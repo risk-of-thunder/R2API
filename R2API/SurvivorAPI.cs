@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using Mono.Cecil.Cil;
-using MonoMod.Utils;
+using MonoMod.RuntimeDetour;
 using RoR2;
 using UnityEngine;
 
@@ -12,11 +11,35 @@ namespace R2API
 {
 	public static class SurvivorAPI
 	{
-		public static ObservableCollection<SurvivorDef> SurvivorDefinitions { get; }
+		public static ObservableCollection<SurvivorDef> SurvivorDefinitions { get; private set; }
+
+		public static EventHandler SurvivorCatalogReady { get; set; }
 
 		private static bool HasBeenInit = false;
 
-		static SurvivorAPI()
+		internal static void InitHooks()
+		{
+			var detour = new NativeDetour(typeof(SurvivorCatalog).GetMethod("Init", BindingFlags.NonPublic | BindingFlags.Static),
+				typeof(SurvivorAPI).GetMethod(nameof(Init), BindingFlags.Public | BindingFlags.Static));
+
+			detour.Apply();
+
+			System.Diagnostics.Trace.TraceInformation("Applied hook");
+
+			On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, survivorIndex) =>
+			{
+				//orig is the original method and SurvivorIndex is the variable that is given to the original GetSurvivorDef
+				if (survivorIndex < 0 || (int)survivorIndex > SurvivorDefinitions.Count)
+				{
+					return null;
+				}
+
+				return SurvivorDefinitions[(int)survivorIndex];
+				//by never doing orig(), the original method is never executed whenever it's called, effectively being replaced
+			};
+		}
+
+		public static void Init()
 		{
 			SurvivorDefinitions = new ObservableCollection<SurvivorDef>(new List<SurvivorDef>
 			{
@@ -72,40 +95,48 @@ namespace R2API
 					primaryColor = new Color(0.827451f, 0.768627465f, 0.3137255f),
 					unlockableName = "Characters.Toolbot",
 					survivorIndex = SurvivorIndex.Toolbot
-				},
+				}
 			});
 
 			SurvivorDefinitions.CollectionChanged += (sender, args) => { ReconstructSurvivors(); };
-		}
 
-		internal static void InitHooks()
-		{
-			On.RoR2.SurvivorCatalog.GetSurvivorDef += (Orig, survivorIndex) =>
+			SurvivorCatalogReady?.Invoke(null, null);
+			
+			HasBeenInit = true;
+
+			SurvivorAPI.survivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
+			SurvivorAPI.allSurvivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
+			SurvivorCatalog.idealSurvivorOrder = Enumerable.Range(0, SurvivorDefinitions.Count).Cast<SurvivorIndex>().ToArray();
+
+			ViewablesCatalog.Node node = new ViewablesCatalog.Node("Survivors", true, null);
+
+			for (int i = 0; i < SurvivorDefinitions.Count; i++)
 			{
-				//orig is the original method and SurvivorIndex is the variable that is given to the original GetSirvivorDef
-				if (survivorIndex < 0 || (int)survivorIndex > SurvivorDefinitions.Count)
-				{
-					return null;
-				}
+				SurvivorDefinitions[i].survivorIndex = (SurvivorIndex)i;
+			}
 
-				return SurvivorDefinitions[(int)survivorIndex];
-				//by never doing Orig(), the original method is never executed whenever it's called, effectively being replaced
-			};
+			foreach (var survivor in SurvivorDefinitions)
+			{
+				ViewablesCatalog.Node survivorEntryNode = new ViewablesCatalog.Node(survivor.survivorIndex.ToString(), false, node);
+				survivorEntryNode.shouldShowUnviewed = userProfile => !userProfile.HasViewedViewable(survivorEntryNode.fullName) && userProfile.HasSurvivorUnlocked(survivor.survivorIndex) && !string.IsNullOrEmpty(survivor.unlockableName);
+			}
+
+			ViewablesCatalog.AddNodeToRoot(node);
 		}
 
-		private static FieldInfo survivorDefs = typeof(SurvivorCatalog).GetField("survivorDefs", BindingFlags.Instance | BindingFlags.NonPublic);
+		private static FieldInfo survivorDefs = typeof(SurvivorCatalog).GetField("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
+		private static FieldInfo allSurvivorDefs = typeof(SurvivorCatalog).GetField("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
 
 		public static void ReconstructSurvivors()
 		{
-			//if (!HasBeenInit)
-			//	return;
+			if (!HasBeenInit)
+				return;
 
 			SurvivorCatalog.survivorMaxCount = Mathf.Max(SurvivorDefinitions.Count, 10);
 
 			for (int i = 0; i < SurvivorDefinitions.Count; i++)
 			{
 				SurvivorDefinitions[i].survivorIndex = (SurvivorIndex)i;
-				System.Diagnostics.Trace.Write($"Assigning {(SurvivorIndex)i} to {SurvivorDefinitions[i].displayNameToken}");
 			}
 
 			SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
