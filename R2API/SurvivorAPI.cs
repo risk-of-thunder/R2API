@@ -112,24 +112,7 @@ namespace R2API
 			
 			HasBeenInit = true;
 
-			SurvivorAPI.survivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
-			SurvivorAPI.allSurvivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
-			SurvivorCatalog.idealSurvivorOrder = Enumerable.Range(0, SurvivorDefinitions.Count).Cast<SurvivorIndex>().ToArray();
-
-			ViewablesCatalog.Node node = new ViewablesCatalog.Node("Survivors", true, null);
-
-			for (int i = 0; i < SurvivorDefinitions.Count; i++)
-			{
-				SurvivorDefinitions[i].survivorIndex = (SurvivorIndex)i;
-			}
-
-			foreach (var survivor in SurvivorDefinitions)
-			{
-				ViewablesCatalog.Node survivorEntryNode = new ViewablesCatalog.Node(survivor.survivorIndex.ToString(), false, node);
-				survivorEntryNode.shouldShowUnviewed = userProfile => !userProfile.HasViewedViewable(survivorEntryNode.fullName) && userProfile.HasSurvivorUnlocked(survivor.survivorIndex) && !string.IsNullOrEmpty(survivor.unlockableName);
-			}
-
-			ViewablesCatalog.AddNodeToRoot(node);
+            ReconstructSurvivors();
 		}
 
 		private static FieldInfo survivorDefs = typeof(SurvivorCatalog).GetField("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
@@ -150,8 +133,7 @@ namespace R2API
 			SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
 
 			survivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
-
-
+            allSurvivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
 
 			ViewablesCatalog.Node node = new ViewablesCatalog.Node("Survivors", true, null);
 
