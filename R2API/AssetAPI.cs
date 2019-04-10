@@ -26,16 +26,16 @@ namespace R2API
         /// <summary>
         /// List of all character masters, including both vanilla and modded ones.
         /// </summary>
-        public static List<GameObject> MasterCatalog { get; private set; }
+        public static List<GameObject> MasterCatalog { get; private set; } = new List<GameObject>();
 
         /// <summary>
         /// List of all character bodies, including both vanilla and modded ones.
         /// </summary>
-        public static List<GameObject> BodyCatalog { get; private set; }
+        public static List<GameObject> BodyCatalog { get; private set; } = new List<GameObject>();
 
         internal static void InitHooks()
         {
-            AssetLoaderReady.Invoke(null,null);
+            AssetLoaderReady?.Invoke(null,null);
 
             IL.RoR2.MasterCatalog.Init += (orig) =>
             {

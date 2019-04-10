@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API", "R2API\R2API.csproj", "{2F8A40CC-6D15-486D-B689-0A7A472DB89E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleMod", "SampleMod\SampleMod.csproj", "{FF7563F3-DA38-4CC4-8786-6B85D027E9B5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{2F8A40CC-6D15-486D-B689-0A7A472DB89E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F8A40CC-6D15-486D-B689-0A7A472DB89E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F8A40CC-6D15-486D-B689-0A7A472DB89E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF7563F3-DA38-4CC4-8786-6B85D027E9B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF7563F3-DA38-4CC4-8786-6B85D027E9B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF7563F3-DA38-4CC4-8786-6B85D027E9B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF7563F3-DA38-4CC4-8786-6B85D027E9B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
