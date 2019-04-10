@@ -9,6 +9,7 @@ namespace R2API
 		internal static void InitializeHooks()
 		{
 			SurvivorAPI.InitHooks();
+            AssetAPI.InitHooks();
 		}
 	}
 }
