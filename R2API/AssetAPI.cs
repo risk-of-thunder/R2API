@@ -39,13 +39,17 @@ namespace R2API
 
             IL.RoR2.MasterCatalog.Init += (orig) =>
             {
-                MMILCursor c = orig.At(2);
+                MMILCursor c = orig.At(0);
+                c.Remove();
+                c.Remove();
                 c.EmitDelegate<Func<GameObject[]>>(BuildMasterCatalog);
             };
 
             IL.RoR2.BodyCatalog.Init += (orig) =>
             {
-                MMILCursor c = orig.At(3);
+                MMILCursor c = orig.At(0);
+                c.Remove();
+                c.Remove();
                 c.EmitDelegate<Func<GameObject[]>>(BuildBodyCatalog);
             };
             doneLoading = true;
