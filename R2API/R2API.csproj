@@ -6,33 +6,28 @@
 
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>I:\SteamLibrary\SteamApps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Assembly-CSharp.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>libs\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>..\..\..\GitHub-Bepis\BepInEx\bin\BepInEx.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>libs\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
-      <HintPath>..\..\SeikoML\lib-stripped\MMHOOK_Assembly-CSharp.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>libs\MMHOOK_Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\BepInEx\bin\Mono.Cecil.dll</HintPath>
+      <HintPath>libs\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod.RuntimeDetour">
-      <HintPath>I:\SteamLibrary\SteamApps\common\Risk of Rain 2\BepInEx\plugins\MonoMod.RuntimeDetour.dll</HintPath>
+      <HintPath>libs\MonoMod.RuntimeDetour.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod.Utils">
-      <HintPath>I:\SteamLibrary\SteamApps\common\Risk of Rain 2\BepInEx\patchers\BepInEx.MonoMod.Loader\MonoMod.Utils.dll</HintPath>
+      <HintPath>libs\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>I:\SteamLibrary\SteamApps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>libs\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>M:\yansim\YandereSimulator_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 
