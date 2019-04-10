@@ -11,10 +11,18 @@ namespace R2API
 {
 	public static class SurvivorAPI
 	{
+        /// <summary>
+        /// The complete list of survivors, including vanilla and modded survivors.
+        /// </summary>
 		public static ObservableCollection<SurvivorDef> SurvivorDefinitions { get; private set; }
 
-		public static EventHandler SurvivorCatalogReady { get; set; }
-
+        /// <summary>
+        /// This event gets triggered when the Survivor Catalog is ready to receive additions/changes/removals.
+        /// </summary>
+		public static event EventHandler SurvivorCatalogReady;
+        /// <summary>
+        /// Returns true when the Vanilla Survivor Catalog has been built
+        /// </summary>
 		private static bool HasBeenInit = false;
 
 		internal static void InitHooks()
@@ -100,7 +108,7 @@ namespace R2API
 
 			SurvivorDefinitions.CollectionChanged += (sender, args) => { ReconstructSurvivors(); };
 
-			SurvivorCatalogReady?.Invoke(null, null);
+			SurvivorCatalogReady?.Invoke(null,null);
 			
 			HasBeenInit = true;
 
