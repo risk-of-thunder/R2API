@@ -7,7 +7,7 @@ using MonoMod.Utils;
 using MonoMod.RuntimeDetour;
 using RoR2;
 using UnityEngine;
-
+using MonoMod.Cil;
 
 namespace R2API
 {
@@ -39,7 +39,7 @@ namespace R2API
 
             IL.RoR2.MasterCatalog.Init += (orig) =>
             {
-                MMILCursor c = orig.At(0);
+                ILCursor c = new ILCursor(orig).Goto(0);
                 c.Remove();
                 c.Remove();
                 c.EmitDelegate<Func<GameObject[]>>(BuildMasterCatalog);
@@ -47,7 +47,7 @@ namespace R2API
 
             IL.RoR2.BodyCatalog.Init += (orig) =>
             {
-                MMILCursor c = orig.At(0);
+                ILCursor c = new ILCursor(orig).Goto(0);
                 c.Remove();
                 c.Remove();
                 c.EmitDelegate<Func<GameObject[]>>(BuildBodyCatalog);
