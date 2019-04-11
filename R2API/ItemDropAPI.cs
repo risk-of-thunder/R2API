@@ -105,13 +105,13 @@ namespace R2API
 
 	public static class ItemDropAPI
 	{
-
+		
 
 		public static void InitHooks()
 		{
 			IL.RoR2.BossGroup.OnCharacterDeathCallback += (il) =>
 			{
-				ILCursor cursor = new ILCursor(il);
+				ILCursor cursor = new ILCursor(il).Goto(0);
 
 				cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethod("get_itemIndex")));
 				
@@ -137,6 +137,45 @@ namespace R2API
 				cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethod("get_itemIndex"));
 
 				//il.PrintInstrs();
+				Debug.Log("[R2API] Hooked into BossGroup.OnCharacterDeathCallback");
+			};
+
+			var dropPickup = typeof(ChestBehavior).GetField("dropPickup", BindingFlags.NonPublic | BindingFlags.Instance);
+			var lunarChance = typeof(ChestBehavior).GetField("lunarChance", BindingFlags.Public | BindingFlags.Instance);
+			var tier1Chance = typeof(ChestBehavior).GetField("tier1Chance", BindingFlags.Public | BindingFlags.Instance);
+			var tier2Chance = typeof(ChestBehavior).GetField("tier2Chance", BindingFlags.Public | BindingFlags.Instance);
+			var tier3Chance = typeof(ChestBehavior).GetField("tier3Chance", BindingFlags.Public | BindingFlags.Instance);
+
+			IL.RoR2.ChestBehavior.RollItem += (il) => {
+				ILCursor cursor = new ILCursor(il).Goto(0);
+				cursor.GotoNext(x => x.MatchLdcI4(8));
+
+				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.EmitDelegate<Action<ChestBehavior>>(@this => {
+					if ((PickupIndex)(dropPickup.GetValue(@this)) != PickupIndex.none) {
+						return;
+					}
+
+					if ((float)lunarChance.GetValue(@this) >= 1f) {
+						@this.dropPickup = GetSelection(ItemDropLocation.LunarChest,
+							Run.instance.treasureRng.nextNormalizedFloat);
+					} else if ((float)tier3Chance.GetValue(@this) >= 0.2f) {
+						@this.dropPickup = GetSelection(ItemDropLocation.LargeChest,
+							Run.instance.treasureRng.nextNormalizedFloat);
+					} else if ((float)tier2Chance.GetValue(@this) >= 0.8f) {
+						@this.dropPickup = GetSelection(ItemDropLocation.MediumChest,
+							Run.instance.treasureRng.nextNormalizedFloat);
+					} else if ((float)tier1Chance.GetValue(@this) <= 0.8f) {
+						@this.dropPickup = GetSelection(ItemDropLocation.SmallChest,
+							Run.instance.treasureRng.nextNormalizedFloat);
+					}
+				});
+
+
+				cursor.Emit(OpCodes.Ret);
+				il.PrintInstrs().Log(true);
+
+				Debug.Log("[R2API] Hooked into ChestBehavior.RollItem");
 			};
 		}
 

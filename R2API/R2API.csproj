@@ -29,9 +29,6 @@
       <HintPath>libs\MonoMod.Utils.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="System.Reflection.Emit">
-      <HintPath>..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.1.1\ref\netcoreapp2.1\System.Reflection.Emit.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>libs\UnityEngine.dll</HintPath>
       <Private>false</Private>
@@ -43,7 +40,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;D:\Games\SteamLibrary\steamapps\common\Risk of Rain 2\BepInEx\plugins\R2API\$(ProjectName).dll&quot;&#xD;&#xA;" />
+    <Exec Command="copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\BepInEx\plugins\R2API\$(ProjectName).dll&quot;&#xD;&#xA;" />
   </Target>
 
 </Project>
