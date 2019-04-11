@@ -11,18 +11,18 @@ namespace R2API
 {
 	public static class SurvivorAPI
 	{
-        /// <summary>
-        /// The complete list of survivors, including vanilla and modded survivors.
-        /// </summary>
+		/// <summary>
+		/// The complete list of survivors, including vanilla and modded survivors.
+		/// </summary>
 		public static ObservableCollection<SurvivorDef> SurvivorDefinitions { get; private set; }
 
-        /// <summary>
-        /// This event gets triggered when the Survivor Catalog is ready to receive additions/changes/removals.
-        /// </summary>
+		/// <summary>
+		/// This event gets triggered when the Survivor Catalog is ready to receive additions/changes/removals.
+		/// </summary>
 		public static event EventHandler SurvivorCatalogReady;
-        /// <summary>
-        /// Returns true when the Vanilla Survivor Catalog has been built
-        /// </summary>
+		/// <summary>
+		/// Returns true when the Vanilla Survivor Catalog has been built
+		/// </summary>
 		private static bool HasBeenInit = false;
 
 		internal static void InitHooks()
@@ -108,11 +108,11 @@ namespace R2API
 
 			SurvivorDefinitions.CollectionChanged += (sender, args) => { ReconstructSurvivors(); };
 
-			SurvivorCatalogReady?.Invoke(null,null);
-			
+			SurvivorCatalogReady?.Invoke(null, null);
+
 			HasBeenInit = true;
 
-            ReconstructSurvivors();
+			ReconstructSurvivors();
 		}
 
 		private static FieldInfo survivorDefs = typeof(SurvivorCatalog).GetField("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
@@ -133,7 +133,7 @@ namespace R2API
 			SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
 
 			survivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
-            allSurvivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
+			allSurvivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
 
 			ViewablesCatalog.Node node = new ViewablesCatalog.Node("Survivors", true, null);
 
