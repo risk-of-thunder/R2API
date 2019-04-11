@@ -7,6 +7,7 @@ using Mono.Cecil.Cil;
 using Mono.Cecil;
 using System.Reflection;
 using MonoMod.Cil;
+using System;
 
 namespace R2API
 {
@@ -104,23 +105,38 @@ namespace R2API
 
 	public static class ItemDropAPI
 	{
+
+
 		public static void InitHooks()
 		{
-			IL.RoR2.BossGroup.OnCharacterDeathCallback += (IL) =>
+			IL.RoR2.BossGroup.OnCharacterDeathCallback += (il) =>
 			{
-				ILCursor cursor = new ILCursor(IL);
+				ILCursor cursor = new ILCursor(il);
 
 				cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethod("get_itemIndex")));
-				var itemIndex_index = (int)cursor.Next.Operand;
+				
+				var itemIndex = (VariableDefinition)cursor.Next.Next.Operand;
 
-				cursor.GotoNext(x => x.MatchStloc(itemIndex_index));
+				cursor.Goto(0);
+				cursor.GotoNext(x => x.MatchCallvirt(typeof(List<PickupIndex>).GetMethod("get_Item")));
+
+				var pickupIndex = (VariableDefinition)cursor.Next.Next.Operand;
+
+				cursor.GotoNext(MoveType.Before, x => x.MatchStloc(itemIndex.Index));
+				cursor.Emit(OpCodes.Stloc_S, itemIndex);
+
+				cursor.Emit(OpCodes.Ldc_I4_0);
 
 				cursor.Emit(OpCodes.Ldarg_0);
-				cursor.Emit(OpCodes.Ldfld, typeof(BossGroup).GetField("rng", BindingFlags.NonPublic));
+				cursor.Emit(OpCodes.Ldfld, typeof(BossGroup).GetField("rng", BindingFlags.NonPublic | BindingFlags.Instance));
 				cursor.Emit(OpCodes.Callvirt, typeof(Xoroshiro128Plus).GetMethod("get_nextNormalizedFloat"));
-				cursor.Emit(OpCodes.Ldc_I4_0);
-				cursor.Emit(OpCodes.Call, typeof(ItemDropLocation).GetMethod("GetSelection", BindingFlags.Static));
-				cursor.EmitDelegate(() => { Debug.Log("[R2API] YAY"); });
+				cursor.Emit(OpCodes.Call, typeof(ItemDropAPI).GetMethod("GetSelection"));
+				cursor.Emit(OpCodes.Stloc_S, pickupIndex);
+				cursor.Emit(OpCodes.Ldloca_S, pickupIndex);
+
+				cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethod("get_itemIndex"));
+
+				//il.PrintInstrs();
 			};
 		}
 
