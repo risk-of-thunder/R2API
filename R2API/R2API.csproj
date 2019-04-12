@@ -37,10 +37,10 @@
       <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
-		<Reference Include="UnityEngine.Networking">
-			<HintPath>libs\UnityEngine.Networking.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
+	<Reference Include="UnityEngine.Networking">
+		<HintPath>libs\UnityEngine.Networking.dll</HintPath>
+		<Private>false</Private>
+	</Reference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
