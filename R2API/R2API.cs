@@ -19,6 +19,8 @@ namespace R2API
 			Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 			Environment.SetEnvironmentVariable("MONOMOD_DMD_DUMP", "dmddump");
 
+			On.RoR2.RoR2Application.UnitySystemConsoleRedirector.Redirect += (orig) => { };
+
 			InitConfig();
 
 			Hooks.InitializeHooks();
