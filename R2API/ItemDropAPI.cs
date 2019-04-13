@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using RoR2;
 using MonoMod.Utils;
 using Mono.Cecil.Cil;
@@ -8,6 +7,7 @@ using Mono.Cecil;
 using System.Reflection;
 using MonoMod.Cil;
 using System;
+using BepInEx.Logging;
 
 namespace R2API
 {
@@ -105,6 +105,8 @@ namespace R2API
 
 	public static class ItemDropAPI
 	{
+		public static ManualLogSource Logger = R2API.Logger;
+
 		public static void InitHooks()
 		{
 			var itemDropApi_GetSelection = typeof(ItemDropAPI).GetMethod("GetSelection");
@@ -140,7 +142,7 @@ namespace R2API
 				//il.PrintInstrs();
 			};
 
-			Debug.Log("[R2API] Hooked into BossGroup.OnCharacterDeathCallback");
+			Logger.LogInfo("Hooked into BossGroup.OnCharacterDeathCallback");
 
 			var dropPickup = typeof(ChestBehavior).GetField("dropPickup", BindingFlags.NonPublic | BindingFlags.Instance);
 			var lunarChance = typeof(ChestBehavior).GetField("lunarChance", BindingFlags.Public | BindingFlags.Instance);
@@ -177,7 +179,7 @@ namespace R2API
 				cursor.Emit(OpCodes.Ret);
 			};
 
-			Debug.Log("[R2API] Hooked into ChestBehavior.RollItem");
+			Logger.LogInfo("Hooked into ChestBehavior.RollItem");
 
 			var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethod("Evaluate");
 
@@ -187,10 +189,10 @@ namespace R2API
 				cursor.GotoNext(x => x.MatchCallvirt(weightedSelection_Evaluate));
 				cursor.Next.OpCode = OpCodes.Nop;
 				cursor.Next.Operand = null;
-				cursor.EmitDelegate<Func<WeightedSelection<PickupIndex>, float, PickupIndex>>((_, x) => GetSelection(ItemDropLocation.Boss, x));
+				cursor.EmitDelegate<Func<WeightedSelection<PickupIndex>, float, PickupIndex>>((_, x) => GetSelection(ItemDropLocation.Shrine, x));
 			};
 
-			Debug.Log("[R2API] Hooked into ShrineChanceBehavior.AddShrineStack");
+			Logger.LogInfo("Hooked into ShrineChanceBehavior.AddShrineStack");
 
 
 
@@ -225,6 +227,9 @@ namespace R2API
 				self.largeChestDropTierSelector.Clear();
 			};
 
+
+			Logger.LogInfo("Hooked into Run.BuildDropTable");
+
 		}
 
 		public static float ChestSpawnRate = 1.0f;
@@ -252,14 +257,14 @@ namespace R2API
 
 		public static void AddDropInformation(ItemDropLocation dropLocation, params PickupSelection[] pickupSelections)
 		{
-			Debug.Log($"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
+			Logger.LogInfo($"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
 
 			Selection[dropLocation] = pickupSelections.ToList();
 		}
 
 		public static void AddDropInformation(ItemDropLocation dropLocation, List<PickupSelection> pickupSelections)
 		{
-			Debug.Log($"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
+			Logger.LogInfo($"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
 
 			Selection[dropLocation] = pickupSelections;
 		}
