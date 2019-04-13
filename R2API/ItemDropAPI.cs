@@ -109,12 +109,15 @@ namespace R2API
 
 		public static void InitHooks()
 		{
+			var itemDropApi_GetSelection = typeof(ItemDropAPI).GetMethod("GetSelection");
+			var xoroshiro_GetNextNormalizedFloat = typeof(Xoroshiro128Plus).GetMethod("get_nextNormalizedFloat");
+
 			IL.RoR2.BossGroup.OnCharacterDeathCallback += (il) =>
 			{
 				ILCursor cursor = new ILCursor(il).Goto(0);
 
 				cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethod("get_itemIndex")));
-				
+
 				var itemIndex = (VariableDefinition)cursor.Next.Next.Operand;
 
 				cursor.Goto(0);
@@ -129,16 +132,17 @@ namespace R2API
 
 				cursor.Emit(OpCodes.Ldarg_0);
 				cursor.Emit(OpCodes.Ldfld, typeof(BossGroup).GetField("rng", BindingFlags.NonPublic | BindingFlags.Instance));
-				cursor.Emit(OpCodes.Callvirt, typeof(Xoroshiro128Plus).GetMethod("get_nextNormalizedFloat"));
-				cursor.Emit(OpCodes.Call, typeof(ItemDropAPI).GetMethod("GetSelection"));
+				cursor.Emit(OpCodes.Callvirt, xoroshiro_GetNextNormalizedFloat);
+				cursor.Emit(OpCodes.Call, itemDropApi_GetSelection);
 				cursor.Emit(OpCodes.Stloc_S, pickupIndex);
 				cursor.Emit(OpCodes.Ldloca_S, pickupIndex);
 
 				cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethod("get_itemIndex"));
 
 				//il.PrintInstrs();
-				Debug.Log("[R2API] Hooked into BossGroup.OnCharacterDeathCallback");
 			};
+
+			Debug.Log("[R2API] Hooked into BossGroup.OnCharacterDeathCallback");
 
 			var dropPickup = typeof(ChestBehavior).GetField("dropPickup", BindingFlags.NonPublic | BindingFlags.Instance);
 			var lunarChance = typeof(ChestBehavior).GetField("lunarChance", BindingFlags.Public | BindingFlags.Instance);
@@ -173,10 +177,23 @@ namespace R2API
 
 
 				cursor.Emit(OpCodes.Ret);
-				il.PrintInstrs().Log(true);
-
-				Debug.Log("[R2API] Hooked into ChestBehavior.RollItem");
 			};
+			Debug.Log("[R2API] Hooked into ChestBehavior.RollItem");
+
+
+			var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethod("Evaluate");
+
+			IL.RoR2.ShrineChanceBehavior.AddShrineStack += (il) => {
+				var cursor = new ILCursor(il).Goto(0);
+
+				cursor.GotoNext(x => x.MatchCallvirt(weightedSelection_Evaluate));
+				cursor.Next.OpCode = OpCodes.Nop;
+				cursor.Next.Operand = null;
+				cursor.EmitDelegate<Func<WeightedSelection<PickupIndex>, float, PickupIndex>>((_, x) => GetSelection(ItemDropLocation.Boss, x));
+			};
+
+			Debug.Log("[R2API] Hooked into ShrineChanceBehavior.AddShrineStack");
+
 		}
 
 		public static float ChestSpawnRate = 1.0f;

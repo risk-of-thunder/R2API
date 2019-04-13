@@ -32,7 +32,7 @@ namespace R2API
 
 			if (string.IsNullOrWhiteSpace(exePath) == false) {
 				var process = new System.Diagnostics.ProcessStartInfo(exePath) {
-					Arguments = $"/c \"{file}\""
+					Arguments = $"\"{file}\""
 				};
 				System.Diagnostics.Process.Start(process);
 			}

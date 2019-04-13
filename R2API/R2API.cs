@@ -13,6 +13,7 @@ namespace R2API
 		public R2API()
 		{
 			Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
+			Environment.SetEnvironmentVariable("MONOMOD_DMD_DUMP", "dmddump");
 
 			InitConfig();
 
