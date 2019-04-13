@@ -1,6 +1,7 @@
 ﻿using System;
 using BepInEx;
 using BepInEx.Configuration;
+using BepInEx.Logging;
 using RoR2;
 
 namespace R2API
@@ -8,10 +9,13 @@ namespace R2API
 	[BepInPlugin("com.bepis.r2api", "R2API", "1.0")]
 	public class R2API : BaseUnityPlugin
 	{
+		internal new static ManualLogSource Logger { get; set; }
+
 		public static ConfigWrapper<bool> IsModded { get; protected set; }
 
 		public R2API()
 		{
+			Logger = base.Logger;
 			Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 			Environment.SetEnvironmentVariable("MONOMOD_DMD_DUMP", "dmddump");
 
