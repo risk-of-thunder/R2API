@@ -105,8 +105,6 @@ namespace R2API
 
 	public static class ItemDropAPI
 	{
-		
-
 		public static void InitHooks()
 		{
 			var itemDropApi_GetSelection = typeof(ItemDropAPI).GetMethod("GetSelection");
@@ -178,8 +176,8 @@ namespace R2API
 
 				cursor.Emit(OpCodes.Ret);
 			};
-			Debug.Log("[R2API] Hooked into ChestBehavior.RollItem");
 
+			Debug.Log("[R2API] Hooked into ChestBehavior.RollItem");
 
 			var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethod("Evaluate");
 
@@ -193,6 +191,39 @@ namespace R2API
 			};
 
 			Debug.Log("[R2API] Hooked into ShrineChanceBehavior.AddShrineStack");
+
+
+
+			On.RoR2.Run.BuildDropTable += (orig, self) => {
+				if (DefaultDrops) {
+					// Setup default item lists
+					DefaultItemDrops.AddDefaults();
+				}
+
+				self.availableTier1DropList.Clear();
+				self.availableTier1DropList.AddRange(GetDefaultDropList(ItemTier.Tier1).Select(x => new PickupIndex(x)).ToList());
+
+				self.availableTier2DropList.Clear();
+				self.availableTier2DropList.AddRange(GetDefaultDropList(ItemTier.Tier2).Select(x => new PickupIndex(x)).ToList());
+
+				self.availableTier3DropList.Clear();
+				self.availableTier3DropList.AddRange(GetDefaultDropList(ItemTier.Tier3).Select(x => new PickupIndex(x)).ToList());
+
+				self.availableEquipmentDropList.Clear();
+				self.availableEquipmentDropList.AddRange(GetDefaultEquipmentDropList().Select(x => new PickupIndex(x)).ToList());
+
+				self.availableLunarDropList.Clear();
+				self.availableLunarDropList.AddRange(GetDefaultLunarDropList().Select(x => new PickupIndex(x)).ToList());
+
+				self.smallChestDropTierSelector.Clear();
+				self.smallChestDropTierSelector.AddChoice(self.availableTier1DropList, 0.8f);
+				self.smallChestDropTierSelector.AddChoice(self.availableTier2DropList, 0.2f);
+				self.smallChestDropTierSelector.AddChoice(self.availableTier3DropList, 0.01f);
+				self.mediumChestDropTierSelector.Clear();
+				self.mediumChestDropTierSelector.AddChoice(self.availableTier2DropList, 0.8f);
+				self.mediumChestDropTierSelector.AddChoice(self.availableTier3DropList, 0.2f);
+				self.largeChestDropTierSelector.Clear();
+			};
 
 		}
 
