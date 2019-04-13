@@ -6,6 +6,7 @@ using MonoMod.Utils;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
 using System.Reflection;
+using MonoMod.Cil;
 
 namespace R2API
 {
@@ -107,7 +108,7 @@ namespace R2API
 		{
 			IL.RoR2.BossGroup.OnCharacterDeathCallback += (IL) =>
 			{
-				MMILCursor cursor = IL.At(0);
+				ILCursor cursor = new ILCursor(IL);
 
 				cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethod("get_itemIndex")));
 				var itemIndex_index = (int)cursor.Next.Operand;
@@ -119,6 +120,7 @@ namespace R2API
 				cursor.Emit(OpCodes.Callvirt, typeof(Xoroshiro128Plus).GetMethod("get_nextNormalizedFloat"));
 				cursor.Emit(OpCodes.Ldc_I4_0);
 				cursor.Emit(OpCodes.Call, typeof(ItemDropLocation).GetMethod("GetSelection", BindingFlags.Static));
+				cursor.EmitDelegate(() => { Debug.Log("[R2API] YAY"); });
 			};
 		}
 
