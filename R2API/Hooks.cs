@@ -10,6 +10,7 @@ namespace R2API
 		{
 			SurvivorAPI.InitHooks();
             AssetAPI.InitHooks();
+			ItemDropAPI.InitHooks();
 		}
 	}
 }
