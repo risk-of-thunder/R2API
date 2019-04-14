@@ -138,11 +138,7 @@ namespace R2API
 				cursor.Emit(OpCodes.Ldloca_S, pickupIndex);
 
 				cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethod("get_itemIndex"));
-
-				//il.PrintInstrs();
 			};
-
-			Logger.LogInfo("Hooked into BossGroup.OnCharacterDeathCallback");
 
 			var dropPickup = typeof(ChestBehavior).GetField("dropPickup", BindingFlags.NonPublic | BindingFlags.Instance);
 			var lunarChance = typeof(ChestBehavior).GetField("lunarChance", BindingFlags.Public | BindingFlags.Instance);
@@ -175,11 +171,8 @@ namespace R2API
 					}
 				});
 
-
 				cursor.Emit(OpCodes.Ret);
 			};
-
-			Logger.LogInfo("Hooked into ChestBehavior.RollItem");
 
 			var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethod("Evaluate");
 
@@ -191,10 +184,6 @@ namespace R2API
 				cursor.Next.Operand = null;
 				cursor.EmitDelegate<Func<WeightedSelection<PickupIndex>, float, PickupIndex>>((_, x) => GetSelection(ItemDropLocation.Shrine, x));
 			};
-
-			Logger.LogInfo("Hooked into ShrineChanceBehavior.AddShrineStack");
-
-
 
 			On.RoR2.Run.BuildDropTable += (orig, self) => {
 				if (DefaultDrops) {
@@ -226,10 +215,6 @@ namespace R2API
 				self.mediumChestDropTierSelector.AddChoice(self.availableTier3DropList, 0.2f);
 				self.largeChestDropTierSelector.Clear();
 			};
-
-
-			Logger.LogInfo("Hooked into Run.BuildDropTable");
-
 		}
 
 		public static float ChestSpawnRate = 1.0f;
