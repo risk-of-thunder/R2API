@@ -4,6 +4,8 @@
 	{
 		internal static void InitializeHooks()
 		{
+			On.RoR2.RoR2Application.UnitySystemConsoleRedirector.Redirect += orig => { };
+
 			SurvivorAPI.InitHooks();
 			AssetAPI.InitHooks();
 		}
