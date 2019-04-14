@@ -15,21 +15,21 @@ namespace R2API.Utils
 		public static TReturn GetFieldValue<TReturn>(this object instance, string fieldName)
 		{
 			return (TReturn)instance.GetType()
-				.GetField(fieldName, _defaultFlags | BindingFlags.Instance)
-					.GetValue(instance);
+									.GetField(fieldName, _defaultFlags | BindingFlags.Instance)
+									.GetValue(instance);
 		}
 
 		public static TReturn GetFieldValue<TClass, TReturn>(string fieldName)
 		{
 			return (TReturn)typeof(TClass)
-				.GetField(fieldName, _defaultFlags | BindingFlags.Static)
-					.GetValue(null);
+							.GetField(fieldName, _defaultFlags | BindingFlags.Static)
+							.GetValue(null);
 		}
 
 		public static void SetFieldValue(this object instance, string fieldName, object value)
 		{
 			instance.GetType()
-				.GetField(fieldName, _defaultFlags | BindingFlags.Instance)
+					.GetField(fieldName, _defaultFlags | BindingFlags.Instance)
 					.SetValue(instance, value);
 		}
 
@@ -37,7 +37,7 @@ namespace R2API.Utils
 		{
 			typeof(TClass)
 				.GetField(fieldName, _defaultFlags | BindingFlags.Static)
-					.SetValue(null, value);
+				.SetValue(null, value);
 		}
 
 		#endregion
@@ -47,28 +47,28 @@ namespace R2API.Utils
 		public static TReturn GetProperyValue<TReturn>(this object instance, string propName)
 		{
 			return (TReturn)instance.GetType()
-				.GetProperty(propName, _defaultFlags | BindingFlags.Instance)
-					.GetValue(instance);
+									.GetProperty(propName, _defaultFlags | BindingFlags.Instance)
+									.GetValue(instance);
 		}
 
 		public static TReturn GetProperyValue<TClass, TReturn>(string propName)
 		{
 			return (TReturn)typeof(TClass)
-				.GetProperty(propName, _defaultFlags | BindingFlags.Static)
-					.GetValue(null);
+							.GetProperty(propName, _defaultFlags | BindingFlags.Static)
+							.GetValue(null);
 		}
 
 		public static void SetProperyValue(this object instance, string propName, object value)
 		{
 			instance.GetType()
-				.GetProperty(propName, _defaultFlags | BindingFlags.Instance)
+					.GetProperty(propName, _defaultFlags | BindingFlags.Instance)
 					.SetValue(instance, value);
 		}
 
 		public static void SetProperyValue<TClass>(string propName, object value)
 		{
 			typeof(TClass).GetProperty(propName, _defaultFlags | BindingFlags.Static)
-				.SetValue(null, value);
+						  .SetValue(null, value);
 		}
 
 		#endregion
@@ -78,15 +78,15 @@ namespace R2API.Utils
 		public static TReturn InvokeMethod<TReturn>(this object instance, string methodName, params object[] methodParams)
 		{
 			return (TReturn)instance.GetType()
-				.GetMethod(methodName, _defaultFlags | BindingFlags.Instance)
-					.Invoke(instance, methodParams);
+									.GetMethod(methodName, _defaultFlags | BindingFlags.Instance)
+									.Invoke(instance, methodParams);
 		}
 
 		public static TReturn InvokeMethod<TClass, TReturn>(string methodName, params object[] methodParams)
 		{
 			return (TReturn)typeof(TClass)
-				.GetMethod(methodName, _defaultFlags | BindingFlags.Static)
-					.Invoke(null, methodParams);
+							.GetMethod(methodName, _defaultFlags | BindingFlags.Static)
+							.Invoke(null, methodParams);
 		}
 
 		public static void InvokeMethod(this object instance, string methodName, params object[] methodParams)

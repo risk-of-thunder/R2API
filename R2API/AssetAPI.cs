@@ -34,13 +34,13 @@ namespace R2API
 			IL.RoR2.MasterCatalog.Init += (il) =>
 			{
 				ILCursor c = new ILCursor(il).Goto(0); //Initialize IL cursor at position 0
-				c.Remove();  //Deletes the "Prefabs/CharacterMasters" string being stored in the stack
+				c.Remove(); //Deletes the "Prefabs/CharacterMasters" string being stored in the stack
 				c.Goto(0);
 				c.Remove(); //Deletes the call Resources.Load<GameObjec>() from the stack
 				c.Goto(0);
 				//Stores the new GameObject[] in the static field MasterCatalog.masterPrefabs.
 				//This array contains both vanilla and modded Character Masters
-				c.EmitDelegate<Func<GameObject[]>>(BuildMasterCatalog); 
+				c.EmitDelegate<Func<GameObject[]>>(BuildMasterCatalog);
 			};
 
 			IL.RoR2.BodyCatalog.Init += (il) =>
@@ -55,7 +55,7 @@ namespace R2API
 				//TODO: find a way to also add 2d sprites, as are done on line 113 and have a very hard-coded path 
 				c.EmitDelegate<Func<GameObject[]>>(BuildBodyCatalog);
 			};
-			doneLoading = true; 
+			doneLoading = true;
 		}
 
 		internal static GameObject[] BuildMasterCatalog()
@@ -63,6 +63,7 @@ namespace R2API
 			MasterCatalog.AddRange(Resources.LoadAll<GameObject>("Prefabs/CharacterMasters/"));
 			return MasterCatalog.ToArray();
 		}
+
 		internal static GameObject[] BuildBodyCatalog()
 		{
 			BodyCatalog.AddRange(Resources.LoadAll<GameObject>("Prefabs/CharacterBodies/"));

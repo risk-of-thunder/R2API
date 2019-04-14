@@ -20,6 +20,7 @@ namespace R2API
 		/// This event gets triggered when the Survivor Catalog is ready to receive additions/changes/removals.
 		/// </summary>
 		public static event EventHandler SurvivorCatalogReady;
+
 		/// <summary>
 		/// Returns true when the Vanilla Survivor Catalog has been built
 		/// </summary>

@@ -15,7 +15,7 @@
     </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
       <HintPath>libs\MMHOOK_Assembly-CSharp.dll</HintPath>
-      <Private>false</Private>
+      <Private>true</Private>
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>libs\Mono.Cecil.dll</HintPath>
@@ -23,7 +23,7 @@
     </Reference>
     <Reference Include="MonoMod.RuntimeDetour">
       <HintPath>libs\MonoMod.RuntimeDetour.dll</HintPath>
-      <Private>false</Private>
+      <Private>true</Private>
     </Reference>
     <Reference Include="MonoMod.Utils">
       <HintPath>libs\MonoMod.Utils.dll</HintPath>
@@ -39,7 +39,17 @@
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>libs\UnityEngine.Networking.dll</HintPath>
+      <Private>false</Private>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="libs\MMHOOK_Assembly-CSharp.dll">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="libs\MonoMod.RuntimeDetour.dll">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

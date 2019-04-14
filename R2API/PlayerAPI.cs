@@ -3,7 +3,6 @@ using R2API.Utils;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace R2API
 {
@@ -16,6 +15,7 @@ namespace R2API
 			var detour = new NativeDetour(typeof(CharacterBody).GetMethod("RecalculateStats", System.Reflection.BindingFlags.Public),
 				typeof(ItemAPI).GetMethod(nameof(RecalcStats), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static));
 		}
+
 		public static void RecalcStats(CharacterBody characterBody)
 		{
 			characterBody.SetFieldValue("experience", TeamManager.instance.GetTeamExperience(characterBody.teamComponent.teamIndex));
@@ -35,7 +35,7 @@ namespace R2API
 			float damage = 0;
 			float Crit = 0;
 			float Armor = 0;
-			float critHeal = 0; 
+			float critHeal = 0;
 
 			//Primary Skill
 			float PrimaryCooldownScale = 0;
@@ -63,6 +63,7 @@ namespace R2API
 			characterBody.statsDirty = false;
 		}
 	}
+
 	public class PlayerStatChange
 	{
 		/// <summary>
@@ -72,15 +73,24 @@ namespace R2API
 		/// Target = "damamge"
 		/// </example>
 		public string Target { get; set; }
+
 		/// <summary>
 		/// The type of operand that will be applied to the target.	
 		/// </summary>
 		public Operands operand { get; set; }
+
 		/// <summary>
 		/// This method is executed by the API to obtain the value. This is where you will have to code the logic of how your custom effect
 		/// changes the player's stats.
 		/// </summary>
 		public Func<CharacterBody, int> Function { get; private set; }
 	}
-	public enum Operands { Addition, Multiplication, Division, Substraction }
+
+	public enum Operands
+	{
+		Addition,
+		Multiplication,
+		Division,
+		Substraction
+	}
 }
