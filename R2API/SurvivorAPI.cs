@@ -33,8 +33,6 @@ namespace R2API
 
 			detour.Apply();
 
-			System.Diagnostics.Trace.TraceInformation("Applied hook");
-
 			On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, survivorIndex) =>
 			{
 				//orig is the original method and SurvivorIndex is the variable that is given to the original GetSurvivorDef
