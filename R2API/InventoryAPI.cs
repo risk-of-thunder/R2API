@@ -18,17 +18,11 @@ namespace R2API
 			var inventory_onInventoryChanged = typeof(RoR2.Inventory).GetField("onInventoryChanged");
 
 			IL.RoR2.UI.ItemInventoryDisplay.AllocateIcons += (il) => {
-				//il.PrintInstrs();
 				var cursor = new ILCursor(il).Goto(0);
 				cursor.GotoNext(x => x.MatchStloc(0));
 				cursor.Emit(OpCodes.Dup);
 				cursor.EmitDelegate<Action<ItemIcon>>(i => OnItemIconAdded?.Invoke(i));
-				//il.PrintInstrs();
 			};
-
-			//IL.RoR2.UI.ItemInventoryDisplay.Alloc
-
-			Debug.Log("[R2API] Hooked into ItemInventoryDisplay.AllocateIcons");
 		}
 	}
 }

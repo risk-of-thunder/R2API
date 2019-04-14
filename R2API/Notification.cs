@@ -21,7 +21,7 @@ namespace R2API
 
 		private void Awake()
 		{
-			// TODO(kookehs): Figure out HUD transform for canvas and scaling
+			// TODO: Figure out HUD transform for canvas and scaling
 			Parent = RoR2Application.instance.mainCanvas.transform;
 			RootObject = Instantiate(Resources.Load<GameObject>("Prefabs/NotificationPanel2"));
 			GenericNotification = RootObject.GetComponent<GenericNotification>();
