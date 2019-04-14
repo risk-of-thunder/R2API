@@ -11,10 +11,19 @@ namespace R2API
 {
 	public static class SurvivorAPI
 	{
+		/// <summary>
+		/// The complete list of survivors, including vanilla and modded survivors.
+		/// </summary>
 		public static ObservableCollection<SurvivorDef> SurvivorDefinitions { get; private set; }
 
-		public static EventHandler SurvivorCatalogReady { get; set; }
+		/// <summary>
+		/// This event gets triggered when the Survivor Catalog is ready to receive additions/changes/removals.
+		/// </summary>
+		public static event EventHandler SurvivorCatalogReady;
 
+		/// <summary>
+		/// Returns true when the Vanilla Survivor Catalog has been built
+		/// </summary>
 		private static bool HasBeenInit = false;
 
 		internal static void InitHooks()
@@ -51,14 +60,15 @@ namespace R2API
 					primaryColor = new Color(0.929411769f, 0.5882353f, 0.07058824f),
 					survivorIndex = SurvivorIndex.Commando
 				},
+
 				new SurvivorDef
 				{
-					bodyPrefab = BodyCatalog.FindBodyPrefab("EngiBody"),
-					displayPrefab = Resources.Load<GameObject>("Prefabs/CharacterDisplays/EngiDisplay"),
-					descriptionToken = "ENGI_DESCRIPTION",
-					primaryColor = new Color(0.372549027f, 0.8862745f, 0.5254902f),
-					unlockableName = "Characters.Engineer",
-					survivorIndex = SurvivorIndex.Engineer
+					bodyPrefab = BodyCatalog.FindBodyPrefab("ToolbotBody"),
+					displayPrefab = Resources.Load<GameObject>("Prefabs/CharacterDisplays/ToolbotDisplay"),
+					descriptionToken = "TOOLBOT_DESCRIPTION",
+					primaryColor = new Color(0.827451f, 0.768627465f, 0.3137255f),
+					unlockableName = "Characters.Toolbot",
+					survivorIndex = SurvivorIndex.Toolbot
 				},
 				new SurvivorDef
 				{
@@ -68,6 +78,15 @@ namespace R2API
 					descriptionToken = "HUNTRESS_DESCRIPTION",
 					unlockableName = "Characters.Huntress",
 					survivorIndex = SurvivorIndex.Huntress
+				},
+				new SurvivorDef
+				{
+					bodyPrefab = BodyCatalog.FindBodyPrefab("EngiBody"),
+					displayPrefab = Resources.Load<GameObject>("Prefabs/CharacterDisplays/EngiDisplay"),
+					descriptionToken = "ENGI_DESCRIPTION",
+					primaryColor = new Color(0.372549027f, 0.8862745f, 0.5254902f),
+					unlockableName = "Characters.Engineer",
+					survivorIndex = SurvivorIndex.Engineer
 				},
 				new SurvivorDef
 				{
@@ -86,46 +105,20 @@ namespace R2API
 					primaryColor = new Color(0.423529416f, 0.819607854f, 0.917647064f),
 					unlockableName = "Characters.Mercenary",
 					survivorIndex = SurvivorIndex.Merc
-				},
-				new SurvivorDef
-				{
-					bodyPrefab = BodyCatalog.FindBodyPrefab("ToolbotBody"),
-					displayPrefab = Resources.Load<GameObject>("Prefabs/CharacterDisplays/ToolbotDisplay"),
-					descriptionToken = "TOOLBOT_DESCRIPTION",
-					primaryColor = new Color(0.827451f, 0.768627465f, 0.3137255f),
-					unlockableName = "Characters.Toolbot",
-					survivorIndex = SurvivorIndex.Toolbot
 				}
 			});
 
 			SurvivorDefinitions.CollectionChanged += (sender, args) => { ReconstructSurvivors(); };
 
 			SurvivorCatalogReady?.Invoke(null, null);
-			
+
 			HasBeenInit = true;
 
-			SurvivorAPI.survivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
-			SurvivorAPI.allSurvivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
-			SurvivorCatalog.idealSurvivorOrder = Enumerable.Range(0, SurvivorDefinitions.Count).Cast<SurvivorIndex>().ToArray();
-
-			ViewablesCatalog.Node node = new ViewablesCatalog.Node("Survivors", true, null);
-
-			for (int i = 0; i < SurvivorDefinitions.Count; i++)
-			{
-				SurvivorDefinitions[i].survivorIndex = (SurvivorIndex)i;
-			}
-
-			foreach (var survivor in SurvivorDefinitions)
-			{
-				ViewablesCatalog.Node survivorEntryNode = new ViewablesCatalog.Node(survivor.survivorIndex.ToString(), false, node);
-				survivorEntryNode.shouldShowUnviewed = userProfile => !userProfile.HasViewedViewable(survivorEntryNode.fullName) && userProfile.HasSurvivorUnlocked(survivor.survivorIndex) && !string.IsNullOrEmpty(survivor.unlockableName);
-			}
-
-			ViewablesCatalog.AddNodeToRoot(node);
+			ReconstructSurvivors();
 		}
 
-		private static FieldInfo survivorDefs = typeof(SurvivorCatalog).GetField("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
-		private static FieldInfo allSurvivorDefs = typeof(SurvivorCatalog).GetField("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
+		private static readonly FieldInfo survivorDefs = typeof(SurvivorCatalog).GetField("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
+		private static readonly FieldInfo allSurvivorDefs = typeof(SurvivorCatalog).GetField("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
 
 		public static void ReconstructSurvivors()
 		{
@@ -142,8 +135,7 @@ namespace R2API
 			SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
 
 			survivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
-
-
+			allSurvivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
 
 			ViewablesCatalog.Node node = new ViewablesCatalog.Node("Survivors", true, null);
 
