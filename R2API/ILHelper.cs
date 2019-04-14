@@ -66,9 +66,8 @@ namespace R2API
 				action = Debug.Log;
 			}
 
-			var start = 0;
 			foreach (var inst in il.Instrs) {
-				var str = $"{start++,3} {inst.OpCode.ToString()} {(inst.Operand != null ? inst.Operand.ToString() : "")}";
+				var str = $"{inst.OpCode.ToString()} {(inst.Operand != null ? inst.Operand.ToString() : "")}";
 				instructions.Add(str);
 
 				action?.Invoke(str);

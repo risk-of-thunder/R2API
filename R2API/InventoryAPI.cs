@@ -1,5 +1,6 @@
 ﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using RoR2;
 using RoR2.UI;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,6 @@ namespace R2API
 		{
 			var inventory_onInventoryChanged = typeof(RoR2.Inventory).GetField("onInventoryChanged");
 
-
 			IL.RoR2.UI.ItemInventoryDisplay.AllocateIcons += (il) => {
 				//il.PrintInstrs();
 				var cursor = new ILCursor(il).Goto(0);
@@ -25,6 +25,8 @@ namespace R2API
 				cursor.EmitDelegate<Action<ItemIcon>>(i => OnItemIconAdded?.Invoke(i));
 				//il.PrintInstrs();
 			};
+
+			//IL.RoR2.UI.ItemInventoryDisplay.Alloc
 
 			Debug.Log("[R2API] Hooked into ItemInventoryDisplay.AllocateIcons");
 		}
