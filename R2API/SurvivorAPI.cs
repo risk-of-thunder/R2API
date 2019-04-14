@@ -60,14 +60,15 @@ namespace R2API
 					primaryColor = new Color(0.929411769f, 0.5882353f, 0.07058824f),
 					survivorIndex = SurvivorIndex.Commando
 				},
+
 				new SurvivorDef
 				{
-					bodyPrefab = BodyCatalog.FindBodyPrefab("EngiBody"),
-					displayPrefab = Resources.Load<GameObject>("Prefabs/CharacterDisplays/EngiDisplay"),
-					descriptionToken = "ENGI_DESCRIPTION",
-					primaryColor = new Color(0.372549027f, 0.8862745f, 0.5254902f),
-					unlockableName = "Characters.Engineer",
-					survivorIndex = SurvivorIndex.Engineer
+					bodyPrefab = BodyCatalog.FindBodyPrefab("ToolbotBody"),
+					displayPrefab = Resources.Load<GameObject>("Prefabs/CharacterDisplays/ToolbotDisplay"),
+					descriptionToken = "TOOLBOT_DESCRIPTION",
+					primaryColor = new Color(0.827451f, 0.768627465f, 0.3137255f),
+					unlockableName = "Characters.Toolbot",
+					survivorIndex = SurvivorIndex.Toolbot
 				},
 				new SurvivorDef
 				{
@@ -77,6 +78,15 @@ namespace R2API
 					descriptionToken = "HUNTRESS_DESCRIPTION",
 					unlockableName = "Characters.Huntress",
 					survivorIndex = SurvivorIndex.Huntress
+				},
+				new SurvivorDef
+				{
+					bodyPrefab = BodyCatalog.FindBodyPrefab("EngiBody"),
+					displayPrefab = Resources.Load<GameObject>("Prefabs/CharacterDisplays/EngiDisplay"),
+					descriptionToken = "ENGI_DESCRIPTION",
+					primaryColor = new Color(0.372549027f, 0.8862745f, 0.5254902f),
+					unlockableName = "Characters.Engineer",
+					survivorIndex = SurvivorIndex.Engineer
 				},
 				new SurvivorDef
 				{
@@ -95,15 +105,6 @@ namespace R2API
 					primaryColor = new Color(0.423529416f, 0.819607854f, 0.917647064f),
 					unlockableName = "Characters.Mercenary",
 					survivorIndex = SurvivorIndex.Merc
-				},
-				new SurvivorDef
-				{
-					bodyPrefab = BodyCatalog.FindBodyPrefab("ToolbotBody"),
-					displayPrefab = Resources.Load<GameObject>("Prefabs/CharacterDisplays/ToolbotDisplay"),
-					descriptionToken = "TOOLBOT_DESCRIPTION",
-					primaryColor = new Color(0.827451f, 0.768627465f, 0.3137255f),
-					unlockableName = "Characters.Toolbot",
-					survivorIndex = SurvivorIndex.Toolbot
 				}
 			});
 
@@ -116,8 +117,8 @@ namespace R2API
 			ReconstructSurvivors();
 		}
 
-		private static FieldInfo survivorDefs = typeof(SurvivorCatalog).GetField("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
-		private static FieldInfo allSurvivorDefs = typeof(SurvivorCatalog).GetField("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
+		private static readonly FieldInfo survivorDefs = typeof(SurvivorCatalog).GetField("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
+		private static readonly FieldInfo allSurvivorDefs = typeof(SurvivorCatalog).GetField("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
 
 		public static void ReconstructSurvivors()
 		{
