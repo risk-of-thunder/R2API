@@ -1,13 +1,7 @@
 ﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using RoR2;
 using RoR2.UI;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using R2API.Utils;
-using UnityEngine;
-using System.Reflection;
 
 namespace R2API
 {
