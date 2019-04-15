@@ -21,10 +21,6 @@ namespace R2API
 		/// </summary>
 		public static event EventHandler SurvivorCatalogReady;
 
-		/// <summary>
-		/// Returns true when the Vanilla Survivor Catalog has been built
-		/// </summary>
-		private static bool HasBeenInit = false;
 
 		internal static void InitHooks()
 		{
@@ -110,8 +106,6 @@ namespace R2API
 
 			SurvivorCatalogReady?.Invoke(null, null);
 
-			HasBeenInit = true;
-
 			ReconstructSurvivors();
 		}
 
@@ -120,8 +114,6 @@ namespace R2API
 
 		public static void ReconstructSurvivors()
 		{
-			if (!HasBeenInit)
-				return;
 
 			SurvivorCatalog.survivorMaxCount = Mathf.Max(SurvivorDefinitions.Count, 10);
 
@@ -135,9 +127,9 @@ namespace R2API
 			survivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
 			allSurvivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
 
-			ViewablesCatalog.Node node = new ViewablesCatalog.Node("Survivors", true, null);
+			ViewablesCatalog.Node node = new ViewablesCatalog.Node("/Survivors/", true, null);
 
-			var existingNode = ViewablesCatalog.FindNode("Survivors");
+			var existingNode = ViewablesCatalog.FindNode("/Survivors/");
 
 			//this essentially deletes an existing node if it exists
 			existingNode?.SetParent(new ViewablesCatalog.Node("dummy", true, null));
