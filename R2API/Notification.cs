@@ -26,7 +26,6 @@ namespace R2API
 			RootObject = Instantiate(Resources.Load<GameObject>("Prefabs/NotificationPanel2"));
 			GenericNotification = RootObject.GetComponent<GenericNotification>();
 			GenericNotification.transform.SetParent(Parent);
-			GenericNotification = RootObject.GetComponent<GenericNotification>();
 			GenericNotification.iconImage.enabled = false;
 		}
 
