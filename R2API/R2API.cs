@@ -17,7 +17,6 @@ namespace R2API
 		{
 			Logger = base.Logger;
 			Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
-			Environment.SetEnvironmentVariable("MONOMOD_DMD_DUMP", "dmddump");
 
 			InitConfig();
 

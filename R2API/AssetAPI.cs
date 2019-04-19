@@ -35,7 +35,9 @@ namespace R2API
 			{
 				ILCursor c = new ILCursor(il).Goto(0); //Initialize IL cursor at position 0
 				c.Remove(); //Deletes the "Prefabs/CharacterMasters" string being stored in the stack
+				c.Goto(0);
 				c.Remove(); //Deletes the call Resources.Load<GameObjec>() from the stack
+				c.Goto(0);
 				//Stores the new GameObject[] in the static field MasterCatalog.masterPrefabs.
 				//This array contains both vanilla and modded Character Masters
 				c.EmitDelegate<Func<GameObject[]>>(BuildMasterCatalog);
@@ -45,7 +47,9 @@ namespace R2API
 			{
 				ILCursor c = new ILCursor(il).Goto(0); //Initialize IL cursor at position 0
 				c.Remove(); //Deletes the "Prefabs/CharacterBodies/" string being stored in the stack
+				c.Goto(0);
 				c.Remove(); //Deletes the call Resources.Load<GameObjec>() from the stack
+				c.Goto(0);
 				//Stores the new GameObject[] in the static field BodyCatalog.bodyPrefabs
 				//This array contains both vanilla and modded Body prefabs.
 				//TODO: find a way to also add 2d sprites, as are done on line 113 and have a very hard-coded path 
