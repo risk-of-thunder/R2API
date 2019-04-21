@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -16,7 +17,10 @@ namespace R2API
 		public R2API()
 		{
 			Logger = base.Logger;
-			Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
+            CheckForIncompatibleAssemblies();
+
+
+            Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
 			InitConfig();
 
@@ -25,7 +29,38 @@ namespace R2API
 			RoR2Application.isModded = IsModded.Value;
 		}
 
-		protected void InitConfig()
+        private void CheckForIncompatibleAssemblies()
+        {
+
+            string CenterText(string text, int w)
+            {
+                return string.Format("*{0," + ((w / 2) + (text.Length / 2)) + "}{ ," + ((w/2) + (text.Length/2)) + "}*", text);
+            }
+
+            var assemblies = new[] { "MonoMod.*", "Mono.*" };
+
+            var dir = Assembly.GetCallingAssembly().Location;
+
+            Logger.LogWarning(dir);
+
+
+            const int width = 50;
+            var top = new string('*', width);
+            string s = "You have some incompatible assemblies";
+            
+            Logger.LogWarning(top);
+            Logger.LogWarning($"*{CenterText("!WARNING!", width-2)}*");
+            Logger.LogWarning($"*{CenterText("You may have incompatible assemblies", width-2)}*");
+            Logger.LogWarning("*                                     *");
+            Logger.LogWarning("*                                     *");
+            Logger.LogWarning("*                                     *");
+            Logger.LogWarning("*                                     *");
+            Logger.LogWarning(top);
+
+
+        }
+
+        protected void InitConfig()
 		{
 			IsModded = Config.Wrap(
 				section: "Game",
