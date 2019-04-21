@@ -14,104 +14,115 @@ namespace R2API
 
 		private const BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
 
-		public static FieldInfo CGetField<T>(string name, BindingFlags bindingFlags = _bindingFlags)
+		public static FieldInfo GetFieldCached<T>(string name, BindingFlags bindingFlags = _bindingFlags)
 		{
-			return CGetField(typeof(T), name, bindingFlags);
+			return GetFieldCached(typeof(T), name, bindingFlags);
 		}
 
-		public static FieldInfo CGetField(this Type T, string name, BindingFlags bindingFlags = _bindingFlags)
+		public static FieldInfo GetFieldCached(this Type T, string name, BindingFlags bindingFlags = _bindingFlags)
 		{
 			var key = new KeyValuePair<Type, string>(T, name);
 			if (fieldCache.ContainsKey(key)) {
 				return fieldCache[key];
 			}
 
-			var fieldInfo = T.CGetField(name, bindingFlags);
+			var fieldInfo = T.GetFieldCached(name, bindingFlags);
 			fieldCache[key] = fieldInfo;
 			return fieldInfo;
 		}
 
-		public static void CSetFieldValue<T>(this object instance, string name, T value, BindingFlags bindingFlags = _bindingFlags)
+		public static void SetFieldValueCached<T>(this object instance, string name, T value, BindingFlags bindingFlags = _bindingFlags)
 		{
 			var type = instance.GetType();
-			CGetField(type, name, bindingFlags).SetValue(instance, value);
+			GetFieldCached(type, name, bindingFlags).SetValue(instance, value);
 		}
 
-		public static T CGetFieldValue<T>(this object instance, string name, BindingFlags bindingFlags = _bindingFlags)
+		public static T GetFieldValueCached<T>(this object instance, string name, BindingFlags bindingFlags = _bindingFlags)
 		{
 			var type = instance.GetType();
-			return (T)CGetField(type, name, bindingFlags).GetValue(instance);
+			return (T)GetFieldCached(type, name, bindingFlags).GetValue(instance);
 		}
 
-		public static MethodInfo CGetMethod<T>(string name, BindingFlags bindingFlags = _bindingFlags)
+		public static MethodInfo GetMethodCached<T>(string name, BindingFlags bindingFlags = _bindingFlags)
 		{
-			return CGetMethod(typeof(T), name, bindingFlags);
+			return GetMethodCached(typeof(T), name, bindingFlags);
 		}
 
-		public static MethodInfo CGetMethod(this Type T, string name, BindingFlags bindingFlags = _bindingFlags)
+		public static MethodInfo GetMethodCached(this Type T, string name, BindingFlags bindingFlags = _bindingFlags)
 		{
 			var key = new KeyValuePair<Type, string>(T, name);
 			if (methodCache.ContainsKey(key)) {
 				return methodCache[key];
 			}
 
-			var methodInfo = T.CGetMethod(name, bindingFlags);
+			var methodInfo = T.GetMethodCached(name, bindingFlags);
 			methodCache[key] = methodInfo;
 			return methodInfo;
 		}
 
-		public static MethodInfo CGetMethod(this Type T, string name, Type[] argumentTypes, BindingFlags bindingFlags = _bindingFlags)
+		public static MethodInfo GetMethodCached(this Type T, string name, Type[] argumentTypes, BindingFlags bindingFlags = _bindingFlags)
 		{
 			var key = new Tuple<Type, string, Type[]>(T, name, argumentTypes);
 			if (overloadedMethodCache.ContainsKey(key)) {
 				return overloadedMethodCache[key];
 			}
 
-			var methodInfo = T.CGetMethod(name, bindingFlags);
+			var methodInfo = T.GetMethodCached(name, bindingFlags);
 			overloadedMethodCache[key] = methodInfo;
 			return methodInfo;
 		}
 
-		public static T InvokeMethod<T>(this object instance, string name, BindingFlags bindingFlags = _bindingFlags, params object[] args)
+		public static T InvokeMethod<T>(this object instance, string name, object[] args, BindingFlags bindingFlags = _bindingFlags)
 		{
 			var type = instance.GetType();
-			return (T)CGetMethod(type, name, bindingFlags).Invoke(instance, args);
+			return (T)GetMethodCached(type, name, bindingFlags).Invoke(instance, args);
 		}
 
-		public static T InvokeMethod<T>(this object instance, string name, Type[] argumentTypes, BindingFlags bindingFlags = _bindingFlags, params object[] args)
+		public static void InvokeMethod(this object instance, string name, object arg, BindingFlags bindingFlags = _bindingFlags)
+		{
+			InvokeMethod(instance, name, new object[] { arg }, bindingFlags);
+		}
+
+		public static void InvokeMethod(this object instance, string name, object[] args, BindingFlags bindingFlags = _bindingFlags)
 		{
 			var type = instance.GetType();
-			return (T)CGetMethod(type, name, argumentTypes, bindingFlags).Invoke(instance, args);
+			GetMethodCached(type, name, bindingFlags).Invoke(instance, args);
 		}
 
-
-		public static PropertyInfo CGetProperty<T>(string name, BindingFlags bindingFlags = _bindingFlags)
+		public static T InvokeMethod<T>(this object instance, string name, Type[] argumentTypes, object[] args, BindingFlags bindingFlags = _bindingFlags)
 		{
-			return CGetProperty(typeof(T), name, bindingFlags);
+			var type = instance.GetType();
+			return (T)GetMethodCached(type, name, argumentTypes, bindingFlags).Invoke(instance, args);
 		}
 
-		public static PropertyInfo CGetProperty(this Type T, string name, BindingFlags bindingFlags = _bindingFlags)
+
+		public static PropertyInfo GetPropertyCached<T>(string name, BindingFlags bindingFlags = _bindingFlags)
+		{
+			return GetPropertyCached(typeof(T), name, bindingFlags);
+		}
+
+		public static PropertyInfo GetPropertyCached(this Type T, string name, BindingFlags bindingFlags = _bindingFlags)
 		{
 			var key = new KeyValuePair<Type, string>(T, name);
 			if (propertyCache.ContainsKey(key)) {
 				return propertyCache[key];
 			}
 
-			var propertyInfo = T.CGetProperty(name, bindingFlags);
+			var propertyInfo = T.GetPropertyCached(name, bindingFlags);
 			propertyCache[key] = propertyInfo;
 			return propertyInfo;
 		}
 
-		public static T CGetPropertyValue<T>(this object instance, string name, BindingFlags bindingFlags = _bindingFlags)
+		public static T GetPropertyValueCached<T>(this object instance, string name, BindingFlags bindingFlags = _bindingFlags)
 		{
 			var type = instance.GetType();
-			return (T)CGetProperty(type, name, bindingFlags).GetValue(instance);
+			return (T)GetPropertyCached(type, name, bindingFlags).GetValue(instance);
 		}
 
-		public static void CSetPropertyValue<T>(this object instance, string name, T value, BindingFlags bindingFlags = _bindingFlags)
+		public static void SetPropertyValueCached<T>(this object instance, string name, T value, BindingFlags bindingFlags = _bindingFlags)
 		{
 			var type = instance.GetType();
-			CGetProperty(type, name, bindingFlags).SetValue(instance, value);
+			GetPropertyCached(type, name, bindingFlags).SetValue(instance, value);
 		}
 	}
 }
