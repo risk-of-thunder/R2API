@@ -13,14 +13,14 @@ namespace R2API
 		{
 			var detour = new NativeDetour(
 				typeof(SerializableEntityStateType).GetMethod("set_stateType", BindingFlags.Public | BindingFlags.Instance),
-				typeof(EntityAPI).GetMethod(nameof(SetStateTypeDetour), BindingFlags.Public | BindingFlags.Static));
+				typeof(EntityAPI).GetMethod(nameof(SetStateTypeDetour), BindingFlags.NonPublic | BindingFlags.Static));
 
 			detour.Apply();
 		}
 
 		private static void SetStateTypeDetour(SerializableEntityStateType self, Type value)
 		{
-			var typeName = typeof(SerializableEntityStateType).CGetField("_typeName");
+			var typeName = typeof(SerializableEntityStateType).GetFieldCached("_typeName");
 			typeName.SetValue(self, ((value != null && value.IsSubclassOf(typeof(EntityState))) ? value.AssemblyQualifiedName : ""));
 		}
 	}
