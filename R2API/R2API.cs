@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -17,10 +21,10 @@ namespace R2API
 		public R2API()
 		{
 			Logger = base.Logger;
-            CheckForIncompatibleAssemblies();
+			CheckForIncompatibleAssemblies();
 
 
-            Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
+			Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
 			InitConfig();
 
@@ -29,38 +33,57 @@ namespace R2API
 			RoR2Application.isModded = IsModded.Value;
 		}
 
-        private void CheckForIncompatibleAssemblies()
-        {
+		private void CheckForIncompatibleAssemblies()
+		{
+			const int width = 70;
 
-            string CenterText(string text, int w)
-            {
-                return string.Format("*{0," + ((w / 2) + (text.Length / 2)) + "}{ ," + ((w/2) + (text.Length/2)) + "}*", text);
-            }
-
-            var assemblies = new[] { "MonoMod.*", "Mono.*" };
-
-            var dir = Assembly.GetCallingAssembly().Location;
-
-            Logger.LogWarning(dir);
+			string CenterText(string text = "")
+			{
+				return string.Format("*{0," + ((width / 2) + (text.Length / 2)) + "}{1," + ((width / 2) - (text.Length / 2)) + "}*", text, " ");
+			}
 
 
-            const int width = 50;
-            var top = new string('*', width);
-            string s = "You have some incompatible assemblies";
-            
-            Logger.LogWarning(top);
-            Logger.LogWarning($"*{CenterText("!WARNING!", width-2)}*");
-            Logger.LogWarning($"*{CenterText("You may have incompatible assemblies", width-2)}*");
-            Logger.LogWarning("*                                     *");
-            Logger.LogWarning("*                                     *");
-            Logger.LogWarning("*                                     *");
-            Logger.LogWarning("*                                     *");
-            Logger.LogWarning(top);
+			var assemblies = "(MonoMod*)|(Mono\\.Cecil)";
 
+			var dirName = Directory.GetCurrentDirectory();
+			var managed = System.IO.Path.Combine(dirName, "Risk of Rain 2_Data", "Managed");
+			var dlls = Directory.GetFiles(managed, "*.dll");
 
-        }
+			var incompatibleFiles = new List<string>();
 
-        protected void InitConfig()
+			foreach (var dll in dlls) 
+			{
+				var file = new FileInfo(dll);
+
+				if (Regex.IsMatch(file.Name, assemblies, RegexOptions.IgnoreCase)) 
+				{
+					incompatibleFiles.Add(file.Name);
+				}
+			}
+
+			if (incompatibleFiles.Count <= 0) {
+				return;
+			}
+
+			var top = new string('*', width + 2);
+
+			Logger.LogError(top);
+			Logger.LogError(CenterText());
+			Logger.LogError($"{CenterText("!ERROR!")}");
+			Logger.LogError($"{CenterText("You have incompatible assemblies")}");
+			Logger.LogError($"{CenterText("Please delete the follow files from your managed folder")}");
+			Logger.LogError(CenterText());
+
+			foreach (var file in incompatibleFiles) 
+			{
+				Logger.LogError($"{CenterText(file)}");
+			}
+
+			Logger.LogError(CenterText());
+			Logger.LogError(top);
+		}
+
+		protected void InitConfig()
 		{
 			IsModded = Config.Wrap(
 				section: "Game",
