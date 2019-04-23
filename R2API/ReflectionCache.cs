@@ -7,10 +7,10 @@ namespace R2API
 {
 	public static class ReflectionCache
 	{
-		private static readonly Dictionary<KeyValuePair<Type, string>, FieldInfo> fieldCache = new Dictionary<KeyValuePair<Type, string>, FieldInfo>();
-		private static readonly Dictionary<KeyValuePair<Type, string>, MethodInfo> methodCache = new Dictionary<KeyValuePair<Type, string>, MethodInfo>();
+		private static readonly Dictionary<Tuple<Type, string>, FieldInfo> fieldCache = new Dictionary<Tuple<Type, string>, FieldInfo>();
+		private static readonly Dictionary<Tuple<Type, string>, MethodInfo> methodCache = new Dictionary<Tuple<Type, string>, MethodInfo>();
 		private static readonly Dictionary<Tuple<Type, string, Type[]>, MethodInfo> overloadedMethodCache = new Dictionary<Tuple<Type, string, Type[]>, MethodInfo>();
-		private static readonly Dictionary<KeyValuePair<Type, string>, PropertyInfo> propertyCache = new Dictionary<KeyValuePair<Type, string>, PropertyInfo>();
+		private static readonly Dictionary<Tuple<Type, string>, PropertyInfo> propertyCache = new Dictionary<Tuple<Type, string>, PropertyInfo>();
 
 		private const BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
 
@@ -21,26 +21,14 @@ namespace R2API
 
 		public static FieldInfo GetFieldCached(this Type T, string name, BindingFlags bindingFlags = _bindingFlags)
 		{
-			var key = new KeyValuePair<Type, string>(T, name);
+			var key = new Tuple<Type, string>(T, name);
 			if (fieldCache.ContainsKey(key)) {
 				return fieldCache[key];
 			}
 
-			var fieldInfo = T.GetFieldCached(name, bindingFlags);
+			var fieldInfo = T.GetField(name, bindingFlags);
 			fieldCache[key] = fieldInfo;
 			return fieldInfo;
-		}
-
-		public static void SetFieldValueCached<T>(this object instance, string name, T value, BindingFlags bindingFlags = _bindingFlags)
-		{
-			var type = instance.GetType();
-			GetFieldCached(type, name, bindingFlags).SetValue(instance, value);
-		}
-
-		public static T GetFieldValueCached<T>(this object instance, string name, BindingFlags bindingFlags = _bindingFlags)
-		{
-			var type = instance.GetType();
-			return (T)GetFieldCached(type, name, bindingFlags).GetValue(instance);
 		}
 
 		public static MethodInfo GetMethodCached<T>(string name, BindingFlags bindingFlags = _bindingFlags)
@@ -50,12 +38,12 @@ namespace R2API
 
 		public static MethodInfo GetMethodCached(this Type T, string name, BindingFlags bindingFlags = _bindingFlags)
 		{
-			var key = new KeyValuePair<Type, string>(T, name);
+			var key = new Tuple<Type, string>(T, name);
 			if (methodCache.ContainsKey(key)) {
 				return methodCache[key];
 			}
 
-			var methodInfo = T.GetMethodCached(name, bindingFlags);
+			var methodInfo = T.GetMethod(name, bindingFlags);
 			methodCache[key] = methodInfo;
 			return methodInfo;
 		}
@@ -67,34 +55,10 @@ namespace R2API
 				return overloadedMethodCache[key];
 			}
 
-			var methodInfo = T.GetMethodCached(name, bindingFlags);
+			var methodInfo = T.GetMethod(name, bindingFlags);
 			overloadedMethodCache[key] = methodInfo;
 			return methodInfo;
 		}
-
-		public static T InvokeMethod<T>(this object instance, string name, object[] args, BindingFlags bindingFlags = _bindingFlags)
-		{
-			var type = instance.GetType();
-			return (T)GetMethodCached(type, name, bindingFlags).Invoke(instance, args);
-		}
-
-		public static void InvokeMethod(this object instance, string name, object arg, BindingFlags bindingFlags = _bindingFlags)
-		{
-			InvokeMethod(instance, name, new object[] { arg }, bindingFlags);
-		}
-
-		public static void InvokeMethod(this object instance, string name, object[] args, BindingFlags bindingFlags = _bindingFlags)
-		{
-			var type = instance.GetType();
-			GetMethodCached(type, name, bindingFlags).Invoke(instance, args);
-		}
-
-		public static T InvokeMethod<T>(this object instance, string name, Type[] argumentTypes, object[] args, BindingFlags bindingFlags = _bindingFlags)
-		{
-			var type = instance.GetType();
-			return (T)GetMethodCached(type, name, argumentTypes, bindingFlags).Invoke(instance, args);
-		}
-
 
 		public static PropertyInfo GetPropertyCached<T>(string name, BindingFlags bindingFlags = _bindingFlags)
 		{
@@ -103,26 +67,14 @@ namespace R2API
 
 		public static PropertyInfo GetPropertyCached(this Type T, string name, BindingFlags bindingFlags = _bindingFlags)
 		{
-			var key = new KeyValuePair<Type, string>(T, name);
+			var key = new Tuple<Type, string>(T, name);
 			if (propertyCache.ContainsKey(key)) {
 				return propertyCache[key];
 			}
 
-			var propertyInfo = T.GetPropertyCached(name, bindingFlags);
+			var propertyInfo = T.GetProperty(name, bindingFlags);
 			propertyCache[key] = propertyInfo;
 			return propertyInfo;
-		}
-
-		public static T GetPropertyValueCached<T>(this object instance, string name, BindingFlags bindingFlags = _bindingFlags)
-		{
-			var type = instance.GetType();
-			return (T)GetPropertyCached(type, name, bindingFlags).GetValue(instance);
-		}
-
-		public static void SetPropertyValueCached<T>(this object instance, string name, T value, BindingFlags bindingFlags = _bindingFlags)
-		{
-			var type = instance.GetType();
-			GetPropertyCached(type, name, bindingFlags).SetValue(instance, value);
 		}
 	}
 }
