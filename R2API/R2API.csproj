@@ -70,8 +70,4 @@
     </None>
   </ItemGroup>
 
-	 <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		 <Exec Command="copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;D:\Games\SteamLibrary\steamapps\common\Risk of Rain 2\BepInEx\plugins\R2API\$(ProjectName).dll&quot;&#xD;&#xA;" />
-	 </Target>
-
 </Project>
