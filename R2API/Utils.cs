@@ -15,28 +15,28 @@ namespace R2API.Utils
 		public static TReturn GetFieldValue<TReturn>(this object instance, string fieldName)
 		{
 			return (TReturn)instance.GetType()
-									.GetField(fieldName, _defaultFlags | BindingFlags.Instance)
+									.GetFieldCached(fieldName, _defaultFlags | BindingFlags.Instance)
 									.GetValue(instance);
 		}
 
 		public static TReturn GetFieldValue<TClass, TReturn>(string fieldName)
 		{
 			return (TReturn)typeof(TClass)
-							.GetField(fieldName, _defaultFlags | BindingFlags.Static)
+							.GetFieldCached(fieldName, _defaultFlags | BindingFlags.Static)
 							.GetValue(null);
 		}
 
 		public static void SetFieldValue(this object instance, string fieldName, object value)
 		{
 			instance.GetType()
-					.GetField(fieldName, _defaultFlags | BindingFlags.Instance)
+					.GetFieldCached(fieldName, _defaultFlags | BindingFlags.Instance)
 					.SetValue(instance, value);
 		}
 
 		public static void SetFieldValue<TClass>(string fieldName, object value)
 		{
 			typeof(TClass)
-				.GetField(fieldName, _defaultFlags | BindingFlags.Static)
+				.GetFieldCached(fieldName, _defaultFlags | BindingFlags.Static)
 				.SetValue(null, value);
 		}
 
@@ -47,27 +47,27 @@ namespace R2API.Utils
 		public static TReturn GetProperyValue<TReturn>(this object instance, string propName)
 		{
 			return (TReturn)instance.GetType()
-									.GetProperty(propName, _defaultFlags | BindingFlags.Instance)
+									.GetPropertyCached(propName, _defaultFlags | BindingFlags.Instance)
 									.GetValue(instance);
 		}
 
 		public static TReturn GetProperyValue<TClass, TReturn>(string propName)
 		{
 			return (TReturn)typeof(TClass)
-							.GetProperty(propName, _defaultFlags | BindingFlags.Static)
+							.GetPropertyCached(propName, _defaultFlags | BindingFlags.Static)
 							.GetValue(null);
 		}
 
 		public static void SetProperyValue(this object instance, string propName, object value)
 		{
 			instance.GetType()
-					.GetProperty(propName, _defaultFlags | BindingFlags.Instance)
+					.GetPropertyCached(propName, _defaultFlags | BindingFlags.Instance)
 					.SetValue(instance, value);
 		}
 
 		public static void SetProperyValue<TClass>(string propName, object value)
 		{
-			typeof(TClass).GetProperty(propName, _defaultFlags | BindingFlags.Static)
+			typeof(TClass).GetPropertyCached(propName, _defaultFlags | BindingFlags.Static)
 						  .SetValue(null, value);
 		}
 
@@ -78,14 +78,14 @@ namespace R2API.Utils
 		public static TReturn InvokeMethod<TReturn>(this object instance, string methodName, params object[] methodParams)
 		{
 			return (TReturn)instance.GetType()
-									.GetMethod(methodName, _defaultFlags | BindingFlags.Instance)
+									.GetMethodCached(methodName, _defaultFlags | BindingFlags.Instance)
 									.Invoke(instance, methodParams);
 		}
 
 		public static TReturn InvokeMethod<TClass, TReturn>(string methodName, params object[] methodParams)
 		{
 			return (TReturn)typeof(TClass)
-							.GetMethod(methodName, _defaultFlags | BindingFlags.Static)
+							.GetMethodCached(methodName, _defaultFlags | BindingFlags.Static)
 							.Invoke(null, methodParams);
 		}
 
@@ -100,6 +100,8 @@ namespace R2API.Utils
 		}
 
 		#endregion
+
+//TODO: Cache these
 
 		#region Class
 
