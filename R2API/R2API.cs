@@ -7,89 +7,80 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using RoR2;
 
-namespace R2API
-{
-	[BepInPlugin("com.bepis.r2api", "R2API", "1.0")]
-	public class R2API : BaseUnityPlugin
-	{
-		internal new static ManualLogSource Logger { get; set; }
+namespace R2API {
+    [BepInPlugin("com.bepis.r2api", "R2API", "1.0")]
+    public class R2API : BaseUnityPlugin {
+        internal new static ManualLogSource Logger { get; set; }
 
-		public static ConfigWrapper<bool> IsModded { get; protected set; }
+        public static ConfigWrapper<bool> IsModded { get; protected set; }
 
-		public R2API()
-		{
-			Logger = base.Logger;
-			CheckForIncompatibleAssemblies();
+        public R2API() {
+            Logger = base.Logger;
+            CheckForIncompatibleAssemblies();
 
 
-			Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
+            Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
-			InitConfig();
+            InitConfig();
 
-			Hooks.InitializeHooks();
+            Hooks.InitializeHooks();
 
-			RoR2Application.isModded = IsModded.Value;
-		}
+            RoR2Application.isModded = IsModded.Value;
+        }
 
-		private void CheckForIncompatibleAssemblies()
-		{
-			const int width = 70;
+        private void CheckForIncompatibleAssemblies() {
+            const int width = 70;
 
-			string CenterText(string text = "")
-			{
-				return string.Format(
-					"*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
-			}
+            string CenterText(string text = "") {
+                return string.Format(
+                    "*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
+            }
 
 
-			const string assemblies = "(MonoMod*)|(Mono\\.Cecil)";
+            const string assemblies = "(MonoMod*)|(Mono\\.Cecil)";
 
-			var dirName = Directory.GetCurrentDirectory();
-			var managed = System.IO.Path.Combine(dirName, "Risk of Rain 2_Data", "Managed");
-			var dlls = Directory.GetFiles(managed, "*.dll");
+            var dirName = Directory.GetCurrentDirectory();
+            var managed = System.IO.Path.Combine(dirName, "Risk of Rain 2_Data", "Managed");
+            var dlls = Directory.GetFiles(managed, "*.dll");
 
-			var incompatibleFiles = new List<string>();
+            var incompatibleFiles = new List<string>();
 
-			foreach (var dll in dlls)
-			{
-				var file = new FileInfo(dll);
+            foreach (var dll in dlls) {
+                var file = new FileInfo(dll);
 
-				if (Regex.IsMatch(file.Name, assemblies, RegexOptions.IgnoreCase))
-				{
-					incompatibleFiles.Add(file.Name);
-				}
-			}
+                if (Regex.IsMatch(file.Name, assemblies, RegexOptions.IgnoreCase)) {
+                    incompatibleFiles.Add(file.Name);
+                }
+            }
 
-			if (incompatibleFiles.Count <= 0)
-			{
-				return;
-			}
+            if (incompatibleFiles.Count <= 0) {
+                return;
+            }
 
-			var top = new string('*', width + 2);
+            var top = new string('*', width + 2);
 
-			Logger.LogError(top);
-			Logger.LogError(CenterText());
-			Logger.LogError($"{CenterText("!ERROR!")}");
-			Logger.LogError($"{CenterText("You have incompatible assemblies")}");
-			Logger.LogError($"{CenterText("Please delete the follow files from your managed folder")}");
-			Logger.LogError(CenterText());
+            Logger.LogError(top);
+            Logger.LogError(CenterText());
+            Logger.LogError($"{CenterText("!ERROR!")}");
+            Logger.LogError($"{CenterText("You have incompatible assemblies")}");
+            Logger.LogError($"{CenterText("Please delete the follow files from your managed folder")}");
+            Logger.LogError(CenterText());
 
-			foreach (var file in incompatibleFiles)
-			{
-				Logger.LogError($"{CenterText(file)}");
-			}
+            foreach (var file in incompatibleFiles) {
+                Logger.LogError($"{CenterText(file)}");
+            }
 
-			Logger.LogError(CenterText());
-			Logger.LogError(top);
-		}
+            Logger.LogError(CenterText());
+            Logger.LogError(top);
+        }
 
-		protected void InitConfig()
-		{
-			IsModded = Config.Wrap(
-				section: "Game",
-				key: "IsModded",
-				description: "Enables or disables the isModded flag in the game, which affects if you will be matched with other modded users.",
-				defaultValue: true);
-		}
-	}
+        protected void InitConfig() {
+            IsModded = Config.Wrap(
+                section: "Game",
+                key: "IsModded",
+                description:
+                "Enables or disables the isModded flag in the game, which affects if you will be matched with other modded users.",
+                defaultValue: true);
+        }
+    }
 }
