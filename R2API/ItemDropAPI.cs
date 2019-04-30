@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RoR2;
-using MonoMod.Utils;
 using Mono.Cecil.Cil;
-using Mono.Cecil;
 using System.Reflection;
 using MonoMod.Cil;
 using System;
@@ -37,7 +35,7 @@ namespace R2API
 
 			var shrineSelections = new List<PickupSelection>
 			{
-				new List<ItemIndex> { ItemIndex.None }.ToSelection(ItemDropAPI.DefaultShrineFailureWeight),
+				new List<ItemIndex> {ItemIndex.None}.ToSelection(ItemDropAPI.DefaultShrineFailureWeight),
 				t1.ToSelection(ItemDropAPI.DefaultShrineTier1Weight),
 				t2.ToSelection(ItemDropAPI.DefaultShrineTier2Weight),
 				t3.ToSelection(ItemDropAPI.DefaultShrineTier3Weight),
@@ -57,7 +55,7 @@ namespace R2API
 			{
 				t1.ToSelection(ItemDropAPI.DefaultChestTier1DropChance),
 				t2.ToSelection(ItemDropAPI.DefaultChestTier2DropChance),
-				t3.ToSelection(ItemDropAPI.DefaultChestTier3DropChance),
+				t3.ToSelection(ItemDropAPI.DefaultChestTier3DropChance)
 			};
 
 			ItemDropAPI.AddDropInformation(ItemDropLocation.SmallChest, chestSelections);
@@ -112,18 +110,18 @@ namespace R2API
 			var itemDropApi_GetSelection = typeof(ItemDropAPI).GetMethod("GetSelection");
 			var xoroshiro_GetNextNormalizedFloat = typeof(Xoroshiro128Plus).GetMethod("get_nextNormalizedFloat");
 
-			IL.RoR2.BossGroup.OnCharacterDeathCallback += (il) =>
+			IL.RoR2.BossGroup.OnCharacterDeathCallback += il =>
 			{
-				ILCursor cursor = new ILCursor(il).Goto(0);
+				var cursor = new ILCursor(il).Goto(0);
 
 				cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethod("get_itemIndex")));
 
-				var itemIndex = (VariableDefinition)cursor.Next.Next.Operand;
+				var itemIndex = (VariableDefinition) cursor.Next.Next.Operand;
 
 				cursor.Goto(0);
 				cursor.GotoNext(x => x.MatchCallvirt(typeof(List<PickupIndex>).GetMethod("get_Item")));
 
-				var pickupIndex = (VariableDefinition)cursor.Next.Next.Operand;
+				var pickupIndex = (VariableDefinition) cursor.Next.Next.Operand;
 
 				cursor.GotoNext(MoveType.Before, x => x.MatchStloc(itemIndex.Index));
 				cursor.Emit(OpCodes.Stloc_S, itemIndex);
@@ -140,32 +138,47 @@ namespace R2API
 				cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethod("get_itemIndex"));
 			};
 
-			var dropPickup = typeof(ChestBehavior).GetField("dropPickup", BindingFlags.NonPublic | BindingFlags.Instance);
-			var lunarChance = typeof(ChestBehavior).GetField("lunarChance", BindingFlags.Public | BindingFlags.Instance);
-			var tier1Chance = typeof(ChestBehavior).GetField("tier1Chance", BindingFlags.Public | BindingFlags.Instance);
-			var tier2Chance = typeof(ChestBehavior).GetField("tier2Chance", BindingFlags.Public | BindingFlags.Instance);
-			var tier3Chance = typeof(ChestBehavior).GetField("tier3Chance", BindingFlags.Public | BindingFlags.Instance);
+			var dropPickup =
+				typeof(ChestBehavior).GetField("dropPickup", BindingFlags.NonPublic | BindingFlags.Instance);
+			var lunarChance =
+				typeof(ChestBehavior).GetField("lunarChance", BindingFlags.Public | BindingFlags.Instance);
+			var tier1Chance =
+				typeof(ChestBehavior).GetField("tier1Chance", BindingFlags.Public | BindingFlags.Instance);
+			var tier2Chance =
+				typeof(ChestBehavior).GetField("tier2Chance", BindingFlags.Public | BindingFlags.Instance);
+			var tier3Chance =
+				typeof(ChestBehavior).GetField("tier3Chance", BindingFlags.Public | BindingFlags.Instance);
 
-			IL.RoR2.ChestBehavior.RollItem += (il) => {
-				ILCursor cursor = new ILCursor(il).Goto(0);
+			IL.RoR2.ChestBehavior.RollItem += il =>
+			{
+				var cursor = new ILCursor(il).Goto(0);
 				cursor.GotoNext(x => x.MatchLdcI4(8));
 
 				cursor.Emit(OpCodes.Ldarg_0);
-				cursor.EmitDelegate<Action<ChestBehavior>>(@this => {
-					if ((PickupIndex)(dropPickup.GetValue(@this)) != PickupIndex.none) {
+				cursor.EmitDelegate<Action<ChestBehavior>>(@this =>
+				{
+					if ((PickupIndex) dropPickup.GetValue(@this) != PickupIndex.none)
+					{
 						return;
 					}
 
-					if ((float)lunarChance.GetValue(@this) >= 1f) {
+					if ((float) lunarChance.GetValue(@this) >= 1f)
+					{
 						@this.dropPickup = GetSelection(ItemDropLocation.LunarChest,
 							Run.instance.treasureRng.nextNormalizedFloat);
-					} else if ((float)tier3Chance.GetValue(@this) >= 0.2f) {
+					}
+					else if ((float) tier3Chance.GetValue(@this) >= 0.2f)
+					{
 						@this.dropPickup = GetSelection(ItemDropLocation.LargeChest,
 							Run.instance.treasureRng.nextNormalizedFloat);
-					} else if ((float)tier2Chance.GetValue(@this) >= 0.8f) {
+					}
+					else if ((float) tier2Chance.GetValue(@this) >= 0.8f)
+					{
 						@this.dropPickup = GetSelection(ItemDropLocation.MediumChest,
 							Run.instance.treasureRng.nextNormalizedFloat);
-					} else if ((float)tier1Chance.GetValue(@this) <= 0.8f) {
+					}
+					else if ((float) tier1Chance.GetValue(@this) <= 0.8f)
+					{
 						@this.dropPickup = GetSelection(ItemDropLocation.SmallChest,
 							Run.instance.treasureRng.nextNormalizedFloat);
 					}
@@ -176,35 +189,44 @@ namespace R2API
 
 			var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethod("Evaluate");
 
-			IL.RoR2.ShrineChanceBehavior.AddShrineStack += (il) => {
+			IL.RoR2.ShrineChanceBehavior.AddShrineStack += il =>
+			{
 				var cursor = new ILCursor(il).Goto(0);
 
 				cursor.GotoNext(x => x.MatchCallvirt(weightedSelection_Evaluate));
 				cursor.Next.OpCode = OpCodes.Nop;
 				cursor.Next.Operand = null;
-				cursor.EmitDelegate<Func<WeightedSelection<PickupIndex>, float, PickupIndex>>((_, x) => GetSelection(ItemDropLocation.Shrine, x));
+				cursor.EmitDelegate<Func<WeightedSelection<PickupIndex>, float, PickupIndex>>((_, x) =>
+					GetSelection(ItemDropLocation.Shrine, x));
 			};
 
-			On.RoR2.Run.BuildDropTable += (orig, self) => {
-				if (DefaultDrops) {
+			On.RoR2.Run.BuildDropTable += (orig, self) =>
+			{
+				if (DefaultDrops)
+				{
 					// Setup default item lists
 					DefaultItemDrops.AddDefaults();
 				}
 
 				self.availableTier1DropList.Clear();
-				self.availableTier1DropList.AddRange(GetDefaultDropList(ItemTier.Tier1).Select(x => new PickupIndex(x)).ToList());
+				self.availableTier1DropList.AddRange(GetDefaultDropList(ItemTier.Tier1).Select(x => new PickupIndex(x))
+					.ToList());
 
 				self.availableTier2DropList.Clear();
-				self.availableTier2DropList.AddRange(GetDefaultDropList(ItemTier.Tier2).Select(x => new PickupIndex(x)).ToList());
+				self.availableTier2DropList.AddRange(GetDefaultDropList(ItemTier.Tier2).Select(x => new PickupIndex(x))
+					.ToList());
 
 				self.availableTier3DropList.Clear();
-				self.availableTier3DropList.AddRange(GetDefaultDropList(ItemTier.Tier3).Select(x => new PickupIndex(x)).ToList());
+				self.availableTier3DropList.AddRange(GetDefaultDropList(ItemTier.Tier3).Select(x => new PickupIndex(x))
+					.ToList());
 
 				self.availableEquipmentDropList.Clear();
-				self.availableEquipmentDropList.AddRange(GetDefaultEquipmentDropList().Select(x => new PickupIndex(x)).ToList());
+				self.availableEquipmentDropList.AddRange(GetDefaultEquipmentDropList().Select(x => new PickupIndex(x))
+					.ToList());
 
 				self.availableLunarDropList.Clear();
-				self.availableLunarDropList.AddRange(GetDefaultLunarDropList().Select(x => new PickupIndex(x)).ToList());
+				self.availableLunarDropList.AddRange(GetDefaultLunarDropList().Select(x => new PickupIndex(x))
+					.ToList());
 
 				self.smallChestDropTierSelector.Clear();
 				self.smallChestDropTierSelector.AddChoice(self.availableTier1DropList, 0.8f);
@@ -236,20 +258,23 @@ namespace R2API
 
 		public static bool DefaultDrops { get; set; } = true;
 
-		public static List<ItemIndex> None { get; set; } = new List<ItemIndex> { ItemIndex.None };
+		public static List<ItemIndex> None { get; set; } = new List<ItemIndex> {ItemIndex.None};
 
-		public static Dictionary<ItemDropLocation, List<PickupSelection>> Selection { get; set; } = new Dictionary<ItemDropLocation, List<PickupSelection>>();
+		public static Dictionary<ItemDropLocation, List<PickupSelection>> Selection { get; set; } =
+			new Dictionary<ItemDropLocation, List<PickupSelection>>();
 
 		public static void AddDropInformation(ItemDropLocation dropLocation, params PickupSelection[] pickupSelections)
 		{
-			Logger.LogInfo($"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
+			Logger.LogInfo(
+				$"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
 
 			Selection[dropLocation] = pickupSelections.ToList();
 		}
 
 		public static void AddDropInformation(ItemDropLocation dropLocation, List<PickupSelection> pickupSelections)
 		{
-			Logger.LogInfo($"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
+			Logger.LogInfo(
+				$"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
 
 			Selection[dropLocation] = pickupSelections;
 		}
@@ -273,16 +298,14 @@ namespace R2API
 		{
 			var list = new List<ItemIndex>();
 
-			for (ItemIndex itemIndex = ItemIndex.Syringe; itemIndex < ItemIndex.Count; itemIndex++)
+			for (var itemIndex = ItemIndex.Syringe; itemIndex < ItemIndex.Count; itemIndex++)
 			{
-				if (Run.instance.availableItems.HasItem(itemIndex))
-				{
-					ItemDef itemDef = ItemCatalog.GetItemDef(itemIndex);
+				if (!Run.instance.availableItems.HasItem(itemIndex))
+					continue;
 
-					if (itemDef.tier == itemTier)
-					{
-						list.Add(itemIndex);
-					}
+				if (ItemCatalog.GetItemDef(itemIndex).tier == itemTier)
+				{
+					list.Add(itemIndex);
 				}
 			}
 
@@ -293,18 +316,17 @@ namespace R2API
 		{
 			var list = new List<EquipmentIndex>();
 
-			for (EquipmentIndex equipmentIndex = EquipmentIndex.CommandMissile; equipmentIndex < EquipmentIndex.Count; equipmentIndex++)
+			for (var equipmentIndex = EquipmentIndex.CommandMissile;
+				equipmentIndex < EquipmentIndex.Count;
+				equipmentIndex++)
 			{
-				if (Run.instance.availableEquipment.HasEquipment(equipmentIndex))
+				if (!Run.instance.availableEquipment.HasEquipment(equipmentIndex))
+					continue;
+
+				var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
+				if (equipmentDef.canDrop && equipmentDef.isLunar)
 				{
-					EquipmentDef equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
-					if (equipmentDef.canDrop)
-					{
-						if (equipmentDef.isLunar)
-						{
-							list.Add(equipmentIndex);
-						}
-					}
+					list.Add(equipmentIndex);
 				}
 			}
 
@@ -315,18 +337,17 @@ namespace R2API
 		{
 			var list = new List<EquipmentIndex>();
 
-			for (EquipmentIndex equipmentIndex = EquipmentIndex.CommandMissile; equipmentIndex < EquipmentIndex.Count; equipmentIndex++)
+			for (var equipmentIndex = EquipmentIndex.CommandMissile;
+				equipmentIndex < EquipmentIndex.Count;
+				equipmentIndex++)
 			{
-				if (Run.instance.availableEquipment.HasEquipment(equipmentIndex))
+				if (!Run.instance.availableEquipment.HasEquipment(equipmentIndex))
+					continue;
+
+				var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
+				if (equipmentDef.canDrop && !equipmentDef.isLunar)
 				{
-					EquipmentDef equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
-					if (equipmentDef.canDrop)
-					{
-						if (!equipmentDef.isLunar)
-						{
-							list.Add(equipmentIndex);
-						}
-					}
+					list.Add(equipmentIndex);
 				}
 			}
 

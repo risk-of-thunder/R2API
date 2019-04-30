@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Configuration;
@@ -39,11 +37,12 @@ namespace R2API
 
 			string CenterText(string text = "")
 			{
-				return string.Format("*{0," + ((width / 2) + (text.Length / 2)) + "}{1," + ((width / 2) - (text.Length / 2)) + "}*", text, " ");
+				return string.Format(
+					"*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
 			}
 
 
-			var assemblies = "(MonoMod*)|(Mono\\.Cecil)";
+			const string assemblies = "(MonoMod*)|(Mono\\.Cecil)";
 
 			var dirName = Directory.GetCurrentDirectory();
 			var managed = System.IO.Path.Combine(dirName, "Risk of Rain 2_Data", "Managed");
@@ -51,17 +50,18 @@ namespace R2API
 
 			var incompatibleFiles = new List<string>();
 
-			foreach (var dll in dlls) 
+			foreach (var dll in dlls)
 			{
 				var file = new FileInfo(dll);
 
-				if (Regex.IsMatch(file.Name, assemblies, RegexOptions.IgnoreCase)) 
+				if (Regex.IsMatch(file.Name, assemblies, RegexOptions.IgnoreCase))
 				{
 					incompatibleFiles.Add(file.Name);
 				}
 			}
 
-			if (incompatibleFiles.Count <= 0) {
+			if (incompatibleFiles.Count <= 0)
+			{
 				return;
 			}
 
@@ -74,7 +74,7 @@ namespace R2API
 			Logger.LogError($"{CenterText("Please delete the follow files from your managed folder")}");
 			Logger.LogError(CenterText());
 
-			foreach (var file in incompatibleFiles) 
+			foreach (var file in incompatibleFiles)
 			{
 				Logger.LogError($"{CenterText(file)}");
 			}

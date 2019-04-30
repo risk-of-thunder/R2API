@@ -1,9 +1,7 @@
 ﻿using RoR2;
 using RoR2.UI;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace R2API
@@ -16,8 +14,12 @@ namespace R2API
 		public Func<string> GetDescription { get; set; }
 		public Transform Parent { get; set; }
 
-		private static FieldInfo ResolvedText = typeof(LanguageTextMeshController).GetField("resolvedString", BindingFlags.Instance | BindingFlags.NonPublic);
-		private static MethodInfo UpdateLabel = typeof(LanguageTextMeshController).GetMethod("UpdateLabel", BindingFlags.Instance | BindingFlags.NonPublic);
+		private static FieldInfo ResolvedText =
+			typeof(LanguageTextMeshController).GetField("resolvedString",
+				BindingFlags.Instance | BindingFlags.NonPublic);
+
+		private static MethodInfo UpdateLabel =
+			typeof(LanguageTextMeshController).GetMethod("UpdateLabel", BindingFlags.Instance | BindingFlags.NonPublic);
 
 		private void Awake()
 		{
@@ -31,7 +33,8 @@ namespace R2API
 
 		private void Update()
 		{
-			if (GenericNotification == null) {
+			if (GenericNotification == null)
+			{
 				Destroy(this);
 				return;
 			}
@@ -42,7 +45,6 @@ namespace R2API
 
 			ResolvedText.SetValue(GenericNotification.descriptionText, GetDescription());
 			UpdateLabel.Invoke(GenericNotification.descriptionText, null);
-
 		}
 
 		private void OnDestroy()

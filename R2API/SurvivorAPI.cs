@@ -24,7 +24,8 @@ namespace R2API
 
 		internal static void InitHooks()
 		{
-			var detour = new NativeDetour(typeof(SurvivorCatalog).GetMethod("Init", BindingFlags.NonPublic | BindingFlags.Static),
+			var detour = new NativeDetour(
+				typeof(SurvivorCatalog).GetMethod("Init", BindingFlags.NonPublic | BindingFlags.Static),
 				typeof(SurvivorAPI).GetMethod(nameof(Init), BindingFlags.Public | BindingFlags.Static));
 
 			detour.Apply();
@@ -32,12 +33,12 @@ namespace R2API
 			On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, survivorIndex) =>
 			{
 				//orig is the original method and SurvivorIndex is the variable that is given to the original GetSurvivorDef
-				if (survivorIndex < 0 || (int)survivorIndex > SurvivorDefinitions.Count)
+				if (survivorIndex < 0 || (int) survivorIndex > SurvivorDefinitions.Count)
 				{
 					return null;
 				}
 
-				return SurvivorDefinitions[(int)survivorIndex];
+				return SurvivorDefinitions[(int) survivorIndex];
 				//by never doing orig(), the original method is never executed whenever it's called, effectively being replaced
 			};
 		}
@@ -109,17 +110,19 @@ namespace R2API
 			ReconstructSurvivors();
 		}
 
-		private static readonly FieldInfo survivorDefs = typeof(SurvivorCatalog).GetField("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
-		private static readonly FieldInfo allSurvivorDefs = typeof(SurvivorCatalog).GetField("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
+		private static readonly FieldInfo survivorDefs =
+			typeof(SurvivorCatalog).GetField("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
+
+		private static readonly FieldInfo allSurvivorDefs =
+			typeof(SurvivorCatalog).GetField("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
 
 		public static void ReconstructSurvivors()
 		{
-
 			SurvivorCatalog.survivorMaxCount = Mathf.Max(SurvivorDefinitions.Count, 10);
 
-			for (int i = 0; i < SurvivorDefinitions.Count; i++)
+			for (var i = 0; i < SurvivorDefinitions.Count; i++)
 			{
-				SurvivorDefinitions[i].survivorIndex = (SurvivorIndex)i;
+				SurvivorDefinitions[i].survivorIndex = (SurvivorIndex) i;
 			}
 
 			SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
@@ -127,7 +130,7 @@ namespace R2API
 			survivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
 			allSurvivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
 
-			ViewablesCatalog.Node node = new ViewablesCatalog.Node("/Survivors/", true, null);
+			var node = new ViewablesCatalog.Node("/Survivors/", true, null);
 
 			var existingNode = ViewablesCatalog.FindNode("/Survivors/");
 
@@ -138,8 +141,11 @@ namespace R2API
 			{
 				var survivor = SurvivorDefinitions[i];
 
-				ViewablesCatalog.Node survivorEntryNode = new ViewablesCatalog.Node(survivor.displayNameToken, false, node);
-				survivorEntryNode.shouldShowUnviewed = userProfile => !userProfile.HasViewedViewable(survivorEntryNode.fullName) && userProfile.HasSurvivorUnlocked(survivor.survivorIndex) && !string.IsNullOrEmpty(survivor.unlockableName);
+				var survivorEntryNode = new ViewablesCatalog.Node(survivor.displayNameToken, false, node);
+				survivorEntryNode.shouldShowUnviewed = userProfile =>
+					!userProfile.HasViewedViewable(survivorEntryNode.fullName) &&
+					userProfile.HasSurvivorUnlocked(survivor.survivorIndex) &&
+					!string.IsNullOrEmpty(survivor.unlockableName);
 			}
 
 			ViewablesCatalog.AddNodeToRoot(node);

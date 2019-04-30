@@ -16,9 +16,11 @@ namespace R2API
 
 		public static void RecalcStats(CharacterBody characterBody)
 		{
-			characterBody.SetFieldValue("experience", TeamManager.instance.GetTeamExperience(characterBody.teamComponent.teamIndex));
-			characterBody.SetFieldValue("level", TeamManager.instance.GetTeamLevel(characterBody.teamComponent.teamIndex));
-			
+			characterBody.SetFieldValue("experience",
+				TeamManager.instance.GetTeamExperience(characterBody.teamComponent.teamIndex));
+			characterBody.SetFieldValue("level",
+				TeamManager.instance.GetTeamLevel(characterBody.teamComponent.teamIndex));
+
 			/* Calculate Vanilla items effects
 			* 
 			* TODO
@@ -56,12 +58,15 @@ namespace R2API
 		//Primary Skill
 		public float PrimaryCooldownScale = 0;
 		public float PrimaryStock = 0;
+
 		//Secondary Skill
 		public float SecondaryCooldownScale = 0;
 		public float SecondaryStock = 0;
+
 		//Utility Skill
 		public float UtilityCooldownScale = 0;
 		public float UtilityStock = 0;
+
 		//Special Skill
 		public float SpecialCooldownScale = 0;
 		public float SpecialStock = 0;

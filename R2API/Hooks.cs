@@ -7,7 +7,7 @@
 			On.RoR2.RoR2Application.UnitySystemConsoleRedirector.Redirect += orig => { };
 
 			SurvivorAPI.InitHooks();
-            AssetAPI.InitHooks();
+			AssetAPI.InitHooks();
 			ItemDropAPI.InitHooks();
 			InventoryAPI.InitHooks();
 			EntityAPI.InitHooks();

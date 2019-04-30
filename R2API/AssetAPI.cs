@@ -31,24 +31,24 @@ namespace R2API
 		{
 			AssetLoaderReady?.Invoke(null, null);
 
-			IL.RoR2.MasterCatalog.Init += (il) =>
+			IL.RoR2.MasterCatalog.Init += il =>
 			{
-				ILCursor c = new ILCursor(il).Goto(0); //Initialize IL cursor at position 0
+				var c = new ILCursor(il).Goto(0); //Initialize IL cursor at position 0
 				c.Remove(); //Deletes the "Prefabs/CharacterMasters" string being stored in the stack
 				c.Goto(0);
-				c.Remove(); //Deletes the call Resources.Load<GameObjec>() from the stack
+				c.Remove(); //Deletes the call Resources.Load<GameObject>() from the stack
 				c.Goto(0);
 				//Stores the new GameObject[] in the static field MasterCatalog.masterPrefabs.
 				//This array contains both vanilla and modded Character Masters
 				c.EmitDelegate<Func<GameObject[]>>(BuildMasterCatalog);
 			};
 
-			IL.RoR2.BodyCatalog.Init += (il) =>
+			IL.RoR2.BodyCatalog.Init += il =>
 			{
-				ILCursor c = new ILCursor(il).Goto(0); //Initialize IL cursor at position 0
+				var c = new ILCursor(il).Goto(0); //Initialize IL cursor at position 0
 				c.Remove(); //Deletes the "Prefabs/CharacterBodies/" string being stored in the stack
 				c.Goto(0);
-				c.Remove(); //Deletes the call Resources.Load<GameObjec>() from the stack
+				c.Remove(); //Deletes the call Resources.Load<GameObject>() from the stack
 				c.Goto(0);
 				//Stores the new GameObject[] in the static field BodyCatalog.bodyPrefabs
 				//This array contains both vanilla and modded Body prefabs.

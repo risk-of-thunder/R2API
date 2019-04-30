@@ -12,7 +12,8 @@ namespace R2API
 
 		public static void InitHooks()
 		{
-			IL.RoR2.UI.ItemInventoryDisplay.AllocateIcons += (il) => {
+			IL.RoR2.UI.ItemInventoryDisplay.AllocateIcons += il =>
+			{
 				var cursor = new ILCursor(il).Goto(0);
 				cursor.GotoNext(x => x.MatchStloc(0));
 				cursor.Emit(OpCodes.Dup);
@@ -21,7 +22,7 @@ namespace R2API
 
 			var setSubscribedInventory = typeof(ItemInventoryDisplay).GetMethod("SetSubscribedInventory");
 
-			IL.RoR2.UI.ScoreboardStrip.SetMaster += (il) =>
+			IL.RoR2.UI.ScoreboardStrip.SetMaster += il =>
 			{
 				var cursor = new ILCursor(il).Goto(0);
 				cursor.GotoNext(x => x.MatchCallvirt(setSubscribedInventory));
@@ -29,8 +30,10 @@ namespace R2API
 
 				cursor.Emit(OpCodes.Ldarg_0);
 
-				cursor.EmitDelegate<Action<ScoreboardStrip>>(eq => {
-					if (eq.equipmentIcon != null) {
+				cursor.EmitDelegate<Action<ScoreboardStrip>>(eq =>
+				{
+					if (eq.equipmentIcon != null)
+					{
 						OnEquipmentIconAdded?.Invoke(eq.equipmentIcon);
 					}
 				});
