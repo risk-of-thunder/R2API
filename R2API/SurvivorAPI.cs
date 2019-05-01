@@ -22,8 +22,8 @@ namespace R2API {
 
         internal static void InitHooks() {
             var detour = new NativeDetour(
-                typeof(SurvivorCatalog).GetMethod("Init", BindingFlags.NonPublic | BindingFlags.Static),
-                typeof(SurvivorAPI).GetMethod(nameof(Init), BindingFlags.Public | BindingFlags.Static));
+                typeof(SurvivorCatalog).GetMethodCached("Init", BindingFlags.NonPublic | BindingFlags.Static),
+                typeof(SurvivorAPI).GetMethodCached(nameof(Init), BindingFlags.Public | BindingFlags.Static));
 
             detour.Apply();
 
@@ -47,7 +47,6 @@ namespace R2API {
                     primaryColor = new Color(0.929411769f, 0.5882353f, 0.07058824f),
                     survivorIndex = SurvivorIndex.Commando
                 },
-
                 new SurvivorDef {
                     bodyPrefab = BodyCatalog.FindBodyPrefab("ToolbotBody"),
                     displayPrefab = Resources.Load<GameObject>("Prefabs/CharacterDisplays/ToolbotDisplay"),
@@ -98,10 +97,10 @@ namespace R2API {
         }
 
         private static readonly FieldInfo survivorDefs =
-            typeof(SurvivorCatalog).GetField("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(SurvivorCatalog).GetFieldCached("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
 
         private static readonly FieldInfo allSurvivorDefs =
-            typeof(SurvivorCatalog).GetField("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(SurvivorCatalog).GetFieldCached("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
 
         public static void ReconstructSurvivors() {
             SurvivorCatalog.survivorMaxCount = Mathf.Max(SurvivorDefinitions.Count, 10);

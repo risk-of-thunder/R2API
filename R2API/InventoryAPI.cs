@@ -2,6 +2,7 @@
 using MonoMod.Cil;
 using RoR2.UI;
 using System;
+using System.Reflection;
 
 namespace R2API {
     public static class InventoryAPI {
@@ -16,7 +17,7 @@ namespace R2API {
                 cursor.EmitDelegate<Action<ItemIcon>>(i => OnItemIconAdded?.Invoke(i));
             };
 
-            var setSubscribedInventory = typeof(ItemInventoryDisplay).GetMethod("SetSubscribedInventory");
+            var setSubscribedInventory = typeof(ItemInventoryDisplay).GetMethodCached("SetSubscribedInventory", BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
             IL.RoR2.UI.ScoreboardStrip.SetMaster += il => {
                 var cursor = new ILCursor(il).Goto(0);

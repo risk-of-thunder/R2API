@@ -13,11 +13,10 @@ namespace R2API {
         public Transform Parent { get; set; }
 
         private static FieldInfo ResolvedText =
-            typeof(LanguageTextMeshController).GetField("resolvedString",
-                BindingFlags.Instance | BindingFlags.NonPublic);
+            typeof(LanguageTextMeshController).GetFieldCached("resolvedString", BindingFlags.Instance | BindingFlags.NonPublic);
 
         private static MethodInfo UpdateLabel =
-            typeof(LanguageTextMeshController).GetMethod("UpdateLabel", BindingFlags.Instance | BindingFlags.NonPublic);
+            typeof(LanguageTextMeshController).GetMethodCached("UpdateLabel", BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
         private void Awake() {
             // TODO: Figure out HUD transform for canvas and scaling

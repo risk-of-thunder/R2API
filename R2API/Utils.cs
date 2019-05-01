@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace R2API.Utils {
@@ -65,39 +66,63 @@ namespace R2API.Utils {
 
         #region Method
 
+        public static TReturn InvokeMethod<TReturn>(this object instance, string methodName) =>
+            instance.InvokeMethod<TReturn>(methodName, null);
+
+        public static TReturn InvokeMethod<TClass, TReturn>(string methodName) =>
+            InvokeMethod<TClass, TReturn>(methodName, null);
+
+        public static void InvokeMethod(this object instance, string methodName) =>
+            instance.InvokeMethod<object>(methodName);
+
+        public static void InvokeMethod<TClass>(string methodName) =>
+            InvokeMethod<TClass, object>(methodName);
+
+
         public static TReturn InvokeMethod<TReturn>(this object instance, string methodName,
             params object[] methodParams) {
-            return (TReturn) instance.GetType()
-                .GetMethodCached(methodName, _defaultFlags | BindingFlags.Instance)
+            return (TReturn) (methodParams == null
+                    ? instance.GetType()
+                        .GetMethodCached(methodName, _defaultFlags | BindingFlags.Instance)
+                    : instance.GetType()
+                        .GetMethodCached(methodName, methodParams.Select(x => x.GetType()).ToArray(),
+                            _defaultFlags | BindingFlags.Instance)
+                )
                 .Invoke(instance, methodParams);
         }
 
         public static TReturn InvokeMethod<TClass, TReturn>(string methodName, params object[] methodParams) {
-            return (TReturn) typeof(TClass)
-                .GetMethodCached(methodName, _defaultFlags | BindingFlags.Static)
+            return (TReturn) (methodParams == null
+                    ? typeof(TClass)
+                        .GetMethodCached(methodName, _defaultFlags | BindingFlags.Instance)
+                    : typeof(TClass)
+                        .GetMethodCached(methodName, methodParams.Select(x => x.GetType()).ToArray(),
+                            _defaultFlags | BindingFlags.Instance)
+                )
                 .Invoke(null, methodParams);
         }
 
-        public static void InvokeMethod(this object instance, string methodName, params object[] methodParams) {
+        public static void InvokeMethod(this object instance, string methodName, params object[] methodParams) =>
             instance.InvokeMethod<object>(methodName, methodParams);
-        }
 
-        public static void InvokeMethod<TClass>(string methodName, params object[] methodParams) {
+        public static void InvokeMethod<TClass>(string methodName, params object[] methodParams) =>
             InvokeMethod<TClass, object>(methodName, methodParams);
-        }
 
         #endregion
-
-//TODO: Cache these
 
         #region Class
 
         public static Type GetNestedType<TParent>(string name) {
-            return typeof(TParent).GetNestedType(name, BindingFlags.Public | BindingFlags.NonPublic);
+            return typeof(TParent).GetNestedTypeCached(name, BindingFlags.Public | BindingFlags.NonPublic);
         }
 
         public static object Instantiate(this Type type) {
             return Activator.CreateInstance(type, true);
+        }
+
+        public static object Instantiate(this Type type, params object[] constructorArguments) {
+            return type.GetConstructorCached(constructorArguments.Select(x => x.GetType()).ToArray())
+                .Invoke(constructorArguments);
         }
 
         public static object InstantiateGeneric<TClass>(this Type typeArgument) {
