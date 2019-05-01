@@ -169,29 +169,33 @@ namespace R2API {
                     .ToArray()
             );
 
-            // This essentially deletes an existing node if it exists
-            // TODO: does not work, ViewablesCatalog.fullNameToNodeMap does not seem to get updated
-            // TODO: maybe instead of removing and re-adding only add nodes that are missing?
-            var existingNode = ViewablesCatalog.FindNode("/Survivors/");
-            existingNode?.SetParent(new ViewablesCatalog.Node("dummy", true));
+            var parent = ViewablesCatalog.FindNode("/Survivors/")
+                         ?? new ViewablesCatalog.Node("Survivors", true);
 
-            var node = new ViewablesCatalog.Node("Survivors", true);
+            if (parent.parent == null)
+                ViewablesCatalog.AddNodeToRoot(parent);
 
             foreach (var survivor in SurvivorDefinitions) {
-                var survivorEntryNode = new ViewablesCatalog.Node(
-                    survivor.survivorIndex < SurvivorIndex.Count
-                        ? survivor.survivorIndex.ToString()
-                        // TODO: change to different way for getting custom survivor node names?
-                        : survivor.displayNameToken,
-                    false, node);
+                var name = survivor.survivorIndex < SurvivorIndex.Count
+                    ? survivor.survivorIndex.ToString()
+                    // TODO: change to different way for getting custom survivor node names?
+                    : survivor.displayNameToken;
 
-                survivorEntryNode.shouldShowUnviewed = userProfile =>
-                    !userProfile.HasViewedViewable(survivorEntryNode.fullName) &&
-                    userProfile.HasSurvivorUnlocked(survivor.survivorIndex) &&
-                    !string.IsNullOrEmpty(survivor.unlockableName);
+                var child =
+                    ViewablesCatalog.FindNode(parent.fullName + name)
+                    ?? new ViewablesCatalog.Node(name, false, parent);
+
+                child.shouldShowUnviewed = userProfile =>
+                        !string.IsNullOrEmpty(survivor.unlockableName)
+                        && survivor.survivorIndex < SurvivorIndex.Count
+                        && userProfile.HasSurvivorUnlocked(survivor.survivorIndex)
+                        && !userProfile.HasViewedViewable(child.fullName)
+                    ;
             }
 
-            ViewablesCatalog.AddNodeToRoot(node);
+            Debug.Log("Re-setting all survivor nodes, duplicates may occur. This is no problem.");
+            ViewablesCatalog.AddNodeToRoot(parent);
+            Debug.Log("Re-setting survivor nodes complete.");
         }
     }
 }
