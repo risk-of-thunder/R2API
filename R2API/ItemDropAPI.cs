@@ -200,8 +200,7 @@ namespace R2API {
                     .ToList());
 
                 self.availableLunarDropList.Clear();
-                self.availableLunarDropList.AddRange(GetDefaultLunarDropList().Select(x => new PickupIndex(x))
-                    .ToList());
+                self.availableLunarDropList.AddRange(GetDefaultLunarDropList());
 
                 self.smallChestDropTierSelector.Clear();
                 self.smallChestDropTierSelector.AddChoice(self.availableTier1DropList, 0.8f);
@@ -282,8 +281,8 @@ namespace R2API {
             return list;
         }
 
-        public static List<EquipmentIndex> GetDefaultLunarDropList() {
-            var list = new List<EquipmentIndex>();
+        public static List<PickupIndex> GetDefaultLunarDropList() {
+            var list = new List<PickupIndex>();
 
             for (var equipmentIndex = EquipmentIndex.CommandMissile;
                 equipmentIndex < EquipmentIndex.Count;
@@ -293,7 +292,18 @@ namespace R2API {
 
                 var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
                 if (equipmentDef.canDrop && equipmentDef.isLunar) {
-                    list.Add(equipmentIndex);
+                    list.Add(new PickupIndex(equipmentIndex));
+                }
+            }
+
+            for (var itemIndex = ItemIndex.Syringe;
+                itemIndex < ItemIndex.Count;
+                itemIndex++) {
+                if (!Run.instance.availableItems.HasItem(itemIndex))
+                    continue;
+   
+                if (ItemCatalog.GetItemDef(itemIndex).tier == ItemTier.Lunar) {
+                    list.Add(new PickupIndex(itemIndex));
                 }
             }
 
@@ -319,24 +329,23 @@ namespace R2API {
         }
 
         public static PickupSelection ToSelection(this List<ItemIndex> indices, float dropChance = 1.0f) {
-            if (indices == null) {
-                return null;
-            }
-
-            return new PickupSelection {
+            return indices == null ? null : new PickupSelection {
                 DropChance = dropChance,
                 Pickups = indices.Select(x => new PickupIndex(x)).ToList()
             };
         }
 
         public static PickupSelection ToSelection(this List<EquipmentIndex> indices, float dropChance = 1.0f) {
-            if (indices == null) {
-                return null;
-            }
-
-            return new PickupSelection {
+            return indices == null ? null : new PickupSelection {
                 DropChance = dropChance,
                 Pickups = indices.Select(x => new PickupIndex(x)).ToList()
+            };
+        }
+
+        public static PickupSelection ToSelection(this List<PickupIndex> pickups, float dropChance = 1.0f) {
+            return pickups == null ? null : new PickupSelection {
+                Pickups = pickups,
+                DropChance = dropChance
             };
         }
     }
