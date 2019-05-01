@@ -93,18 +93,18 @@ namespace R2API {
         public static ManualLogSource Logger = R2API.Logger;
 
         public static void InitHooks() {
-            var itemDropApi_GetSelection = typeof(ItemDropAPI).GetMethod("GetSelection");
-            var xoroshiro_GetNextNormalizedFloat = typeof(Xoroshiro128Plus).GetMethod("get_nextNormalizedFloat");
+            var itemDropApi_GetSelection = typeof(ItemDropAPI).GetMethodCached("GetSelection");
+            var xoroshiro_GetNextNormalizedFloat = typeof(Xoroshiro128Plus).GetMethodCached("get_nextNormalizedFloat");
 
             IL.RoR2.BossGroup.OnCharacterDeathCallback += il => {
                 var cursor = new ILCursor(il).Goto(0);
 
-                cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethod("get_itemIndex")));
+                cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethodCached("get_itemIndex")));
 
                 var itemIndex = (VariableDefinition) cursor.Next.Next.Operand;
 
                 cursor.Goto(0);
-                cursor.GotoNext(x => x.MatchCallvirt(typeof(List<PickupIndex>).GetMethod("get_Item")));
+                cursor.GotoNext(x => x.MatchCallvirt(typeof(List<PickupIndex>).GetMethodCached("get_Item")));
 
                 var pickupIndex = (VariableDefinition) cursor.Next.Next.Operand;
 
@@ -114,26 +114,25 @@ namespace R2API {
                 cursor.Emit(OpCodes.Ldc_I4_0);
 
                 cursor.Emit(OpCodes.Ldarg_0);
-                cursor.Emit(OpCodes.Ldfld,
-                    typeof(BossGroup).GetField("rng", BindingFlags.NonPublic | BindingFlags.Instance));
+                cursor.Emit(OpCodes.Ldfld, typeof(BossGroup).GetFieldCached("rng"));
                 cursor.Emit(OpCodes.Callvirt, xoroshiro_GetNextNormalizedFloat);
                 cursor.Emit(OpCodes.Call, itemDropApi_GetSelection);
                 cursor.Emit(OpCodes.Stloc_S, pickupIndex);
                 cursor.Emit(OpCodes.Ldloca_S, pickupIndex);
 
-                cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethod("get_itemIndex"));
+                cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethodCached("get_itemIndex"));
             };
 
             var dropPickup =
-                typeof(ChestBehavior).GetField("dropPickup", BindingFlags.NonPublic | BindingFlags.Instance);
+                typeof(ChestBehavior).GetFieldCached("dropPickup");
             var lunarChance =
-                typeof(ChestBehavior).GetField("lunarChance", BindingFlags.Public | BindingFlags.Instance);
+                typeof(ChestBehavior).GetFieldCached("lunarChance", BindingFlags.Public | BindingFlags.Instance);
             var tier1Chance =
-                typeof(ChestBehavior).GetField("tier1Chance", BindingFlags.Public | BindingFlags.Instance);
+                typeof(ChestBehavior).GetFieldCached("tier1Chance", BindingFlags.Public | BindingFlags.Instance);
             var tier2Chance =
-                typeof(ChestBehavior).GetField("tier2Chance", BindingFlags.Public | BindingFlags.Instance);
+                typeof(ChestBehavior).GetFieldCached("tier2Chance", BindingFlags.Public | BindingFlags.Instance);
             var tier3Chance =
-                typeof(ChestBehavior).GetField("tier3Chance", BindingFlags.Public | BindingFlags.Instance);
+                typeof(ChestBehavior).GetFieldCached("tier3Chance", BindingFlags.Public | BindingFlags.Instance);
 
             IL.RoR2.ChestBehavior.RollItem += il => {
                 var cursor = new ILCursor(il).Goto(0);
@@ -166,7 +165,7 @@ namespace R2API {
                 cursor.Emit(OpCodes.Ret);
             };
 
-            var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethod("Evaluate");
+            var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethodCached("Evaluate");
 
             IL.RoR2.ShrineChanceBehavior.AddShrineStack += il => {
                 var cursor = new ILCursor(il).Goto(0);

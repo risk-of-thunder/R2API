@@ -16,7 +16,7 @@ namespace R2API {
                 cursor.EmitDelegate<Action<ItemIcon>>(i => OnItemIconAdded?.Invoke(i));
             };
 
-            var setSubscribedInventory = typeof(ItemInventoryDisplay).GetMethod("SetSubscribedInventory");
+            var setSubscribedInventory = typeof(ItemInventoryDisplay).GetMethodCached("SetSubscribedInventory");
 
             IL.RoR2.UI.ScoreboardStrip.SetMaster += il => {
                 var cursor = new ILCursor(il).Goto(0);
