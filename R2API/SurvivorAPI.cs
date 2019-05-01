@@ -29,9 +29,59 @@ namespace R2API {
 
             On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, survivorIndex) => {
                 //orig is the original method and SurvivorIndex is the variable that is given to the original GetSurvivorDef
-                return SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex);
                 //by never doing orig(), the original method is never executed whenever it's called, effectively being replaced
+                return SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex);
             };
+        }
+
+
+        /// <summary>
+        /// Add a SurvivorDef to the list of available survivors. Use on SurvivorCatalogReady event.
+        /// ATTENTION: SET A VALUE FOR SURVIVORINDEX! DEFAULT IS 0 AND YOU WILL OVERWRITE COMMANDO.
+        /// Any value is okay, but note:
+        ///
+        /// Behaviour of this function differs, depending on the SurvivorIndex specified in the SurvivorDef:
+        /// - SurvivorIndex smaller than SurvivorIndex.Count
+        ///     Function will try to replace an existing Survivor with this index. Use to replace existing survivors.
+        /// - SurvivorIndex larger or equal to SurvivorIndex.Count
+        ///     Function handles parameter as a custom survivor, and will set SurvivorIndex as low as possible, but
+        ///     will not replace other default or custom survivors.
+        ///
+        /// Please use this instead of SurvivorDefinitions.Insert/etc.
+        /// </summary>
+        /// <param name="survivor">The survivor to add.</param>
+        public static void AddSurvivor(SurvivorDef survivor) {
+            if (survivor.survivorIndex < SurvivorIndex.Count
+                && SurvivorDefinitions.Any(x => x.survivorIndex == survivor.survivorIndex)
+            ) {
+                var toRemove = SurvivorDefinitions.Where(x => x.survivorIndex == survivor.survivorIndex).ToList();
+
+                toRemove.ForEach(x => SurvivorDefinitions.Remove(x));
+            }
+            else {
+                survivor.survivorIndex = SurvivorIndex.Count;
+                while (SurvivorDefinitions.Any(x => x.survivorIndex == survivor.survivorIndex))
+                    survivor.survivorIndex += 1;
+            }
+
+            SurvivorDefinitions.Add(survivor);
+        }
+
+        /// <summary>
+        /// Add a SurvivorDef to the list of available survivors. Will add the survivor on SurvivorCatalogReady event.
+        /// ATTENTION: SET A VALUE FOR SURVIVORINDEX! DEFAULT IS 0 AND YOU WILL OVERWRITE COMMANDO.
+        /// Any value is okay, but note:
+        ///
+        /// Behaviour of this function differs, depending on the SurvivorIndex specified in the SurvivorDef:
+        /// - SurvivorIndex smaller than SurvivorIndex.Count
+        ///     Function will try to replace an existing Survivor with this index. Use to replace existing survivors.
+        /// - SurvivorIndex larger or equal to SurvivorIndex.Count
+        ///     Function handles parameter as a custom survivor, and will set SurvivorIndex as low as possible, but
+        ///     will not replace other default or custom survivors.
+        /// </summary>
+        /// <param name="survivor">The survivor to add.</param>
+        public static void AddSurvivorOnReady(SurvivorDef survivor) {
+            SurvivorCatalogReady += (sender, args) => { AddSurvivor(survivor); };
         }
 
         public static void Init() {
@@ -117,16 +167,17 @@ namespace R2API {
                     .OrderBy(x => x.survivorIndex)
                     .Select(x => x.bodyPrefab == null ? null : x)
                     .ToArray()
-                );
+            );
 
-            //this essentially deletes an existing node if it exists
-            // TODO this does not work, ViewablesCatalog.fullNameToNodeMap does not seem to get updated
+            // This essentially deletes an existing node if it exists
+            // TODO: does not work, ViewablesCatalog.fullNameToNodeMap does not seem to get updated
+            // TODO: maybe instead of removing and re-adding only add nodes that are missing?
             var existingNode = ViewablesCatalog.FindNode("/Survivors/");
             existingNode?.SetParent(new ViewablesCatalog.Node("dummy", true));
 
             var node = new ViewablesCatalog.Node("Survivors", true);
 
-            foreach (var survivor in SurvivorDefinitions.Where(x => x.bodyPrefab != null)) {
+            foreach (var survivor in SurvivorDefinitions) {
                 var survivorEntryNode = new ViewablesCatalog.Node(
                     survivor.survivorIndex < SurvivorIndex.Count
                         ? survivor.survivorIndex.ToString()
