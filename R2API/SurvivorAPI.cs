@@ -29,7 +29,7 @@ namespace R2API {
 
             On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, survivorIndex) => {
                 //orig is the original method and SurvivorIndex is the variable that is given to the original GetSurvivorDef
-                return SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex && x.bodyPrefab != null);
+                return SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex);
                 //by never doing orig(), the original method is never executed whenever it's called, effectively being replaced
             };
         }
@@ -99,26 +99,25 @@ namespace R2API {
             typeof(SurvivorCatalog).GetFieldCached("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
 
         public static void ReconstructSurvivors() {
-            SurvivorCatalog.survivorMaxCount = Math.Max((int)SurvivorDefinitions.Select(x => x.survivorIndex).Max(), 10);
+            SurvivorCatalog.survivorMaxCount =
+                Math.Max((int) SurvivorDefinitions.Select(x => x.survivorIndex).Max(), 10);
             SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
 
             // Only contains not null survivors
             allSurvivorDefs.SetValue(null, SurvivorDefinitions
                 .OrderBy(x => x.survivorIndex)
-                .Where(x => x.bodyPrefab != null)
                 .ToArray()
             );
 
             // Contains null for index with no survivor
-            foreach (var i in Enumerable.Range(0, SurvivorCatalog.survivorMaxCount)) {
-                if (SurvivorDefinitions.All(x => x.survivorIndex != (SurvivorIndex) i))
-                    SurvivorDefinitions.Add(new SurvivorDef {survivorIndex = (SurvivorIndex) i});
-            }
-            survivorDefs.SetValue(null, SurvivorDefinitions
-                .OrderBy(x => x.survivorIndex)
-                .Select(x => x.bodyPrefab == null ? null : x)
-                .ToArray()
-            );
+            survivorDefs.SetValue(null,
+                Enumerable.Range(0, SurvivorCatalog.survivorMaxCount)
+                    .Select(i => SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == (SurvivorIndex) i)
+                                 ?? new SurvivorDef {survivorIndex = (SurvivorIndex) i})
+                    .OrderBy(x => x.survivorIndex)
+                    .Select(x => x.bodyPrefab == null ? null : x)
+                    .ToArray()
+                );
 
             //this essentially deletes an existing node if it exists
             // TODO this does not work, ViewablesCatalog.fullNameToNodeMap does not seem to get updated
@@ -128,8 +127,12 @@ namespace R2API {
             var node = new ViewablesCatalog.Node("Survivors", true);
 
             foreach (var survivor in SurvivorDefinitions.Where(x => x.bodyPrefab != null)) {
-                // TODO: survivor.survivorIndex.ToString() is correct, but doesnt work with custom survivors.
-                var survivorEntryNode = new ViewablesCatalog.Node(survivor.survivorIndex.ToString(), false, node);
+                var survivorEntryNode = new ViewablesCatalog.Node(
+                    survivor.survivorIndex < SurvivorIndex.Count
+                        ? survivor.survivorIndex.ToString()
+                        // TODO: change to different way for getting custom survivor node names?
+                        : survivor.displayNameToken,
+                    false, node);
 
                 survivorEntryNode.shouldShowUnviewed = userProfile =>
                     !userProfile.HasViewedViewable(survivorEntryNode.fullName) &&
