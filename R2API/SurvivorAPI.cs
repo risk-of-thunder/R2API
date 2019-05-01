@@ -29,11 +29,7 @@ namespace R2API {
 
             On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, survivorIndex) => {
                 //orig is the original method and SurvivorIndex is the variable that is given to the original GetSurvivorDef
-                if (survivorIndex < 0 || (int) survivorIndex > SurvivorDefinitions.Count) {
-                    return null;
-                }
-
-                return SurvivorDefinitions[(int) survivorIndex];
+                return SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex && x.bodyPrefab != null);
                 //by never doing orig(), the original method is never executed whenever it's called, effectively being replaced
             };
         }
@@ -89,11 +85,11 @@ namespace R2API {
                 }
             });
 
-            SurvivorDefinitions.CollectionChanged += (sender, args) => { ReconstructSurvivors(); };
-
             SurvivorCatalogReady?.Invoke(null, null);
 
             ReconstructSurvivors();
+
+            SurvivorDefinitions.CollectionChanged += (sender, args) => { ReconstructSurvivors(); };
         }
 
         private static readonly FieldInfo survivorDefs =
@@ -103,28 +99,38 @@ namespace R2API {
             typeof(SurvivorCatalog).GetFieldCached("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
 
         public static void ReconstructSurvivors() {
-            SurvivorCatalog.survivorMaxCount = Mathf.Max(SurvivorDefinitions.Count, 10);
-
-            for (var i = 0; i < SurvivorDefinitions.Count; i++) {
-                SurvivorDefinitions[i].survivorIndex = (SurvivorIndex) i;
-            }
-
+            SurvivorCatalog.survivorMaxCount = Math.Max((int)SurvivorDefinitions.Select(x => x.survivorIndex).Max(), 10);
             SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
 
-            survivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
-            allSurvivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
+            // Only contains not null survivors
+            allSurvivorDefs.SetValue(null, SurvivorDefinitions
+                .OrderBy(x => x.survivorIndex)
+                .Where(x => x.bodyPrefab != null)
+                .ToArray()
+            );
 
-            var node = new ViewablesCatalog.Node("/Survivors/", true, null);
-
-            var existingNode = ViewablesCatalog.FindNode("/Survivors/");
+            // Contains null for index with no survivor
+            foreach (var i in Enumerable.Range(0, SurvivorCatalog.survivorMaxCount)) {
+                if (SurvivorDefinitions.All(x => x.survivorIndex != (SurvivorIndex) i))
+                    SurvivorDefinitions.Add(new SurvivorDef {survivorIndex = (SurvivorIndex) i});
+            }
+            survivorDefs.SetValue(null, SurvivorDefinitions
+                .OrderBy(x => x.survivorIndex)
+                .Select(x => x.bodyPrefab == null ? null : x)
+                .ToArray()
+            );
 
             //this essentially deletes an existing node if it exists
-            existingNode?.SetParent(new ViewablesCatalog.Node("dummy", true, null));
+            // TODO this does not work, ViewablesCatalog.fullNameToNodeMap does not seem to get updated
+            var existingNode = ViewablesCatalog.FindNode("/Survivors/");
+            existingNode?.SetParent(new ViewablesCatalog.Node("dummy", true));
 
-            for (var i = 0; i < SurvivorDefinitions.Count; i++) {
-                var survivor = SurvivorDefinitions[i];
+            var node = new ViewablesCatalog.Node("Survivors", true);
 
-                var survivorEntryNode = new ViewablesCatalog.Node(survivor.displayNameToken, false, node);
+            foreach (var survivor in SurvivorDefinitions.Where(x => x.bodyPrefab != null)) {
+                // TODO: survivor.survivorIndex.ToString() is correct, but doesnt work with custom survivors.
+                var survivorEntryNode = new ViewablesCatalog.Node(survivor.survivorIndex.ToString(), false, node);
+
                 survivorEntryNode.shouldShowUnviewed = userProfile =>
                     !userProfile.HasViewedViewable(survivorEntryNode.fullName) &&
                     userProfile.HasSurvivorUnlocked(survivor.survivorIndex) &&
