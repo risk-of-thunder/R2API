@@ -19,6 +19,8 @@ namespace R2API {
         /// </summary>
         public static event EventHandler SurvivorCatalogReady;
 
+        private static bool WasReady;
+
 
         internal static void InitHooks() {
             var detour = new NativeDetour(
@@ -33,6 +35,7 @@ namespace R2API {
                 return SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex);
             };
         }
+
 
 
         /// <summary>
@@ -50,7 +53,8 @@ namespace R2API {
         /// Please use this instead of SurvivorDefinitions.Insert/etc.
         /// </summary>
         /// <param name="survivor">The survivor to add.</param>
-        public static void AddSurvivor(SurvivorDef survivor) {
+        /// <returns>The SurvivorIndex your survivor was assigned.</returns>
+        public static SurvivorIndex AddSurvivor(SurvivorDef survivor) {
             if (survivor.survivorIndex < SurvivorIndex.Count
                 && SurvivorDefinitions.Any(x => x.survivorIndex == survivor.survivorIndex)
             ) {
@@ -59,12 +63,13 @@ namespace R2API {
                 toRemove.ForEach(x => SurvivorDefinitions.Remove(x));
             }
             else {
-                survivor.survivorIndex = SurvivorIndex.Count;
+                survivor.survivorIndex = SurvivorIndex.Count + 1;
                 while (SurvivorDefinitions.Any(x => x.survivorIndex == survivor.survivorIndex))
                     survivor.survivorIndex += 1;
             }
 
             SurvivorDefinitions.Add(survivor);
+            return survivor.survivorIndex;
         }
 
         /// <summary>
@@ -81,7 +86,10 @@ namespace R2API {
         /// </summary>
         /// <param name="survivor">The survivor to add.</param>
         public static void AddSurvivorOnReady(SurvivorDef survivor) {
-            SurvivorCatalogReady += (sender, args) => { AddSurvivor(survivor); };
+            if (WasReady)
+                AddSurvivor(survivor);
+            else
+                SurvivorCatalogReady += (sender, args) => { AddSurvivor(survivor); };
         }
 
         public static void Init() {
@@ -135,6 +143,7 @@ namespace R2API {
                 }
             });
 
+            WasReady = true;
             SurvivorCatalogReady?.Invoke(null, null);
 
             ReconstructSurvivors();
@@ -149,6 +158,19 @@ namespace R2API {
             typeof(SurvivorCatalog).GetFieldCached("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
 
         public static void ReconstructSurvivors() {
+            SurvivorDefinitions.GroupBy(x => x.survivorIndex).Where(x => x.Count() > 1).ToList().ForEach(x => {
+
+                string CenterText(string text = "") {
+                    const int width = 70;
+                    return string.Format(
+                        "*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
+                }
+
+                Debug.LogError($"{CenterText("!ERROR!")}");
+                Debug.LogError($"{CenterText($"One of your mods assigns a duplicate SurvivorIndex for \"{x.Key}\"")}");
+                Debug.LogError($"{CenterText("Please ask the author to fix their mod.")}");
+            });
+
             SurvivorCatalog.survivorMaxCount =
                 Math.Max((int) SurvivorDefinitions.Select(x => x.survivorIndex).Max(), 10);
             SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
@@ -176,10 +198,7 @@ namespace R2API {
                 ViewablesCatalog.AddNodeToRoot(parent);
 
             foreach (var survivor in SurvivorDefinitions) {
-                var name = survivor.survivorIndex < SurvivorIndex.Count
-                    ? survivor.survivorIndex.ToString()
-                    // TODO: change to different way for getting custom survivor node names?
-                    : survivor.displayNameToken;
+                var name = survivor.survivorIndex.ToString();
 
                 var child =
                     ViewablesCatalog.FindNode(parent.fullName + name)
