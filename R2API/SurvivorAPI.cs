@@ -29,14 +29,12 @@ namespace R2API {
 
             detour.Apply();
 
-            // TODO: this does not work at all.
+            // TODO: this does not work at all due to inlining.
             On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, survivorIndex) => GetSurvivorDef(survivorIndex);
         }
 
-        public static SurvivorDef GetSurvivorDef(SurvivorIndex survivorIndex) {
-            Debug.Log("Custom GetSurvivorDef called, thank god.");
-            return SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex);
-        }
+        public static SurvivorDef GetSurvivorDef(SurvivorIndex survivorIndex) =>
+            SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex);
 
         /// <summary>
         /// Add a SurvivorDef to the list of available survivors. Use on SurvivorCatalogReady event.
