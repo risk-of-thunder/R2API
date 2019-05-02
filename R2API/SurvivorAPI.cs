@@ -29,14 +29,14 @@ namespace R2API {
 
             detour.Apply();
 
-            On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, survivorIndex) => {
-                //orig is the original method and SurvivorIndex is the variable that is given to the original GetSurvivorDef
-                //by never doing orig(), the original method is never executed whenever it's called, effectively being replaced
-                return SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex);
-            };
+            // TODO: this does not work at all.
+            On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, survivorIndex) => GetSurvivorDef(survivorIndex);
         }
 
-
+        public static SurvivorDef GetSurvivorDef(SurvivorIndex survivorIndex) {
+            Debug.Log("Custom GetSurvivorDef called, thank god.");
+            return SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex);
+        }
 
         /// <summary>
         /// Add a SurvivorDef to the list of available survivors. Use on SurvivorCatalogReady event.
@@ -44,11 +44,11 @@ namespace R2API {
         /// Any value is okay, but note:
         ///
         /// Behaviour of this function differs, depending on the SurvivorIndex specified in the SurvivorDef:
-        /// - SurvivorIndex smaller than SurvivorIndex.Count
+        /// - SurvivorIndex between SurvivorIndex.None and SurvivorIndex.Count
         ///     Function will try to replace an existing Survivor with this index. Use to replace existing survivors.
-        /// - SurvivorIndex larger or equal to SurvivorIndex.Count
-        ///     Function handles parameter as a custom survivor, and will set SurvivorIndex as low as possible, but
-        ///     will not replace other default or custom survivors.
+        ///
+        /// - Other SurvivorIndex
+        ///     SurvivorIndex will be set as low as possible, but will not replace other default or custom survivors.
         ///
         /// Please use this instead of SurvivorDefinitions.Insert/etc.
         /// </summary>
@@ -56,7 +56,7 @@ namespace R2API {
         /// <returns>The SurvivorIndex your survivor was assigned.</returns>
         public static SurvivorIndex AddSurvivor(SurvivorDef survivor) {
             if (survivor.survivorIndex < SurvivorIndex.Count
-                && SurvivorDefinitions.Any(x => x.survivorIndex == survivor.survivorIndex)
+                && survivor.survivorIndex > SurvivorIndex.None
             ) {
                 var toRemove = SurvivorDefinitions.Where(x => x.survivorIndex == survivor.survivorIndex).ToList();
 
@@ -78,11 +78,11 @@ namespace R2API {
         /// Any value is okay, but note:
         ///
         /// Behaviour of this function differs, depending on the SurvivorIndex specified in the SurvivorDef:
-        /// - SurvivorIndex smaller than SurvivorIndex.Count
+        /// - SurvivorIndex between SurvivorIndex.None and SurvivorIndex.Count
         ///     Function will try to replace an existing Survivor with this index. Use to replace existing survivors.
-        /// - SurvivorIndex larger or equal to SurvivorIndex.Count
-        ///     Function handles parameter as a custom survivor, and will set SurvivorIndex as low as possible, but
-        ///     will not replace other default or custom survivors.
+        ///
+        /// - Other SurvivorIndex
+        ///     SurvivorIndex will be set as low as possible, but will not replace other default or custom survivors.
         /// </summary>
         /// <param name="survivor">The survivor to add.</param>
         public static void AddSurvivorOnReady(SurvivorDef survivor) {
@@ -157,22 +157,15 @@ namespace R2API {
         private static readonly FieldInfo allSurvivorDefs =
             typeof(SurvivorCatalog).GetFieldCached("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
 
-        public static void ReconstructSurvivors() {
+        private static void ReconstructSurvivors() {
             SurvivorDefinitions.GroupBy(x => x.survivorIndex).Where(x => x.Count() > 1).ToList().ForEach(x => {
-
-                string CenterText(string text = "") {
-                    const int width = 70;
-                    return string.Format(
-                        "*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
-                }
-
                 Debug.LogError($"{CenterText("!ERROR!")}");
                 Debug.LogError($"{CenterText($"One of your mods assigns a duplicate SurvivorIndex for \"{x.Key}\"")}");
                 Debug.LogError($"{CenterText("Please ask the author to fix their mod.")}");
             });
 
             SurvivorCatalog.survivorMaxCount =
-                Math.Max((int) SurvivorDefinitions.Select(x => x.survivorIndex).Max(), 10);
+                Math.Max((int) SurvivorDefinitions.Select(x => x.survivorIndex).Max() + 1, 10);
             SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
 
             // Only contains not null survivors
@@ -215,6 +208,20 @@ namespace R2API {
             Debug.Log("Re-setting all survivor nodes, duplicates may occur. This is no problem.");
             ViewablesCatalog.AddNodeToRoot(parent);
             Debug.Log("Re-setting survivor nodes complete.");
+
+            // TODO: as soon as we can reliably replace GetSurvivorDef, remove this check.
+            // This will only show if survivors with indexes beyond or equal to SurvivorIndex.Count have been added,
+            // as only then problems with GetSurvivorDef arise.
+            var check = SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex >= SurvivorIndex.Count);
+            if (check != null && SurvivorCatalog.GetSurvivorDef(check.survivorIndex) == null) {
+                Debug.LogError($"{CenterText("!ERROR!")}");
+                Debug.LogError($"{CenterText("GetSurvivorDef has not been replaced, some survivors will show as in-progress.")}");
+                Debug.LogError($"{CenterText("Please help us, wait until this is fixed, or ask how to")}");
+                Debug.LogError($"{CenterText("edit your Assembly-CSharp for a workaround.")}");
+            }
         }
+
+        private static string CenterText(string text = "", int width = 80) =>
+            string.Format("*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
     }
 }
