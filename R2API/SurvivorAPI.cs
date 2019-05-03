@@ -154,9 +154,9 @@ namespace R2API {
 
         private static void ReconstructSurvivors() {
             SurvivorDefinitions.GroupBy(x => x.survivorIndex).Where(x => x.Count() > 1).ToList().ForEach(x => {
-                Debug.LogError($"{CenterText("!ERROR!")}");
-                Debug.LogError($"{CenterText($"One of your mods assigns a duplicate SurvivorIndex for \"{x.Key}\"")}");
-                Debug.LogError($"{CenterText("Please ask the author to fix their mod.")}");
+                R2API.Logger.LogError($"{CenterText("!ERROR!")}");
+                R2API.Logger.LogError($"{CenterText($"One of your mods assigns a duplicate SurvivorIndex for \"{x.Key}\"")}");
+                R2API.Logger.LogError($"{CenterText("Please ask the author to fix their mod.")}");
             });
 
             SurvivorCatalog.survivorMaxCount =
@@ -210,9 +210,9 @@ namespace R2API {
             if (overLimit == null || SurvivorCatalog.GetSurvivorDef(overLimit.survivorIndex) != null)
                 return;
 
-            Debug.LogError($"{CenterText("!ERROR!")}");
-            Debug.LogError($"{CenterText("MonoMod component of R2API is not installed correctly!")}");
-            Debug.LogError($"{CenterText("Please copy Assembly-CSharp.R2API.mm.dll to BepInEx/monomod.")}");
+            R2API.Logger.LogError($"{CenterText("!ERROR!")}");
+            R2API.Logger.LogError($"{CenterText("MonoMod component of R2API is not installed correctly!")}");
+            R2API.Logger.LogError($"{CenterText("Please copy Assembly-CSharp.R2API.mm.dll to BepInEx/monomod.")}");
         }
 
         private static string CenterText(string text = "", int width = 80) =>
