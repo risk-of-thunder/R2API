@@ -28,9 +28,6 @@ namespace R2API {
                 typeof(SurvivorAPI).GetMethodCached(nameof(Init), BindingFlags.Public | BindingFlags.Static));
 
             detour.Apply();
-
-            // TODO: this does not work at all due to inlining.
-            On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, survivorIndex) => GetSurvivorDef(survivorIndex);
         }
 
         public static SurvivorDef GetSurvivorDef(SurvivorIndex survivorIndex) =>
@@ -207,16 +204,15 @@ namespace R2API {
             ViewablesCatalog.AddNodeToRoot(parent);
             Debug.Log("Re-setting survivor nodes complete.");
 
-            // TODO: as soon as we can reliably replace GetSurvivorDef, remove this check.
-            // This will only show if survivors with indexes beyond or equal to SurvivorIndex.Count have been added,
-            // as only then problems with GetSurvivorDef arise.
-            var check = SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex >= SurvivorIndex.Count);
-            if (check != null && SurvivorCatalog.GetSurvivorDef(check.survivorIndex) == null) {
-                Debug.LogError($"{CenterText("!ERROR!")}");
-                Debug.LogError($"{CenterText("GetSurvivorDef has not been replaced, some survivors will show as in-progress.")}");
-                Debug.LogError($"{CenterText("Please help us, wait until this is fixed, or ask how to")}");
-                Debug.LogError($"{CenterText("edit your Assembly-CSharp for a workaround.")}");
-            }
+            // Survivors over the builtin limit will be returned as null from SurvivorCatalog.GetSurvivorDef
+            // This is a quick check if the MonoMod component is installed correctly.
+            var overLimit = SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex >= SurvivorIndex.Count);
+            if (overLimit == null || SurvivorCatalog.GetSurvivorDef(overLimit.survivorIndex) != null)
+                return;
+
+            Debug.LogError($"{CenterText("!ERROR!")}");
+            Debug.LogError($"{CenterText("MonoMod component of R2API is not installed correctly!")}");
+            Debug.LogError($"{CenterText("Please copy Assembly-CSharp.R2API.mm.dll to BepInEx/monomod.")}");
         }
 
         private static string CenterText(string text = "", int width = 80) =>
