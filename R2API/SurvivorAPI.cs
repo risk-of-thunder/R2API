@@ -19,6 +19,8 @@ namespace R2API {
         /// </summary>
         public static event EventHandler SurvivorCatalogReady;
 
+        private static bool WasReady;
+
 
         internal static void InitHooks() {
             var detour = new NativeDetour(
@@ -26,16 +28,63 @@ namespace R2API {
                 typeof(SurvivorAPI).GetMethodCached(nameof(Init), BindingFlags.Public | BindingFlags.Static));
 
             detour.Apply();
+        }
 
-            On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, survivorIndex) => {
-                //orig is the original method and SurvivorIndex is the variable that is given to the original GetSurvivorDef
-                if (survivorIndex < 0 || (int) survivorIndex > SurvivorDefinitions.Count) {
-                    return null;
-                }
+        public static SurvivorDef GetSurvivorDef(SurvivorIndex survivorIndex) =>
+            SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex);
 
-                return SurvivorDefinitions[(int) survivorIndex];
-                //by never doing orig(), the original method is never executed whenever it's called, effectively being replaced
-            };
+        /// <summary>
+        /// Add a SurvivorDef to the list of available survivors. Use on SurvivorCatalogReady event.
+        /// ATTENTION: SET A VALUE FOR SURVIVORINDEX! DEFAULT IS 0 AND YOU WILL OVERWRITE COMMANDO.
+        /// Any value is okay, but note:
+        ///
+        /// Behaviour of this function differs, depending on the SurvivorIndex specified in the SurvivorDef:
+        /// - SurvivorIndex between SurvivorIndex.None and SurvivorIndex.Count
+        ///     Function will try to replace an existing Survivor with this index. Use to replace existing survivors.
+        ///
+        /// - Other SurvivorIndex
+        ///     SurvivorIndex will be set as low as possible, but will not replace other default or custom survivors.
+        ///
+        /// Please use this instead of SurvivorDefinitions.Insert/etc.
+        /// </summary>
+        /// <param name="survivor">The survivor to add.</param>
+        /// <returns>The SurvivorIndex your survivor was assigned.</returns>
+        public static SurvivorIndex AddSurvivor(SurvivorDef survivor) {
+            if (survivor.survivorIndex < SurvivorIndex.Count
+                && survivor.survivorIndex > SurvivorIndex.None
+            ) {
+                var toRemove = SurvivorDefinitions.Where(x => x.survivorIndex == survivor.survivorIndex).ToList();
+
+                toRemove.ForEach(x => SurvivorDefinitions.Remove(x));
+            }
+            else {
+                survivor.survivorIndex = SurvivorIndex.Count + 1;
+                while (SurvivorDefinitions.Any(x => x.survivorIndex == survivor.survivorIndex))
+                    survivor.survivorIndex += 1;
+            }
+
+            SurvivorDefinitions.Add(survivor);
+            return survivor.survivorIndex;
+        }
+
+        /// <summary>
+        /// Add a SurvivorDef to the list of available survivors. Will add the survivor on SurvivorCatalogReady event.
+        /// ATTENTION: SET A VALUE FOR SURVIVORINDEX! DEFAULT IS 0 AND YOU WILL OVERWRITE COMMANDO.
+        /// Any value is okay, but note:
+        ///
+        /// Behaviour of this function differs, depending on the SurvivorIndex specified in the SurvivorDef:
+        /// - SurvivorIndex between SurvivorIndex.None and SurvivorIndex.Count
+        ///     Function will try to replace an existing Survivor with this index. Use to replace existing survivors.
+        ///
+        /// - Other SurvivorIndex
+        ///     SurvivorIndex will be set as low as possible, but will not replace other default or custom survivors.
+        /// </summary>
+        /// <param name="survivor">The survivor to add.</param>
+        public static void AddSurvivorOnReady(SurvivorDef survivor) {
+            if (WasReady)
+                AddSurvivor(survivor);
+            else
+                SurvivorCatalogReady += (sender, args) => { AddSurvivor(survivor); };
         }
 
         public static void Init() {
@@ -89,11 +138,12 @@ namespace R2API {
                 }
             });
 
-            SurvivorDefinitions.CollectionChanged += (sender, args) => { ReconstructSurvivors(); };
-
+            WasReady = true;
             SurvivorCatalogReady?.Invoke(null, null);
 
             ReconstructSurvivors();
+
+            SurvivorDefinitions.CollectionChanged += (sender, args) => { ReconstructSurvivors(); };
         }
 
         private static readonly FieldInfo survivorDefs =
@@ -102,36 +152,70 @@ namespace R2API {
         private static readonly FieldInfo allSurvivorDefs =
             typeof(SurvivorCatalog).GetFieldCached("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
 
-        public static void ReconstructSurvivors() {
-            SurvivorCatalog.survivorMaxCount = Mathf.Max(SurvivorDefinitions.Count, 10);
+        private static void ReconstructSurvivors() {
+            SurvivorDefinitions.GroupBy(x => x.survivorIndex).Where(x => x.Count() > 1).ToList().ForEach(x => {
+                R2API.Logger.LogError($"{CenterText("!ERROR!")}");
+                R2API.Logger.LogError($"{CenterText($"One of your mods assigns a duplicate SurvivorIndex for \"{x.Key}\"")}");
+                R2API.Logger.LogError($"{CenterText("Please ask the author to fix their mod.")}");
+            });
 
-            for (var i = 0; i < SurvivorDefinitions.Count; i++) {
-                SurvivorDefinitions[i].survivorIndex = (SurvivorIndex) i;
-            }
-
+            SurvivorCatalog.survivorMaxCount =
+                Math.Max((int) SurvivorDefinitions.Select(x => x.survivorIndex).Max() + (GetSurvivorDef(SurvivorIndex.Count) != null ? 1 : 0), 10);
             SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
 
-            survivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
-            allSurvivorDefs.SetValue(null, SurvivorDefinitions.ToArray());
+            // Only contains not null survivors
+            allSurvivorDefs.SetValue(null, SurvivorDefinitions
+                .OrderBy(x => x.survivorIndex)
+                .ToArray()
+            );
 
-            var node = new ViewablesCatalog.Node("/Survivors/", true, null);
+            // Contains null for index with no survivor
+            survivorDefs.SetValue(null,
+                Enumerable.Range(0, SurvivorCatalog.survivorMaxCount)
+                    .Select(i => SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == (SurvivorIndex) i)
+                                 ?? new SurvivorDef {survivorIndex = (SurvivorIndex) i})
+                    .OrderBy(x => x.survivorIndex)
+                    .Select(x => x.bodyPrefab == null ? null : x)
+                    .ToArray()
+            );
 
-            var existingNode = ViewablesCatalog.FindNode("/Survivors/");
+            var parent = ViewablesCatalog.FindNode("/Survivors/")
+                         ?? new ViewablesCatalog.Node("Survivors", true);
 
-            //this essentially deletes an existing node if it exists
-            existingNode?.SetParent(new ViewablesCatalog.Node("dummy", true, null));
+            if (parent.parent == null)
+                ViewablesCatalog.AddNodeToRoot(parent);
 
-            for (var i = 0; i < SurvivorDefinitions.Count; i++) {
-                var survivor = SurvivorDefinitions[i];
+            foreach (var survivor in SurvivorDefinitions) {
+                var name = survivor.survivorIndex.ToString();
 
-                var survivorEntryNode = new ViewablesCatalog.Node(survivor.displayNameToken, false, node);
-                survivorEntryNode.shouldShowUnviewed = userProfile =>
-                    !userProfile.HasViewedViewable(survivorEntryNode.fullName) &&
-                    userProfile.HasSurvivorUnlocked(survivor.survivorIndex) &&
-                    !string.IsNullOrEmpty(survivor.unlockableName);
+                var child =
+                    ViewablesCatalog.FindNode(parent.fullName + name)
+                    ?? new ViewablesCatalog.Node(name, false, parent);
+
+                child.shouldShowUnviewed = userProfile =>
+                        !string.IsNullOrEmpty(survivor.unlockableName)
+                        && survivor.survivorIndex < SurvivorIndex.Count
+                        && userProfile.HasSurvivorUnlocked(survivor.survivorIndex)
+                        && !userProfile.HasViewedViewable(child.fullName)
+                    ;
             }
 
-            ViewablesCatalog.AddNodeToRoot(node);
+            Debug.Log("Re-setting all survivor nodes, duplicates may occur. This is no problem.");
+            ViewablesCatalog.AddNodeToRoot(parent);
+            Debug.Log("Re-setting survivor nodes complete.");
+
+            // Survivors over the builtin limit will be returned as null from SurvivorCatalog.GetSurvivorDef
+            // This is a quick check if the MonoMod component is installed correctly.
+            var overLimit = SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex >= SurvivorIndex.Count);
+            if (overLimit == null || SurvivorCatalog.GetSurvivorDef(overLimit.survivorIndex) != null)
+                return;
+
+            R2API.Logger.LogError($"{CenterText("!ERROR!")}");
+            R2API.Logger.LogError($"{CenterText("MonoMod component of R2API is not installed correctly!")}");
+            R2API.Logger.LogError($"{CenterText("Please copy Assembly-CSharp.R2API.mm.dll to BepInEx/monomod.")}");
         }
+
+        private static string CenterText(string text = "", int width = 80) =>
+            string.Format("*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
     }
 }
