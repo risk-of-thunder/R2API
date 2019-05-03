@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>Assembly-CSharp.R2API.mm</AssemblyName>
+        <RootNamespace>RoR2</RootNamespace>
+        <LangVersion>7.1</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="Assembly-CSharp">
+            <HintPath>..\R2API\libs\Assembly-CSharp.dll</HintPath>
+            <Private>False</Private>
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\R2API\R2API.csproj">
+        </ProjectReference>
+    </ItemGroup>
+
+</Project>

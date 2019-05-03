@@ -163,7 +163,7 @@ namespace R2API {
             });
 
             SurvivorCatalog.survivorMaxCount =
-                Math.Max((int) SurvivorDefinitions.Select(x => x.survivorIndex).Max() + 1, 10);
+                Math.Max((int) SurvivorDefinitions.Select(x => x.survivorIndex).Max() + (GetSurvivorDef(SurvivorIndex.Count) != null ? 1 : 0), 10);
             SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
 
             // Only contains not null survivors
