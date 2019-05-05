@@ -46,17 +46,16 @@ namespace R2API {
         private static event EventHandler UpdateValues;
 
         /// <summary>
-        /// Adds a rule category to the lobby.
+        /// Adds a rule category to the lobby. If a category with the same title already exists, will return that.
         /// </summary>
         /// <param name="title">The category's title.</param>
         /// <param name="color">The category's color</param>
         /// <param name="emptyDescription">Should the category be empty, you can show this description.</param>
         /// <returns>The RuleCategoryDef, keep if you want to add rules.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Gets thrown should the category already exist.</exception>
         public static RuleCategoryDef AddCategory(string title, Color color, string emptyDescription = null) {
-            if (RuleCatalog.allCategoryDefs.Any(x => x.displayToken == title))
-                throw new ArgumentOutOfRangeException(nameof(title),
-                    "R2API.LobbyConfigAPI.AddCategory: Category already exists.");
+            var category = RuleCatalog.allCategoryDefs.FirstOrDefault(x => x.displayToken == title);
+            if (category != null)
+                return category;
 
             _addCategory.Invoke(null, new object[] {title, color, emptyDescription, null});
             return RuleCatalog.allCategoryDefs.Last();
