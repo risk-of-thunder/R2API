@@ -7,14 +7,14 @@ using System.Runtime.CompilerServices;
 namespace R2API {
     public static class EntityAPI {
         public static void InitHooks() {
-            var detour = new Hook(
-                typeof(SerializableEntityStateType).GetMethodCached("set_stateType",
-                    BindingFlags.Public | BindingFlags.Instance),
-                typeof(EntityAPI).GetMethodCached(nameof(set_stateType_Hook),
-                    BindingFlags.Public | BindingFlags.Static)
-            );
+            //var detour = new Hook(
+            //    typeof(SerializableEntityStateType).GetMethodCached("set_stateType",
+            //        BindingFlags.Public | BindingFlags.Instance),
+            //    typeof(EntityAPI).GetMethodCached(nameof(set_stateType_Hook),
+            //        BindingFlags.Public | BindingFlags.Static)
+            //);
 
-            detour.Apply();
+            //detour.Apply();
         }
 
 
