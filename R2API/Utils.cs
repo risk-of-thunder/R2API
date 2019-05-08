@@ -6,32 +6,32 @@ using System.Reflection;
 
 namespace R2API.Utils {
     public static class Reflection {
-        private const BindingFlags _defaultFlags =
+        private const BindingFlags DefaultFlags =
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
 
         #region Field
 
         public static TReturn GetFieldValue<TReturn>(this object instance, string fieldName) {
             return (TReturn) instance.GetType()
-                .GetFieldCached(fieldName, _defaultFlags | BindingFlags.Instance)
+                .GetFieldCached(fieldName, DefaultFlags | BindingFlags.Instance)
                 .GetValue(instance);
         }
 
-        public static TReturn GetFieldValue<TClass, TReturn>(string fieldName) {
-            return (TReturn) typeof(TClass)
-                .GetFieldCached(fieldName, _defaultFlags | BindingFlags.Static)
+        public static TReturn GetFieldValue<TReturn>(this Type staticType, string fieldName) {
+            return (TReturn) staticType
+                .GetFieldCached(fieldName, DefaultFlags | BindingFlags.Static)
                 .GetValue(null);
         }
 
         public static void SetFieldValue(this object instance, string fieldName, object value) {
             instance.GetType()
-                .GetFieldCached(fieldName, _defaultFlags | BindingFlags.Instance)
+                .GetFieldCached(fieldName, DefaultFlags | BindingFlags.Instance)
                 .SetValue(instance, value);
         }
 
-        public static void SetFieldValue<TClass>(string fieldName, object value) {
-            typeof(TClass)
-                .GetFieldCached(fieldName, _defaultFlags | BindingFlags.Static)
+        public static void SetFieldValue(this Type staticType, string fieldName, object value) {
+            staticType
+                .GetFieldCached(fieldName, DefaultFlags | BindingFlags.Static)
                 .SetValue(null, value);
         }
 
@@ -41,24 +41,24 @@ namespace R2API.Utils {
 
         public static TReturn GetPropertyValue<TReturn>(this object instance, string propName) {
             return (TReturn) instance.GetType()
-                .GetPropertyCached(propName, _defaultFlags | BindingFlags.Instance)
+                .GetPropertyCached(propName, DefaultFlags | BindingFlags.Instance)
                 .GetValue(instance);
         }
 
-        public static TReturn GetPropertyValue<TClass, TReturn>(string propName) {
-            return (TReturn) typeof(TClass)
-                .GetPropertyCached(propName, _defaultFlags | BindingFlags.Static)
+        public static TReturn GetPropertyValue<TReturn>(this Type staticType, string propName) {
+            return (TReturn) staticType
+                .GetPropertyCached(propName, DefaultFlags | BindingFlags.Static)
                 .GetValue(null);
         }
 
         public static void SetPropertyValue(this object instance, string propName, object value) {
             instance.GetType()
-                .GetPropertyCached(propName, _defaultFlags | BindingFlags.Instance)
+                .GetPropertyCached(propName, DefaultFlags | BindingFlags.Instance)
                 .SetValue(instance, value);
         }
 
-        public static void SetPropertyValue<TClass>(string propName, object value) {
-            typeof(TClass).GetPropertyCached(propName, _defaultFlags | BindingFlags.Static)
+        public static void SetPropertyValue(this Type staticType, string propName, object value) {
+            staticType.GetPropertyCached(propName, DefaultFlags | BindingFlags.Static)
                 .SetValue(null, value);
         }
 
@@ -69,35 +69,34 @@ namespace R2API.Utils {
         public static TReturn InvokeMethod<TReturn>(this object instance, string methodName) =>
             instance.InvokeMethod<TReturn>(methodName, null);
 
-        public static TReturn InvokeMethod<TClass, TReturn>(string methodName) =>
-            InvokeMethod<TClass, TReturn>(methodName, null);
+        public static TReturn InvokeMethod<TReturn>(this Type staticType, string methodName) =>
+            staticType.InvokeMethod<TReturn>(methodName, null);
 
         public static void InvokeMethod(this object instance, string methodName) =>
             instance.InvokeMethod<object>(methodName);
 
-        public static void InvokeMethod<TClass>(string methodName) =>
-            InvokeMethod<TClass, object>(methodName);
+        public static void InvokeMethod(this Type staticType, string methodName) =>
+            staticType.InvokeMethod<object>(methodName);
 
 
-        public static TReturn InvokeMethod<TReturn>(this object instance, string methodName,
-            params object[] methodParams) {
+        public static TReturn InvokeMethod<TReturn>(this object instance, string methodName, params object[] methodParams) {
             return (TReturn) (methodParams == null
                     ? instance.GetType()
-                        .GetMethodCached(methodName, _defaultFlags | BindingFlags.Instance)
+                        .GetMethodCached(methodName, DefaultFlags | BindingFlags.Instance)
                     : instance.GetType()
                         .GetMethodCached(methodName, methodParams.Select(x => x.GetType()).ToArray(),
-                            _defaultFlags | BindingFlags.Instance)
+                            DefaultFlags | BindingFlags.Instance)
                 )
                 .Invoke(instance, methodParams);
         }
 
-        public static TReturn InvokeMethod<TClass, TReturn>(string methodName, params object[] methodParams) {
+        public static TReturn InvokeMethod<TReturn>(this Type staticType, string methodName, params object[] methodParams) {
             return (TReturn) (methodParams == null
-                    ? typeof(TClass)
-                        .GetMethodCached(methodName, _defaultFlags | BindingFlags.Instance)
-                    : typeof(TClass)
+                    ? staticType
+                        .GetMethodCached(methodName, DefaultFlags | BindingFlags.Instance)
+                    : staticType
                         .GetMethodCached(methodName, methodParams.Select(x => x.GetType()).ToArray(),
-                            _defaultFlags | BindingFlags.Instance)
+                            DefaultFlags | BindingFlags.Instance)
                 )
                 .Invoke(null, methodParams);
         }
@@ -105,8 +104,8 @@ namespace R2API.Utils {
         public static void InvokeMethod(this object instance, string methodName, params object[] methodParams) =>
             instance.InvokeMethod<object>(methodName, methodParams);
 
-        public static void InvokeMethod<TClass>(string methodName, params object[] methodParams) =>
-            InvokeMethod<TClass, object>(methodName, methodParams);
+        public static void InvokeMethod(this Type staticType, string methodName, params object[] methodParams) =>
+            staticType.InvokeMethod<object>(methodName, methodParams);
 
         #endregion
 
