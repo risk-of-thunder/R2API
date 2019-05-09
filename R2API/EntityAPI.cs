@@ -3,6 +3,7 @@ using MonoMod.RuntimeDetour;
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using R2API.Utils;
 
 namespace R2API {
     public static class EntityAPI {

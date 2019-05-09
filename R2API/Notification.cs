@@ -2,6 +2,7 @@
 using RoR2.UI;
 using System;
 using System.Reflection;
+using R2API.Utils;
 using UnityEngine;
 
 namespace R2API {
