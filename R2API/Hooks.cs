@@ -9,6 +9,9 @@
             InventoryAPI.InitHooks();
             EntityAPI.InitHooks();
             LobbyConfigAPI.InitHooks();
+            CustomItemAPI.InitHooks();
+            EffectAPI.InitHooks();
+            PlayerAPI.InitHooks();
         }
     }
 }
