@@ -2,7 +2,7 @@
 using System.Reflection;
 using UnityEngine;
 
-namespace R2API {
+namespace R2API.Utils {
     public static class ILHelper {
         public static void PrintMethods(this Type T) {
             foreach (var method in T.GetMethods()) {

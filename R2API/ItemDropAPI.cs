@@ -6,6 +6,7 @@ using System.Reflection;
 using MonoMod.Cil;
 using System;
 using BepInEx.Logging;
+using R2API.Utils;
 
 namespace R2API {
     public class PickupSelection {

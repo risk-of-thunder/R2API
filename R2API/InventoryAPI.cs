@@ -3,6 +3,7 @@ using MonoMod.Cil;
 using RoR2.UI;
 using System;
 using System.Reflection;
+using R2API.Utils;
 
 namespace R2API {
     public static class InventoryAPI {

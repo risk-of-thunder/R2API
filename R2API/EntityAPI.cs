@@ -3,6 +3,7 @@ using MonoMod.RuntimeDetour;
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using R2API.Utils;
 
 namespace R2API {
     public static class EntityAPI {
@@ -20,7 +21,7 @@ namespace R2API {
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void set_stateType_Hook(ref SerializableEntityStateType self, Type value) {
-            var typeName = typeof(SerializableEntityStateType).GetFieldCached("_typeName");
+            var typeName = typeof(SerializableEntityStateType).GetFieldCached("_typeName", BindingFlags.Instance | BindingFlags.NonPublic);
             typeName.SetValue(self,
                 value != null && value.IsSubclassOf(typeof(EntityState)) ? value.AssemblyQualifiedName : "");
         }

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using MonoMod.RuntimeDetour;
+using R2API.Utils;
 using RoR2;
 using UnityEngine;
 
