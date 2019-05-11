@@ -71,6 +71,10 @@ namespace R2API {
         public virtual float RecalculateSecondaryCount(float baseValue, CharacterBody character) => baseValue;
         public virtual float RecalculateUtilityCount(float baseValue, CharacterBody character) => baseValue;
         public virtual float RecalculateSpecialCount(float baseValue, CharacterBody character) => baseValue;
+
+        public virtual void UpdateItem(CharacterBody character) {
+
+        }
     }
 
     class DefaultRecalculate : ModRecalculateCustom {
@@ -433,7 +437,6 @@ namespace R2API {
 
         static public void AddCustomRecalculate(ModRecalculateCustom customRecalculate) {
             m_RecalulateList.Add(customRecalculate);
-            Debug.Log("adding a new recalculate : " + customRecalculate.ToString());
             ReorderRecalculateList();
         }
 
@@ -447,7 +450,11 @@ namespace R2API {
             if (characterBody == null)
                 return;
 
-            Debug.Log("Recalculate ammount : " + m_RecalulateList.Count);
+            CustomItemAPI.Update();
+            foreach (ModRecalculateCustom recal in m_RecalulateList) {
+                recal.InvokeMethod("UpdateItem", new object[1] { characterBody });
+            }
+
 
             characterBody.SetPropertyValue("experience",
                 TeamManager.instance.GetTeamExperience(characterBody.teamComponent.teamIndex));
@@ -513,8 +520,6 @@ namespace R2API {
                 }
             }
 
-
-            //Health and Shield update
             if (NetworkServer.active) {
                 float HealthOffset = characterBody.maxHealth - preHealth;
                 float ShieldOffset = characterBody.maxShield - preShield;
