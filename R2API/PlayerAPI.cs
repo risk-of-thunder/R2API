@@ -44,7 +44,8 @@ namespace R2API {
 
 
     public class ModRecalculateCustom {
-        public short RecalculatePriority = (short)Priority.Additive;
+        public short RecalculatePriority;
+
         public FunctionTag FlagOverWrite = FunctionTag.None;
 
         public virtual float RecalculateHealth(float baseValue, CharacterBody character) => baseValue;
@@ -73,7 +74,10 @@ namespace R2API {
     }
 
     class DefaultRecalculate : ModRecalculateCustom {
-        new public short RecalculatePriority = 0;
+
+        public DefaultRecalculate() {
+            RecalculatePriority = 0;
+        }
 
         public override float RecalculateHealth(float baseValue, CharacterBody character) {
             float MaxHealth = character.baseMaxHealth + (character.level - 1) * character.levelMaxHealth;
@@ -400,16 +404,13 @@ namespace R2API {
         }
 
         static void AddOrder(this Dictionary<int, ModRecalculateCustom> dic, int pos, ModRecalculateCustom obj, bool warn = false) {
-            try {
-                if (dic.ContainsKey(pos)) {
-                    AddOrder(dic, pos + 1, obj, true);
-                }
+            if (dic.ContainsKey(pos)) {
+                AddOrder(dic, pos + 1, obj, true);
+            }
+            else { 
                 dic.Add(pos, obj);
                 if (warn)
-                    Debug.Log("Character Stat API warning : The loading priority for " + obj.ToString() + " priority : " + obj.RecalculatePriority + " is allready used, priotity : " + pos + " given");
-            }
-            catch (OverflowException) {
-                throw new Exception("Error, the Minimum priority is allready used by : " + dic[short.MaxValue].ToString() + ", only one recalculate can be at the Minimum priority");
+                    Debug.Log("Character Stat API warning : The loading priority for " + obj.ToString() + " priority : " + obj.RecalculatePriority + " is allready used by : "+ dic[obj.RecalculatePriority].ToString() +", priotity : " + pos + " given");
             }
         }
 
@@ -426,10 +427,12 @@ namespace R2API {
 
         static public void AddCustomRecalculate(ModRecalculateCustom customRecalculate) {
             m_RecalulateList.Add(customRecalculate);
+            Debug.Log("adding a new recalculate : " + customRecalculate.ToString());
             ReorderRecalculateList();
         }
 
         public static void InitHooks() {
+            m_RecalulateList = new List<ModRecalculateCustom>();
             m_RecalulateList.Add(new DefaultRecalculate());
             On.RoR2.CharacterBody.RecalculateStats += (orig, self) => RecalcStats(self);
         }
@@ -438,6 +441,7 @@ namespace R2API {
             if (characterBody == null)
                 return;
 
+            Debug.Log("Recalculate ammount : " + m_RecalulateList.Count);
 
             characterBody.SetPropertyValue("experience",
                 TeamManager.instance.GetTeamExperience(characterBody.teamComponent.teamIndex));
@@ -453,45 +457,45 @@ namespace R2API {
             float preHealth = characterBody.maxHealth;
             float preShield = characterBody.maxShield;
 
-            characterBody.SetPropertyValue("maxHealth", StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateHealth), characterBody));
+            characterBody.SetPropertyValue("maxHealth", StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateHealth), characterBody));
 
-            characterBody.SetPropertyValue("maxShield", StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateShield), characterBody));
+            characterBody.SetPropertyValue("maxShield", StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateShield), characterBody));
 
-            characterBody.SetPropertyValue("regen", StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateRegen), characterBody));
+            characterBody.SetPropertyValue("regen", StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateRegen), characterBody));
 
-            characterBody.SetPropertyValue("moveSpeed", StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateMoveSpeed), characterBody));
+            characterBody.SetPropertyValue("moveSpeed", StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateMoveSpeed), characterBody));
             characterBody.SetPropertyValue("acceleration", characterBody.moveSpeed / characterBody.baseMoveSpeed * characterBody.baseAcceleration);
 
-            characterBody.SetPropertyValue("jumpPower", StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateJumpPower), characterBody));
+            characterBody.SetPropertyValue("jumpPower", StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateJumpPower), characterBody));
             characterBody.SetPropertyValue("maxJumpHeight", Trajectory.CalculateApex(characterBody.jumpPower));
-            characterBody.SetPropertyValue("maxJumpCount", (int)StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateJumpCount), characterBody));
+            characterBody.SetPropertyValue("maxJumpCount", (int)StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateJumpCount), characterBody));
 
-            characterBody.SetPropertyValue("damage", StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateDamage), characterBody));
+            characterBody.SetPropertyValue("damage", StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateDamage), characterBody));
 
-            characterBody.SetPropertyValue("attackSpeed", StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateAttackSpeed), characterBody));
+            characterBody.SetPropertyValue("attackSpeed", StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateAttackSpeed), characterBody));
 
-            characterBody.SetPropertyValue("crit", StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateCrit), characterBody));
-            characterBody.SetPropertyValue("armor", StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateArmor), characterBody));
+            characterBody.SetPropertyValue("crit", StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateCrit), characterBody));
+            characterBody.SetPropertyValue("armor", StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateArmor), characterBody));
 
             //CoolDown 
-            float CoolDownMultiplier = StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateGeneralCooldown), characterBody);
+            float CoolDownMultiplier = StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateGeneralCooldown), characterBody);
             if ((bool)characterBody.GetFieldValue<SkillLocator>("skillLocator").primary) {
-                characterBody.GetFieldValue<SkillLocator>("skillLocator").primary.cooldownScale = StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculatePrimaryCoolDown), characterBody) * CoolDownMultiplier;
+                characterBody.GetFieldValue<SkillLocator>("skillLocator").primary.cooldownScale = StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculatePrimaryCoolDown), characterBody) * CoolDownMultiplier;
                 if (characterBody.GetFieldValue<SkillLocator>("skillLocator").primary.baseMaxStock > 1)
-                    characterBody.GetFieldValue<SkillLocator>("skillLocator").primary.SetBonusStockFromBody((int)StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculatePrimaryCount), characterBody));
+                    characterBody.GetFieldValue<SkillLocator>("skillLocator").primary.SetBonusStockFromBody((int)StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculatePrimaryCount), characterBody));
             }
             if ((bool)characterBody.GetFieldValue<SkillLocator>("skillLocator").secondary) {
-                characterBody.GetFieldValue<SkillLocator>("skillLocator").secondary.cooldownScale = StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateSecondaryCooldown), characterBody) * CoolDownMultiplier;
-                characterBody.GetFieldValue<SkillLocator>("skillLocator").secondary.SetBonusStockFromBody((int)StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateSecondaryCount), characterBody));
+                characterBody.GetFieldValue<SkillLocator>("skillLocator").secondary.cooldownScale = StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateSecondaryCooldown), characterBody) * CoolDownMultiplier;
+                characterBody.GetFieldValue<SkillLocator>("skillLocator").secondary.SetBonusStockFromBody((int)StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateSecondaryCount), characterBody));
             }
             if ((bool)characterBody.GetFieldValue<SkillLocator>("skillLocator").utility) {
-                characterBody.GetFieldValue<SkillLocator>("skillLocator").utility.cooldownScale = StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateUtilityCooldown), characterBody) * CoolDownMultiplier;
-                characterBody.GetFieldValue<SkillLocator>("skillLocator").utility.SetBonusStockFromBody((int)StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateUtilityCount), characterBody));
+                characterBody.GetFieldValue<SkillLocator>("skillLocator").utility.cooldownScale = StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateUtilityCooldown), characterBody) * CoolDownMultiplier;
+                characterBody.GetFieldValue<SkillLocator>("skillLocator").utility.SetBonusStockFromBody((int)StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateUtilityCount), characterBody));
             }
             if ((bool)characterBody.GetFieldValue<SkillLocator>("skillLocator").special) {
-                characterBody.GetFieldValue<SkillLocator>("skillLocator").special.cooldownScale = StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateSpecialCooldown), characterBody) * CoolDownMultiplier;
+                characterBody.GetFieldValue<SkillLocator>("skillLocator").special.cooldownScale = StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateSpecialCooldown), characterBody) * CoolDownMultiplier;
                 if (characterBody.GetFieldValue<SkillLocator>("skillLocator").special.baseMaxStock > 1)
-                    characterBody.GetFieldValue<SkillLocator>("skillLocator").special.SetBonusStockFromBody((int)StatHandler(GetMethodInfo(new DefaultRecalculate().RecalculateSpecialCount), characterBody));
+                    characterBody.GetFieldValue<SkillLocator>("skillLocator").special.SetBonusStockFromBody((int)StatHandler(GetMethodInfo(new ModRecalculateCustom().RecalculateSpecialCount), characterBody));
             }
             //Since it's not yet used in game, I leave that here for now
             characterBody.SetPropertyValue("critHeal", 0.0f);
