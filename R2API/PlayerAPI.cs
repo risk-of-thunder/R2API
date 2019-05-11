@@ -404,13 +404,19 @@ namespace R2API {
         }
 
         static void AddOrder(this Dictionary<int, ModRecalculateCustom> dic, int pos, ModRecalculateCustom obj, bool warn = false) {
-            if (dic.ContainsKey(pos)) {
-                AddOrder(dic, pos + 1, obj, true);
+            try { 
+                if (dic.ContainsKey(pos)) {
+                        AddOrder(dic, pos + 1, obj, true);
+                }
+                else { 
+                    dic.Add(pos, obj);
+                    if (warn)
+                        Debug.Log("Character Stat API warning : The loading priority for " + obj.ToString() + " priority : " + obj.RecalculatePriority + " is allready used by : "+ dic[obj.RecalculatePriority].ToString() +", priotity : " + pos + " given");
+                }
             }
-            else { 
-                dic.Add(pos, obj);
-                if (warn)
-                    Debug.Log("Character Stat API warning : The loading priority for " + obj.ToString() + " priority : " + obj.RecalculatePriority + " is allready used by : "+ dic[obj.RecalculatePriority].ToString() +", priotity : " + pos + " given");
+            catch (OverflowException)
+            {
+                throw new Exception("Error, the Minimum priority is allready used by : "+ dic[short.MaxValue].ToString() +", only one recalculate can be at the Minimum priority");
             }
         }
 
