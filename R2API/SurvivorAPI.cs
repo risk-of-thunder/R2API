@@ -9,6 +9,7 @@ using RoR2;
 using UnityEngine;
 
 namespace R2API {
+    // ReSharper disable once InconsistentNaming
     public static class SurvivorAPI {
         /// <summary>
         /// The complete list of survivors, including vanilla and modded survivors.
@@ -20,7 +21,7 @@ namespace R2API {
         /// </summary>
         public static event EventHandler SurvivorCatalogReady;
 
-        private static bool WasReady;
+        private static bool _wasReady;
 
 
         internal static void InitHooks() {
@@ -82,7 +83,7 @@ namespace R2API {
         /// </summary>
         /// <param name="survivor">The survivor to add.</param>
         public static void AddSurvivorOnReady(SurvivorDef survivor) {
-            if (WasReady)
+            if (_wasReady)
                 AddSurvivor(survivor);
             else
                 SurvivorCatalogReady += (sender, args) => { AddSurvivor(survivor); };
@@ -139,19 +140,13 @@ namespace R2API {
                 }
             });
 
-            WasReady = true;
+            _wasReady = true;
             SurvivorCatalogReady?.Invoke(null, null);
 
             ReconstructSurvivors();
 
             SurvivorDefinitions.CollectionChanged += (sender, args) => { ReconstructSurvivors(); };
         }
-
-        private static readonly FieldInfo survivorDefs =
-            typeof(SurvivorCatalog).GetFieldCached("survivorDefs");
-
-        private static readonly FieldInfo allSurvivorDefs =
-            typeof(SurvivorCatalog).GetFieldCached("_allSurvivorDefs");
 
         private static void ReconstructSurvivors() {
             SurvivorDefinitions.GroupBy(x => x.survivorIndex).Where(x => x.Count() > 1).ToList().ForEach(x => {
@@ -161,17 +156,18 @@ namespace R2API {
             });
 
             SurvivorCatalog.survivorMaxCount =
-                Math.Max((int) SurvivorDefinitions.Select(x => x.survivorIndex).Max() + (GetSurvivorDef(SurvivorIndex.Count) != null ? 1 : 0), 10);
+                Math.Max((int) SurvivorDefinitions.Select(x => x.survivorIndex).Max() + 1, 10);
             SurvivorCatalog.idealSurvivorOrder = SurvivorDefinitions.Select(x => x.survivorIndex).ToArray();
 
             // Only contains not null survivors
-            allSurvivorDefs.SetValue(null, SurvivorDefinitions
-                .OrderBy(x => x.survivorIndex)
-                .ToArray()
+            typeof(SurvivorCatalog).SetFieldValue("_allSurvivorDefs",
+                SurvivorDefinitions
+                    .OrderBy(x => x.survivorIndex)
+                    .ToArray()
             );
 
             // Contains null for index with no survivor
-            survivorDefs.SetValue(null,
+            typeof(SurvivorCatalog).SetFieldValue("survivorDefs",
                 Enumerable.Range(0, SurvivorCatalog.survivorMaxCount)
                     .Select(i => SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == (SurvivorIndex) i)
                                  ?? new SurvivorDef {survivorIndex = (SurvivorIndex) i})
@@ -216,7 +212,9 @@ namespace R2API {
             R2API.Logger.LogError($"{CenterText("Please copy Assembly-CSharp.R2API.mm.dll to BepInEx/monomod.")}");
         }
 
+        // ReSharper disable FormatStringProblem
         private static string CenterText(string text = "", int width = 80) =>
             string.Format("*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
+        // ReSharper restore FormatStringProblem
     }
 }

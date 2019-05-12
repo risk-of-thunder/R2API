@@ -9,6 +9,7 @@ using RoR2;
 
 namespace R2API {
     [BepInPlugin("com.bepis.r2api", "R2API", "2.0.0")]
+    // ReSharper disable once InconsistentNaming
     public class R2API : BaseUnityPlugin {
         internal new static ManualLogSource Logger { get; set; }
 
@@ -28,13 +29,13 @@ namespace R2API {
             RoR2Application.isModded = IsModded.Value;
         }
 
-        private void CheckForIncompatibleAssemblies() {
+        private static void CheckForIncompatibleAssemblies() {
             const int width = 70;
 
-            string CenterText(string text = "") {
-                return string.Format(
-                    "*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
-            }
+            // ReSharper disable FormatStringProblem
+            string CenterText(string text = "") =>
+                string.Format("*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
+            // ReSharper restore FormatStringProblem
 
 
             const string assemblies = "(MonoMod*)|(Mono\\.Cecil)";
@@ -75,12 +76,13 @@ namespace R2API {
         }
 
         protected void InitConfig() {
+            // ReSharper disable ArgumentsStyleLiteral ArgumentsStyleStringLiteral
             IsModded = Config.Wrap(
                 section: "Game",
                 key: "IsModded",
-                description:
-                "Enables or disables the isModded flag in the game, which affects if you will be matched with other modded users.",
+                description: "Enables or disables the isModded flag in the game, which affects if you will be matched with other modded users.",
                 defaultValue: true);
+            // ReSharper restore ArgumentsStyleLiteral ArgumentsStyleStringLiteral
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Reflection;
 using R2API.Utils;
 
 namespace R2API {
+    // ReSharper disable once InconsistentNaming
     public static class InventoryAPI {
         public static event Action<ItemIcon> OnItemIconAdded;
         public static event Action<EquipmentIcon> OnEquipmentIconAdded;
