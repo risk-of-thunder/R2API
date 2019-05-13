@@ -25,6 +25,27 @@ namespace R2API.Tests {
             var val = typeof(StaticReflectionTestObject).GetFieldValue<string>("PrivateValue");
             Assert.AreEqual("test", val);
         }
+
+        [TestMethod]
+        public void TestReflectionPropertyGetAndSet() {
+            var testObject = new ReflectionTestObject();
+            var val = testObject.GetPropertyValue<string>("PrivateProperty");
+            Assert.AreEqual("Get off my lawn", val);
+
+            testObject.SetPropertyValue<string>("PrivateProperty", "testProp");
+            var val2 = testObject.GetPropertyValue<string>("PrivateProperty");
+            Assert.AreEqual("testProp", val2);
+        }
+
+        [TestMethod]
+        public void TestReflectionStaticPropertyGetAndSet() {
+            var val = typeof(StaticReflectionTestObject).GetPropertyValue<string>("PrivateProperty");
+            Assert.AreEqual("Get off my lawn", val);
+
+            typeof(StaticReflectionTestObject).SetPropertyValue<string>("PrivateProperty", "testProp");
+            var val2 = typeof(StaticReflectionTestObject).GetPropertyValue<string>("PrivateProperty");
+            Assert.AreEqual("testProp", val2);
+        }
     }
 
     public class ReflectionTestBaseObject {
@@ -35,9 +56,11 @@ namespace R2API.Tests {
     public class ReflectionTestObject : ReflectionTestBaseObject {
         private string PrivateValue1 = "SECRET1";
         private string PrivateValueCollide = "SECRET_COLLIDE_CORRECT";
+        private string PrivateProperty { get; set; } = "Get off my lawn";
     }
 
     public static class StaticReflectionTestObject {
         private static string PrivateValue = "SECRET";
+        private static string PrivateProperty { get; set; } = "Get off my lawn";
     }
 }

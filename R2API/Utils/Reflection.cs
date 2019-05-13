@@ -9,8 +9,8 @@ using MonoMod.Utils;
 
 namespace R2API.Utils {
     public static class Reflection {
-        private const BindingFlags DefaultFlags =
-            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
+        private const BindingFlags AllFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+
 
         #region Field
 
@@ -27,7 +27,7 @@ namespace R2API.Utils {
         /// Gets the <see cref="FieldInfo"/> on the specified <see cref="Type"/> and searches base types if not found.
         /// </summary>
         /// <param name="t">The <see cref="Type"/> to search and get base types from</param>
-        /// <param name="name">The name of the field to search for.</param>
+        /// <param name="name">The name of the property to search for.</param>
         /// <returns></returns>
         private static FieldInfo GetFieldFull(this Type t, string name) {
             while (true) {
@@ -35,9 +35,8 @@ namespace R2API.Utils {
                     return null;
                 }
 
-                const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
-                var fieldInfo = t.GetField(name, flags);
+                var fieldInfo = t.GetField(name, AllFlags);
                 if (fieldInfo != null) {
                     return fieldInfo;
                 }
@@ -45,7 +44,7 @@ namespace R2API.Utils {
             }
         }
 
-        public static FieldInfo GetFieldCached<T>(string name, BindingFlags bindingFlags) =>
+        public static FieldInfo GetFieldCached<T>(string name) =>
             GetFieldCached(typeof(T), name);
 
         public static FieldInfo GetFieldCached(this Type T, string name) {
@@ -55,9 +54,9 @@ namespace R2API.Utils {
             return FieldCache[(T, name)] = T.GetFieldFull(name);
         }
 
-        private delegate void SetFieldDelegate(object instance, object value);
-
         private delegate object GetFieldDelegate(object instance);
+
+        private delegate void SetFieldDelegate(object instance, object value);
 
         private static GetFieldDelegate GetGetFieldDelegate<TValue>(this FieldInfo field, bool instance) {
             if (GetFieldDelegateCache.TryGetValue(field, out var val) && val != null)
@@ -74,7 +73,7 @@ namespace R2API.Utils {
         }
 
         private static GetFieldDelegate CreateGetFieldDelegate<T>(this FieldInfo field, bool instance) {
-            var method = new DynamicMethodDefinition($"{field.DeclaringType?.Name ?? "???"} {field.Name} Getter", typeof(T), new [] { typeof(object) });
+            var method = new DynamicMethodDefinition($"{field} Getter", typeof(T), new [] { typeof(object) });
             var il = method.GetILProcessor();
 
             if (instance) {
@@ -91,7 +90,7 @@ namespace R2API.Utils {
         }
 
         private static SetFieldDelegate CreateSetFieldDelegate(this FieldInfo field, bool instance) {
-            var method = new DynamicMethodDefinition($"{field.DeclaringType?.Name ?? "???"} {field.Name} Setter", typeof(void), new[] { typeof(object), typeof(object) });
+            var method = new DynamicMethodDefinition($"{field} Setter", typeof(void), new[] { typeof(object), typeof(object) });
             var il = method.GetILProcessor();
 
             if (instance) {
@@ -123,14 +122,14 @@ namespace R2API.Utils {
                 (null);
         }
 
-        public static void SetFieldValue(this object instance, string fieldName, object value) {
+        public static void SetFieldValue<TValue>(this object instance, string fieldName, TValue value) {
             instance.GetType()
                 .GetFieldCached(fieldName)
                 .GetSetFieldDelegate(true)
                 (instance, value);
         }
 
-        public static void SetFieldValue(this Type staticType, string fieldName, object value) {
+        public static void SetFieldValue<TValue>(this Type staticType, string fieldName, TValue value) {
             staticType
                 .GetFieldCached(fieldName)
                 .GetSetFieldDelegate(false)
@@ -144,39 +143,95 @@ namespace R2API.Utils {
         private static readonly ConcurrentDictionary<(Type T, string name), PropertyInfo> PropertyCache =
             new ConcurrentDictionary<(Type T, string name), PropertyInfo>();
 
+        private static readonly ConcurrentDictionary<PropertyInfo, GetPropertyDelegate> GetPropertyDelegateCache =
+            new ConcurrentDictionary<PropertyInfo, GetPropertyDelegate>();
 
-        public static PropertyInfo GetPropertyCached<T>(string name, BindingFlags bindingFlags) =>
-            GetPropertyCached(typeof(T), name, bindingFlags);
+        private static readonly ConcurrentDictionary<PropertyInfo, SetPropertyDelegate> SetPropertyDelegateCache =
+            new ConcurrentDictionary<PropertyInfo, SetPropertyDelegate>();
 
-        public static PropertyInfo GetPropertyCached(this Type T, string name, BindingFlags bindingFlags) {
+        private delegate object GetPropertyDelegate(object instance);
+
+        private delegate void SetPropertyDelegate(object instance, object value);
+
+
+        private static GetPropertyDelegate GetGetPropertyDelegate<TValue>(this PropertyInfo property, bool instance) {
+            if (GetPropertyDelegateCache.TryGetValue(property, out var val) && val != null)
+                return val;
+
+            return GetPropertyDelegateCache[property] = property.CreateGetPropertyDelegate<TValue>(instance);
+        }
+
+        private static SetPropertyDelegate GetSetPropertyDelegate(this PropertyInfo property, bool instance) {
+            if (SetPropertyDelegateCache.TryGetValue(property, out var val) && val != null)
+                return val;
+
+            return SetPropertyDelegateCache[property] = property.CreateSetPropertyDelegate(instance);
+        }
+
+        private static GetPropertyDelegate CreateGetPropertyDelegate<TValue>(this PropertyInfo property, bool instance) {
+            var method = new DynamicMethodDefinition($"{property} Getter", typeof(TValue), new[] { typeof(object) });
+            var il = method.GetILProcessor();
+
+            if (instance) {
+                il.Emit(OpCodes.Ldarg_0);
+            }
+
+            il.Emit(OpCodes.Call, property.GetGetMethod(true));
+            il.Emit(OpCodes.Ret);
+
+            return (GetPropertyDelegate)method.Generate().CreateDelegate(typeof(GetPropertyDelegate));
+        }
+
+        private static SetPropertyDelegate CreateSetPropertyDelegate(this PropertyInfo property, bool instance) {
+            var method = new DynamicMethodDefinition($"{property} Setter", typeof(void), new[] { typeof(object), typeof(object) });
+            var il = method.GetILProcessor();
+
+            if (instance) {
+                il.Emit(OpCodes.Ldarg_0);
+            }
+
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Call, property.GetSetMethod(true));
+            il.Emit(OpCodes.Ret);
+
+            return (SetPropertyDelegate)method.Generate().CreateDelegate(typeof(SetPropertyDelegate));
+        }
+
+        public static PropertyInfo GetPropertyCached<T>(string name) =>
+            GetPropertyCached(typeof(T), name);
+
+        public static PropertyInfo GetPropertyCached(this Type T, string name) {
             if (PropertyCache.TryGetValue((T, name), out var val) && val != null)
                 return val;
 
-            return PropertyCache[(T, name)] = T.GetProperty(name, bindingFlags);
+            return PropertyCache[(T, name)] = T.GetProperty(name, AllFlags);
         }
-
 
         public static TReturn GetPropertyValue<TReturn>(this object instance, string propName) {
             return (TReturn) instance.GetType()
-                .GetPropertyCached(propName, DefaultFlags | BindingFlags.Instance)
-                .GetValue(instance);
+                .GetPropertyCached(propName)
+                .GetGetPropertyDelegate<TReturn>(true)
+                (instance);
         }
 
         public static TReturn GetPropertyValue<TReturn>(this Type staticType, string propName) {
             return (TReturn) staticType
-                .GetPropertyCached(propName, DefaultFlags | BindingFlags.Static)
-                .GetValue(null);
+                .GetPropertyCached(propName)
+                .GetGetPropertyDelegate<TReturn>(false)
+                (null);
         }
 
-        public static void SetPropertyValue(this object instance, string propName, object value) {
+        public static void SetPropertyValue<TValue>(this object instance, string propName, object value) {
             instance.GetType()
-                .GetPropertyCached(propName, DefaultFlags | BindingFlags.Instance)
-                .SetValue(instance, value);
+                .GetPropertyCached(propName)
+                .GetSetPropertyDelegate(true)
+                (instance, value);
         }
 
-        public static void SetPropertyValue(this Type staticType, string propName, object value) {
-            staticType.GetPropertyCached(propName, DefaultFlags | BindingFlags.Static)
-                .SetValue(null, value);
+        public static void SetPropertyValue<TValue>(this Type staticType, string propName, object value) {
+            staticType.GetPropertyCached(propName)
+                .GetSetPropertyDelegate(false)
+                (null, value);
         }
 
         #endregion
@@ -190,25 +245,25 @@ namespace R2API.Utils {
             new ConcurrentDictionary<(Type T, string name, Type[] arguments), MethodInfo>();
 
 
-        public static MethodInfo GetMethodCached<T>(string name, BindingFlags bindingFlags) =>
-            GetMethodCached(typeof(T), name, bindingFlags);
+        public static MethodInfo GetMethodCached<T>(string name) =>
+            GetMethodCached(typeof(T), name);
 
-        public static MethodInfo GetMethodCached(this Type T, string name, BindingFlags bindingFlags) {
+        public static MethodInfo GetMethodCached(this Type T, string name) {
             if (MethodCache.TryGetValue((T, name), out var val) && val != null)
                 return val;
 
-            return MethodCache[(T, name)] = T.GetMethod(name, bindingFlags);
+            return MethodCache[(T, name)] = T.GetMethod(name, AllFlags);
         }
 
         public static MethodInfo GetMethodCached<T>(string name, Type[] argumentTypes, BindingFlags bindingFlags) =>
-            GetMethodCached(typeof(T), name, argumentTypes, bindingFlags);
+            GetMethodCached(typeof(T), name, argumentTypes);
 
-        public static MethodInfo GetMethodCached(this Type T, string name, Type[] argumentTypes, BindingFlags bindingFlags) {
+        public static MethodInfo GetMethodCached(this Type T, string name, Type[] argumentTypes) {
             if (OverloadedMethodCache.TryGetValue((T, name, argumentTypes), out var val) && val != null)
                 return val;
 
             return OverloadedMethodCache[(T, name, argumentTypes)] =
-                T.GetMethod(name, bindingFlags, null, argumentTypes, null);
+                T.GetMethod(name, AllFlags, null, argumentTypes, null);
         }
 
 
@@ -228,10 +283,9 @@ namespace R2API.Utils {
         public static TReturn InvokeMethod<TReturn>(this object instance, string methodName, params object[] methodParams) {
             return (TReturn) (methodParams == null
                     ? instance.GetType()
-                        .GetMethodCached(methodName, DefaultFlags | BindingFlags.Instance)
+                        .GetMethodCached(methodName)
                     : instance.GetType()
-                        .GetMethodCached(methodName, methodParams.Select(x => x.GetType()).ToArray(),
-                            DefaultFlags | BindingFlags.Instance)
+                        .GetMethodCached(methodName, methodParams.Select(x => x.GetType()).ToArray())
                 )
                 .Invoke(instance, methodParams);
         }
@@ -239,10 +293,9 @@ namespace R2API.Utils {
         public static TReturn InvokeMethod<TReturn>(this Type staticType, string methodName, params object[] methodParams) {
             return (TReturn) (methodParams == null
                     ? staticType
-                        .GetMethodCached(methodName, DefaultFlags | BindingFlags.Instance)
+                        .GetMethodCached(methodName)
                     : staticType
-                        .GetMethodCached(methodName, methodParams.Select(x => x.GetType()).ToArray(),
-                            DefaultFlags | BindingFlags.Instance)
+                        .GetMethodCached(methodName, methodParams.Select(x => x.GetType()).ToArray())
                 )
                 .Invoke(null, methodParams);
         }

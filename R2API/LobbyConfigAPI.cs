@@ -12,13 +12,11 @@ namespace R2API {
 
         private static readonly MethodInfo _addCategory =
             typeof(RuleCatalog).GetMethodCached("AddCategory"
-                , new[] {typeof(string), typeof(Color), typeof(string), typeof(Func<bool>)}
-                , BindingFlags.Static | BindingFlags.NonPublic);
+                , new[] {typeof(string), typeof(Color), typeof(string), typeof(Func<bool>)});
 
         private static readonly MethodInfo _addRule =
             typeof(RuleCatalog).GetMethodCached("AddRule"
-                , new[] {typeof(RuleDef)}
-                , BindingFlags.Static | BindingFlags.NonPublic);
+                , new[] {typeof(RuleDef)});
 
         private static readonly List<RuleChoiceDef> _ruleChoices = (List<RuleChoiceDef>)
             typeof(RuleCatalog).GetFieldCached("allChoicesDefs")

@@ -25,8 +25,8 @@ namespace R2API {
 
         internal static void InitHooks() {
             var detour = new NativeDetour(
-                typeof(SurvivorCatalog).GetMethodCached("Init", BindingFlags.NonPublic | BindingFlags.Static),
-                typeof(SurvivorAPI).GetMethodCached(nameof(Init), BindingFlags.Public | BindingFlags.Static));
+                typeof(SurvivorCatalog).GetMethodCached("Init"),
+                typeof(SurvivorAPI).GetMethodCached(nameof(Init)));
 
             detour.Apply();
         }

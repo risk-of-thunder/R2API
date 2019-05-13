@@ -94,18 +94,18 @@ namespace R2API {
         public static ManualLogSource Logger = R2API.Logger;
 
         public static void InitHooks() {
-            var itemDropApi_GetSelection = typeof(ItemDropAPI).GetMethodCached("GetSelection", BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
-            var xoroshiro_GetNextNormalizedFloat = typeof(Xoroshiro128Plus).GetMethodCached("get_nextNormalizedFloat", BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+            var itemDropApi_GetSelection = typeof(ItemDropAPI).GetMethodCached("GetSelection");
+            var xoroshiro_GetNextNormalizedFloat = typeof(Xoroshiro128Plus).GetMethodCached("get_nextNormalizedFloat");
 
             IL.RoR2.BossGroup.OnCharacterDeathCallback += il => {
                 var cursor = new ILCursor(il).Goto(0);
 
-                cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethodCached("get_itemIndex", BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)));
+                cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethodCached("get_itemIndex")));
 
                 var itemIndex = (VariableDefinition) cursor.Next.Next.Operand;
 
                 cursor.Goto(0);
-                cursor.GotoNext(x => x.MatchCallvirt(typeof(List<PickupIndex>).GetMethodCached("get_Item", BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)));
+                cursor.GotoNext(x => x.MatchCallvirt(typeof(List<PickupIndex>).GetMethodCached("get_Item")));
 
                 var pickupIndex = (VariableDefinition) cursor.Next.Next.Operand;
 
@@ -121,7 +121,7 @@ namespace R2API {
                 cursor.Emit(OpCodes.Stloc_S, pickupIndex);
                 cursor.Emit(OpCodes.Ldloca_S, pickupIndex);
 
-                cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethodCached("get_itemIndex", BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static));
+                cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethodCached("get_itemIndex"));
             };
 
             var dropPickup =
@@ -166,7 +166,7 @@ namespace R2API {
                 cursor.Emit(OpCodes.Ret);
             };
 
-            var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethodCached("Evaluate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+            var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethodCached("Evaluate");
 
             IL.RoR2.ShrineChanceBehavior.AddShrineStack += il => {
                 var cursor = new ILCursor(il).Goto(0);

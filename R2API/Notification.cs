@@ -14,7 +14,7 @@ namespace R2API {
         public Transform Parent { get; set; }
 
         private static MethodInfo UpdateLabel =
-            typeof(LanguageTextMeshController).GetMethodCached("UpdateLabel", BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+            typeof(LanguageTextMeshController).GetMethodCached("UpdateLabel");
 
         private void Awake() {
             // TODO: Figure out HUD transform for canvas and scaling
