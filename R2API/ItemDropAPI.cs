@@ -115,7 +115,7 @@ namespace R2API {
                 cursor.Emit(OpCodes.Ldc_I4_0);
 
                 cursor.Emit(OpCodes.Ldarg_0);
-                cursor.Emit(OpCodes.Ldfld, typeof(BossGroup).GetFieldCached("rng", BindingFlags.NonPublic | BindingFlags.Instance));
+                cursor.Emit(OpCodes.Ldfld, typeof(BossGroup).GetFieldCached("rng"));
                 cursor.Emit(OpCodes.Callvirt, xoroshiro_GetNextNormalizedFloat);
                 cursor.Emit(OpCodes.Call, itemDropApi_GetSelection);
                 cursor.Emit(OpCodes.Stloc_S, pickupIndex);
@@ -125,15 +125,15 @@ namespace R2API {
             };
 
             var dropPickup =
-                typeof(ChestBehavior).GetFieldCached("dropPickup", BindingFlags.NonPublic | BindingFlags.Instance);
+                typeof(ChestBehavior).GetFieldCached("dropPickup");
             var lunarChance =
-                typeof(ChestBehavior).GetFieldCached("lunarChance", BindingFlags.Public | BindingFlags.Instance);
+                typeof(ChestBehavior).GetFieldCached("lunarChance");
             var tier1Chance =
-                typeof(ChestBehavior).GetFieldCached("tier1Chance", BindingFlags.Public | BindingFlags.Instance);
+                typeof(ChestBehavior).GetFieldCached("tier1Chance");
             var tier2Chance =
-                typeof(ChestBehavior).GetFieldCached("tier2Chance", BindingFlags.Public | BindingFlags.Instance);
+                typeof(ChestBehavior).GetFieldCached("tier2Chance");
             var tier3Chance =
-                typeof(ChestBehavior).GetFieldCached("tier3Chance", BindingFlags.Public | BindingFlags.Instance);
+                typeof(ChestBehavior).GetFieldCached("tier3Chance");
 
             IL.RoR2.ChestBehavior.RollItem += il => {
                 var cursor = new ILCursor(il).Goto(0);

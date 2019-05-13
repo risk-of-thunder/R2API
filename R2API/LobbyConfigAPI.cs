@@ -21,7 +21,7 @@ namespace R2API {
                 , BindingFlags.Static | BindingFlags.NonPublic);
 
         private static readonly List<RuleChoiceDef> _ruleChoices = (List<RuleChoiceDef>)
-            typeof(RuleCatalog).GetFieldCached("allChoicesDefs", BindingFlags.NonPublic | BindingFlags.Static)
+            typeof(RuleCatalog).GetFieldCached("allChoicesDefs")
                 .GetValue(null);
 
         #endregion

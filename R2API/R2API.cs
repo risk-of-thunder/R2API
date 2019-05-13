@@ -8,7 +8,7 @@ using BepInEx.Logging;
 using RoR2;
 
 namespace R2API {
-    [BepInPlugin("com.bepis.r2api", "R2API", "1.0")]
+    [BepInPlugin("com.bepis.r2api", "R2API", "2.0.0")]
     public class R2API : BaseUnityPlugin {
         internal new static ManualLogSource Logger { get; set; }
 

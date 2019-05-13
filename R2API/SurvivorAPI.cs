@@ -148,10 +148,10 @@ namespace R2API {
         }
 
         private static readonly FieldInfo survivorDefs =
-            typeof(SurvivorCatalog).GetFieldCached("survivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(SurvivorCatalog).GetFieldCached("survivorDefs");
 
         private static readonly FieldInfo allSurvivorDefs =
-            typeof(SurvivorCatalog).GetFieldCached("_allSurvivorDefs", BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(SurvivorCatalog).GetFieldCached("_allSurvivorDefs");
 
         private static void ReconstructSurvivors() {
             SurvivorDefinitions.GroupBy(x => x.survivorIndex).Where(x => x.Count() > 1).ToList().ForEach(x => {

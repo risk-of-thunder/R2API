@@ -13,9 +13,6 @@ namespace R2API {
         public Func<string> GetDescription { get; set; }
         public Transform Parent { get; set; }
 
-        private static FieldInfo ResolvedText =
-            typeof(LanguageTextMeshController).GetFieldCached("resolvedString", BindingFlags.Instance | BindingFlags.NonPublic);
-
         private static MethodInfo UpdateLabel =
             typeof(LanguageTextMeshController).GetMethodCached("UpdateLabel", BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
@@ -34,11 +31,10 @@ namespace R2API {
                 return;
             }
 
-
-            ResolvedText.SetValue(GenericNotification.titleText, GetTitle());
+            GenericNotification.titleText.SetFieldValue("resolvedString", GetTitle());
             UpdateLabel.Invoke(GenericNotification.titleText, null);
 
-            ResolvedText.SetValue(GenericNotification.descriptionText, GetDescription());
+            GenericNotification.descriptionText.SetFieldValue("resolvedString", GetDescription());
             UpdateLabel.Invoke(GenericNotification.descriptionText, null);
         }
 

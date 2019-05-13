@@ -4,6 +4,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Mono.Cecil.Cil;
+using MonoMod.Utils;
 
 namespace R2API.Utils {
     public static class Reflection {
@@ -15,40 +17,124 @@ namespace R2API.Utils {
         private static readonly ConcurrentDictionary<(Type T, string name), FieldInfo> FieldCache =
             new ConcurrentDictionary<(Type T, string name), FieldInfo>();
 
+        private static readonly ConcurrentDictionary<FieldInfo, GetFieldDelegate> GetFieldDelegateCache =
+            new ConcurrentDictionary<FieldInfo, GetFieldDelegate>();
+
+        private static readonly ConcurrentDictionary<FieldInfo, SetFieldDelegate> SetFieldDelegateCache =
+            new ConcurrentDictionary<FieldInfo, SetFieldDelegate>();
+
+        /// <summary>
+        /// Gets the <see cref="FieldInfo"/> on the specified <see cref="Type"/> and searches base types if not found.
+        /// </summary>
+        /// <param name="t">The <see cref="Type"/> to search and get base types from</param>
+        /// <param name="name">The name of the field to search for.</param>
+        /// <returns></returns>
+        private static FieldInfo GetFieldFull(this Type t, string name) {
+            while (true) {
+                if (t == null) {
+                    return null;
+                }
+
+                const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+
+                var fieldInfo = t.GetField(name, flags);
+                if (fieldInfo != null) {
+                    return fieldInfo;
+                }
+                t = t.BaseType;
+            }
+        }
 
         public static FieldInfo GetFieldCached<T>(string name, BindingFlags bindingFlags) =>
-            GetFieldCached(typeof(T), name, bindingFlags);
+            GetFieldCached(typeof(T), name);
 
-        public static FieldInfo GetFieldCached(this Type T, string name, BindingFlags bindingFlags) {
+        public static FieldInfo GetFieldCached(this Type T, string name) {
             if (FieldCache.TryGetValue((T, name), out var val) && val != null)
                 return val;
 
-            return FieldCache[(T, name)] = T.GetField(name, bindingFlags);
+            return FieldCache[(T, name)] = T.GetFieldFull(name);
         }
 
+        private delegate void SetFieldDelegate(object instance, object value);
+
+        private delegate object GetFieldDelegate(object instance);
+
+        private static GetFieldDelegate GetGetFieldDelegate<TValue>(this FieldInfo field, bool instance) {
+            if (GetFieldDelegateCache.TryGetValue(field, out var val) && val != null)
+                return val;
+
+            return GetFieldDelegateCache[field] = field.CreateGetFieldDelegate<TValue>(instance);
+        }
+
+        private static SetFieldDelegate GetSetFieldDelegate(this FieldInfo field, bool instance) {
+            if (SetFieldDelegateCache.TryGetValue(field, out var val) && val != null)
+                return val;
+
+            return SetFieldDelegateCache[field] = field.CreateSetFieldDelegate(instance);
+        }
+
+        private static GetFieldDelegate CreateGetFieldDelegate<T>(this FieldInfo field, bool instance) {
+            var method = new DynamicMethodDefinition($"{field.DeclaringType?.Name ?? "???"} {field.Name} Getter", typeof(T), new [] { typeof(object) });
+            var il = method.GetILProcessor();
+
+            if (instance) {
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Ldfld, field);
+            }
+            else {
+                il.Emit(OpCodes.Ldsfld, field);
+            }
+
+            il.Emit(OpCodes.Ret);
+
+            return (GetFieldDelegate)method.Generate().CreateDelegate(typeof(GetFieldDelegate));
+        }
+
+        private static SetFieldDelegate CreateSetFieldDelegate(this FieldInfo field, bool instance) {
+            var method = new DynamicMethodDefinition($"{field.DeclaringType?.Name ?? "???"} {field.Name} Setter", typeof(void), new[] { typeof(object), typeof(object) });
+            var il = method.GetILProcessor();
+
+            if (instance) {
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Ldarg_1);
+                il.Emit(OpCodes.Stfld, field);
+            }
+            else {
+                il.Emit(OpCodes.Ldarg_1);
+                il.Emit(OpCodes.Stsfld, field);
+            }
+
+            il.Emit(OpCodes.Ret);
+
+            return (SetFieldDelegate)method.Generate().CreateDelegate(typeof(SetFieldDelegate));
+        }
 
         public static TReturn GetFieldValue<TReturn>(this object instance, string fieldName) {
             return (TReturn) instance.GetType()
-                .GetFieldCached(fieldName, DefaultFlags | BindingFlags.Instance)
-                .GetValue(instance);
+                .GetFieldCached(fieldName)
+                .GetGetFieldDelegate<TReturn>(true)
+                (instance);
         }
 
         public static TReturn GetFieldValue<TReturn>(this Type staticType, string fieldName) {
             return (TReturn) staticType
-                .GetFieldCached(fieldName, DefaultFlags | BindingFlags.Static)
-                .GetValue(null);
+                .GetFieldCached(fieldName)
+                .GetGetFieldDelegate<TReturn>(false)
+                (null);
         }
 
         public static void SetFieldValue(this object instance, string fieldName, object value) {
             instance.GetType()
-                .GetFieldCached(fieldName, DefaultFlags | BindingFlags.Instance)
-                .SetValue(instance, value);
+                .GetFieldCached(fieldName)
+                .GetSetFieldDelegate(true)
+                (instance, value);
         }
 
         public static void SetFieldValue(this Type staticType, string fieldName, object value) {
             staticType
-                .GetFieldCached(fieldName, DefaultFlags | BindingFlags.Static)
-                .SetValue(null, value);
+                .GetFieldCached(fieldName)
+                .GetSetFieldDelegate(false)
+                (null, value);
         }
 
         #endregion

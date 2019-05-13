@@ -21,7 +21,7 @@ namespace R2API {
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void set_stateType_Hook(ref SerializableEntityStateType self, Type value) {
-            var typeName = typeof(SerializableEntityStateType).GetFieldCached("_typeName", BindingFlags.Instance | BindingFlags.NonPublic);
+            var typeName = typeof(SerializableEntityStateType).GetFieldCached("_typeName");
             typeName.SetValue(self,
                 value != null && value.IsSubclassOf(typeof(EntityState)) ? value.AssemblyQualifiedName : "");
         }
