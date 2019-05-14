@@ -32,7 +32,7 @@ namespace R2API.Tests {
             var val = testObject.GetPropertyValue<string>("PrivateProperty");
             Assert.AreEqual("Get off my lawn", val);
 
-            testObject.SetPropertyValue<string>("PrivateProperty", "testProp");
+            testObject.SetPropertyValue("PrivateProperty", "testProp");
             var val2 = testObject.GetPropertyValue<string>("PrivateProperty");
             Assert.AreEqual("testProp", val2);
         }
@@ -42,9 +42,25 @@ namespace R2API.Tests {
             var val = typeof(StaticReflectionTestObject).GetPropertyValue<string>("PrivateProperty");
             Assert.AreEqual("Get off my lawn", val);
 
-            typeof(StaticReflectionTestObject).SetPropertyValue<string>("PrivateProperty", "testProp");
+            typeof(StaticReflectionTestObject).SetPropertyValue("PrivateProperty", "testProp");
             var val2 = typeof(StaticReflectionTestObject).GetPropertyValue<string>("PrivateProperty");
             Assert.AreEqual("testProp", val2);
+        }
+
+        [TestMethod]
+        public void TestReflectionCall() {
+            var testObject = new ReflectionTestObject();
+            var val = testObject.InvokeMethod<string>("Test", "test", "1");
+            Assert.AreEqual("test1", val);
+        }
+
+        [TestMethod]
+        public void TestReflectionCallVoid() {
+            var testObject = new ReflectionTestObject();
+            testObject.InvokeMethod<string>("Test2", "testValue");
+
+            var val = testObject.GetFieldValue<string>("PrivateValue1");
+            Assert.AreEqual("testValue", val);
         }
     }
 
@@ -57,6 +73,14 @@ namespace R2API.Tests {
         private string PrivateValue1 = "SECRET1";
         private string PrivateValueCollide = "SECRET_COLLIDE_CORRECT";
         private string PrivateProperty { get; set; } = "Get off my lawn";
+
+        private string Test(string a, string b) {
+            return a + b;
+        }
+
+        private void Test2(string privateValue) {
+            PrivateValue1 = privateValue;
+        }
     }
 
     public static class StaticReflectionTestObject {
