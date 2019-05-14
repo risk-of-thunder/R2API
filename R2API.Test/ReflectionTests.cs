@@ -62,6 +62,20 @@ namespace R2API.Test {
             var val = testObject.GetFieldValue<string>("PrivateValue1");
             Assert.Same("testValue", val);
         }
+
+        [Fact]
+        public void TestReflectionStaticCallVoid() {
+            typeof(StaticReflectionTestObject).InvokeMethod<string>("Test2", "testValue");
+
+            var val = typeof(StaticReflectionTestObject).GetFieldValue<string>("PrivateValue");
+            Assert.Same("testValue", val);
+        }
+
+        [Fact]
+        public void TestReflectionStaticCall() {
+            var val = typeof(StaticReflectionTestObject).InvokeMethod<string>("Test", "test", "1");
+            Assert.Equal("test1", val);
+        }
     }
 
     public class ReflectionTestBaseObject {
@@ -86,5 +100,13 @@ namespace R2API.Test {
     public static class StaticReflectionTestObject {
         private static string PrivateValue = "SECRET";
         private static string PrivateProperty { get; set; } = "Get off my lawn";
+
+        private static string Test(string a, string b) {
+            return a + b;
+        }
+
+        private static void Test2(string privateValue) {
+            PrivateValue = privateValue;
+        }
     }
 }

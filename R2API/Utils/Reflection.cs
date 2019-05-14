@@ -10,11 +10,14 @@ using MonoMod.Utils;
 namespace R2API.Utils {
     public static class Reflection {
 
-        private const BindingFlags AllFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+        private const BindingFlags AllFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static |
+                                              BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
         private delegate object GetDelegate(object instance);
 
         private delegate void SetDelegate(object instance, object value);
+
+        private delegate object CallDelegate(object instance, object[] arguments);
 
         #region Caches
 
@@ -44,11 +47,12 @@ namespace R2API.Utils {
         private static readonly ConcurrentDictionary<(Type T, string name), MethodInfo> MethodCache =
             new ConcurrentDictionary<(Type T, string name), MethodInfo>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name, Type[] argumentTypes), MethodInfo> OverloadedMethodCache =
-            new ConcurrentDictionary<(Type T, string name, Type[] argumentTypes), MethodInfo>();
+        private static readonly ConcurrentDictionary<(Type T, string name, Type[] argumentTypes), MethodInfo>
+            OverloadedMethodCache =
+                new ConcurrentDictionary<(Type T, string name, Type[] argumentTypes), MethodInfo>();
 
-        private static readonly ConcurrentDictionary<MethodInfo, FastReflectionDelegate> DelegateCache =
-            new ConcurrentDictionary<MethodInfo, FastReflectionDelegate>();
+        private static readonly ConcurrentDictionary<MethodInfo, CallDelegate> DelegateCache =
+            new ConcurrentDictionary<MethodInfo, CallDelegate>();
 
 
         // Class
@@ -115,6 +119,7 @@ namespace R2API.Utils {
                 if (fieldInfo != null) {
                     return fieldInfo;
                 }
+
                 T = T.BaseType;
             }
 
@@ -126,42 +131,6 @@ namespace R2API.Utils {
 
         private static SetDelegate GetFieldSetDelegate(this FieldInfo field, bool instance) =>
             FieldSetDelegateCache.GetOrAdd(field, x => x.CreateSetDelegate(instance));
-
-        private static GetDelegate CreateGetDelegate<T>(this FieldInfo field, bool instance) {
-            var method = new DynamicMethodDefinition($"{field} Getter", typeof(T), new [] { typeof(object) });
-            var il = method.GetILProcessor();
-
-            if (instance) {
-                il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Ldfld, field);
-            }
-            else {
-                il.Emit(OpCodes.Ldsfld, field);
-            }
-
-            il.Emit(OpCodes.Ret);
-
-            return (GetDelegate)method.Generate().CreateDelegate(typeof(GetDelegate));
-        }
-
-        private static SetDelegate CreateSetDelegate(this FieldInfo field, bool instance) {
-            var method = new DynamicMethodDefinition($"{field} Setter", typeof(void), new[] { typeof(object), typeof(object) });
-            var il = method.GetILProcessor();
-
-            if (instance) {
-                il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Ldarg_1);
-                il.Emit(OpCodes.Stfld, field);
-            }
-            else {
-                il.Emit(OpCodes.Ldarg_1);
-                il.Emit(OpCodes.Stsfld, field);
-            }
-
-            il.Emit(OpCodes.Ret);
-
-            return (SetDelegate)method.Generate().CreateDelegate(typeof(SetDelegate));
-        }
 
         #endregion
 
@@ -203,35 +172,6 @@ namespace R2API.Utils {
         private static SetDelegate GetPropertySetDelegate(this PropertyInfo property, bool instance) =>
             PropertySetDelegateCache.GetOrAdd(property, prop => prop.CreateSetDelegate(instance));
 
-        private static GetDelegate CreateGetDelegate<TValue>(this PropertyInfo property, bool instance) {
-            var method = new DynamicMethodDefinition($"{property} Getter", typeof(TValue), new[] { typeof(object) });
-            var il = method.GetILProcessor();
-
-            if (instance) {
-                il.Emit(OpCodes.Ldarg_0);
-            }
-
-            il.Emit(OpCodes.Call, property.GetGetMethod(true));
-            il.Emit(OpCodes.Ret);
-
-            return (GetDelegate)method.Generate().CreateDelegate(typeof(GetDelegate));
-        }
-
-        private static SetDelegate CreateSetDelegate(this PropertyInfo property, bool instance) {
-            var method = new DynamicMethodDefinition($"{property} Setter", typeof(void), new[] { typeof(object), typeof(object) });
-            var il = method.GetILProcessor();
-
-            if (instance) {
-                il.Emit(OpCodes.Ldarg_0);
-            }
-
-            il.Emit(OpCodes.Ldarg_1);
-            il.Emit(OpCodes.Call, property.GetSetMethod(true));
-            il.Emit(OpCodes.Ret);
-
-            return (SetDelegate)method.Generate().CreateDelegate(typeof(SetDelegate));
-        }
-
         #endregion
 
         #region Method
@@ -261,7 +201,8 @@ namespace R2API.Utils {
         public static void InvokeMethod(this Type staticType, string methodName) =>
             staticType.InvokeMethod<object>(methodName);
 
-        public static TReturn InvokeMethod<TReturn>(this object instance, string methodName, params object[] methodParams) =>
+        public static TReturn InvokeMethod<TReturn>(this object instance, string methodName,
+            params object[] methodParams) =>
             (TReturn) (methodParams == null
                 ? instance.GetType()
                     .GetMethodCached(methodName)
@@ -271,7 +212,8 @@ namespace R2API.Utils {
             .GetMethodDelegateCached()
             .Invoke(instance, methodParams);
 
-        public static TReturn InvokeMethod<TReturn>(this Type staticType, string methodName, params object[] methodParams) =>
+        public static TReturn InvokeMethod<TReturn>(this Type staticType, string methodName,
+            params object[] methodParams) =>
             (TReturn) (methodParams == null
                 ? staticType
                     .GetMethodCached(methodName)
@@ -288,9 +230,9 @@ namespace R2API.Utils {
             staticType.InvokeMethod<object>(methodName, methodParams);
 
 
-        private static FastReflectionDelegate GetMethodDelegateCached(this MethodInfo methodInfo) =>
+        private static CallDelegate GetMethodDelegateCached(this MethodInfo methodInfo) =>
             // Thanks 0x0 :)
-            DelegateCache.GetOrAdd(methodInfo, method => method.CreateFastDelegate());
+            DelegateCache.GetOrAdd(methodInfo, method => method.GenerateCallDelegate());
 
         #endregion
 
@@ -313,7 +255,6 @@ namespace R2API.Utils {
         public static Type GetNestedTypeCached(this Type T, string name) =>
             NestedTypeCache.GetOrAddOnNull((T, name), x => x.T.GetNestedType(x.name, AllFlags));
 
-
         public static object Instantiate(this Type type) =>
             Activator.CreateInstance(type, true);
 
@@ -329,6 +270,180 @@ namespace R2API.Utils {
 
         public static IList InstantiateList(this Type type) =>
             (IList) typeof(List<>).MakeGenericType(type).Instantiate();
+
+        #endregion
+
+        #region Fast Reflection
+
+        private static GetDelegate CreateGetDelegate<T>(this FieldInfo field, bool instance) {
+            var method = new DynamicMethodDefinition($"{field} Getter", typeof(T), new[] { typeof(object) });
+            var il = method.GetILProcessor();
+
+            if (instance) {
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Ldfld, field);
+            } else {
+                il.Emit(OpCodes.Ldsfld, field);
+            }
+
+            il.Emit(OpCodes.Ret);
+
+            return (GetDelegate)method.Generate().CreateDelegate(typeof(GetDelegate));
+        }
+
+        private static SetDelegate CreateSetDelegate(this FieldInfo field, bool instance) {
+            var method = new DynamicMethodDefinition($"{field} Setter", typeof(void),
+                new[] { typeof(object), typeof(object) });
+            var il = method.GetILProcessor();
+
+            if (instance) {
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Ldarg_1);
+                il.Emit(OpCodes.Stfld, field);
+            } else {
+                il.Emit(OpCodes.Ldarg_1);
+                il.Emit(OpCodes.Stsfld, field);
+            }
+
+            il.Emit(OpCodes.Ret);
+
+            return (SetDelegate)method.Generate().CreateDelegate(typeof(SetDelegate));
+        }
+
+        private static GetDelegate CreateGetDelegate<TValue>(this PropertyInfo property, bool instance) {
+            var method = new DynamicMethodDefinition($"{property} Getter", typeof(TValue), new[] { typeof(object) });
+            var il = method.GetILProcessor();
+
+            if (instance) {
+                il.Emit(OpCodes.Ldarg_0);
+            }
+
+            il.Emit(OpCodes.Call, property.GetGetMethod(true));
+            il.Emit(OpCodes.Ret);
+
+            return (GetDelegate)method.Generate().CreateDelegate(typeof(GetDelegate));
+        }
+
+        private static SetDelegate CreateSetDelegate(this PropertyInfo property, bool instance) {
+            var method = new DynamicMethodDefinition($"{property} Setter", typeof(void),
+                new[] { typeof(object), typeof(object) });
+            var il = method.GetILProcessor();
+
+            if (instance) {
+                il.Emit(OpCodes.Ldarg_0);
+            }
+
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Call, property.GetSetMethod(true));
+            il.Emit(OpCodes.Ret);
+
+            return (SetDelegate)method.Generate().CreateDelegate(typeof(SetDelegate));
+        }
+
+        // Partial hack from https://github.com/0x0ade/MonoMod/blob/master/MonoMod.Utils/FastReflectionHelper.cs
+        // to get fast call delegates
+        private static CallDelegate GenerateCallDelegate(this MethodInfo method) {
+            var dmd = new DynamicMethodDefinition(
+                $"CallDelegate<{method.GetFindableID(simple: true)}>", typeof(object), new[] { typeof(object), typeof(object[]) });
+            var il = dmd.GetILProcessor();
+
+            var args = method.GetParameters();
+
+            if (!method.IsStatic) {
+                il.Emit(OpCodes.Ldarg_0);
+                if (method.DeclaringType.GetTypeInfo().IsValueType) {
+                    il.Emit(OpCodes.Unbox_Any, method.DeclaringType);
+                }
+            }
+
+            for (var i = 0; i < args.Length; i++) {
+                var argType = args[i].ParameterType;
+                var argIsByRef = argType.IsByRef;
+                if (argIsByRef)
+                    argType = argType.GetElementType();
+                var argIsValueType = argType.GetTypeInfo().IsValueType;
+
+                if (argIsByRef && argIsValueType) {
+                    // Used later when storing back the reference to the new box in the array.
+                    il.Emit(OpCodes.Ldarg_1);
+                    il.EmitFast_Ldc_I4(i);
+                }
+
+                il.Emit(OpCodes.Ldarg_1);
+                il.EmitFast_Ldc_I4(i);
+
+                if (argIsByRef && !argIsValueType) {
+                    il.Emit(OpCodes.Ldelema, typeof(object));
+                }
+                else {
+                    il.Emit(OpCodes.Ldelem_Ref);
+                    if (!argIsValueType) continue;
+                    il.Emit(!argIsByRef ? OpCodes.Unbox_Any : OpCodes.Unbox, argType);
+                }
+            }
+
+            if (method.IsFinal || !method.IsVirtual) {
+                il.Emit(OpCodes.Call, method);
+            }
+            else {
+                il.Emit(OpCodes.Callvirt, method);
+            }
+
+            var returnType = method.IsConstructor ? method.DeclaringType : method.ReturnType;
+            if (returnType != typeof(void)) {
+                if (returnType.GetTypeInfo().IsValueType) {
+                    il.Emit(OpCodes.Box, returnType);
+                }
+            }
+            else {
+                il.Emit(OpCodes.Ldnull);
+            }
+
+            il.Emit(OpCodes.Ret);
+
+            return (CallDelegate) dmd.Generate().CreateDelegate(typeof(CallDelegate));
+        }
+
+        // https://github.com/0x0ade/MonoMod/blob/master/MonoMod.Utils/FastReflectionHelper.cs
+        private static void EmitFast_Ldc_I4(this ILProcessor il, int value) {
+            switch (value) {
+                case -1:
+                    il.Emit(OpCodes.Ldc_I4_M1);
+                    return;
+                case 0:
+                    il.Emit(OpCodes.Ldc_I4_0);
+                    return;
+                case 1:
+                    il.Emit(OpCodes.Ldc_I4_1);
+                    return;
+                case 2:
+                    il.Emit(OpCodes.Ldc_I4_2);
+                    return;
+                case 3:
+                    il.Emit(OpCodes.Ldc_I4_3);
+                    return;
+                case 4:
+                    il.Emit(OpCodes.Ldc_I4_4);
+                    return;
+                case 5:
+                    il.Emit(OpCodes.Ldc_I4_5);
+                    return;
+                case 6:
+                    il.Emit(OpCodes.Ldc_I4_6);
+                    return;
+                case 7:
+                    il.Emit(OpCodes.Ldc_I4_7);
+                    return;
+                case 8:
+                    il.Emit(OpCodes.Ldc_I4_8);
+                    return;
+            }
+
+            if (value > -129 && value < 128)
+                il.Emit(OpCodes.Ldc_I4_S, (sbyte) value);
+            else
+                il.Emit(OpCodes.Ldc_I4, value);
+        }
 
         #endregion
     }
