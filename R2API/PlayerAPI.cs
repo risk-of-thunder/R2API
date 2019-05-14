@@ -8,7 +8,7 @@ namespace R2API {
     public static class PlayerAPI {
         public static List<Action<PlayerStats>> CustomEffects { get; private set; }
 
-        public static void InitHooks() {
+        internal static void InitHooks() {
             On.RoR2.CharacterBody.RecalculateStats += (orig, self) => RecalcStats(self);
         }
 

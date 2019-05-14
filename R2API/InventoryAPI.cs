@@ -2,7 +2,6 @@
 using MonoMod.Cil;
 using RoR2.UI;
 using System;
-using System.Reflection;
 using R2API.Utils;
 
 namespace R2API {
@@ -11,7 +10,7 @@ namespace R2API {
         public static event Action<ItemIcon> OnItemIconAdded;
         public static event Action<EquipmentIcon> OnEquipmentIconAdded;
 
-        public static void InitHooks() {
+        internal static void InitHooks() {
             IL.RoR2.UI.ItemInventoryDisplay.AllocateIcons += il => {
                 var cursor = new ILCursor(il).Goto(0);
                 cursor.GotoNext(x => x.MatchStloc(0));

@@ -1,4 +1,3 @@
-using System;
 using R2API.Utils;
 using Xunit;
 
