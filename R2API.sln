@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API", "R2API\R2API.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.MonoMod", "R2API.MonoMod\R2API.MonoMod.csproj", "{EA7A07AF-BCF5-48C1-BEFB-B569785743FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Test", "R2API.Tests\R2API.Test.csproj", "{6B0701A6-16A5-4AC8-B7BD-319325DD8BD8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Test", "R2API.Test\R2API.Test.csproj", "{A10234E2-EEED-447D-857C-D68DBB561F3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{EA7A07AF-BCF5-48C1-BEFB-B569785743FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA7A07AF-BCF5-48C1-BEFB-B569785743FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA7A07AF-BCF5-48C1-BEFB-B569785743FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B0701A6-16A5-4AC8-B7BD-319325DD8BD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B0701A6-16A5-4AC8-B7BD-319325DD8BD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B0701A6-16A5-4AC8-B7BD-319325DD8BD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B0701A6-16A5-4AC8-B7BD-319325DD8BD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A10234E2-EEED-447D-857C-D68DBB561F3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A10234E2-EEED-447D-857C-D68DBB561F3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A10234E2-EEED-447D-857C-D68DBB561F3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A10234E2-EEED-447D-857C-D68DBB561F3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

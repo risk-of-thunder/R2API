@@ -1,66 +1,66 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using R2API.Utils;
+using Xunit;
 
-namespace R2API.Tests {
-    [TestClass]
+namespace R2API.Test {
     public class ReflectionTests {
-        [TestMethod]
+        [Fact]
         public void TestReflectionFieldGetAndSet() {
             var testObject = new ReflectionTestObject();
             testObject.SetFieldValue("PrivateValue", "test");
             var ret = testObject.GetFieldValue<string>("PrivateValue");
-            Assert.AreEqual("test", ret);
+            Assert.Same("test", ret);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestReflectionFieldGetChildFirst() {
             var testObject = new ReflectionTestObject();
             var val = testObject.GetFieldValue<string>("PrivateValueCollide");
-            Assert.AreEqual("SECRET_COLLIDE_CORRECT", val);
+            Assert.Same("SECRET_COLLIDE_CORRECT", val);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestReflectionStaticFieldGetAndSet() {
             typeof(StaticReflectionTestObject).SetFieldValue("PrivateValue", "test");
             var val = typeof(StaticReflectionTestObject).GetFieldValue<string>("PrivateValue");
-            Assert.AreEqual("test", val);
+            Assert.Same("test", val);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestReflectionPropertyGetAndSet() {
             var testObject = new ReflectionTestObject();
             var val = testObject.GetPropertyValue<string>("PrivateProperty");
-            Assert.AreEqual("Get off my lawn", val);
+            Assert.Same("Get off my lawn", val);
 
             testObject.SetPropertyValue("PrivateProperty", "testProp");
             var val2 = testObject.GetPropertyValue<string>("PrivateProperty");
-            Assert.AreEqual("testProp", val2);
+            Assert.Same("testProp", val2);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestReflectionStaticPropertyGetAndSet() {
             var val = typeof(StaticReflectionTestObject).GetPropertyValue<string>("PrivateProperty");
-            Assert.AreEqual("Get off my lawn", val);
+            Assert.Same("Get off my lawn", val);
 
             typeof(StaticReflectionTestObject).SetPropertyValue("PrivateProperty", "testProp");
             var val2 = typeof(StaticReflectionTestObject).GetPropertyValue<string>("PrivateProperty");
-            Assert.AreEqual("testProp", val2);
+            Assert.Same("testProp", val2);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestReflectionCall() {
             var testObject = new ReflectionTestObject();
             var val = testObject.InvokeMethod<string>("Test", "test", "1");
-            Assert.AreEqual("test1", val);
+            Assert.Equal("test1", val);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestReflectionCallVoid() {
             var testObject = new ReflectionTestObject();
             testObject.InvokeMethod<string>("Test2", "testValue");
 
             var val = testObject.GetFieldValue<string>("PrivateValue1");
-            Assert.AreEqual("testValue", val);
+            Assert.Same("testValue", val);
         }
     }
 
