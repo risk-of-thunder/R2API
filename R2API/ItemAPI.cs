@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using RoR2;
 
 namespace R2API {
+    // ReSharper disable once InconsistentNaming
     public static class ItemAPI {
         public static ObservableCollection<ItemDef> ItemDefinitions { get; private set; }
 

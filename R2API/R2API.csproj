@@ -19,6 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="UtilPack.NuGet.MSBuild" Version="2.9.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -71,7 +72,7 @@
 		  <Private>false</Private>
 	  </Reference>
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Update="libs\MMHOOK_Assembly-CSharp.dll">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

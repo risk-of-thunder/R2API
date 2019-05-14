@@ -90,6 +90,7 @@ namespace R2API {
         LargeChestSelector
     }
 
+    // ReSharper disable once InconsistentNaming
     public static class ItemDropAPI {
         public static ManualLogSource Logger = R2API.Logger;
 
@@ -302,7 +303,7 @@ namespace R2API {
                 itemIndex++) {
                 if (!Run.instance.availableItems.HasItem(itemIndex))
                     continue;
-   
+
                 if (ItemCatalog.GetItemDef(itemIndex).tier == ItemTier.Lunar) {
                     list.Add(new PickupIndex(itemIndex));
                 }

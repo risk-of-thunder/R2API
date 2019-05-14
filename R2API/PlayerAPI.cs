@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 
 namespace R2API {
+    // ReSharper disable once InconsistentNaming
     public static class PlayerAPI {
         public static List<Action<PlayerStats>> CustomEffects { get; private set; }
 
@@ -18,13 +19,13 @@ namespace R2API {
                 TeamManager.instance.GetTeamLevel(characterBody.teamComponent.teamIndex));
 
             /* Calculate Vanilla items effects
-            * 
+            *
             * TODO
             */
 
             PlayerStats playerStats = null; //TODO: initialize this from characterBody
 
-            foreach (var effectAction in PlayerAPI.CustomEffects) {
+            foreach (var effectAction in CustomEffects) {
                 effectAction(playerStats);
             }
 

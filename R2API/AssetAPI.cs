@@ -4,6 +4,7 @@ using UnityEngine;
 using MonoMod.Cil;
 
 namespace R2API {
+    // ReSharper disable once InconsistentNaming
     public static class AssetAPI {
         /// <summary>
         /// This event is invoked as soon as the AssetAPI is loaded. This is the perfect time to add assets to the Master and Object Catalogs in the API.
@@ -47,7 +48,7 @@ namespace R2API {
                 c.Goto(0);
                 //Stores the new GameObject[] in the static field BodyCatalog.bodyPrefabs
                 //This array contains both vanilla and modded Body prefabs.
-                //TODO: find a way to also add 2d sprites, as are done on line 113 and have a very hard-coded path 
+                //TODO: find a way to also add 2d sprites, as are done on line 113 and have a very hard-coded path
                 c.EmitDelegate<Func<GameObject[]>>(BuildBodyCatalog);
             };
             doneLoading = true;
