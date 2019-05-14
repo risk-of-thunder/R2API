@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API", "R2API\R2API.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.MonoMod", "R2API.MonoMod\R2API.MonoMod.csproj", "{EA7A07AF-BCF5-48C1-BEFB-B569785743FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Tests", "R2API.Tests\R2API.Tests.csproj", "{6B0701A6-16A5-4AC8-B7BD-319325DD8BD8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Test", "R2API.Tests\R2API.Test.csproj", "{6B0701A6-16A5-4AC8-B7BD-319325DD8BD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
