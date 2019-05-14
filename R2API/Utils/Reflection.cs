@@ -16,7 +16,6 @@ namespace R2API.Utils {
 
         private delegate void SetDelegate(object instance, object value);
 
-
         #region Caches
 
         // Field
@@ -45,16 +44,16 @@ namespace R2API.Utils {
         private static readonly ConcurrentDictionary<(Type T, string name), MethodInfo> MethodCache =
             new ConcurrentDictionary<(Type T, string name), MethodInfo>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name, Type[] arguments), MethodInfo> OverloadedMethodCache =
-            new ConcurrentDictionary<(Type T, string name, Type[] arguments), MethodInfo>();
+        private static readonly ConcurrentDictionary<(Type T, string name, Type[] argumentTypes), MethodInfo> OverloadedMethodCache =
+            new ConcurrentDictionary<(Type T, string name, Type[] argumentTypes), MethodInfo>();
 
         private static readonly ConcurrentDictionary<MethodInfo, FastReflectionDelegate> DelegateCache =
             new ConcurrentDictionary<MethodInfo, FastReflectionDelegate>();
 
 
         // Class
-        private static readonly ConcurrentDictionary<(Type T, Type[] arguments), ConstructorInfo> ConstructorCache =
-            new ConcurrentDictionary<(Type T, Type[] arguments), ConstructorInfo>();
+        private static readonly ConcurrentDictionary<(Type T, Type[] argumentTypes), ConstructorInfo> ConstructorCache =
+            new ConcurrentDictionary<(Type T, Type[] argumentTypes), ConstructorInfo>();
 
         private static readonly ConcurrentDictionary<(Type T, string name), Type> NestedTypeCache =
             new ConcurrentDictionary<(Type T, string name), Type>();
@@ -70,7 +69,6 @@ namespace R2API.Utils {
         }
 
         #endregion
-
 
         #region Field
 
@@ -249,8 +247,7 @@ namespace R2API.Utils {
 
         public static MethodInfo GetMethodCached(this Type T, string name, Type[] argumentTypes) =>
             OverloadedMethodCache.GetOrAddOnNull((T, name, argumentTypes),
-                // TODO: access tuple element 3 by name
-                x => x.T.GetMethod(x.name, AllFlags, null, x.Item3, null));
+                x => x.T.GetMethod(x.name, AllFlags, null, x.argumentTypes, null));
 
         public static TReturn InvokeMethod<TReturn>(this object instance, string methodName) =>
             instance.InvokeMethod<TReturn>(methodName, null);

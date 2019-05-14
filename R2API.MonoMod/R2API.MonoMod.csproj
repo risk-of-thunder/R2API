@@ -8,6 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="MonoMod" Version="19.5.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Reference Include="Assembly-CSharp">
             <HintPath>..\R2API\libs\Assembly-CSharp.dll</HintPath>
             <Private>False</Private>
