@@ -1,15 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+	  <OutputType>Library</OutputType>
 
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+		<IsPackable>false</IsPackable>
+	  <TestProjectType>UnitTest</TestProjectType>
+
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+
+    <Reference Include="MonoMod.Utils">
+	    <HintPath>..\R2API\libs\MonoMod.Utils.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
