@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using Mono.Cecil.Cil;
 using MonoMod.Utils;
-using RoR2;
 
 namespace R2API.Utils {
     public static class Reflection {
@@ -14,9 +13,9 @@ namespace R2API.Utils {
         private const BindingFlags AllFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static |
                                               BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
-        private delegate T GetDelegate<T>(object instance);
+        private delegate T GetDelegate<out T>(object instance);
 
-        private delegate void SetDelegate<T>(object instance, T value);
+        private delegate void SetDelegate<in T>(object instance, T value);
 
         private delegate object CallDelegate(object instance, object[] arguments);
 
@@ -234,7 +233,6 @@ namespace R2API.Utils {
 
 
         private static CallDelegate GetMethodDelegateCached(this MethodInfo methodInfo) =>
-            // Thanks 0x0 :)
             DelegateCache.GetOrAdd(methodInfo, method => method.GenerateCallDelegate());
 
         #endregion
@@ -276,16 +274,16 @@ namespace R2API.Utils {
 
         #region Fast Reflection
 
-        private static GetDelegate<T> CreateGetDelegate<T>(this FieldInfo field) {
+        private static GetDelegate<TReturn> CreateGetDelegate<TReturn>(this FieldInfo field) {
             if (field == null) {
                 throw new ArgumentException("Field cannot be null.", nameof(field));
             }
 
-            if (field.FieldType != typeof(T)) {
-                throw new Exception($"Field type {field.FieldType} does not match the requested type {typeof(T)}.");
+            if (field.FieldType != typeof(TReturn)) {
+                throw new Exception($"Field type {field.FieldType} does not match the requested type {typeof(TReturn)}.");
             }
  
-            var method = new DynamicMethodDefinition($"{field} Getter", typeof(T), new[] { typeof(object) });
+            var method = new DynamicMethodDefinition($"{field} Getter", typeof(TReturn), new[] { typeof(object) });
             var il = method.GetILProcessor();
 
             if (!field.IsStatic) {
@@ -297,12 +295,16 @@ namespace R2API.Utils {
 
             il.Emit(OpCodes.Ret);
 
-            return (GetDelegate<T>)method.Generate().CreateDelegate(typeof(GetDelegate<T>));
+            return (GetDelegate<TReturn>)method.Generate().CreateDelegate(typeof(GetDelegate<TReturn>));
         }
 
         private static SetDelegate<TValue> CreateSetDelegate<TValue>(this FieldInfo field) {
             if (field == null) {
                 throw new ArgumentException("Field cannot be null.", nameof(field));
+            }
+
+            if (field.FieldType != typeof(TValue)) {
+                throw new Exception($"Value type type {typeof(TValue)} does not match the requested type {field.FieldType}.");
             }
 
             var method = new DynamicMethodDefinition($"{field} Setter", typeof(void),
@@ -328,6 +330,10 @@ namespace R2API.Utils {
                 throw new ArgumentException("Property cannot be null.", nameof(property));
             }
 
+            if (property.PropertyType != typeof(TReturn)) {
+                throw new Exception($"Field type {property.PropertyType} does not match the requested type {typeof(TReturn)}.");
+            }
+
             var method = new DynamicMethodDefinition($"{property} Getter", typeof(TReturn), new[] { typeof(object) });
             var il = method.GetILProcessor();
 
@@ -346,6 +352,10 @@ namespace R2API.Utils {
         private static SetDelegate<TValue> CreateSetDelegate<TValue>(this PropertyInfo property) {
             if (property == null) {
                 throw new ArgumentException("Property cannot be null.", nameof(property));
+            }
+
+            if (property.PropertyType != typeof(TValue)) {
+                throw new Exception($"Value type type {typeof(TValue)} does not match the requested type {property.PropertyType}.");
             }
 
             var method = new DynamicMethodDefinition($"{property} Setter", typeof(void),
