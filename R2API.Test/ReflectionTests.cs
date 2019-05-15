@@ -1,9 +1,9 @@
+using System;
 using R2API.Utils;
 using RoR2;
 using RoR2.UI;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace R2API.Test {
     public class ReflectionTests {
