@@ -89,7 +89,7 @@ namespace R2API.Test {
 
         [Fact]
         public void TestReflectionWrongFieldType() {
-            Assert.Throws<Exception>(() => {
+            Assert.ThrowsAny<Exception>(() => {
                 typeof(StaticReflectionTestObject).GetFieldValue<bool>("PrivateValue");
             });
         }
