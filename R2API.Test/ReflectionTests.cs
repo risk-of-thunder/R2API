@@ -1,11 +1,19 @@
 using System;
 using R2API.Utils;
+using RoR2;
+using RoR2.UI;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace R2API.Test {
     public class ReflectionTests {
+        private readonly ITestOutputHelper _helper;
+
+        public ReflectionTests(ITestOutputHelper helper) {
+            this._helper = helper;
+        }
+
         [Fact]
         public void TestReflectionFieldGetAndSet() {
             var testObject = new ReflectionTestObject();
@@ -59,7 +67,7 @@ namespace R2API.Test {
         [Fact]
         public void TestReflectionCallVoid() {
             var testObject = new ReflectionTestObject();
-            testObject.InvokeMethod<string>("Test2", "testValue");
+            testObject.InvokeMethod("Test2", "testValue");
 
             var val = testObject.GetFieldValue<string>("PrivateValue1");
             Assert.Same("testValue", val);
@@ -67,7 +75,7 @@ namespace R2API.Test {
 
         [Fact]
         public void TestReflectionStaticCallVoid() {
-            typeof(StaticReflectionTestObject).InvokeMethod<string>("Test2", "testValue");
+            typeof(StaticReflectionTestObject).InvokeMethod("Test2", "testValue");
 
             var val = typeof(StaticReflectionTestObject).GetFieldValue<string>("PrivateValue");
             Assert.Same("testValue", val);
@@ -81,7 +89,7 @@ namespace R2API.Test {
 
         [Fact]
         public void TestReflectionWrongFieldType() {
-            Assert.Throws<ArgumentException>(() => {
+            Assert.Throws<Exception>(() => {
                 typeof(StaticReflectionTestObject).GetFieldValue<bool>("PrivateValue");
             });
         }
@@ -92,6 +100,31 @@ namespace R2API.Test {
                 var val = typeof(StaticReflectionTestObject).InvokeMethod<string>("Test", "a");
             });
         }
+
+        [Fact]
+        public void TestReflectionGetEnumField() {
+            var testObject = new ReflectionTestObject();
+            var enumValue = testObject.GetFieldValue<TestEnum>("TestEnum");
+            Assert.Equal(TestEnum.Test2, enumValue);
+        }
+
+        [Fact]
+        public void TestReflectionGetAndSetFieldValueType() {
+            var itemIcon = new ItemIcon();
+            itemIcon.SetFieldValue("itemIndex", ItemIndex.AlienHead);
+
+            var iIndex = typeof(ItemIcon).GetField("itemIndex");
+            var refIndex = (ItemIndex)iIndex.GetValue(itemIcon);
+
+            var index = itemIcon.GetFieldValue<ItemIndex>("itemIndex");
+            Assert.Equal(refIndex, index);
+            Assert.Equal(ItemIndex.AlienHead, index);
+        }
+    }
+
+    public enum TestEnum {
+        Test1 = 0,
+        Test2 = 1
     }
 
     public class ReflectionTestBaseObject {
@@ -106,11 +139,15 @@ namespace R2API.Test {
     public class ReflectionTestObject : ReflectionTestBaseObject {
         private string PrivateValue1 = "SECRET1";
         private string PrivateValueCollide = "SECRET_COLLIDE_CORRECT";
+        private TestEnum TestEnum = TestEnum.Test2;
+
         private string PrivateProperty { get; set; } = "Get off my lawn";
 
         private string Test(string a, string b) {
             return a + b;
         }
+
+        
 
         private void Test2(string privateValue) {
             PrivateValue1 = privateValue;

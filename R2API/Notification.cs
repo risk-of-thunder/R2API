@@ -13,9 +13,6 @@ namespace R2API {
         public Func<string> GetDescription { get; set; }
         public Transform Parent { get; set; }
 
-        private static MethodInfo UpdateLabel =
-            typeof(LanguageTextMeshController).GetMethodCached("UpdateLabel");
-
         private void Awake() {
             // TODO: Figure out HUD transform for canvas and scaling
             Parent = RoR2Application.instance.mainCanvas.transform;
@@ -32,10 +29,10 @@ namespace R2API {
             }
 
             GenericNotification.titleText.SetFieldValue("resolvedString", GetTitle());
-            UpdateLabel.Invoke(GenericNotification.titleText, null);
+            GenericNotification.titleText.InvokeMethod("UpdateLabel");
 
             GenericNotification.descriptionText.SetFieldValue("resolvedString", GetDescription());
-            UpdateLabel.Invoke(GenericNotification.descriptionText, null);
+            GenericNotification.descriptionText.InvokeMethod("UpdateLabel");
         }
 
         private void OnDestroy() {
