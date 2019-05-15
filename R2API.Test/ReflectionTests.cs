@@ -1,6 +1,8 @@
 using System;
 using R2API.Utils;
 using Xunit;
+using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace R2API.Test {
     public class ReflectionTests {
@@ -76,11 +78,29 @@ namespace R2API.Test {
             var val = typeof(StaticReflectionTestObject).InvokeMethod<string>("Test", "test", "1");
             Assert.Equal("test1", val);
         }
+
+        [Fact]
+        public void TestReflectionWrongFieldType() {
+            Assert.Throws<ArgumentException>(() => {
+                typeof(StaticReflectionTestObject).GetFieldValue<bool>("PrivateValue");
+            });
+        }
+
+        [Fact]
+        public void TestReflectionWrongArgumentCount() {
+            Assert.Throws<Exception>(() => {
+                var val = typeof(StaticReflectionTestObject).InvokeMethod<string>("Test", "a");
+            });
+        }
     }
 
     public class ReflectionTestBaseObject {
         private string PrivateValue = "SECRET";
         private string PrivateValueCollide = "SECRET_COLLIDE";
+
+        private int BaseTest(int a, int b) {
+            return a + b;
+        }
     }
 
     public class ReflectionTestObject : ReflectionTestBaseObject {
