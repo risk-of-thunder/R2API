@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using MonoMod.RuntimeDetour;
 using R2API.Utils;
 using RoR2;
@@ -30,6 +29,17 @@ namespace R2API {
                 typeof(SurvivorAPI).GetMethodCached(nameof(Init)));
 
             detour.Apply();
+
+            On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, index) => GetSurvivorDef(index);
+
+            // TODO: THIS IS A HOTFIX, WHY IS THE FIRST CHARACTERBODY NULL
+            On.RoR2.UI.LogBook.LogBookController.BuildCategories += orig => {
+                typeof(BodyCatalog).SetFieldValue("bodyPrefabBodyComponents",
+                    typeof(BodyCatalog)
+                        .GetFieldValue<CharacterBody[]>("bodyPrefabBodyComponents")
+                        .Where(x => x != null).ToArray());
+                return orig();
+            };
         }
 
         public static SurvivorDef GetSurvivorDef(SurvivorIndex survivorIndex) =>
@@ -60,7 +70,7 @@ namespace R2API {
                 toRemove.ForEach(x => SurvivorDefinitions.Remove(x));
             }
             else {
-                survivor.survivorIndex = SurvivorIndex.Count + 1;
+                survivor.survivorIndex = SurvivorIndex.Count;
                 while (SurvivorDefinitions.Any(x => x.survivorIndex == survivor.survivorIndex))
                     survivor.survivorIndex += 1;
             }

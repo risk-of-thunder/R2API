@@ -1,14 +1,12 @@
 ﻿using EntityStates;
-using MonoMod.RuntimeDetour;
 using System;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using R2API.Utils;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
     public static class EntityAPI {
-        public static void InitHooks() {
+        internal static void InitHooks() {
             //var detour = new Hook(
             //    typeof(SerializableEntityStateType).GetMethodCached("set_stateType",
             //        BindingFlags.Public | BindingFlags.Instance),

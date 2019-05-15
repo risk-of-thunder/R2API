@@ -2,7 +2,6 @@
 using System.Linq;
 using RoR2;
 using Mono.Cecil.Cil;
-using System.Reflection;
 using MonoMod.Cil;
 using System;
 using BepInEx.Logging;
@@ -92,9 +91,9 @@ namespace R2API {
 
     // ReSharper disable once InconsistentNaming
     public static class ItemDropAPI {
-        public static ManualLogSource Logger = R2API.Logger;
+        public static readonly ManualLogSource Logger = R2API.Logger;
 
-        public static void InitHooks() {
+        internal static void InitHooks() {
             var itemDropApi_GetSelection = typeof(ItemDropAPI).GetMethodCached("GetSelection");
             var xoroshiro_GetNextNormalizedFloat = typeof(Xoroshiro128Plus).GetMethodCached("get_nextNormalizedFloat");
 
