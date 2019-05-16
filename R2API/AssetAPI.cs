@@ -44,6 +44,7 @@ namespace R2API {
 
         /// <summary>
         /// Add a BodyPrefab to RoR2.BodyCatalog, even after init.
+        /// If you try to add a BodyPrefab whose name already exists in nameToIndexMap, this method will throw.
         /// </summary>
         /// <param name="bodyPrefab"></param>
         /// <param name="portraitIcon"></param>
@@ -61,12 +62,15 @@ namespace R2API {
             var nameToIndexMap =
                 typeof(RoR2.BodyCatalog).GetFieldValue<Dictionary<string, int>>("nameToIndexMap");
 
+            if (nameToIndexMap.ContainsKey(bodyPrefab.name) || nameToIndexMap.ContainsKey(bodyPrefab.name + "(Clone)"))
+                throw new ArgumentException($"BodyPrefab with the name \"{bodyPrefab.name}\" already exists.");
+
             var index = bodyPrefabs.Length;
             Array.Resize(ref bodyPrefabs, index + 1);
 
             bodyPrefabs[index] = bodyPrefab;
-            nameToIndexMap.Add(bodyPrefab.name, index);
-            nameToIndexMap.Add(bodyPrefab.name + "(Clone)", index);
+            nameToIndexMap[bodyPrefab.name] = index;
+            nameToIndexMap[bodyPrefab.name + "(Clone)"] = index;
 
             Array.Resize(ref bodyPrefabBodyComponents, index + 1);
             bodyPrefabBodyComponents[index] = bodyPrefab.GetComponent<RoR2.CharacterBody>();
