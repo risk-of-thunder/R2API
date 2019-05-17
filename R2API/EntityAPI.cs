@@ -1,28 +1,25 @@
 ﻿using EntityStates;
 using System;
-using System.Runtime.CompilerServices;
+using MonoMod.RuntimeDetour;
 using R2API.Utils;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
     public static class EntityAPI {
         internal static void InitHooks() {
-            //var detour = new Hook(
-            //    typeof(SerializableEntityStateType).GetMethodCached("set_stateType",
-            //        BindingFlags.Public | BindingFlags.Instance),
-            //    typeof(EntityAPI).GetMethodCached(nameof(set_stateType_Hook),
-            //        BindingFlags.Public | BindingFlags.Static)
-            //);
+            var detour = new Hook(
+                typeof(SerializableEntityStateType).GetMethodCached("set_stateType"),
+                typeof(EntityAPI).GetMethodCached(nameof(set_stateType_Hook))
+            );
 
-            //detour.Apply();
+            detour.Apply();
         }
 
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void set_stateType_Hook(ref SerializableEntityStateType self, Type value) {
-            var typeName = typeof(SerializableEntityStateType).GetFieldCached("_typeName");
-            typeName.SetValue(self,
-                value != null && value.IsSubclassOf(typeof(EntityState)) ? value.AssemblyQualifiedName : "");
+        internal static void set_stateType_Hook(ref SerializableEntityStateType self, Type value) {
+            self.SetStructFieldValue("_typeName",
+                value != null && value.IsSubclassOf(typeof(EntityState))
+                    ? value.AssemblyQualifiedName
+                    : "");
         }
     }
 }
