@@ -13,8 +13,6 @@ namespace R2API {
     public class R2API : BaseUnityPlugin {
         internal new static ManualLogSource Logger { get; set; }
 
-        public static ConfigWrapper<bool> IsModded { get; protected set; }
-
         public R2API() {
             Logger = base.Logger;
             CheckForIncompatibleAssemblies();
@@ -26,7 +24,12 @@ namespace R2API {
 
             Hooks.InitializeHooks();
 
-            RoR2Application.isModded = IsModded.Value;
+            RoR2Application.isModded = true;
+
+            On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
+                RoR2Application.isModded = true;
+                orig(self);
+            };
         }
 
         private static void CheckForIncompatibleAssemblies() {
@@ -76,13 +79,6 @@ namespace R2API {
         }
 
         protected void InitConfig() {
-            // ReSharper disable ArgumentsStyleLiteral ArgumentsStyleStringLiteral
-            IsModded = Config.Wrap(
-                section: "Game",
-                key: "IsModded",
-                description: "Enables or disables the isModded flag in the game, which affects if you will be matched with other modded users.",
-                defaultValue: true);
-            // ReSharper restore ArgumentsStyleLiteral ArgumentsStyleStringLiteral
         }
     }
 }
