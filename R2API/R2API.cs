@@ -3,20 +3,27 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using BepInEx;
-using BepInEx.Configuration;
 using BepInEx.Logging;
+using R2API.Utils;
 using RoR2;
 
 namespace R2API {
-    [BepInPlugin("com.bepis.r2api", "R2API", "2.0.0")]
+    [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     // ReSharper disable once InconsistentNaming
     public class R2API : BaseUnityPlugin {
+
+        // ReSharper disable once InconsistentNaming
+        public const string PluginGUID = "com.bepis.r2api";
+        public const string PluginName = "R2API";
+        public const string PluginVersion = "2.0.0";
+
+        private const string GameBuild = "3743353";
+
         internal new static ManualLogSource Logger { get; set; }
 
         public R2API() {
             Logger = base.Logger;
             CheckForIncompatibleAssemblies();
-
 
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
@@ -30,6 +37,24 @@ namespace R2API {
                 RoR2Application.isModded = true;
                 orig(self);
             };
+
+            On.RoR2.RoR2Application.OnLoad += (orig, self) => {
+                orig(self);
+
+                var build = typeof(RoR2Application).GetFieldValue<string>("steamBuildId");
+                if (GameBuild == build)
+                    return;
+
+                Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{build}\".");
+                Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
+            };
+        }
+
+        public static bool SupportsVersion(string version) {
+            var own = Version.Parse(PluginVersion);
+            var v = Version.Parse(version);
+
+            return own.Major == v.Major && own.Minor <= v.Minor;
         }
 
         private static void CheckForIncompatibleAssemblies() {
