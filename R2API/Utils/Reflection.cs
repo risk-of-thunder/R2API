@@ -19,6 +19,10 @@ namespace R2API.Utils {
 
         private delegate object CallDelegate(object instance, object[] arguments);
 
+        private delegate void SetDelegateRef<TInstance, in TValue>(ref TInstance instance, TValue value) where TInstance : struct;
+
+        public delegate T GetDelegateRef<TInstance, out T>(ref TInstance instance) where TInstance : struct;
+
         #region Caches
 
         // Field
@@ -106,6 +110,13 @@ namespace R2API.Utils {
                 .GetFieldSetDelegate<TValue>()
                 (null, value);
 
+        public static void SetStructFieldValue<TInstance, TValue>(this ref TInstance instance, string fieldName, TValue value)
+            where TInstance : struct =>
+            typeof(TInstance)
+                .GetFieldCached(fieldName)
+                .GetFieldSetDelegateRef<TInstance, TValue>()
+                (ref instance, value);
+
 
         /// <summary>
         /// Gets the <see cref="FieldInfo"/> on the specified <see cref="Type"/> and searches base types if not found.
@@ -131,6 +142,9 @@ namespace R2API.Utils {
 
         private static SetDelegate<TValue> GetFieldSetDelegate<TValue>(this FieldInfo field) =>
             (SetDelegate<TValue>)FieldSetDelegateCache.GetOrAdd(field, x => x.CreateSetDelegate<TValue>());
+
+        private static SetDelegateRef<TInstance, TValue> GetFieldSetDelegateRef<TInstance, TValue>(this FieldInfo field) where TInstance : struct =>
+            (SetDelegateRef<TInstance, TValue>)FieldSetDelegateCache.GetOrAdd(field, x => x.CreateSetDelegateRef<TInstance, TValue>());
 
         #endregion
 
@@ -165,12 +179,36 @@ namespace R2API.Utils {
                 .GetPropertySetDelegate<TValue>()
                 (null, value);
 
+        public static void SetStructPropertyValue<TInstance, TValue>(this ref TInstance instance, string propName,
+            TValue value)
+            where TInstance : struct =>
+            typeof(TInstance)
+                .GetPropertyCached(propName)
+                .GetPropertySetDelegateRef<TInstance, TValue>()
+                (ref instance, value);
+
+        public static TValue GetStructPropertyValue<TInstance, TValue>(this ref TInstance instance, string propName)
+            where TInstance : struct =>
+            typeof(TInstance)
+                .GetPropertyCached(propName)
+                .GetPropertyGetDelegateRef<TInstance, TValue>()
+                (ref instance);
 
         private static GetDelegate<TReturn> GetPropertyGetDelegate<TReturn>(this PropertyInfo property) =>
             (GetDelegate<TReturn>)PropertyGetDelegateCache.GetOrAdd(property, prop => prop.CreateGetDelegate<TReturn>());
 
+        private static GetDelegateRef<TInstance, TReturn> GetPropertyGetDelegateRef<TInstance, TReturn>(this PropertyInfo property)
+            where TInstance : struct =>
+            (GetDelegateRef<TInstance, TReturn>)PropertyGetDelegateCache.GetOrAdd(property, prop => prop.CreateGetDelegate<TInstance, TReturn>());
+
         private static SetDelegate<TValue> GetPropertySetDelegate<TValue>(this PropertyInfo property) =>
             (SetDelegate<TValue>)PropertySetDelegateCache.GetOrAdd(property, prop => prop.CreateSetDelegate<TValue>());
+
+        private static SetDelegateRef<TInstance, TValue> GetPropertySetDelegateRef<TInstance, TValue>(
+            this PropertyInfo property)
+            where TInstance : struct =>
+            (SetDelegateRef<TInstance, TValue>) PropertySetDelegateCache.GetOrAdd(property,
+                prop => prop.CreateSetDelegateRef<TInstance, TValue>());
 
         #endregion
 
@@ -282,17 +320,19 @@ namespace R2API.Utils {
             if (field.FieldType != typeof(TReturn)) {
                 throw new Exception($"Field type {field.FieldType} does not match the requested type {typeof(TReturn)}.");
             }
- 
+
+
             var method = new DynamicMethodDefinition($"{field} Getter", typeof(TReturn), new[] { typeof(object) });
             var il = method.GetILProcessor();
 
             if (!field.IsStatic) {
                 il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Ldfld, field);
-            } else {
-                il.Emit(OpCodes.Ldsfld, field);
+                if (field.DeclaringType.GetTypeInfo().IsValueType) {
+                    il.Emit(OpCodes.Unbox_Any, field.DeclaringType);
+                }
             }
 
+            il.Emit(!field.IsStatic ? OpCodes.Ldfld : OpCodes.Ldsfld, field);
             il.Emit(OpCodes.Ret);
 
             return (GetDelegate<TReturn>)method.Generate().CreateDelegate(typeof(GetDelegate<TReturn>));
@@ -313,16 +353,38 @@ namespace R2API.Utils {
 
             if (!field.IsStatic) {
                 il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Ldarg_1);
-                il.Emit(OpCodes.Stfld, field);
-            } else {
-                il.Emit(OpCodes.Ldarg_1);
-                il.Emit(OpCodes.Stsfld, field);
             }
+
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(!field.IsStatic ? OpCodes.Stfld : OpCodes.Stsfld, field);
 
             il.Emit(OpCodes.Ret);
 
             return (SetDelegate<TValue>)method.Generate().CreateDelegate(typeof(SetDelegate<TValue>));
+        }
+
+        private static SetDelegateRef<TInstance, TValue> CreateSetDelegateRef<TInstance, TValue>(this FieldInfo field) where TInstance : struct {
+            if (field == null) {
+                throw new ArgumentException("Field cannot be null.", nameof(field));
+            }
+
+            if (field.FieldType != typeof(TValue)) {
+                throw new Exception($"Value type type {typeof(TValue)} does not match the requested type {field.FieldType}.");
+            }
+
+            var method = new DynamicMethodDefinition($"{field} SetterByRef", typeof(void),
+                new[] { typeof(TInstance).MakeByRefType(), typeof(TValue) });
+            var il = method.GetILProcessor();
+
+            if (!field.IsStatic) {
+                il.Emit(OpCodes.Ldarg_0);
+            }
+
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(!field.IsStatic ? OpCodes.Stfld : OpCodes.Stsfld, field);
+            il.Emit(OpCodes.Ret);
+
+            return (SetDelegateRef<TInstance, TValue>)method.Generate().CreateDelegate(typeof(SetDelegateRef<TInstance, TValue>));
         }
 
         private static GetDelegate<TReturn> CreateGetDelegate<TReturn>(this PropertyInfo property) {
@@ -337,7 +399,7 @@ namespace R2API.Utils {
             var method = new DynamicMethodDefinition($"{property} Getter", typeof(TReturn), new[] { typeof(object) });
             var il = method.GetILProcessor();
 
-            var getMethod = property.GetGetMethod(true);
+            var getMethod = property.GetGetMethod(nonPublic: true);
 
             if (!getMethod.IsStatic) {
                 il.Emit(OpCodes.Ldarg_0);
@@ -349,6 +411,31 @@ namespace R2API.Utils {
             return (GetDelegate<TReturn>)method.Generate().CreateDelegate(typeof(GetDelegate<TReturn>));
         }
 
+        public static GetDelegateRef<TInstance, TReturn> CreateGetDelegate<TInstance, TReturn>(this PropertyInfo property) where TInstance : struct {
+            if (property == null) {
+                throw new ArgumentException("Property cannot be null.", nameof(property));
+            }
+
+            if (property.PropertyType != typeof(TReturn)) {
+                throw new Exception($"Field type {property.PropertyType} does not match the requested type {typeof(TReturn)}.");
+            }
+
+            var method = new DynamicMethodDefinition($"{property} Getter", typeof(TReturn), new[] { typeof(TInstance).MakeByRefType() });
+            var il = method.GetILProcessor();
+
+            var getMethod = property.GetGetMethod(nonPublic: true);
+
+            if (!getMethod.IsStatic) {
+                il.Emit(OpCodes.Ldarg_0);
+            }
+
+            il.Emit(OpCodes.Call, getMethod);
+            il.Emit(OpCodes.Ret);
+
+            return (GetDelegateRef<TInstance, TReturn>)method.Generate().CreateDelegate(typeof(GetDelegateRef<TInstance, TReturn>));
+        }
+
+
         private static SetDelegate<TValue> CreateSetDelegate<TValue>(this PropertyInfo property) {
             if (property == null) {
                 throw new ArgumentException("Property cannot be null.", nameof(property));
@@ -359,7 +446,7 @@ namespace R2API.Utils {
             }
 
             var method = new DynamicMethodDefinition($"{property} Setter", typeof(void),
-                new[] { typeof(object), typeof(object) });
+                new[] { typeof(object), typeof(TValue) });
             var il = method.GetILProcessor();
 
             var setMethod = property.GetSetMethod(true);
@@ -373,6 +460,32 @@ namespace R2API.Utils {
             il.Emit(OpCodes.Ret);
 
             return (SetDelegate<TValue>)method.Generate().CreateDelegate(typeof(SetDelegate<TValue>));
+        }
+
+        private static SetDelegateRef<TInstance, TValue> CreateSetDelegateRef<TInstance, TValue>(this PropertyInfo property) where TInstance : struct {
+            if (property == null) {
+                throw new ArgumentException("Property cannot be null.", nameof(property));
+            }
+
+            if (property.PropertyType != typeof(TValue)) {
+                throw new Exception($"Value type type {typeof(TValue)} does not match the requested type {property.PropertyType}.");
+            }
+
+            var method = new DynamicMethodDefinition($"{property} SetterByRef", typeof(void),
+                new[] { typeof(TInstance).MakeByRefType(), typeof(TValue) });
+            var il = method.GetILProcessor();
+
+            var setMethod = property.GetSetMethod(true);
+
+            if (!setMethod.IsStatic) {
+                il.Emit(OpCodes.Ldarg_0);
+            }
+
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Call, setMethod);
+            il.Emit(OpCodes.Ret);
+
+            return (SetDelegateRef<TInstance, TValue>)method.Generate().CreateDelegate(typeof(SetDelegateRef<TInstance, TValue>));
         }
 
         // Partial hack from https://github.com/0x0ade/MonoMod/blob/master/MonoMod.Utils/FastReflectionHelper.cs

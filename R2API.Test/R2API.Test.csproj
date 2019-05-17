@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
 	  <OutputType>Library</OutputType>
-
+		<LangVersion>7.2</LangVersion>
 		<IsPackable>false</IsPackable>
 	  <TestProjectType>UnitTest</TestProjectType>
 

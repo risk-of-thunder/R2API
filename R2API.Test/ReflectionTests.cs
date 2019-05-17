@@ -1,4 +1,6 @@
 using System;
+using EntityStates;
+using EntityStates.Jellyfish;
 using R2API.Utils;
 using RoR2;
 using RoR2.UI;
@@ -119,11 +121,97 @@ namespace R2API.Test {
             Assert.Equal(refIndex, index);
             Assert.Equal(ItemIndex.AlienHead, index);
         }
+
+        [Fact]
+        public void TestReflectionStructFieldGetAndSet() {
+            var i = new MyTestStruct(5);
+            var newVal = new MyOtherStruct(3);
+            i.SetStructFieldValue("_typeName", newVal);
+            i.SetStructFieldValue("privateField", 45);
+
+            var typeNameField = typeof(MyTestStruct).GetFieldCached("_typeName");
+            var typeNameActual = (MyOtherStruct)typeNameField.GetValue(i);
+            var privateField = i.GetFieldValue<int>("privateField");
+            Assert.Equal(45, privateField);
+
+            var typeName = i.GetFieldValue<MyOtherStruct>("_typeName");
+            Assert.Equal(typeNameActual.Val, typeName.Val);
+            Assert.Equal(3, typeName.Val);
+        }
+
+        [Fact]
+        public void TestReflectionStructStaticGetAndSet() {
+            var i = new MyOtherStruct(5);
+
+            i.SetStructFieldValue("PrivateVal", 3);
+
+            var typeNameField = typeof(MyOtherStruct).GetFieldCached("PrivateVal");
+            var privateValActual = (int)typeNameField.GetValue(i);
+
+            var privateVal = i.GetFieldValue<int>("PrivateVal");
+            Assert.Equal(privateValActual, privateVal);
+            Assert.Equal(3, privateVal);
+        }
+
+        [Fact]
+        public void TestReflectionStructPrivatePropertyGetAndSet() {
+            var i = new MyTestStruct(10);
+            const string propertyName = "PublicProperty2";
+            var privateProperty1 = i.GetStructPropertyValue<MyTestStruct, string>(propertyName);
+
+            Assert.Equal("nice", privateProperty1);
+
+            i.SetStructPropertyValue(propertyName, "test2");
+            var privateProperty2 = i.GetStructPropertyValue<MyTestStruct, string>(propertyName);
+
+            Assert.Equal("test2", privateProperty2);
+        }
+
+        [Fact]
+        public void TestReflectionStructPublicPropertyGetAndSet() {
+            var i = new MyTestStruct(10);
+            var publicProperty1 = i.GetStructPropertyValue<MyTestStruct, int>("PublicProperty");
+            Assert.Equal(10, publicProperty1);
+
+            i.SetStructPropertyValue("PublicProperty", 15);
+            var publicProperty2 = i.GetStructPropertyValue<MyTestStruct, int>("PublicProperty");
+
+            Assert.Equal(15, publicProperty2);
+        }
     }
 
     public enum TestEnum {
         Test1 = 0,
         Test2 = 1
+    }
+
+    public struct MyOtherStruct {
+        public MyOtherStruct(int val) {
+            Val = val;
+            PrivateVal = val;
+        }
+
+        public int Val;
+        private static int PrivateVal;
+    }
+
+    public struct MyTestStruct {
+        public MyTestStruct(int val) {
+            _typeName = new MyOtherStruct(val);
+            privateField = val;
+            PrivateProperty = val;
+            PublicProperty = val;
+            PublicProperty2 = "nice";
+        }
+
+        private MyOtherStruct _typeName;
+
+        private int privateField;
+
+        private int PrivateProperty { get; set; }
+        public int PublicProperty { get; set; }
+
+        public string PublicProperty2 { get; set; }
     }
 
     public class ReflectionTestBaseObject {
@@ -145,8 +233,6 @@ namespace R2API.Test {
         private string Test(string a, string b) {
             return a + b;
         }
-
-        
 
         private void Test2(string privateValue) {
             PrivateValue1 = privateValue;
