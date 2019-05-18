@@ -1,6 +1,4 @@
 using System;
-using EntityStates;
-using EntityStates.Jellyfish;
 using R2API.Utils;
 using RoR2;
 using RoR2.UI;
