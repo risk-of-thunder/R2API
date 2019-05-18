@@ -12,6 +12,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath>D:\Games\steamapps\common\Risk of Rain 2\BepInEx\plugins\R2API\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +43,7 @@
     <Reference Include="MonoMod.RuntimeDetour">
       <HintPath>libs\MonoMod.RuntimeDetour.dll</HintPath>
       <Private>false</Private>
+      <SpecificVersion>false</SpecificVersion>
     </Reference>
     <Reference Include="MonoMod.Utils">
       <HintPath>libs\MonoMod.Utils.dll</HintPath>

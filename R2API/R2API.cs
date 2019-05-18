@@ -6,6 +6,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using RoR2;
+using UnityEngine;
 
 namespace R2API {
     [BepInPlugin("com.bepis.r2api", "R2API", "2.0.0")]
@@ -26,7 +27,10 @@ namespace R2API {
 
             Hooks.InitializeHooks();
 
+            
             RoR2Application.isModded = IsModded.Value;
+
+            Logger.LogInfo("Init finished");
         }
 
         private static void CheckForIncompatibleAssemblies() {
@@ -64,7 +68,7 @@ namespace R2API {
             Logger.LogError(CenterText());
             Logger.LogError($"{CenterText("!ERROR!")}");
             Logger.LogError($"{CenterText("You have incompatible assemblies")}");
-            Logger.LogError($"{CenterText("Please delete the follow files from your managed folder")}");
+            Logger.LogError($"{CenterText("Please delete the following files from your managed folder")}");
             Logger.LogError(CenterText());
 
             foreach (var file in incompatibleFiles) {

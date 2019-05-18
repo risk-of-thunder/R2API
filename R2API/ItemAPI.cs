@@ -12,6 +12,7 @@ namespace R2API {
         }
     }
 
+    
     public class CustomItem {
         public ItemDef Item { get; private set; }
         public List<Action<PlayerStats>> StatEffects { get; } = new List<Action<PlayerStats>>();
