@@ -1,4 +1,4 @@
-#Changelog
+# Changelog
 
 ## 2.0.0
 - Fixed SurvivorAPI, you can now have more than one custom survivor
