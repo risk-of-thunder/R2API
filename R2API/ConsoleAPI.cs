@@ -29,8 +29,6 @@ namespace R2API {
                 //Commands may be invalid/valid simply a wrapper class to provide helper props
                 var cmdObj = new R2APIConCommand(cmd, sender);
 
-                //extend on help
-                
                 //So we try handle.
                 if (TryHandleR2APICmd(cmdObj) && cmdObj.Name.ToLower() != "help") {
                     return;
@@ -38,6 +36,8 @@ namespace R2API {
 
                 
                 orig.Invoke(self, sender, cmd, false);
+
+                //extend on help
                 if (cmdObj.Name.ToLower() == "help") {
                     var headerMsg = "R2API Console Help:\nRegistered Commands:\n";
                     var body = _gatherCmdHelp();
