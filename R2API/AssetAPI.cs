@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MonoMod.Cil;
+using R2API.Utils;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
@@ -19,12 +20,72 @@ namespace R2API {
         /// <summary>
         /// List of all character masters, including both vanilla and modded ones.
         /// </summary>
+        // TODO: implement late load for MasterCatalog the same way as for BodyCatalog
         public static List<GameObject> MasterCatalog { get; private set; } = new List<GameObject>();
+
+
+        #region BodyCatalog
 
         /// <summary>
         /// List of all character bodies, including both vanilla and modded ones.
         /// </summary>
-        public static List<GameObject> BodyCatalog { get; private set; } = new List<GameObject>();
+        public static readonly List<GameObject> BodyCatalog = new List<GameObject>();
+
+        /// <summary>
+        /// If BodyCatalog.Init was called already.
+        /// </summary>
+        private static bool _bodyCatalogReady;
+
+        /// <summary>
+        /// Invokes just before BodyCatalog.Init - EventArgs is AssetAPI.BodyCatalog.
+        /// </summary>
+        public static event EventHandler<List<GameObject>> OnBodyCatalogReady;
+
+
+        /// <summary>
+        /// Add a BodyPrefab to RoR2.BodyCatalog, even after init.
+        /// If you try to add a BodyPrefab whose name already exists in nameToIndexMap, this method will throw.
+        /// </summary>
+        /// <param name="bodyPrefab"></param>
+        /// <param name="portraitIcon"></param>
+        /// <returns>The index of your BodyPrefab.</returns>
+        public static int AddToBodyCatalog(GameObject bodyPrefab, Texture2D portraitIcon = null) {
+            BodyCatalog.Add(bodyPrefab);
+
+            if (!_bodyCatalogReady)
+                return BodyCatalog.Count - 1;
+
+            var bodyPrefabs =
+                typeof(RoR2.BodyCatalog).GetFieldValue<GameObject[]>("bodyPrefabs");
+            var bodyPrefabBodyComponents =
+                typeof(RoR2.BodyCatalog).GetFieldValue<RoR2.CharacterBody[]>("bodyPrefabBodyComponents");
+            var nameToIndexMap =
+                typeof(RoR2.BodyCatalog).GetFieldValue<Dictionary<string, int>>("nameToIndexMap");
+
+            if (nameToIndexMap.ContainsKey(bodyPrefab.name) || nameToIndexMap.ContainsKey(bodyPrefab.name + "(Clone)"))
+                throw new ArgumentException($"BodyPrefab with the name \"{bodyPrefab.name}\" already exists.");
+
+            var index = bodyPrefabs.Length;
+            Array.Resize(ref bodyPrefabs, index + 1);
+
+            bodyPrefabs[index] = bodyPrefab;
+            nameToIndexMap[bodyPrefab.name] = index;
+            nameToIndexMap[bodyPrefab.name + "(Clone)"] = index;
+
+            Array.Resize(ref bodyPrefabBodyComponents, index + 1);
+            bodyPrefabBodyComponents[index] = bodyPrefab.GetComponent<RoR2.CharacterBody>();
+
+            if (portraitIcon != null)
+                bodyPrefabBodyComponents[index].portraitIcon = portraitIcon;
+
+
+            typeof(RoR2.BodyCatalog).SetFieldValue("bodyPrefabs", bodyPrefabs);
+            typeof(RoR2.BodyCatalog).SetFieldValue("bodyPrefabBodyComponents", bodyPrefabBodyComponents);
+
+            return index;
+        }
+
+        #endregion
 
         internal static void InitHooks() {
             AssetLoaderReady?.Invoke(null, null);
@@ -52,6 +113,14 @@ namespace R2API {
                 c.EmitDelegate<Func<GameObject[]>>(BuildBodyCatalog);
             };
             doneLoading = true;
+
+            On.RoR2.BodyCatalog.Init += orig => {
+                OnBodyCatalogReady?.Invoke(null, BodyCatalog);
+
+                orig();
+
+                _bodyCatalogReady = true;
+            };
         }
 
         internal static GameObject[] BuildMasterCatalog() {

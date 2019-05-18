@@ -36,11 +36,6 @@ namespace R2API {
                     UpdateValues?.Invoke(self, null);
                 };
             };
-
-            On.RoR2.UI.RuleCategoryController.Awake += (orig, self) => {
-                self.SetCollapsed(true);
-                orig(self);
-            };
         }
 
         private static event EventHandler UpdateValues;
