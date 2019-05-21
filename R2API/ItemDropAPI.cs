@@ -36,7 +36,7 @@ namespace R2API {
                 eq.ToSelection(ItemDropAPI.DefaultShrineEquipmentWeight)
             };
 
-            ItemDropAPI.AddDropInformation(ItemDropLocation.Shrine, shrineSelections);
+            ItemDropAPI.ReplaceDrops(ItemDropLocation.Shrine, shrineSelections);
         }
 
         public static void AddChestDefaultDrops() {
@@ -50,20 +50,20 @@ namespace R2API {
                 t3.ToSelection(ItemDropAPI.DefaultChestTier3DropChance)
             };
 
-            ItemDropAPI.AddDropInformation(ItemDropLocation.SmallChest, chestSelections);
-            ItemDropAPI.AddDropInformation(ItemDropLocation.MediumChest, t2.ToSelection(0.8f), t3.ToSelection(0.2f));
-            ItemDropAPI.AddDropInformation(ItemDropLocation.LargeChest, t3.ToSelection());
+            ItemDropAPI.ReplaceDrops(ItemDropLocation.SmallChest, chestSelections);
+            ItemDropAPI.ReplaceDrops(ItemDropLocation.MediumChest, t2.ToSelection(0.8f), t3.ToSelection(0.2f));
+            ItemDropAPI.ReplaceDrops(ItemDropLocation.LargeChest, t3.ToSelection());
         }
 
         public static void AddEquipmentChestDefaultDrops() {
             var eq = ItemDropAPI.GetDefaultEquipmentDropList();
 
-            ItemDropAPI.AddDropInformation(ItemDropLocation.EquipmentChest, eq.ToSelection());
+            ItemDropAPI.ReplaceDrops(ItemDropLocation.EquipmentChest, eq.ToSelection());
         }
 
         public static void AddLunarChestDefaultDrops() {
             var lun = ItemDropAPI.GetDefaultLunarDropList();
-            ItemDropAPI.AddDropInformation(ItemDropLocation.LunarChest, lun.ToSelection());
+            ItemDropAPI.ReplaceDrops(ItemDropLocation.LunarChest, lun.ToSelection());
         }
 
         public static void AddBossDefaultDrops() {
@@ -71,7 +71,7 @@ namespace R2API {
 
             var t2 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier2);
 
-            ItemDropAPI.AddDropInformation(ItemDropLocation.Boss, t2.ToSelection());
+            ItemDropAPI.ReplaceDrops(ItemDropLocation.Boss, t2.ToSelection());
         }
     }
 
@@ -84,9 +84,9 @@ namespace R2API {
         MediumChest,
         LargeChest,
         Shrine,
-        SmallChestSelector,
-        MediumChestSelector,
-        LargeChestSelector
+        //SmallChestSelector,
+        //MediumChestSelector,
+        //LargeChestSelector
     }
 
     // ReSharper disable once InconsistentNaming
@@ -183,7 +183,7 @@ namespace R2API {
                     // Setup default item lists
                     DefaultItemDrops.AddDefaults();
                 }
-
+                // These lists should be replaced soon.
                 self.availableTier1DropList.Clear();
                 self.availableTier1DropList.AddRange(GetDefaultDropList(ItemTier.Tier1).Select(x => new PickupIndex(x))
                     .ToList());
@@ -204,17 +204,16 @@ namespace R2API {
                 self.availableLunarDropList.AddRange(GetDefaultLunarDropList());
 
                 self.smallChestDropTierSelector.Clear();
-                self.smallChestDropTierSelector.AddChoice(self.availableTier1DropList, 0.8f);
-                self.smallChestDropTierSelector.AddChoice(self.availableTier2DropList, 0.2f);
-                self.smallChestDropTierSelector.AddChoice(self.availableTier3DropList, 0.01f);
+                self.smallChestDropTierSelector.AddChoice(self.availableTier1DropList, DefaultSmallChestTier1SelectorDropChance);
+                self.smallChestDropTierSelector.AddChoice(self.availableTier2DropList, DefaultSmallChestTier2SelectorDropChance);
+                self.smallChestDropTierSelector.AddChoice(self.availableTier3DropList, DefaultSmallChestTier3SelectorDropChance);
                 self.mediumChestDropTierSelector.Clear();
-                self.mediumChestDropTierSelector.AddChoice(self.availableTier2DropList, 0.8f);
-                self.mediumChestDropTierSelector.AddChoice(self.availableTier3DropList, 0.2f);
+                self.mediumChestDropTierSelector.AddChoice(self.availableTier2DropList, DefaultMediumChestTier1SelectorDropChance);
+                self.mediumChestDropTierSelector.AddChoice(self.availableTier3DropList, DefaultMediumChestTier2SelectorDropChance);
                 self.largeChestDropTierSelector.Clear();
             };
         }
 
-        public static float ChestSpawnRate = 1.0f;
         public static bool IncludeSpecialBossDrops = true;
 
         public static float DefaultChestTier1DropChance = 0.8f;
@@ -227,18 +226,19 @@ namespace R2API {
         public static float DefaultShrineTier2Weight = 2f;
         public static float DefaultShrineTier3Weight = 0.2f;
 
-        public static float DefaultTier1SelectorDropChance = 0.8f;
-        public static float DefaultTier2SelectorDropChance = 0.2f;
-        public static float DefaultTier3SelectorDropChance = 0.01f;
+        public static float DefaultSmallChestTier1SelectorDropChance = 0.8f;
+        public static float DefaultSmallChestTier2SelectorDropChance = 0.2f;
+        public static float DefaultSmallChestTier3SelectorDropChance = 0.01f;
+
+        public static float DefaultMediumChestTier1SelectorDropChance = 0.8f;
+        public static float DefaultMediumChestTier2SelectorDropChance = 0.2f;
 
         public static bool DefaultDrops { get; set; } = true;
-
-        public static List<ItemIndex> None { get; set; } = new List<ItemIndex> {ItemIndex.None};
 
         public static Dictionary<ItemDropLocation, List<PickupSelection>> Selection { get; set; } =
             new Dictionary<ItemDropLocation, List<PickupSelection>>();
 
-        public static void AddDropInformation(ItemDropLocation dropLocation,
+        public static void ReplaceDrops(ItemDropLocation dropLocation,
             params PickupSelection[] pickupSelections) {
             Logger.LogInfo(
                 $"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
@@ -246,11 +246,25 @@ namespace R2API {
             Selection[dropLocation] = pickupSelections.ToList();
         }
 
-        public static void AddDropInformation(ItemDropLocation dropLocation, List<PickupSelection> pickupSelections) {
+        public static void ReplaceDrops(ItemDropLocation dropLocation, List<PickupSelection> pickupSelections) {
             Logger.LogInfo(
                 $"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
 
             Selection[dropLocation] = pickupSelections;
+        }
+
+        public static void AddDrops(ItemDropLocation dropLocation, PickupSelection pickups) {
+            if (Selection[dropLocation] == null) {
+                Selection[dropLocation] = new List<PickupSelection>();
+            }
+            Selection[dropLocation].Add(pickups);
+        }
+
+        public static void AddDrops(ItemDropLocation dropLocation, IEnumerable<PickupSelection> pickups) {
+            if (Selection[dropLocation] == null) {
+                Selection[dropLocation] = new List<PickupSelection>();
+            }
+            Selection[dropLocation].AddRange(pickups);
         }
 
         public static PickupIndex GetSelection(ItemDropLocation dropLocation, float normalizedIndex) {
