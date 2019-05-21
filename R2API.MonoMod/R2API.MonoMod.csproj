@@ -14,13 +14,12 @@
     <ItemGroup>
         <Reference Include="Assembly-CSharp">
             <HintPath>..\R2API\libs\Assembly-CSharp.dll</HintPath>
-            <Private>False</Private>
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+            <Private>false</Private>
         </Reference>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\R2API\R2API.csproj">
+        <ProjectReference PrivateAssets="all" Include="..\R2API\R2API.csproj" >
         </ProjectReference>
     </ItemGroup>
 
