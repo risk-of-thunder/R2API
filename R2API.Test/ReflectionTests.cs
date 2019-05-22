@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using R2API.Utils;
 using RoR2;
 using RoR2.UI;
@@ -175,6 +177,20 @@ namespace R2API.Test {
             var publicProperty2 = i.GetStructPropertyValue<MyTestStruct, int>("PublicProperty");
 
             Assert.Equal(15, publicProperty2);
+        }
+
+        [Fact]
+        public void TestReflectionItemDropAPI() {
+            var method = typeof(PickupIndex).GetMethodCached("get_itemIndex");
+            Assert.NotNull(method);
+
+
+            var nextElementUniform = typeof(Xoroshiro128Plus)
+                .GetMethods()
+                .First(x => x.Name == "NextElementUniform"
+                            && x.GetParameters()[0].ParameterType.GUID == typeof(List<>).GUID);
+
+            Assert.NotNull(nextElementUniform);
         }
     }
 

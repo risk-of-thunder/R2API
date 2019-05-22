@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.2
+- Bug fix for ItemDropAPI hook
+- Update Assembly-CSharp and mod info for latest version of RoR2
+
 ## 2.0.1
 - Updated MMHOOK_Assembly-CSharp.dll
 - Added more usages of ItemDropAPI

@@ -97,19 +97,23 @@ namespace R2API {
             var itemDropApi_GetSelection = typeof(ItemDropAPI).GetMethodCached("GetSelection");
             var xoroshiro_GetNextNormalizedFloat = typeof(Xoroshiro128Plus).GetMethodCached("get_nextNormalizedFloat");
 
+            Logger.LogDebug($"{nameof(ItemDropAPI)} - Hook 1");
             IL.RoR2.BossGroup.OnCharacterDeathCallback += il => {
                 var cursor = new ILCursor(il).Goto(0);
-
                 cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethodCached("get_itemIndex")));
 
                 var itemIndex = (VariableDefinition) cursor.Next.Next.Operand;
 
                 cursor.Goto(0);
-                cursor.GotoNext(x => x.MatchCallvirt(typeof(List<PickupIndex>).GetMethodCached("get_Item")));
 
-                var pickupIndex = (VariableDefinition) cursor.Next.Next.Operand;
+                cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetConstructorCached(new[] { typeof(ItemIndex) })));
+                cursor.GotoPrev(x => x.OpCode == OpCodes.Ldloca_S);
 
-                cursor.GotoNext(MoveType.Before, x => x.MatchStloc(itemIndex.Index));
+                var pickupIndex = (VariableDefinition) cursor.Next.Operand;
+
+                cursor.Goto(0);
+
+                cursor.GotoNext(x => x.MatchStloc(itemIndex.Index));
                 cursor.Emit(OpCodes.Stloc_S, itemIndex);
 
                 cursor.Emit(OpCodes.Ldc_I4_0);
@@ -135,29 +139,30 @@ namespace R2API {
             var tier3Chance =
                 typeof(ChestBehavior).GetFieldCached("tier3Chance");
 
+            Logger.LogDebug($"{nameof(ItemDropAPI)} - Hook 2");
             IL.RoR2.ChestBehavior.RollItem += il => {
                 var cursor = new ILCursor(il).Goto(0);
                 cursor.GotoNext(x => x.MatchLdcI4(8));
 
                 cursor.Emit(OpCodes.Ldarg_0);
                 cursor.EmitDelegate<Action<ChestBehavior>>(@this => {
-                    if ((PickupIndex) dropPickup.GetValue(@this) != PickupIndex.none) {
+                    if (@this.GetFieldValue<PickupIndex>("dropPickup") != PickupIndex.none) {
                         return;
                     }
 
-                    if ((float) lunarChance.GetValue(@this) >= 1f) {
+                    if (@this.GetFieldValue<float>("lunarChance") >= 1f) {
                         @this.dropPickup = GetSelection(ItemDropLocation.LunarChest,
                             Run.instance.treasureRng.nextNormalizedFloat);
                     }
-                    else if ((float) tier3Chance.GetValue(@this) >= 0.2f) {
+                    else if (@this.GetFieldValue<float>("tier3Chance") >= 0.2f) {
                         @this.dropPickup = GetSelection(ItemDropLocation.LargeChest,
                             Run.instance.treasureRng.nextNormalizedFloat);
                     }
-                    else if ((float) tier2Chance.GetValue(@this) >= 0.8f) {
+                    else if (@this.GetFieldValue<float>("tier2Chance") >= 0.8f) {
                         @this.dropPickup = GetSelection(ItemDropLocation.MediumChest,
                             Run.instance.treasureRng.nextNormalizedFloat);
                     }
-                    else if ((float) tier1Chance.GetValue(@this) <= 0.8f) {
+                    else if (@this.GetFieldValue<float>("tier1Chance") <= 0.8f) {
                         @this.dropPickup = GetSelection(ItemDropLocation.SmallChest,
                             Run.instance.treasureRng.nextNormalizedFloat);
                     }
@@ -168,6 +173,7 @@ namespace R2API {
 
             var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethodCached("Evaluate");
 
+            Logger.LogDebug($"{nameof(ItemDropAPI)} - Hook 3");
             IL.RoR2.ShrineChanceBehavior.AddShrineStack += il => {
                 var cursor = new ILCursor(il).Goto(0);
 
@@ -177,6 +183,8 @@ namespace R2API {
                 cursor.EmitDelegate<Func<WeightedSelection<PickupIndex>, float, PickupIndex>>((_, x) =>
                     GetSelection(ItemDropLocation.Shrine, x));
             };
+
+            Logger.LogDebug($"{nameof(ItemDropAPI)} - Hook 4");
 
             On.RoR2.Run.BuildDropTable += (orig, self) => {
                 if (DefaultDrops) {
