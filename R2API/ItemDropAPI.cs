@@ -6,6 +6,8 @@ using MonoMod.Cil;
 using System;
 using BepInEx.Logging;
 using R2API.Utils;
+using UnityEngine;
+using UnityEngine.Networking;
 
 namespace R2API {
     public class PickupSelection {
@@ -129,6 +131,11 @@ namespace R2API {
             };
 
             On.RoR2.ChestBehavior.RollItem += (orig, self) => {
+                if (!NetworkServer.active) {
+                    Debug.LogWarning("[Server] function 'System.Void RoR2.ChestBehavior::RollItem()' called on client");
+                    return;
+                }
+
                 if (self.GetFieldValue<PickupIndex>("dropPickup") != PickupIndex.none) {
                     return;
                 }
