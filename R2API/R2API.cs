@@ -15,7 +15,7 @@ namespace R2API {
         // ReSharper disable once InconsistentNaming
         public const string PluginGUID = "com.bepis.r2api";
         public const string PluginName = "R2API";
-        public const string PluginVersion = "2.0.2";
+        public const string PluginVersion = "2.0.5";
 
         private const string GameBuild = "3830295";
 
