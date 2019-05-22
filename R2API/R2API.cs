@@ -13,7 +13,7 @@ namespace R2API {
     public class R2API : BaseUnityPlugin {
 
         // ReSharper disable once InconsistentNaming
-        public const string PluginGUID = "tristanmcpherson-" + PluginName + "-" + PluginVersion;
+        public const string PluginGUID = "com.bepis.r2api";
         public const string PluginName = "R2API";
         public const string PluginVersion = "2.0.2";
 
