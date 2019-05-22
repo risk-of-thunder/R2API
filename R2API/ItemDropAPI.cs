@@ -128,47 +128,24 @@ namespace R2API {
                 cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethodCached("get_itemIndex"));
             };
 
-            var dropPickup =
-                typeof(ChestBehavior).GetFieldCached("dropPickup");
-            var lunarChance =
-                typeof(ChestBehavior).GetFieldCached("lunarChance");
-            var tier1Chance =
-                typeof(ChestBehavior).GetFieldCached("tier1Chance");
-            var tier2Chance =
-                typeof(ChestBehavior).GetFieldCached("tier2Chance");
-            var tier3Chance =
-                typeof(ChestBehavior).GetFieldCached("tier3Chance");
+            On.RoR2.ChestBehavior.RollItem += (orig, self) => {
+                if (self.GetFieldValue<PickupIndex>("dropPickup") != PickupIndex.none) {
+                    return;
+                }
 
-            Logger.LogDebug($"{nameof(ItemDropAPI)} - Hook 2");
-            IL.RoR2.ChestBehavior.RollItem += il => {
-                var cursor = new ILCursor(il).Goto(0);
-                cursor.GotoNext(x => x.MatchLdcI4(8));
-
-                cursor.Emit(OpCodes.Ldarg_0);
-                cursor.EmitDelegate<Action<ChestBehavior>>(@this => {
-                    if (@this.GetFieldValue<PickupIndex>("dropPickup") != PickupIndex.none) {
-                        return;
-                    }
-
-                    if (@this.GetFieldValue<float>("lunarChance") >= 1f) {
-                        @this.dropPickup = GetSelection(ItemDropLocation.LunarChest,
-                            Run.instance.treasureRng.nextNormalizedFloat);
-                    }
-                    else if (@this.GetFieldValue<float>("tier3Chance") >= 0.2f) {
-                        @this.dropPickup = GetSelection(ItemDropLocation.LargeChest,
-                            Run.instance.treasureRng.nextNormalizedFloat);
-                    }
-                    else if (@this.GetFieldValue<float>("tier2Chance") >= 0.8f) {
-                        @this.dropPickup = GetSelection(ItemDropLocation.MediumChest,
-                            Run.instance.treasureRng.nextNormalizedFloat);
-                    }
-                    else if (@this.GetFieldValue<float>("tier1Chance") <= 0.8f) {
-                        @this.dropPickup = GetSelection(ItemDropLocation.SmallChest,
-                            Run.instance.treasureRng.nextNormalizedFloat);
-                    }
-                });
-
-                cursor.Emit(OpCodes.Ret);
+                if (self.GetFieldValue<float>("lunarChance") >= 1f) {
+                    self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.LunarChest,
+                        Run.instance.treasureRng.nextNormalizedFloat));
+                } else if (self.GetFieldValue<float>("tier3Chance") >= 0.2f) {
+                    self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.LargeChest,
+                        Run.instance.treasureRng.nextNormalizedFloat));
+                } else if (self.GetFieldValue<float>("tier2Chance") >= 0.8f) {
+                    self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.MediumChest,
+                        Run.instance.treasureRng.nextNormalizedFloat));
+                } else if (self.GetFieldValue<float>("tier1Chance") <= 0.8f) {
+                    self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.SmallChest,
+                        Run.instance.treasureRng.nextNormalizedFloat));
+                }
             };
 
             var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethodCached("Evaluate");
