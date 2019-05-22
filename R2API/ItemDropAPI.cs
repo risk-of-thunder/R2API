@@ -262,14 +262,14 @@ namespace R2API {
         }
 
         public static void AddDrops(ItemDropLocation dropLocation, PickupSelection pickups) {
-            if (Selection[dropLocation] == null) {
+            if (!Selection.ContainsKey(dropLocation)) {
                 Selection[dropLocation] = new List<PickupSelection>();
             }
             Selection[dropLocation].Add(pickups);
         }
 
         public static void AddDrops(ItemDropLocation dropLocation, IEnumerable<PickupSelection> pickups) {
-            if (Selection[dropLocation] == null) {
+            if (!Selection.ContainsKey(dropLocation)) {
                 Selection[dropLocation] = new List<PickupSelection>();
             }
             Selection[dropLocation].AddRange(pickups);
