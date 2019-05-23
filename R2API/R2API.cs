@@ -33,11 +33,6 @@ namespace R2API {
 
             RoR2Application.isModded = true;
 
-            On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
-                RoR2Application.isModded = true;
-                orig(self);
-            };
-
             On.RoR2.RoR2Application.OnLoad += (orig, self) => {
                 orig(self);
 
