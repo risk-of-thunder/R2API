@@ -13,7 +13,7 @@ same as an unmodded game, the `isModded` flag excluded.
 
 ## Installation
 
-The latest stable version is included in the [BepInEx Pack](https://thunderstore.io/package/bbepis/BepInExPack/) on Thunderstore.
+The latest stable version is *NO LONGER* included in the [BepInEx Pack](https://thunderstore.io/package/bbepis/BepInExPack/) on Thunderstore.
 
 >#### Bleeding Edge
 > Latest bleeding edge builds of `master` are hosted on [Azure](https://raegous.visualstudio.com/Risk%20of%20Rain%202%20Modding/_build/latest?definitionId=1&branchName=master),
