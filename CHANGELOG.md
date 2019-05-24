@@ -14,3 +14,4 @@
 - Added Custom EntityStates support
 - Added Fast Cached Reflection API, see: [Reflection.cs](https://github.com/risk-of-thunder/R2API/blob/master/R2API/Utils/Reflection.cs)
 - Added In-Game Rule UI API, see: [LobbyConfigAPI.cs](https://github.com/risk-of-thunder/R2API/blob/master/R2API/LobbyConfigAPI.cs)
+- Added ItemDropAPI, a complete replacement for managing item drops, see: [ItemDropAPI.cs](https://github.com/risk-of-thunder/R2API/blob/master/R2API/ItemDropAPI.cs)
