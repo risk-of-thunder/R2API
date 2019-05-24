@@ -201,7 +201,7 @@ namespace R2API {
             };
         }
 
-        //public static bool IncludeSpecialBossDrops = true;
+        public static bool IncludeSpecialBossDrops = true;
 
         public static float DefaultChestTier1DropChance = 0.8f;
         public static float DefaultChestTier2DropChance = 0.2f;
