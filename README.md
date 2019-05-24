@@ -18,6 +18,4 @@ The latest stable version is included in the [BepInEx Pack](https://thunderstore
 >#### Bleeding Edge
 > Latest bleeding edge builds of `master` are hosted on [Azure](https://raegous.visualstudio.com/Risk%20of%20Rain%202%20Modding/_build/latest?definitionId=1&branchName=master),
 > and may be downloaded using the `Artifacts` drop down menu.
-> The contents of `drop\R2API\bin\Release\netstandard2.0\ ` are meant to be extracted into `BepInEx\plugins\R2API\ `, while
-> the file `drop\R2API.MonoMod\bin\Release\netstandard2.0\Assembly-CSharp.R2API.mm.dll` is meant to be extracted into
-> `BepInEx\monomod\ `.
+> The contents of `R2API` should be extracted into the `BepInEx` folder.
