@@ -15,7 +15,7 @@ same as an unmodded game, the `isModded` flag excluded.
 
 The latest stable version is *NO LONGER* included in the [BepInEx Pack](https://thunderstore.io/package/bbepis/BepInExPack/) on Thunderstore.
 
->#### Bleeding Edge
+> #### Bleeding Edge
 > Latest bleeding edge builds of `master` are hosted on [Azure](https://raegous.visualstudio.com/Risk%20of%20Rain%202%20Modding/_build/latest?definitionId=1&branchName=master),
 > and may be downloaded using the `Artifacts` drop down menu.
 > The contents of `R2API` should be extracted into the `BepInEx` folder.
