@@ -96,9 +96,6 @@ namespace R2API {
         public static readonly ManualLogSource Logger = R2API.Logger;
 
         internal static void InitHooks() {
-            var itemDropApi_GetSelection = typeof(ItemDropAPI).GetMethodCached("GetSelection");
-            var xoroshiro_GetNextNormalizedFloat = typeof(Xoroshiro128Plus).GetMethodCached("get_nextNormalizedFloat");
-
             Logger.LogDebug($"{nameof(ItemDropAPI)} - Hook 1");
             IL.RoR2.BossGroup.OnCharacterDeathCallback += il => {
                 var cursor = new ILCursor(il).Goto(0);
@@ -122,8 +119,8 @@ namespace R2API {
 
                 cursor.Emit(OpCodes.Ldarg_0);
                 cursor.Emit(OpCodes.Ldfld, typeof(BossGroup).GetFieldCached("rng"));
-                cursor.Emit(OpCodes.Callvirt, xoroshiro_GetNextNormalizedFloat);
-                cursor.Emit(OpCodes.Call, itemDropApi_GetSelection);
+                cursor.Emit(OpCodes.Callvirt, typeof(Xoroshiro128Plus).GetMethodCached("get_nextNormalizedFloat"));
+                cursor.Emit(OpCodes.Call, typeof(ItemDropAPI).GetMethodCached("GetSelection"));
                 cursor.Emit(OpCodes.Stloc_S, pickupIndex);
                 cursor.Emit(OpCodes.Ldloca_S, pickupIndex);
 
@@ -155,13 +152,11 @@ namespace R2API {
                 }
             };
 
-            var weightedSelection_Evaluate = typeof(WeightedSelection<PickupIndex>).GetMethodCached("Evaluate");
-
             Logger.LogDebug($"{nameof(ItemDropAPI)} - Hook 3");
             IL.RoR2.ShrineChanceBehavior.AddShrineStack += il => {
                 var cursor = new ILCursor(il).Goto(0);
 
-                cursor.GotoNext(x => x.MatchCallvirt(weightedSelection_Evaluate));
+                cursor.GotoNext(x => x.MatchCallvirt(typeof(WeightedSelection<PickupIndex>).GetMethodCached("Evaluate")));
                 cursor.Next.OpCode = OpCodes.Nop;
                 cursor.Next.Operand = null;
                 cursor.EmitDelegate<Func<WeightedSelection<PickupIndex>, float, PickupIndex>>((_, x) =>
@@ -206,7 +201,7 @@ namespace R2API {
             };
         }
 
-        public static bool IncludeSpecialBossDrops = true;
+        //public static bool IncludeSpecialBossDrops = true;
 
         public static float DefaultChestTier1DropChance = 0.8f;
         public static float DefaultChestTier2DropChance = 0.2f;
@@ -229,6 +224,16 @@ namespace R2API {
 
         public static Dictionary<ItemDropLocation, List<PickupSelection>> Selection { get; set; } =
             new Dictionary<ItemDropLocation, List<PickupSelection>>();
+
+        private static readonly Dictionary<ItemTier, List<ItemIndex>> AdditionalTierItems = new Dictionary<ItemTier, List<ItemIndex>> {
+            { ItemTier.Tier1, new List<ItemIndex>() },
+            { ItemTier.Tier2, new List<ItemIndex>() },
+            { ItemTier.Tier3, new List<ItemIndex>() },
+            { ItemTier.Boss, new List<ItemIndex>() },
+            { ItemTier.Lunar, new List<ItemIndex>() }
+        };
+
+        private static readonly List<EquipmentIndex> AdditionalEquipment = new List<EquipmentIndex>();
 
         public static void ReplaceDrops(ItemDropLocation dropLocation,
             params PickupSelection[] pickupSelections) {
@@ -259,6 +264,18 @@ namespace R2API {
             Selection[dropLocation].AddRange(pickups);
         }
 
+        public static void AddToDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
+            if (itemTier == ItemTier.NoTier) {
+                return;
+            }
+
+            AdditionalTierItems[itemTier].AddRange(items);
+        }
+
+        public static void AddToDefaultEquipment(params EquipmentIndex[] equipment) {
+            AdditionalEquipment.AddRange(equipment);
+        }
+
         public static PickupIndex GetSelection(ItemDropLocation dropLocation, float normalizedIndex) {
             if (!Selection.ContainsKey(dropLocation))
                 return new PickupIndex(ItemIndex.None);
@@ -274,6 +291,10 @@ namespace R2API {
         }
 
         public static List<ItemIndex> GetDefaultDropList(ItemTier itemTier) {
+            if (itemTier == ItemTier.NoTier) {
+                return null;
+            }
+
             var list = new List<ItemIndex>();
 
             for (var itemIndex = ItemIndex.Syringe; itemIndex < ItemIndex.Count; itemIndex++) {
@@ -285,6 +306,7 @@ namespace R2API {
                 }
             }
 
+            list.AddRange(AdditionalTierItems[itemTier]);
             return list;
         }
 
@@ -314,6 +336,7 @@ namespace R2API {
                 }
             }
 
+            list.AddRange(AdditionalTierItems[ItemTier.Lunar].Select(x => new PickupIndex(x)));
             return list;
         }
 
@@ -332,6 +355,7 @@ namespace R2API {
                 }
             }
 
+            list.AddRange(AdditionalEquipment);
             return list;
         }
 
