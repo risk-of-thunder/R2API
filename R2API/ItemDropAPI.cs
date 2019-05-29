@@ -5,6 +5,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using BepInEx.Logging;
+using MonoMod.RuntimeDetour;
 using R2API.Utils;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -47,14 +48,21 @@ namespace R2API {
             var t3 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier3);
 
             var chestSelections = new [] {
-                t1.ToSelection(ItemDropAPI.DefaultChestTier1DropChance),
-                t2.ToSelection(ItemDropAPI.DefaultChestTier2DropChance),
-                t3.ToSelection(ItemDropAPI.DefaultChestTier3DropChance)
+                t1.ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
+                t2.ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
+                t3.ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance)
             };
 
+            var lockboxSelections = new[] {
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1).ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier2).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier3).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance)
+            };
+
+            ItemDropAPI.AddDrops(ItemDropLocation.Lockbox, lockboxSelections);
             ItemDropAPI.AddDrops(ItemDropLocation.SmallChest, chestSelections);
-            ItemDropAPI.AddDrops(ItemDropLocation.MediumChest, t2.ToSelection(0.8f), t3.ToSelection(0.2f));
-            ItemDropAPI.AddDrops(ItemDropLocation.LargeChest, t3.ToSelection());
+            ItemDropAPI.AddDrops(ItemDropLocation.MediumChest, t2.ToSelection(ItemDropAPI.DefaultMediumChestTier2DropChance), t3.ToSelection(ItemDropAPI.DefaultMediumChestTier3DropChance));
+            ItemDropAPI.AddDrops(ItemDropLocation.LargeChest, t3.ToSelection(ItemDropAPI.DefaultLargeChestTier3DropChance));
         }
 
         public static void AddEquipmentChestDefaultDrops() {
@@ -85,6 +93,7 @@ namespace R2API {
         SmallChest,
         MediumChest,
         LargeChest,
+        Lockbox,
         Shrine,
         //SmallChestSelector,
         //MediumChestSelector,
@@ -95,117 +104,22 @@ namespace R2API {
     public static class ItemDropAPI {
         public static readonly ManualLogSource Logger = R2API.Logger;
 
-        internal static void InitHooks() {
-            Logger.LogDebug($"{nameof(ItemDropAPI)} - Hook 1");
-            IL.RoR2.BossGroup.OnCharacterDeathCallback += il => {
-                var cursor = new ILCursor(il).Goto(0);
-                cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethodCached("get_itemIndex")));
-
-                var itemIndex = (VariableDefinition) cursor.Next.Next.Operand;
-
-                cursor.Goto(0);
-
-                cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetConstructorCached(new[] { typeof(ItemIndex) })));
-                cursor.GotoPrev(x => x.OpCode == OpCodes.Ldloca_S);
-
-                var pickupIndex = (VariableDefinition) cursor.Next.Operand;
-
-                cursor.Goto(0);
-
-                cursor.GotoNext(x => x.MatchStloc(itemIndex.Index));
-                cursor.Emit(OpCodes.Stloc_S, itemIndex);
-
-                cursor.Emit(OpCodes.Ldc_I4_0);
-
-                cursor.Emit(OpCodes.Ldarg_0);
-                cursor.Emit(OpCodes.Ldfld, typeof(BossGroup).GetFieldCached("rng"));
-                cursor.Emit(OpCodes.Callvirt, typeof(Xoroshiro128Plus).GetMethodCached("get_nextNormalizedFloat"));
-                cursor.Emit(OpCodes.Call, typeof(ItemDropAPI).GetMethodCached("GetSelection"));
-                cursor.Emit(OpCodes.Stloc_S, pickupIndex);
-                cursor.Emit(OpCodes.Ldloca_S, pickupIndex);
-
-                cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethodCached("get_itemIndex"));
-            };
-
-            On.RoR2.ChestBehavior.RollItem += (orig, self) => {
-                if (!NetworkServer.active) {
-                    Debug.LogWarning("[Server] function 'System.Void RoR2.ChestBehavior::RollItem()' called on client");
-                    return;
-                }
-
-                if (self.GetFieldValue<PickupIndex>("dropPickup") != PickupIndex.none) {
-                    return;
-                }
-
-                if (self.GetFieldValue<float>("lunarChance") >= 1f) {
-                    self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.LunarChest,
-                        Run.instance.treasureRng.nextNormalizedFloat));
-                } else if (self.GetFieldValue<float>("tier3Chance") >= 0.2f) {
-                    self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.LargeChest,
-                        Run.instance.treasureRng.nextNormalizedFloat));
-                } else if (self.GetFieldValue<float>("tier2Chance") >= 0.8f) {
-                    self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.MediumChest,
-                        Run.instance.treasureRng.nextNormalizedFloat));
-                } else if (self.GetFieldValue<float>("tier1Chance") <= 0.8f) {
-                    self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.SmallChest,
-                        Run.instance.treasureRng.nextNormalizedFloat));
-                }
-            };
-
-            Logger.LogDebug($"{nameof(ItemDropAPI)} - Hook 3");
-            IL.RoR2.ShrineChanceBehavior.AddShrineStack += il => {
-                var cursor = new ILCursor(il).Goto(0);
-
-                cursor.GotoNext(x => x.MatchCallvirt(typeof(WeightedSelection<PickupIndex>).GetMethodCached("Evaluate")));
-                cursor.Next.OpCode = OpCodes.Nop;
-                cursor.Next.Operand = null;
-                cursor.EmitDelegate<Func<WeightedSelection<PickupIndex>, float, PickupIndex>>((_, x) =>
-                    GetSelection(ItemDropLocation.Shrine, x));
-            };
-
-            Logger.LogDebug($"{nameof(ItemDropAPI)} - Hook 4");
-
-            On.RoR2.Run.BuildDropTable += (orig, self) => {
-                if (DefaultDrops) {
-                    // Setup default item lists
-                    DefaultItemDrops.AddDefaults();
-                }
-                // These lists should be replaced soon.
-                self.availableTier1DropList.Clear();
-                self.availableTier1DropList.AddRange(GetDefaultDropList(ItemTier.Tier1).Select(x => new PickupIndex(x))
-                    .ToList());
-
-                self.availableTier2DropList.Clear();
-                self.availableTier2DropList.AddRange(GetDefaultDropList(ItemTier.Tier2).Select(x => new PickupIndex(x))
-                    .ToList());
-
-                self.availableTier3DropList.Clear();
-                self.availableTier3DropList.AddRange(GetDefaultDropList(ItemTier.Tier3).Select(x => new PickupIndex(x))
-                    .ToList());
-
-                self.availableEquipmentDropList.Clear();
-                self.availableEquipmentDropList.AddRange(GetDefaultEquipmentDropList().Select(x => new PickupIndex(x))
-                    .ToList());
-
-                self.availableLunarDropList.Clear();
-                self.availableLunarDropList.AddRange(GetDefaultLunarDropList());
-
-                self.smallChestDropTierSelector.Clear();
-                self.smallChestDropTierSelector.AddChoice(self.availableTier1DropList, DefaultSmallChestTier1SelectorDropChance);
-                self.smallChestDropTierSelector.AddChoice(self.availableTier2DropList, DefaultSmallChestTier2SelectorDropChance);
-                self.smallChestDropTierSelector.AddChoice(self.availableTier3DropList, DefaultSmallChestTier3SelectorDropChance);
-                self.mediumChestDropTierSelector.Clear();
-                self.mediumChestDropTierSelector.AddChoice(self.availableTier2DropList, DefaultMediumChestTier1SelectorDropChance);
-                self.mediumChestDropTierSelector.AddChoice(self.availableTier3DropList, DefaultMediumChestTier2SelectorDropChance);
-                self.largeChestDropTierSelector.Clear();
-            };
-        }
-
         public static bool IncludeSpecialBossDrops = true;
 
-        public static float DefaultChestTier1DropChance = 0.8f;
-        public static float DefaultChestTier2DropChance = 0.2f;
-        public static float DefaultChestTier3DropChance = 0.01f;
+        private const string SmallChest = "Chest1";
+        private const string MediumChest = "Chest2";
+        private const string LargeChest = "GoldChest";
+        private const string LunarChest = "LunarChest";
+        private const string Lockbox = "Lockbox";
+
+        public static float DefaultSmallChestTier1DropChance = 0.8f;
+        public static float DefaultSmallChestTier2DropChance = 0.2f;
+        public static float DefaultSmallChestTier3DropChance = 0.01f;
+
+        public static float DefaultMediumChestTier2DropChance = 0.8f;
+        public static float DefaultMediumChestTier3DropChance = 0.2f;
+
+        public static float DefaultLargeChestTier3DropChance = 1.0f;
 
         public static float DefaultShrineEquipmentWeight = 2f;
         public static float DefaultShrineFailureWeight = 10.1f;
@@ -235,19 +149,139 @@ namespace R2API {
 
         private static readonly List<EquipmentIndex> AdditionalEquipment = new List<EquipmentIndex>();
 
-        public static void ReplaceDrops(ItemDropLocation dropLocation,
-            params PickupSelection[] pickupSelections) {
-            Logger.LogInfo(
-                $"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
-
-            Selection[dropLocation] = pickupSelections.ToList();
+        internal static void SetHooks() {
+            IL.RoR2.BossGroup.OnCharacterDeathCallback += BossGroupOnOnCharacterDeathCallback;
+            On.RoR2.ChestBehavior.RollItem += ChestBehaviorOnRollItem;
+            IL.RoR2.ShrineChanceBehavior.AddShrineStack += ShrineChanceBehaviorOnAddShrineStack;
+            On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
         }
 
-        public static void ReplaceDrops(ItemDropLocation dropLocation, List<PickupSelection> pickupSelections) {
-            Logger.LogInfo(
-                $"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
+        internal static void UnsetHooks() {
+            IL.RoR2.BossGroup.OnCharacterDeathCallback -= BossGroupOnOnCharacterDeathCallback;
+            On.RoR2.ChestBehavior.RollItem -= ChestBehaviorOnRollItem;
+            IL.RoR2.ShrineChanceBehavior.AddShrineStack -= ShrineChanceBehaviorOnAddShrineStack;
+            On.RoR2.Run.BuildDropTable -= RunOnBuildDropTable;
+        }
 
-            Selection[dropLocation] = pickupSelections;
+        private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run self) {
+            if (DefaultDrops) {
+                // Setup default item lists
+                DefaultItemDrops.AddDefaults();
+            }
+            // These lists should be replaced soon.
+            self.availableTier1DropList.Clear();
+            self.availableTier1DropList.AddRange(GetDefaultDropList(ItemTier.Tier1).Select(x => new PickupIndex(x))
+                .ToList());
+
+            self.availableTier2DropList.Clear();
+            self.availableTier2DropList.AddRange(GetDefaultDropList(ItemTier.Tier2).Select(x => new PickupIndex(x))
+                .ToList());
+
+            self.availableTier3DropList.Clear();
+            self.availableTier3DropList.AddRange(GetDefaultDropList(ItemTier.Tier3).Select(x => new PickupIndex(x))
+                .ToList());
+
+            self.availableEquipmentDropList.Clear();
+            self.availableEquipmentDropList.AddRange(GetDefaultEquipmentDropList().Select(x => new PickupIndex(x))
+                .ToList());
+
+            self.availableLunarDropList.Clear();
+            self.availableLunarDropList.AddRange(GetDefaultLunarDropList());
+
+            self.smallChestDropTierSelector.Clear();
+            self.smallChestDropTierSelector.AddChoice(self.availableTier1DropList, DefaultSmallChestTier1SelectorDropChance);
+            self.smallChestDropTierSelector.AddChoice(self.availableTier2DropList, DefaultSmallChestTier2SelectorDropChance);
+            self.smallChestDropTierSelector.AddChoice(self.availableTier3DropList, DefaultSmallChestTier3SelectorDropChance);
+            self.mediumChestDropTierSelector.Clear();
+            self.mediumChestDropTierSelector.AddChoice(self.availableTier2DropList, DefaultMediumChestTier1SelectorDropChance);
+            self.mediumChestDropTierSelector.AddChoice(self.availableTier3DropList, DefaultMediumChestTier2SelectorDropChance);
+            self.largeChestDropTierSelector.Clear();
+        }
+
+        private static void ChestBehaviorOnRollItem(On.RoR2.ChestBehavior.orig_RollItem orig, RoR2.ChestBehavior self) {
+            if (!NetworkServer.active) {
+                Debug.LogWarning("[Server] function 'System.Void RoR2.ChestBehavior::RollItem()' called on client");
+                return;
+            }
+
+            if (self.GetFieldValue<PickupIndex>("dropPickup") != PickupIndex.none) {
+                return;
+            }
+
+            if (self.name.ToLower().Contains(LunarChest.ToLower())) {
+                Logger.LogDebug("Dropping Lunar");
+
+                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.LunarChest,
+                    Run.instance.treasureRng.nextNormalizedFloat));
+            } else if (self.name.ToLower().Contains(LargeChest.ToLower())) {
+                Logger.LogDebug("Dropping Legendary");
+
+                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.LargeChest,
+                    Run.instance.treasureRng.nextNormalizedFloat));
+            } else if (self.name.ToLower().Contains(MediumChest.ToLower())) {
+                Logger.LogDebug("Dropping Large");
+
+                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.MediumChest,
+                    Run.instance.treasureRng.nextNormalizedFloat));
+            } else if (self.name.ToLower().Contains(SmallChest.ToLower())) {
+                Logger.LogDebug("Dropping Normal");
+
+                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.SmallChest,
+                    Run.instance.treasureRng.nextNormalizedFloat));
+            } else if (self.name.ToLower().Contains(Lockbox.ToLower())) {
+                Logger.LogDebug("Dropping Lockbox");
+
+                var lockboxes = CharacterMaster.readOnlyInstancesList.Sum(x => x.inventory.GetItemCount(ItemIndex.TreasureCache));
+                Selection[ItemDropLocation.Lockbox][1].DropChance = DefaultSmallChestTier2DropChance * lockboxes;
+                Selection[ItemDropLocation.Lockbox][2].DropChance = DefaultSmallChestTier3DropChance * Mathf.Pow(lockboxes, 2f);
+                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.Lockbox,
+                    Run.instance.treasureRng.nextNormalizedFloat));
+            } else {
+                Logger.LogError($"Unidentified chest type: {self.name}. Dropping normal loot instead.");
+
+                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.SmallChest,
+                    Run.instance.treasureRng.nextNormalizedFloat));
+            }
+        }
+
+        private static void ShrineChanceBehaviorOnAddShrineStack(ILContext il) {
+            var cursor = new ILCursor(il).Goto(0);
+
+            cursor.GotoNext(x => x.MatchCallvirt(typeof(WeightedSelection<PickupIndex>).GetMethodCached("Evaluate")));
+            cursor.Next.OpCode = OpCodes.Nop;
+            cursor.Next.Operand = null;
+            cursor.EmitDelegate<Func<WeightedSelection<PickupIndex>, float, PickupIndex>>((_, x) =>
+                GetSelection(ItemDropLocation.Shrine, x));
+        }
+
+        private static void BossGroupOnOnCharacterDeathCallback(ILContext il) {
+            var cursor = new ILCursor(il).Goto(0);
+            cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethodCached("get_itemIndex")));
+
+            var itemIndex = (VariableDefinition)cursor.Next.Next.Operand;
+
+            cursor.Goto(0);
+
+            cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetConstructorCached(new[] { typeof(ItemIndex) })));
+            cursor.GotoPrev(x => x.OpCode == OpCodes.Ldloca_S);
+
+            var pickupIndex = (VariableDefinition)cursor.Next.Operand;
+
+            cursor.Goto(0);
+
+            cursor.GotoNext(x => x.MatchStloc(itemIndex.Index));
+            cursor.Emit(OpCodes.Stloc_S, itemIndex);
+
+            cursor.Emit(OpCodes.Ldc_I4_0);
+
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.Emit(OpCodes.Ldfld, typeof(BossGroup).GetFieldCached("rng"));
+            cursor.Emit(OpCodes.Callvirt, typeof(Xoroshiro128Plus).GetMethodCached("get_nextNormalizedFloat"));
+            cursor.Emit(OpCodes.Call, typeof(ItemDropAPI).GetMethodCached("GetSelection"));
+            cursor.Emit(OpCodes.Stloc_S, pickupIndex);
+            cursor.Emit(OpCodes.Ldloca_S, pickupIndex);
+
+            cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethodCached("get_itemIndex"));
         }
 
         public static void AddDrops(ItemDropLocation dropLocation, PickupSelection pickups) {
@@ -274,6 +308,21 @@ namespace R2API {
 
         public static void AddToDefaultEquipment(params EquipmentIndex[] equipment) {
             AdditionalEquipment.AddRange(equipment);
+        }
+
+        public static void ReplaceDrops(ItemDropLocation dropLocation,
+            params PickupSelection[] pickupSelections) {
+            Logger.LogInfo(
+                $"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
+
+            Selection[dropLocation] = pickupSelections.ToList();
+        }
+
+        public static void ReplaceDrops(ItemDropLocation dropLocation, List<PickupSelection> pickupSelections) {
+            Logger.LogInfo(
+                $"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
+
+            Selection[dropLocation] = pickupSelections;
         }
 
         public static PickupIndex GetSelection(ItemDropLocation dropLocation, float normalizedIndex) {

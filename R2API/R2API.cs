@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Logging;
+using MonoMod.RuntimeDetour;
+using MonoMod.RuntimeDetour.HookGen;
 using R2API.Utils;
 using RoR2;
 
@@ -15,14 +19,19 @@ namespace R2API {
         // ReSharper disable once InconsistentNaming
         public const string PluginGUID = "com.bepis.r2api";
         public const string PluginName = "R2API";
-        public const string PluginVersion = "2.0.5";
+        public const string PluginVersion = "2.0.9";
 
         private const string GameBuild = "3830295";
 
         internal new static ManualLogSource Logger { get; set; }
 
+        internal static DetourModManager ModManager;
+
         public R2API() {
             Logger = base.Logger;
+            ModManager = new DetourModManager();
+            AddHookLogging();
+
             CheckForIncompatibleAssemblies();
 
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
@@ -48,6 +57,20 @@ namespace R2API {
                 Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{build}\".");
                 Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
             };
+        }
+
+        public static void AddHookLogging() {
+            ModManager.OnHook += (assembly, @base, arg3, arg4) => LogMethod(@base);
+            ModManager.OnDetour += (assembly, @base, arg3) => LogMethod(@base);
+            ModManager.OnNativeDetour += (assembly, @base, arg3, arg4) => LogMethod(@base);
+
+            HookEndpointManager.OnAdd += (@base, @delegate) => LogMethod(@base);
+            HookEndpointManager.OnModify += (@base, @delegate) => LogMethod(@base);
+        }
+
+        private static bool LogMethod(MemberInfo @base) {
+            Logger.LogDebug($"Hook added for: {@base.DeclaringType}.{@base.Name}");
+            return true;
         }
 
         public static bool SupportsVersion(string version) {
