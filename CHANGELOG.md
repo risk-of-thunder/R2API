@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2.0.9
+- Bug fixes for lockboxes and medium chests only giving Tier 3 items
+
 ## 2.0.2
 - Bug fix for ItemDropAPI hook
 - Update Assembly-CSharp and mod info for latest version of RoR2
