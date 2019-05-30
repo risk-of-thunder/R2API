@@ -15,7 +15,6 @@ namespace R2API {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     // ReSharper disable once InconsistentNaming
     public class R2API : BaseUnityPlugin {
-
         // ReSharper disable once InconsistentNaming
         public const string PluginGUID = "com.bepis.r2api";
         public const string PluginName = "R2API";
@@ -43,8 +42,11 @@ namespace R2API {
             RoR2Application.isModded = true;
 
             On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
-                RoR2Application.isModded = true;
-                orig(self);
+                // TODO: If we can enable quick play without regrets, uncomment.
+                //if (self.name == "Button, QP")
+                //    return;
+
+                self.gameObject.SetActive(false);
             };
 
             On.RoR2.RoR2Application.OnLoad += (orig, self) => {
@@ -87,49 +89,28 @@ namespace R2API {
         }
 
         private static void CheckForIncompatibleAssemblies() {
-            const int width = 70;
-
-            // ReSharper disable FormatStringProblem
-            string CenterText(string text = "") =>
-                string.Format("*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
-            // ReSharper restore FormatStringProblem
-
-
-            const string assemblies = "(MonoMod*)|(Mono\\.Cecil)";
-
             var dirName = Directory.GetCurrentDirectory();
             var managed = System.IO.Path.Combine(dirName, "Risk of Rain 2_Data", "Managed");
             var dlls = Directory.GetFiles(managed, "*.dll");
 
-            var incompatibleFiles = new List<string>();
+            var info = new List<string> {
+                "You have incompatible assemblies",
+                "Please delete the following files from your managed folder:",
+                ""
+            };
+            var countEmpty = info.Count;
 
-            foreach (var dll in dlls) {
-                var file = new FileInfo(dll);
+            info.AddRange(dlls
+                .Select(x => new FileInfo(x))
+                .Where(x => Regex.IsMatch(x.Name
+                    , @"(MonoMod*)|(Mono\.Cecil)"
+                    , RegexOptions.Compiled | RegexOptions.IgnoreCase))
+                .Select(x => x.Name));
 
-                if (Regex.IsMatch(file.Name, assemblies, RegexOptions.IgnoreCase)) {
-                    incompatibleFiles.Add(file.Name);
-                }
-            }
-
-            if (incompatibleFiles.Count <= 0) {
+            if (info.Count == countEmpty)
                 return;
-            }
 
-            var top = new string('*', width + 2);
-
-            Logger.LogError(top);
-            Logger.LogError(CenterText());
-            Logger.LogError($"{CenterText("!ERROR!")}");
-            Logger.LogError($"{CenterText("You have incompatible assemblies")}");
-            Logger.LogError($"{CenterText("Please delete the follow files from your managed folder")}");
-            Logger.LogError(CenterText());
-
-            foreach (var file in incompatibleFiles) {
-                Logger.LogError($"{CenterText(file)}");
-            }
-
-            Logger.LogError(CenterText());
-            Logger.LogError(top);
+            Logger.LogBlockError(info);
         }
 
         protected void InitConfig() {
