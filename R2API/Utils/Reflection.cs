@@ -84,7 +84,8 @@ namespace R2API.Utils {
             typeof(T).GetFieldCached(name);
 
         public static FieldInfo GetFieldCached(this Type T, string name) =>
-            FieldCache.GetOrAddOnNull((T, name), x => x.T.GetFieldFull(x.name));
+            FieldCache.GetOrAddOnNull((T, name), x => x.T.GetFieldFull(x.name)
+                ?? throw new Exception($"Could not find {nameof(FieldInfo)} on {T.FullName} with the name {name}"));
 
         public static TReturn GetFieldValue<TReturn>(this object instance, string fieldName) =>
             instance.GetType()
@@ -218,14 +219,17 @@ namespace R2API.Utils {
             typeof(T).GetMethodCached(name);
 
         public static MethodInfo GetMethodCached(this Type T, string name) =>
-            MethodCache.GetOrAddOnNull((T, name), x => x.T.GetMethod(x.name, AllFlags));
+            MethodCache.GetOrAddOnNull((T, name), x => x.T.GetMethod(x.name, AllFlags)
+                ?? throw new Exception($"Could not find {nameof(MethodInfo)} on {T.FullName} with the name {name}"));
 
         public static MethodInfo GetMethodCached<T>(string name, Type[] argumentTypes) =>
             typeof(T).GetMethodCached(name, argumentTypes);
 
         public static MethodInfo GetMethodCached(this Type T, string name, Type[] argumentTypes) =>
             OverloadedMethodCache.GetOrAddOnNull((T, name, argumentTypes),
-                x => x.T.GetMethod(x.name, AllFlags, null, x.argumentTypes, null));
+                x => x.T.GetMethod(x.name, AllFlags, null, x.argumentTypes, null)
+                     ?? throw new Exception($"Could not find {nameof(MethodInfo)} on {T.FullName} with the name {name} and arguments: " +
+                                            $"{string.Join(",", argumentTypes.Select(a => a.FullName))}"));
 
         public static TReturn InvokeMethod<TReturn>(this object instance, string methodName) =>
             instance.InvokeMethod<TReturn>(methodName, null);
@@ -281,7 +285,8 @@ namespace R2API.Utils {
             GetConstructorCached(typeof(T), argumentTypes);
 
         public static ConstructorInfo GetConstructorCached(this Type T, Type[] argumentTypes) =>
-            ConstructorCache.GetOrAddOnNull((T, argumentTypes), x => x.T.GetConstructor(x.argumentTypes));
+            ConstructorCache.GetOrAddOnNull((T, argumentTypes), x => x.T.GetConstructor(x.argumentTypes)
+                ?? throw new Exception($"Could not find {nameof(ConstructorInfo)} on {T.FullName} with the arguments {string.Join(",", argumentTypes.Select(a => a.FullName))}"));
 
         public static Type GetNestedType<T>(string name) =>
             typeof(T).GetNestedTypeCached(name);
@@ -290,7 +295,8 @@ namespace R2API.Utils {
             typeof(T).GetNestedTypeCached(name);
 
         public static Type GetNestedTypeCached(this Type T, string name) =>
-            NestedTypeCache.GetOrAddOnNull((T, name), x => x.T.GetNestedType(x.name, AllFlags));
+            NestedTypeCache.GetOrAddOnNull((T, name), x => x.T.GetNestedType(x.name, AllFlags)
+                ?? throw new Exception($"Could not find nested {nameof(Type)} on {T.FullName} with the name {name}"));
 
         public static object Instantiate(this Type type) =>
             Activator.CreateInstance(type, true);

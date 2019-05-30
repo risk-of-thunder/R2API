@@ -192,6 +192,12 @@ namespace R2API.Test {
 
             Assert.NotNull(nextElementUniform);
         }
+
+        [Fact]
+        public void TestGetFieldValueException() {
+            var cm = new CharacterMaster();
+            Assert.Throws<Exception>(() => cm.GetFieldValue<Inventory>("inventory"));
+        }
     }
 
     public enum TestEnum {
