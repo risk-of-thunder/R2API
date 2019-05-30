@@ -38,6 +38,8 @@ namespace R2API {
             InitConfig();
 
             Hooks.InitializeHooks();
+            var submoduleHandler = new APISubmoduleHandler(3830295, Logger);
+            submoduleHandler.LoadAll(typeof(R2API).Assembly);
 
             RoR2Application.isModded = true;
 

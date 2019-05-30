@@ -8,9 +8,9 @@ namespace R2API.Utils {
 
     [Flags]
     public enum InitStage {
-        SetHooks = 0x00,
-        Init = 0x1,
-
+        SetHooks   = 0x00,
+        Load       = 0x0F,
+        Unload     = 0xF0,
         UnsetHooks = 0xFF
     }
 
@@ -37,18 +37,19 @@ namespace R2API.Utils {
             _logger = logger;
         }
 
-        public void HandleAll(Assembly assembly) {
+        public void LoadAll(Assembly assembly) {
             var types = assembly.GetTypes().Where(APISubmoduleFilter).ToList();
             var faults = new Dictionary<Type, Exception>();
 
             types.ForEachTry(t => InvokeStage(t, InitStage.SetHooks), faults);
-            types.ForEachTry(t => InvokeStage(t, InitStage.Init), faults);
-            types.ForEachTry(t => t.SetFieldValue("IsInit", true), faults);
+            types.ForEachTry(t => InvokeStage(t, InitStage.Load), faults);
+            types.ForEachTry(t => t.SetFieldValue("IsLoaded", true));
 
             faults.Keys.ForEachTry(t => {
                 _logger?.Log(LogLevel.Error, $"{t.Name} could not be initialized: {faults[t]}");
                 InvokeStage(t, InitStage.UnsetHooks);
             });
+            faults.Keys.ForEachTry(t => t.SetFieldValue("IsLoaded", false));
         }
 
 

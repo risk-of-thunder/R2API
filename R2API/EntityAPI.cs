@@ -24,11 +24,19 @@ namespace R2API {
 
         #endregion
 
+
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void InitHooks() {
+        internal static void SetHooks() {
             _detourSet_stateType.Apply();
             _detourSet_typeName.Apply();
         }
+
+        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
+        internal static void UnsetHooks() {
+            _detourSet_stateType.Undo();
+            _detourSet_typeName.Undo();
+        }
+
 
         internal static void set_stateType_Hook(ref SerializableEntityStateType self, Type value) =>
             self.SetStructFieldValue("_typeName",

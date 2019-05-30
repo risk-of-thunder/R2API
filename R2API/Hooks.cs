@@ -7,7 +7,6 @@
             AssetAPI.InitHooks();
             ItemDropAPI.SetHooks();
             InventoryAPI.InitHooks();
-            EntityAPI.InitHooks();
             LobbyConfigAPI.InitHooks();
         }
     }
