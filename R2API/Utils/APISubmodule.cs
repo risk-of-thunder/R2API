@@ -8,10 +8,10 @@ namespace R2API.Utils {
 
     [Flags]
     public enum InitStage {
-        SetHooks   = 0x00,
-        Load       = 0x0F,
-        Unload     = 0xF0,
-        UnsetHooks = 0xFF
+        SetHooks   = 0x01,
+        Load       = 0x02,
+        Unload     = 0x04,
+        UnsetHooks = 0x08
     }
 
     // ReSharper disable once InconsistentNaming
@@ -71,7 +71,7 @@ namespace R2API.Utils {
 
         private void InvokeStage(Type type, InitStage stage) {
             var method = type.GetMethods().Where(m => m.IsStatic && m.GetCustomAttributes(typeof(R2APISubmoduleInit))
-                .Any(a => ((R2APISubmoduleInit) a).Stage == stage)).ToList();
+                .Any(a => ((R2APISubmoduleInit) a).Stage.HasFlag(stage))).ToList();
 
             if (method.Count == 0) {
                 _logger?.Log(LogLevel.Debug, $"{type.Name} has static method registered for {stage.ToString()}");
