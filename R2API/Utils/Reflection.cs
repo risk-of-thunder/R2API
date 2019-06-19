@@ -323,7 +323,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Field cannot be null.", nameof(field));
             }
 
-            if (field.FieldType != typeof(TReturn)) {
+            if (!typeof(TReturn).IsAssignableFrom(field.FieldType)) {
                 throw new Exception($"Field type {field.FieldType} does not match the requested type {typeof(TReturn)}.");
             }
 
@@ -349,7 +349,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Field cannot be null.", nameof(field));
             }
 
-            if (field.FieldType != typeof(TValue)) {
+            if (!field.FieldType.IsAssignableFrom(typeof(TValue))) {
                 throw new Exception($"Value type type {typeof(TValue)} does not match the requested type {field.FieldType}.");
             }
 
@@ -398,7 +398,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Property cannot be null.", nameof(property));
             }
 
-            if (property.PropertyType != typeof(TReturn)) {
+            if (!typeof(TReturn).IsAssignableFrom(property.PropertyType)) {
                 throw new Exception($"Field type {property.PropertyType} does not match the requested type {typeof(TReturn)}.");
             }
 
@@ -422,7 +422,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Property cannot be null.", nameof(property));
             }
 
-            if (property.PropertyType != typeof(TReturn)) {
+            if (!typeof(TReturn).IsAssignableFrom(property.PropertyType)) {
                 throw new Exception($"Field type {property.PropertyType} does not match the requested type {typeof(TReturn)}.");
             }
 
@@ -447,7 +447,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Property cannot be null.", nameof(property));
             }
 
-            if (property.PropertyType != typeof(TValue)) {
+            if (!property.PropertyType.IsAssignableFrom(typeof(TValue))) {
                 throw new Exception($"Value type type {typeof(TValue)} does not match the requested type {property.PropertyType}.");
             }
 
@@ -473,7 +473,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Property cannot be null.", nameof(property));
             }
 
-            if (property.PropertyType != typeof(TValue)) {
+            if (!property.PropertyType.IsAssignableFrom(typeof(TValue))) {
                 throw new Exception($"Value type type {typeof(TValue)} does not match the requested type {property.PropertyType}.");
             }
 
