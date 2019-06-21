@@ -20,7 +20,7 @@ namespace R2API {
         public const string PluginName = "R2API";
         public const string PluginVersion = "2.0.11";
 
-        private const string GameBuild = "3830295";
+        private const int GameBuild = 3830295;
 
         internal new static ManualLogSource Logger { get; set; }
 
@@ -35,11 +35,9 @@ namespace R2API {
 
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
-            InitConfig();
-
             Hooks.InitializeHooks();
-            var submoduleHandler = new APISubmoduleHandler(3830295, Logger);
-            submoduleHandler.LoadAll(typeof(R2API).Assembly);
+            var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
+            submoduleHandler.LoadAll(GetType().Assembly);
 
             RoR2Application.isModded = true;
 
@@ -54,11 +52,10 @@ namespace R2API {
             On.RoR2.RoR2Application.OnLoad += (orig, self) => {
                 orig(self);
 
-                var build = typeof(RoR2Application).GetFieldValue<string>("steamBuildId");
-                if (GameBuild == build)
+                if (GameBuild == self.steamworksClient.BuildId)
                     return;
 
-                Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{build}\".");
+                Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{self.steamworksClient.BuildId}\".");
                 Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
             };
         }
@@ -113,9 +110,6 @@ namespace R2API {
                 return;
 
             Logger.LogBlockError(info);
-        }
-
-        protected void InitConfig() {
         }
     }
 }

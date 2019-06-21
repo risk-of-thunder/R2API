@@ -41,9 +41,12 @@ namespace R2API.Utils {
             var types = assembly.GetTypes().Where(APISubmoduleFilter).ToList();
             var faults = new Dictionary<Type, Exception>();
 
-            types.ForEachTry(t => InvokeStage(t, InitStage.SetHooks), faults);
-            types.ForEachTry(t => InvokeStage(t, InitStage.Load), faults);
-            types.ForEachTry(t => t.SetFieldValue("IsLoaded", true));
+            types
+                .ForEachTry(t => InvokeStage(t, InitStage.SetHooks), faults);
+            types.Where(t => !faults.ContainsKey(t))
+                .ForEachTry(t => InvokeStage(t, InitStage.Load), faults);
+            types.Where(t => !faults.ContainsKey(t))
+                .ForEachTry(t => t.SetFieldValue("IsLoaded", true));
 
             faults.Keys.ForEachTry(t => {
                 _logger?.Log(LogLevel.Error, $"{t.Name} could not be initialized: {faults[t]}");
@@ -56,7 +59,7 @@ namespace R2API.Utils {
         // ReSharper disable once InconsistentNaming
         private bool APISubmoduleFilter(Type type) {
             var attr = (R2APISubmodule) type
-                .GetCustomAttributes(typeof(R2APISubmodule), false)
+                .GetCustomAttributes(typeof(R2APISubmodule))
                 .FirstOrDefault();
 
             if (attr == null)
@@ -74,7 +77,7 @@ namespace R2API.Utils {
                 .Any(a => ((R2APISubmoduleInit) a).Stage.HasFlag(stage))).ToList();
 
             if (method.Count == 0) {
-                _logger?.Log(LogLevel.Debug, $"{type.Name} has static method registered for {stage.ToString()}");
+                _logger?.Log(LogLevel.Debug, $"{type.Name} has no static method registered for {stage.ToString()}");
                 return;
             }
 
@@ -85,18 +88,15 @@ namespace R2API.Utils {
 
     public static class EnumerableExtensions {
 
-        public static void ForEachTry<T>(this IEnumerable<T> list, Action<T> action, IDictionary<T, Exception> blacklist = null) {
-            // ReSharper disable once ImplicitlyCapturedClosure
-            (blacklist == null ? list : list.Where(e => !blacklist.ContainsKey(e)))
-                .ToList()
-                .ForEach(element => {
-                    try {
-                        action(element);
-                    }
-                    catch (Exception exception) {
-                        blacklist?.Add(element, exception);
-                    }
-                });
+        public static void ForEachTry<T>(this IEnumerable<T> list, Action<T> action, IDictionary<T, Exception> exceptions = null) {
+            list.ToList().ForEach(element => {
+                try {
+                    action(element);
+                }
+                catch (Exception exception) {
+                    exceptions?.Add(element, exception);
+                }
+            });
         }
     }
 }
