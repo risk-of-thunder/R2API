@@ -19,7 +19,7 @@ namespace R2API {
         // ReSharper disable once InconsistentNaming
         public const string PluginGUID = "com.bepis.r2api";
         public const string PluginName = "R2API";
-        public const string PluginVersion = "2.0.9";
+        public const string PluginVersion = "2.0.11";
 
         private const string GameBuild = "3830295";
 
@@ -69,7 +69,10 @@ namespace R2API {
         }
 
         private static bool LogMethod(MemberInfo @base) {
-            Logger.LogDebug($"Hook added for: {@base.DeclaringType}.{@base.Name}");
+            var declaringType = @base.DeclaringType;
+            var name = @base.Name;
+            var identifier = declaringType != null ? $"{declaringType}.{name}" : name;
+            Logger.LogDebug($"Hook added for: {identifier}");
             return true;
         }
 
