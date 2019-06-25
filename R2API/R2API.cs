@@ -69,6 +69,9 @@ namespace R2API {
         }
 
         private static bool LogMethod(MemberInfo @base) {
+            if (@base == null) {
+                return true;
+            }
             var declaringType = @base.DeclaringType;
             var name = @base.Name;
             var identifier = declaringType != null ? $"{declaringType}.{name}" : name;
