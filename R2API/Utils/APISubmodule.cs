@@ -49,7 +49,7 @@ namespace R2API.Utils {
                 .ForEachTry(t => t.SetFieldValue("IsLoaded", true));
 
             faults.Keys.ForEachTry(t => {
-                _logger?.Log(LogLevel.Error, $"{t.Name} could not be initialized: {faults[t]}");
+                _logger?.Log(LogLevel.Error, $"{t.Name} could not be initialized and has been disabled:\n\n{faults[t]}");
                 InvokeStage(t, InitStage.UnsetHooks);
             });
             faults.Keys.ForEachTry(t => t.SetFieldValue("IsLoaded", false));
@@ -73,7 +73,8 @@ namespace R2API.Utils {
         }
 
         private void InvokeStage(Type type, InitStage stage) {
-            var method = type.GetMethods().Where(m => m.IsStatic && m.GetCustomAttributes(typeof(R2APISubmoduleInit))
+            var method = type.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                .Where(m => m.GetCustomAttributes(typeof(R2APISubmoduleInit))
                 .Any(a => ((R2APISubmoduleInit) a).Stage.HasFlag(stage))).ToList();
 
             if (method.Count == 0) {

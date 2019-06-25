@@ -6,10 +6,12 @@ using R2API.Utils;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
+    [R2APISubmodule]
     public static class InventoryAPI {
         public static event Action<ItemIcon> OnItemIconAdded;
         public static event Action<EquipmentIcon> OnEquipmentIconAdded;
 
+        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void InitHooks() {
             IL.RoR2.UI.ItemInventoryDisplay.AllocateIcons += il => {
                 var cursor = new ILCursor(il).Goto(0);

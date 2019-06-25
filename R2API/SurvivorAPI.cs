@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
+    [R2APISubmodule]
     public static class SurvivorAPI {
         /// <summary>
         /// The complete list of survivors, including vanilla and modded survivors.
@@ -23,6 +24,7 @@ namespace R2API {
         private static bool _wasReady;
 
 
+        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void InitHooks() {
             var detour = new NativeDetour(
                 typeof(SurvivorCatalog).GetMethodCached("Init"),
@@ -147,6 +149,15 @@ namespace R2API {
                     primaryColor = new Color(0.423529416f, 0.819607854f, 0.917647064f),
                     unlockableName = "Characters.Mercenary",
                     survivorIndex = SurvivorIndex.Merc
+                },
+                new SurvivorDef
+                {
+                    bodyPrefab = BodyCatalog.FindBodyPrefab("TreebotBody"),
+                    displayPrefab = Resources.Load<GameObject>("Prefabs/CharacterDisplays/TreebotDisplay"),
+                    descriptionToken = "TREEBOT_DESCRIPTION",
+                    primaryColor = new Color(0.5254902f, 0.6196079f, 0.3294118f),
+                    unlockableName = "Characters.Treebot",
+                    survivorIndex = SurvivorIndex.Treebot
                 }
             });
 
