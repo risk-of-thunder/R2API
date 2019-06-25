@@ -5,7 +5,7 @@
 
             SurvivorAPI.InitHooks();
             AssetAPI.InitHooks();
-            ItemDropAPI.InitHooks();
+            ItemDropAPI.SetHooks();
             InventoryAPI.InitHooks();
             EntityAPI.InitHooks();
             LobbyConfigAPI.InitHooks();
