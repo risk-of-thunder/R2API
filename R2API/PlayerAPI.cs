@@ -29,7 +29,7 @@ namespace R2API {
                 effectAction(playerStats);
             }
 
-            characterBody.statsDirty = false;
+            //characterBody.statsDirty = false;
         }
     }
 

@@ -31,6 +31,10 @@
       <HintPath>libs\BepInEx.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="Facepunch.Steamworks, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>libs\Facepunch.Steamworks.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
       <HintPath>libs\MMHOOK_Assembly-CSharp.dll</HintPath>
       <Private>true</Private>

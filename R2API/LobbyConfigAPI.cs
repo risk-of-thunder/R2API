@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
+    [R2APISubmodule]
     public static class LobbyConfigAPI {
         #region Reflection
 
@@ -25,6 +26,7 @@ namespace R2API {
 
         #endregion
 
+        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void InitHooks() {
             // late hook.
             On.RoR2.PreGameController.Awake += (origAwake, selfPreGameController) => {

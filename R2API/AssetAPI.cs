@@ -6,6 +6,7 @@ using R2API.Utils;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
+    [R2APISubmodule]
     public static class AssetAPI {
         /// <summary>
         /// This event is invoked as soon as the AssetAPI is loaded. This is the perfect time to add assets to the Master and Object Catalogs in the API.
@@ -87,6 +88,7 @@ namespace R2API {
 
         #endregion
 
+        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void InitHooks() {
             AssetLoaderReady?.Invoke(null, null);
 

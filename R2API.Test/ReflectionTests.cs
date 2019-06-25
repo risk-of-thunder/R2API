@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using R2API.Utils;
@@ -168,6 +169,34 @@ namespace R2API.Test {
         }
 
         [Fact]
+        public void TestReflectionStructPrivatePropertyGetAndSet2() {
+            var i = new MyTestStruct(10);
+            const string propertyName = "PrivateProperty";
+            var privateProperty1 = i.GetStructPropertyValue<MyTestStruct, int>(propertyName);
+
+            Assert.Equal(10, privateProperty1);
+
+            i.SetStructPropertyValue(propertyName, 5);
+            var privateProperty2 = i.GetStructPropertyValue<MyTestStruct, int>(propertyName);
+
+            Assert.Equal(5, privateProperty2);
+        }
+
+        [Fact]
+        public void TestReflectionExtraCase1() {
+            var mock = new RunMock();
+
+            var dictionary = mock.GetFieldValue<IDictionary>("dict");
+            Assert.Equal(5, dictionary["thing"]);
+
+            mock.SetPropertyValue("livingPlayerCount", 10);
+            //mock.SetPropertyValue("livingPlayerCount", 0);
+            mock.SetPropertyValue("participatingPlayerCount", 5);
+            Assert.Equal(10, mock.GetPropertyValue<int>("livingPlayerCount"));
+            Assert.Equal(5, mock.GetPropertyValue<int>("participatingPlayerCount"));
+        }
+
+        [Fact]
         public void TestReflectionStructPublicPropertyGetAndSet() {
             var i = new MyTestStruct(10);
             var publicProperty1 = i.GetStructPropertyValue<MyTestStruct, int>("PublicProperty");
@@ -191,6 +220,20 @@ namespace R2API.Test {
                             && x.GetParameters()[0].ParameterType.GUID == typeof(List<>).GUID);
 
             Assert.NotNull(nextElementUniform);
+        }
+
+        [Fact]
+        public void TestGetFieldValueException() {
+            var cm = new CharacterMaster();
+            Assert.Throws<Exception>(() => cm.GetFieldValue<Inventory>("inventory"));
+        }
+
+        [Fact]
+        public void TestGetFieldCached() {
+            var fieldInfo = typeof(HealthComponent).GetFieldCached("increaseHealingCount");
+            Assert.NotNull(fieldInfo);
+            var fieldInfo2 = typeof(HealthComponent).GetFieldCached("repeatHealCount");
+            Assert.NotNull(fieldInfo2);
         }
     }
 
@@ -264,5 +307,14 @@ namespace R2API.Test {
         private static void Test2(string privateValue) {
             PrivateValue = privateValue;
         }
+    }
+
+    public class RunMock {
+        public int livingPlayerCount { get; private set; }
+        public int participatingPlayerCount { get; private set; }
+
+        private Dictionary<string, int> dict = new Dictionary<string, int> {
+            {"thing", 5}
+        };
     }
 }

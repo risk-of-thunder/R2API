@@ -101,6 +101,7 @@ namespace R2API {
     }
 
     // ReSharper disable once InconsistentNaming
+    [R2APISubmodule]
     public static class ItemDropAPI {
         public static readonly ManualLogSource Logger = R2API.Logger;
 
@@ -149,15 +150,17 @@ namespace R2API {
 
         private static readonly List<EquipmentIndex> AdditionalEquipment = new List<EquipmentIndex>();
 
+        //[R2APISubmoduleInit(Stage = InitStage.SetHooks)] TODO: reactivate once IL is ok
         internal static void SetHooks() {
-            IL.RoR2.BossGroup.OnCharacterDeathCallback += BossGroupOnOnCharacterDeathCallback;
+            IL.RoR2.BossGroup.OnMemberDeathServer += BossGroupOnOnCharacterDeathCallback;
             On.RoR2.ChestBehavior.RollItem += ChestBehaviorOnRollItem;
             IL.RoR2.ShrineChanceBehavior.AddShrineStack += ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
         }
 
+        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            IL.RoR2.BossGroup.OnCharacterDeathCallback -= BossGroupOnOnCharacterDeathCallback;
+            IL.RoR2.BossGroup.OnMemberDeathServer -= BossGroupOnOnCharacterDeathCallback;
             On.RoR2.ChestBehavior.RollItem -= ChestBehaviorOnRollItem;
             IL.RoR2.ShrineChanceBehavior.AddShrineStack -= ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable -= RunOnBuildDropTable;
