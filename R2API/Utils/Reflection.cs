@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using MonoMod.Utils;
 
 namespace R2API.Utils {
@@ -563,7 +564,7 @@ namespace R2API.Utils {
         }
 
         // https://github.com/0x0ade/MonoMod/blob/master/MonoMod.Utils/FastReflectionHelper.cs
-        private static void EmitFast_Ldc_I4(this ILProcessor il, int value) {
+        public static void EmitFast_Ldc_I4(this ILProcessor il, int value) {
             switch (value) {
                 case -1:
                     il.Emit(OpCodes.Ldc_I4_M1);
@@ -601,6 +602,26 @@ namespace R2API.Utils {
                 il.Emit(OpCodes.Ldc_I4_S, (sbyte) value);
             else
                 il.Emit(OpCodes.Ldc_I4, value);
+        }
+
+        public static byte ReadLocalIndex(OpCode opCode, object operand) {
+            if (opCode == OpCodes.Ldloc_0 || opCode == OpCodes.Stloc_0) {
+                return 0;
+            }
+            if (opCode == OpCodes.Ldloc_1 || opCode == OpCodes.Stloc_1) {
+                return 1;
+            }
+            if (opCode == OpCodes.Ldloc_2 || opCode == OpCodes.Stloc_2) {
+                return 1;
+            }
+            if (opCode == OpCodes.Ldloc_3 || opCode == OpCodes.Stloc_3) {
+                return 1;
+            }
+            if (opCode == OpCodes.Ldloc_S || opCode == OpCodes.Stloc_S) {
+                return (byte)operand;
+            }
+
+            throw new Exception($"Could not read index for opcode and operand: {opCode} - {operand}");
         }
 
         #endregion

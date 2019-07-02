@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using R2API.Utils;
 using RoR2;
 using RoR2.UI;
@@ -108,19 +109,6 @@ namespace R2API.Test {
             var testObject = new ReflectionTestObject();
             var enumValue = testObject.GetFieldValue<TestEnum>("TestEnum");
             Assert.Equal(TestEnum.Test2, enumValue);
-        }
-
-        [Fact]
-        public void TestReflectionGetAndSetFieldValueType() {
-            var itemIcon = new ItemIcon();
-            itemIcon.SetFieldValue("itemIndex", ItemIndex.AlienHead);
-
-            var iIndex = typeof(ItemIcon).GetField("itemIndex");
-            var refIndex = (ItemIndex)iIndex.GetValue(itemIcon);
-
-            var index = itemIcon.GetFieldValue<ItemIndex>("itemIndex");
-            Assert.Equal(refIndex, index);
-            Assert.Equal(ItemIndex.AlienHead, index);
         }
 
         [Fact]

@@ -5,7 +5,6 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using BepInEx.Logging;
-using MonoMod.RuntimeDetour;
 using R2API.Utils;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -59,6 +58,15 @@ namespace R2API {
                 ItemDropAPI.GetDefaultDropList(ItemTier.Tier3).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance)
             };
 
+            var utility = ItemDropAPI.GetDefaultDropListByRequiredTag(ItemTag.Utility);
+            var damage = ItemDropAPI.GetDefaultDropListByRequiredTag(ItemTag.Damage);
+            var healing = ItemDropAPI.GetDefaultDropListByRequiredTag(ItemTag.Healing);
+
+
+            ItemDropAPI.AddDrops(ItemDropLocation.UtilityChest, utility.ToSelection());
+            ItemDropAPI.AddDrops(ItemDropLocation.DamageChest, damage.ToSelection());
+            ItemDropAPI.AddDrops(ItemDropLocation.HealingChest, healing.ToSelection());
+
             ItemDropAPI.AddDrops(ItemDropLocation.Lockbox, lockboxSelections);
             ItemDropAPI.AddDrops(ItemDropLocation.SmallChest, chestSelections);
             ItemDropAPI.AddDrops(ItemDropLocation.MediumChest, t2.ToSelection(ItemDropAPI.DefaultMediumChestTier2DropChance), t3.ToSelection(ItemDropAPI.DefaultMediumChestTier3DropChance));
@@ -95,6 +103,9 @@ namespace R2API {
         LargeChest,
         Lockbox,
         Shrine,
+        UtilityChest,
+        HealingChest,
+        DamageChest,
         //SmallChestSelector,
         //MediumChestSelector,
         //LargeChestSelector
@@ -112,6 +123,20 @@ namespace R2API {
         private const string LargeChest = "GoldChest";
         private const string LunarChest = "LunarChest";
         private const string Lockbox = "Lockbox";
+        private const string UtilityChest = "CategoryChestUtility";
+        private const string DamageChest = "CategoryChestDamage";
+        private const string HealingChest = "CategoryChestHealing";
+
+        private static readonly Dictionary<string, ItemDropLocation> ChestLookup =
+            new Dictionary<string, ItemDropLocation>(StringComparer.OrdinalIgnoreCase) {
+                { SmallChest, ItemDropLocation.SmallChest },
+                { MediumChest, ItemDropLocation.MediumChest },
+                { LargeChest, ItemDropLocation.LargeChest },
+                { LunarChest, ItemDropLocation.LunarChest },
+                { UtilityChest, ItemDropLocation.UtilityChest },
+                { DamageChest, ItemDropLocation.DamageChest },
+                { HealingChest, ItemDropLocation.HealingChest }
+            };
 
         public static float DefaultSmallChestTier1DropChance = 0.8f;
         public static float DefaultSmallChestTier2DropChance = 0.2f;
@@ -150,9 +175,9 @@ namespace R2API {
 
         private static readonly List<EquipmentIndex> AdditionalEquipment = new List<EquipmentIndex>();
 
-        //[R2APISubmoduleInit(Stage = InitStage.SetHooks)] TODO: reactivate once IL is ok
+        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            IL.RoR2.BossGroup.OnMemberDeathServer += BossGroupOnOnCharacterDeathCallback;
+            IL.RoR2.BossGroup.DropRewards += DropRewards;
             On.RoR2.ChestBehavior.RollItem += ChestBehaviorOnRollItem;
             IL.RoR2.ShrineChanceBehavior.AddShrineStack += ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
@@ -160,7 +185,7 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            IL.RoR2.BossGroup.OnMemberDeathServer -= BossGroupOnOnCharacterDeathCallback;
+            IL.RoR2.BossGroup.DropRewards -= DropRewards;
             On.RoR2.ChestBehavior.RollItem -= ChestBehaviorOnRollItem;
             IL.RoR2.ShrineChanceBehavior.AddShrineStack -= ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable -= RunOnBuildDropTable;
@@ -211,25 +236,13 @@ namespace R2API {
                 return;
             }
 
-            if (self.name.ToLower().Contains(LunarChest.ToLower())) {
-                Logger.LogDebug("Dropping Lunar");
+            var chestName = self.name.Replace("(Clone)", "").Trim();
+            Logger.LogDebug($"Dropping {self.name} - {self.requiredItemTag}");
 
-                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.LunarChest,
-                    Run.instance.treasureRng.nextNormalizedFloat));
-            } else if (self.name.ToLower().Contains(LargeChest.ToLower())) {
-                Logger.LogDebug("Dropping Legendary");
 
-                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.LargeChest,
-                    Run.instance.treasureRng.nextNormalizedFloat));
-            } else if (self.name.ToLower().Contains(MediumChest.ToLower())) {
-                Logger.LogDebug("Dropping Large");
+            if (ChestLookup.ContainsKey(chestName)) {
 
-                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.MediumChest,
-                    Run.instance.treasureRng.nextNormalizedFloat));
-            } else if (self.name.ToLower().Contains(SmallChest.ToLower())) {
-                Logger.LogDebug("Dropping Normal");
-
-                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.SmallChest,
+                self.SetFieldValue("dropPickup", GetSelection(ChestLookup[chestName],
                     Run.instance.treasureRng.nextNormalizedFloat));
             } else if (self.name.ToLower().Contains(Lockbox.ToLower())) {
                 Logger.LogDebug("Dropping Lockbox");
@@ -257,13 +270,11 @@ namespace R2API {
                 GetSelection(ItemDropLocation.Shrine, x));
         }
 
-        private static void BossGroupOnOnCharacterDeathCallback(ILContext il) {
+        private static void DropRewards(ILContext il) {
             var cursor = new ILCursor(il).Goto(0);
             cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethodCached("get_itemIndex")));
 
-            var itemIndex = (VariableDefinition)cursor.Next.Next.Operand;
-
-            cursor.Goto(0);
+            var itemIndex = Reflection.ReadLocalIndex(cursor.Next.Next.OpCode, cursor.Next.Next.Operand);
 
             cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetConstructorCached(new[] { typeof(ItemIndex) })));
             cursor.GotoPrev(x => x.OpCode == OpCodes.Ldloca_S);
@@ -272,7 +283,7 @@ namespace R2API {
 
             cursor.Goto(0);
 
-            cursor.GotoNext(x => x.MatchStloc(itemIndex.Index));
+            cursor.GotoNext(x => x.MatchStloc(itemIndex));
             cursor.Emit(OpCodes.Stloc_S, itemIndex);
 
             cursor.Emit(OpCodes.Ldc_I4_0);
@@ -359,6 +370,22 @@ namespace R2API {
             }
 
             list.AddRange(AdditionalTierItems[itemTier]);
+            return list;
+        }
+
+
+        public static List<ItemIndex> GetDefaultDropListByRequiredTag(ItemTag requiredTag) {
+            var list = new List<ItemIndex>();
+
+            for (var itemIndex = ItemIndex.Syringe; itemIndex < ItemIndex.Count; itemIndex++) {
+                if (!Run.instance.availableItems.HasItem(itemIndex))
+                    continue;
+
+                if (ItemCatalog.GetItemDef(itemIndex).ContainsTag(requiredTag)) {
+                    list.Add(itemIndex);
+                }
+            }
+
             return list;
         }
 
