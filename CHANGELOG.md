@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.1.0
+- Add modularity to internal APIs to better failsafe and also support unloading hooks
+- Bug fixes / updates for current patch
+
 ## 2.0.9
 - Bug fixes for lockboxes and medium chests only giving Tier 3 items
 
