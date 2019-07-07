@@ -58,14 +58,28 @@ namespace R2API {
                 ItemDropAPI.GetDefaultDropList(ItemTier.Tier3).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance)
             };
 
-            var utility = ItemDropAPI.GetDefaultDropListByRequiredTag(ItemTag.Utility);
-            var damage = ItemDropAPI.GetDefaultDropListByRequiredTag(ItemTag.Damage);
-            var healing = ItemDropAPI.GetDefaultDropListByRequiredTag(ItemTag.Healing);
+            var utilitySelections = new[] {
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Utility).ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Utility).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Utility).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
+            };
+
+            var damageSelections = new[] {
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Damage).ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Damage).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Damage).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
+            };
+
+            var healingSelections = new[] {
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
+            };
 
 
-            ItemDropAPI.AddDrops(ItemDropLocation.UtilityChest, utility.ToSelection());
-            ItemDropAPI.AddDrops(ItemDropLocation.DamageChest, damage.ToSelection());
-            ItemDropAPI.AddDrops(ItemDropLocation.HealingChest, healing.ToSelection());
+            ItemDropAPI.AddDrops(ItemDropLocation.UtilityChest, utilitySelections);
+            ItemDropAPI.AddDrops(ItemDropLocation.DamageChest, damageSelections);
+            ItemDropAPI.AddDrops(ItemDropLocation.HealingChest, healingSelections);
 
             ItemDropAPI.AddDrops(ItemDropLocation.Lockbox, lockboxSelections);
             ItemDropAPI.AddDrops(ItemDropLocation.SmallChest, chestSelections);
@@ -374,14 +388,15 @@ namespace R2API {
         }
 
 
-        public static List<ItemIndex> GetDefaultDropListByRequiredTag(ItemTag requiredTag) {
+        public static List<ItemIndex> GetDefaultDropList(ItemTier itemTier, ItemTag requiredTag) {
             var list = new List<ItemIndex>();
 
             for (var itemIndex = ItemIndex.Syringe; itemIndex < ItemIndex.Count; itemIndex++) {
                 if (!Run.instance.availableItems.HasItem(itemIndex))
                     continue;
 
-                if (ItemCatalog.GetItemDef(itemIndex).ContainsTag(requiredTag)) {
+                var itemDef = ItemCatalog.GetItemDef(itemIndex);
+                if (itemDef.tier == itemTier && itemDef.ContainsTag(requiredTag)) {
                     list.Add(itemIndex);
                 }
             }
