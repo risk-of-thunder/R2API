@@ -8,15 +8,14 @@ using UnityEngine;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
-    [R2APISubmodule(Build = 3830295)]
-    public class LobbyConfigAPI {
+    [R2APISubmodule(Build = 3961583)]
+    public static class LobbyConfigAPI {
 
         private static int _ruleNameSequence;
         internal static string RuleNameSequence() => $"LCAPI_{++_ruleNameSequence:D5}";
 
-        private static readonly List<RuleChoiceDef> InternalRuleChoices = (List<RuleChoiceDef>)
-            typeof(RuleCatalog).GetFieldCached("allChoicesDefs")
-                .GetValue(null);
+        private static readonly List<RuleChoiceDef> InternalRuleChoices =
+            typeof(RuleCatalog).GetFieldValue<List<RuleChoiceDef>>("allChoicesDefs");
 
         private static List<RuleCategoryController> _controllers;
 
@@ -55,6 +54,7 @@ namespace R2API {
             public LobbyCategory PushRule<T>(LobbyRule<T> rule) {
                 rule.Pushed = true;
 
+                rule.Def.globalIndex = RuleCatalog.ruleCount;
                 typeof(RuleCatalog).GetMethodCached("AddRule"
                     , new[] {typeof(RuleDef)})
                     .Invoke(null, new object[] {rule.Def});
@@ -232,7 +232,9 @@ namespace R2API {
         /// <returns>The RuleCategoryDef, keep if you want to add rules.</returns>
         [Obsolete("Use the LobbyCategory constructor instead.")]
         public static RuleCategoryDef AddCategory(string title, Color color, string emptyDescription = null) {
-            return new LobbyCategory(title, color, emptyDescription).Def;
+            var category = RuleCatalog.allCategoryDefs.FirstOrDefault(x => x.displayToken == title);
+
+            return category ?? new LobbyCategory(title, color, emptyDescription).Def;
         }
 
         /// <summary>
