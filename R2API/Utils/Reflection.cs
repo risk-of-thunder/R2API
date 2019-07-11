@@ -128,7 +128,8 @@ namespace R2API.Utils {
                 (null);
 
         /// <summary>
-        /// Sets the value of the specified field on the specified type
+        /// Sets the value of the specified field on the specified object; if the object is a struct use
+        /// <see cref="SetStructFieldValue{TInstance, TValue}(ref TInstance, string, TValue)"/> instead
         /// </summary>
         /// <typeparam name="TValue">The type of the value to set/typeparam>
         /// <param name="instance">The name of the field to set the value of</param>
@@ -156,7 +157,7 @@ namespace R2API.Utils {
                 (null, value);
 
         /// <summary>
-        /// Sets the value of the specified field on the specified type
+        /// Sets the value of the specified field on the specified struct
         /// </summary>
         /// <typeparam name="TValue">The type of the value to set</typeparam>
         /// <param name="instance">The name of the field to set the value of</param>
@@ -221,7 +222,8 @@ namespace R2API.Utils {
             PropertyCache.GetOrAddOnNull((T, name), x => x.T.GetProperty(x.name, AllFlags));
 
         /// <summary>
-        /// Gets the value of the property on the specified object
+        /// Gets the value of the property on the specified object; if the object is a struct use
+        /// <see cref="GetStructPropertyValue{TInstance, TValue}(ref TInstance, string)"></see> instead
         /// </summary>
         /// <typeparam name="TReturn">The type of the return value</typeparam>
         /// <param name="instance">The object to get the property's value from</param>
