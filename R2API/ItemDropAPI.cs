@@ -128,7 +128,7 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class ItemDropAPI {
-        public static readonly ManualLogSource Logger = R2API.Logger;
+        public static ManualLogSource Logger => R2API.Logger;
 
         public static bool IncludeSpecialBossDrops = true;
 
