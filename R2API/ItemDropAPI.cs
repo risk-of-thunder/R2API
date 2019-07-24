@@ -60,20 +60,20 @@ namespace R2API {
 
             var utilitySelections = new[] {
                 ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Utility).ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Utility).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Utility).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier2, ItemTag.Utility).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier3, ItemTag.Utility).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
             };
 
             var damageSelections = new[] {
                 ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Damage).ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Damage).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Damage).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier2, ItemTag.Damage).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier3, ItemTag.Damage).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
             };
 
             var healingSelections = new[] {
                 ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier2, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier3, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
             };
 
 
