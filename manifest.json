@@ -1,6 +1,6 @@
 ﻿{
 	"name": "R2API",
-	"version_number": "2.1.0",
+	"version_number": "0.0.1",
 	"website_url": "https://github.com/risk-of-thunder/R2API",
 	"description": "A modding API for Risk of Rain 2",
 	"dependencies": [ "bbepis-BepInExPack-2.0.0" ]
