@@ -130,6 +130,7 @@ namespace R2API {
     public static class ItemDropAPI {
         public static ManualLogSource Logger => R2API.Logger;
 
+        public static int? BossDropParticipatingPlayerCount = null;
         public static bool IncludeSpecialBossDrops = true;
 
         private const string SmallChest = "Chest1";
@@ -286,6 +287,13 @@ namespace R2API {
 
         private static void DropRewards(ILContext il) {
             var cursor = new ILCursor(il).Goto(0);
+            cursor.GotoNext(x => x.MatchCall(typeof(Run).GetMethodCached("get_participatingPlayerCount")));
+            cursor.GotoNext();
+
+            cursor.EmitDelegate<Func<int>>(() => BossDropParticipatingPlayerCount ?? Run.instance.participatingPlayerCount);
+
+            cursor.Emit(OpCodes.Stloc_0);
+
             cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethodCached("get_itemIndex")));
 
             var itemIndex = Reflection.ReadLocalIndex(cursor.Next.Next.OpCode, cursor.Next.Next.Operand);
