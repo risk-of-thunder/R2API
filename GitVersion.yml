@@ -1,8 +1,8 @@
 assembly-versioning-scheme: MajorMinorPatch
-mode: ContinuousDeployment
+mode: Mainline
 branches:
   develop:
-    mode: ContinuousDeployment
+    mode: Mainline
     tag: ''
     increment: Patch
     prevent-increment-of-merged-branch-version: false
