@@ -1,14 +1,15 @@
 assembly-versioning-scheme: MajorMinorPatch
 mode: ContinuousDeployment
 branches:
-    develop:
-        regex: dev(elop)?(ment)?$
-        mode: ContinuousDeployment
-        tag: ''
-        increment: Patch
-        prevent-increment-of-merged-branch-version: false
-        track-merge-target: true
-        tracks-release-branches: true
-        is-release-branch: false
+  develop:
+    mode: ContinuousDeployment
+    tag: ''
+    increment: Patch
+    prevent-increment-of-merged-branch-version: false
+    track-merge-target: true
+    regex: dev(elop)?(ment)?$
+    tracks-release-branches: true
+    is-release-branch: false
 ignore:
   sha: []
+merge-message-formats: {}
