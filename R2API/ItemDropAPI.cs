@@ -287,7 +287,9 @@ namespace R2API {
 
         private static void DropRewards(ILContext il) {
             var cursor = new ILCursor(il).Goto(0);
-            cursor.GotoNext(x => x.MatchCall(typeof(Run).GetMethodCached("get_participatingPlayerCount")));
+
+            cursor.GotoNext(MoveType.After, x => x.MatchCallvirt(typeof(Run).GetMethod("get_participatingPlayerCount")));
+            cursor.GotoNext();
             cursor.GotoNext();
 
             cursor.EmitDelegate<Func<int>>(() => BossDropParticipatingPlayerCount ?? Run.instance.participatingPlayerCount);
@@ -318,6 +320,8 @@ namespace R2API {
             cursor.Emit(OpCodes.Ldloca_S, pickupIndex);
 
             cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethodCached("get_itemIndex"));
+
+            Logger.LogDebug(il.ToString());
         }
 
         public static void AddDrops(ItemDropLocation dropLocation, PickupSelection pickups) {
