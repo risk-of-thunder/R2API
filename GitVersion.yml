@@ -1,15 +1,6 @@
 assembly-versioning-scheme: MajorMinorPatch
 mode: Mainline
-branches:
-  develop:
-    mode: Mainline
-    tag: ''
-    increment: Patch
-    prevent-increment-of-merged-branch-version: false
-    track-merge-target: true
-    regex: dev(elop)?(ment)?$
-    tracks-release-branches: true
-    is-release-branch: false
+increment: Patch
 ignore:
   sha: []
 merge-message-formats: {}
