@@ -76,7 +76,7 @@ namespace R2API.Utils {
         /// </summary>
         /// <returns>List of PlayerCharacterMasterControllers</returns>
         public static IEnumerable<PlayerCharacterMasterController> GetAllPlayers() {
-            return UnityEngine.Object.FindObjectsOfType<PlayerCharacterMasterController>();
+            return PlayerCharacterMasterController.instances;
         }
 
         /// <summary>
@@ -84,7 +84,8 @@ namespace R2API.Utils {
         /// </summary>
         /// <returns>List of NetworkUsers</returns>
         public static IEnumerable<NetworkUser> GetAllNetworkUsers() {
-            return UnityEngine.Object.FindObjectsOfType<NetworkUser>();
+
+            return RoR2.NetworkUser.readOnlyInstancesList;
         }
     }
 }
