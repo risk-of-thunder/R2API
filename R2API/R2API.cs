@@ -8,6 +8,7 @@ using BepInEx;
 using BepInEx.Logging;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
+using R2API.Commands;
 using R2API.Utils;
 using RoR2;
 
@@ -18,8 +19,10 @@ namespace R2API {
         // ReSharper disable once InconsistentNaming
         public const string PluginGUID = "com.bepis.r2api";
         public const string PluginName = "R2API";
-        public const string PluginVersion = "0.0.1";
+        public const string PluginVersion = "0.0.2";
 
+        public static CommandAPI CommandAPI;
+        public static PermissionsAPI PermissionsAPI;
 
         private const int GameBuild = 3961583;
 
@@ -59,6 +62,11 @@ namespace R2API {
                 Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{self.steamworksClient.BuildId}\".");
                 Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
             };
+        }
+
+        public void Awake() {
+            PermissionsAPI = new PermissionsAPI();
+            CommandAPI = new CommandAPI();
         }
 
         public static void AddHookLogging() {
