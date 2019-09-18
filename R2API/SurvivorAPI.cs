@@ -33,8 +33,6 @@ namespace R2API {
             detour.Apply();
 
             On.RoR2.SurvivorCatalog.GetSurvivorDef += (orig, index) => GetSurvivorDef(index);
-            On.RoR2.SurvivorCatalog.GetSurvivorIndexFromBodyIndex += (orig, index) => GetSurvivorIndexFromBodyIndex(index);
-            On.RoR2.SurvivorCatalog.GetBodyIndexFromSurvivorIndex += (orig, index) => GetBodyIndexFromSurvivorIndex(index);
 
             // TODO: THIS IS A HOTFIX, WHY IS THE FIRST CHARACTERBODY NULL
             On.RoR2.UI.LogBook.LogBookController.BuildCategories += orig => {
@@ -48,14 +46,6 @@ namespace R2API {
 
         public static SurvivorDef GetSurvivorDef(SurvivorIndex survivorIndex) =>
             SurvivorDefinitions.FirstOrDefault(x => x.survivorIndex == survivorIndex);
-
-        public static SurvivorIndex GetSurvivorIndexFromBodyIndex(int bodyIndex) {
-            return typeof(SurvivorCatalog).GetFieldValue<SurvivorIndex[]>("bodyIndexToSurvivorIndex")[bodyIndex];
-        }
-
-        public static int GetBodyIndexFromSurvivorIndex(SurvivorIndex survivorIndex) {
-            return typeof(SurvivorCatalog).GetFieldValue<int[]>("survivorIndexToBodyIndex")[(int)survivorIndex];
-        }
 
         /// <summary>
         /// Add a SurvivorDef to the list of available survivors. Use on SurvivorCatalogReady event.
