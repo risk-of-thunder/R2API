@@ -217,10 +217,9 @@ namespace R2API {
             );
 
             var bodyIndexToSurvivorIndex = new SurvivorIndex[BodyCatalog.bodyCount];
-            var survivorIndexToBodyIndex = new int[SurvivorDefinitions.Count];
+            var survivorIndexToBodyIndex = new int[SurvivorCatalog.survivorMaxCount];
 
-            foreach (var survivorDef in SurvivorDefinitions)
-            {
+            foreach (var survivorDef in SurvivorDefinitions) {
                 int bodyIndex = survivorDef.bodyPrefab.GetComponent<CharacterBody>().bodyIndex;
                 bodyIndexToSurvivorIndex[bodyIndex] = survivorDef.survivorIndex;
                 survivorIndexToBodyIndex[(int)survivorDef.survivorIndex] = bodyIndex;
