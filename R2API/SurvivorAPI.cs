@@ -217,7 +217,7 @@ namespace R2API {
             );
 
             var bodyIndexToSurvivorIndex = new SurvivorIndex[BodyCatalog.bodyCount];
-            var survivorIndexToBodyIndex = new int[(int)SurvivorIndex.Count];
+            var survivorIndexToBodyIndex = new int[SurvivorDefinitions.Count];
 
             foreach (var survivorDef in SurvivorDefinitions)
             {
