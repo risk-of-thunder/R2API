@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -132,7 +132,7 @@ namespace R2API {
                     descriptionToken = "ENGI_DESCRIPTION",
                     primaryColor = new Color(0.372549027f, 0.8862745f, 0.5254902f),
                     unlockableName = "Characters.Engineer",
-                    survivorIndex = SurvivorIndex.Engineer
+                    survivorIndex = SurvivorIndex.Engi
                 },
                 new SurvivorDef {
                     bodyPrefab = BodyCatalog.FindBodyPrefab("MageBody"),
@@ -158,6 +158,15 @@ namespace R2API {
                     primaryColor = new Color(0.5254902f, 0.6196079f, 0.3294118f),
                     unlockableName = "Characters.Treebot",
                     survivorIndex = SurvivorIndex.Treebot
+                },
+                new SurvivorDef
+                {
+                    bodyPrefab = BodyCatalog.FindBodyPrefab("LoaderBody"),
+                    displayPrefab = Resources.Load<GameObject>("Prefabs/CharacterDisplays/LoaderDisplay"),
+                    descriptionToken = "LOADER_DESCRIPTION",
+                    primaryColor = new Color(0.403921574f, 0.4392157f, 0.870588243f),
+                    unlockableName = "Characters.Loader",
+                    survivorIndex = SurvivorIndex.Loader
                 }
             });
 
@@ -196,6 +205,18 @@ namespace R2API {
                     .Select(x => x.bodyPrefab == null ? null : x)
                     .ToArray()
             );
+
+            var bodyIndexToSurvivorIndex = new SurvivorIndex[BodyCatalog.bodyCount];
+            var survivorIndexToBodyIndex = new int[SurvivorCatalog.survivorMaxCount];
+
+            foreach (var survivorDef in SurvivorDefinitions) {
+                int bodyIndex = survivorDef.bodyPrefab.GetComponent<CharacterBody>().bodyIndex;
+                bodyIndexToSurvivorIndex[bodyIndex] = survivorDef.survivorIndex;
+                survivorIndexToBodyIndex[(int)survivorDef.survivorIndex] = bodyIndex;
+            }
+
+            typeof(SurvivorCatalog).SetFieldValue("bodyIndexToSurvivorIndex", bodyIndexToSurvivorIndex);
+            typeof(SurvivorCatalog).SetFieldValue("survivorIndexToBodyIndex", survivorIndexToBodyIndex);
 
             var parent = ViewablesCatalog.FindNode("/Survivors/")
                          ?? new ViewablesCatalog.Node("Survivors", true);
