@@ -22,7 +22,7 @@ namespace R2API.Utils {
 
         private delegate void SetDelegateRef<TInstance, in TValue>(ref TInstance instance, TValue value) where TInstance : struct;
 
-        public delegate T GetDelegateRef<TInstance, out T>(ref TInstance instance) where TInstance : struct;
+        private delegate T GetDelegateRef<TInstance, out T>(ref TInstance instance) where TInstance : struct;
 
         #region Caches
 
