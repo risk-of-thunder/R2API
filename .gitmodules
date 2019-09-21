@@ -1,4 +1,4 @@
-[submodule "R2API/Assetplus"]
-	path = R2API/Assetplus
-	url = https://github.com/mistername/Assetplus
+[submodule "R2API/AssetPlus"]
+	path = R2API/AssetPlus
+	url = https://github.com/mistername/AssetPlus
 	branch = master
