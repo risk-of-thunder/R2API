@@ -15,7 +15,7 @@ namespace R2API.Utils {
 
     public class CommandHelper {
         public static void RegisterCommands(RoR2.Console self) {
-            var types = Assembly.GetEntryAssembly()?.GetTypes();
+            var types = Assembly.GetCallingAssembly()?.GetTypes();
             if (types == null) {
                 return;
             }
