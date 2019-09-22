@@ -1,0 +1,3 @@
+[submodule "R2API/AssetPlus"]
+	path = R2API/AssetPlus
+	url = https://github.com/mistername/AssetPlus
