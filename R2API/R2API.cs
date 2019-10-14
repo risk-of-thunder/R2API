@@ -21,7 +21,7 @@ namespace R2API {
         public const string PluginVersion = "0.0.1";
 
 
-        public const int GameBuild = 4233443 ;
+        private const int GameBuild = 4233443;
 
         internal new static ManualLogSource Logger { get; set; }
 
