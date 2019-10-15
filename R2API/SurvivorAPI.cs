@@ -8,32 +8,6 @@ using BepInEx;
 using RoR2;
 
 namespace R2API {
-    [BepInPlugin("test", "test", "0.0.1")]
-    // ReSharper disable once InconsistentNaming
-    public class R2APITest : BaseUnityPlugin {
-        public void Awake() {
-            GameObject body = Resources.Load<GameObject>("Prefabs/CharacterBodies/AncientWispBody");
-
-            //Rename the body so it doesn
-            body.name = "WispSurvivor";
-
-            //Queue the body to be added to the BodyCatalog
-            //PrefabUtilities.RegisterNewBody(body);
-
-            //Create the survivorDef
-            SurvivorDef bodySurvivorDef = new SurvivorDef {
-                bodyPrefab = body,
-                descriptionToken = "asd",
-                displayPrefab = Resources.Load<GameObject>("Prefabs/Characters/CommandoDisplay"),
-                primaryColor = new Color(0.15f, 0.15f, 0.15f),
-            };
-
-            //Queue the survivorDef to be added to the survivorcatalog
-            SurvivorAPI.AddSurvivor(bodySurvivorDef);
-        }
-    }
-
-
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class SurvivorAPI {
