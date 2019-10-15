@@ -42,7 +42,6 @@ namespace R2API {
         public static event EventHandler SurvivorCatalogReady;
 
         public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
-        private static readonly Dictionary<SurvivorDef, string> _modInfo = new Dictionary<SurvivorDef, string>();
         /// <summary>
         /// Add a SurvivorDef to the list of available survivors.
         /// This must be called before the SurvivorCatalog inits, so before plugin.Start()
@@ -53,43 +52,23 @@ namespace R2API {
         /// </summary>
         /// <param name="survivor">The survivor to add.</param>
         /// <returns>true if survivor will be added</returns>
-        public static bool AddSurvivor(SurvivorDef survivor, [CallerFilePath] string file = null, [CallerMemberName] string name = null, [CallerLineNumber] int lineNumber = 0) {
-
-            string modInfo = GetModInfoString(file, name, lineNumber);
+        public static bool AddSurvivor(SurvivorDef survivor) {
 
             if( survivorsAlreadyAdded ) {
-                R2API.Logger.LogError($"Tried to add survivor: {survivor.displayNameToken} after survivor list was created at: {modInfo}");
+                R2API.Logger.LogError($"Tried to add survivor: {survivor.displayNameToken} after survivor list was created");
                 return false;
             }
 
             if (!survivor.bodyPrefab) {
-                R2API.Logger.LogError($"No prefab defined for survivor: {survivor.displayNameToken} in {modInfo}");
+                R2API.Logger.LogError($"No prefab defined for survivor: {survivor.displayNameToken}");
                 return false;
             }
 
-            _modInfo[survivor] = modInfo;
             SurvivorDefinitions.Add(survivor);
 
             return true;
         }
 
-        private static string GetModInfoString(string file, string name, int lineNumber) {
-            R2API.Logger.LogError(file);
-
-            //Isolate the name
-            int start = file.LastIndexOf('/');
-            int end = file.LastIndexOf('.');
-            end -= start;
-            string modName;
-            if (end > 0) {
-                modName = file.Substring(start + 1, end);
-            }
-            else {
-                modName = file.Substring(start + 1);
-            }
-            //Return a string with the info
-            return "Mod: " + modName + " Method: " + name + " Line: " + lineNumber.ToString();
-        }
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
@@ -118,15 +97,14 @@ namespace R2API {
 
 
             foreach (var survivor in SurvivorDefinitions) {
-                var modName = _modInfo[survivor];
 
                 //Check if the current survivor has been registered in bodycatalog. Log if it has not, but still add the survivor
                 if (BodyCatalog.FindBodyIndex(survivor.bodyPrefab) == -1 || BodyCatalog.GetBodyPrefab(BodyCatalog.FindBodyIndex(survivor.bodyPrefab)) != survivor.bodyPrefab) {
 
-                    R2API.Logger.LogWarning($"Survivor: {survivor.displayNameToken} is not properly registered in bodycatalog by: {modName}");
+                    R2API.Logger.LogWarning($"Survivor: {survivor.displayNameToken} is not properly registered in {nameof(BodyCatalog)}");
                 }
 
-                R2API.Logger.LogInfo($"Survivor: {survivor.displayNameToken} added by: {modName}");
+                R2API.Logger.LogInfo($"Survivor: {survivor.displayNameToken} added");
 
                 survivorDefinitions.Add(survivor);
 
