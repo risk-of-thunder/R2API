@@ -138,6 +138,7 @@ namespace R2API {
         private const string LargeChest = "GoldChest";
         private const string LunarChest = "LunarChest";
         private const string Lockbox = "Lockbox";
+        private const string CloakedChest = "Chest1Stealthed";
         private const string UtilityChest = "CategoryChestUtility";
         private const string DamageChest = "CategoryChestDamage";
         private const string HealingChest = "CategoryChestHealing";
@@ -150,7 +151,8 @@ namespace R2API {
                 { LunarChest, ItemDropLocation.LunarChest },
                 { UtilityChest, ItemDropLocation.UtilityChest },
                 { DamageChest, ItemDropLocation.DamageChest },
-                { HealingChest, ItemDropLocation.HealingChest }
+                { HealingChest, ItemDropLocation.HealingChest },
+                { CloakedChest, ItemDropLocation.SmallChest}
             };
 
         public static float DefaultSmallChestTier1DropChance = 0.8f;
