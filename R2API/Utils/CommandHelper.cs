@@ -48,7 +48,8 @@ namespace R2API.Utils {
             }
 
             if (self.allConVars == null) {
-                Debug.LogErrorFormat("Can't register the convars from mod {0} before the game does. Try doing it after initConvars!",assembly.FullName);
+                Debug.LogErrorFormat("Can't register the convars from mod {0} before the game does. Try doing it after initConvars!",assembly.GetName().Name);
+                return;
             }
 
             List<BaseConVar> customVars = new List<BaseConVar>();
