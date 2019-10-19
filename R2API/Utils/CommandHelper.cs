@@ -9,14 +9,13 @@ using RoR2.ConVar;
 using UnityEngine;
 
 namespace R2API.Utils {
-    /*
-         This code belongs to Wildbook. 
-         https://github.com/wildbook/R2Mods/blob/develop/Utilities/CommandHelper.cs
-         Credit goes to Wildbook.         
-             */
-
     public class CommandHelper {
         public static void RegisterCommands(RoR2.Console self) {
+                /*
+            This code belongs to Wildbook. 
+            https://github.com/wildbook/R2Mods/blob/develop/Utilities/CommandHelper.cs
+            Credit goes to Wildbook.         
+                */
             var types = Assembly.GetCallingAssembly()?.GetTypes();
             if (types == null) {
                 return;
