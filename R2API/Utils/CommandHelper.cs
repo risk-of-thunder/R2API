@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using System.Runtime.CompilerServices;
 using RoR2;
+using RoR2.ConVar;
+using UnityEngine;
 
 namespace R2API.Utils {
     /*
@@ -36,6 +38,37 @@ namespace R2API.Utils {
 
                     catalog[attribute.commandName.ToLower()] = conCommand;
                 }
+            }
+        }
+
+        public static void RegisterConVars(RoR2.Console self) {
+            var assembly = Assembly.GetCallingAssembly();
+            if(assembly==null) {
+                return;
+            }
+
+            if (self.allConVars == null) {
+                Debug.LogErrorFormat("Can't register the convars from mod {0} before the game does. Try doing it after initConvars!",assembly.FullName);
+            }
+
+            List<BaseConVar> customVars = new List<BaseConVar>();
+            foreach (Type type in assembly.GetTypes()) {
+                foreach (FieldInfo field in type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
+                    if (field.FieldType.IsSubclassOf(typeof(BaseConVar))) {
+                        if (field.IsStatic) {
+                            self.RegisterConVarInternal((BaseConVar)field.GetValue(null));
+                            customVars.Add((BaseConVar) field.GetValue(null));
+                        }
+                        else if (CustomAttributeExtensions.GetCustomAttribute<CompilerGeneratedAttribute>(type) == null)
+                            Debug.LogErrorFormat("ConVar defined as {0} in {1}. {2} could not be registered. ConVars must be static fields.", type.Name, assembly.FullName, field.Name);
+                    }
+                }
+            }
+            foreach (BaseConVar baseConVar in customVars) {
+                if ((baseConVar.flags & ConVarFlags.Engine) != ConVarFlags.None)
+                    baseConVar.defaultValue = baseConVar.GetString();
+                else if (baseConVar.defaultValue != null)
+                    baseConVar.SetString(baseConVar.defaultValue);
             }
         }
     }
