@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 using R2API.Utils;
-using UnityEngine;
-using BepInEx;
 using RoR2;
 
 namespace R2API {
@@ -27,8 +24,7 @@ namespace R2API {
         /// <param name="survivor">The survivor to add.</param>
         /// <returns>true if survivor will be added</returns>
         public static bool AddSurvivor(SurvivorDef survivor) {
-
-            if( survivorsAlreadyAdded ) {
+            if (survivorsAlreadyAdded) {
                 R2API.Logger.LogError($"Tried to add survivor: {survivor.displayNameToken} after survivor list was created");
                 return false;
             }
@@ -60,8 +56,8 @@ namespace R2API {
             survivorsAlreadyAdded = true;
 
             // Get the count of the new survivors added, and the number of vanilla survivors
-            int newSurvivorCount = SurvivorDefinitions.Count;
-            int exisitingSurvivorCount = SurvivorCatalog.idealSurvivorOrder.Length;
+            var newSurvivorCount = SurvivorDefinitions.Count;
+            var exisitingSurvivorCount = SurvivorCatalog.idealSurvivorOrder.Length;
 
             // Increase the size of the order array to accomodate the added survivors
             Array.Resize(ref SurvivorCatalog.idealSurvivorOrder, exisitingSurvivorCount + newSurvivorCount);
