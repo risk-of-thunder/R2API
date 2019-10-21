@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
-    [R2APISubmodule(Build = 3961583)]
+    [R2APISubmodule(Build = 4233443)]
     public static class LobbyConfigAPI {
 
         private static int _ruleNameSequence;

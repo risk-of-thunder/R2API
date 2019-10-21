@@ -748,7 +748,7 @@ namespace R2API.Utils {
             }
 
             var dmd = new DynamicMethodDefinition(
-                $"CallDelegate<{method.GetFindableID(simple: true)}>", typeof(object), new[] { typeof(object), typeof(object[]) });
+                $"CallDelegate<{method.GetID(simple: true)}>", typeof(object), new[] { typeof(object), typeof(object[]) });
             var il = dmd.GetILProcessor();
 
             var args = method.GetParameters();
