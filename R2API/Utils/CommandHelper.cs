@@ -9,19 +9,79 @@ using RoR2.ConVar;
 using UnityEngine;
 
 namespace R2API.Utils {
+    [R2APISubmodule]
     public class CommandHelper {
-        public static void RegisterCommands(RoR2.Console self) {
+
+        private static Queue<Assembly> assemblies = new Queue<Assembly>();
+        private static RoR2.Console console = null;
+
+
+        /** <summary>
+         * Scans the calling assembly for ConCommand attributes and Convar fields and adds these to the console.
+         * This method may be called at any time.
+         * </summary>
+         */
+        public static void AddToConsoleWhenReady() {
+            Assembly assembly = Assembly.GetCallingAssembly();
+            if(assembly == null) {
+                return;
+            }
+            assemblies.Enqueue(assembly);
+            HandleCommandsConvars();
+        }
+
+        /** <summary>
+         * Exactly the same as AddToConsoleWhenReady(): use that method instead.
+         * </summary>
+         */
+        [Obsolete("Use 'AddToConsoleWhenReady()' instead.")]
+        public static void RegisterCommands(RoR2.Console _) {
+            Assembly assembly = Assembly.GetCallingAssembly();
+            if (assembly == null) {
+                return;
+            }
+            assemblies.Enqueue(assembly);
+            HandleCommandsConvars();
+        }
+
+        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
+        internal static void SetHooks() {
+            On.RoR2.Console.InitConVars += ConsoleReady;
+        }
+
+        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
+        internal static void UnsetHooks() {
+            On.RoR2.Console.InitConVars -= ConsoleReady;
+        }
+
+        private static void ConsoleReady(On.RoR2.Console.orig_InitConVars orig, RoR2.Console self) {
+            orig(self);
+            console = self;
+            HandleCommandsConvars();
+        }
+
+        private static void HandleCommandsConvars() {
+            if (console == null) return;
+
+            while (assemblies.Count > 0) {
+                Assembly assembly = assemblies.Dequeue();
+                RegisterCommands(assembly);
+                RegisterConVars(assembly);
+            }
+        }
+
+        private static void RegisterCommands(Assembly assembly) {
                 /*
             This code belongs to Wildbook. 
             https://github.com/wildbook/R2Mods/blob/develop/Utilities/CommandHelper.cs
             Credit goes to Wildbook.         
                 */
-            var types = Assembly.GetCallingAssembly()?.GetTypes();
+            var types = assembly?.GetTypes();
             if (types == null) {
                 return;
             }
 
-            var catalog = self.GetFieldValue<IDictionary>("concommandCatalog");
+            var catalog = console.GetFieldValue<IDictionary>("concommandCatalog");
             const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
             var methods = types.SelectMany(x =>
                 x.GetMethods(flags).Where(m => m.GetCustomAttribute<ConCommandAttribute>() != null));
@@ -40,23 +100,13 @@ namespace R2API.Utils {
             }
         }
 
-        public static void RegisterConVars(RoR2.Console self) {
-            var assembly = Assembly.GetCallingAssembly();
-            if(assembly==null) {
-                return;
-            }
-
-            if (self.allConVars == null) {
-                Debug.LogErrorFormat("Can't register the convars from mod {0} before the game does. Try doing it after initConvars!",assembly.GetName().Name);
-                return;
-            }
-
+        private static void RegisterConVars(Assembly assembly) {
             List<BaseConVar> customVars = new List<BaseConVar>();
             foreach (Type type in assembly.GetTypes()) {
                 foreach (FieldInfo field in type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
                     if (field.FieldType.IsSubclassOf(typeof(BaseConVar))) {
                         if (field.IsStatic) {
-                            self.RegisterConVarInternal((BaseConVar)field.GetValue(null));
+                            console.RegisterConVarInternal((BaseConVar)field.GetValue(null));//TODO: Use reflection here instead because publicize can fail for some people if I understand correctly. This method may be cached until the submodule is unloaded.
                             customVars.Add((BaseConVar) field.GetValue(null));
                         }
                         else if (CustomAttributeExtensions.GetCustomAttribute<CompilerGeneratedAttribute>(type) == null)
