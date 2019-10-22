@@ -12,7 +12,7 @@ namespace R2API.Utils {
     [R2APISubmodule]
     public class CommandHelper {
 
-        private static Queue<Assembly> Assemblies = new Queue<Assembly>();
+        private static Queue<Assembly> assemblies = new Queue<Assembly>();
         private static RoR2.Console console = null;
 
         public static void AddToConsoleWhenReady() {
@@ -20,6 +20,9 @@ namespace R2API.Utils {
             if(assembly == null) {
                 return;
             }
+            assemblies.Enqueue(assembly);
+            HandleCommandsConvars();
+        }
 
         [Obsolete("Use 'AddToConsoleWhenReady()' instead.")]
         public static void RegisterCommands(RoR2.Console _) {
@@ -50,8 +53,8 @@ namespace R2API.Utils {
         private static void HandleCommandsConvars() {
             if (console == null) return;
 
-            while (Assemblies.Count > 0) {
-                Assembly assembly = Assemblies.Dequeue();
+            while (assemblies.Count > 0) {
+                Assembly assembly = assemblies.Dequeue();
                 RegisterCommands(assembly);
                 RegisterConVars(assembly);
             }
