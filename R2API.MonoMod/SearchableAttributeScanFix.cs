@@ -2,30 +2,36 @@
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
+// ReSharper disable NotAccessedField.Local
 
 using System;
 using System.Collections.Generic;
 using MonoMod;
+using R2API.Utils;
 
 namespace RoR2 {
     internal class patch_SearchableAttribute : Attribute {
         [MonoModConstructor]
         static patch_SearchableAttribute() {
             instancesListsByType = new Dictionary<Type, List<SearchableAttribute>>();
-            assemblyBlacklist = new HashSet<string>
-            {
+            assemblyBlacklist = new HashSet<string> {
                 "MMHOOK_Assembly-CSharp",
-                "BepInEx.Preloader",
                 "BepInEx",
+                "BepInEx.Preloader",
+                "BepInEx.Harmony",
+                "BepInEx.MonoMod.Loader",
                 "0Harmony",
                 "Mono.Cecil",
-                "BepInEx.MonoMod.Loader",
-                "MonoMod",
-                "MonoMod.Utils",
                 "Mono.Cecil.Pdb",
                 "Mono.Cecil.Mdb",
-                "R2API",
+                "MonoMod",
                 "MonoMod.RuntimeDetour",
+                "MonoMod.RuntimeDetour.HarmonySharedState",
+                "MonoMod.Utils",
+                "MonoMod.Utils.GetManagedSizeHelper",
+                "MonoMod.Utils.Cil.ILGeneratorProxy",
+                "R2API",
+                "Assembly-CSharp.R2API.mm.MonoModRules [MMILRT, ID:0]",
                 "mscorlib",
                 "UnityEngine",
                 "UnityEngine.AIModule",
@@ -161,7 +167,7 @@ namespace RoR2 {
                 "Assembly"
             };
             try {
-                SearchableAttribute.Scan();
+                typeof(SearchableAttribute).InvokeMethod("Scan");
             }
             catch (Exception ex) {
                 System.Console.WriteLine(ex.Message);
