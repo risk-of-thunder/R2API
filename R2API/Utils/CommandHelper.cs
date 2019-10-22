@@ -21,7 +21,13 @@ namespace R2API.Utils {
                 return;
             }
 
-            Assemblies.Enqueue(assembly);
+        [Obsolete("Use 'AddToConsoleWhenReady()' instead.")]
+        public static void RegisterCommands(RoR2.Console _) {
+            Assembly assembly = Assembly.GetCallingAssembly();
+            if (assembly == null) {
+                return;
+            }
+            assemblies.Enqueue(assembly);
             HandleCommandsConvars();
         }
 
@@ -87,7 +93,7 @@ namespace R2API.Utils {
                 foreach (FieldInfo field in type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
                     if (field.FieldType.IsSubclassOf(typeof(BaseConVar))) {
                         if (field.IsStatic) {
-                            console.RegisterConVarInternal((BaseConVar)field.GetValue(null));
+                            console.RegisterConVarInternal((BaseConVar)field.GetValue(null));//TODO: Use reflection here instead because publicize can fail for some people if I understand correctly. This method may be cached until the submodule is unloaded.
                             customVars.Add((BaseConVar) field.GetValue(null));
                         }
                         else if (CustomAttributeExtensions.GetCustomAttribute<CompilerGeneratedAttribute>(type) == null)
