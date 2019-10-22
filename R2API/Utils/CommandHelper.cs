@@ -15,6 +15,12 @@ namespace R2API.Utils {
         private static Queue<Assembly> assemblies = new Queue<Assembly>();
         private static RoR2.Console console = null;
 
+
+        /** <summary>
+         * Scans the calling assembly for ConCommand attributes and Convar fields and adds these to the console.
+         * This method may be called at any time.
+         * </summary>
+         */
         public static void AddToConsoleWhenReady() {
             Assembly assembly = Assembly.GetCallingAssembly();
             if(assembly == null) {
@@ -24,6 +30,10 @@ namespace R2API.Utils {
             HandleCommandsConvars();
         }
 
+        /** <summary>
+         * Exactly the same as AddToConsoleWhenReady(): use that method instead.
+         * </summary>
+         */
         [Obsolete("Use 'AddToConsoleWhenReady()' instead.")]
         public static void RegisterCommands(RoR2.Console _) {
             Assembly assembly = Assembly.GetCallingAssembly();
