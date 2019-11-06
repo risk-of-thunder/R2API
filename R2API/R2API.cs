@@ -38,7 +38,7 @@ namespace R2API {
 
             On.RoR2.RoR2Application.UnitySystemConsoleRedirector.Redirect += orig => { };
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
-            submoduleHandler.LoadAll(GetType().Assembly);
+            submoduleHandler.LoadAll();
 
             RoR2Application.isModded = true;
 

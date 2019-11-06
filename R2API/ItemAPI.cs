@@ -55,7 +55,7 @@ namespace R2API {
 
                 cursor.GotoNext(
                     i => i.MatchLdcI4(out OriginalEquipmentCount),
-                    i => i.MatchCallOrCallvirt<Array>("Resize")
+                    i => i.MatchCall<Array>("Resize")
                 );
             };
 
