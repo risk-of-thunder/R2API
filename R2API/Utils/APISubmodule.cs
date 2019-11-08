@@ -54,7 +54,13 @@ namespace R2API.Utils {
 
         public void LoadAll() {
             var allTypes = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(assembly => assembly.GetTypes())
+                    .SelectMany(assembly => {
+                        try {
+                            return assembly.GetTypes();
+                        } catch (ReflectionTypeLoadException) {
+                            return Enumerable.Empty<Type>();
+                        }
+                    })
                     .ToList();
 
             var modulesToEnable =
