@@ -80,7 +80,6 @@ namespace R2API {
             ruleChoices.choices.Sort(delegate(RuleChoiceDef x, RuleChoiceDef y){
                 var xDiffValue = getScalingValue(x);
                 var yDiffValue = getScalingValue(y);
-                Debug.Log($"Comparing {x.localName}.{xDiffValue} to {y.localName}.{yDiffValue}");
                 return xDiffValue.CompareTo(yDiffValue);            
             });
             return ruleChoices;
