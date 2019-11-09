@@ -17,7 +17,6 @@ namespace RoR2 {
             List<TEntry> moddedEntries = new List<TEntry>();
             getAdditionalEntries?.Invoke(moddedEntries);
 
-            moddedEntries.Sort((a, b) => StringComparer.Ordinal.Compare(nameGetter(a), nameGetter(b)));
             Array.Resize(ref entries, vanillaEntriesLength + moddedEntries.Count);
 
             for (int i = vanillaEntriesLength; i < moddedEntries.Count + vanillaEntriesLength; i++) {
