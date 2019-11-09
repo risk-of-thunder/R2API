@@ -2,6 +2,7 @@ using R2API.Utils;
 using RoR2;
 using System;
 using System.Collections.ObjectModel;
+using UnityEngine;
 
 namespace R2API {
     [R2APISubmodule]
@@ -35,7 +36,6 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             difficultyCatalogReady?.Invoke(null, null);
-            difficultyAlreadyAdded = true;
             On.RoR2.DifficultyCatalog.GetDifficultyDef += DifficultyCatalog_GetDifficultyDef;
             On.RoR2.RuleDef.FromDifficulty += RuleDef_FromDifficulty;
         }
@@ -49,32 +49,39 @@ namespace R2API {
         private static DifficultyDef DifficultyCatalog_GetDifficultyDef(On.RoR2.DifficultyCatalog.orig_GetDifficultyDef orig, DifficultyIndex difficultyIndex)
         {
             int index = (int) difficultyIndex;
-            if(index >= DifficultyCatalog.difficultyDefs.Length && index < difficultyDefinitions.Count+2){
-                return difficultyDefinitions[index-2];
+            int length = DifficultyCatalog.difficultyDefs.Length;
+            if (index >= length){
+                return difficultyDefinitions[index-length];
             }
             return orig(difficultyIndex);
         }
         private static RuleDef RuleDef_FromDifficulty(On.RoR2.RuleDef.orig_FromDifficulty orig)
         {
             RuleDef ruleChoices = orig();
-            for( int i =0; i<difficultyDefinitions.Count;i++){
+            difficultyAlreadyAdded = true;
+            for ( int i =0; i<difficultyDefinitions.Count;i++){
                 DifficultyDef difficultyDef = difficultyDefinitions[i];
                 RuleChoiceDef choice = ruleChoices.AddChoice(Language.GetString(difficultyDef.nameToken), null, false);
                 choice.spritePath = difficultyDef.iconPath;
                 choice.tooltipNameToken = difficultyDef.nameToken;
                 choice.tooltipNameColor = difficultyDef.color;
                 choice.tooltipBodyToken = difficultyDef.descriptionToken;
-                choice.difficultyIndex = (DifficultyIndex) i+2;
+                choice.difficultyIndex = (DifficultyIndex) i+3;
                 }
-            ruleChoices.choices.Sort((x,y)=>{
-                return DifficultyCatalog
-                        .GetDifficultyDef(x.difficultyIndex)
-                        .scalingValue
-                        .CompareTo(
-                            DifficultyCatalog
-                            .GetDifficultyDef(y.difficultyIndex)
-                            .scalingValue
-                            );
+
+            float getScalingValue(RuleChoiceDef rule) {
+                if(rule.difficultyIndex <= DifficultyIndex.Hard) {
+                    return (float) rule.difficultyIndex + 1f;
+                }
+                else {
+                    return difficultyDefinitions[rule.difficultyIndex - DifficultyIndex.Count].scalingValue;
+                }
+            }
+            ruleChoices.choices.Sort(delegate(RuleChoiceDef x, RuleChoiceDef y){
+                var xDiffValue = getScalingValue(x);
+                var yDiffValue = getScalingValue(y);
+                Debug.Log($"Comparing {x.localName}.{xDiffValue} to {y.localName}.{yDiffValue}");
+                return xDiffValue.CompareTo(yDiffValue);            
             });
             return ruleChoices;
         }
