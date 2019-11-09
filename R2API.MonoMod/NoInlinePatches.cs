@@ -7,4 +7,9 @@ namespace RoR2 {
         [MonoModIgnore] [NoInlining]
         public static extern SurvivorDef GetSurvivorDef(SurvivorIndex survivorIndex);
     }
+
+    internal class patch_DifficultyCatalog {
+        [MonoModIgnore] [NoInlining]
+        public static extern DifficultyDef GetDifficultyDef(DifficultyIndex difficultyIndex);
+    }
 }
