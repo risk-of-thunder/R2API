@@ -10,8 +10,6 @@ namespace R2API {
     public static class SurvivorAPI {
         private static bool survivorsAlreadyAdded = false;
 
-        public static event EventHandler SurvivorCatalogReady;
-
         public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
         /// <summary>
         /// Add a SurvivorDef to the list of available survivors.
@@ -42,7 +40,6 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            SurvivorCatalogReady?.Invoke(null, null);
             SurvivorCatalog.getAdditionalSurvivorDefs += AddSurvivorAction;
         }
 
