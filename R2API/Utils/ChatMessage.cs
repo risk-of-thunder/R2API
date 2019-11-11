@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using RoR2;
+﻿using RoR2;
 
 namespace R2API.Utils {
     public static class ChatMessage {
@@ -37,7 +36,10 @@ namespace R2API.Utils {
             SendColored(message, ColorCatalog.GetColorHexString(color));
         }
 
-        public static void SendColored(string message, Color color) {
+        public static void SendColored(string message, System.Drawing.Color color) {
+            SendColored(message, ColorToHexString(color));
+        }
+        public static void SendColored(string message, UnityEngine.Color color) {
             SendColored(message, ColorToHexString(color));
         }
 
@@ -52,12 +54,19 @@ namespace R2API.Utils {
             SendColored(message, ColorCatalog.GetColorHexString(color), messageFrom);
         }
 
-        public static void SendColored(string message, Color color, string messageFrom) {
+        public static void SendColored(string message, System.Drawing.Color color, string messageFrom) {
+            SendColored(message, ColorToHexString(color), messageFrom);
+        }
+
+        public static void SendColored(string message, UnityEngine.Color color, string messageFrom) {
             SendColored(message, ColorToHexString(color), messageFrom);
         }
 
         private static string ColorToHexString(System.Drawing.Color c) {
             return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+        }
+        private static string ColorToHexString(UnityEngine.Color c) {
+            return "#" + UnityEngine.ColorUtility.ToHtmlStringRGB(c);
         }
     }
 
