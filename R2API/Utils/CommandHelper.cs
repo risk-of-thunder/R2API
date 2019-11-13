@@ -23,7 +23,7 @@ namespace R2API.Utils {
          */
         public static void AddToConsoleWhenReady() {
             Assembly assembly = Assembly.GetCallingAssembly();
-            if(assembly == null) {
+            if (assembly == null) {
                 return;
             }
             assemblies.Enqueue(assembly);
@@ -71,11 +71,11 @@ namespace R2API.Utils {
         }
 
         private static void RegisterCommands(Assembly assembly) {
-                /*
-            This code belongs to Wildbook. 
-            https://github.com/wildbook/R2Mods/blob/develop/Utilities/CommandHelper.cs
-            Credit goes to Wildbook.         
-                */
+            /*
+        This code belongs to Wildbook. 
+        https://github.com/wildbook/R2Mods/blob/develop/Utilities/CommandHelper.cs
+        Credit goes to Wildbook.         
+            */
             var types = assembly?.GetTypes();
             if (types == null) {
                 return;
@@ -108,9 +108,8 @@ namespace R2API.Utils {
                         if (field.IsStatic) {
                             console.InvokeMethod("RegisterConVarInternal", (BaseConVar)field.GetValue(null));
                             //console.RegisterConVarInternal((BaseConVar)field.GetValue(null));//This line fails on Release.
-                            customVars.Add((BaseConVar) field.GetValue(null));
-                        }
-                        else if (CustomAttributeExtensions.GetCustomAttribute<CompilerGeneratedAttribute>(type) == null)
+                            customVars.Add((BaseConVar)field.GetValue(null));
+                        } else if (CustomAttributeExtensions.GetCustomAttribute<CompilerGeneratedAttribute>(type) == null)
                             Debug.LogErrorFormat("ConVar defined as {0} in {1}. {2} could not be registered. ConVars must be static fields.", type.Name, assembly.FullName, field.Name);
                     }
                 }

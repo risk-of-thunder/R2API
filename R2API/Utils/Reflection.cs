@@ -318,7 +318,7 @@ namespace R2API.Utils {
         private static SetDelegateRef<TInstance, TValue> GetPropertySetDelegateRef<TInstance, TValue>(
             this PropertyInfo property)
             where TInstance : struct =>
-            (SetDelegateRef<TInstance, TValue>) PropertySetDelegateCache.GetOrAdd(property,
+            (SetDelegateRef<TInstance, TValue>)PropertySetDelegateCache.GetOrAdd(property,
                 prop => prop.CreateSetDelegateRef<TInstance, TValue>());
 
         #endregion
@@ -419,7 +419,7 @@ namespace R2API.Utils {
                         .GetMethodCached(methodName, methodParams.Select(x => x.GetType()).ToArray())
                 ) ?? throw new Exception($"Could not find method on type {instance.GetType()} with the name of {methodName} with the arguments specified.");
 
-            return (TReturn) methodInfo.GetMethodDelegateCached()(instance, methodParams);
+            return (TReturn)methodInfo.GetMethodDelegateCached()(instance, methodParams);
         }
 
         /// <summary>
@@ -439,7 +439,7 @@ namespace R2API.Utils {
                     .GetMethodCached(methodName, methodParams.Select(x => x.GetType()).ToArray()))
                 ?? throw new Exception($"Could not find method on type {staticType} with the name of {methodName} with the arguments specified.");
 
-            return (TReturn) methodInfo.GetMethodDelegateCached()(null, methodParams);
+            return (TReturn)methodInfo.GetMethodDelegateCached()(null, methodParams);
         }
 
         /// <summary>
@@ -557,7 +557,7 @@ namespace R2API.Utils {
         /// <param name="type"></param>
         /// <returns></returns>
         public static IList InstantiateList(this Type type) =>
-            (IList) typeof(List<>).MakeGenericType(type).Instantiate();
+            (IList)typeof(List<>).MakeGenericType(type).Instantiate();
 
         #endregion
 
@@ -844,7 +844,7 @@ namespace R2API.Utils {
             }
 
             if (value > -129 && value < 128)
-                il.Emit(OpCodes.Ldc_I4_S, (sbyte) value);
+                il.Emit(OpCodes.Ldc_I4_S, (sbyte)value);
             else
                 il.Emit(OpCodes.Ldc_I4, value);
         }

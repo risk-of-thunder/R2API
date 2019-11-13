@@ -30,7 +30,7 @@ namespace R2API {
             var t3 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier3);
             var eq = ItemDropAPI.GetDefaultEquipmentDropList();
 
-            var shrineSelections = new [] {
+            var shrineSelections = new[] {
                 new List<ItemIndex> {ItemIndex.None}.ToSelection(ItemDropAPI.DefaultShrineFailureWeight),
                 t1.ToSelection(ItemDropAPI.DefaultShrineTier1Weight),
                 t2.ToSelection(ItemDropAPI.DefaultShrineTier2Weight),
@@ -46,7 +46,7 @@ namespace R2API {
             var t2 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier2);
             var t3 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier3);
 
-            var chestSelections = new [] {
+            var chestSelections = new[] {
                 t1.ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
                 t2.ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
                 t3.ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance)
@@ -311,7 +311,7 @@ namespace R2API {
             cursor.GotoNext(x => x.MatchStloc(itemIndex));
             cursor.Emit(OpCodes.Stloc_S, itemIndex);
 
-            
+
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.Emit(OpCodes.Dup);
             cursor.Emit(OpCodes.Ldfld, typeof(BossGroup).GetFieldCached("rng"));

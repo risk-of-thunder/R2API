@@ -7,7 +7,7 @@ namespace R2API {
     /// <summary>
     /// This class provides a wrapper around an AssetBundle for integrating it into the regular Unity Resources library
     /// </summary>
-    public sealed class AssetBundleResourcesProvider : IResourcesProvider {
+    public sealed class AssetBundleResourcesProvider : IResourceProvider {
         private readonly AssetBundle _bundle;
 
         public AssetBundleResourcesProvider(string modPrefix, AssetBundle bundle) {

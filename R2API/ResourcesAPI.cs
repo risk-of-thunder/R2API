@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 namespace R2API {
     [R2APISubmodule]
     public static class ResourcesAPI {
-        private static readonly Dictionary<string, IResourcesProvider> Providers = new Dictionary<string, IResourcesProvider>();
+        private static readonly Dictionary<string, IResourceProvider> Providers = new Dictionary<string, IResourceProvider>();
 
         private static NativeDetour ResourcesLoadDetour;
         private delegate Object d_ResourcesLoad(string path, Type type);
@@ -55,7 +55,7 @@ namespace R2API {
             ResourcesLoadAllDetour.Undo();
         }
 
-        public static void AddProvider(IResourcesProvider provider) {
+        public static void AddProvider(IResourceProvider provider) {
             Providers.Add(provider.ModPrefix, provider);
         }
 

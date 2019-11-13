@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EntityStates.Huntress;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
@@ -171,9 +170,9 @@ namespace R2API {
                 return -1;
             }
 
-            item.ItemDef.itemIndex = (ItemIndex) OriginalItemCount + CustomItemCount++;
+            item.ItemDef.itemIndex = (ItemIndex)OriginalItemCount + CustomItemCount++;
             ItemDefinitions.Add(item);
-            return (int) item.ItemDef.itemIndex;
+            return (int)item.ItemDef.itemIndex;
         }
 
         /// <summary>
@@ -189,9 +188,9 @@ namespace R2API {
                 return -1;
             }
 
-            item.EquipmentDef.equipmentIndex = (EquipmentIndex) OriginalEquipmentCount + CustomEquipmentCount++;
+            item.EquipmentDef.equipmentIndex = (EquipmentIndex)OriginalEquipmentCount + CustomEquipmentCount++;
             EquipmentDefinitions.Add(item);
-            return (int) item.EquipmentDef.equipmentIndex;
+            return (int)item.EquipmentDef.equipmentIndex;
         }
 
         /// <summary>
@@ -207,9 +206,9 @@ namespace R2API {
                 return -1;
             }
 
-            buff.BuffDef.buffIndex = (BuffIndex) OriginalBuffCount + CustomBuffCount++;
+            buff.BuffDef.buffIndex = (BuffIndex)OriginalBuffCount + CustomBuffCount++;
             BuffDefinitions.Add(buff);
-            return (int) buff.BuffDef.buffIndex;
+            return (int)buff.BuffDef.buffIndex;
         }
 
         /// <summary>
@@ -225,9 +224,9 @@ namespace R2API {
                 return -1;
             }
 
-            elite.EliteDef.eliteIndex = (EliteIndex) OriginalEliteCount + CustomEliteCount++;
+            elite.EliteDef.eliteIndex = (EliteIndex)OriginalEliteCount + CustomEliteCount++;
             EliteDefinitions.Add(elite);
-            return (int) elite.EliteDef.eliteIndex;
+            return (int)elite.EliteDef.eliteIndex;
         }
         #endregion
 
@@ -264,7 +263,7 @@ namespace R2API {
             cursor.Index = brFalsePos;
             cursor.Next.Operand = label;
         }
-        
+
         private static void AddingItemDisplayRulesToCharacterModels(On.RoR2.CharacterModel.orig_Start orig, CharacterModel self) {
             orig(self);
 
@@ -277,8 +276,8 @@ namespace R2API {
 
             foreach (var customEquipment in EquipmentDefinitions) {
                 if (customEquipment.ItemDisplayRules != null) {
-                    var displayRuleGroup = new DisplayRuleGroup {rules = customEquipment.ItemDisplayRules};
-                    self.itemDisplayRuleSet.SetItemDisplayRuleGroup(customEquipment.EquipmentDef.name,  displayRuleGroup);
+                    var displayRuleGroup = new DisplayRuleGroup { rules = customEquipment.ItemDisplayRules };
+                    self.itemDisplayRuleSet.SetItemDisplayRuleGroup(customEquipment.EquipmentDef.name, displayRuleGroup);
                 }
             }
 
@@ -292,8 +291,7 @@ namespace R2API {
 
         // Disable DiscoveredPickups field in UserProfile for custom items
         private static void SaveFieldAttributeOnSetupPickupsSet(On.RoR2.UserProfile.SaveFieldAttribute.orig_SetupPickupsSet orig, UserProfile.SaveFieldAttribute self, FieldInfo fieldInfo) {
-            self.getter = delegate (UserProfile userProfile)
-            {
+            self.getter = delegate (UserProfile userProfile) {
                 bool[] pickupsSet = (bool[])fieldInfo.GetValue(userProfile);
                 var result = new StringBuilder("");
                 for (int i = 0; i < OriginalItemCount + OriginalEquipmentCount + 1; i++) {
@@ -307,8 +305,7 @@ namespace R2API {
 
                 return result.ToString();
             };
-            self.setter = delegate (UserProfile userProfile, string valueString)
-            {
+            self.setter = delegate (UserProfile userProfile, string valueString) {
                 bool[] array = (bool[])fieldInfo.GetValue(userProfile);
                 Array.Clear(array, 0, 0);
                 string[] array2 = valueString.Split(' ');
@@ -320,8 +317,7 @@ namespace R2API {
                     }
                 }
             };
-            self.copier = delegate (UserProfile srcProfile, UserProfile destProfile)
-            {
+            self.copier = delegate (UserProfile srcProfile, UserProfile destProfile) {
                 Array sourceArray = (bool[])fieldInfo.GetValue(srcProfile);
                 bool[] array = (bool[])fieldInfo.GetValue(destProfile);
                 Array.Copy(sourceArray, array, array.Length);
@@ -346,7 +342,7 @@ namespace R2API {
                 perItemStatDef.SetFieldValue("keyToStatDef", keyToStatDef);
 
                 foreach (ItemIndex itemIndex in ItemCatalog.allItems) {
-                    if ((int) itemIndex >= OriginalItemCount)
+                    if ((int)itemIndex >= OriginalItemCount)
                         continue;
                     ItemDef itemDef = ItemCatalog.GetItemDef(itemIndex);
                     StatDef statDef = StatDef.Register(prefix + "." + itemDef.name, recordType, dataType, 0.0);
@@ -363,9 +359,9 @@ namespace R2API {
                 var dataType = perEquipmentStatDef.GetFieldValue<StatDataType>("dataType");
                 var keyToStatDef = EquipmentCatalog.GetPerEquipmentBuffer<StatDef>();
                 perEquipmentStatDef.SetFieldValue("keyToStatDef", keyToStatDef);
-                
+
                 foreach (EquipmentIndex equipmentIndex in EquipmentCatalog.allEquipment) {
-                    if ((int) equipmentIndex >= OriginalEquipmentCount)
+                    if ((int)equipmentIndex >= OriginalEquipmentCount)
                         continue;
                     StatDef statDef = StatDef.Register(prefix + "." + equipmentIndex, recordType, dataType, 0.0);
                     keyToStatDef[(int)equipmentIndex] = statDef;
@@ -399,12 +395,12 @@ namespace R2API {
 
         // Normally push values to the StatSheet about the item (totalCollected etc). It saves to UserProfile
         private static void StatManagerOnOnServerItemGiven(On.RoR2.Stats.StatManager.orig_OnServerItemGiven orig, Inventory inventory, ItemIndex itemIndex, int quantity) {
-            if ((int) itemIndex < OriginalItemCount)
+            if ((int)itemIndex < OriginalItemCount)
                 orig(inventory, itemIndex, quantity);
         }
-        
+
         private static void StatManagerOnOnEquipmentActivated(On.RoR2.Stats.StatManager.orig_OnEquipmentActivated orig, EquipmentSlot activator, EquipmentIndex equipmentIndex) {
-            if ((int) equipmentIndex < OriginalEquipmentCount)
+            if ((int)equipmentIndex < OriginalEquipmentCount)
                 orig(activator, equipmentIndex);
         }
         #endregion
@@ -436,8 +432,7 @@ namespace R2API {
                     string stringFormatted = Language.GetStringFormatted("GENERIC_PREFIX_FOUND", "Unknown"); // param arg being the value from custom file
                     string stringFormatted2 = Language.GetStringFormatted("ITEM_PREFIX_STACKCOUNT", "Unknown");
                     self.AddSimpleTextPanel(stringFormatted, stringFormatted2);
-                }
-                else if (equipmentIndex != EquipmentIndex.None) {
+                } else if (equipmentIndex != EquipmentIndex.None) {
                     EquipmentDef equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
                     self.AddDescriptionPanel(Language.GetString(equipmentDef.descriptionToken));
                     token = equipmentDef.loreToken;
@@ -449,8 +444,7 @@ namespace R2API {
                 }
                 // ReSharper disable once AssignNullToNotNullAttribute
                 self.AddNotesPanel(Language.IsTokenInvalid(token) ? Language.GetString("EARLY_ACCESS_LORE") : Language.GetString(token));
-            }
-            else {
+            } else {
                 orig(self, pickupIndex);
             }
         }
@@ -474,7 +468,7 @@ namespace R2API {
 
         public static bool IsCustomItemOrEquipment(PickupIndex pickupIndex) {
             var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
-            return (int) pickupDef.itemIndex >= OriginalItemCount || (int) pickupDef.equipmentIndex >= OriginalEquipmentCount;
+            return (int)pickupDef.itemIndex >= OriginalItemCount || (int)pickupDef.equipmentIndex >= OriginalEquipmentCount;
         }
     }
 

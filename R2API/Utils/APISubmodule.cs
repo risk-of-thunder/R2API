@@ -31,7 +31,7 @@ namespace R2API.Utils {
         public InitStage Stage;
     }
 
-    [AttributeUsage(AttributeTargets.All)]
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public class R2APISubmoduleDependency : Attribute {
         public string SubmoduleName { get; set; }
 
