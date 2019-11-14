@@ -2,6 +2,13 @@
 # R2API – a modding API for Risk of Rain 2
 [![Build Status](https://raegous.visualstudio.com/Risk%20of%20Rain%202%20Modding/_apis/build/status/Risk%20of%20Rain%202%20Modding-.NET%20Desktop-CI?branchName=master)](https://raegous.visualstudio.com/Risk%20of%20Rain%202%20Modding/_build/latest?definitionId=1&branchName=master)
 
+## Note to Mod Developers
+
+Breaking Change for next RoR2 Content Update: R2API Submodules (ResourceAPI, SurvivorAPI, etc) will be only enabled by using the R2APISubmoduleDependency attribute somewhere in your mod. As of the next update (for new BepInEx) all submodules will be enabled by default.
+
+Example usage: 
+[R2APISubmoduleDependency("SurvivorAPI", "DifficultyAPI")]
+
 ## About
 
 R2API is designed to provide an abstraction layer in order to expose and simplify APIs to allow developers to modify
