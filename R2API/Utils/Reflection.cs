@@ -82,9 +82,9 @@ namespace R2API.Utils {
         #region Field
 
         /// <summary>
-        /// Gets the <see cref="FieldInfo" /> of the type by name and caches it
+        /// Gets the <see cref="FieldInfo"/> of the type by name and caches it
         /// </summary>
-        /// <param name="T">The type to search</param>
+        /// <typeparam name="T">The type to search</typeparam>
         /// <param name="name">The name of the field to find</param>
         /// <returns></returns>
         public static FieldInfo GetFieldCached<T>(string name) =>
@@ -159,9 +159,11 @@ namespace R2API.Utils {
         /// <summary>
         /// Sets the value of the specified field on the specified struct
         /// </summary>
+        /// <typeparam name="TInstance">The type of the instance of the struct</typeparam>
         /// <typeparam name="TValue">The type of the value to set</typeparam>
         /// <param name="instance">The name of the field to set the value of</param>
         /// <param name="fieldName">The type to set the specified field's value on</param>
+        /// <param name="value">The value to set the field to</param>
         /// <returns></returns>
         public static void SetStructFieldValue<TInstance, TValue>(this ref TInstance instance, string fieldName, TValue value)
             where TInstance : struct =>
@@ -174,7 +176,7 @@ namespace R2API.Utils {
         /// <summary>
         /// Gets the <see cref="FieldInfo"/> on the specified <see cref="Type"/> and searches base types if not found.
         /// </summary>
-        /// <param name="T">The <see cref="Type"/> to search and get base types from</param>
+        /// <typeparam name="T">The <see cref="Type"/> to search and get base types from</param>
         /// <param name="name">The name of the property to search for.</param>
         /// <returns></returns>
         private static FieldInfo GetFieldFull(this Type T, string name) {
@@ -206,7 +208,7 @@ namespace R2API.Utils {
         /// <summary>
         /// Gets the <see cref="PropertyInfo"/> of the type by name
         /// </summary>
-        /// <typeparam name="T">The type on which to find the property</typeparam>
+        /// <typetypeparam name="T">The type on which to find the property</typeparam>
         /// <param name="name">The name of the property to get</param>
         /// <returns></returns>
         public static PropertyInfo GetPropertyCached<T>(string name) =>
@@ -215,7 +217,7 @@ namespace R2API.Utils {
         /// <summary>
         /// Gets the <see cref="PropertyInfo"/> of the type by name
         /// </summary>
-        /// <param name="T">The type to get the <see cref="PropertyInfo"/> from</param>
+        /// <typeparam name="T">The type to get the <see cref="PropertyInfo"/> from</param>
         /// <param name="name">The name of the property to get</param>
         /// <returns></returns>
         public static PropertyInfo GetPropertyCached(this Type T, string name) =>
@@ -269,7 +271,7 @@ namespace R2API.Utils {
         /// <typeparam name="TValue">The type of the value to set</typeparam>
         /// <param name="staticType">The name of the static field to set the value of</param>
         /// <param name="propName">The type to set the specified static property's value on</param>
-        /// <param name="value">The value to set</param>
+        /// <param name="value">The value to set the property to</param>
         /// <returns></returns>
         public static void SetPropertyValue<TValue>(this Type staticType, string propName, TValue value) =>
             staticType.GetPropertyCached(propName)?
@@ -279,9 +281,11 @@ namespace R2API.Utils {
         /// <summary>
         /// Sets the value of the specified property on the specified struct
         /// </summary>
+        /// <typeparam name="TInstance">The type of the instance of the struct</typeparam>
         /// <typeparam name="TValue">The type of the value to set</typeparam>
         /// <param name="instance">The name of the field to set the value of</param>
         /// <param name="propName">The type to set the specified property's value on</param>
+        /// <param name="value">The value to set the property to</param>
         /// <returns></returns>
         public static void SetStructPropertyValue<TInstance, TValue>(this ref TInstance instance, string propName,
             TValue value)
@@ -357,7 +361,7 @@ namespace R2API.Utils {
         /// <summary>
         /// Gets the method on the specified static type and caches it. This overload is used when the method is ambiguous
         /// </summary>
-        /// <typeparam name="T">The type to search</typeparam>
+        /// <param name="T">The type to search</param>
         /// <param name="name">The name of the method to find</param>
         /// <param name="argumentTypes">The types of the argument</param>
         public static MethodInfo GetMethodCached(this Type T, string name, Type[] argumentTypes) =>
@@ -471,7 +475,7 @@ namespace R2API.Utils {
         /// <summary>
         /// Gets the constructor on the specified type with specified arguments and caches it
         /// </summary>
-        /// <param name="T">The type to search</param>
+        /// <typeparam name="T">The type to search</typeparam>
         /// <param name="argumentTypes">The types of the arguments on the constructor to find</param>
         /// <returns></returns>
         public static ConstructorInfo GetConstructorCached<T>(Type[] argumentTypes) =>
@@ -490,7 +494,7 @@ namespace R2API.Utils {
         /// <summary>
         /// Gets the nested type on the specified type
         /// </summary>
-        /// <param name="T">The type to search</param>
+        /// <typeparam name="T">The type to search</typeparam>
         /// <param name="name">The name of the nested type to find</param>
         /// <returns></returns>
         public static Type GetNestedType<T>(string name) =>
@@ -499,7 +503,7 @@ namespace R2API.Utils {
         /// <summary>
         /// Gets the nested type on the specified type
         /// </summary>
-        /// <param name="T">The type to search</param>
+        /// <typeparam name="T">The type to search</typeparam>
         /// <param name="name">The name of the nested type to find</param>
         /// <returns></returns>
         public static Type GetNestedTypeCached<T>(string name) =>

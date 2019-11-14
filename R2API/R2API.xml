@@ -1,0 +1,674 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>R2API</name>
+    </assembly>
+    <members>
+        <member name="E:R2API.AssetAPI.AssetLoaderReady">
+            <summary>
+            This event is invoked as soon as the AssetAPI is loaded. This is the perfect time to add assets to the Master and Object Catalogs in the API.
+            </summary>
+        </member>
+        <member name="P:R2API.AssetAPI.doneLoading">
+            <summary>
+            Returns true once assets have been loaded.
+            </summary>
+        </member>
+        <member name="P:R2API.AssetAPI.MasterCatalog">
+            <summary>
+            List of all character masters, including both vanilla and modded ones.
+            </summary>
+        </member>
+        <member name="F:R2API.AssetAPI.BodyCatalog">
+            <summary>
+            List of all character bodies, including both vanilla and modded ones.
+            </summary>
+        </member>
+        <member name="F:R2API.AssetAPI._bodyCatalogReady">
+            <summary>
+            If BodyCatalog.Init was called already.
+            </summary>
+        </member>
+        <member name="E:R2API.AssetAPI.OnBodyCatalogReady">
+            <summary>
+            Invokes just before BodyCatalog.Init - EventArgs is AssetAPI.BodyCatalog.
+            </summary>
+        </member>
+        <member name="M:R2API.AssetAPI.AddToBodyCatalog(UnityEngine.GameObject,UnityEngine.Texture2D)">
+            <summary>
+            Add a BodyPrefab to RoR2.BodyCatalog, even after init.
+            If you try to add a BodyPrefab whose name already exists in nameToIndexMap, this method will throw.
+            </summary>
+            <param name="bodyPrefab"></param>
+            <param name="portraitIcon"></param>
+            <returns>The index of your BodyPrefab.</returns>
+        </member>
+        <member name="T:R2API.AssetBundleResourcesProvider">
+            <summary>
+            This class provides a wrapper around an AssetBundle for integrating it into the regular Unity Resources library
+            </summary>
+        </member>
+        <member name="T:R2API.AssetPlus.AssetPlus">
+            <summary>
+            Simple class for adding all the individual of AssetPlus together
+            </summary>
+                // ReSharper disable once InconsistentNaming
+        </member>
+        <member name="M:R2API.AssetPlus.FontPlus.FontStart">
+            <summary>
+            Checks for for amount of fonts after all Awake()
+            </summary>
+        </member>
+        <member name="T:R2API.AssetPlus.Fonts">
+            <summary>
+            use this class to add fonts
+            </summary>
+        </member>
+        <member name="M:R2API.AssetPlus.Fonts.Add(System.String)">
+            <summary>
+            for adding an TMP_FontAsset inside an seperate assetbundle (.font is loaded automatically)
+            </summary>
+            <param name="path">absolute path to the assetbundle</param>
+        </member>
+        <member name="M:R2API.AssetPlus.Fonts.Add(System.Byte[])">
+            <summary>
+            for adding an TMP_FontAsset while it is still in an assetbundle
+            </summary>
+            <param name="fontFile">the assetbundle file</param>
+        </member>
+        <member name="M:R2API.AssetPlus.Fonts.Add(TMPro.TMP_FontAsset)">
+            <summary>
+            for adding an TMP_FontAsset directly
+            </summary>
+            <param name="fontAsset">The loaded fontasset</param>
+        </member>
+        <member name="T:R2API.AssetPlus.Languages">
+            <summary>
+            class for language files to load
+            </summary>
+        </member>
+        <member name="M:R2API.AssetPlus.Languages.AddPath(System.String)">
+            <summary>
+            adding an file via path (.language is added automatically )
+            </summary>
+            <param name="path">absolute path to file</param>
+        </member>
+        <member name="M:R2API.AssetPlus.Languages.AddToken(System.String,System.String)">
+            <summary>
+            Adds a single languagetoken and value
+            </summary>
+            <param name="key">Token the game asks</param>
+            <param name="value">Value it gives back</param>
+        </member>
+        <member name="M:R2API.AssetPlus.Languages.AddToken(System.String,System.String,System.String)">
+            <summary>
+            Adds a single languagetoken and value to a specific language
+            </summary>
+            <param name="key">Token the game asks</param>
+            <param name="value">Value it gives back</param>
+            <param name="language">Language you want to add this to</param>
+        </member>
+        <member name="M:R2API.AssetPlus.Languages.Add(System.String)">
+            <summary>
+            Adding an file which is read into an string
+            </summary>
+            <param name="file">entire file as string</param>
+        </member>
+        <member name="M:R2API.AssetPlus.SoundPlus.LoadBanks">
+            <summary>
+            Loads all the banks, can only be called once and after RoR2.RoR2Application.OnLoad because of the initialization of the init bank
+            </summary>
+        </member>
+        <member name="T:R2API.AssetPlus.SoundBanks">
+            <summary>
+            class for SoundBanks to load
+            </summary>
+        </member>
+        <member name="F:R2API.AssetPlus.SoundBanks.Loaded">
+            <summary>
+            Makes sure to correctly load banks added before or after RoR2.RoR2Application.OnLoad()
+            </summary>
+        </member>
+        <member name="M:R2API.AssetPlus.SoundBanks.Add(System.Byte[])">
+            <summary>
+            Adds a soundbank to load, returns the ID used for unloading
+            </summary>
+            <param name="bank">byte array of the entire .bnk file</param>
+        </member>
+        <member name="M:R2API.AssetPlus.SoundBanks.Add(System.String)">
+            <summary>
+            Adds an external soundbank to load, returns the ID used for unloading (.sound files are loaded automatically)
+            </summary>
+            <param name="path">the absolute path to the file</param>
+        </member>
+        <member name="M:R2API.AssetPlus.SoundBanks.Remove(System.UInt32)">
+            <summary>
+            Unloads an bank using the ID (ID is returned at the Add() of the bank)
+            </summary>
+            <param name="ID">BankID</param>
+            <returns></returns>
+        </member>
+        <member name="T:R2API.AssetPlus.SoundBanks.Bank">
+            <summary>
+            Class containing all the information of a bank
+            </summary>
+        </member>
+        <member name="F:R2API.AssetPlus.SoundBanks.Bank._bankIteration">
+            <summary>
+            Number keeping track of PublicID to give
+            </summary>
+        </member>
+        <member name="F:R2API.AssetPlus.SoundBanks.Bank.BankData">
+            <summary>
+            BankData supplied by the user
+            </summary>
+        </member>
+        <member name="F:R2API.AssetPlus.SoundBanks.Bank.PublicID">
+            <summary>
+            Identifier for the User
+            </summary>
+        </member>
+        <member name="F:R2API.AssetPlus.SoundBanks.Bank.Memory">
+            <summary>
+            Pointer for the wwise engine
+            </summary>
+        </member>
+        <member name="F:R2API.AssetPlus.SoundBanks.Bank.BankID">
+            <summary>
+            Identifier for the engine
+            </summary>
+        </member>
+        <member name="M:R2API.AssetPlus.SoundBanks.Bank.Load">
+            <summary>
+            Loads the bank into the wwise engine
+            </summary>
+        </member>
+        <member name="M:R2API.AssetPlus.SoundBanks.Bank.UnLoad">
+            <summary>
+            Unloads the bank from the wwise engine
+            </summary>
+            <returns>The AKRESULT of unloading itself</returns>
+        </member>
+        <member name="F:R2API.AssetPlus.SoundBanks.soundBanks">
+            <summary>
+            List of all the Banks
+            </summary>
+        </member>
+        <member name="M:R2API.DifficultyAPI.AddDifficulty(RoR2.DifficultyDef)">
+            <summary>
+            Add a DifficultyDef to the list of available difficulties.
+            This must be called before the DifficultyCatalog inits, so before plugin.Start()
+            You'll get your new index returned that you can work with for comparing to Run.Instance.selectedDifficulty.
+            If this is called after the DifficultyCatalog inits then this will return -1/DifficultyIndex.Invalid and ignore the difficulty
+            </summary>
+            <param name="difficulty">The difficulty to add.</param>
+            <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
+        </member>
+        <member name="M:R2API.ItemAPI.AddCustomItem(R2API.CustomItem)">
+            <summary>
+            Add a custom item to the list of available items.
+            Value for ItemDef.ItemIndex can be ignored.
+            If this is called after the ItemCatalog inits then this will return false and ignore the custom item.
+            </summary>
+            <param name="item">The item to add.</param>
+            <returns>the ItemIndex of your item if added. -1 otherwise</returns>
+        </member>
+        <member name="M:R2API.ItemAPI.AddCustomEquipment(R2API.CustomEquipment)">
+            <summary>
+            Add a custom equipment item to the list of available items.
+            Value for EquipmentDef.ItemIndex can be ignored.
+            If this is called after the EquipmentCatalog inits then this will return false and ignore the custom equipment item.
+            </summary>
+            <param name="item">The equipment item to add.</param>
+            <returns>the EquipmentIndex of your item if added. -1 otherwise</returns>
+        </member>
+        <member name="M:R2API.ItemAPI.AddCustomBuff(R2API.CustomBuff)">
+            <summary>
+            Add a custom buff to the list of available buffs.
+            Value for BuffDef.buffIndex can be ignored.
+            If this is called after the BuffCatalog inits then this will return false and ignore the custom buff.
+            </summary>
+            <param name="buff">The buff to add.</param>
+            <returns>the BuffIndex of your item if added. -1 otherwise</returns>
+        </member>
+        <member name="M:R2API.ItemAPI.AddCustomElite(R2API.CustomElite)">
+            <summary>
+            Add a custom item to the list of available elites.
+            Value for EliteDef.eliteIndex can be ignored.
+            If this is called after the ItemCatalog inits then this will return false and ignore the custom elite.
+            </summary>
+            <param name="elite">The elite to add.</param>
+            <returns>the EliteIndex of your item if added. -1 otherwise</returns>
+        </member>
+        <member name="T:R2API.CustomBuff">
+            <summary>
+            Class that defines a custom buff type for use in the game;
+            you may omit the index in the BuffDef, as that will
+            be assigned by ItemAPI.
+            </summary>
+        </member>
+        <member name="F:R2API.CustomBuff.Name">
+            <summary>
+            Name of the Buff for the purposes of looking up its index
+            </summary>
+        </member>
+        <member name="F:R2API.CustomBuff.BuffDef">
+            <summary>
+            Definition of the Buff
+            </summary>
+        </member>
+        <member name="T:R2API.CustomElite">
+            <summary>
+            Class that defines a custom Elite type for use in the game.
+            All Elites consistent of an Elite definition, a <see cref="T:R2API.CustomEquipment"/>
+            and a <see cref="T:R2API.CustomBuff"/>.  The equipment is automatically provided to
+            the Elite when it spawns and is configured to passively apply the buff.
+            Note that if Elite Spawning Overhaul is enabled, you'll also want to create a EliteAffixCard/>
+            to allow the combat director to spawn your elite type.
+            </summary>
+        </member>
+        <member name="F:R2API.CustomElite.Name">
+            <summary>
+            Name of the Elite, for purposes of looking up its index
+            </summary>
+        </member>
+        <member name="F:R2API.CustomElite.EliteDef">
+            <summary>
+            Elite definition (you can omit the index references, as those will be filled in automatically by ItemLib)
+            </summary>
+        </member>
+        <member name="F:R2API.CustomElite.Equipment">
+            <summary>
+            Custom equipment that the Elite will carry; do note that this is something that may (rarely) drop from the Elite when killed,
+            so players can also end up with this equipment
+            </summary>
+        </member>
+        <member name="F:R2API.CustomElite.Buff">
+            <summary>
+            Custom buff that is applied passively by the equipment; note that this can be active on the player
+            if they're using Wake of Vultures or pick up the equipment, so you'll need to decide what impact
+            the elite buff should have on players.
+            </summary>
+        </member>
+        <member name="F:R2API.CustomElite.Tier">
+            <summary>
+            Tier for the elite, where 1 is standard elites (Fire, Ice, Lightning) and 2 is currently just Poison (Malachite).
+            If Elite Spawning Overhaul is disabled, it will use this tier to set cost/hp/dmg scaling.  Even if your mod is
+            only intended to work with ESO enabled, this should still be set to a valid number 1-2 for compatibility with
+            the underlying game code.
+            </summary>
+        </member>
+        <member name="M:R2API.LobbyConfigAPI.LobbyCategory.#ctor(System.String,UnityEngine.Color,System.String)">
+            <summary>
+            Adds a rule category to the lobby.
+            </summary>
+            <param name="title">The category's title.</param>
+            <param name="color">The category's color</param>
+            <param name="description">Should the category be empty, you can show this description.</param>
+        </member>
+        <member name="M:R2API.LobbyConfigAPI.LobbyCategory.#ctor(RoR2.RuleCategoryDef)">
+            <summary>
+            Wraps a rule category for the lobby.
+            </summary>
+            <param name="category">The category.</param>
+        </member>
+        <member name="M:R2API.LobbyConfigAPI.LobbyCategory.PushRule``1(R2API.LobbyConfigAPI.LobbyRule{``0})">
+            <summary>
+            Adds a rule to the category. You cannot add choices to that rule after pushing it.
+            </summary>
+            <param name="rule">The rule to add.</param>
+            <typeparam name="T">The type of value this rule holds.</typeparam>
+            <returns>'this', for chaining.</returns>
+        </member>
+        <member name="M:R2API.LobbyConfigAPI.LobbyCategory.AddChildCategory(R2API.LobbyConfigAPI.LobbyCategory)">
+            <summary>
+            Adds a child to this category.
+            The child will get hidden should the parent be collapsed.
+            </summary>
+            <param name="category">The child.</param>
+            <returns>'this', for chaining.</returns>
+        </member>
+        <member name="P:R2API.LobbyConfigAPI.LobbyRule`1.Value">
+            <summary>
+            Value of the current choice of the rule.
+            </summary>
+        </member>
+        <member name="E:R2API.LobbyConfigAPI.LobbyRule`1.ValueChanged">
+            <summary>
+            Gets invoked if the rule is added to a category and the value changed.
+            Sender is 'this', args is 'this.Value'.
+            </summary>
+        </member>
+        <member name="M:R2API.LobbyConfigAPI.LobbyRule`1.#ctor">
+            <summary>
+            Construct a rule. Does not affect the game until you push the rule to a category.
+            </summary>
+        </member>
+        <member name="M:R2API.LobbyConfigAPI.LobbyRule`1.AddChoice(`0,System.String,System.String,UnityEngine.Color,UnityEngine.Color,System.String)">
+            <summary>
+            Adds a choice to the rule.
+            </summary>
+            <param name="value">The value this choice represents.</param>
+            <param name="title">Tooltip title.</param>
+            <param name="description">Tooltip description.</param>
+            <param name="titleColor"></param>
+            <param name="descriptionColor"></param>
+            <param name="sprite">A path to the sprite for this choice.</param>
+            <returns>'this', for chaining.</returns>
+        </member>
+        <member name="M:R2API.LobbyConfigAPI.LobbyRule`1.MakeValueDefault(`0)">
+            <summary>
+            Set the default value for this rule.
+            </summary>
+            <param name="value">The value for which the choice will be marked as default.</param>
+            <returns>'this', for chaining.</returns>
+        </member>
+        <member name="M:R2API.LobbyConfigAPI.LobbyRule`1.AddChoice(`0,System.String,System.String,UnityEngine.Color,UnityEngine.Color,System.String,System.String)">
+            <summary>
+            Adds a choice to the rule.
+            </summary>
+            <param name="value">The value this choice represents.</param>
+            <param name="title">Tooltip title.</param>
+            <param name="description">Tooltip description.</param>
+            <param name="titleColor"></param>
+            <param name="descriptionColor"></param>
+            <param name="sprite">A path to the sprite for this choice.</param>
+            <param name="name">An internal name for this choice.</param>
+            <returns>'this', for chaining.</returns>
+        </member>
+        <member name="M:R2API.LobbyConfigAPI.AddCategory(System.String,UnityEngine.Color,System.String)">
+            <summary>
+            Adds a rule category to the lobby. If a category with the same title already exists, will return that.
+            </summary>
+            <param name="title">The category's title.</param>
+            <param name="color">The category's color</param>
+            <param name="emptyDescription">Should the category be empty, you can show this description.</param>
+            <returns>The RuleCategoryDef, keep if you want to add rules.</returns>
+        </member>
+        <member name="M:R2API.LobbyConfigAPI.AddToCategory``1(RoR2.RuleCategoryDef,R2API.LobbyConfigAPI.LobbyRule{``0})">
+            <summary>
+            Adds a rule to the category. DO NOT ADD CHOICES AFTER THIS.
+            </summary>
+            <param name="category">The category to add this rule to.</param>
+            <param name="rule">The rule to add.</param>
+            <typeparam name="T">The type of value this rule holds.</typeparam>
+        </member>
+        <member name="M:R2API.SurvivorAPI.AddSurvivor(RoR2.SurvivorDef)">
+            <summary>
+            Add a SurvivorDef to the list of available survivors.
+            This must be called before the SurvivorCatalog inits, so before plugin.Start()
+            Value for SurvivorIndex is ignored by game code so can be left blank
+            If this is called after the SurvivorCatalog inits then this will return false and ignore the survivor
+            Can optionally specify a name for the survivor that will be logged with the mod info.
+            The survivor prefab must be non-null
+            </summary>
+            <param name="survivor">The survivor to add.</param>
+            <returns>true if survivor will be added</returns>
+        </member>
+        <member name="M:R2API.Utils.ChatMessage.Send(System.String)">
+            <summary>
+            Send a message to the chat
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:R2API.Utils.ChatMessage.Send(System.String,System.String)">
+            <summary>
+            Send a message to the chat in the format "<see cref="!:messageFrom"/>: <see cref="!:message"/>"
+            </summary>
+            <param name="message"></param>
+            <param name="messageFrom"></param>
+        </member>
+        <member name="M:R2API.Utils.CommandHelper.AddToConsoleWhenReady">
+            <summary>
+            Scans the calling assembly for ConCommand attributes and Convar fields and adds these to the console.
+            This method may be called at any time.
+            </summary>
+        </member>
+        <member name="M:R2API.Utils.CommandHelper.RegisterCommands(RoR2.Console)">
+            <summary>
+            Exactly the same as AddToConsoleWhenReady(): use that method instead.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetFieldCached``1(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetFieldCached(System.Type,System.String)" -->
+        <member name="M:R2API.Utils.Reflection.GetFieldValue``1(System.Object,System.String)">
+            <summary>
+            Gets the value of the field on the object
+            </summary>
+            <typeparam name="TReturn">The type of the return value</typeparam>
+            <param name="fieldName">The name of the field to get the value of</param>
+            <param name="instance">The object to get the field's value from</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetFieldValue``1(System.Type,System.String)">
+            <summary>
+            Gets the value of the specified static field on the specified static type
+            </summary>
+            <typeparam name="TReturn">The return type</typeparam>
+            <param name="staticType">The name of the static field to get the value of</param>
+            <param name="fieldName">The type to get the specified static field's value on</param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.SetFieldValue``1(System.Object,System.String,``0)" -->
+        <member name="M:R2API.Utils.Reflection.SetFieldValue``1(System.Type,System.String,``0)">
+            <summary>
+            Sets the value of the specified static field on the specified static type
+            </summary>
+            <typeparam name="TValue">The type of the value to set</typeparam>
+            <param name="staticType">The name of the static field to set the value of</param>
+            <param name="fieldName">The type to set the specified static field's value on</param>
+            <param name="value">The value to set</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.SetStructFieldValue``2(``0@,System.String,``1)">
+            <summary>
+            Sets the value of the specified field on the specified struct
+            </summary>
+            <typeparam name="TValue">The type of the value to set</typeparam>
+            <param name="instance">The name of the field to set the value of</param>
+            <param name="fieldName">The type to set the specified field's value on</param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetFieldFull(System.Type,System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetPropertyCached``1(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetPropertyCached(System.Type,System.String)" -->
+        <member name="M:R2API.Utils.Reflection.GetPropertyValue``1(System.Object,System.String)">
+            <summary>
+            Gets the value of the property on the specified object; if the object is a struct use
+            <see cref="M:R2API.Utils.Reflection.GetStructPropertyValue``2(``0@,System.String)"></see> instead
+            </summary>
+            <typeparam name="TReturn">The type of the return value</typeparam>
+            <param name="instance">The object to get the property's value from</param>
+            <param name="propName">The name of the field to get the value of</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetPropertyValue``1(System.Type,System.String)">
+            <summary>
+            Gets the value of the static property on the specified static type
+            </summary>
+            <typeparam name="TReturn">The return type</typeparam>
+            <param name="staticType">The name of the static field to get the value of</param>
+            <param name="propName">The type to get the specified static property's value on</param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.SetPropertyValue``1(System.Object,System.String,``0)" -->
+        <member name="M:R2API.Utils.Reflection.SetPropertyValue``1(System.Type,System.String,``0)">
+            <summary>
+            Sets the value of the static property on the specified static class
+            </summary>
+            <typeparam name="TValue">The type of the value to set</typeparam>
+            <param name="staticType">The name of the static field to set the value of</param>
+            <param name="propName">The type to set the specified static property's value on</param>
+            <param name="value">The value to set</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.SetStructPropertyValue``2(``0@,System.String,``1)">
+            <summary>
+            Sets the value of the specified property on the specified struct
+            </summary>
+            <typeparam name="TValue">The type of the value to set</typeparam>
+            <param name="instance">The name of the field to set the value of</param>
+            <param name="propName">The type to set the specified property's value on</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetStructPropertyValue``2(``0@,System.String)">
+            <summary>
+            Gets the value of the specified property on the specified struct
+            </summary>
+            <typeparam name="TValue">The type of the value to set</typeparam>
+            <param name="instance">The name of the field to set the value of</param>
+            <param name="propName">The type to set the specified property's value on</param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetMethodCached``1(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetMethodCached(System.Type,System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetMethodCached``1(System.String,System.Type[])" -->
+        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetMethodCached(System.Type,System.String,System.Type[])" -->
+        <member name="M:R2API.Utils.Reflection.InvokeMethod``1(System.Object,System.String)">
+            <summary>
+            Invoke a method on the specified object by name
+            </summary>
+            <typeparam name="TReturn">The return type of the method</typeparam>
+            <param name="instance">The object to invoke the method on</param>
+            <param name="methodName">The name of the method to invoke</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.InvokeMethod``1(System.Type,System.String)">
+            <summary>
+            Invoke a static method on the specified type by name
+            </summary>
+            <typeparam name="TReturn">The return type of the method</typeparam>
+            <param name="staticType">The static type to search</param>
+            <param name="methodName">The name of the method to invoke</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.InvokeMethod(System.Object,System.String)">
+            <summary>
+            Invoke a method on the specified object by name
+            </summary>
+            <param name="instance">The object to invoke the method on</param>
+            <param name="methodName">The name of the method to invoke</param>
+        </member>
+        <member name="M:R2API.Utils.Reflection.InvokeMethod(System.Type,System.String)">
+            <summary>
+            Invoke a static method on the specified type by name
+            </summary>
+            <param name="staticType">The static type to search</param>
+            <param name="methodName">The name of the method to invoke</param>
+        </member>
+        <member name="M:R2API.Utils.Reflection.InvokeMethod``1(System.Object,System.String,System.Object[])">
+            <summary>
+            Invoke a method on the specified object by name with parameters
+            </summary>
+            <typeparam name="TReturn">The return type of the method</typeparam>
+            <param name="instance">The object to invoke the method on</param>
+            <param name="methodName">The name of the method to invoke</param>
+            <param name="methodParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.InvokeMethod``1(System.Type,System.String,System.Object[])">
+            <summary>
+            Invoke a static method on the specified type by name with parameters
+            </summary>
+            <typeparam name="TReturn">The return type of the method</typeparam>
+            <param name="staticType">The static type to search</param>
+            <param name="methodName">The name of the method to invoke</param>
+            <param name="methodParams">The method parameters</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.InvokeMethod(System.Object,System.String,System.Object[])">
+            <summary>
+            Invoke a method on the specified object by name with parameters
+            </summary>
+            <param name="instance">The object to invoke the method on</param>
+            <param name="methodName">The name of the method to invoke</param>
+            <param name="methodParams"></param>
+        </member>
+        <member name="M:R2API.Utils.Reflection.InvokeMethod(System.Type,System.String,System.Object[])">
+            <summary>
+            Invoke a static method on the specified type by name with parameters
+            </summary>
+            <param name="staticType">The static type to search</param>
+            <param name="methodName">The name of the method to invoke</param>
+            <param name="methodParams"></param>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetConstructorCached``1(System.Type[])">
+            <summary>
+            Gets the constructor on the specified type with specified arguments and caches it
+            </summary>
+            <typeparam name="T">The type to search</typeparam>
+            <param name="argumentTypes">The types of the arguments on the constructor to find</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetConstructorCached(System.Type,System.Type[])">
+            <summary>
+            Gets the constructor on the specified static type with specified arguments and caches it
+            </summary>
+            <typeparam name="T">The type to search</typeparam>
+            <param name="argumentTypes">The types of the arguments on the constructor to find</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetNestedType``1(System.String)">
+            <summary>
+            Gets the nested type on the specified type
+            </summary>
+            <typeparam name="T">The type to search</typeparam>
+            <param name="name">The name of the nested type to find</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetNestedTypeCached``1(System.String)">
+            <summary>
+            Gets the nested type on the specified type
+            </summary>
+            <typeparam name="T">The type to search</typeparam>
+            <param name="name">The name of the nested type to find</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetNestedTypeCached(System.Type,System.String)">
+            <summary>
+            Gets the nested type on the specified static type
+            </summary>
+            <typeparam name="T">The static type to search</typeparam>
+            <param name="name">The name of the nested type to find</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.Instantiate(System.Type)">
+            <summary>
+            Instatiates the specified type
+            </summary>
+            <param name="type">The type to instantiate</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.Instantiate(System.Type,System.Object[])">
+            <summary>
+            Instatiates the specified type with specified constructor arguments
+            </summary>
+            <param name="type">The type to instantiate</param>
+            <param name="constructorArguments">The constructor arguments</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.InstantiateGeneric``1(System.Type)">
+            <summary>
+            Instantiates the specified generic type
+            </summary>
+            <typeparam name="TClass">The type to instantiate</typeparam>
+            <param name="typeArgument">The type of the generic type argument</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.InstantiateGeneric``1(System.Type[])">
+            <summary>
+            Instantiates the specified generic types
+            </summary>
+            <typeparam name="TClass">The type to instantiate</typeparam>
+            <param name="typeArgument">The types of the generic type arguments</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.InstantiateList(System.Type)">
+            <summary>
+            Instantiates a list of the specified generic type
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
