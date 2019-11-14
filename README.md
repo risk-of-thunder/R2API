@@ -4,10 +4,11 @@
 
 ## Note to Mod Developers
 
-Breaking Change for next RoR2 Content Update: R2API Submodules (ResourceAPI, SurvivorAPI, etc) will be only enabled by using the R2APISubmoduleDependency attribute somewhere in your mod. As of the next update (for new BepInEx) all submodules will be enabled by default.
+Breaking Change for next RoR2 Content Update: R2API Submodules (ResourceAPI, SurvivorAPI, etc) will be only enabled by using the `R2APISubmoduleDependency` attribute somewhere in your mod. As of the next update (for new BepInEx) all submodules will be enabled by default.
 
 Example usage: 
-[R2APISubmoduleDependency("SurvivorAPI", "DifficultyAPI")]
+
+    [R2APISubmoduleDependency("SurvivorAPI", "DifficultyAPI")]
 
 ## About
 
