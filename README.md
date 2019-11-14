@@ -17,7 +17,7 @@ Risk of Rain 2 more easily, while still keeping mod interoperability in mind.
 
 At it's heart, R2API is meant to be base work, which is why it doesnt include any additional in game functionality,
 be it for developing or for users in general. **This is by choice.** A game with just R2API should feel and behave the
-same as an unmodded game, the `isModded` flag excluded.
+same as an unmodded game, the `isModded` flag excluded. 
 
 ## Installation
 
