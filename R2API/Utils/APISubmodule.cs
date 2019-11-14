@@ -33,10 +33,10 @@ namespace R2API.Utils {
 
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public class R2APISubmoduleDependency : Attribute {
-        public string SubmoduleName { get; set; }
+        public string[] SubmoduleNames { get; set; }
 
-        public R2APISubmoduleDependency(string submoduleName) {
-            SubmoduleName = submoduleName;
+        public R2APISubmoduleDependency(params string[] submoduleName) {
+            SubmoduleNames = submoduleName;
         }
     }
 
@@ -67,7 +67,7 @@ namespace R2API.Utils {
                 allTypes
                     .Select(t => t.GetCustomAttribute<R2APISubmoduleDependency>())
                     .Where(a => a != null)
-                    .Select(a => a.SubmoduleName)
+                    .SelectMany(a => a.SubmoduleNames)
                     .Distinct()
                     .ToList();
 
