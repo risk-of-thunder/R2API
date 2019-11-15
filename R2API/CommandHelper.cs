@@ -7,8 +7,9 @@ using System.Runtime.CompilerServices;
 using RoR2;
 using RoR2.ConVar;
 using UnityEngine;
+using R2API.Utils;
 
-namespace R2API.Utils {
+namespace R2API {
     [R2APISubmodule]
     public class CommandHelper {
 
