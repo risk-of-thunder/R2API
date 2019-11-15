@@ -31,20 +31,6 @@ namespace R2API {
             HandleCommandsConvars();
         }
 
-        /** <summary>
-         * Exactly the same as AddToConsoleWhenReady(): use that method instead.
-         * </summary>
-         */
-        [Obsolete("Use 'AddToConsoleWhenReady()' instead.")]
-        public static void RegisterCommands(RoR2.Console _) {
-            Assembly assembly = Assembly.GetCallingAssembly();
-            if (assembly == null) {
-                return;
-            }
-            assemblies.Enqueue(assembly);
-            HandleCommandsConvars();
-        }
-
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             On.RoR2.Console.InitConVars += ConsoleReady;
