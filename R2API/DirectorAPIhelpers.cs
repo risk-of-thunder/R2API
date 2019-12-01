@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using R2API.Utils;
 using RoR2;
 
 namespace R2API {
@@ -20,41 +16,41 @@ namespace R2API {
             /// These can be used for matching names.
             /// </summary>
             public static class MonsterNames {
-                public static readonly String StoneTitanDistantRoost = "csctitanblackbeach";
-                public static readonly String StoneTitanAbyssalDepths = "csctitandampcaves";
-                public static readonly String StoneTitanTitanicPlains = "csctitangolemplains";
-                public static readonly String StoneTitanAbandonedAqueduct = "csctitangoolake";
-                public static readonly String ArchaicWisp = "cscarchwisp";
-                public static readonly String StrikeDrone = "cscbackupdrone";
-                public static readonly String Beetle = "cscbeetle";
-                public static readonly String BeetleGuard = "cscbeetleguard";
-                public static readonly String BeetleGuardFriendly = "cscbeetleguardally";
-                public static readonly String BeetleQueen = "cscbeetlequeen";
-                public static readonly String BrassContraption = "cscbell";
-                public static readonly String BighornBison = "cscbison";
-                public static readonly String ClayDunestrider = "cscclayboss";
-                public static readonly String ClayTemplar = "cscclaybruiser";
-                public static readonly String OverloadingWorm = "cscelectricworm";
-                public static readonly String StoneGolem = "cscgolem";
-                public static readonly String Grovetender = "cscgravekeeper";
-                public static readonly String GreaterWisp = "cscgreaterwisp";
-                public static readonly String HermitCrab = "cschermitcrab";
-                public static readonly String Imp = "cscimp";
-                public static readonly String ImpOverlord = "cscimpboss";
-                public static readonly String Jellyfish = "cscjellyfish";
-                public static readonly String Lemurian = "csclemurian";
-                public static readonly String ElderLemurian = "csclemurianbruiser";
-                public static readonly String LesserWisp = "csclesserwisp";
-                public static readonly String MagmaWorm = "cscmagmaworm";
-                public static readonly String SolusControlUnit = "cscroboballboss";
-                public static readonly String SolusProbe = "cscroboballmini";
-                public static readonly String AlloyWorshipUnit = "cscsuperroboballboss";
-                public static readonly String AlliedWarshipUnit = "cscsuperroboballboss";
-                public static readonly String FriendlyBoatUnit = "cscsuperroboballboss";
-                public static readonly String Aurelionite = "csctitangold";
-                public static readonly String AurelioniteAlly = "csctitangoldally";
-                public static readonly String WanderingVagrant = "cscvagrant";
-                public static readonly String AlloyVulture = "cscvulture";
+                public static readonly string StoneTitanDistantRoost = "csctitanblackbeach";
+                public static readonly string StoneTitanAbyssalDepths = "csctitandampcaves";
+                public static readonly string StoneTitanTitanicPlains = "csctitangolemplains";
+                public static readonly string StoneTitanAbandonedAqueduct = "csctitangoolake";
+                public static readonly string ArchaicWisp = "cscarchwisp";
+                public static readonly string StrikeDrone = "cscbackupdrone";
+                public static readonly string Beetle = "cscbeetle";
+                public static readonly string BeetleGuard = "cscbeetleguard";
+                public static readonly string BeetleGuardFriendly = "cscbeetleguardally";
+                public static readonly string BeetleQueen = "cscbeetlequeen";
+                public static readonly string BrassContraption = "cscbell";
+                public static readonly string BighornBison = "cscbison";
+                public static readonly string ClayDunestrider = "cscclayboss";
+                public static readonly string ClayTemplar = "cscclaybruiser";
+                public static readonly string OverloadingWorm = "cscelectricworm";
+                public static readonly string StoneGolem = "cscgolem";
+                public static readonly string Grovetender = "cscgravekeeper";
+                public static readonly string GreaterWisp = "cscgreaterwisp";
+                public static readonly string HermitCrab = "cschermitcrab";
+                public static readonly string Imp = "cscimp";
+                public static readonly string ImpOverlord = "cscimpboss";
+                public static readonly string Jellyfish = "cscjellyfish";
+                public static readonly string Lemurian = "csclemurian";
+                public static readonly string ElderLemurian = "csclemurianbruiser";
+                public static readonly string LesserWisp = "csclesserwisp";
+                public static readonly string MagmaWorm = "cscmagmaworm";
+                public static readonly string SolusControlUnit = "cscroboballboss";
+                public static readonly string SolusProbe = "cscroboballmini";
+                public static readonly string AlloyWorshipUnit = "cscsuperroboballboss";
+                public static readonly string AlliedWarshipUnit = "cscsuperroboballboss";
+                public static readonly string FriendlyBoatUnit = "cscsuperroboballboss";
+                public static readonly string Aurelionite = "csctitangold";
+                public static readonly string AurelioniteAlly = "csctitangoldally";
+                public static readonly string WanderingVagrant = "cscvagrant";
+                public static readonly string AlloyVulture = "cscvulture";
             }
 
             /// <summary>
@@ -62,42 +58,42 @@ namespace R2API {
             /// These can be used for matching names.
             /// </summary>
             public static class InteractableNames {
-                public static readonly String Barrel = "iscbarrel1";
-                public static readonly String GunnerDrone = "iscbrokendrone1";
-                public static readonly String HealingDrone = "iscbrokendrone2";
-                public static readonly String EquipmentDrone = "iscbrokenequipmentdrone";
-                public static readonly String IncineratorDrone = "iscbrokenflamedrone";
-                public static readonly String TC280 = "iscbrokenmegadrone";
-                public static readonly String MissileDrone = "iscbrokenmissiledrone";
-                public static readonly String GunnerTurret = "iscbrokenturret1";
-                public static readonly String DamageChest = "isccategorychestdamage";
-                public static readonly String HealingChest = "isccategorychesthealing";
-                public static readonly String UtilityChest = "isccategorychestutility";
-                public static readonly String BasicChest = "iscchest1";
-                public static readonly String CloakedChest = "iscchest1stealthed";
-                public static readonly String LargeChest = "iscchest2";
-                public static readonly String PrinterCommon = "iscduplicator";
-                public static readonly String PrinterUncommon = "iscduplicatorlarge";
-                public static readonly String PrinterLegendary = "iscduplicatormilitary";
-                public static readonly String EquipmentBarrel = "iscequipmentbarrel";
-                public static readonly String LegendaryChest = "iscgoldchest";
-                public static readonly String HalcyonBacon = "iscgoldshoresbracon";
-                public static readonly String GoldPortal = "iscgoldshoresportal";
-                public static readonly String Lockbox = "isclockbox";
-                public static readonly String LunarBud = "isclunarchest";
-                public static readonly String CelestialPortal = "iscmsportal";
-                public static readonly String RadioScanner = "iscradartower";
-                public static readonly String BluePortal = "iscshopportal";
-                public static readonly String BloodShrine = "iscshrineblood";
-                public static readonly String MountainShrine = "iscshrineboss";
-                public static readonly String ChanceShrine = "iscshrinechance";
-                public static readonly String CombatShrine = "iscshrinecombat";
-                public static readonly String GoldShrine = "iscshrinegoldshoresaccess";
-                public static readonly String WoodsShrine = "iscshrinehealing";
-                public static readonly String OrderShrine = "iscshrinerestack";
-                public static readonly String Teleporter = "iscteleporter";
-                public static readonly String MultiShopCommon = "isctripleshop";
-                public static readonly String MultiShopUncommon = "isctripleshoplarge";
+                public static readonly string Barrel = "iscbarrel1";
+                public static readonly string GunnerDrone = "iscbrokendrone1";
+                public static readonly string HealingDrone = "iscbrokendrone2";
+                public static readonly string EquipmentDrone = "iscbrokenequipmentdrone";
+                public static readonly string IncineratorDrone = "iscbrokenflamedrone";
+                public static readonly string TC280 = "iscbrokenmegadrone";
+                public static readonly string MissileDrone = "iscbrokenmissiledrone";
+                public static readonly string GunnerTurret = "iscbrokenturret1";
+                public static readonly string DamageChest = "isccategorychestdamage";
+                public static readonly string HealingChest = "isccategorychesthealing";
+                public static readonly string UtilityChest = "isccategorychestutility";
+                public static readonly string BasicChest = "iscchest1";
+                public static readonly string CloakedChest = "iscchest1stealthed";
+                public static readonly string LargeChest = "iscchest2";
+                public static readonly string PrinterCommon = "iscduplicator";
+                public static readonly string PrinterUncommon = "iscduplicatorlarge";
+                public static readonly string PrinterLegendary = "iscduplicatormilitary";
+                public static readonly string EquipmentBarrel = "iscequipmentbarrel";
+                public static readonly string LegendaryChest = "iscgoldchest";
+                public static readonly string HalcyonBacon = "iscgoldshoresbracon";
+                public static readonly string GoldPortal = "iscgoldshoresportal";
+                public static readonly string Lockbox = "isclockbox";
+                public static readonly string LunarBud = "isclunarchest";
+                public static readonly string CelestialPortal = "iscmsportal";
+                public static readonly string RadioScanner = "iscradartower";
+                public static readonly string BluePortal = "iscshopportal";
+                public static readonly string BloodShrine = "iscshrineblood";
+                public static readonly string MountainShrine = "iscshrineboss";
+                public static readonly string ChanceShrine = "iscshrinechance";
+                public static readonly string CombatShrine = "iscshrinecombat";
+                public static readonly string GoldShrine = "iscshrinegoldshoresaccess";
+                public static readonly string WoodsShrine = "iscshrinehealing";
+                public static readonly string OrderShrine = "iscshrinerestack";
+                public static readonly string Teleporter = "iscteleporter";
+                public static readonly string MultiShopCommon = "isctripleshop";
+                public static readonly string MultiShopUncommon = "isctripleshoplarge";
             }
 
 
@@ -106,7 +102,7 @@ namespace R2API {
             /// </summary>
             /// <param name="monsterName">The name of the monster to edit</param>
             /// <param name="elitesAllowed">Should elites be allowed?</param>
-            public static void PreventElites( String monsterName, Boolean elitesAllowed ) {
+            public static void PreventElites(string monsterName, bool elitesAllowed ) {
                 
                 DirectorAPI.monsterActions += ( monsters, currentStage ) => {
                     foreach( DirectorCardHolder holder in monsters ) {
@@ -143,7 +139,7 @@ namespace R2API {
             /// <param name="category">The category to add the monster to</param>
             /// <param name="stage">The stage to add the monster to</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void AddNewMonsterToStage( DirectorCard monsterCard, MonsterCategory category, Stage stage, String customStageName = "" ) {
+            public static void AddNewMonsterToStage( DirectorCard monsterCard, MonsterCategory category, Stage stage, string customStageName = "" ) {
                 
                 DirectorCardHolder card = new DirectorCardHolder
                 {
@@ -186,7 +182,7 @@ namespace R2API {
             /// <param name="category">The category of the interactable</param>
             /// <param name="stage">The stage to add the interactable to</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void AddNewInteractableToStage( DirectorCard interactableCard, InteractableCategory category, Stage stage, String customStageName = "" ) {
+            public static void AddNewInteractableToStage( DirectorCard interactableCard, InteractableCategory category, Stage stage, string customStageName = "" ) {
                 
                 DirectorCardHolder card = new DirectorCardHolder
                 {
@@ -194,7 +190,7 @@ namespace R2API {
                     interactableCategory = category,
                     monsterCategory = MonsterCategory.None
                 };
-                DirectorAPI.interactableActions += ( interactables, currentStage ) => {
+                DirectorAPI.InteractableActions += ( interactables, currentStage ) => {
                     if( currentStage.stage == stage ) {
                         if( currentStage.CheckStage( stage, customStageName ) ) {
                             interactables.Add( card );
@@ -207,7 +203,7 @@ namespace R2API {
             /// Removes a monster from spawns on all stages.
             /// </summary>
             /// <param name="monsterName">The name of the monster card to remove</param>
-            public static void RemoveExistingMonster( String monsterName ) {
+            public static void RemoveExistingMonster(string monsterName ) {
                 
                 DirectorAPI.monsterActions += ( monsters, currentStage ) => {
                     monsters.RemoveAll( ( card ) => (card.card.spawnCard.name.ToLower() == monsterName.ToLower()) );
@@ -221,7 +217,7 @@ namespace R2API {
             /// <param name="monsterName">The name of the monster card to remove</param>
             /// <param name="stage">The stage to remove on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void RemoveExistingMonsterFromStage( String monsterName, Stage stage, String customStageName = "" ) {
+            public static void RemoveExistingMonsterFromStage(string monsterName, Stage stage, string customStageName = "" ) {
                 
                 DirectorAPI.monsterActions += ( monsters, currentStage ) => {
                     if( currentStage.stage == stage ) {
@@ -236,7 +232,7 @@ namespace R2API {
             /// Remove an interactable from spawns on all stages.
             /// </summary>
             /// <param name="interactableName">Name of the interactable to remove</param>
-            public static void RemoveExistingInteractable( String interactableName ) {
+            public static void RemoveExistingInteractable(string interactableName ) {
                 
                 DirectorAPI.interactableActions += ( interactables, currentStage ) => {
                     interactables.RemoveAll( ( card ) => (card.card.spawnCard.name.ToLower() == interactableName.ToLower()) );
@@ -250,7 +246,7 @@ namespace R2API {
             /// <param name="interactableName">The name of the interactable to remove</param>
             /// <param name="stage">The stage to remove on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void RemoveExistingInteractableFromStage( String interactableName, Stage stage, String customStageName = "" ) {
+            public static void RemoveExistingInteractableFromStage(string interactableName, Stage stage, string customStageName = "" ) {
                 
                 DirectorAPI.interactableActions += ( interactables, currentStage ) => {
                     if( currentStage.stage == stage ) {
@@ -268,7 +264,7 @@ namespace R2API {
             /// <param name="increase">The quantity to add</param>
             /// <param name="stage">The stage to add on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void AddSceneMonsterCredits( Int32 increase, Stage stage, String customStageName = "" ) {
+            public static void AddSceneMonsterCredits(int increase, Stage stage, string customStageName = "" ) {
                 
                 DirectorAPI.stageSettingsActions += ( settings, currentStage ) => {
                     if( currentStage.stage == stage ) {
@@ -286,7 +282,7 @@ namespace R2API {
             /// <param name="increase">The quantity to add</param>
             /// <param name="stage">The stage to add on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void AddSceneInteractableCredits( Int32 increase, Stage stage, String customStageName = "" ) {
+            public static void AddSceneInteractableCredits(int increase, Stage stage, string customStageName = "" ) {
                 
                 DirectorAPI.stageSettingsActions += ( settings, currentStage ) => {
                     if( currentStage.stage == stage ) {
@@ -304,7 +300,7 @@ namespace R2API {
             /// <param name="multiplier">The number to multiply by</param>
             /// <param name="stage">The stage to multiply on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void MultiplySceneMonsterCredits( Int32 multiplier, Stage stage, String customStageName = "" ) {
+            public static void MultiplySceneMonsterCredits(int multiplier, Stage stage, string customStageName = "" ) {
                 
                 DirectorAPI.stageSettingsActions += ( settings, currentStage ) => {
                     if( currentStage.stage == stage ) {
@@ -322,7 +318,7 @@ namespace R2API {
             /// <param name="multiplier">The number to multiply by</param>
             /// <param name="stage">The stage to multiply on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void MultiplySceneInteractableCredits( Int32 multiplier, Stage stage, String customStageName = "" ) {
+            public static void MultiplySceneInteractableCredits(int multiplier, Stage stage, string customStageName = "" ) {
                 
                 DirectorAPI.stageSettingsActions += ( settings, currentStage ) => {
                     if( currentStage.stage == stage ) {
@@ -340,7 +336,7 @@ namespace R2API {
             /// <param name="divisor">The number to divide by</param>
             /// <param name="stage">The stage to divide on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void ReduceSceneMonsterCredits( Int32 divisor, Stage stage, String customStageName = "" ) {
+            public static void ReduceSceneMonsterCredits(int divisor, Stage stage, string customStageName = "" ) {
                 
                 DirectorAPI.stageSettingsActions += ( settings, currentStage ) => {
                     if( currentStage.stage == stage ) {
@@ -358,7 +354,7 @@ namespace R2API {
             /// <param name="divisor">The number to divide by</param>
             /// <param name="stage">The stage to divide on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void ReduceSceneInteractableCredits( Int32 divisor, Stage stage, String customStageName = "" ) {
+            public static void ReduceSceneInteractableCredits(int divisor, Stage stage, string customStageName = "" ) {
                 
                 DirectorAPI.stageSettingsActions += ( settings, currentStage ) => {
                     if( currentStage.stage == stage ) {
