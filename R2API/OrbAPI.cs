@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using R2API.Utils;
-using RoR2;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class OrbAPI {
-        private static Boolean orbsAlreadyAdded = false;
+        private static bool orbsAlreadyAdded = false;
 
         public static ObservableCollection<Type> OrbDefinitions = new ObservableCollection<Type>();
 
@@ -50,16 +49,16 @@ namespace R2API {
             orig();
 
             Type[] orbCat = typeof(RoR2.Orbs.OrbCatalog).GetFieldValue<Type[]>("indexToType");
-            Dictionary<Type, Int32> typeToIndex = typeof(RoR2.Orbs.OrbCatalog).GetFieldValue<Dictionary<Type, Int32>>("typeToIndex");
+            Dictionary<Type, int> typeToIndex = typeof(RoR2.Orbs.OrbCatalog).GetFieldValue<Dictionary<Type, int>>("typeToIndex");
 
-            Int32 origLength = orbCat.Length;
-            Int32 extraLength = OrbDefinitions.Count;
+            int origLength = orbCat.Length;
+            int extraLength = OrbDefinitions.Count;
 
             Array.Resize<Type>( ref orbCat, origLength + extraLength );
 
-            Int32 temp;
+            int temp;
 
-            for( Int32 i = 0; i < extraLength; i++ ) {
+            for(int i = 0; i < extraLength; i++ ) {
                 temp = i + origLength;
                 orbCat[temp] = OrbDefinitions[i];
                 typeToIndex.Add( OrbDefinitions[i], temp );

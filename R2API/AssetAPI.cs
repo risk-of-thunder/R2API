@@ -16,7 +16,7 @@ namespace R2API {
         /// <summary>
         /// Returns true once assets have been loaded.
         /// </summary>
-        public static bool doneLoading { get; private set; }
+        public static bool DoneLoading { get; private set; }
 
         /// <summary>
         /// List of all character masters, including both vanilla and modded ones.
@@ -114,7 +114,7 @@ namespace R2API {
                 //TODO: find a way to also add 2d sprites, as are done on line 113 and have a very hard-coded path
                 c.EmitDelegate<Func<GameObject[]>>(BuildBodyCatalog);
             };
-            doneLoading = true;
+            DoneLoading = true;
 
             On.RoR2.BodyCatalog.Init += orig => {
                 OnBodyCatalogReady?.Invoke(null, BodyCatalog);

@@ -1,33 +1,33 @@
-using System;
+using R2API.Utils;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
-using R2API.Utils;
-using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
+using RoR2.Networking;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class PrefabAPI {
 
-        private static Boolean needToRegister = false;
+        private static bool needToRegister = false;
         private static GameObject parent;
         private static List<HashStruct> thingsToHash = new List<HashStruct>();
 
-        /// <summary>
-        /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
-        /// Also registers the clone to network if registerNetwork is not set to false.
-        /// Do not override the file, member, and line number parameters. They are used to generate a unique hash for the network ID.
-        /// </summary>
-        /// <param name="g">The GameObject to clone</param>
-        /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
-        /// <param name="registerNetwork">Should the object be registered to network</param>
-        /// <returns>The GameObject of the clone</returns>
-        public static GameObject InstantiateClone( this GameObject g, System.String nameToSet, System.Boolean registerNetwork = true, [CallerFilePath] System.String file = "", [CallerMemberName] System.String member = "", [CallerLineNumber] System.Int32 line = 0 ) {
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+                              /// <summary>
+                              /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
+                              /// Also registers the clone to network if registerNetwork is not set to false.
+                              /// Do not override the file, member, and line number parameters. They are used to generate a unique hash for the network ID.
+                              /// </summary>
+                              /// <param name="g">The GameObject to clone</param>
+                              /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
+                              /// <param name="registerNetwork">Should the object be registered to network</param>
+                              /// <returns>The GameObject of the clone</returns>
+        public static GameObject InstantiateClone( this GameObject g, string nameToSet, bool registerNetwork = true, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0 ) {
+
             GameObject prefab = MonoBehaviour.Instantiate<GameObject>(g, GetParent().transform);
             prefab.name = nameToSet;
             if( registerNetwork ) {
@@ -35,7 +35,6 @@ namespace R2API {
             }
             return prefab;
         }
-
         /// <summary>
         /// Registers a prefab so that NetworkServer.Spawn will function properly with it.
         /// Only will work on prefabs with a NetworkIdentity component.
@@ -43,9 +42,10 @@ namespace R2API {
         /// Do not override the file, member, and line number parameters. They are used to generate a unique hash for the network ID.
         /// </summary>
         /// <param name="g">The prefab to register</param>
-        public static void RegisterNetworkPrefab( this GameObject g, [CallerFilePath] System.String file = "", [CallerMemberName] System.String member = "", [CallerLineNumber] System.Int32 line = 0 ) {
+        public static void RegisterNetworkPrefab( this GameObject g, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0 ) {
             RegisterPrefabInternal( g, file, member, line );
         }
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
@@ -74,13 +74,13 @@ namespace R2API {
 
         private struct HashStruct {
             public GameObject prefab;
-            public System.String goName;
-            public System.String callPath;
-            public System.String callMember;
-            public System.Int32 callLine;
+            public string goName;
+            public string callPath;
+            public string callMember;
+            public int callLine;
         }
 
-        private static void RegisterPrefabInternal( GameObject prefab, System.String callPath, System.String callMember, System.Int32 callLine ) {
+        private static void RegisterPrefabInternal( GameObject prefab, string callPath, string callMember, int callLine ) {
             HashStruct h = new HashStruct
             {
                 prefab = prefab,
@@ -120,7 +120,7 @@ namespace R2API {
             i15 = 0
         };
 
-        private static void RegisterClientPrefabsNStuff( On.RoR2.Networking.GameNetworkManager.orig_OnStartClient orig, RoR2.Networking.GameNetworkManager self, UnityEngine.Networking.NetworkClient newClient ) {
+        private static void RegisterClientPrefabsNStuff( On.RoR2.Networking.GameNetworkManager.orig_OnStartClient orig, GameNetworkManager self, NetworkClient newClient ) {
             orig( self, newClient );
             foreach( HashStruct h in thingsToHash ) {
                 if( (h.prefab.GetComponent<NetworkIdentity>() != null)) h.prefab.GetComponent<NetworkIdentity>().SetFieldValue<NetworkHash128>( "m_AssetId", nullHash );
@@ -128,13 +128,13 @@ namespace R2API {
             }
         }
 
-        private static System.String MakeHash( System.String s ) {
+        private static string MakeHash(string s ) {
             MD5 hash = MD5.Create();
-            System.Byte[] prehash = hash.ComputeHash( Encoding.UTF8.GetBytes( s ) );
-
+            byte[] prehash = hash.ComputeHash( Encoding.UTF8.GetBytes( s ) );
+            hash.Dispose();
             StringBuilder sb = new StringBuilder();
 
-            for( System.Int32 i = 0; i < prehash.Length; i++ ) {
+            for(int i = 0; i < prehash.Length; i++ ) {
                 sb.Append( prehash[i].ToString( "x2" ) );
             }
 

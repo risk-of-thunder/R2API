@@ -17,11 +17,11 @@ namespace R2API {
         public struct SkinDefInfo {
             public SkinDef[] baseSkins;
             public Sprite icon;
-            public System.String nameToken;
-            public System.String unlockableName;
+            public string nameToken;
+            public string unlockableName;
             public GameObject rootObject;
             public CharacterModel.RendererInfo[] rendererInfos;
-            public System.String name;
+            public string name;
         }
 
         /// <summary>
