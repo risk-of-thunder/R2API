@@ -11,19 +11,19 @@ namespace R2API {
         /// <summary>
         /// Event used to edit stage settings.
         /// </summary>
-        public static event Action<StageSettings, StageInfo> stageSettingsActions;
+        public static event Action<StageSettings, StageInfo> StageSettingsActions;
         /// <summary>
         /// Event used to edit/add/remove the monsters spawned on a stage.
         /// </summary>
-        public static event Action<List<DirectorCardHolder> , StageInfo> monsterActions;
+        public static event Action<List<DirectorCardHolder>, StageInfo> MonsterActions;
         /// <summary>
         /// Event used to edit/add/remove interactables spawned on a stage.
         /// </summary>
-        public static event Action<List<DirectorCardHolder> , StageInfo> interactableActions;
+        public static event Action<List<DirectorCardHolder>, StageInfo> InteractableActions;
         /// <summary>
         /// Event used to edit/add/remove monster families on a stage.
         /// </summary>
-        public static event Action<List<MonsterFamilyHolder>, StageInfo> familyActions;
+        public static event Action<List<MonsterFamilyHolder>, StageInfo> FamilyActions;
         /// <summary>
         /// If this is called then DirectorAPI will hook ClassicStageInfo.Awake and use the events to make changes
         /// </summary>
