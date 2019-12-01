@@ -16,6 +16,7 @@ namespace R2API {
             /// These can be used for matching names.
             /// </summary>
             public static class MonsterNames {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
                 public static readonly string StoneTitanDistantRoost = "csctitanblackbeach";
                 public static readonly string StoneTitanAbyssalDepths = "csctitandampcaves";
                 public static readonly string StoneTitanTitanicPlains = "csctitangolemplains";
@@ -51,6 +52,7 @@ namespace R2API {
                 public static readonly string AurelioniteAlly = "csctitangoldally";
                 public static readonly string WanderingVagrant = "cscvagrant";
                 public static readonly string AlloyVulture = "cscvulture";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             }
 
             /// <summary>
@@ -58,6 +60,7 @@ namespace R2API {
             /// These can be used for matching names.
             /// </summary>
             public static class InteractableNames {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
                 public static readonly string Barrel = "iscbarrel1";
                 public static readonly string GunnerDrone = "iscbrokendrone1";
                 public static readonly string HealingDrone = "iscbrokendrone2";
@@ -94,6 +97,7 @@ namespace R2API {
                 public static readonly string Teleporter = "iscteleporter";
                 public static readonly string MultiShopCommon = "isctripleshop";
                 public static readonly string MultiShopUncommon = "isctripleshoplarge";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             }
 
 

@@ -97,6 +97,7 @@ namespace R2API {
             /// When this is set to custom, check the string in StageInfo
             /// </summary>
             Custom = 1,
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
             TitanicPlains = 2,
             DistantRoost = 4,
             WetlandAspect = 8,
@@ -108,6 +109,7 @@ namespace R2API {
             GildedCoast = 512,
             MomentFractured = 1024,
             Bazaar = 2048
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 
         public struct StageInfo {
