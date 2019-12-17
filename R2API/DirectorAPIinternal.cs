@@ -39,7 +39,7 @@ namespace R2API {
             if( !info ) return stageInfo;
             SceneDef scene = info.sceneDef;
             if( !scene ) return stageInfo;
-            switch( scene.sceneName ) {
+            switch( scene.baseSceneName ) {
                 case "golemplains":
                     stageInfo.stage = Stage.TitanicPlains;
                     break;
@@ -69,7 +69,7 @@ namespace R2API {
                     break;
                 default:
                     stageInfo.stage = Stage.Custom;
-                    stageInfo.customStageName = scene.sceneName;
+                    stageInfo.customStageName = scene.baseSceneName;
                     break;
             }
             return stageInfo;

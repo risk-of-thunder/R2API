@@ -34,12 +34,6 @@ namespace R2API {
         #region ModHelper Events and Hooks
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            // Temporary fix as the getter from the buffCount propriety doesnt retrieve from BuffCatalog.buffDefs.Length directly
-            On.RoR2.BuffCatalog.Init += orig => {
-                orig();
-                typeof(BuffCatalog).SetPropertyValue("buffCount", typeof(BuffCatalog).GetFieldValue<BuffDef[]>("buffDefs").Length);
-            };
-
             IL.RoR2.ItemCatalog.DefineItems += il => {
                 var cursor = new ILCursor(il);
 
@@ -67,7 +61,7 @@ namespace R2API {
                 );
             };
 
-            IL.RoR2.EliteCatalog.cctor += il => {
+            IL.RoR2.EliteCatalog.Init += il => {
                 var cursor = new ILCursor(il);
 
                 cursor.GotoNext(
