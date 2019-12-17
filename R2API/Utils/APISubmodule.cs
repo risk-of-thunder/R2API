@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using BepInEx.Logging;
@@ -52,34 +53,54 @@ namespace R2API.Utils {
             _logger = logger;
         }
 
-        public void LoadAll() {
-            var allTypes = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(assembly => {
-                        try {
-                            return assembly.GetTypes();
-                        } catch (ReflectionTypeLoadException) {
-                            return Enumerable.Empty<Type>();
+        public void LoadRequested() {
+            Assembly[] getAssemblies() {
+                var assemblies = new List<Assembly>();
+
+                var path = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
+
+                while (!path.ToLower().EndsWith("ins")) {
+                    path = Directory.GetParent(path).FullName;
+                }
+
+                foreach (string dll in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories)) {
+                    if (!dll.ToLower().Contains("r2api") || !dll.ToLower().Contains("mmhook")) {
+                        try // bepis code
+                        {
+                            assemblies.Add(Assembly.LoadFile(dll));
                         }
-                    })
-                    .ToList();
+                        catch (BadImageFormatException) { } //unmanaged dll
+                        catch (ReflectionTypeLoadException) { }
+                    }
 
-            var modulesToEnable =
-                allTypes
-                    .Select(t => t.GetCustomAttribute<R2APISubmoduleDependency>())
-                    .Where(a => a != null)
-                    .SelectMany(a => a.SubmoduleNames)
-                    .Distinct()
-                    .ToList();
+                }
 
-            // TODO: Remove when ready to end transition period
-            modulesToEnable.AddRange(allTypes.Where(t => t.GetCustomAttribute<R2APISubmodule>() != null).Select(t => t.Name));
-            modulesToEnable = modulesToEnable.Distinct().ToList();
-            //
+                return assemblies.ToArray();
+            }
 
-            _moduleSet = new HashSet<string>(modulesToEnable);
+            var allTypes = getAssemblies()
+                .SelectMany(assembly => {
+                    try {
+                        return assembly.GetTypes();
+                    }
+                    catch (ReflectionTypeLoadException) {
+                        return Enumerable.Empty<Type>();
+                    }
+                })
+                .ToList();
 
+            _moduleSet = new HashSet<string>();
 
-            foreach (var module in modulesToEnable) {
+            foreach (var type in allTypes) {
+                var subModules = type.GetCustomAttributes<R2APISubmoduleDependency>();
+                foreach (var subModule in subModules) {
+                    foreach (var name in subModule.SubmoduleNames) {
+                        _moduleSet.Add(name);
+                    }
+                }
+            }
+
+            foreach (var module in _moduleSet) {
                 R2API.Logger.LogInfo($"Requested R2API Submodule: {module}");
             }
 
@@ -88,8 +109,7 @@ namespace R2API.Utils {
             foreach (var moduleType in moduleTypes) {
                 R2API.Logger.LogInfo($"Found and Enabling R2API Submodule: {moduleType.FullName}");
             }
-
-            //var types = assembly.GetTypes().Where(APISubmoduleFilter).ToList();
+            
             var faults = new Dictionary<Type, Exception>();
 
             moduleTypes
