@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using R2API.Utils;
 using RoR2;
 using UnityEngine;
@@ -9,31 +10,81 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class EffectAPI {
-     
         /// <summary>
-        /// Adds an effect to the EffectCatalog
-        /// Can be called at any time.
+        /// Mimics events found in CatalogModHelpers, can be used to add or sort effects.
+        /// </summary>
+        public static event Action<List<EffectDef>> getAdditionalEntries;
+
+        [R2APISubmoduleInit( Stage = InitStage.SetHooks )]
+        internal static void SetHooks() {
+            On.RoR2.EffectCatalog.GetDefaultEffectDefs += EffectCatalog_GetDefaultEffectDefs;
+        }
+
+        [R2APISubmoduleInit( Stage = InitStage.UnsetHooks )]
+        internal static void UnsetHooks() {
+            On.RoR2.EffectCatalog.GetDefaultEffectDefs -= EffectCatalog_GetDefaultEffectDefs;
+        }
+
+        private static EffectDef[] EffectCatalog_GetDefaultEffectDefs( On.RoR2.EffectCatalog.orig_GetDefaultEffectDefs orig ) {
+            EffectDef[] effects = orig();
+
+            var effectList = effects.ToList();
+            if( getAdditionalEntries != null ) {
+                getAdditionalEntries( effectList );
+            }
+            return effectList.ToArray();
+        }
+
+
+        /// <summary>
+        /// Creates an EffectDef from a prefab and adds it to the EffectCatalog.
+        /// The prefab must have an the following components: EffectComponent, VFXAttributes
+        /// For more control over the EffectDef, use AddEffect( EffectDef )
         /// </summary>
         /// <param name="effect">The prefab of the effect to be added</param>
         /// <returns>True if the effect was added</returns>
         public static bool AddEffect(GameObject effect) {
-            /*List<GameObject> effects = EffectManager.instance.GetFieldValue<List<GameObject>>("effectPrefabsList");
-            Dictionary<GameObject, uint> effectLookup = EffectManager.instance.GetFieldValue<Dictionary<GameObject, uint>>("effectPrefabToIndexMap");
-
-            if(!effect) {
+            if( effect == null ) {
+                Debug.LogError( "Effect prefab was null" );
                 return false;
             }
 
-            int index = effects.Count;
+            EffectComponent effectComp = effect.GetComponent<EffectComponent>();
+            if( effectComp == null ) {
+                Debug.LogErrorFormat( "Effect prefab: \"{0}\" does not have an EffectComponent.", effect.name );
+                return false;
+            }
 
-            effects.Add( effect );
-            effectLookup.Add( effect, (uint)index );
+            VFXAttributes vfxAtrib = effect.GetComponent<VFXAttributes>();
+            if( vfxAtrib == null ) {
+                Debug.LogErrorFormat( "Effect prefab: \"{0}\" does not have a VFXAttributes component.", effect.name );
+                return false;
+            }
 
-            return true;*/
+            EffectDef def = new EffectDef {
+                prefab = effect,
+                prefabEffectComponent = effectComp,
+                prefabVfxAttributes = vfxAtrib,
+                prefabName = effect.name,
+                spawnSoundEventName = effectComp.soundName
+            };
 
-            R2API.Logger.LogError("EffectAPI is currently broken for now");
+            return AddEffect( def );
+        }
 
-            return false;
+        /// <summary>
+        /// Adds an EffectDef to the EffectCatalog when the catalog inits.
+        /// </summary>
+        /// <param name="effect">The EffectDef to addZ</param>
+        /// <returns>False if the EffectDef was null</returns>
+        public static bool AddEffect( EffectDef effect ) {
+            if( effect == null ) {
+                Debug.LogError( "EffectDef was null." );
+                return false;
+            }
+
+            getAdditionalEntries += ( list ) => list.Add( effect );
+            return true;
         }
     }
 }
