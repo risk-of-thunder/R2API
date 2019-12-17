@@ -16,20 +16,24 @@ namespace R2API {
         /// </summary>
         /// <param name="effect">The prefab of the effect to be added</param>
         /// <returns>True if the effect was added</returns>
-        public static Boolean AddEffect(GameObject effect) {
-            List<GameObject> effects = EffectManager.instance.GetFieldValue<List<GameObject>>("effectPrefabsList");
-            Dictionary<GameObject, System.UInt32> effectLookup = EffectManager.instance.GetFieldValue<Dictionary<GameObject, System.UInt32>>("effectPrefabToIndexMap");
+        public static bool AddEffect(GameObject effect) {
+            /*List<GameObject> effects = EffectManager.instance.GetFieldValue<List<GameObject>>("effectPrefabsList");
+            Dictionary<GameObject, uint> effectLookup = EffectManager.instance.GetFieldValue<Dictionary<GameObject, uint>>("effectPrefabToIndexMap");
 
             if(!effect) {
                 return false;
             }
 
-            System.Int32 index = effects.Count;
+            int index = effects.Count;
 
             effects.Add( effect );
-            effectLookup.Add( effect, (System.UInt32)index );
+            effectLookup.Add( effect, (uint)index );
 
-            return true;
+            return true;*/
+
+            R2API.Logger.LogError("EffectAPI is currently broken for now");
+
+            return false;
         }
     }
 }

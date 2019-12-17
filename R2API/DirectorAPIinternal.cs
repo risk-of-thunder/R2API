@@ -39,7 +39,7 @@ namespace R2API {
             if( !info ) return stageInfo;
             SceneDef scene = info.sceneDef;
             if( !scene ) return stageInfo;
-            switch( scene.sceneName ) {
+            switch( scene.baseSceneName ) {
                 case "golemplains":
                     stageInfo.stage = Stage.TitanicPlains;
                     break;
@@ -69,7 +69,7 @@ namespace R2API {
                     break;
                 default:
                     stageInfo.stage = Stage.Custom;
-                    stageInfo.customStageName = scene.sceneName;
+                    stageInfo.customStageName = scene.baseSceneName;
                     break;
             }
             return stageInfo;
@@ -77,18 +77,18 @@ namespace R2API {
 
         private static void ApplySettingsChanges( ClassicStageInfo self, StageInfo stageInfo ) {
             StageSettings settings = GetStageSettings( self );
-            stageSettingsActions?.Invoke( settings, stageInfo );
+            StageSettingsActions?.Invoke( settings, stageInfo );
             SetStageSettings( self, settings );
         }
 
         private static void ApplyMonsterChanges( ClassicStageInfo self, StageInfo stage ) {
             var monsters = self.GetFieldValue<DirectorCardCategorySelection>("monsterCategories");
             List<DirectorCardHolder> monsterCards = new List<DirectorCardHolder>();
-            for( Int32 i = 0; i < monsters.categories.Length; i++ ) {
+            for(int i = 0; i < monsters.categories.Length; i++ ) {
                 DirectorCardCategorySelection.Category cat = monsters.categories[i];
                 MonsterCategory monstCat = GetMonsterCategory( cat.name );
                 InteractableCategory interCat = GetInteractableCategory( cat.name);
-                for( Int32 j = 0; j < cat.cards.Length; j++ ) {
+                for(int j = 0; j < cat.cards.Length; j++ ) {
                     monsterCards.Add( new DirectorCardHolder {
                         interactableCategory = interCat,
                         monsterCategory = monstCat,
@@ -96,11 +96,11 @@ namespace R2API {
                     } );
                 }
             }
-            monsterActions?.Invoke( monsterCards, stage );
+            MonsterActions?.Invoke( monsterCards, stage );
             List<DirectorCard> monsterBasic = new List<DirectorCard>();
             List<DirectorCard> monsterSub = new List<DirectorCard>();
             List<DirectorCard> monsterChamp = new List<DirectorCard>();
-            for( Int32 i = 0; i < monsterCards.Count; i++ ) {
+            for(int i = 0; i < monsterCards.Count; i++ ) {
                 DirectorCardHolder hold = monsterCards[i];
                 switch( hold.monsterCategory ) {
                     default:
@@ -116,7 +116,7 @@ namespace R2API {
                         break;
                 }
             }
-            for( Int32 i = 0; i < monsters.categories.Length; i++ ) {
+            for(int i = 0; i < monsters.categories.Length; i++ ) {
                 DirectorCardCategorySelection.Category cat = monsters.categories[i];
                 switch( cat.name ) {
                     default:
@@ -138,11 +138,11 @@ namespace R2API {
         private static void ApplyInteractableChanges( ClassicStageInfo self, StageInfo stage ) {
             var interactables = self.GetFieldValue<DirectorCardCategorySelection>("interactableCategories");
             List<DirectorCardHolder> interactableCards = new List<DirectorCardHolder>();
-            for( Int32 i = 0; i < interactables.categories.Length; i++ ) {
+            for(int i = 0; i < interactables.categories.Length; i++ ) {
                 DirectorCardCategorySelection.Category cat = interactables.categories[i];
                 MonsterCategory monstCat = GetMonsterCategory( cat.name );
                 InteractableCategory interCat = GetInteractableCategory( cat.name );
-                for( Int32 j = 0; j < cat.cards.Length; j++ ) {
+                for(int j = 0; j < cat.cards.Length; j++ ) {
                     interactableCards.Add( new DirectorCardHolder {
                         interactableCategory = interCat,
                         monsterCategory = monstCat,
@@ -150,7 +150,7 @@ namespace R2API {
                     } );
                 }
             }
-            interactableActions?.Invoke( interactableCards, stage );
+            InteractableActions?.Invoke( interactableCards, stage );
             List<DirectorCard> interChests = new List<DirectorCard>();
             List<DirectorCard> interBarrels = new List<DirectorCard>();
             List<DirectorCard> interShrines = new List<DirectorCard>();
@@ -158,7 +158,7 @@ namespace R2API {
             List<DirectorCard> interMisc = new List<DirectorCard>();
             List<DirectorCard> interRare = new List<DirectorCard>();
             List<DirectorCard> interDupe = new List<DirectorCard>();
-            for( Int32 i = 0; i < interactableCards.Count; i++ ) {
+            for(int i = 0; i < interactableCards.Count; i++ ) {
                 DirectorCardHolder hold = interactableCards[i];
                 switch( hold.interactableCategory ) {
                     default:
@@ -187,7 +187,7 @@ namespace R2API {
                         break;
                 }
             }
-            for( Int32 i = 0; i < interactables.categories.Length; i++ ) {
+            for(int i = 0; i < interactables.categories.Length; i++ ) {
                 DirectorCardCategorySelection.Category cat = interactables.categories[i];
                 switch( cat.name ) {
                     default:
@@ -220,12 +220,12 @@ namespace R2API {
 
         private static void ApplyFamilyChanges( ClassicStageInfo self, StageInfo stage ) {
             List<MonsterFamilyHolder> familyHolds = new List<MonsterFamilyHolder>();
-            for( Int32 i = 0; i < self.possibleMonsterFamilies.Length; i++ ) {
+            for(int i = 0; i < self.possibleMonsterFamilies.Length; i++ ) {
                 familyHolds.Add( GetMonsterFamilyHolder( self.possibleMonsterFamilies[i] ) );
             }
-            familyActions?.Invoke( familyHolds, stage );
+            FamilyActions?.Invoke( familyHolds, stage );
             self.possibleMonsterFamilies = new ClassicStageInfo.MonsterFamily[familyHolds.Count];
-            for( Int32 i = 0; i < familyHolds.Count; i++ ) {
+            for(int i = 0; i < familyHolds.Count; i++ ) {
                 Debug.Log( i );
                 self.possibleMonsterFamilies[i] = GetMonsterFamily( familyHolds[i] );
             }
@@ -237,20 +237,20 @@ namespace R2API {
                 sceneDirectorInteractableCredits = self.sceneDirectorInteractibleCredits,
                 sceneDirectorMonsterCredits = self.sceneDirectorMonsterCredits
             };
-            set.bonusCreditObjects = new Dictionary<GameObject, Int32>();
-            for( Int32 i = 0; i < self.bonusInteractibleCreditObjects.Length; i++ ) {
+            set.bonusCreditObjects = new Dictionary<GameObject, int>();
+            for(int i = 0; i < self.bonusInteractibleCreditObjects.Length; i++ ) {
                 var bonusObj = self.bonusInteractibleCreditObjects[i];
                 set.bonusCreditObjects[bonusObj.objectThatGrantsPointsIfEnabled] = bonusObj.points;
             }
-            set.interactableCategoryWeights = new Dictionary<InteractableCategory, Single>();
+            set.interactableCategoryWeights = new Dictionary<InteractableCategory, float>();
             var interCats = self.GetFieldValue<DirectorCardCategorySelection>("interactableCategories");
-            for( Int32 i = 0; i < interCats.categories.Length; i++ ) {
+            for(int i = 0; i < interCats.categories.Length; i++ ) {
                 var cat = interCats.categories[i];
                 set.interactableCategoryWeights[GetInteractableCategory( cat.name )] = cat.selectionWeight;
             }
-            set.monsterCategoryWeights = new Dictionary<MonsterCategory, Single>();
+            set.monsterCategoryWeights = new Dictionary<MonsterCategory, float>();
             var monstCats = self.GetFieldValue<DirectorCardCategorySelection>("monsterCategories");
-            for( Int32 i = 0; i < monstCats.categories.Length; i++ ) {
+            for(int i = 0; i < monstCats.categories.Length; i++ ) {
                 var cat = monstCats.categories[i];
                 set.monsterCategoryWeights[GetMonsterCategory( cat.name )] = cat.selectionWeight;
             }
@@ -262,7 +262,7 @@ namespace R2API {
             self.sceneDirectorMonsterCredits = set.sceneDirectorMonsterCredits;
             var keys = set.bonusCreditObjects.Keys.ToArray();
             var bonuses = new ClassicStageInfo.BonusInteractibleCreditObject[keys.Length];
-            for( Int32 i = 0; i < keys.Length; i++ ) {
+            for(int i = 0; i < keys.Length; i++ ) {
                 bonuses[i] = new ClassicStageInfo.BonusInteractibleCreditObject {
                     objectThatGrantsPointsIfEnabled = keys[i],
                     points = set.bonusCreditObjects[keys[i]]
@@ -270,14 +270,14 @@ namespace R2API {
             }
             self.bonusInteractibleCreditObjects = bonuses;
             var interCats = self.GetFieldValue<DirectorCardCategorySelection>("interactableCategories");
-            for( Int32 i = 0; i < interCats.categories.Length; i++ ) {
+            for(int i = 0; i < interCats.categories.Length; i++ ) {
                 var cat = interCats.categories[i];
                 InteractableCategory intCat = GetInteractableCategory( cat.name );
                 cat.selectionWeight = set.interactableCategoryWeights[intCat];
                 interCats.categories[i] = cat;
             }
             var monstCats = self.GetFieldValue<DirectorCardCategorySelection>("monsterCategories");
-            for( Int32 i = 0; i < monstCats.categories.Length; i++ ) {
+            for(int i = 0; i < monstCats.categories.Length; i++ ) {
                 var cat = monstCats.categories[i];
                 MonsterCategory monCat = GetMonsterCategory( cat.name );
                 cat.selectionWeight = set.monsterCategoryWeights[monCat];
@@ -285,7 +285,7 @@ namespace R2API {
             }
         }
 
-        private static MonsterCategory GetMonsterCategory( String s ) {
+        private static MonsterCategory GetMonsterCategory(string s ) {
             switch( s ) {
                 default:
                     return MonsterCategory.None;
@@ -298,7 +298,7 @@ namespace R2API {
             }
         }
 
-        private static InteractableCategory GetInteractableCategory( String s ) {
+        private static InteractableCategory GetInteractableCategory(string s ) {
             switch( s ) {
                 default:
                     return InteractableCategory.None;
@@ -328,7 +328,7 @@ namespace R2API {
                 selectionChatString = family.familySelectionChatString
             };
             var cards = family.monsterFamilyCategories.categories;
-            for( Int32 i = 0; i < cards.Length; i++ ) {
+            for(int i = 0; i < cards.Length; i++ ) {
                 var cat = cards[i];
 
                 switch( cat.name ) {

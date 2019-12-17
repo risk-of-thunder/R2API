@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using R2API.Utils;
 using RoR2;
 using UnityEngine;
 
@@ -13,19 +11,19 @@ namespace R2API {
         /// <summary>
         /// Event used to edit stage settings.
         /// </summary>
-        public static event Action<StageSettings, StageInfo> stageSettingsActions;
+        public static event Action<StageSettings, StageInfo> StageSettingsActions;
         /// <summary>
         /// Event used to edit/add/remove the monsters spawned on a stage.
         /// </summary>
-        public static event Action<List<DirectorCardHolder> , StageInfo> monsterActions;
+        public static event Action<List<DirectorCardHolder>, StageInfo> MonsterActions;
         /// <summary>
         /// Event used to edit/add/remove interactables spawned on a stage.
         /// </summary>
-        public static event Action<List<DirectorCardHolder> , StageInfo> interactableActions;
+        public static event Action<List<DirectorCardHolder>, StageInfo> InteractableActions;
         /// <summary>
         /// Event used to edit/add/remove monster families on a stage.
         /// </summary>
-        public static event Action<List<MonsterFamilyHolder>, StageInfo> familyActions;
+        public static event Action<List<MonsterFamilyHolder>, StageInfo> FamilyActions;
         /// <summary>
         /// If this is called then DirectorAPI will hook ClassicStageInfo.Awake and use the events to make changes
         /// </summary>
@@ -99,6 +97,7 @@ namespace R2API {
             /// When this is set to custom, check the string in StageInfo
             /// </summary>
             Custom = 1,
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
             TitanicPlains = 2,
             DistantRoost = 4,
             WetlandAspect = 8,
@@ -110,6 +109,7 @@ namespace R2API {
             GildedCoast = 512,
             MomentFractured = 1024,
             Bazaar = 2048
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 
         public struct StageInfo {
@@ -120,7 +120,7 @@ namespace R2API {
             /// <summary>
             /// This is set to the name of the custom stage. Is left blank for vanilla stages.
             /// </summary>
-            public String customStageName;
+            public string customStageName;
 
             /// <summary>
             /// Returns true if the current stage matches any of the stages you specify.
@@ -129,7 +129,7 @@ namespace R2API {
             /// <param name="stage">The stages to match with</param>
             /// <param name="customStageNames">Names of the custom stages to match. Leave blank to match all custom stages</param>
             /// <returns></returns>
-            public Boolean CheckStage( Stage stage, params String[] customStageNames ) {
+            public bool CheckStage( Stage stage, params string[] customStageNames ) {
                 if( !stage.HasFlag( this.stage ) ) return false;
                 if( this.stage == Stage.Custom && customStageNames.Length != 0 && !customStageNames.Contains( this.customStageName ) ) return false;
                 return true;
@@ -145,27 +145,27 @@ namespace R2API {
             /// How many credits the scene director has for monsters at the start of a stage.
             /// This scales with difficulty, and thus will always be zero on the first stage.
             /// </summary>
-            public Int32 sceneDirectorMonsterCredits;
+            public int sceneDirectorMonsterCredits;
             /// <summary>
             /// How many credits the scene director has for interactables at the start of a stage.
             /// </summary>
-            public Int32 sceneDirectorInteractableCredits;
+            public int sceneDirectorInteractableCredits;
 
             /// <summary>
             /// If the GameObject key of the dictionary is enabled, then the scene director gains the value in extra interactable credits
             /// Used for things like the door in Abyssal Depths.
             /// </summary>
-            public Dictionary<GameObject, Int32> bonusCreditObjects;
+            public Dictionary<GameObject, int> bonusCreditObjects;
 
             /// <summary>
             /// The weights for each monster category on this stage.
             /// </summary>
-            public Dictionary<MonsterCategory,Single> monsterCategoryWeights;
+            public Dictionary<MonsterCategory, float> monsterCategoryWeights;
 
             /// <summary>
             /// The weights for each interactable category on this stage.
             /// </summary>
-            public Dictionary<InteractableCategory,Single> interactableCategoryWeights;
+            public Dictionary<InteractableCategory, float> interactableCategoryWeights;
         }
         /// <summary>
         /// A wrapper class for DirectorCards. A list of these is passed to everything subscribed to monsterActions and interactableActions.
@@ -204,35 +204,35 @@ namespace R2API {
             /// <summary>
             /// The selection weight for basic monsters during the family event.
             /// </summary>
-            public Single familyBasicMonsterWeight;
+            public float familyBasicMonsterWeight;
             /// <summary>
             /// The selection weight for minibosses during the family event.
             /// </summary>
-            public Single familyMinibossWeight;
+            public float familyMinibossWeight;
             /// <summary>
             /// The selection weight for champions during the family event.
             /// </summary>
-            public Single familyChampionWeight;
+            public float familyChampionWeight;
             /// <summary>
             /// The minimum number of stages completed for this family event to occur.
             /// </summary>
-            public Int32 minStageCompletion;
+            public int minStageCompletion;
             /// <summary>
             /// The maximum number of stages for this family event to occur.
             /// </summary>
-            public Int32 maxStageCompletion;
+            public int maxStageCompletion;
 
             /// <summary>
             /// The weight of this monster family relative to other monster families.
             /// Does NOT increase the chances of a family event occuring, just the chance that this will be chosen when one does occur.
             /// Support for modifying the chance of family events overall will come later (and will be in StageSettings)
             /// </summary>
-            public Single familySelectionWeight;
+            public float familySelectionWeight;
 
             /// <summary>
             /// The message sent to chat when this family is selected.
             /// </summary>
-            public String selectionChatString;
+            public string selectionChatString;
         }
     }
 }

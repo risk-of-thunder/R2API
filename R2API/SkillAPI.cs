@@ -16,20 +16,20 @@ namespace R2API {
         /// </summary>
         /// <param name="t">The type to add</param>
         /// <returns>True if succesfully added</returns>
-        public static Boolean AddSkill( Type t ) {
+        public static bool AddSkill( Type t ) {
             if( t == null || !t.IsSubclassOf( typeof( EntityStates.EntityState ) ) || t.IsAbstract ) {
                 return false;
             }
             Type stateTab = typeof(EntityStates.EntityState).Assembly.GetType("EntityStates.StateIndexTable");
             Type[] id2State = stateTab.GetFieldValue<Type[]>("stateIndexToType");
-            String[] name2Id = stateTab.GetFieldValue<String[]>("stateIndexToTypeName");
-            Dictionary<Type, Int16> state2Id = stateTab.GetFieldValue<Dictionary<Type, Int16>>("stateTypeToIndex");
-            Int32 ogNum = id2State.Length;
+            string[] name2Id = stateTab.GetFieldValue<string[]>("stateIndexToTypeName");
+            Dictionary<Type, short> state2Id = stateTab.GetFieldValue<Dictionary<Type, short>>("stateTypeToIndex");
+            int ogNum = id2State.Length;
             Array.Resize<Type>( ref id2State, ogNum + 1 );
             Array.Resize<String>( ref name2Id, ogNum + 1 );
             id2State[ogNum] = t;
             name2Id[ogNum] = t.FullName;
-            state2Id[t] = (Int16)ogNum;
+            state2Id[t] = (short)ogNum;
             stateTab.SetFieldValue<Type[]>( "stateIndexToType", id2State );
             stateTab.SetFieldValue<String[]>( "stateIndexToTypeName", name2Id );
             stateTab.SetFieldValue<Dictionary<Type, Int16>>( "stateTypeToIndex", state2Id );
@@ -42,7 +42,7 @@ namespace R2API {
         /// </summary>
         /// <param name="s">The SkillDef to add</param>
         /// <returns>True if the event was registered</returns>
-        public static Boolean AddSkillDef( SkillDef s ) {
+        public static bool AddSkillDef( SkillDef s ) {
             if( !s ) return false;
             SkillCatalog.getAdditionalSkillDefs += ( list ) => {
                 list.Add( s );
@@ -56,7 +56,7 @@ namespace R2API {
         /// </summary>
         /// <param name="sf">The skillfamily to add</param>
         /// <returns>True if the event was registered</returns>
-        public static Boolean AddSkillFamily( SkillFamily sf ) {
+        public static bool AddSkillFamily( SkillFamily sf ) {
             if( !sf ) return false;
             SkillCatalog.getAdditionalSkillFamilies += ( list ) => {
                 list.Add( sf );

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Logging;
+using Facepunch.Steamworks;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.Utils;
@@ -21,7 +22,7 @@ namespace R2API {
         public const string PluginVersion = "0.0.1";
 
 
-        private const int GameBuild = 4233443;
+        private const int GameBuild = 4478858;
 
         internal new static ManualLogSource Logger { get; set; }
 
@@ -38,7 +39,7 @@ namespace R2API {
 
             On.RoR2.RoR2Application.UnitySystemConsoleRedirector.Redirect += orig => { };
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
-            submoduleHandler.LoadAll();
+            submoduleHandler.LoadRequested();
 
             RoR2Application.isModded = true;
 
@@ -50,13 +51,14 @@ namespace R2API {
                 self.gameObject.SetActive(false);
             };
 
-            On.RoR2.RoR2Application.OnLoad += (orig, self) => {
-                orig(self);
+            SteamworksClientManager.onLoaded += () => {
+                var buildId =
+                    SteamworksClientManager.instance.GetFieldValue<Client>("steamworksClient").BuildId;
 
-                if (GameBuild == self.steamworksClient.BuildId)
+                if (GameBuild == buildId)
                     return;
 
-                Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{self.steamworksClient.BuildId}\".");
+                Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{buildId}\".");
                 Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
             };
         }
