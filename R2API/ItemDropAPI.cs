@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using RoR2;
 using Mono.Cecil.Cil;
@@ -142,6 +142,7 @@ namespace R2API {
         private const string UtilityChest = "CategoryChestUtility";
         private const string DamageChest = "CategoryChestDamage";
         private const string HealingChest = "CategoryChestHealing";
+        private const string ScavLunarBackpack = "ScavLunarBackpack";
 
         private static readonly Dictionary<string, ItemDropLocation> ChestLookup =
             new Dictionary<string, ItemDropLocation>(StringComparer.OrdinalIgnoreCase) {
@@ -269,6 +270,9 @@ namespace R2API {
                 Selection[ItemDropLocation.Lockbox][2].DropChance = DefaultSmallChestTier3DropChance * Mathf.Pow(lockboxes, 2f);
                 self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.Lockbox,
                     Run.instance.treasureRng.nextNormalizedFloat));
+            } else if (self.name.ToLower().Contains("scavlunarbackpack"))
+            {
+                self.SetFieldValue<PickupIndex>("dropPickup", PickupCatalog.FindPickupIndex("LunarCoin.Coin0"));
             } else {
                 Logger.LogError($"Unidentified chest type: {self.name}. Dropping normal loot instead.");
 
