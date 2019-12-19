@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RoR2;
 using Mono.Cecil.Cil;
@@ -76,6 +76,12 @@ namespace R2API {
                 ItemDropAPI.GetDefaultDropList(ItemTier.Tier3, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
             };
 
+            var scavSelections = new[] {
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1).ToSelection(ItemDropAPI.DefaultScavBackpackTier1DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier2).ToSelection(ItemDropAPI.DefaultScavBackpackTier2DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Tier3).ToSelection(ItemDropAPI.DefaultScavBackpackTier3DropChance),
+                ItemDropAPI.GetDefaultDropList(ItemTier.Lunar).ToSelection(ItemDropAPI.DefaultScavBackpackLunarDropChance),
+            };
 
             ItemDropAPI.AddDrops(ItemDropLocation.UtilityChest, utilitySelections);
             ItemDropAPI.AddDrops(ItemDropLocation.DamageChest, damageSelections);
@@ -85,6 +91,7 @@ namespace R2API {
             ItemDropAPI.AddDrops(ItemDropLocation.SmallChest, chestSelections);
             ItemDropAPI.AddDrops(ItemDropLocation.MediumChest, t2.ToSelection(ItemDropAPI.DefaultMediumChestTier2DropChance), t3.ToSelection(ItemDropAPI.DefaultMediumChestTier3DropChance));
             ItemDropAPI.AddDrops(ItemDropLocation.LargeChest, t3.ToSelection(ItemDropAPI.DefaultLargeChestTier3DropChance));
+            ItemDropAPI.AddDrops(ItemDropLocation.ScavBackPack, scavSelections);
         }
 
         public static void AddEquipmentChestDefaultDrops() {
@@ -120,6 +127,7 @@ namespace R2API {
         UtilityChest,
         HealingChest,
         DamageChest,
+        ScavBackPack
         //SmallChestSelector,
         //MediumChestSelector,
         //LargeChestSelector
@@ -142,6 +150,7 @@ namespace R2API {
         private const string UtilityChest = "CategoryChestUtility";
         private const string DamageChest = "CategoryChestDamage";
         private const string HealingChest = "CategoryChestHealing";
+        private const string ScavBackpack = "ScavBackpack";
         private const string ScavLunarBackpack = "ScavLunarBackpack";
 
         private static readonly Dictionary<string, ItemDropLocation> ChestLookup =
@@ -153,7 +162,8 @@ namespace R2API {
                 { UtilityChest, ItemDropLocation.UtilityChest },
                 { DamageChest, ItemDropLocation.DamageChest },
                 { HealingChest, ItemDropLocation.HealingChest },
-                { CloakedChest, ItemDropLocation.SmallChest}
+                { CloakedChest, ItemDropLocation.SmallChest},
+                { ScavBackpack, ItemDropLocation.ScavBackPack}
             };
 
         public static float DefaultSmallChestTier1DropChance = 0.8f;
@@ -177,6 +187,12 @@ namespace R2API {
 
         public static float DefaultMediumChestTier1SelectorDropChance = 0.8f;
         public static float DefaultMediumChestTier2SelectorDropChance = 0.2f;
+
+        public static float DefaultScavBackpackTier1DropChance = 0.8f;
+        public static float DefaultScavBackpackTier2DropChance = 0.2f;
+        public static float DefaultScavBackpackTier3DropChance = 0.01f;
+        public static float DefaultScavBackpackLunarDropChance = 0f;
+
 
         public static bool DefaultDrops { get; set; } = true;
 
