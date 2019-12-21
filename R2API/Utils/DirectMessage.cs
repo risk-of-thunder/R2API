@@ -3,16 +3,16 @@ using System;
 using UnityEngine.Networking;
 
 namespace R2API.Utils {
-    static class DirectMessage {
+    public static class DirectMessage {
 
         [Obsolete("Not really obsolete, but try caching your network connection instead!")]
         public static void SendDirectMessage(string message, NetworkUser networkUser) {
-            SendDirectMessage(message, Networking.GetNetworkConnectionFromNetworkUser(networkUser));
+            SendDirectMessage(message, Networking.FindNetworkConnectionFromNetworkUser(networkUser));
         }
 
         [Obsolete("Not really obsolete, but try caching your network connection instead!")]
         public static void SendDirectMessage(Chat.ChatMessageBase message, NetworkUser networkUser) {
-            SendDirectMessage(message, Networking.GetNetworkConnectionFromNetworkUser(networkUser));
+            SendDirectMessage(message, Networking.FindNetworkConnectionFromNetworkUser(networkUser));
         }
 
         public static void SendDirectMessage(string message, NetworkConnection connection) {
