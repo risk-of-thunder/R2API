@@ -1,8 +1,15 @@
 ﻿using RoR2;
+using System;
 using UnityEngine.Networking;
 
 namespace R2API.Utils {
     static class PrivateMessage {
+
+        [Obsolete("Not really obsolete, but try caching your network connection instead!")]
+        public static void SendPrivateMessage(string message, NetworkUser networkUser) {
+            SendPrivateMessage(message, Networking.GetNetworkConnectionFromNetworkUser(networkUser));
+        }
+
         public static void SendPrivateMessage(string message, NetworkConnection connection) {
             SendPrivateMessage(new Chat.SimpleChatMessage() { baseToken = "{0}", paramTokens = new[] { message } }, connection);
         }
