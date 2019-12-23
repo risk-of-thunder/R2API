@@ -51,7 +51,7 @@ namespace R2API.Utils {
             Assembly[] getAssemblies() {
                 var assemblies = new List<Assembly>();
 
-                var path = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
+                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
                 while (!path.ToLower().EndsWith("ins")) {
                     path = Directory.GetParent(path).FullName;
