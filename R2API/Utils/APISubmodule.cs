@@ -6,12 +6,6 @@ using System.Reflection;
 using BepInEx.Logging;
 
 namespace R2API.Utils {
-
-    [R2APISubmoduleDependency("SurvivorAPI")]
-    public class Test {
-
-    }
-
     [Flags]
     public enum InitStage {
         SetHooks   = 0x01,
