@@ -8,6 +8,15 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     //[R2APISubmodule]
     public static partial class DirectorAPI {
+        #region Loaded check
+        //Maybe best to set up a base class or interface that does this automatically?
+        public static bool Loaded {
+            get {
+                return IsLoaded;
+            }
+        }
+        private static bool IsLoaded = false;
+        #endregion
         /// <summary>
         /// Event used to edit stage settings.
         /// </summary>
@@ -108,7 +117,9 @@ namespace R2API {
             SirensCall = 256,
             GildedCoast = 512,
             MomentFractured = 1024,
-            Bazaar = 2048
+            Bazaar = 2048,
+            VoidCell = 4096,
+            MomentWhole = 8192
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 

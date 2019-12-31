@@ -67,6 +67,12 @@ namespace R2API {
                 case "goldshores":
                     stageInfo.stage = Stage.GildedCoast;
                     break;
+                case "arena":
+                    stageInfo.stage = Stage.VoidCell;
+                    break;
+                case "limbo":
+                    stageInfo.stage = Stage.MomentWhole;
+                    break;
                 default:
                     stageInfo.stage = Stage.Custom;
                     stageInfo.customStageName = scene.baseSceneName;
