@@ -5,6 +5,7 @@ using MonoMod.RuntimeDetour;
 using R2API.Utils;
 
 namespace R2API {
+    [Obsolete( "Please use LoadoutAPI instead")]
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class EntityAPI {
