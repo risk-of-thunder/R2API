@@ -61,6 +61,11 @@ namespace R2API {
                 Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{buildId}\".");
                 Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
             };
+            On.RoR2.SteamworksServerManager.UpdateHostName += (orig, self, hostname) => {
+                orig(self, $"[MOD] {hostname}");
+                Server server = ((SteamworksServerManager)self).GetFieldValue<Server>("steamworksServer");
+                server.GameTags = "mod,"+ server.GameTags;
+            };
         }
 
         public static void AddHookLogging() {

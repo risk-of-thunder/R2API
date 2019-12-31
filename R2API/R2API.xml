@@ -9,7 +9,7 @@
             This event is invoked as soon as the AssetAPI is loaded. This is the perfect time to add assets to the Master and Object Catalogs in the API.
             </summary>
         </member>
-        <member name="P:R2API.AssetAPI.doneLoading">
+        <member name="P:R2API.AssetAPI.DoneLoading">
             <summary>
             Returns true once assets have been loaded.
             </summary>
@@ -204,6 +204,404 @@
             <param name="difficulty">The difficulty to add.</param>
             <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
         </member>
+        <member name="E:R2API.DirectorAPI.StageSettingsActions">
+            <summary>
+            Event used to edit stage settings.
+            </summary>
+        </member>
+        <member name="E:R2API.DirectorAPI.MonsterActions">
+            <summary>
+            Event used to edit/add/remove the monsters spawned on a stage.
+            </summary>
+        </member>
+        <member name="E:R2API.DirectorAPI.InteractableActions">
+            <summary>
+            Event used to edit/add/remove interactables spawned on a stage.
+            </summary>
+        </member>
+        <member name="E:R2API.DirectorAPI.FamilyActions">
+            <summary>
+            Event used to edit/add/remove monster families on a stage.
+            </summary>
+        </member>
+        <member name="T:R2API.DirectorAPI.MonsterCategory">
+            <summary>
+            If this is called then DirectorAPI will hook ClassicStageInfo.Awake and use the events to make changes
+            </summary>
+            <summary>
+            The three categories for monsters. Support for custom categories will come later.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterCategory.None">
+            <summary>
+            An invalid default value. Anything with this value is ignored when dealing with monsters.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterCategory.BasicMonsters">
+            <summary>
+            Small enemies like Lemurians and Beetles.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterCategory.Minibosses">
+            <summary>
+            Medium enemies like Golems and Beetle Guards.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterCategory.Champions">
+            <summary>
+            Bosses like Vagrants and Titans.
+            </summary>
+        </member>
+        <member name="T:R2API.DirectorAPI.InteractableCategory">
+            <summary>
+            The categories for interactables. Support for custom categories will come later.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.InteractableCategory.None">
+            <summary>
+            An invalid default value. Anything with this value is ignored when dealing with interactables.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.InteractableCategory.Chests">
+            <summary>
+            Chests, such as basic chests, large chests, shops, equipment barrels, lunar pods, and category chests. NOT legendary chests or cloaked chests.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.InteractableCategory.Barrels">
+            <summary>
+            Barrels.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.InteractableCategory.Shrines">
+            <summary>
+            Chance shrines, blood shrines, combat shrines, order shrines, mountain shrines, shrine of the woods. NOT shrine of gold.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.InteractableCategory.Drones">
+            <summary>
+            All types of drones such as TC-280, equipment drones, gunner drones, healing drones, and incinerator drones. NOT gunner turrets.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.InteractableCategory.Misc">
+            <summary>
+            Gunner turrets only.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.InteractableCategory.Rare">
+            <summary>
+            Legendary chests, cloaked chests, shrine of gold, and radio scanners.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.InteractableCategory.Duplicator">
+            <summary>
+            All three tiers of printers.
+            </summary>
+        </member>
+        <member name="T:R2API.DirectorAPI.Stage">
+            <summary>
+            A flags enum for the vanilla stages. Custom stages are handled with a string in StageInfo.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.Custom">
+            <summary>
+            When this is set to custom, check the string in StageInfo
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.StageInfo.stage">
+            <summary>
+            The current stage. If set to custom, check customStageName.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.StageInfo.customStageName">
+            <summary>
+            This is set to the name of the custom stage. Is left blank for vanilla stages.
+            </summary>
+        </member>
+        <member name="M:R2API.DirectorAPI.StageInfo.CheckStage(R2API.DirectorAPI.Stage,System.String[])">
+            <summary>
+            Returns true if the current stage matches any of the stages you specify.
+            To match a custom stage, include Stage.Custom in your stage input and specify names in customStageNames.
+            </summary>
+            <param name="stage">The stages to match with</param>
+            <param name="customStageNames">Names of the custom stages to match. Leave blank to match all custom stages</param>
+            <returns></returns>
+        </member>
+        <member name="T:R2API.DirectorAPI.StageSettings">
+            <summary>
+            A class passed to everything subscribed to stageSettingsActions that contains various settings for a stage.
+            All mods will be working off the same settings, so operators like *=,+=,-=, and /= are preferred over directly setting values.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.StageSettings.sceneDirectorMonsterCredits">
+            <summary>
+            How many credits the scene director has for monsters at the start of a stage.
+            This scales with difficulty, and thus will always be zero on the first stage.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.StageSettings.sceneDirectorInteractableCredits">
+            <summary>
+            How many credits the scene director has for interactables at the start of a stage.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.StageSettings.bonusCreditObjects">
+            <summary>
+            If the GameObject key of the dictionary is enabled, then the scene director gains the value in extra interactable credits
+            Used for things like the door in Abyssal Depths.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.StageSettings.monsterCategoryWeights">
+            <summary>
+            The weights for each monster category on this stage.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.StageSettings.interactableCategoryWeights">
+            <summary>
+            The weights for each interactable category on this stage.
+            </summary>
+        </member>
+        <member name="T:R2API.DirectorAPI.DirectorCardHolder">
+            <summary>
+            A wrapper class for DirectorCards. A list of these is passed to everything subscribed to monsterActions and interactableActions.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.DirectorCardHolder.card">
+            <summary>
+            The director card. This contains the majority of the information for an interactable or monster, including the prefab.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.DirectorCardHolder.monsterCategory">
+            <summary>
+            The monster category the card belongs to. Will be set to None for interactables.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.DirectorCardHolder.interactableCategory">
+            <summary>
+            The interactable category the card belongs to. Will be set to none for monsters.
+            </summary>
+        </member>
+        <member name="T:R2API.DirectorAPI.MonsterFamilyHolder">
+            <summary>
+            A wrapper class for Monster Families. A list of these is passed to everything subscribed to familyActions.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.familyBasicMonsters">
+            <summary>
+            List of all basic monsters that can spawn during this family event.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.familyMinibosses">
+            <summary>
+            List of all minibosses that can spawn during this family event.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.familyChampions">
+            <summary>
+            List of all champions that can spawn during this family event.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.familyBasicMonsterWeight">
+            <summary>
+            The selection weight for basic monsters during the family event.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.familyMinibossWeight">
+            <summary>
+            The selection weight for minibosses during the family event.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.familyChampionWeight">
+            <summary>
+            The selection weight for champions during the family event.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.minStageCompletion">
+            <summary>
+            The minimum number of stages completed for this family event to occur.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.maxStageCompletion">
+            <summary>
+            The maximum number of stages for this family event to occur.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.familySelectionWeight">
+            <summary>
+            The weight of this monster family relative to other monster families.
+            Does NOT increase the chances of a family event occuring, just the chance that this will be chosen when one does occur.
+            Support for modifying the chance of family events overall will come later (and will be in StageSettings)
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.selectionChatString">
+            <summary>
+            The message sent to chat when this family is selected.
+            </summary>
+        </member>
+        <member name="T:R2API.DirectorAPI.Helpers">
+            <summary>
+            This subclass contains helper methods for use with DirectorAPI.
+            Note that there is much more flexibility by working with the API directly through its event system.
+            The primary purpose of these helpers is to serve as example code, and to assist with very simple tasks.
+            They are NOT intended to be, or ever will be, a comprehensive way to use the DirectorAPI.
+            </summary>
+        </member>
+        <member name="T:R2API.DirectorAPI.Helpers.MonsterNames">
+            <summary>
+            This class contains static strings for each characterspawncard in the base game.
+            These can be used for matching names.
+            </summary>
+        </member>
+        <member name="T:R2API.DirectorAPI.Helpers.InteractableNames">
+            <summary>
+            This class contains static strings for each interactablespawncard in the base game.
+            These can be used for matching names.
+            </summary>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.PreventElites(System.String,System.Boolean)">
+            <summary>
+            Enables or disables elite spawns for a specific monster.
+            </summary>
+            <param name="monsterName">The name of the monster to edit</param>
+            <param name="elitesAllowed">Should elites be allowed?</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.AddNewMonster(RoR2.DirectorCard,R2API.DirectorAPI.MonsterCategory)">
+            <summary>
+            Adds a new monster to all stages.
+            </summary>
+            <param name="monsterCard">The DirectorCard for the monster</param>
+            <param name="category">The category to add the monster to</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.AddNewMonsterToStage(RoR2.DirectorCard,R2API.DirectorAPI.MonsterCategory,R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Adds a new monster to a specific stage.
+            For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            </summary>
+            <param name="monsterCard">The DirectorCard of the monster to add</param>
+            <param name="category">The category to add the monster to</param>
+            <param name="stage">The stage to add the monster to</param>
+            <param name="customStageName">The name of the custom stage</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.AddNewInteractable(RoR2.DirectorCard,R2API.DirectorAPI.InteractableCategory)">
+            <summary>
+            Adds a new interactable to all stages.
+            </summary>
+            <param name="interactableCard">The DirectorCard for the interactable</param>
+            <param name="category">The category of the interactable</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.AddNewInteractableToStage(RoR2.DirectorCard,R2API.DirectorAPI.InteractableCategory,R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Adds a new interactable to a specific stage.
+            For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            </summary>
+            <param name="interactableCard">The DirectorCard of the interactable</param>
+            <param name="category">The category of the interactable</param>
+            <param name="stage">The stage to add the interactable to</param>
+            <param name="customStageName">The name of the custom stage</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.RemoveExistingMonster(System.String)">
+            <summary>
+            Removes a monster from spawns on all stages.
+            </summary>
+            <param name="monsterName">The name of the monster card to remove</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.RemoveExistingMonsterFromStage(System.String,R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Removes a monster from spawns on a specific stage.
+            For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            </summary>
+            <param name="monsterName">The name of the monster card to remove</param>
+            <param name="stage">The stage to remove on</param>
+            <param name="customStageName">The name of the custom stage</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.RemoveExistingInteractable(System.String)">
+            <summary>
+            Remove an interactable from spawns on all stages.
+            </summary>
+            <param name="interactableName">Name of the interactable to remove</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.RemoveExistingInteractableFromStage(System.String,R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Remove an interactable from spawns on a specific stage.
+            For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            </summary>
+            <param name="interactableName">The name of the interactable to remove</param>
+            <param name="stage">The stage to remove on</param>
+            <param name="customStageName">The name of the custom stage</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.AddSceneMonsterCredits(System.Int32,R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Adds a flat amount of monster credits to the scene director on a specific stage.
+            For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            </summary>
+            <param name="increase">The quantity to add</param>
+            <param name="stage">The stage to add on</param>
+            <param name="customStageName">The name of the custom stage</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.AddSceneInteractableCredits(System.Int32,R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Adds a flat amount of interactable credits to the scene director on a specific stage.
+            For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            </summary>
+            <param name="increase">The quantity to add</param>
+            <param name="stage">The stage to add on</param>
+            <param name="customStageName">The name of the custom stage</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.MultiplySceneMonsterCredits(System.Int32,R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Multiplies the scene director monster credits on a specific stage.
+            For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            </summary>
+            <param name="multiplier">The number to multiply by</param>
+            <param name="stage">The stage to multiply on</param>
+            <param name="customStageName">The name of the custom stage</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.MultiplySceneInteractableCredits(System.Int32,R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Multiplies the scene director interactable credits on a specific stage.
+            For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            </summary>
+            <param name="multiplier">The number to multiply by</param>
+            <param name="stage">The stage to multiply on</param>
+            <param name="customStageName">The name of the custom stage</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.ReduceSceneMonsterCredits(System.Int32,R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Divides the scene director monster credits on a specific stage.
+            For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            </summary>
+            <param name="divisor">The number to divide by</param>
+            <param name="stage">The stage to divide on</param>
+            <param name="customStageName">The name of the custom stage</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.ReduceSceneInteractableCredits(System.Int32,R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Divides the scene director interactable credits on a specific stage.
+            For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            </summary>
+            <param name="divisor">The number to divide by</param>
+            <param name="stage">The stage to divide on</param>
+            <param name="customStageName">The name of the custom stage</param>
+        </member>
+        <member name="E:R2API.EffectAPI.getAdditionalEntries">
+            <summary>
+            Mimics events found in CatalogModHelpers, can be used to add or sort effects.
+            </summary>
+        </member>
+        <member name="M:R2API.EffectAPI.AddEffect(UnityEngine.GameObject)">
+            <summary>
+            Creates an EffectDef from a prefab and adds it to the EffectCatalog.
+            The prefab must have an the following components: EffectComponent, VFXAttributes
+            For more control over the EffectDef, use AddEffect( EffectDef )
+            </summary>
+            <param name="effect">The prefab of the effect to be added</param>
+            <returns>True if the effect was added</returns>
+        </member>
+        <member name="M:R2API.EffectAPI.AddEffect(RoR2.EffectDef)">
+            <summary>
+            Adds an EffectDef to the EffectCatalog when the catalog inits.
+            </summary>
+            <param name="effect">The EffectDef to addZ</param>
+            <returns>False if the EffectDef was null</returns>
+        </member>
         <member name="M:R2API.ItemAPI.AddCustomItem(R2API.CustomItem)">
             <summary>
             Add a custom item to the list of available items.
@@ -393,6 +791,75 @@
             <param name="rule">The rule to add.</param>
             <typeparam name="T">The type of value this rule holds.</typeparam>
         </member>
+        <member name="M:R2API.OrbAPI.AddOrb(System.Type)">
+            <summary>
+            Adds an Orb to the orb catalog.
+            This must be called during plugin Awake() or OnEnable().
+            The type must be a subclass of RoR2.Orbs.Orb
+            </summary>
+            <param name="t">The type of the orb being added</param>
+            <returns>True if orb will be added</returns>
+        </member>
+        <member name="M:R2API.PrefabAPI.InstantiateClone(UnityEngine.GameObject,System.String,System.Boolean,System.String,System.String,System.Int32)">
+            <summary>
+            Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
+            Also registers the clone to network if registerNetwork is not set to false.
+            Do not override the file, member, and line number parameters. They are used to generate a unique hash for the network ID.
+            </summary>
+            <param name="g">The GameObject to clone</param>
+            <param name="nameToSet">The name to give the clone (Should be unique)</param>
+            <param name="registerNetwork">Should the object be registered to network</param>
+            <returns>The GameObject of the clone</returns>
+        </member>
+        <member name="M:R2API.PrefabAPI.RegisterNetworkPrefab(UnityEngine.GameObject,System.String,System.String,System.Int32)">
+            <summary>
+            Registers a prefab so that NetworkServer.Spawn will function properly with it.
+            Only will work on prefabs with a NetworkIdentity component.
+            Is never needed for existing objects unless you have cloned them.
+            Do not override the file, member, and line number parameters. They are used to generate a unique hash for the network ID.
+            </summary>
+            <param name="g">The prefab to register</param>
+        </member>
+        <member name="M:R2API.SkillAPI.AddSkill(System.Type)">
+            <summary>
+            Adds a type for a skill EntityState to the SkillsCatalog.
+            State must derive from EntityStates.EntityState.
+            Note that SkillDefs and SkillFamiles must also be added seperately.
+            </summary>
+            <param name="t">The type to add</param>
+            <returns>True if succesfully added</returns>
+        </member>
+        <member name="M:R2API.SkillAPI.AddSkillDef(RoR2.Skills.SkillDef)">
+            <summary>
+            Registers an event to add a SkillDef to the SkillDefCatalog.
+            Must be called before Catalog init (during Awake() or OnEnable())
+            </summary>
+            <param name="s">The SkillDef to add</param>
+            <returns>True if the event was registered</returns>
+        </member>
+        <member name="M:R2API.SkillAPI.AddSkillFamily(RoR2.Skills.SkillFamily)">
+            <summary>
+            Registers an event to add a SkillFamily to the SkillFamiliesCatalog
+            Must be called before Catalog init (during Awake() or OnEnable())
+            </summary>
+            <param name="sf">The skillfamily to add</param>
+            <returns>True if the event was registered</returns>
+        </member>
+        <member name="T:R2API.SkinAPI.SkinDefInfo">
+            <summary>
+            A container struct for all SkinDef parameters.
+            Use this to set skinDef values, then call CreateNewSkinDef().
+            </summary>
+        </member>
+        <member name="M:R2API.SkinAPI.CreateNewSkinDef(R2API.SkinAPI.SkinDefInfo)">
+            <summary>
+            Creates a new SkinDef from a SkinDefInfo.
+            Note that this prevents null-refs by disabling SkinDef awake while the SkinDef is being created.
+            The things that occur during awake are performed when first applied to a character instead.
+            </summary>
+            <param name="skin"></param>
+            <returns></returns>
+        </member>
         <member name="M:R2API.SurvivorAPI.AddSurvivor(RoR2.SurvivorDef)">
             <summary>
             Add a SurvivorDef to the list of available survivors.
@@ -429,8 +896,22 @@
             Exactly the same as AddToConsoleWhenReady(): use that method instead.
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetFieldCached``1(System.String)" -->
-        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetFieldCached(System.Type,System.String)" -->
+        <member name="M:R2API.Utils.Reflection.GetFieldCached``1(System.String)">
+            <summary>
+            Gets the <see cref="T:System.Reflection.FieldInfo"/> of the type by name and caches it
+            </summary>
+            <typeparam name="T">The type to search</typeparam>
+            <param name="name">The name of the field to find</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetFieldCached(System.Type,System.String)">
+            <summary>
+            Gets the <see cref="T:System.Reflection.FieldInfo" /> of the type by name and caches it
+            </summary>
+            <param name="T">The type to search</param>
+            <param name="name">The name of the field to find</param>
+            <returns></returns>
+        </member>
         <member name="M:R2API.Utils.Reflection.GetFieldValue``1(System.Object,System.String)">
             <summary>
             Gets the value of the field on the object
@@ -464,9 +945,11 @@
             <summary>
             Sets the value of the specified field on the specified struct
             </summary>
+            <typeparam name="TInstance">The type of the instance of the struct</typeparam>
             <typeparam name="TValue">The type of the value to set</typeparam>
             <param name="instance">The name of the field to set the value of</param>
             <param name="fieldName">The type to set the specified field's value on</param>
+            <param name="value">The value to set the field to</param>
             <returns></returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetFieldFull(System.Type,System.String)" -->
@@ -499,16 +982,18 @@
             <typeparam name="TValue">The type of the value to set</typeparam>
             <param name="staticType">The name of the static field to set the value of</param>
             <param name="propName">The type to set the specified static property's value on</param>
-            <param name="value">The value to set</param>
+            <param name="value">The value to set the property to</param>
             <returns></returns>
         </member>
         <member name="M:R2API.Utils.Reflection.SetStructPropertyValue``2(``0@,System.String,``1)">
             <summary>
             Sets the value of the specified property on the specified struct
             </summary>
+            <typeparam name="TInstance">The type of the instance of the struct</typeparam>
             <typeparam name="TValue">The type of the value to set</typeparam>
             <param name="instance">The name of the field to set the value of</param>
             <param name="propName">The type to set the specified property's value on</param>
+            <param name="value">The value to set the property to</param>
             <returns></returns>
         </member>
         <member name="M:R2API.Utils.Reflection.GetStructPropertyValue``2(``0@,System.String)">
@@ -520,10 +1005,39 @@
             <param name="propName">The type to set the specified property's value on</param>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetMethodCached``1(System.String)" -->
-        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetMethodCached(System.Type,System.String)" -->
-        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetMethodCached``1(System.String,System.Type[])" -->
-        <!-- Badly formed XML comment ignored for member "M:R2API.Utils.Reflection.GetMethodCached(System.Type,System.String,System.Type[])" -->
+        <member name="M:R2API.Utils.Reflection.GetMethodCached``1(System.String)">
+            <summary>
+            Gets the method on the specified type and caches it
+            </summary>
+            <typeparam name="T">The type to search</typeparam>
+            <param name="name">The name of the method to find</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetMethodCached(System.Type,System.String)">
+            <summary>
+            Gets the method on the specified static type and caches it
+            </summary>
+            <param name="T">The type to search</param>
+            <param name="name">The name of the method to find</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetMethodCached``1(System.String,System.Type[])">
+            <summary>
+            Gets the method on the specified type and caches it. This overload is used when the method is ambiguous
+            </summary>
+            <typeparam name="T">The type to search</typeparam>
+            <param name="name">The name of the method to find</param>
+            <param name="argumentTypes">The types of the argument</param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.Utils.Reflection.GetMethodCached(System.Type,System.String,System.Type[])">
+            <summary>
+            Gets the method on the specified static type and caches it. This overload is used when the method is ambiguous
+            </summary>
+            <param name="T">The type to search</param>
+            <param name="name">The name of the method to find</param>
+            <param name="argumentTypes">The types of the argument</param>
+        </member>
         <member name="M:R2API.Utils.Reflection.InvokeMethod``1(System.Object,System.String)">
             <summary>
             Invoke a method on the specified object by name
@@ -604,7 +1118,7 @@
             <summary>
             Gets the constructor on the specified static type with specified arguments and caches it
             </summary>
-            <typeparam name="T">The type to search</typeparam>
+            <param name="T">The type to search</param>
             <param name="argumentTypes">The types of the arguments on the constructor to find</param>
             <returns></returns>
         </member>
@@ -628,7 +1142,7 @@
             <summary>
             Gets the nested type on the specified static type
             </summary>
-            <typeparam name="T">The static type to search</typeparam>
+            <param name="T">The static type to search</param>
             <param name="name">The name of the nested type to find</param>
             <returns></returns>
         </member>

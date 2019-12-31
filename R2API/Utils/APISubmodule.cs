@@ -6,12 +6,6 @@ using System.Reflection;
 using BepInEx.Logging;
 
 namespace R2API.Utils {
-
-    [R2APISubmoduleDependency("SurvivorAPI")]
-    public class Test {
-
-    }
-
     [Flags]
     public enum InitStage {
         SetHooks   = 0x01,
@@ -57,7 +51,7 @@ namespace R2API.Utils {
             Assembly[] getAssemblies() {
                 var assemblies = new List<Assembly>();
 
-                var path = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
+                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
                 while (!path.ToLower().EndsWith("ins")) {
                     path = Directory.GetParent(path).FullName;
