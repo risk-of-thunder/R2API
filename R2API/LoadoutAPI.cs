@@ -55,10 +55,10 @@ namespace R2API {
         // ReSharper restore InconsistentNaming
 
         internal static void set_stateType_Hook( ref SerializableEntityStateType self, Type value ) =>
-        self.SetStructFieldValue( "_typeName",
-        value != null && value.IsSubclassOf( typeof( EntityState ) )
-        ? value.AssemblyQualifiedName
-        : "" );
+            self.SetStructFieldValue( "_typeName",
+            value != null && value.IsSubclassOf( typeof( EntityState ) )
+            ? value.AssemblyQualifiedName
+            : "" );
 
         internal static void set_typeName_Hook( ref SerializableEntityStateType self, string value ) =>
             set_stateType_Hook( ref self, Type.GetType( value ) ?? GetTypeAllAssemblies( value ) );
