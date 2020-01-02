@@ -28,11 +28,13 @@ namespace R2API {
 
         internal static DetourModManager ModManager;
 
+        internal static R2API instance;
+
         public R2API() {
             Logger = base.Logger;
             ModManager = new DetourModManager();
+            instance = this;
             AddHookLogging();
-
             CheckForIncompatibleAssemblies();
 
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
@@ -42,6 +44,9 @@ namespace R2API {
             submoduleHandler.LoadRequested();
 
             RoR2Application.isModded = true;
+
+            //This needs to always be enabled, regardless of module dependency, or it is useless
+            ModListAPI.Init();
 
             On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
                 // TODO: If we can enable quick play without regrets, uncomment.
