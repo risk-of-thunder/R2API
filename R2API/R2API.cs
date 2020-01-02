@@ -73,6 +73,10 @@ namespace R2API {
             };
         }
 
+        public void Start() {
+            ModListAPI.BuildModList();
+        }
+
         public static void AddHookLogging() {
             ModManager.OnHook += (assembly, @base, arg3, arg4) => LogMethod(@base);
             ModManager.OnDetour += (assembly, @base, arg3) => LogMethod(@base);

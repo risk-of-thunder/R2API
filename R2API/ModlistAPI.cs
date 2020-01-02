@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
 using BepInEx;
+using BepInEx.Configuration;
 using R2API.Utils;
 using RoR2;
 using RoR2.Networking;
@@ -21,10 +22,13 @@ namespace R2API {
         //I used Try Catch excessively to hopefully ensure that any errors this causes due to future updates are zero impact.
 
         public const short messageIndex = 200;
-        public const float messageWaitTimeServer = 10f;
-        public const float messageWaitTimeClient = 5f;
+        public const float messageWaitTimeServer = 1f;
+        public const float messageWaitTimeClient = 1f;
 
         public static bool Loaded { get; private set; }
+
+        public static ModList currentServerMods { get; private set; }
+        public static Dictionary<CSteamID, ModList> connectedClientMods { get; private set; }
 
         public static event Action<NetworkConnection, ModList> modlistRecievedFromServer;
         public static event Action<NetworkConnection, ModList, CSteamID> modlistRecievedFromClient;
@@ -32,11 +36,10 @@ namespace R2API {
         internal static void Init() {
             try {
                 Loaded = true;
-                localModList = BuildModList();
                 On.RoR2.Networking.NetworkMessageHandlerAttribute.CollectHandlers += ScanForNetworkAttributes;
                 GameNetworkManager.onClientConnectGlobal += ClientsideConnect;
                 GameNetworkManager.onServerConnectGlobal += ServersideConnect;
-
+                connectedClientMods = new Dictionary<CSteamID, ModList>();
 #if DEBUG
                 modlistRecievedFromServer += ( conn, list ) => R2API.Logger.LogInfo( list.TextRepresentation() );
                 modlistRecievedFromClient += ( conn, list, steamID ) => R2API.Logger.LogInfo( list.TextRepresentation() );
@@ -88,9 +91,9 @@ namespace R2API {
 
         #region Actually do networking stuff
         private static Dictionary<NetworkConnection, ModList> tempConnectionInfo = new Dictionary<NetworkConnection, ModList>();
-        private static Dictionary<CSteamID, ModList> connectedModLists = new Dictionary<CSteamID, ModList>();
+        //private static Dictionary<CSteamID, ModList> connectedModLists = new Dictionary<CSteamID, ModList>();
         private static ModList localModList;
-        private static ModList serverModList;
+        //private static ModList serverModList;
         private static ModList tempServerModList;
 
         private static void ServersideConnect( UnityEngine.Networking.NetworkConnection connection ) {
@@ -104,7 +107,6 @@ namespace R2API {
         }
         private static void ClientsideConnect( UnityEngine.Networking.NetworkConnection connection ) {
             try {
-                // This will very likely break on pirated copies of the game. Sounds like a good feature to me.
                 ModListMessage msg = new ModListMessage( localModList, false );
                 connection.SendByChannel( messageIndex, msg, QosChannelIndex.defaultReliable.intVal );
                 R2API.instance.StartCoroutine( MessageWaitClient( connection, messageWaitTimeClient ) );
@@ -115,7 +117,6 @@ namespace R2API {
 
         private static IEnumerator MessageWaitServer( NetworkConnection conn, float duration ) {
             yield return new WaitForSeconds( duration );
-
             ModList list = null;
             if( tempConnectionInfo.ContainsKey( conn ) ) {
                 list = tempConnectionInfo[conn];
@@ -123,12 +124,15 @@ namespace R2API {
                 list = ModList.vanilla;
             }
             CSteamID steamID = ServerAuthManager.FindAuthData( conn ).steamId;
-            connectedModLists[steamID] = list;
+            connectedClientMods[steamID] = list;
             modlistRecievedFromClient?.Invoke( conn, list, steamID );
+            if( tempConnectionInfo.ContainsKey( conn ) ) {
+                tempConnectionInfo.Remove( conn );
+            }
         }
 
         private static IEnumerator MessageWaitClient( NetworkConnection conn, float duration ) {
-            yield return new WaitForSeconds( duration * 0.5f );
+            yield return new WaitForSeconds( duration );
 
             ModList list = null;
             if( tempServerModList != null ) {
@@ -136,8 +140,9 @@ namespace R2API {
             } else {
                 list = ModList.vanilla;
             }
-            serverModList = list;
+            currentServerMods = list;
             modlistRecievedFromServer?.Invoke( conn, list );
+            tempServerModList = null;
         }
 
         [NetworkMessageHandler( client = true, server = true, msgType = messageIndex )]
@@ -244,34 +249,146 @@ namespace R2API {
         public class ModInfo {
             public String guid { get; private set; }
             public System.Version version { get; private set; }
+            public bool hasConfig {
+                get {
+                    return this.configData != null;
+                }
+            }
+            public ConfigData configData { get; private set; }
+
 
             public ModInfo( PluginInfo plugin ) {
                 this.guid = plugin.Metadata.GUID;
                 this.version = plugin.Metadata.Version;
+                if( plugin.Instance.Config != null ) {
+                    this.configData = new ConfigData( plugin.Instance.Config );
+                } else {
+                    this.configData = null;
+                }
             }
-            private ModInfo( String guid, System.Version version ) {
+            private ModInfo( String guid, System.Version version, ConfigData configData ) {
                 this.guid = guid;
                 this.version = version;
+                this.configData = configData;
             }
             public void Write( NetworkWriter writer ) {
                 writer.Write( this.guid );
                 writer.Write( this.version.ToString() );
+                writer.Write( this.hasConfig );
+                this.configData.Write( writer );
             }
             public static ModInfo Read( NetworkReader reader ) {
                 var guid = reader.ReadString();
                 var version = new System.Version(reader.ReadString());
-                return new ModInfo( guid, version );
+                ConfigData configData = null;
+                if( reader.ReadBoolean() ) {
+                    configData = ConfigData.Read( reader );
+                }
+                return new ModInfo( guid, version, configData );
+            }
+        }
+
+        #region Config file serialization
+        public class ConfigData {
+            private Dictionary< string, ConfigOption > data = new Dictionary<string, ConfigOption>();
+            public ConfigData( ConfigFile config ) {
+                foreach( ConfigDefinition def in config.Keys ) {
+                    this.data[def.Section + ":-:" + def.Key] = new ConfigOption( config[def] );
+                }
+            }
+
+            private ConfigData() { }
+
+            public void Write( NetworkWriter writer ) {
+                writer.Write( this.data.Count );
+                foreach( KeyValuePair<string, ConfigOption> dataEntry in this.data ) {
+                    writer.Write( dataEntry.Key );
+                    dataEntry.Value.Write( writer );
+                }
+            }
+
+            public static ConfigData Read( NetworkReader reader ) {
+                int count = reader.ReadInt32();
+                Dictionary<string, ConfigOption> data = new Dictionary<string, ConfigOption>(count);
+                for( int i = 0; i < count; i++ ) {
+                    var keyString = reader.ReadString();
+                    data[keyString] = ConfigOption.Read( reader );
+                }
+
+                return new ConfigData {
+                    data = data
+                };
+            }
+        }
+
+        public class ConfigOption {
+            public ConfigOption( ConfigEntryBase entry ) {
+                this.type = entry.SettingType;
+                this.value = entry.BoxedValue;
+            }
+
+            public ConfigOption( Type type, object value ) {
+                this.type = type;
+                this.value = value;
+            }
+
+            public Type type { get; private set; }
+            public object value { get; private set; }
+
+            public void Write( NetworkWriter writer ) {
+                writer.Write( GetTypeIndex(this.type) );
+                writer.Write( TomlTypeConverter.GetConverter( this.type ).ConvertToString( this.value, this.type ) );
+            }
+
+            public static ConfigOption Read( NetworkReader reader ) {
+                var typeString = reader.ReadString();
+                var objString = reader.ReadString();
+                var type = GetIndexType( typeString );
+                var obj = TomlTypeConverter.GetConverter( type ).ConvertToObject( objString, type);
+                return new ConfigOption( type, obj );
+            }
+
+            public static Dictionary<Type,string> typeIndexMap = null;
+            public static Dictionary<string,Type> indexTypeMap = null;
+            public static string GetTypeIndex( Type type ) {
+                if( typeIndexMap == null || indexTypeMap == null ) BuildTypeIndexMap();
+
+                if( typeIndexMap.ContainsKey( type ) ) return typeIndexMap[type];
+
+                R2API.Logger.LogError( "Invalid type found in Bepinex Config." );
+                return "";
+            }
+
+            public static Type GetIndexType( string index ) {
+                if( typeIndexMap == null || indexTypeMap == null ) BuildTypeIndexMap();
+
+                return indexTypeMap[index];
+            }
+
+            public static void BuildTypeIndexMap() {
+                typeIndexMap = new Dictionary<Type, string>();
+                indexTypeMap = new Dictionary<string, Type>(); 
+                foreach( Type t in TomlTypeConverter.GetSupportedTypes() ) {
+                    typeIndexMap[t] = t.AssemblyQualifiedName;
+                    indexTypeMap[t.AssemblyQualifiedName] = t;
+                }
             }
         }
         #endregion
+        #endregion
 
         #region Build the modlist
-        private static ModList BuildModList() {
-            var mods = new List<ModInfo>();
-            foreach( KeyValuePair<string, PluginInfo> kv in BepInEx.Bootstrap.Chainloader.PluginInfos ) {
-                mods.Add( new ModInfo( kv.Value ) );
+        internal static void BuildModList() {
+            try {
+                var mods = new List<ModInfo>();
+                foreach( KeyValuePair<string, PluginInfo> kv in BepInEx.Bootstrap.Chainloader.PluginInfos ) {
+                    mods.Add( new ModInfo( kv.Value ) );
+                }
+
+                localModList = new ModList(mods);
+            } catch (Exception e ) {
+                Fail( e, "BuildModList" );
             }
-            return new ModList( mods );
         }
         #endregion
     }
