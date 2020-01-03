@@ -7,6 +7,8 @@ using RoR2;
 using RoR2.Skills;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Collections;
+using Unity.Jobs;
 
 namespace R2API {
     [R2APISubmodule]
@@ -198,6 +200,78 @@ namespace R2API {
 
         #region Adding Skins
         /// <summary>
+        /// Creates a skin icon sprite styled after the ones already in the game.
+        /// </summary>
+        /// <param name="top">The color of the top portion</param>
+        /// <param name="right">The color of the right portion</param>
+        /// <param name="bottom">The color of the bottom portion</param>
+        /// <param name="left">The color of the left portion</param>
+        /// <returns>The icon sprite</returns>
+        public static Sprite CreateSkinIcon( Color top, Color right, Color bottom, Color left ) {
+            return CreateSkinIcon( top, right, bottom, left, new Color( 0.6f, 0.6f, 0.6f ) );
+        }
+        /// <summary>
+        /// Creates a skin icon sprite styled after the ones already in the game.
+        /// </summary>
+        /// <param name="top">The color of the top portion</param>
+        /// <param name="right">The color of the right portion</param>
+        /// <param name="bottom">The color of the bottom portion</param>
+        /// <param name="left">The color of the left portion</param>
+        /// <param name="line">The color of the dividing lines</param>
+        /// <returns></returns>
+        public static Sprite CreateSkinIcon( Color top, Color right, Color bottom, Color left, Color line ) {
+            Texture2D tex = new Texture2D( 128, 128, TextureFormat.RGBA32, false );
+            new IconTexJob {
+                top = top,
+                bottom = bottom,
+                right = right,
+                left = left,
+                line = line,
+                texOutput = tex.GetRawTextureData<Color32>()
+            }.Schedule( 16384, 1 ).Complete();
+            tex.wrapMode = TextureWrapMode.Clamp;
+            tex.Apply();
+            return Sprite.Create( tex, new Rect( 0, 0, 128, 128 ), new Vector2( 0.5f, 0.5f ) );
+        }
+        private struct IconTexJob : IJobParallelFor {
+            [ReadOnly]
+            public Color32 top;
+            [ReadOnly]
+            public Color32 right;
+            [ReadOnly]
+            public Color32 bottom;
+            [ReadOnly]
+            public Color32 left;
+            [ReadOnly]
+            public Color32 line;
+            public NativeArray<Color32> texOutput;
+            public void Execute( Int32 index ) {
+                Int32 x = (index % 128) - 64;
+                Int32 y = Mathf.FloorToInt( index / 128 ) - 64;
+                if( Math.Abs( Math.Abs( y ) - Math.Abs( x ) ) <= 2 ) {
+                    this.texOutput[index] = this.line;
+                    return;
+                }
+                if( y > x && y > -x ) {
+                    this.texOutput[index] = this.top;
+                    return;
+                }
+                if( y < x && y < -x ) {
+                    this.texOutput[index] = this.bottom;
+                    return;
+                }
+                if( y > x && y < -x ) {
+                    this.texOutput[index] = this.left;
+                    return;
+                }
+                if( y < x && y > -x ) {
+                    this.texOutput[index] = this.right;
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
         /// A container struct for all SkinDef parameters.
         /// Use this to set skinDef values, then call CreateNewSkinDef().
         /// </summary>
@@ -208,6 +282,8 @@ namespace R2API {
             public string unlockableName;
             public GameObject rootObject;
             public CharacterModel.RendererInfo[] rendererInfos;
+            public SkinDef.MeshReplacement[] meshReplacements;
+            public SkinDef.GameObjectActivation[] gameObjectActivations;
             public string name;
         }
 
@@ -232,6 +308,8 @@ namespace R2API {
             newSkin.unlockableName = skin.unlockableName;
             newSkin.rootObject = skin.rootObject;
             newSkin.rendererInfos = skin.rendererInfos;
+            newSkin.gameObjectActivations = skin.gameObjectActivations;
+            newSkin.meshReplacements = skin.meshReplacements;
             newSkin.nameToken = skin.nameToken;
             newSkin.name = skin.name;
 
