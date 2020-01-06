@@ -247,7 +247,7 @@ namespace R2API {
             public NativeArray<Color32> texOutput;
             public void Execute( Int32 index ) {
                 Int32 x = (index % 128) - 64;
-                Int32 y = Mathf.FloorToInt( index / 128 ) - 64;
+                Int32 y = (index / 128) - 64;
                 if( Math.Abs( Math.Abs( y ) - Math.Abs( x ) ) <= 2 ) {
                     this.texOutput[index] = this.line;
                     return;
