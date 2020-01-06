@@ -319,6 +319,114 @@ namespace R2API {
             return newSkin;
         }
 
+        /// <summary>
+        /// Adds a skin to the body prefab for a character.
+        /// Will attempt to create a default skin if one is not present.
+        /// </summary>
+        /// <param name="bodyPrefab">The body to add the skin to</param>
+        /// <param name="skin">The SkinDefInfo for the skin to add</param>
+        /// <returns>True if successful</returns>
+        public static Boolean AddSkinToCharacter( GameObject bodyPrefab, SkinDefInfo skin ) {
+            var skinDef = CreateNewSkinDef( skin );
+            return AddSkinToCharacter( bodyPrefab, skinDef );
+        }
+
+        /// <summary>
+        /// Adds a skin to the body prefab for a character.
+        /// Will attempt to create a default skin if one is not present.
+        /// </summary>
+        /// <param name="bodyPrefab">The body to add the skin to</param>
+        /// <param name="skin">The SkinDef to add</param>
+        /// <returns>True if successful</returns>
+        public static Boolean AddSkinToCharacter( GameObject bodyPrefab, SkinDef skin ) {
+            if( bodyPrefab == null ) {
+                R2API.Logger.LogError( "Tried to add skin to null body prefab." );
+                return false;
+            }
+
+            if( skin == null ) {
+                R2API.Logger.LogError( "Tried to add invalid skin." );
+                return false;
+            }
+            addedSkins.Add( skin );
+
+            var modelLocator = bodyPrefab.GetComponent<ModelLocator>();
+            if( modelLocator == null ) {
+                R2API.Logger.LogError( "Tried to add skin to invalid body prefab (No ModelLocator)." );
+                return false;
+            }
+
+            var model = modelLocator.modelTransform;
+            if( model == null ) {
+                R2API.Logger.LogError( "Tried to add skin to body prefab with no modelTransform." );
+                return false;
+            }
+
+            if( skin.rootObject != model.gameObject ) {
+                R2API.Logger.LogError( "Tried to add skin with improper root object set." );
+                return false;
+            }
+
+            var modelSkins = model.GetComponent<ModelSkinController>();
+            if( modelSkins == null ) {
+                R2API.Logger.LogWarning( bodyPrefab.name + " does not have a modelSkinController.\nAdding a new one and attempting to populate the default skin.\nHighly recommended you set the controller up manually." );
+                var charModel = model.GetComponent<CharacterModel>();
+                if( charModel == null ) {
+                    R2API.Logger.LogError( "Unable to locate CharacterModel, default skin creation aborted." );
+                    return false;
+                }
+
+                var skinnedRenderer = charModel.mainSkinnedMeshRenderer;
+                if( skinnedRenderer == null ) {
+                    R2API.Logger.LogError( "CharacterModel did not contain a main SkinnedMeshRenderer, default skin creation aborted." );
+                    return false;
+                }
+
+                var baseRenderInfos = charModel.baseRendererInfos;
+                if( baseRenderInfos == null || baseRenderInfos.Length == 0 ) {
+                    R2API.Logger.LogError( "CharacterModel rendererInfos are invalid, default skin creation aborted." );
+                    return false;
+                }
+
+                modelSkins = model.gameObject.AddComponent<ModelSkinController>();
+
+                var skinDefInfo = new SkinDefInfo {
+                    baseSkins = Array.Empty<SkinDef>(),
+                    gameObjectActivations = Array.Empty<SkinDef.GameObjectActivation>(),
+                    icon = CreateDefaultSkinIcon(),
+                    name = "skin"+bodyPrefab.name+"Default",
+                    nameToken = bodyPrefab.name.ToUpper() + "_DEFAULT_SKIN_NAME",
+                    rootObject = model.gameObject,
+                    unlockableName = "",
+                    meshReplacements = new SkinDef.MeshReplacement[1]
+                    {
+                        new SkinDef.MeshReplacement {
+                            renderer = skinnedRenderer,
+                            mesh = skinnedRenderer.sharedMesh
+                        }
+                    },
+                    rendererInfos = charModel.baseRendererInfos
+                };
+
+                var defaultSkinDef = CreateNewSkinDef( skinDefInfo );
+
+                modelSkins.skins = new SkinDef[1] {
+                    defaultSkinDef
+                };
+            }
+
+            var skinsArray = modelSkins.skins;
+            var index = skinsArray.Length;
+            Array.Resize<SkinDef>( ref skinsArray, index + 1 );
+            skinsArray[index] = skin;
+            modelSkins.skins = skinsArray;
+            return true;
+        }
+
+        internal static Sprite CreateDefaultSkinIcon() {
+            return CreateSkinIcon( Color.red, Color.green, Color.blue, Color.black );
+        }
+
         private static void DoNothing( On.RoR2.SkinDef.orig_Awake orig, SkinDef self ) {
             //Intentionally do nothing
         }
