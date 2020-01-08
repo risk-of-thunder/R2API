@@ -28,12 +28,10 @@ namespace R2API {
 
         internal static DetourModManager ModManager;
 
-        internal static R2API instance;
 
         public R2API() {
             Logger = base.Logger;
             ModManager = new DetourModManager();
-            instance = this;
             AddHookLogging();
             CheckForIncompatibleAssemblies();
 
