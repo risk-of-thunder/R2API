@@ -6,9 +6,11 @@ using RoR2;
 using RoR2.Skills;
 
 namespace R2API {
+    [Obsolete( "Please use LoadoutAPI instead" )]
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class SkillAPI {
+
         /// <summary>
         /// Adds a type for a skill EntityState to the SkillsCatalog.
         /// State must derive from EntityStates.EntityState.
