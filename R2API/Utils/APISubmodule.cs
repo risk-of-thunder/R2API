@@ -48,7 +48,7 @@ namespace R2API.Utils {
         }
 
         public void LoadRequested() {
-            Assembly[] getAssemblies() {
+            Assembly[] GetAssemblies() {
                 var assemblies = new List<Assembly>();
 
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -58,7 +58,7 @@ namespace R2API.Utils {
                 }
 
                 foreach (string dll in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories)) {
-                    if (!dll.ToLower().Contains("r2api") || !dll.ToLower().Contains("mmhook")) {
+                    if (!dll.ToLower().Contains("r2api") && !dll.ToLower().Contains("mmhook")) {
                         try // bepis code
                         {
                             assemblies.Add(Assembly.LoadFile(dll));
@@ -72,7 +72,7 @@ namespace R2API.Utils {
                 return assemblies.ToArray();
             }
 
-            var allTypes = getAssemblies()
+            var allTypes = GetAssemblies()
                 .SelectMany(assembly => {
                     try {
                         return assembly.GetTypes();
@@ -98,7 +98,7 @@ namespace R2API.Utils {
                 R2API.Logger.LogInfo($"Requested R2API Submodule: {module}");
             }
 
-            var moduleTypes = allTypes.Where(APISubmoduleFilter);
+            var moduleTypes = Assembly.GetExecutingAssembly().GetTypes().Where(APISubmoduleFilter).ToList();
 
             foreach (var moduleType in moduleTypes) {
                 R2API.Logger.LogInfo($"Found and Enabling R2API Submodule: {moduleType.FullName}");

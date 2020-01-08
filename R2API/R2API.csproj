@@ -1,4 +1,4 @@
-﻿ <Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -21,14 +21,9 @@
    </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="5.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="MonoMod" Version="19.11.5.1" />
     <PackageReference Include="MonoMod.RuntimeDetour" Version="19.11.5.1" />
     <PackageReference Include="MonoMod.Utils" Version="19.11.5.1" />
-    <PackageReference Include="UtilPack.NuGet.MSBuild" Version="2.9.1" />
   </ItemGroup>
 
   <ItemGroup>
