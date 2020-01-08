@@ -14,6 +14,9 @@ using UnityEngine.Networking;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
+    /// <summary>
+    /// An API for sending and retreiving a list of mods (and config settings) in multiplayer.
+    /// </summary>
     [R2APISubmodule]
     public static class ModListAPI {
         //This needs to be active at all times, rather than enabled as a submodule.
