@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Configuration;
 using R2API.Utils;
@@ -13,6 +14,9 @@ using UnityEngine.Networking;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
+    /// <summary>
+    /// An API for sending and retreiving a list of mods (and config settings) in multiplayer.
+    /// </summary>
     [R2APISubmodule]
     public static class ModListAPI {
         //This needs to be active at all times, rather than enabled as a submodule.
@@ -123,16 +127,14 @@ namespace R2API {
 
         #region Actually do networking stuff
         private static Dictionary<NetworkConnection, ModList> tempConnectionInfo = new Dictionary<NetworkConnection, ModList>();
-        //private static Dictionary<CSteamID, ModList> connectedModLists = new Dictionary<CSteamID, ModList>();
         private static ModList localModList;
-        //private static ModList serverModList;
         private static ModList tempServerModList;
 
         private static void ServersideConnect( UnityEngine.Networking.NetworkConnection connection ) {
             try {
                 ModListMessage msg = new ModListMessage( localModList, true );
                 connection.SendByChannel( messageIndex, msg, QosChannelIndex.defaultReliable.intVal );
-                R2API.instance.StartCoroutine( MessageWaitServer( connection, messageWaitTimeServer ) );
+                MessageWaitServerAsync( connection, messageWaitTimeServer );
             } catch (Exception e ) {
                 Fail( e, "ServersideConnect" );
             }
@@ -141,14 +143,15 @@ namespace R2API {
             try {
                 ModListMessage msg = new ModListMessage( localModList, false );
                 connection.SendByChannel( messageIndex, msg, QosChannelIndex.defaultReliable.intVal );
-                R2API.instance.StartCoroutine( MessageWaitClient( connection, messageWaitTimeClient ) );
+                MessageWaitClientAsync( connection, messageWaitTimeClient );
             } catch (Exception e ){
                 Fail( e, "ClientsideConnect" );
             }
         }
 
-        private static IEnumerator MessageWaitServer( NetworkConnection conn, float duration ) {
-            yield return new WaitForSeconds( duration );
+        private static async void MessageWaitServerAsync( NetworkConnection conn, float duration ) {
+            await Task.Delay( TimeSpan.FromSeconds( duration ) );
+
             ModList list = null;
             if( tempConnectionInfo.ContainsKey( conn ) ) {
                 list = tempConnectionInfo[conn];
@@ -163,8 +166,8 @@ namespace R2API {
             }
         }
 
-        private static IEnumerator MessageWaitClient( NetworkConnection conn, float duration ) {
-            yield return new WaitForSeconds( duration );
+        private static async void MessageWaitClientAsync( NetworkConnection conn, float duration ) {
+            await Task.Delay( TimeSpan.FromSeconds( duration ) );
 
             ModList list = null;
             if( tempServerModList != null ) {
@@ -495,6 +498,7 @@ namespace R2API {
                 var typeString = reader.ReadString();
                 var objString = reader.ReadString();
                 var type = GetIndexType( typeString );
+                if( type == null ) return new ConfigOption( typeof( int ), -999 );
                 var obj = TomlTypeConverter.GetConverter( type ).ConvertToObject( objString, type);
                 return new ConfigOption( type, obj );
             }
@@ -512,8 +516,9 @@ namespace R2API {
 
             private static Type GetIndexType( string index ) {
                 if( typeIndexMap == null || indexTypeMap == null ) BuildTypeIndexMap();
+                if( indexTypeMap.ContainsKey( index ) ) return indexTypeMap[index];
 
-                return indexTypeMap[index];
+                return null;
             }
 
             private static void BuildTypeIndexMap() {
