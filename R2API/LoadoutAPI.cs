@@ -376,7 +376,7 @@ namespace R2API {
                     return false;
                 }
 
-                var skinnedRenderer = charModel.mainSkinnedMeshRenderer;
+                var skinnedRenderer = charModel.GetFieldValue<SkinnedMeshRenderer>("mainSkinnedMeshRenderer");
                 if( skinnedRenderer == null ) {
                     R2API.Logger.LogError( "CharacterModel did not contain a main SkinnedMeshRenderer, default skin creation aborted." );
                     return false;
