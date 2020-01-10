@@ -322,6 +322,7 @@ namespace R2API {
         /// <summary>
         /// Adds a skin to the body prefab for a character.
         /// Will attempt to create a default skin if one is not present.
+        /// Must be called during plugin Awake or OnEnable. If called afterwards the new skins must be added to bodycatalog manually.
         /// </summary>
         /// <param name="bodyPrefab">The body to add the skin to</param>
         /// <param name="skin">The SkinDefInfo for the skin to add</param>
@@ -334,6 +335,7 @@ namespace R2API {
         /// <summary>
         /// Adds a skin to the body prefab for a character.
         /// Will attempt to create a default skin if one is not present.
+        /// Must be called during plugin Awake or OnEnable. If called afterwards the new skins must be added to bodycatalog manually.
         /// </summary>
         /// <param name="bodyPrefab">The body to add the skin to</param>
         /// <param name="skin">The SkinDef to add</param>
