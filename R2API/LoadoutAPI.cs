@@ -275,7 +275,7 @@ namespace R2API {
         /// A container struct for all SkinDef parameters.
         /// Use this to set skinDef values, then call CreateNewSkinDef().
         /// </summary>
-        public class SkinDefInfo {
+        public struct SkinDefInfo {
             public SkinDef[] baseSkins;
             public Sprite icon;
             public string nameToken;
@@ -285,18 +285,6 @@ namespace R2API {
             public SkinDef.MeshReplacement[] meshReplacements;
             public SkinDef.GameObjectActivation[] gameObjectActivations;
             public string name;
-
-            public SkinDefInfo() {
-                this.baseSkins = Array.Empty<SkinDef>();
-                this.icon = Resources.Load<Sprite>( "NotAPath" );
-                this.nameToken = "";
-                this.unlockableName = "";
-                this.rootObject = null;
-                this.rendererInfos = Array.Empty<CharacterModel.RendererInfo>();
-                this.meshReplacements = Array.Empty<SkinDef.MeshReplacement>();
-                this.gameObjectActivations = Array.Empty<SkinDef.GameObjectActivation>();
-                this.name = "";
-            }
         }
 
         /// <summary>
@@ -334,7 +322,6 @@ namespace R2API {
         /// <summary>
         /// Adds a skin to the body prefab for a character.
         /// Will attempt to create a default skin if one is not present.
-        /// Must be called during plugin Awake or OnEnable. If called afterwards the new skins must be added to bodycatalog manually.
         /// </summary>
         /// <param name="bodyPrefab">The body to add the skin to</param>
         /// <param name="skin">The SkinDefInfo for the skin to add</param>
@@ -347,7 +334,6 @@ namespace R2API {
         /// <summary>
         /// Adds a skin to the body prefab for a character.
         /// Will attempt to create a default skin if one is not present.
-        /// Must be called during plugin Awake or OnEnable. If called afterwards the new skins must be added to bodycatalog manually.
         /// </summary>
         /// <param name="bodyPrefab">The body to add the skin to</param>
         /// <param name="skin">The SkinDef to add</param>
@@ -390,7 +376,7 @@ namespace R2API {
                     return false;
                 }
 
-                var skinnedRenderer = charModel.GetFieldValue<SkinnedMeshRenderer>("mainSkinnedMeshRenderer");
+                var skinnedRenderer = charModel.mainSkinnedMeshRenderer;
                 if( skinnedRenderer == null ) {
                     R2API.Logger.LogError( "CharacterModel did not contain a main SkinnedMeshRenderer, default skin creation aborted." );
                     return false;
