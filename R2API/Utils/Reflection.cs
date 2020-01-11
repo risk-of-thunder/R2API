@@ -131,7 +131,7 @@ namespace R2API.Utils {
         /// Sets the value of the specified field on the specified object; if the object is a struct use
         /// <see cref="SetStructFieldValue{TInstance, TValue}(ref TInstance, string, TValue)"/> instead
         /// </summary>
-        /// <typeparam name="TValue">The type of the value to set/typeparam>
+        /// <typeparam name="TValue">The type of the value to set</typeparam>
         /// <param name="instance">The name of the field to set the value of</param>
         /// <param name="fieldName">The type to set the specified field's value on</param>
         /// <param name="value">The value to set</param>
@@ -176,7 +176,7 @@ namespace R2API.Utils {
         /// <summary>
         /// Gets the <see cref="FieldInfo"/> on the specified <see cref="Type"/> and searches base types if not found.
         /// </summary>
-        /// <typeparam name="T">The <see cref="Type"/> to search and get base types from</param>
+        /// <param name="T">The <see cref="Type"/> to search and get base types from</param>
         /// <param name="name">The name of the property to search for.</param>
         /// <returns></returns>
         private static FieldInfo GetFieldFull(this Type T, string name) {
@@ -221,7 +221,7 @@ namespace R2API.Utils {
         /// <summary>
         /// Gets the <see cref="PropertyInfo"/> of the type by name
         /// </summary>
-        /// <typetypeparam name="T">The type on which to find the property</typeparam>
+        /// <typeparam name="T">The type on which to find the property</typeparam>
         /// <param name="name">The name of the property to get</param>
         /// <returns></returns>
         public static PropertyInfo GetPropertyCached<T>(string name) =>
@@ -230,7 +230,7 @@ namespace R2API.Utils {
         /// <summary>
         /// Gets the <see cref="PropertyInfo"/> of the type by name
         /// </summary>
-        /// <typeparam name="T">The type to get the <see cref="PropertyInfo"/> from</param>
+        /// <param name="T">The type to get the <see cref="PropertyInfo"/> from</param>
         /// <param name="name">The name of the property to get</param>
         /// <returns></returns>
         public static PropertyInfo GetPropertyCached(this Type T, string name) =>
@@ -267,7 +267,7 @@ namespace R2API.Utils {
         /// Sets the value of the property on the specified class; if you're setting the property on a
         /// struct use <see cref="SetStructPropertyValue{TInstance, TValue}(ref TInstance, string, TValue)"/> instead
         /// </summary>
-        /// <typeparam name="TValue">The type of the value to set/typeparam>
+        /// <typeparam name="TValue">The type of the value to set</typeparam>
         /// <param name="instance">The name of the field to set the value of</param>
         /// <param name="propName">The type to set the specified property's value on</param>
         /// <param name="value">The value to set</param>
@@ -311,6 +311,7 @@ namespace R2API.Utils {
         /// <summary>
         /// Gets the value of the specified property on the specified struct
         /// </summary>
+        /// <typeparam name="TInstance">The type of the struct</typeparam>
         /// <typeparam name="TValue">The type of the value to set</typeparam>
         /// <param name="instance">The name of the field to set the value of</param>
         /// <param name="propName">The type to set the specified property's value on</param>
