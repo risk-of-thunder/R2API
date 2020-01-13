@@ -86,7 +86,7 @@ namespace R2API {
             On.RoR2.Stats.StatManager.OnServerItemGiven += StatManagerOnOnServerItemGiven;
             On.RoR2.Stats.StatManager.OnEquipmentActivated += StatManagerOnOnEquipmentActivated;
 
-            On.RoR2.UI.LogBook.LogBookController.GetPickupStatus += LogBookControllerOnGetPickupStatus;
+            On.RoR2.UI.LogBook.LogBookController.GetPickupStatus += LogBookCustomEntriesAlwaysAvailable;
             On.RoR2.UI.LogBook.PageBuilder.AddSimplePickup += PageBuilderOnAddSimplePickup;
             On.RoR2.UI.LogBook.LogBookController.GetPickupTooltipContent += LogBookControllerOnGetPickupTooltipContent;
         }
@@ -158,15 +158,15 @@ namespace R2API {
         /// </summary>
         /// <param name="item">The item to add.</param>
         /// <returns>the ItemIndex of your item if added. -1 otherwise</returns>
-        public static int AddCustomItem(CustomItem item) {
+        public static ItemIndex Add(CustomItem item) {
             if (_itemCatalogInitialized) {
                 R2API.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the item list was created");
-                return -1;
+                return ItemIndex.None;
             }
 
             item.ItemDef.itemIndex = (ItemIndex)OriginalItemCount + CustomItemCount++;
             ItemDefinitions.Add(item);
-            return (int)item.ItemDef.itemIndex;
+            return item.ItemDef.itemIndex;
         }
 
         /// <summary>
@@ -176,15 +176,15 @@ namespace R2API {
         /// </summary>
         /// <param name="item">The equipment item to add.</param>
         /// <returns>the EquipmentIndex of your item if added. -1 otherwise</returns>
-        public static int AddCustomEquipment(CustomEquipment item) {
+        public static EquipmentIndex Add(CustomEquipment item) {
             if (_equipmentCatalogInitialized) {
                 R2API.Logger.LogError($"Too late ! Tried to add equipment item: {item.EquipmentDef.nameToken} after the equipment list was created");
-                return -1;
+                return EquipmentIndex.None;
             }
 
             item.EquipmentDef.equipmentIndex = (EquipmentIndex)OriginalEquipmentCount + CustomEquipmentCount++;
             EquipmentDefinitions.Add(item);
-            return (int)item.EquipmentDef.equipmentIndex;
+            return item.EquipmentDef.equipmentIndex;
         }
 
         /// <summary>
@@ -194,15 +194,15 @@ namespace R2API {
         /// </summary>
         /// <param name="buff">The buff to add.</param>
         /// <returns>the BuffIndex of your item if added. -1 otherwise</returns>
-        public static int AddCustomBuff(CustomBuff buff) {
+        public static BuffIndex Add(CustomBuff buff) {
             if (_buffCatalogInitialized) {
                 R2API.Logger.LogError($"Too late ! Tried to add buff: {buff.BuffDef.name} after the buff list was created");
-                return -1;
+                return BuffIndex.None;
             }
 
             buff.BuffDef.buffIndex = (BuffIndex)OriginalBuffCount + CustomBuffCount++;
             BuffDefinitions.Add(buff);
-            return (int)buff.BuffDef.buffIndex;
+            return buff.BuffDef.buffIndex;
         }
 
         /// <summary>
@@ -212,15 +212,35 @@ namespace R2API {
         /// </summary>
         /// <param name="elite">The elite to add.</param>
         /// <returns>the EliteIndex of your item if added. -1 otherwise</returns>
-        public static int AddCustomElite(CustomElite elite) {
+        public static EliteIndex Add(CustomElite elite) {
             if (_eliteCatalogInitialized) {
-                R2API.Logger.LogError($"Too late ! Tried to add iteliteem: {elite.EliteDef.modifierToken} after the elite list was created");
-                return -1;
+                R2API.Logger.LogError($"Too late ! Tried to add elite: {elite.EliteDef.modifierToken} after the elite list was created");
+                return EliteIndex.None;
             }
 
             elite.EliteDef.eliteIndex = (EliteIndex)OriginalEliteCount + CustomEliteCount++;
             EliteDefinitions.Add(elite);
-            return (int)elite.EliteDef.eliteIndex;
+            return elite.EliteDef.eliteIndex;
+        }
+
+        [Obsolete("Use the Add() method that will directly returns the correct enum type (ItemIndex) instead.")]
+        public static int AddCustomItem(CustomItem item) {
+            return (int)Add(item);
+        }
+
+        [Obsolete("Use the Add() method that will directly returns the correct enum type (EquipmentIndex) instead.")]
+        public static int AddCustomEquipment(CustomEquipment item) {
+            return (int)Add(item);
+        }
+
+        [Obsolete("Use the Add() method that will directly returns the correct enum type (BuffIndex) instead.")]
+        public static int AddCustomBuff(CustomBuff buff) {
+            return (int)Add(buff);
+        }
+
+        [Obsolete("Use the Add() method that will directly returns the correct enum type (EliteIndex) instead.")]
+        public static int AddCustomElite(CustomElite elite) {
+            return (int)Add(elite);
         }
         #endregion
 
@@ -405,7 +425,7 @@ namespace R2API {
         // That way we could have a logbook working for custom items too
         // For now lets assume the user unlocked / discovered the item so we can see 3d models on it
 
-        private static EntryStatus LogBookControllerOnGetPickupStatus(On.RoR2.UI.LogBook.LogBookController.orig_GetPickupStatus orig, UserProfile userProfile, Entry entry) {
+        private static EntryStatus LogBookCustomEntriesAlwaysAvailable(On.RoR2.UI.LogBook.LogBookController.orig_GetPickupStatus orig, UserProfile userProfile, Entry entry) {
             if (IsCustomItemOrEquipment((PickupIndex)entry.extraData)) {
                 return EntryStatus.Available;
             }

@@ -58,7 +58,8 @@ namespace R2API.Utils {
                 }
 
                 foreach (string dll in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories)) {
-                    if (!dll.ToLower().Contains("r2api") && !dll.ToLower().Contains("mmhook")) {
+                    var fileName = Path.GetFileName(dll);
+                    if (!fileName.ToLower().Contains("r2api") && !fileName.ToLower().Contains("mmhook")) {
                         try // bepis code
                         {
                             assemblies.Add(Assembly.LoadFile(dll));
