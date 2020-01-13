@@ -11,6 +11,15 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class PrefabAPI {
+        #region Loaded check
+        //Maybe best to set up a base class or interface that does this automatically?
+        public static bool Loaded {
+            get {
+                return IsLoaded;
+            }
+        }
+        private static bool IsLoaded = false;
+        #endregion
 
         private static bool needToRegister = false;
         private static GameObject parent;
@@ -27,7 +36,10 @@ namespace R2API {
                               /// <param name="registerNetwork">Should the object be registered to network</param>
                               /// <returns>The GameObject of the clone</returns>
         public static GameObject InstantiateClone( this GameObject g, string nameToSet, bool registerNetwork = true, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0 ) {
-
+            if( !IsLoaded ) {
+                R2API.Logger.LogError( "PrefabAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]" );
+                return null;
+            }
             GameObject prefab = MonoBehaviour.Instantiate<GameObject>(g, GetParent().transform);
             prefab.name = nameToSet;
             if( registerNetwork ) {
@@ -43,6 +55,10 @@ namespace R2API {
         /// </summary>
         /// <param name="g">The prefab to register</param>
         public static void RegisterNetworkPrefab( this GameObject g, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0 ) {
+            if( !IsLoaded ) {
+                R2API.Logger.LogError( "PrefabAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]" );
+                return;
+            }
             RegisterPrefabInternal( g, file, member, line );
         }
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
@@ -96,7 +112,7 @@ namespace R2API {
         private static void SetupRegistrationEvent() {
             if( !needToRegister ) {
                 needToRegister = true;
-                On.RoR2.Networking.GameNetworkManager.OnStartClient += RegisterClientPrefabsNStuff;
+                RoR2.Networking.GameNetworkManager.onStartGlobal += RegisterClientPrefabsNStuff;
             }
         }
 
@@ -120,8 +136,7 @@ namespace R2API {
             i15 = 0
         };
 
-        private static void RegisterClientPrefabsNStuff( On.RoR2.Networking.GameNetworkManager.orig_OnStartClient orig, GameNetworkManager self, NetworkClient newClient ) {
-            orig( self, newClient );
+        private static void RegisterClientPrefabsNStuff() {
             foreach( HashStruct h in thingsToHash ) {
                 if( (h.prefab.GetComponent<NetworkIdentity>() != null)) h.prefab.GetComponent<NetworkIdentity>().SetFieldValue<NetworkHash128>( "m_AssetId", nullHash );
                 ClientScene.RegisterPrefab( h.prefab, NetworkHash128.Parse( MakeHash( h.goName + h.callPath + h.callMember + h.callLine.ToString() ) ) );

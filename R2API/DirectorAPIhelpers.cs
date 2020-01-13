@@ -52,6 +52,9 @@ namespace R2API {
                 public static readonly string AurelioniteAlly = "csctitangoldally";
                 public static readonly string WanderingVagrant = "cscvagrant";
                 public static readonly string AlloyVulture = "cscvulture";
+                public static readonly string Scavanger = "cscscav";
+                public static readonly string LunarScavanger = "cscscavlunar";
+                public static readonly string VoidReaver = "cscnullifier";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             }
 
@@ -97,6 +100,12 @@ namespace R2API {
                 public static readonly string Teleporter = "iscteleporter";
                 public static readonly string MultiShopCommon = "isctripleshop";
                 public static readonly string MultiShopUncommon = "isctripleshoplarge";
+                public static readonly string EmergencyDrone = "iscbrokenemergencydrone";
+                public static readonly string AdaptiveChest = "isccasinochest";
+                public static readonly string OvergrownPrinter = "iscduplicatorwild";
+                public static readonly string ScavangerBackpack = "iscscavbackpack";
+                public static readonly string LunarScavangerBackpack = "iscscavlunarbackpack";
+                public static readonly string CleansingPool = "iscshrinecleanse";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             }
 

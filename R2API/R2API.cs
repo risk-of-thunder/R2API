@@ -28,11 +28,11 @@ namespace R2API {
 
         internal static DetourModManager ModManager;
 
+
         public R2API() {
             Logger = base.Logger;
             ModManager = new DetourModManager();
             AddHookLogging();
-
             CheckForIncompatibleAssemblies();
             CheckR2APIMonomodPatch();
 
@@ -43,6 +43,9 @@ namespace R2API {
             submoduleHandler.LoadRequested();
 
             RoR2Application.isModded = true;
+
+            //This needs to always be enabled, regardless of module dependency, or it is useless
+            ModListAPI.Init();
 
             On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
                 // TODO: If we can enable quick play without regrets, uncomment.
@@ -68,6 +71,10 @@ namespace R2API {
                 var server = ((SteamworksServerManager)self).GetFieldValue<Server>("steamworksServer");
                 server.GameTags = "mod," + server.GameTags;
             };
+        }
+
+        public void Start() {
+            ModListAPI.BuildModList();
         }
 
         public static void AddHookLogging() {

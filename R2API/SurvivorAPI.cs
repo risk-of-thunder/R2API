@@ -8,6 +8,16 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class SurvivorAPI {
+        #region Loaded check
+        //Maybe best to set up a base class or interface that does this automatically?
+        public static bool Loaded {
+            get {
+                return IsLoaded;
+            }
+        }
+        private static bool IsLoaded = false;
+        #endregion
+
         private static bool survivorsAlreadyAdded = false;
 
         public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
@@ -22,6 +32,9 @@ namespace R2API {
         /// <param name="survivor">The survivor to add.</param>
         /// <returns>true if survivor will be added</returns>
         public static bool AddSurvivor(SurvivorDef survivor) {
+            if( !IsLoaded ) {
+                R2API.Logger.LogError( "SurvivorAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]" );
+            }
             if (survivorsAlreadyAdded) {
                 R2API.Logger.LogError($"Tried to add survivor: {survivor.displayNameToken} after survivor list was created");
                 return false;

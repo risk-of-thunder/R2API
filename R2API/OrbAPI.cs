@@ -7,6 +7,17 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class OrbAPI {
+        #region Loaded check
+        //Maybe best to set up a base class or interface that does this automatically?
+        public static bool Loaded {
+            get {
+                return IsLoaded;
+            }
+        }
+        private static bool IsLoaded = false;
+        #endregion
+
+
         private static bool orbsAlreadyAdded = false;
 
         public static ObservableCollection<Type> OrbDefinitions = new ObservableCollection<Type>();
@@ -19,6 +30,10 @@ namespace R2API {
         /// <param name="t">The type of the orb being added</param>
         /// <returns>True if orb will be added</returns>
         public static bool AddOrb(Type t) {
+            if( !IsLoaded ) {
+                R2API.Logger.LogError( "OrbAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]" );
+                return false;
+            }
             if (orbsAlreadyAdded) {
                 R2API.Logger.LogError($"Tried to add Orb type: {nameof(t)} after orb catalog was generated");
                 return false;
