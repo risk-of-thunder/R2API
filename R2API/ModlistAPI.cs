@@ -16,13 +16,15 @@ using UnityEngine.Networking;
 namespace R2API {
     // ReSharper disable once InconsistentNaming
     /// <summary>
-    /// An API for sending and retreiving a list of mods (and config settings) in multiplayer.
+    /// An API for sending and retreiving a list of mods (and config settings) for connected players and the server in multiplayer.
     /// </summary>
     [R2APISubmodule]
     public static class ModListAPI {
         //This needs to be active at all times, rather than enabled as a submodule.
         //Central idea is for any client with any mods to send a list of installed mods to server.
-        //Server also sends its list to client. That, and the access to those lists is the only functionality of this API.
+        //Server also sends its list to client.
+        //In addition to a list of mods, all config settings for mods are also sent as part of the list.
+        //Those config settings are accessible 
         //I used Try Catch excessively to hopefully ensure that any errors this causes due to future updates are zero impact.
 
         /// <summary>
@@ -153,36 +155,45 @@ namespace R2API {
         private static async void MessageWaitServerAsync( NetworkConnection conn, float duration, CSteamID from ) {
             await Task.Delay( TimeSpan.FromSeconds( duration ) );
 
-            ModList list = null;
-            if( tempConnectionInfo.ContainsKey( conn ) ) {
-                list = tempConnectionInfo[conn];
-            } else {
-                list = ModList.vanilla;
+            try {
+                ModList list = null;
+                if( tempConnectionInfo.ContainsKey( conn ) ) {
+                    list = tempConnectionInfo[conn];
+                } else {
+                    list = ModList.vanilla;
+                }
+                if( from == null || from == new CSteamID() ) {
+                    R2API.Logger.LogWarning( "Server recieved message with invalid SteamID" );
+                    from = new CSteamID();
+                }
+                //CSteamID steamID = ServerAuthManager.FindAuthData( conn ).steamId;
+                connectedClientMods[from] = list;
+                modlistRecievedFromClient?.Invoke( conn, list, from );
+                if( tempConnectionInfo.ContainsKey( conn ) ) {
+                    tempConnectionInfo.Remove( conn );
+                }
+            } catch (Exception e) {
+                Fail( e, "MessageWaitServerAsync" );
             }
-            if( from == null || from == new CSteamID() ) {
-                R2API.Logger.LogWarning( "Server recieved message with invalid SteamID" );
-                from = new CSteamID();
-            }
-            //CSteamID steamID = ServerAuthManager.FindAuthData( conn ).steamId;
-            connectedClientMods[from] = list;
-            modlistRecievedFromClient?.Invoke( conn, list, from );
-            if( tempConnectionInfo.ContainsKey( conn ) ) {
-                tempConnectionInfo.Remove( conn );
-            }
+
         }
 
         private static async void MessageWaitClientAsync( NetworkConnection conn, float duration ) {
             await Task.Delay( TimeSpan.FromSeconds( duration ) );
 
-            ModList list = null;
-            if( tempServerModList != null ) {
-                list = tempServerModList;
-            } else {
-                list = ModList.vanilla;
+            try {
+                ModList list = null;
+                if( tempServerModList != null ) {
+                    list = tempServerModList;
+                } else {
+                    list = ModList.vanilla;
+                }
+                currentServerMods = list;
+                modlistRecievedFromServer?.Invoke( conn, list );
+                tempServerModList = null;
+            } catch( Exception e ) {
+                Fail( e, "MessageWaitClientAsync" );
             }
-            currentServerMods = list;
-            modlistRecievedFromServer?.Invoke( conn, list );
-            tempServerModList = null;
         }
 
         [NetworkMessageHandler( client = true, server = true, msgType = messageIndex )]
@@ -387,14 +398,37 @@ namespace R2API {
             }
 
             /// <summary>
-            /// Gets a value in the config for the mod from the ConfigEntry used to bind it.
+            /// Gets a value in the mod's config from the ConfigEntry used to bind it.
             /// </summary>
             /// <typeparam name="T">The Type of the value to get</typeparam>
             /// <param name="configEntry">The ConfigEntry that was used to bind it.</param>
             /// <returns>The value from the config</returns>
             public T GetConfigValue<T>( ConfigEntry<T> configEntry ) {
-                if( !this.hasConfig ) return default( T );
+                if( !this.hasConfig ) return default;
                 return this.configData.LookupValue<T>( configEntry );
+            }
+
+            /// <summary>
+            /// Gets a value in the mod's config from the key and section of the setting.
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <param name="key">The key of the setting</param>
+            /// <param name="section">The section the setting is in</param>
+            /// <returns>The value from the config</returns>
+            public T GetConfigValue<T>( string key, string section ) {
+                if( !this.hasConfig ) return default;
+                return this.configData.LookupValue<T>( key, section );
+            }
+
+            /// <summary>
+            /// Gets a value in the mod's config from the key and section of the setting as System.Object.
+            /// </summary>
+            /// <param name="key">The key of the setting</param>
+            /// <param name="section">The section the setting is in</param>
+            /// <returns>The value from the config as System.Object</returns>
+            public object GetConfigValue( string key, string section ) {
+                if( !this.hasConfig ) return default;
+                return this.configData.LookupValue( key, section );
             }
 
 
@@ -456,22 +490,34 @@ namespace R2API {
                 };
             }
 
+            internal T LookupValue<T>( string key, string section ) {
+                var intKey = section + divider + key;
+                if( this.data.ContainsKey( intKey ) ) {
+                    var option = this.data[intKey];
 
-
-            internal T LookupValue<T>( ConfigEntry<T> entry ) {
-                var key = entry.Definition.Section + divider + entry.Definition.Key;
-                if( this.data.ContainsKey( key ) ) {
-                    var option = this.data[key];
-
-                    if( option.type == typeof(T) ) {
+                    if( option.type == typeof( T ) ) {
                         return (T)option.value;
                     } else {
-                        R2API.Logger.LogError( "Type mismatch for key: " + entry.Definition.Key + " in config." );
-                        return default( T );
+                        R2API.Logger.LogError( "Type mismatch for key: " + key + " in config. The correct type is: " + option.type );
+                        return default;
                     }
                 } else {
-                    R2API.Logger.LogError( "The key: " + entry.Definition.Key + " does not exist in that config. Could be a different version of the mod." );
-                    return default( T );
+                    R2API.Logger.LogError( "The key: " + key + " does not exist in that config. Could be a different version of the mod." );
+                    return default;
+                }
+            }
+
+            internal T LookupValue<T>( ConfigEntry<T> entry ) {
+                return LookupValue<T>( entry.Definition.Key, entry.Definition.Section );
+            }
+
+            internal object LookupValue( string key, string section ) {
+                var intKey = section + divider + key;
+                if( this.data.ContainsKey( intKey ) ) {
+                    return this.data[intKey].value;
+                } else {
+                    R2API.Logger.LogError( "The key: " + key + " does not exist in that config. Could be a different version of the mod." );
+                    return default;
                 }
             }
         }
