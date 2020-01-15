@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Configuration;
+using Facepunch.Steamworks;
 using R2API.Utils;
 using RoR2.Networking;
 using UnityEngine;
@@ -132,16 +133,16 @@ namespace R2API {
 
         private static void ServersideConnect( UnityEngine.Networking.NetworkConnection connection ) {
             try {
-                ModListMessage msg = new ModListMessage( localModList, true );
+                ModListMessage msg = new ModListMessage( localModList, true, new CSteamID() );
                 connection.SendByChannel( messageIndex, msg, QosChannelIndex.defaultReliable.intVal );
-                MessageWaitServerAsync( connection, messageWaitTimeServer );
+                MessageWaitServerAsync( connection, messageWaitTimeServer, msg.steamID );
             } catch (Exception e ) {
                 Fail( e, "ServersideConnect" );
             }
         }
         private static void ClientsideConnect( UnityEngine.Networking.NetworkConnection connection ) {
             try {
-                ModListMessage msg = new ModListMessage( localModList, false );
+                ModListMessage msg = new ModListMessage( localModList, false, new CSteamID(Client.Instance.SteamId ) );
                 connection.SendByChannel( messageIndex, msg, QosChannelIndex.defaultReliable.intVal );
                 MessageWaitClientAsync( connection, messageWaitTimeClient );
             } catch (Exception e ){
@@ -149,7 +150,7 @@ namespace R2API {
             }
         }
 
-        private static async void MessageWaitServerAsync( NetworkConnection conn, float duration ) {
+        private static async void MessageWaitServerAsync( NetworkConnection conn, float duration, CSteamID from ) {
             await Task.Delay( TimeSpan.FromSeconds( duration ) );
 
             ModList list = null;
@@ -158,9 +159,13 @@ namespace R2API {
             } else {
                 list = ModList.vanilla;
             }
-            CSteamID steamID = ServerAuthManager.FindAuthData( conn ).steamId;
-            connectedClientMods[steamID] = list;
-            modlistRecievedFromClient?.Invoke( conn, list, steamID );
+            if( from == null || from == new CSteamID() ) {
+                R2API.Logger.LogWarning( "Server recieved message with invalid SteamID" );
+                from = new CSteamID();
+            }
+            //CSteamID steamID = ServerAuthManager.FindAuthData( conn ).steamId;
+            connectedClientMods[from] = list;
+            modlistRecievedFromClient?.Invoke( conn, list, from );
             if( tempConnectionInfo.ContainsKey( conn ) ) {
                 tempConnectionInfo.Remove( conn );
             }
@@ -197,10 +202,19 @@ namespace R2API {
         private class ModListMessage : MessageBase {
             internal ModList mods { get; private set; }
             internal bool fromServer { get; private set; }
+            internal CSteamID steamID;
 
-            internal ModListMessage( ModList mods, bool fromServer ) {
+
+            internal ModListMessage( ModList mods, bool fromServer, CSteamID steamID ) {
                 this.mods = mods;
                 this.fromServer = fromServer;
+                this.steamID = steamID;
+            }
+
+            internal ModListMessage( ModList mods, bool fromServer, ulong steamID ) {
+                this.mods = mods;
+                this.fromServer = fromServer;
+                this.steamID = new CSteamID(steamID);
             }
 
             /// <summary>
@@ -214,6 +228,7 @@ namespace R2API {
             /// <param name="writer"></param>
             public override void Serialize( NetworkWriter writer ) {
                 writer.Write( this.fromServer);
+                writer.Write( this.steamID.value );
                 this.mods.Write( writer );
             }
 
@@ -223,6 +238,7 @@ namespace R2API {
             /// <param name="reader"></param>
             public override void Deserialize( NetworkReader reader ) {
                 this.fromServer = reader.ReadBoolean();
+                this.steamID = new CSteamID( reader.ReadUInt64() );
                 this.mods = ModList.Read( reader );
             }
         }
