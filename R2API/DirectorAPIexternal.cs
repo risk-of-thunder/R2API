@@ -8,15 +8,16 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     //[R2APISubmodule]
     public static partial class DirectorAPI {
-        #region Loaded check
-        //Maybe best to set up a base class or interface that does this automatically?
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
+        // ReSharper disable once ConvertToAutoProperty
         public static bool Loaded {
-            get {
-                return IsLoaded;
-            }
+            get => _loaded;
+            set => _loaded = value;
         }
-        private static bool IsLoaded = false;
-        #endregion
+
+        private static bool _loaded;
         /// <summary>
         /// Event used to edit stage settings.
         /// </summary>
@@ -131,7 +132,7 @@ namespace R2API {
             /// <summary>
             /// This is set to the name of the custom stage. Is left blank for vanilla stages.
             /// </summary>
-            public string customStageName;
+            public string CustomStageName;
 
             /// <summary>
             /// Returns true if the current stage matches any of the stages you specify.
@@ -140,10 +141,9 @@ namespace R2API {
             /// <param name="stage">The stages to match with</param>
             /// <param name="customStageNames">Names of the custom stages to match. Leave blank to match all custom stages</param>
             /// <returns></returns>
-            public bool CheckStage( Stage stage, params string[] customStageNames ) {
-                if( !stage.HasFlag( this.stage ) ) return false;
-                if( this.stage == Stage.Custom && customStageNames.Length != 0 && !customStageNames.Contains( this.customStageName ) ) return false;
-                return true;
+            public bool CheckStage(Stage stage, params string[] customStageNames) {
+                if (!stage.HasFlag(this.stage)) return false;
+                return this.stage != Stage.Custom || customStageNames.Length == 0 || customStageNames.Contains(CustomStageName);
             }
         }
 
@@ -156,27 +156,27 @@ namespace R2API {
             /// How many credits the scene director has for monsters at the start of a stage.
             /// This scales with difficulty, and thus will always be zero on the first stage.
             /// </summary>
-            public int sceneDirectorMonsterCredits;
+            public int SceneDirectorMonsterCredits;
             /// <summary>
             /// How many credits the scene director has for interactables at the start of a stage.
             /// </summary>
-            public int sceneDirectorInteractableCredits;
+            public int SceneDirectorInteractableCredits;
 
             /// <summary>
             /// If the GameObject key of the dictionary is enabled, then the scene director gains the value in extra interactable credits
             /// Used for things like the door in Abyssal Depths.
             /// </summary>
-            public Dictionary<GameObject, int> bonusCreditObjects;
+            public Dictionary<GameObject, int> BonusCreditObjects;
 
             /// <summary>
             /// The weights for each monster category on this stage.
             /// </summary>
-            public Dictionary<MonsterCategory, float> monsterCategoryWeights;
+            public Dictionary<MonsterCategory, float> MonsterCategoryWeights;
 
             /// <summary>
             /// The weights for each interactable category on this stage.
             /// </summary>
-            public Dictionary<InteractableCategory, float> interactableCategoryWeights;
+            public Dictionary<InteractableCategory, float> InteractableCategoryWeights;
         }
         /// <summary>
         /// A wrapper class for DirectorCards. A list of these is passed to everything subscribed to monsterActions and interactableActions.
@@ -185,15 +185,15 @@ namespace R2API {
             /// <summary>
             /// The director card. This contains the majority of the information for an interactable or monster, including the prefab.
             /// </summary>
-            public DirectorCard card;
+            public DirectorCard Card;
             /// <summary>
             /// The monster category the card belongs to. Will be set to None for interactables.
             /// </summary>
-            public MonsterCategory monsterCategory;
+            public MonsterCategory MonsterCategory;
             /// <summary>
             /// The interactable category the card belongs to. Will be set to none for monsters.
             /// </summary>
-            public InteractableCategory interactableCategory;
+            public InteractableCategory InteractableCategory;
         }
         /// <summary>
         /// A wrapper class for Monster Families. A list of these is passed to everything subscribed to familyActions.
@@ -202,48 +202,48 @@ namespace R2API {
             /// <summary>
             /// List of all basic monsters that can spawn during this family event.
             /// </summary>
-            public List<DirectorCard> familyBasicMonsters;
+            public List<DirectorCard> FamilyBasicMonsters;
             /// <summary>
             /// List of all minibosses that can spawn during this family event.
             /// </summary>
-            public List<DirectorCard> familyMinibosses;
+            public List<DirectorCard> FamilyMinibosses;
             /// <summary>
             /// List of all champions that can spawn during this family event.
             /// </summary>
-            public List<DirectorCard> familyChampions;
+            public List<DirectorCard> FamilyChampions;
 
             /// <summary>
             /// The selection weight for basic monsters during the family event.
             /// </summary>
-            public float familyBasicMonsterWeight;
+            public float FamilyBasicMonsterWeight;
             /// <summary>
             /// The selection weight for minibosses during the family event.
             /// </summary>
-            public float familyMinibossWeight;
+            public float FamilyMinibossWeight;
             /// <summary>
             /// The selection weight for champions during the family event.
             /// </summary>
-            public float familyChampionWeight;
+            public float FamilyChampionWeight;
             /// <summary>
             /// The minimum number of stages completed for this family event to occur.
             /// </summary>
-            public int minStageCompletion;
+            public int MinStageCompletion;
             /// <summary>
             /// The maximum number of stages for this family event to occur.
             /// </summary>
-            public int maxStageCompletion;
+            public int MaxStageCompletion;
 
             /// <summary>
             /// The weight of this monster family relative to other monster families.
             /// Does NOT increase the chances of a family event occuring, just the chance that this will be chosen when one does occur.
             /// Support for modifying the chance of family events overall will come later (and will be in StageSettings)
             /// </summary>
-            public float familySelectionWeight;
+            public float FamilySelectionWeight;
 
             /// <summary>
             /// The message sent to chat when this family is selected.
             /// </summary>
-            public string selectionChatString;
+            public string SelectionChatString;
         }
     }
 }
