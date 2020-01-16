@@ -281,6 +281,9 @@ namespace R2API {
         private static void AddingItemDisplayRulesToCharacterModels(On.RoR2.CharacterModel.orig_Start orig, CharacterModel self) {
             orig(self);
 
+            if (self.itemDisplayRuleSet == null)
+                return;
+
             foreach (var customItem in ItemDefinitions) {
                 if (customItem.ItemDisplayRules != null) {
                     var displayRuleGroup = new DisplayRuleGroup { rules = customItem.ItemDisplayRules };
