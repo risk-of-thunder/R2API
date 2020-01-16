@@ -12,6 +12,8 @@ using RoR2.Stats;
 using RoR2.UI;
 using RoR2.UI.LogBook;
 using Object = UnityEngine.Object;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ClassNeverInstantiated.Global
 #pragma warning disable 618 // PickupIndex being obsolete (but still being used in the game code)
 
 namespace R2API {

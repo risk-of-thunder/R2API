@@ -77,7 +77,7 @@ namespace R2API {
             ModListAPI.BuildModList();
         }
 
-        public static void AddHookLogging() {
+        private static void AddHookLogging() {
             ModManager.OnHook += (assembly, @base, arg3, arg4) => LogMethod(@base);
             ModManager.OnDetour += (assembly, @base, arg3) => LogMethod(@base);
             ModManager.OnNativeDetour += (assembly, @base, arg3, arg4) => LogMethod(@base);

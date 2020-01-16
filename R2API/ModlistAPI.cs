@@ -12,6 +12,10 @@ using R2API.Utils;
 using RoR2.Networking;
 using UnityEngine.Networking;
 using Version = System.Version;
+// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
@@ -109,7 +113,7 @@ namespace R2API {
 
                 FieldInfo netAttribHandler = typeof(NetworkMessageHandlerAttribute).GetField("messageHandler", allFlags);
 
-                foreach(MemberInfo m in typeof(ModListAPI).GetMembers(allFlags)) {
+                foreach (MemberInfo m in typeof(ModListAPI).GetMembers(allFlags)) {
                     var attrib = m.GetCustomAttribute<NetworkMessageHandlerAttribute>();
                     if (attrib == null)
                         continue;
@@ -130,12 +134,12 @@ namespace R2API {
         #endregion
 
         #region Networking
-        private static ModList localModList;
-        private static ModList tempServerModList;
+        private static ModList _localModList;
+        private static ModList _tempServerModList;
 
         private static void ServerSideConnect(NetworkConnection connection) {
             try {
-                var msg = new ModListMessage(localModList, CSteamID.nil, true);
+                var msg = new ModListMessage(_localModList, CSteamID.nil, true);
                 connection.SendByChannel(MessageIndex, msg, QosChannelIndex.defaultReliable.intVal);
                 MessageWaitServerAsync(connection, MessageWaitTimeServer);
             }
@@ -145,7 +149,7 @@ namespace R2API {
         }
         private static void ClientSideConnect(NetworkConnection connection) {
             try {
-                var msg = new ModListMessage(localModList, new CSteamID(Client.Instance.SteamId));
+                var msg = new ModListMessage(_localModList, new CSteamID(Client.Instance.SteamId));
                 connection.SendByChannel(MessageIndex, msg, QosChannelIndex.defaultReliable.intVal);
                 MessageWaitClientAsync(connection, MessageWaitTimeClient);
             }
@@ -166,10 +170,10 @@ namespace R2API {
         private static async void MessageWaitClientAsync(NetworkConnection conn, float duration) {
             await Task.Delay(TimeSpan.FromSeconds(duration));
 
-            ModList list = tempServerModList ?? ModList.Vanilla;
+            ModList list = _tempServerModList ?? ModList.Vanilla;
             CurrentServerMods = list;
             ModListReceivedFromServer?.Invoke(conn, list);
-            tempServerModList = null;
+            _tempServerModList = null;
         }
 
         [NetworkMessageHandler(client = true, server = true, msgType = MessageIndex)]
@@ -182,7 +186,7 @@ namespace R2API {
             }
 
             if (modListMessage.FromServer)
-                tempServerModList = modListMessage.Mods;
+                _tempServerModList = modListMessage.Mods;
             else {
                 if (!modListMessage.SteamId.isValid)
                     R2API.Logger.LogWarning("Server received message with invalid SteamID");
@@ -239,24 +243,24 @@ namespace R2API {
         /// A list of mods.
         /// </summary>
         public class ModList {
-            private readonly List<ModInfo> modInfos;
+            private readonly List<ModInfo> _modInfos;
 
             /// <summary>
             /// A readonly collection of ModInfos.
             /// </summary>
-            public ReadOnlyCollection<ModInfo> Mods => modInfos.AsReadOnly();
+            public ReadOnlyCollection<ModInfo> Mods => _modInfos.AsReadOnly();
 
             /// <summary>
             /// Is this modlist empty?
             /// </summary>
-            public bool IsVanilla => modInfos == null || modInfos.Count == 0;
+            public bool IsVanilla => _modInfos == null || _modInfos.Count == 0;
 
-            private static ModList intVanilla;
+            private static ModList _intVanilla;
 
             /// <summary>
             /// An empty modlist
             /// </summary>
-            public static ModList Vanilla => intVanilla ?? (intVanilla = new ModList());
+            public static ModList Vanilla => _intVanilla ?? (_intVanilla = new ModList());
 
             /// <summary>
             /// Get a string of all the mods contained in the list.
@@ -264,7 +268,7 @@ namespace R2API {
             /// <returns>the string with each mod on its own line</returns>
             public string TextRepresentation() {
                 var builder = new StringBuilder("Mod List:", 200);
-                foreach(ModInfo mod in modInfos) {
+                foreach (ModInfo mod in _modInfos) {
                     builder.Append("\n");
                     builder.Append(mod.Guid);
                     builder.Append(" v.");
@@ -274,8 +278,8 @@ namespace R2API {
             }
 
             internal void Write(NetworkWriter writer) {
-                writer.Write(modInfos.Count);
-                foreach(ModInfo mod in modInfos) {
+                writer.Write(_modInfos.Count);
+                foreach (ModInfo mod in _modInfos) {
                     mod.Write(writer);
                 }
             }
@@ -284,18 +288,18 @@ namespace R2API {
                 var count = reader.ReadInt32();
                 var mods = new List<ModInfo>(count);
 
-                for(var i = 0; i < count; i++)
+                for (var i = 0; i < count; i++)
                     mods.Add(ModInfo.Read(reader));
 
                 return new ModList(mods);
             }
 
             internal ModList(List<ModInfo> mods) {
-                modInfos = mods;
+                _modInfos = mods;
             }
 
             private ModList() {
-                modInfos = new List<ModInfo>();
+                _modInfos = new List<ModInfo>();
             }
         }
 
@@ -303,33 +307,34 @@ namespace R2API {
         /// An entry in a list of mods, represents a single mod.
         /// </summary>
         public class ModInfo {
-            private readonly ConfigData configData;
+            private readonly ConfigData _configData;
 
             /// <summary>
             /// The (hopefully unique) GUID of the mod as a string.
             /// </summary>
-            public string Guid { get; private set; }
+            public string Guid { get; }
 
             /// <summary>
             /// The version of the Mod
             /// </summary>
-            public Version Version { get; private set; }
+            public Version Version { get; }
 
             /// <summary>
             /// Does this ModInfo have a config?
             /// </summary>
-            public bool HasConfig => configData != null;
+            public bool HasConfig => _configData != null;
             
             internal ModInfo(PluginInfo plugin) {
                 Guid = plugin.Metadata.GUID;
                 Version = plugin.Metadata.Version;
 
-                configData = plugin.Instance.Config != null ? new ConfigData(plugin.Instance.Config) : null;
+                _configData = plugin.Instance.Config != null ? new ConfigData(plugin.Instance.Config) : null;
             }
+
             private ModInfo(string guid, Version version, ConfigData data) {
                 Guid = guid;
                 Version = version;
-                configData = data;
+                _configData = data;
             }
 
             /// <summary>
@@ -356,7 +361,7 @@ namespace R2API {
             /// <param name="mod">The other mod</param>
             /// <returns>true if mod, version, and config are the same</returns>
             public bool MatchConfig(ModInfo mod) {
-                return MatchVersion(mod) && configData.Matches(mod.configData);
+                return MatchVersion(mod) && _configData.Matches(mod._configData);
             }
 
             /// <summary>
@@ -366,21 +371,21 @@ namespace R2API {
             /// <param name="configEntry">The ConfigEntry that was used to bind it.</param>
             /// <returns>The value from the config</returns>
             public T GetConfigValue<T>(ConfigEntry<T> configEntry) {
-                return !HasConfig ? default : configData.LookupValue(configEntry);
+                return !HasConfig ? default : _configData.LookupValue(configEntry);
             }
 
             internal void Write(NetworkWriter writer) {
                 writer.Write(Guid);
                 writer.Write(Version.ToString());
                 writer.Write(HasConfig);
-                configData.Write(writer);
+                _configData.Write(writer);
             }
             internal static ModInfo Read(NetworkReader reader) {
                 var guid = reader.ReadString();
                 var version = new Version(reader.ReadString());
                 ConfigData configData = null;
 
-                if(reader.ReadBoolean())
+                if (reader.ReadBoolean())
                     configData = ConfigData.Read(reader);
 
                 return new ModInfo(guid, version, configData);
@@ -391,19 +396,19 @@ namespace R2API {
         internal class ConfigData {
             private const string Divider = ":-:";
 
-            private Dictionary<string, ConfigOption> data = new Dictionary<string, ConfigOption>();
+            private Dictionary<string, ConfigOption> _data = new Dictionary<string, ConfigOption>();
 
             private ConfigData() { }
 
             internal ConfigData(ConfigFile config) {
-                foreach(ConfigDefinition def in config.Keys)
-                    data[def.Section + Divider + def.Key] = new ConfigOption(config[def]);
+                foreach (ConfigDefinition def in config.Keys)
+                    _data[def.Section + Divider + def.Key] = new ConfigOption(config[def]);
             }
 
             internal void Write(NetworkWriter writer) {
-                writer.Write(data.Count);
+                writer.Write(_data.Count);
 
-                foreach(KeyValuePair<string, ConfigOption> dataEntry in data) {
+                foreach (KeyValuePair<string, ConfigOption> dataEntry in _data) {
                     writer.Write(dataEntry.Key);
                     dataEntry.Value.Write(writer);
                 }
@@ -419,13 +424,13 @@ namespace R2API {
                 }
 
                 return new ConfigData {
-                    data = data
+                    _data = data
                 };
             }
 
             internal bool Matches(ConfigData configData) {
-                foreach(KeyValuePair<string,ConfigOption> entry in data)
-                    if(!configData.data.ContainsKey(entry.Key) || !configData.data[entry.Key].Matches(data[entry.Key]))
+                foreach (KeyValuePair<string,ConfigOption> entry in _data)
+                    if (!configData._data.ContainsKey(entry.Key) || !configData._data[entry.Key].Matches(_data[entry.Key]))
                         return false;
 
                 return true;
@@ -433,10 +438,10 @@ namespace R2API {
 
             internal T LookupValue<T>(ConfigEntry<T> entry) {
                 var key = entry.Definition.Section + Divider + entry.Definition.Key;
-                if(data.ContainsKey(key)) {
-                    var option = data[key];
+                if (_data.ContainsKey(key)) {
+                    var option = _data[key];
 
-                    if(option.Type == typeof(T)) {
+                    if (option.Type == typeof(T)) {
                         return (T)option.Value;
                     }
 
@@ -450,8 +455,8 @@ namespace R2API {
         }
 
         private class ConfigOption {
-            private static Dictionary<Type, string> typeIndexMap;
-            private static Dictionary<string, Type> indexTypeMap;
+            private static Dictionary<Type, string> _typeIndexMap;
+            private static Dictionary<string, Type> _indexTypeMap;
 
             internal readonly Type Type;
             internal readonly object Value;
@@ -502,10 +507,10 @@ namespace R2API {
             }
 
             private static string GetTypeIndex(Type type) {
-                if(typeIndexMap == null || indexTypeMap == null) BuildTypeIndexMap();
+                if (_typeIndexMap == null || _indexTypeMap == null) BuildTypeIndexMap();
 
-                if (typeIndexMap != null && typeIndexMap.ContainsKey(type)) {
-                    return typeIndexMap[type];
+                if (_typeIndexMap != null && _typeIndexMap.ContainsKey(type)) {
+                    return _typeIndexMap[type];
                 }
 
                 R2API.Logger.LogError("Invalid type found in Bepinex Config.");
@@ -513,20 +518,20 @@ namespace R2API {
             }
 
             private static Type GetIndexType(string index) {
-                if (typeIndexMap == null || indexTypeMap == null)
+                if (_typeIndexMap == null || _indexTypeMap == null)
                     BuildTypeIndexMap();
 
-                return indexTypeMap != null && indexTypeMap.ContainsKey(index) ? indexTypeMap[index] : null;
+                return _indexTypeMap != null && _indexTypeMap.ContainsKey(index) ? _indexTypeMap[index] : null;
             }
 
             private static void BuildTypeIndexMap() {
-                typeIndexMap = new Dictionary<Type, string>();
-                indexTypeMap = new Dictionary<string, Type>();
+                _typeIndexMap = new Dictionary<Type, string>();
+                _indexTypeMap = new Dictionary<string, Type>();
 
-                foreach(var t in TomlTypeConverter.GetSupportedTypes()) {
-                    typeIndexMap[t] = t.AssemblyQualifiedName;
+                foreach (var t in TomlTypeConverter.GetSupportedTypes()) {
+                    _typeIndexMap[t] = t.AssemblyQualifiedName;
                     if (t.AssemblyQualifiedName != null)
-                        indexTypeMap[t.AssemblyQualifiedName] = t;
+                        _indexTypeMap[t.AssemblyQualifiedName] = t;
                 }
             }
         }
@@ -536,11 +541,11 @@ namespace R2API {
         internal static void BuildModList() {
             try {
                 var mods = new List<ModInfo>();
-                foreach(KeyValuePair<string, PluginInfo> kv in Chainloader.PluginInfos) {
+                foreach (KeyValuePair<string, PluginInfo> kv in Chainloader.PluginInfos) {
                     mods.Add(new ModInfo(kv.Value));
                 }
 
-                localModList = new ModList(mods);
+                _localModList = new ModList(mods);
             }
             catch (Exception e) {
                 Fail(e, "BuildModList");

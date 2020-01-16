@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using BepInEx.Logging;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace R2API.Utils {
     [Flags]
@@ -33,7 +35,7 @@ namespace R2API.Utils {
     /// </summary>
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public class R2APISubmoduleDependency : Attribute {
-        public string[] SubmoduleNames { get; set; }
+        public string[] SubmoduleNames { get; }
 
         public R2APISubmoduleDependency(params string[] submoduleName) {
             SubmoduleNames = submoduleName;
