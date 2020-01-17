@@ -4,10 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using BepInEx.Logging;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace R2API.Utils {
     [Flags]
-    public enum InitStage {
+    internal enum InitStage {
         SetHooks   = 0x01,
         Load       = 0x02,
         Unload     = 0x04,
@@ -16,19 +18,24 @@ namespace R2API.Utils {
 
     // ReSharper disable once InconsistentNaming
     [AttributeUsage(AttributeTargets.Class)]
-    public class R2APISubmodule : Attribute {
+    internal class R2APISubmodule : Attribute {
         public int Build;
     }
 
     // ReSharper disable once InconsistentNaming
     [AttributeUsage(AttributeTargets.Method)]
-    public class R2APISubmoduleInit : Attribute {
+    internal class R2APISubmoduleInit : Attribute {
         public InitStage Stage;
     }
 
+    /// <summary>
+    /// Attribute to have at the top of your BaseUnityPlugin class if you want to load a specific R2API Submodule.
+    /// Parameter(s) are the nameof the submodules.
+    /// e.g: [R2APISubmoduleDependency("SurvivorAPI", "ItemAPI")]
+    /// </summary>
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public class R2APISubmoduleDependency : Attribute {
-        public string[] SubmoduleNames { get; set; }
+        public string[] SubmoduleNames { get; }
 
         public R2APISubmoduleDependency(params string[] submoduleName) {
             SubmoduleNames = submoduleName;
@@ -37,17 +44,27 @@ namespace R2API.Utils {
 
 
     // ReSharper disable once InconsistentNaming
+    /// <summary>
+    /// 
+    /// </summary>
     public class APISubmoduleHandler {
         private readonly int _build;
         private readonly ManualLogSource _logger;
         private HashSet<string> _moduleSet;
+        private HashSet<string> LoadedModules;
 
-        public APISubmoduleHandler(int build, ManualLogSource logger = null) {
+        internal APISubmoduleHandler(int build, ManualLogSource logger = null) {
             _build = build;
             _logger = logger;
         }
 
-        public void LoadRequested() {
+        /// <summary>
+        /// Return true if the specified submodule is loaded.
+        /// </summary>
+        /// <param name="submodule">nameof the submodule</param>
+        public bool IsLoaded(string submodule) => LoadedModules.Contains(submodule);
+
+        internal void LoadRequested() {
             Assembly[] GetAssemblies() {
                 var assemblies = new List<Assembly>();
 
@@ -95,30 +112,29 @@ namespace R2API.Utils {
                 }
             }
 
-            foreach (var module in _moduleSet) {
-                R2API.Logger.LogInfo($"Requested R2API Submodule: {module}");
-            }
-
             var moduleTypes = Assembly.GetExecutingAssembly().GetTypes().Where(APISubmoduleFilter).ToList();
 
             foreach (var moduleType in moduleTypes) {
-                R2API.Logger.LogInfo($"Found and Enabling R2API Submodule: {moduleType.FullName}");
+                R2API.Logger.LogInfo($"Enabling R2API Submodule: {moduleType.Name}");
             }
             
             var faults = new Dictionary<Type, Exception>();
+            LoadedModules = new HashSet<string>();
 
             moduleTypes
                 .ForEachTry(t => InvokeStage(t, InitStage.SetHooks), faults);
             moduleTypes.Where(t => !faults.ContainsKey(t))
                 .ForEachTry(t => InvokeStage(t, InitStage.Load), faults);
-            moduleTypes.Where(t => !faults.ContainsKey(t))
-                .ForEachTry(t => t.SetFieldValue("IsLoaded", true));
 
             faults.Keys.ForEachTry(t => {
                 _logger?.Log(LogLevel.Error, $"{t.Name} could not be initialized and has been disabled:\n\n{faults[t]}");
                 InvokeStage(t, InitStage.UnsetHooks);
             });
-            faults.Keys.ForEachTry(t => t.SetFieldValue("IsLoaded", false));
+
+            moduleTypes.Where(t => !faults.ContainsKey(t))
+                .ForEachTry(t => t.SetFieldValue("_loaded", true));
+            moduleTypes.Where(t => !faults.ContainsKey(t))
+                .ForEachTry(t => LoadedModules.Add(t.Name));
         }
 
 
@@ -156,6 +172,13 @@ namespace R2API.Utils {
 
 
     public static class EnumerableExtensions {
+        /// <summary>
+        /// ForEach but with a try catch in it.
+        /// </summary>
+        /// <param name="list">the enumerable object</param>
+        /// <param name="action">the action to do on it</param>
+        /// <param name="exceptions">the exception dictionary that will get filled, null by default if you simply want to silence the errors if any pop.</param>
+        /// <typeparam name="T"></typeparam>
         public static void ForEachTry<T>(this IEnumerable<T> list, Action<T> action, IDictionary<T, Exception> exceptions = null) {
             list.ToList().ForEach(element => {
                 try {

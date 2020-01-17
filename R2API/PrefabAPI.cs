@@ -5,45 +5,47 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
-using RoR2.Networking;
+// ReSharper disable UnusedMember.Global
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class PrefabAPI {
-        #region Loaded check
-        //Maybe best to set up a base class or interface that does this automatically?
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once ConvertToAutoProperty
         public static bool Loaded {
-            get {
-                return IsLoaded;
-            }
+            get => _loaded;
+            set => _loaded = value;
         }
-        private static bool IsLoaded = false;
-        #endregion
 
-        private static bool needToRegister = false;
-        private static GameObject parent;
-        private static List<HashStruct> thingsToHash = new List<HashStruct>();
+        private static bool _loaded;
+
+        private static bool needToRegister;
+        private static GameObject _parent;
+        private static readonly List<HashStruct> ThingsToHash = new List<HashStruct>();
 
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-                              /// <summary>
-                              /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
-                              /// Also registers the clone to network if registerNetwork is not set to false.
-                              /// Do not override the file, member, and line number parameters. They are used to generate a unique hash for the network ID.
-                              /// </summary>
-                              /// <param name="g">The GameObject to clone</param>
-                              /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
-                              /// <param name="registerNetwork">Should the object be registered to network</param>
-                              /// <returns>The GameObject of the clone</returns>
-        public static GameObject InstantiateClone( this GameObject g, string nameToSet, bool registerNetwork = true, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0 ) {
-            if( !IsLoaded ) {
-                R2API.Logger.LogError( "PrefabAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]" );
+        /// <summary>
+        /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
+        /// Also registers the clone to network if registerNetwork is not set to false.
+        /// Do not override the file, member, and line number parameters. They are used to generate a unique hash for the network ID.
+        /// </summary>
+        /// <param name="g">The GameObject to clone</param>
+        /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
+        /// <param name="registerNetwork">Should the object be registered to network</param>
+        /// <returns>The GameObject of the clone</returns>
+        public static GameObject InstantiateClone(this GameObject g, string nameToSet, bool registerNetwork = true, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0) {
+            if (!Loaded) {
+                R2API.Logger.LogError("PrefabAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
                 return null;
             }
-            GameObject prefab = MonoBehaviour.Instantiate<GameObject>(g, GetParent().transform);
+            var prefab = Object.Instantiate(g, GetParent().transform);
             prefab.name = nameToSet;
-            if( registerNetwork ) {
-                RegisterPrefabInternal( prefab, file, member, line );
+            if (registerNetwork) {
+                RegisterPrefabInternal(prefab, file, member, line);
             }
             return prefab;
         }
@@ -54,12 +56,12 @@ namespace R2API {
         /// Do not override the file, member, and line number parameters. They are used to generate a unique hash for the network ID.
         /// </summary>
         /// <param name="g">The prefab to register</param>
-        public static void RegisterNetworkPrefab( this GameObject g, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0 ) {
-            if( !IsLoaded ) {
-                R2API.Logger.LogError( "PrefabAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]" );
+        public static void RegisterNetworkPrefab(this GameObject g, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0) {
+            if (!Loaded) {
+                R2API.Logger.LogError("PrefabAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
                 return;
             }
-            RegisterPrefabInternal( g, file, member, line );
+            RegisterPrefabInternal(g, file, member, line);
         }
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         
@@ -74,49 +76,49 @@ namespace R2API {
         }
 
         private static GameObject GetParent() {
-            if( !parent ) {
-                parent = new GameObject( "ModdedPrefabs" );
-                MonoBehaviour.DontDestroyOnLoad( parent );
-                parent.SetActive( false );
+            if (!_parent) {
+                _parent = new GameObject("ModdedPrefabs");
+                Object.DontDestroyOnLoad(_parent);
+                _parent.SetActive(false);
 
-                On.RoR2.Util.IsPrefab += ( orig, obj ) => {
-                    if( obj.transform.parent && obj.transform.parent.gameObject.name == "ModdedPrefabs" ) return true;
-                    return orig( obj );
+                On.RoR2.Util.IsPrefab += (orig, obj) => {
+                    if (obj.transform.parent && obj.transform.parent.gameObject.name == "ModdedPrefabs") return true;
+                    return orig(obj);
                 };
             }
 
-            return parent;
+            return _parent;
         }
 
         private struct HashStruct {
-            public GameObject prefab;
-            public string goName;
-            public string callPath;
-            public string callMember;
-            public int callLine;
+            public GameObject Prefab;
+            public string GoName;
+            public string CallPath;
+            public string CallMember;
+            public int CallLine;
         }
 
-        private static void RegisterPrefabInternal( GameObject prefab, string callPath, string callMember, int callLine ) {
-            HashStruct h = new HashStruct
+        private static void RegisterPrefabInternal(GameObject prefab, string callPath, string callMember, int callLine) {
+            var h = new HashStruct
             {
-                prefab = prefab,
-                goName = prefab.name,
-                callPath = callPath,
-                callMember = callMember,
-                callLine = callLine
+                Prefab = prefab,
+                GoName = prefab.name,
+                CallPath = callPath,
+                CallMember = callMember,
+                CallLine = callLine
             };
-            thingsToHash.Add( h );
+            ThingsToHash.Add(h);
             SetupRegistrationEvent();
         }
 
         private static void SetupRegistrationEvent() {
-            if( !needToRegister ) {
+            if (!needToRegister) {
                 needToRegister = true;
                 RoR2.Networking.GameNetworkManager.onStartGlobal += RegisterClientPrefabsNStuff;
             }
         }
 
-        private static NetworkHash128 nullHash = new NetworkHash128
+        private static readonly NetworkHash128 NullHash = new NetworkHash128
         {
             i0 = 0,
             i1 = 0,
@@ -137,20 +139,21 @@ namespace R2API {
         };
 
         private static void RegisterClientPrefabsNStuff() {
-            foreach( HashStruct h in thingsToHash ) {
-                if( (h.prefab.GetComponent<NetworkIdentity>() != null)) h.prefab.GetComponent<NetworkIdentity>().SetFieldValue<NetworkHash128>( "m_AssetId", nullHash );
-                ClientScene.RegisterPrefab( h.prefab, NetworkHash128.Parse( MakeHash( h.goName + h.callPath + h.callMember + h.callLine.ToString() ) ) );
+            foreach (var h in ThingsToHash) {
+                if (h.Prefab.GetComponent<NetworkIdentity>() != null) h.Prefab.GetComponent<NetworkIdentity>().SetFieldValue("m_AssetId", NullHash);
+                ClientScene.RegisterPrefab(h.Prefab, NetworkHash128.Parse(MakeHash(h.GoName + h.CallPath + h.CallMember + h.CallLine)));
             }
         }
 
-        private static string MakeHash(string s ) {
-            MD5 hash = MD5.Create();
-            byte[] prehash = hash.ComputeHash( Encoding.UTF8.GetBytes( s ) );
+        private static string MakeHash(string s) {
+            var hash = MD5.Create();
+            byte[] prehash = hash.ComputeHash(Encoding.UTF8.GetBytes(s));
             hash.Dispose();
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
-            for(int i = 0; i < prehash.Length; i++ ) {
-                sb.Append( prehash[i].ToString( "x2" ) );
+            foreach (var t in prehash)
+            {
+                sb.Append(t.ToString("x2"));
             }
 
             return sb.ToString();

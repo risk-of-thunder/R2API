@@ -6,8 +6,12 @@ using R2API.Utils;
 using UnityEngine;
 using Object = UnityEngine.Object;
 // ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
 
 namespace R2API {
+    /// <summary>
+    /// Allow to register AssetBundles for Mod Makers.
+    /// </summary>
     [R2APISubmodule]
     public static class ResourcesAPI {
         private static readonly Dictionary<string, IResourceProvider> Providers = new Dictionary<string, IResourceProvider>();
@@ -55,6 +59,12 @@ namespace R2API {
             ResourcesLoadAllDetour.Undo();
         }
 
+        /// <summary>
+        /// Add an AssetBundleResourcesProvider to the API.
+        /// A prefix usually looks like this: "@MyModPrefix"
+        /// More information on the R2API Wiki.
+        /// </summary>
+        /// <param name="provider">assetbundle provider to give, usually made with an AssetBundleResourcesProvider(prefix, assetbundle)</param>
         public static void AddProvider(IResourceProvider provider) {
             Providers.Add(provider.ModPrefix, provider);
         }
