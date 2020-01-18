@@ -365,13 +365,37 @@ namespace R2API {
             }
 
             /// <summary>
-            /// Gets a value in the config for the mod from the ConfigEntry used to bind it.
+            /// Gets a value in the mod's config from the ConfigEntry used to bind it.
             /// </summary>
             /// <typeparam name="T">The Type of the value to get</typeparam>
             /// <param name="configEntry">The ConfigEntry that was used to bind it.</param>
             /// <returns>The value from the config</returns>
-            public T GetConfigValue<T>(ConfigEntry<T> configEntry) {
-                return !HasConfig ? default : _configData.LookupValue(configEntry);
+            public T GetConfigValue<T>( ConfigEntry<T> configEntry ) {
+                if( !this.HasConfig ) return default;
+                return this._configData.LookupValue<T>( configEntry );
+            }
+
+            /// <summary>
+            /// Gets a value in the mod's config from the key and section of the setting.
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <param name="key">The key of the setting</param>
+            /// <param name="section">The section the setting is in</param>
+            /// <returns>The value from the config</returns>
+            public T GetConfigValue<T>( string key, string section ) {
+                if( !this.HasConfig ) return default;
+                return this._configData.LookupValue<T>( key, section );
+            }
+
+            /// <summary>
+            /// Gets a value in the mod's config from the key and section of the setting as System.Object.
+            /// </summary>
+            /// <param name="key">The key of the setting</param>
+            /// <param name="section">The section the setting is in</param>
+            /// <returns>The value from the config as System.Object</returns>
+            public object GetConfigValue( string key, string section ) {
+                if( !this.HasConfig ) return default;
+                return this._configData.LookupValue( key, section );
             }
 
             internal void Write(NetworkWriter writer) {
@@ -436,21 +460,35 @@ namespace R2API {
                 return true;
             }
 
-            internal T LookupValue<T>(ConfigEntry<T> entry) {
-                var key = entry.Definition.Section + Divider + entry.Definition.Key;
-                if (_data.ContainsKey(key)) {
-                    var option = _data[key];
+            internal T LookupValue<T>( string key, string section ) {
+                var intKey = section + Divider + key;
+                if( this._data.ContainsKey( intKey ) ) {
+                    var option = this._data[intKey];
 
-                    if (option.Type == typeof(T)) {
+                    if( option.Type == typeof( T ) ) {
                         return (T)option.Value;
+                    } else {
+                        R2API.Logger.LogError( "Type mismatch for key: " + key + " in config. The correct type is: " + option.Type );
+                        return default;
                     }
-
-                    R2API.Logger.LogError("Type mismatch for key: " + entry.Definition.Key + " in config.");
+                } else {
+                    R2API.Logger.LogError( "The key: " + key + " does not exist in that config. Could be a different version of the mod." );
                     return default;
                 }
+            }
 
-                R2API.Logger.LogError("The key: " + entry.Definition.Key + " does not exist in that config. Could be a different version of the mod.");
-                return default;
+            internal T LookupValue<T>( ConfigEntry<T> entry ) {
+                return LookupValue<T>( entry.Definition.Key, entry.Definition.Section );
+            }
+
+            internal object LookupValue( string key, string section ) {
+                var intKey = section + Divider + key;
+                if( this._data.ContainsKey( intKey ) ) {
+                    return this._data[intKey].Value;
+                } else {
+                    R2API.Logger.LogError( "The key: " + key + " does not exist in that config. Could be a different version of the mod." );
+                    return default;
+                }
             }
         }
 
