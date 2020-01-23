@@ -36,12 +36,12 @@ namespace R2API {
         /// <summary>
         /// The amount of time that the server waits to receive a message before assuming a client is vanilla.
         /// </summary>
-        public const float MessageWaitTimeServer = 4f;
+        public const float MessageWaitTimeServer = 10f;
 
         /// <summary>
         /// The amount of time a client waits to receive a message before assuming a server is vanilla.
         /// </summary>
-        public const float MessageWaitTimeClient = 3.5f;
+        public const float MessageWaitTimeClient = 9.5f;
 
         /// <summary>
         /// Is ModListAPI loaded and working?
@@ -140,7 +140,7 @@ namespace R2API {
         private static void ServerSideConnect(NetworkConnection connection) {
             try {
                 var msg = new ModListMessage(_localModList, CSteamID.nil, true);
-                connection.SendByChannel(MessageIndex, msg, QosChannelIndex.defaultReliable.intVal);
+                connection.SendByChannel(MessageIndex, msg, 4);
                 MessageWaitServerAsync(connection, MessageWaitTimeServer);
             }
             catch (Exception e) {
@@ -150,7 +150,7 @@ namespace R2API {
         private static void ClientSideConnect(NetworkConnection connection) {
             try {
                 var msg = new ModListMessage(_localModList, new CSteamID(Client.Instance.SteamId));
-                connection.SendByChannel(MessageIndex, msg, QosChannelIndex.defaultReliable.intVal);
+                connection.SendByChannel(MessageIndex, msg, 4);
                 MessageWaitClientAsync(connection, MessageWaitTimeClient);
             }
             catch (Exception e){
@@ -161,9 +161,11 @@ namespace R2API {
         private static async void MessageWaitServerAsync(NetworkConnection conn, float duration) {
             await Task.Delay(TimeSpan.FromSeconds(duration));
 
-            if (!ConnectedClientMods.ContainsKey(conn))
+            if (!ConnectedClientMods.ContainsKey(conn)) {
                 ConnectedClientMods.Add(conn, ModList.Vanilla);
-
+                R2API.Logger.LogInfo("Adding this connection as a vanilla client: " + conn);
+            }
+            
             ModListReceivedFromClient?.Invoke(conn, ConnectedClientMods[conn]);
         }
 
@@ -178,8 +180,15 @@ namespace R2API {
 
         [NetworkMessageHandler(client = true, server = true, msgType = MessageIndex)]
         private static void HandleModListMessage(NetworkMessage netMsg) {
-            var modListMessage = netMsg.ReadMessage<ModListMessage>();
-
+            ModListMessage modListMessage = null;
+            try {
+                modListMessage = netMsg.ReadMessage<ModListMessage>();
+            }
+            catch (Exception e) {
+                R2API.Logger.LogError("Could not deserialize the ModListMessage:");
+                R2API.Logger.LogError(e.ToString());
+            }
+            
             if (modListMessage == null) {
                 R2API.Logger.LogError("Invalid message sent to message index: " + MessageIndex);
                 return;
@@ -190,7 +199,13 @@ namespace R2API {
             else {
                 if (!modListMessage.SteamId.isValid)
                     R2API.Logger.LogWarning("Server received message with invalid SteamID");
-                ConnectedClientMods.Add(netMsg.conn, modListMessage.Mods);
+                if (!ConnectedClientMods.ContainsKey(netMsg.conn)) {
+                    ConnectedClientMods.Add(netMsg.conn, modListMessage.Mods);
+                    R2API.Logger.LogInfo("Adding this connection as a modded client: " + netMsg.conn);
+                }
+                else {
+                    R2API.Logger.LogWarning("HandleModListMessage tried to add a NetworkConnection that was already added: " + netMsg.conn);
+                }
             }
         }
 
@@ -267,7 +282,7 @@ namespace R2API {
             /// </summary>
             /// <returns>the string with each mod on its own line</returns>
             public string TextRepresentation() {
-                var builder = new StringBuilder("Mod List:", 200);
+                var builder = new StringBuilder("Mod List:");
                 foreach (ModInfo mod in _modInfos) {
                     builder.Append("\n");
                     builder.Append(mod.Guid);
