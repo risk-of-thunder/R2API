@@ -44,8 +44,8 @@ namespace R2API {
 
             RoR2Application.isModded = true;
 
-            //This needs to always be enabled, regardless of module dependency, or it is useless
-            ModListAPI.Init();
+            //Currently disabled until manifest v2
+            //ModListAPI.Init();
 
             On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
                 // TODO: If we can enable quick play without regrets, uncomment.
