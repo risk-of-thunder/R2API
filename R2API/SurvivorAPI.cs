@@ -8,6 +8,16 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class SurvivorAPI {
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
+        public static bool Loaded {
+            get => _loaded;
+            set => _loaded = value;
+        }
+
+        private static bool _loaded;
+
         private static bool survivorsAlreadyAdded = false;
 
         public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
@@ -22,6 +32,10 @@ namespace R2API {
         /// <param name="survivor">The survivor to add.</param>
         /// <returns>true if survivor will be added</returns>
         public static bool AddSurvivor(SurvivorDef survivor) {
+            if (!Loaded) {
+                R2API.Logger.LogError("SurvivorAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
+            }
+
             if (survivorsAlreadyAdded) {
                 R2API.Logger.LogError($"Tried to add survivor: {survivor.displayNameToken} after survivor list was created");
                 return false;
@@ -54,10 +68,10 @@ namespace R2API {
 
             // Get the count of the new survivors added, and the number of vanilla survivors
             var newSurvivorCount = SurvivorDefinitions.Count;
-            var exisitingSurvivorCount = SurvivorCatalog.idealSurvivorOrder.Length;
+            var existingSurvivorCount = SurvivorCatalog.idealSurvivorOrder.Length;
 
             // Increase the size of the order array to accomodate the added survivors
-            Array.Resize(ref SurvivorCatalog.idealSurvivorOrder, exisitingSurvivorCount + newSurvivorCount);
+            Array.Resize(ref SurvivorCatalog.idealSurvivorOrder, existingSurvivorCount + newSurvivorCount);
 
             // Increase the max survivor count to ensure there is enough space on the char select bar
             SurvivorCatalog.survivorMaxCount += newSurvivorCount;
@@ -76,7 +90,7 @@ namespace R2API {
                 survivorDefinitions.Add(survivor);
 
                 // Add that new survivor to the order array so the game knows where to put it in character select
-                SurvivorCatalog.idealSurvivorOrder[exisitingSurvivorCount++] = (SurvivorIndex)exisitingSurvivorCount;
+                SurvivorCatalog.idealSurvivorOrder[existingSurvivorCount++] = (SurvivorIndex)existingSurvivorCount;
             }
         }
     }

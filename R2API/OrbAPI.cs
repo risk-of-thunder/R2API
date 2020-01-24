@@ -2,12 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using R2API.Utils;
+// ReSharper disable UnusedMember.Global
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class OrbAPI {
-        private static bool orbsAlreadyAdded = false;
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
+        public static bool Loaded {
+            get => _loaded;
+            set => _loaded = value;
+        }
+
+        private static bool _loaded;
+
+
+        private static bool _orbsAlreadyAdded = false;
 
         public static ObservableCollection<Type> OrbDefinitions = new ObservableCollection<Type>();
 
@@ -19,12 +31,16 @@ namespace R2API {
         /// <param name="t">The type of the orb being added</param>
         /// <returns>True if orb will be added</returns>
         public static bool AddOrb(Type t) {
-            if (orbsAlreadyAdded) {
+            if (!Loaded) {
+                R2API.Logger.LogError("OrbAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
+                return false;
+            }
+            if (_orbsAlreadyAdded) {
                 R2API.Logger.LogError($"Tried to add Orb type: {nameof(t)} after orb catalog was generated");
                 return false;
             }
 
-            if (t == null || !t.IsSubclassOf( typeof( RoR2.Orbs.Orb ) ) ) {
+            if (t == null || !t.IsSubclassOf(typeof(RoR2.Orbs.Orb))) {
                 R2API.Logger.LogError($"Type: {nameof(t)} is null or not a subclass of RoR2.Orbs.Orb");
                 return false;
             }
@@ -44,28 +60,26 @@ namespace R2API {
             On.RoR2.Orbs.OrbCatalog.GenerateCatalog -= AddOrbs;
         }
 
-        private static void AddOrbs( On.RoR2.Orbs.OrbCatalog.orig_GenerateCatalog orig ) {
-            orbsAlreadyAdded = true;
+        private static void AddOrbs(On.RoR2.Orbs.OrbCatalog.orig_GenerateCatalog orig) {
+            _orbsAlreadyAdded = true;
             orig();
 
-            Type[] orbCat = typeof(RoR2.Orbs.OrbCatalog).GetFieldValue<Type[]>("indexToType");
-            Dictionary<Type, int> typeToIndex = typeof(RoR2.Orbs.OrbCatalog).GetFieldValue<Dictionary<Type, int>>("typeToIndex");
+            var orbCat = typeof(RoR2.Orbs.OrbCatalog).GetFieldValue<Type[]>("indexToType");
+            var typeToIndex = typeof(RoR2.Orbs.OrbCatalog).GetFieldValue<Dictionary<Type, int>>("typeToIndex");
 
             int origLength = orbCat.Length;
             int extraLength = OrbDefinitions.Count;
 
-            Array.Resize<Type>( ref orbCat, origLength + extraLength );
+            Array.Resize(ref orbCat, origLength + extraLength);
 
-            int temp;
-
-            for(int i = 0; i < extraLength; i++ ) {
-                temp = i + origLength;
+            for (int i = 0; i < extraLength; i++) {
+                var temp = i + origLength;
                 orbCat[temp] = OrbDefinitions[i];
-                typeToIndex.Add( OrbDefinitions[i], temp );
+                typeToIndex.Add(OrbDefinitions[i], temp);
             }
 
-            typeof( RoR2.Orbs.OrbCatalog ).SetFieldValue<Type[]>( "indexToType", orbCat );
-            typeof( RoR2.Orbs.OrbCatalog ).SetFieldValue<Dictionary<Type, Int32>>( "typeToIndex", typeToIndex );
+            typeof(RoR2.Orbs.OrbCatalog).SetFieldValue("indexToType", orbCat);
+            typeof(RoR2.Orbs.OrbCatalog).SetFieldValue("typeToIndex", typeToIndex);
         }
     }
 }

@@ -1,4 +1,6 @@
+using System;
 using RoR2;
+// ReSharper disable UnusedMember.Global
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
@@ -52,6 +54,9 @@ namespace R2API {
                 public static readonly string AurelioniteAlly = "csctitangoldally";
                 public static readonly string WanderingVagrant = "cscvagrant";
                 public static readonly string AlloyVulture = "cscvulture";
+                public static readonly string Scavenger = "cscscav";
+                public static readonly string LunarScavenger = "cscscavlunar";
+                public static readonly string VoidReaver = "cscnullifier";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             }
 
@@ -97,6 +102,12 @@ namespace R2API {
                 public static readonly string Teleporter = "iscteleporter";
                 public static readonly string MultiShopCommon = "isctripleshop";
                 public static readonly string MultiShopUncommon = "isctripleshoplarge";
+                public static readonly string EmergencyDrone = "iscbrokenemergencydrone";
+                public static readonly string AdaptiveChest = "isccasinochest";
+                public static readonly string OvergrownPrinter = "iscduplicatorwild";
+                public static readonly string ScavengerBackpack = "iscscavbackpack";
+                public static readonly string LunarScavengerBackpack = "iscscavlunarbackpack";
+                public static readonly string CleansingPool = "iscshrinecleanse";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             }
 
@@ -106,12 +117,12 @@ namespace R2API {
             /// </summary>
             /// <param name="monsterName">The name of the monster to edit</param>
             /// <param name="elitesAllowed">Should elites be allowed?</param>
-            public static void PreventElites(string monsterName, bool elitesAllowed ) {
+            public static void PreventElites(string monsterName, bool elitesAllowed) {
                 
-                DirectorAPI.MonsterActions += ( monsters, currentStage ) => {
-                    foreach( DirectorCardHolder holder in monsters ) {
-                        if( holder.card.spawnCard.name.ToLower() == monsterName.ToLower() ) {
-                            ((CharacterSpawnCard)holder.card.spawnCard).noElites = elitesAllowed;
+                MonsterActions += (monsters, currentStage) => {
+                    foreach (var holder in monsters) {
+                        if (string.Equals(holder.Card.spawnCard.name, monsterName, StringComparison.CurrentCultureIgnoreCase)) {
+                            ((CharacterSpawnCard)holder.Card.spawnCard).noElites = elitesAllowed;
                         }
                     }
                 };
@@ -122,16 +133,16 @@ namespace R2API {
             /// </summary>
             /// <param name="monsterCard">The DirectorCard for the monster</param>
             /// <param name="category">The category to add the monster to</param>
-            public static void AddNewMonster( DirectorCard monsterCard, MonsterCategory category ) {
+            public static void AddNewMonster(DirectorCard monsterCard, MonsterCategory category) {
                 
                 DirectorCardHolder card = new DirectorCardHolder
                 {
-                    card = monsterCard,
-                    interactableCategory = InteractableCategory.None,
-                    monsterCategory = category
+                    Card = monsterCard,
+                    InteractableCategory = InteractableCategory.None,
+                    MonsterCategory = category
                 };
-                DirectorAPI.MonsterActions += ( monsters, currentStage ) => {
-                    monsters.Add( card );
+                MonsterActions += (monsters, currentStage) => {
+                    monsters.Add(card);
                 };
             }
 
@@ -143,18 +154,18 @@ namespace R2API {
             /// <param name="category">The category to add the monster to</param>
             /// <param name="stage">The stage to add the monster to</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void AddNewMonsterToStage( DirectorCard monsterCard, MonsterCategory category, Stage stage, string customStageName = "" ) {
+            public static void AddNewMonsterToStage(DirectorCard monsterCard, MonsterCategory category, Stage stage, string customStageName = "") {
                 
                 DirectorCardHolder card = new DirectorCardHolder
                 {
-                    card = monsterCard,
-                    interactableCategory = InteractableCategory.None,
-                    monsterCategory = category
+                    Card = monsterCard,
+                    InteractableCategory = InteractableCategory.None,
+                    MonsterCategory = category
                 };
-                DirectorAPI.MonsterActions += ( monsters, currentStage ) => {
-                    if( currentStage.stage == stage ) {
-                        if( currentStage.CheckStage( stage, customStageName ) ) {
-                            monsters.Add( card );
+                MonsterActions += (monsters, currentStage) => {
+                    if (currentStage.stage == stage) {
+                        if (currentStage.CheckStage(stage, customStageName)) {
+                            monsters.Add(card);
                         }
                     }
                 };
@@ -165,16 +176,16 @@ namespace R2API {
             /// </summary>
             /// <param name="interactableCard">The DirectorCard for the interactable</param>
             /// <param name="category">The category of the interactable</param>
-            public static void AddNewInteractable( DirectorCard interactableCard, InteractableCategory category ) {
+            public static void AddNewInteractable(DirectorCard interactableCard, InteractableCategory category) {
                 
                 DirectorCardHolder card = new DirectorCardHolder
                 {
-                    card = interactableCard,
-                    interactableCategory = category,
-                    monsterCategory = MonsterCategory.None
+                    Card = interactableCard,
+                    InteractableCategory = category,
+                    MonsterCategory = MonsterCategory.None
                 };
-                DirectorAPI.InteractableActions += ( interactables, currentStage ) => {
-                    interactables.Add( card );
+                InteractableActions += (interactables, currentStage) => {
+                    interactables.Add(card);
                 };
             }
 
@@ -186,18 +197,18 @@ namespace R2API {
             /// <param name="category">The category of the interactable</param>
             /// <param name="stage">The stage to add the interactable to</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void AddNewInteractableToStage( DirectorCard interactableCard, InteractableCategory category, Stage stage, string customStageName = "" ) {
+            public static void AddNewInteractableToStage(DirectorCard interactableCard, InteractableCategory category, Stage stage, string customStageName = "") {
                 
                 DirectorCardHolder card = new DirectorCardHolder
                 {
-                    card = interactableCard,
-                    interactableCategory = category,
-                    monsterCategory = MonsterCategory.None
+                    Card = interactableCard,
+                    InteractableCategory = category,
+                    MonsterCategory = MonsterCategory.None
                 };
-                DirectorAPI.InteractableActions += ( interactables, currentStage ) => {
-                    if( currentStage.stage == stage ) {
-                        if( currentStage.CheckStage( stage, customStageName ) ) {
-                            interactables.Add( card );
+                InteractableActions += (interactables, currentStage) => {
+                    if (currentStage.stage == stage) {
+                        if (currentStage.CheckStage(stage, customStageName)) {
+                            interactables.Add(card);
                         }
                     }
                 };
@@ -207,10 +218,10 @@ namespace R2API {
             /// Removes a monster from spawns on all stages.
             /// </summary>
             /// <param name="monsterName">The name of the monster card to remove</param>
-            public static void RemoveExistingMonster(string monsterName ) {
+            public static void RemoveExistingMonster(string monsterName) {
                 
-                DirectorAPI.MonsterActions += ( monsters, currentStage ) => {
-                    monsters.RemoveAll( ( card ) => (card.card.spawnCard.name.ToLower() == monsterName.ToLower()) );
+                MonsterActions += (monsters, currentStage) => {
+                    monsters.RemoveAll((card) => (card.Card.spawnCard.name.ToLower() == monsterName.ToLower()));
                 };
             }
 
@@ -221,12 +232,12 @@ namespace R2API {
             /// <param name="monsterName">The name of the monster card to remove</param>
             /// <param name="stage">The stage to remove on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void RemoveExistingMonsterFromStage(string monsterName, Stage stage, string customStageName = "" ) {
+            public static void RemoveExistingMonsterFromStage(string monsterName, Stage stage, string customStageName = "") {
                 
-                DirectorAPI.MonsterActions += ( monsters, currentStage ) => {
-                    if( currentStage.stage == stage ) {
-                        if( (stage != Stage.Custom) ^ (currentStage.customStageName == customStageName) ) {
-                            monsters.RemoveAll( ( card ) => (card.card.spawnCard.name.ToLower() == monsterName.ToLower()) );
+                MonsterActions += (monsters, currentStage) => {
+                    if (currentStage.stage == stage) {
+                        if ((stage != Stage.Custom) ^ (currentStage.CustomStageName == customStageName)) {
+                            monsters.RemoveAll((card) => (card.Card.spawnCard.name.ToLower() == monsterName.ToLower()));
                         }
                     }
                 };
@@ -236,10 +247,10 @@ namespace R2API {
             /// Remove an interactable from spawns on all stages.
             /// </summary>
             /// <param name="interactableName">Name of the interactable to remove</param>
-            public static void RemoveExistingInteractable(string interactableName ) {
+            public static void RemoveExistingInteractable(string interactableName) {
                 
-                DirectorAPI.InteractableActions += ( interactables, currentStage ) => {
-                    interactables.RemoveAll( ( card ) => (card.card.spawnCard.name.ToLower() == interactableName.ToLower()) );
+                InteractableActions += (interactables, currentStage) => {
+                    interactables.RemoveAll((card) => (card.Card.spawnCard.name.ToLower() == interactableName.ToLower()));
                 };
             }
 
@@ -250,12 +261,12 @@ namespace R2API {
             /// <param name="interactableName">The name of the interactable to remove</param>
             /// <param name="stage">The stage to remove on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void RemoveExistingInteractableFromStage(string interactableName, Stage stage, string customStageName = "" ) {
+            public static void RemoveExistingInteractableFromStage(string interactableName, Stage stage, string customStageName = "") {
                 
-                DirectorAPI.InteractableActions += ( interactables, currentStage ) => {
-                    if( currentStage.stage == stage ) {
-                        if( currentStage.CheckStage( stage, customStageName ) ) {
-                            interactables.RemoveAll( ( card ) => (card.card.spawnCard.name.ToLower() == interactableName.ToLower()) );
+                InteractableActions += (interactables, currentStage) => {
+                    if (currentStage.stage == stage) {
+                        if (currentStage.CheckStage(stage, customStageName)) {
+                            interactables.RemoveAll((card) => (card.Card.spawnCard.name.ToLower() == interactableName.ToLower()));
                         }
                     }
                 };
@@ -268,12 +279,12 @@ namespace R2API {
             /// <param name="increase">The quantity to add</param>
             /// <param name="stage">The stage to add on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void AddSceneMonsterCredits(int increase, Stage stage, string customStageName = "" ) {
+            public static void AddSceneMonsterCredits(int increase, Stage stage, string customStageName = "") {
                 
-                DirectorAPI.StageSettingsActions += ( settings, currentStage ) => {
-                    if( currentStage.stage == stage ) {
-                        if( currentStage.CheckStage( stage, customStageName ) ) {
-                            settings.sceneDirectorMonsterCredits += increase;
+                StageSettingsActions += (settings, currentStage) => {
+                    if (currentStage.stage == stage) {
+                        if (currentStage.CheckStage(stage, customStageName)) {
+                            settings.SceneDirectorMonsterCredits += increase;
                         }
                     }
                 };
@@ -286,12 +297,12 @@ namespace R2API {
             /// <param name="increase">The quantity to add</param>
             /// <param name="stage">The stage to add on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void AddSceneInteractableCredits(int increase, Stage stage, string customStageName = "" ) {
+            public static void AddSceneInteractableCredits(int increase, Stage stage, string customStageName = "") {
                 
-                DirectorAPI.StageSettingsActions += ( settings, currentStage ) => {
-                    if( currentStage.stage == stage ) {
-                        if( currentStage.CheckStage( stage, customStageName ) ) {
-                            settings.sceneDirectorInteractableCredits += increase;
+                StageSettingsActions += (settings, currentStage) => {
+                    if (currentStage.stage == stage) {
+                        if (currentStage.CheckStage(stage, customStageName)) {
+                            settings.SceneDirectorInteractableCredits += increase;
                         }
                     }
                 };
@@ -304,12 +315,12 @@ namespace R2API {
             /// <param name="multiplier">The number to multiply by</param>
             /// <param name="stage">The stage to multiply on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void MultiplySceneMonsterCredits(int multiplier, Stage stage, string customStageName = "" ) {
+            public static void MultiplySceneMonsterCredits(int multiplier, Stage stage, string customStageName = "") {
                 
-                DirectorAPI.StageSettingsActions += ( settings, currentStage ) => {
-                    if( currentStage.stage == stage ) {
-                        if( currentStage.CheckStage( stage, customStageName ) ) {
-                            settings.sceneDirectorMonsterCredits *= multiplier;
+                StageSettingsActions += (settings, currentStage) => {
+                    if (currentStage.stage == stage) {
+                        if (currentStage.CheckStage(stage, customStageName)) {
+                            settings.SceneDirectorMonsterCredits *= multiplier;
                         }
                     }
                 };
@@ -322,12 +333,12 @@ namespace R2API {
             /// <param name="multiplier">The number to multiply by</param>
             /// <param name="stage">The stage to multiply on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void MultiplySceneInteractableCredits(int multiplier, Stage stage, string customStageName = "" ) {
+            public static void MultiplySceneInteractableCredits(int multiplier, Stage stage, string customStageName = "") {
                 
-                DirectorAPI.StageSettingsActions += ( settings, currentStage ) => {
-                    if( currentStage.stage == stage ) {
-                        if( currentStage.CheckStage( stage, customStageName ) ) {
-                            settings.sceneDirectorInteractableCredits *= multiplier;
+                StageSettingsActions += (settings, currentStage) => {
+                    if (currentStage.stage == stage) {
+                        if (currentStage.CheckStage(stage, customStageName)) {
+                            settings.SceneDirectorInteractableCredits *= multiplier;
                         }
                     }
                 };
@@ -340,12 +351,12 @@ namespace R2API {
             /// <param name="divisor">The number to divide by</param>
             /// <param name="stage">The stage to divide on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void ReduceSceneMonsterCredits(int divisor, Stage stage, string customStageName = "" ) {
+            public static void ReduceSceneMonsterCredits(int divisor, Stage stage, string customStageName = "") {
                 
-                DirectorAPI.StageSettingsActions += ( settings, currentStage ) => {
-                    if( currentStage.stage == stage ) {
-                        if( currentStage.CheckStage( stage, customStageName ) ) {
-                            settings.sceneDirectorMonsterCredits /= divisor;
+                StageSettingsActions += (settings, currentStage) => {
+                    if (currentStage.stage == stage) {
+                        if (currentStage.CheckStage(stage, customStageName)) {
+                            settings.SceneDirectorMonsterCredits /= divisor;
                         }
                     }
                 };
@@ -358,12 +369,12 @@ namespace R2API {
             /// <param name="divisor">The number to divide by</param>
             /// <param name="stage">The stage to divide on</param>
             /// <param name="customStageName">The name of the custom stage</param>
-            public static void ReduceSceneInteractableCredits(int divisor, Stage stage, string customStageName = "" ) {
+            public static void ReduceSceneInteractableCredits(int divisor, Stage stage, string customStageName = "") {
                 
-                DirectorAPI.StageSettingsActions += ( settings, currentStage ) => {
-                    if( currentStage.stage == stage ) {
-                        if( currentStage.CheckStage( stage, customStageName ) ) {
-                            settings.sceneDirectorInteractableCredits /= divisor;
+                StageSettingsActions += (settings, currentStage) => {
+                    if (currentStage.stage == stage) {
+                        if (currentStage.CheckStage(stage, customStageName)) {
+                            settings.SceneDirectorInteractableCredits /= divisor;
                         }
                     }
                 };

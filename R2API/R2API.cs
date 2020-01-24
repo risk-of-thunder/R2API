@@ -28,12 +28,13 @@ namespace R2API {
 
         internal static DetourModManager ModManager;
 
+
         public R2API() {
             Logger = base.Logger;
             ModManager = new DetourModManager();
             AddHookLogging();
-
             CheckForIncompatibleAssemblies();
+            CheckR2APIMonomodPatch();
 
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
@@ -42,6 +43,9 @@ namespace R2API {
             submoduleHandler.LoadRequested();
 
             RoR2Application.isModded = true;
+
+            //This needs to always be enabled, regardless of module dependency, or it is useless
+            ModListAPI.Init();
 
             On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
                 // TODO: If we can enable quick play without regrets, uncomment.
@@ -61,14 +65,19 @@ namespace R2API {
                 Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{buildId}\".");
                 Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
             };
+
             On.RoR2.SteamworksServerManager.UpdateHostName += (orig, self, hostname) => {
                 orig(self, $"[MOD] {hostname}");
-                Server server = ((SteamworksServerManager)self).GetFieldValue<Server>("steamworksServer");
-                server.GameTags = "mod,"+ server.GameTags;
+                var server = ((SteamworksServerManager)self).GetFieldValue<Server>("steamworksServer");
+                server.GameTags = "mod," + server.GameTags;
             };
         }
 
-        public static void AddHookLogging() {
+        public void Start() {
+            ModListAPI.BuildModList();
+        }
+
+        private static void AddHookLogging() {
             ModManager.OnHook += (assembly, @base, arg3, arg4) => LogMethod(@base);
             ModManager.OnDetour += (assembly, @base, arg3) => LogMethod(@base);
             ModManager.OnNativeDetour += (assembly, @base, arg3, arg4) => LogMethod(@base);
@@ -118,6 +127,21 @@ namespace R2API {
                 return;
 
             Logger.LogBlockError(info);
+        }
+
+        // ReSharper disable once InconsistentNaming
+        private static void CheckR2APIMonomodPatch() {
+            var isHere = AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.FullName.ToLower().Contains("r2api.mm.monomodrules"));
+
+            if (!isHere) {
+                var message = new List<string> {
+                    "The Monomod patch of R2API seems to be missing",
+                    "Please make sure that a file called:",
+                    "Assembly-CSharp.R2API.mm.dll",
+                    "is present in the Risk of Rain 2\\BepInEx\\monomod\\ folder",
+                };
+                Logger.LogBlockError(message);
+            }
         }
     }
 }

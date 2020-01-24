@@ -7,6 +7,7 @@ using RoR2.Skills;
 using UnityEngine;
 
 namespace R2API {
+    [Obsolete( "Please use LoadoutAPI instead" )]
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class SkinAPI {

@@ -262,7 +262,7 @@ namespace R2API {
             self.largeChestDropTierSelector.Clear();
         }
 
-        private static void ChestBehaviorOnRollItem(On.RoR2.ChestBehavior.orig_RollItem orig, RoR2.ChestBehavior self) {
+        private static void ChestBehaviorOnRollItem(On.RoR2.ChestBehavior.orig_RollItem orig, ChestBehavior self) {
             if (!NetworkServer.active) {
                 Debug.LogWarning("[Server] function 'System.Void RoR2.ChestBehavior::RollItem()' called on client");
                 return;
@@ -341,7 +341,7 @@ namespace R2API {
                 var norm = rng.nextNormalizedFloat;
 
                 if (self.forceTier3Reward) {
-                    var t3List = ItemDropAPI.GetDefaultDropList(ItemTier.Tier3);
+                    var t3List = GetDefaultDropList(ItemTier.Tier3);
                     var selection = t3List.ToSelection();
                     return GetSelection(new List<PickupSelection> { selection }, norm);
                 } else {
