@@ -12,8 +12,10 @@ At it's core, R2API should not change how the game behaves without any other mod
 ## Installation
 
 The contents of `R2API` should be extracted into the `BepInEx` folder, such that the files inside the `monomod` folder in the zip sit in the `monomod` folder in BepInEx and the files and folder in `plugins` in the archive is inside your `plugins` folder.
+
 A succesful installation should look like this:
 ![installation](https://cdn.discordapp.com/attachments/575082050097381412/667394037229027328/unknown.png)
+*[(click to enlarge)](https://cdn.discordapp.com/attachments/575082050097381412/667394037229027328/unknown.png)*
 
 ## Developing
 
