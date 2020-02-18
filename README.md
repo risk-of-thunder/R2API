@@ -5,7 +5,7 @@
 
 ## About
 
-R2API is a modding framework for other mods to work in, providing centralized and simplified APIs to Risk of Rain 2. This helps keeping mods compatible with each other.
+R2API is a modding framework for other mods to work in, providing centralized and simplified APIs for Risk of Rain 2. This helps keeping mods compatible with each other.
 
 At it's core, R2API should not change how the game behaves without any other mod installed. The only change is to keep mods out of quickplay and prismatic trials by request of the **Hopoo Games** team. 
 
@@ -19,7 +19,7 @@ A succesful installation should look like this:
 
 ## Developing
 
-A lot of documentation is in the included *xmldocs*, and further information may be on the dedicated [R2API wiki](https://github.com/risk-of-thunder/R2API/wiki). Do not hestiate to ask in the modding discord too!
+A lot of documentation is in the included *xmldocs*, and further information may be on the dedicated [R2API wiki](https://github.com/risk-of-thunder/R2API/wiki). Do not hestiate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 
 ## Bleeding Edge
