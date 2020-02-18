@@ -34,8 +34,9 @@ Note that such builds may be **unstable**.
 
 The most recent changelog can always be found on the [Github](https://github.com/risk-of-thunder/R2API/commits/master). In this readme, only the most recent *minor* version will have a changelog.
 
-**2.3.23**
+**2.3.XX**
 
+* [Rewrote the readme](https://github.com/risk-of-thunder/R2API/pull/113)
 * [Updated AssetPlus to allow mass language changes without reloading the current language](https://github.com/risk-of-thunder/R2API/pull/112)
 
 **2.3.22**
