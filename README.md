@@ -46,7 +46,7 @@ The most recent changelog can always be found on the [Github](https://github.com
 **2.3.20**
 
 * [Fix a lot of things in ModListAPI](https://github.com/risk-of-thunder/R2API/pull/108)
-* Added safeties to certain APIs:[A](https://github.com/risk-of-thunder/R2API/pull/107) [B](https://github.com/risk-of-thunder/R2API/pull/103)
+* Added safeties to certain APIs: [A](https://github.com/risk-of-thunder/R2API/pull/107) [B](https://github.com/risk-of-thunder/R2API/pull/103)
 * [Added `IsLoaded(string)` to check if a submodule is loaded correctly](https://github.com/risk-of-thunder/R2API/pull/107)
 * [Change ItemAPI to return more useful values](https://github.com/risk-of-thunder/R2API/pull/106)
 * [Fix R2API not checking for submodule dependencies in certain folders](https://github.com/risk-of-thunder/R2API/pull/106)
