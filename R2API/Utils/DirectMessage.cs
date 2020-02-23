@@ -13,7 +13,7 @@ namespace R2API.Utils {
 		/// <param name="conn"></param>
 		/// <returns>returns NetworkUsers associated  to a NetworkConnection</returns>
         private static RoR2.NetworkUser[] GetConnectionNetworkUsers(UnityEngine.Networking.NetworkConnection conn) {
-            List<UnityEngine.Networking.PlayerController> playerControllers = conn.playerControllers;
+            System.Collections.Generic.List<UnityEngine.Networking.PlayerController> playerControllers = conn.playerControllers;
             RoR2.NetworkUser[] array = new RoR2.NetworkUser[playerControllers.Count];
             for (int i = 0; i < playerControllers.Count; i++) {
                 array[i] = playerControllers[i].gameObject.GetComponent<RoR2.NetworkUser>();
