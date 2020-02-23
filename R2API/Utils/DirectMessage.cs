@@ -8,21 +8,35 @@ namespace R2API.Utils {
     /// </summary>
     public static class DirectMessage {
         /// <summary>
+		/// returns NetworkUsers associated  to a NetworkConnection
+		/// </summary>
+		/// <param name="conn"></param>
+		/// <returns>returns NetworkUsers associated  to a NetworkConnection</returns>
+        private static RoR2.NetworkUser[] GetConnectionNetworkUsers(UnityEngine.Networking.NetworkConnection conn) {
+            List<UnityEngine.Networking.PlayerController> playerControllers = conn.playerControllers;
+            RoR2.NetworkUser[] array = new RoR2.NetworkUser[playerControllers.Count];
+            for (int i = 0; i < playerControllers.Count; i++) {
+                array[i] = playerControllers[i].gameObject.GetComponent<RoR2.NetworkUser>();
+            }
+            return array;
+        }
+
+        /// <summary>
 		/// Converts NetworkUser to NetworkConnection
 		/// </summary>
 		/// <param name="user"></param>
 		/// <returns>NetworkUser's NetworkConnection</returns>
 		private static UnityEngine.Networking.NetworkConnection ResolveUserToConnection(NetworkUser user) {
-            RoR2.Networking.GameNetworkManager[] networkManagers = (RoR2.Networking.GameNetworkManager[])UnityEngine.Object.FindObjectsOfType(typeof(RoR2.Networking.GameNetworkManager));
-
-            foreach (var networkManager in networkManagers) {
-                UnityEngine.Networking.NetworkConnection networkConnection = networkManager.GetClient(user.GetNetworkPlayerName().steamId);
-
+            foreach (NetworkConnection networkConnection in NetworkServer.connections) {
                 if (networkConnection != null) {
-                    return networkConnection;
+                    foreach (NetworkUser networkUser in GetConnectionNetworkUsers(networkConnection)) {
+                        // i don't know, but i think there can be more than 1 networkUser
+                        if (user.Equals(networkUser)) {
+                            return networkConnection;
+                        }
+                    }
                 }
             }
-
             return null;
         }
 
