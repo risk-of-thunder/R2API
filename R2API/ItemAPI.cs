@@ -286,16 +286,19 @@ namespace R2API {
             if (self.itemDisplayRuleSet == null)
                 return;
 
+            string name = self.name;
             foreach (var customItem in ItemDefinitions) {
-                if (customItem.ItemDisplayRules != null) {
-                    var displayRuleGroup = new DisplayRuleGroup { rules = customItem.ItemDisplayRules };
+                var customRules = customItem.ItemDisplayRules;
+                if (customRules != null) {
+                    var displayRuleGroup = new DisplayRuleGroup { rules = customRules[name] };
                     self.itemDisplayRuleSet.SetItemDisplayRuleGroup(customItem.ItemDef.name, displayRuleGroup);
                 }
             }
 
             foreach (var customEquipment in EquipmentDefinitions) {
-                if (customEquipment.ItemDisplayRules != null) {
-                    var displayRuleGroup = new DisplayRuleGroup { rules = customEquipment.ItemDisplayRules };
+                var customRules = customEquipment.ItemDisplayRules;
+                if (customRules != null) {
+                    var displayRuleGroup = new DisplayRuleGroup { rules = customRules[name] };
                     self.itemDisplayRuleSet.SetItemDisplayRuleGroup(customEquipment.EquipmentDef.name, displayRuleGroup);
                 }
             }
@@ -494,9 +497,14 @@ namespace R2API {
 
     public class CustomItem {
         public ItemDef ItemDef;
-        public ItemDisplayRule[] ItemDisplayRules;
+        public ItemDisplayRuleDict ItemDisplayRules;
 
         public CustomItem(ItemDef itemDef, ItemDisplayRule[] itemDisplayRules) {
+            ItemDef = itemDef;
+            ItemDisplayRules = new ItemDisplayRuleDict(itemDisplayRules);
+        }
+
+        public CustomItem(ItemDef itemDef, ItemDisplayRuleDict itemDisplayRules) {
             ItemDef = itemDef;
             ItemDisplayRules = itemDisplayRules;
         }
@@ -504,11 +512,57 @@ namespace R2API {
 
     public class CustomEquipment {
         public EquipmentDef EquipmentDef;
-        public ItemDisplayRule[] ItemDisplayRules;
+        public ItemDisplayRuleDict ItemDisplayRules;
 
         public CustomEquipment(EquipmentDef equipmentDef, ItemDisplayRule[] itemDisplayRules) {
             EquipmentDef = equipmentDef;
+            ItemDisplayRules = new ItemDisplayRuleDict(itemDisplayRules);
+        }
+
+        public CustomEquipment(EquipmentDef equipmentDef, ItemDisplayRuleDict itemDisplayRules) {
+            EquipmentDef = equipmentDef;
             ItemDisplayRules = itemDisplayRules;
+        }
+    }
+
+    public class ItemDisplayRuleDict {
+        public ItemDisplayRule[] this[string CharacterModelName] {
+            get {
+                if (string.IsNullOrEmpty(CharacterModelName) || !Dictionary.ContainsKey(CharacterModelName))
+                    return DefaultRules;
+                else
+                    return Dictionary[CharacterModelName];
+                }
+            set {
+                if (string.IsNullOrEmpty(CharacterModelName))
+                    {
+                    R2API.Logger.LogWarning("DefaultRules overwritten with Indexer! Please set them with the constructor instead!");
+                    DefaultRules = value;
+                    return;
+                }
+                if (Dictionary.ContainsKey(CharacterModelName)) {
+                    Dictionary[CharacterModelName] = value;
+                } else {
+                    Dictionary.Add(CharacterModelName, value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Equivalent to using the set property of the indexer, but added bonus is the ability to ignore the array wrapper normally needed.
+        /// </summary>
+        /// <param name="CharacterModelName"></param>
+        /// <param name="itemDisplayRules"></param>
+        public void Add(string CharacterModelName, params ItemDisplayRule[] itemDisplayRules) {
+            this[CharacterModelName] = itemDisplayRules;
+        }
+
+        public ItemDisplayRule[] DefaultRules {get; private set;}
+
+        private Dictionary<string, ItemDisplayRule[]> Dictionary;
+        public ItemDisplayRuleDict(params ItemDisplayRule[] defaultRules) {
+            DefaultRules = defaultRules;
+            Dictionary = new Dictionary<string, ItemDisplayRule[]>();
         }
     }
 

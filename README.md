@@ -36,6 +36,7 @@ The most recent changelog can always be found on the [Github](https://github.com
 
 **2.3.XX**
 
+* [Allow custom items to define display rules for individual models](https://github.com/risk-of-thunder/R2API/pull/115)
 * [Added more overloads for Direct Messages](https://github.com/risk-of-thunder/R2API/pull/114)
 * [Rewrote the readme](https://github.com/risk-of-thunder/R2API/pull/113)
 * [Updated AssetPlus to allow mass language changes without reloading the current language](https://github.com/risk-of-thunder/R2API/pull/112)
