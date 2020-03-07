@@ -11,6 +11,7 @@ using RoR2;
 using RoR2.Stats;
 using RoR2.UI;
 using RoR2.UI.LogBook;
+using UnityEngine;
 using Object = UnityEngine.Object;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -78,7 +79,7 @@ namespace R2API {
             EliteCatalog.modHelper.getAdditionalEntries += AddEliteAction;
 
             IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
-            On.RoR2.CharacterModel.Start += AddingItemDisplayRulesToCharacterModels;
+            R2API.R2APIStart += AddingItemDisplayRulesToCharacterModels;
 
             On.RoR2.UserProfile.SaveFieldAttribute.SetupPickupsSet += SaveFieldAttributeOnSetupPickupsSet;
             On.RoR2.UserProfile.DiscoverPickup += UserProfileOnDiscoverPickup;
@@ -92,6 +93,8 @@ namespace R2API {
             On.RoR2.UI.LogBook.PageBuilder.AddSimplePickup += PageBuilderOnAddSimplePickup;
             On.RoR2.UI.LogBook.LogBookController.GetPickupTooltipContent += LogBookControllerOnGetPickupTooltipContent;
         }
+
+
 
         private static void AddItemAction(List<ItemDef> itemDefinitions) {
             foreach (var customItem in ItemDefinitions) {
@@ -280,31 +283,36 @@ namespace R2API {
             cursor.Next.Operand = label;
         }
 
-        private static void AddingItemDisplayRulesToCharacterModels(On.RoR2.CharacterModel.orig_Start orig, CharacterModel self) {
-            orig(self);
+        private static void AddingItemDisplayRulesToCharacterModels(object _, EventArgs __) {
+            foreach(GameObject o in BodyCatalog.allBodyPrefabs) {
+                CharacterModel cm = o.GetComponentInChildren<CharacterModel>();
+                if (cm!=null && cm.itemDisplayRuleSet!=null) {
+                    string name = cm.name;
+                    foreach(var customItem in ItemDefinitions) {
+                        var customRules = customItem.ItemDisplayRules;
+                        if (customRules != null) {
+                            //if a specific rule for this model exists, or the model has no rules for this item
+                            if(customRules.TryGetRules(name, out ItemDisplayRule[] rules) || cm.itemDisplayRuleSet.GetItemDisplayRuleGroup(customItem.ItemDef.itemIndex).rules == null) {
+                                cm.itemDisplayRuleSet.SetItemDisplayRuleGroup(customItem.ItemDef.name, new DisplayRuleGroup { rules = rules });
+                            }
+                        }
+                    }
 
-            if (self.itemDisplayRuleSet == null)
-                return;
-
-            string name = self.name;
-            foreach (var customItem in ItemDefinitions) {
-                var customRules = customItem.ItemDisplayRules;
-                if (customRules != null) {
-                    var displayRuleGroup = new DisplayRuleGroup { rules = customRules[name] };
-                    self.itemDisplayRuleSet.SetItemDisplayRuleGroup(customItem.ItemDef.name, displayRuleGroup);
+                    foreach (var customEquipment in EquipmentDefinitions) {
+                        var customRules = customEquipment.ItemDisplayRules;
+                        if (customRules != null) {
+                            //if a specific rule for this model exists, or the model has no rules for this equipment
+                            if (customRules.TryGetRules(name, out ItemDisplayRule[] rules) || cm.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null) {
+                                cm.itemDisplayRuleSet.SetItemDisplayRuleGroup(customEquipment.EquipmentDef.name, new DisplayRuleGroup { rules = rules });
+                            }
+                        }
+                    }
+                    cm.itemDisplayRuleSet.InvokeMethod("GenerateRuntimeValues");
                 }
             }
-
-            foreach (var customEquipment in EquipmentDefinitions) {
-                var customRules = customEquipment.ItemDisplayRules;
-                if (customRules != null) {
-                    var displayRuleGroup = new DisplayRuleGroup { rules = customRules[name] };
-                    self.itemDisplayRuleSet.SetItemDisplayRuleGroup(customEquipment.EquipmentDef.name, displayRuleGroup);
-                }
-            }
-
-            self.itemDisplayRuleSet.InvokeMethod("GenerateRuntimeValues");
         }
+
+
         #endregion
 
         #region Secure UserProfile
@@ -555,6 +563,17 @@ namespace R2API {
         /// <param name="itemDisplayRules"></param>
         public void Add(string CharacterModelName, params ItemDisplayRule[] itemDisplayRules) {
             this[CharacterModelName] = itemDisplayRules;
+        }
+
+        /// <summary>
+        /// Safe way of getting a characters rules, with the promise that the out is always filled.
+        /// </summary>
+        /// <param name="CharacterModelName"></param>
+        /// <param name="itemDisplayRules">The specific rules for this model, or if false is returned, the default rules.</param>
+        /// <returns></returns>
+        public bool TryGetRules(string CharacterModelName, out ItemDisplayRule[] itemDisplayRules) {
+            itemDisplayRules = this[CharacterModelName];
+            return itemDisplayRules == DefaultRules;
         }
 
         public ItemDisplayRule[] DefaultRules {get; private set;}
