@@ -28,6 +28,8 @@ namespace R2API {
 
         internal static DetourModManager ModManager;
 
+        internal static event EventHandler R2APIStart;
+
 
         public R2API() {
             Logger = base.Logger;
@@ -74,7 +76,7 @@ namespace R2API {
         }
 
         public void Start() {
-            ModListAPI.BuildModList();
+            R2APIStart.Invoke(this, null);
         }
 
         private static void AddHookLogging() {
