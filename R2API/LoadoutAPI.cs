@@ -1,4 +1,4 @@
-﻿using R2API.Utils;
+using R2API.Utils;
 using EntityStates;
 using MonoMod.RuntimeDetour;
 using System;
@@ -34,17 +34,17 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            if( _detourSet_stateType == null ) {
+            if (_detourSet_stateType == null) {
                 _detourSet_stateType = new Hook(
-                    typeof( SerializableEntityStateType ).GetMethodCached( "set_stateType" ),
-                    typeof( LoadoutAPI ).GetMethodCached( nameof( Set_stateType_Hook ) )
+                    typeof(SerializableEntityStateType).GetMethodCached("set_stateType"),
+                    typeof(LoadoutAPI).GetMethodCached(nameof(Set_stateType_Hook))
                 );
             }
             _detourSet_stateType.Apply();
-            if( _detourSet_typeName == null ) {
+            if (_detourSet_typeName == null) {
                 _detourSet_typeName = new Hook(
-                    typeof( SerializableEntityStateType ).GetMethodCached( "set_typeName" ),
-                    typeof( LoadoutAPI ).GetMethodCached( nameof( Set_typeName_Hook ) )
+                    typeof(SerializableEntityStateType).GetMethodCached("set_typeName"),
+                    typeof(LoadoutAPI).GetMethodCached(nameof(Set_typeName_Hook))
                 );
             }
             _detourSet_typeName.Apply();
@@ -54,7 +54,7 @@ namespace R2API {
             On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.ToXml += BodyLoadout_ToXml;
         }
 
-        [R2APISubmoduleInit( Stage = InitStage.UnsetHooks )]
+        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             _detourSet_stateType?.Undo();
             _detourSet_typeName?.Undo();
@@ -73,46 +73,46 @@ namespace R2API {
 
         private static Assembly Ror2Assembly {
             get {
-                if( _ror2Assembly == null ) _ror2Assembly = typeof( EntityState ).Assembly;
+                if (_ror2Assembly == null) _ror2Assembly = typeof(EntityState).Assembly;
                 return _ror2Assembly;
             }
         }
         private static Assembly _ror2Assembly;
 
-        private static Dictionary<string,Type> nameToStateTypeLookup;
+        private static Dictionary<string, Type> nameToStateTypeLookup;
 
-        internal static void Set_stateType_Hook( ref SerializableEntityStateType self, Type value ) =>
-            self.SetStructFieldValue( "_typeName",
-            IsValidEntityStateType( value )
+        internal static void Set_stateType_Hook(ref SerializableEntityStateType self, Type value) =>
+            self.SetStructFieldValue("_typeName",
+            IsValidEntityStateType(value)
             ? value.AssemblyQualifiedName
-            : "" );
+            : "");
 
-        internal static void Set_typeName_Hook( ref SerializableEntityStateType self, string value ) =>
-            Set_stateType_Hook( ref self, Type.GetType( value ) ?? GetTypeAllAssemblies( value ) );
+        internal static void Set_typeName_Hook(ref SerializableEntityStateType self, string value) =>
+            Set_stateType_Hook(ref self, Type.GetType(value) ?? GetTypeAllAssemblies(value));
 
-        private static Type GetTypeAllAssemblies( string name ) {
+        private static Type GetTypeAllAssemblies(string name) {
             Type type = Ror2Assembly.GetType(name);
-            if ( IsValidEntityStateType( type ) ) return type;
+            if (IsValidEntityStateType(type)) return type;
 
-            type = Type.GetType( name );
-            if( IsValidEntityStateType( type ) ) return type;
+            type = Type.GetType(name);
+            if (IsValidEntityStateType(type)) return type;
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            for( int i = 0; i < assemblies.Length; ++i ) {
+            for (int i = 0; i < assemblies.Length; ++i) {
                 var asm = assemblies[i];
-                if( asm == Ror2Assembly ) continue;
+                if (asm == Ror2Assembly) continue;
 
-                type = asm.GetType( name );
-                if( IsValidEntityStateType( type ) ) return type;
+                type = asm.GetType(name);
+                if (IsValidEntityStateType(type)) return type;
             }
 
-            R2API.Logger.LogError( String.Format( "No matching entity state type found for name:\n{0}", name ) );
+            R2API.Logger.LogError(String.Format("No matching entity state type found for name:\n{0}", name));
             return null;
         }
 
-        private static bool IsValidEntityStateType( Type type ) {
-            return type != null && type.IsSubclassOf( typeof( EntityState ) ) && !type.IsAbstract;
+        private static bool IsValidEntityStateType(Type type) {
+            return type != null && type.IsSubclassOf(typeof(EntityState)) && !type.IsAbstract;
         }
         #endregion
 
@@ -130,9 +130,9 @@ namespace R2API {
             var bodySkinController = BodyCatalog.GetBodyPrefab(bodyIndex)?.GetComponent<ModelLocator>()?.modelTransform?.GetComponent<ModelSkinController>();
             var skinPreference = self.GetFieldValue<uint>("skinPreference");
             var skins = bodySkinController?.skins;
-            if( skins != null ) {
-                if( skinPreference >= skins.Length || AddedSkins.Contains( skins[skinPreference] ) ) {
-                    self.SetFieldValue( "skinPreference", 0u );
+            if (skins != null) {
+                if (skinPreference >= skins.Length || AddedSkins.Contains(skins[skinPreference])) {
+                    self.SetFieldValue("skinPreference", 0u);
                 }
             }
             var skillPreferences = self.GetFieldValue<uint[]>("skillPreferences");
