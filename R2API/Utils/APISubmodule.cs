@@ -64,7 +64,7 @@ namespace R2API.Utils {
         /// <param name="submodule">nameof the submodule</param>
         public bool IsLoaded(string submodule) => LoadedModules.Contains(submodule);
 
-        internal HashSet<string> LoadRequested() {
+        internal void LoadRequested() {
             Assembly[] GetAssemblies() {
                 var assemblies = new List<Assembly>();
 
@@ -135,9 +135,6 @@ namespace R2API.Utils {
                 .ForEachTry(t => t.SetFieldValue("_loaded", true));
             moduleTypes.Where(t => !faults.ContainsKey(t))
                 .ForEachTry(t => LoadedModules.Add(t.Name));
-
-
-            return LoadedModules;
         }
 
 
