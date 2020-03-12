@@ -98,10 +98,13 @@ namespace R2API {
 
         private static System.Xml.Linq.XElement BodyLoadout_ToXml(On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.orig_ToXml orig, object self, string elementName) {
             var bodyIndex = self.GetFieldValue<int>("bodyIndex");
-            var bodySkinController = BodyCatalog.GetBodyPrefab(bodyIndex).GetComponent<ModelLocator>().modelTransform.GetComponent<ModelSkinController>();
+            var bodySkinController = BodyCatalog.GetBodyPrefab(bodyIndex)?.GetComponent<ModelLocator>()?.modelTransform?.GetComponent<ModelSkinController>();
             var skinPreference = self.GetFieldValue<uint>("skinPreference");
-            if (AddedSkins.Contains(bodySkinController.skins[skinPreference])) {
-                self.SetFieldValue("skinPreference", 0u);
+            var skins = bodySkinController?.skins;
+            if( skins != null ) {
+                if( skinPreference >= skins.Length || AddedSkins.Contains( skins[skinPreference] ) ) {
+                    self.SetFieldValue( "skinPreference", 0u );
+                }
             }
             var skillPreferences = self.GetFieldValue<uint[]>("skillPreferences");
             var allBodyInfosObj = typeof(Loadout.BodyLoadoutManager).GetFieldValue<object>("allBodyInfos");
@@ -147,7 +150,7 @@ namespace R2API {
             Array.Resize(ref id2State, ogNum + 1);
             Array.Resize(ref name2Id, ogNum + 1);
             id2State[ogNum] = t;
-            name2Id[ogNum] = t.FullName;
+            name2Id[ogNum] = t.AssemblyQualifiedName;
             state2Id[t] = (short)ogNum;
             stateTab.SetFieldValue("stateIndexToType", id2State);
             stateTab.SetFieldValue("stateIndexToTypeName", name2Id);
