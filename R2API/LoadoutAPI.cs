@@ -91,13 +91,11 @@ namespace R2API {
             Set_stateType_Hook( ref self, Type.GetType( value ) ?? GetTypeAllAssemblies( value ) );
 
         private static Type GetTypeAllAssemblies( string name ) {
-            Type type = null;
-
-            type = Ror2Assembly.GetType( name );
-            if( IsValidEntityStateType( type ) ) return type; else type = null;
+            Type type = Ror2Assembly.GetType(name);
+            if ( IsValidEntityStateType( type ) ) return type;
 
             type = Type.GetType( name );
-            if( IsValidEntityStateType( type ) ) return type; else type = null;
+            if( IsValidEntityStateType( type ) ) return type;
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
@@ -106,7 +104,7 @@ namespace R2API {
                 if( asm == Ror2Assembly ) continue;
 
                 type = asm.GetType( name );
-                if( IsValidEntityStateType( type ) ) return type; else type = null;
+                if( IsValidEntityStateType( type ) ) return type;
             }
 
             R2API.Logger.LogError( String.Format( "No matching entity state type found for name:\n{0}", name ) );
