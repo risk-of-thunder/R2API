@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Collections;
 using Unity.Jobs;
+using System.Reflection;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -33,13 +34,30 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
+            if( _detourSet_stateType == null ) {
+                _detourSet_stateType = new Hook(
+                    typeof( SerializableEntityStateType ).GetMethodCached( "set_stateType" ),
+                    typeof( LoadoutAPI ).GetMethodCached( nameof( set_stateType_Hook ) )
+                );
+            }
+            _detourSet_stateType.Apply();
+            if( _detourSet_typeName == null ) {
+                _detourSet_typeName = new Hook(
+                    typeof( SerializableEntityStateType ).GetMethodCached( "set_typeName" ),
+                    typeof( LoadoutAPI ).GetMethodCached( nameof( set_typeName_Hook ) )
+                );
+            }
+            _detourSet_typeName.Apply();
+
             On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.IsSkillVariantLocked += CheckSkillVariantValid;
             On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.IsSkinLocked += CheckSkinValid;
             On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.ToXml += BodyLoadout_ToXml;
         }
 
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
+        [R2APISubmoduleInit( Stage = InitStage.UnsetHooks )]
         internal static void UnsetHooks() {
+            _detourSet_stateType?.Undo();
+            _detourSet_typeName?.Undo();
             On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.IsSkillVariantLocked -= CheckSkillVariantValid;
             On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.IsSkinLocked -= CheckSkinValid;
             On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.ToXml -= BodyLoadout_ToXml;
@@ -48,42 +66,55 @@ namespace R2API {
 
         #region EntityState fixes
         // ReSharper disable InconsistentNaming
-        private static readonly Hook _detourSet_stateType = new Hook(
-            typeof(SerializableEntityStateType).GetMethodCached("set_stateType"),
-            typeof(EntityAPI).GetMethodCached(nameof(set_stateType_Hook))
-       );
+        private static Hook _detourSet_stateType;
 
-        private static readonly Hook _detourSet_typeName = new Hook(
-            typeof(SerializableEntityStateType).GetMethodCached("set_typeName"),
-            typeof(EntityAPI).GetMethodCached(nameof(set_typeName_Hook))
-       );
+        private static Hook _detourSet_typeName;
         // ReSharper restore InconsistentNaming
 
-        internal static void set_stateType_Hook(ref SerializableEntityStateType self, Type value) =>
-            self.SetStructFieldValue("_typeName",
-            value != null && value.IsSubclassOf(typeof(EntityState))
+        private static Assembly ror2Assembly {
+            get {
+                if( _ror2Assembly == null ) _ror2Assembly = typeof( EntityState ).Assembly;
+                return _ror2Assembly;
+            }
+        }
+        private static Assembly _ror2Assembly;
+
+        private static Dictionary<string,Type> nameToStateTypeLookup;
+
+        internal static void set_stateType_Hook( ref SerializableEntityStateType self, Type value ) =>
+            self.SetStructFieldValue( "_typeName",
+            IsValidEntityStateType( value )
             ? value.AssemblyQualifiedName
-            : "");
+            : "" );
 
-        internal static void set_typeName_Hook(ref SerializableEntityStateType self, string value) =>
-            set_stateType_Hook(ref self, Type.GetType(value) ?? GetTypeAllAssemblies(value));
+        internal static void set_typeName_Hook( ref SerializableEntityStateType self, string value ) =>
+            set_stateType_Hook( ref self, Type.GetType( value ) ?? GetTypeAllAssemblies( value ) );
 
-        private static Type GetTypeAllAssemblies(string name) {
+        private static Type GetTypeAllAssemblies( string name ) {
             Type type = null;
 
-            var assemblies = AppDomain.CurrentDomain
-                .GetAssemblies()
-                // Assembly-CSharp will be checked earlier if we order by name
-                .OrderBy(asm => asm.FullName);
+            type = ror2Assembly.GetType( name );
+            if( IsValidEntityStateType( type ) ) return type; else type = null;
 
-            foreach (var asm in assemblies) {
-                type = asm.GetTypes().FirstOrDefault(t => t.Name == name || t.FullName == name);
+            type = Type.GetType( name );
+            if( IsValidEntityStateType( type ) ) return type; else type = null;
 
-                if (type != null)
-                    break;
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            for( int i = 0; i < assemblies.Length; ++i ) {
+                var asm = assemblies[i];
+                if( asm == ror2Assembly ) continue;
+
+                type = asm.GetType( name );
+                if( IsValidEntityStateType( type ) ) return type; else type = null;
             }
 
-            return type;
+            R2API.Logger.LogError( String.Format( "No matching entity state type found for name:\n{0}", name ) );
+            return null;
+        }
+
+        private static bool IsValidEntityStateType( Type type ) {
+            return type != null && type.IsSubclassOf( typeof( EntityState ) ) && !type.IsAbstract;
         }
         #endregion
 
