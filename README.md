@@ -35,6 +35,8 @@ Note that such builds may be **unstable**.
 The most recent changelog can always be found on the [Github](https://github.com/risk-of-thunder/R2API/commits/master). In this readme, only the most recent *minor* version will have a changelog.
 
 **2.3.XX**
+
+* [Allow mods to check if a R2API Submodule is loaded without needing an R2API instance](https://github.com/risk-of-thunder/R2API/pull/118)
 * [Allow custom survivors to define display rules for custom items & improve code quality of display rules](https://github.com/risk-of-thunder/R2API/pull/116)
 * [Allow custom items to define display rules for individual models](https://github.com/risk-of-thunder/R2API/pull/115)
 * [Added more overloads for Direct Messages](https://github.com/risk-of-thunder/R2API/pull/114)
