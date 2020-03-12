@@ -226,6 +226,8 @@ namespace R2API {
         }
 
         private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run self) {
+            orig(self);
+
             if (DefaultDrops) {
                 // Setup default item lists
                 DefaultItemDrops.AddDefaults();
