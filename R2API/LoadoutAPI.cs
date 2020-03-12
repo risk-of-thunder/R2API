@@ -79,8 +79,6 @@ namespace R2API {
         }
         private static Assembly _ror2Assembly;
 
-        private static Dictionary<string, Type> nameToStateTypeLookup;
-
         internal static void Set_stateType_Hook(ref SerializableEntityStateType self, Type value) =>
             self.SetStructFieldValue("_typeName",
             IsValidEntityStateType(value)
