@@ -37,14 +37,14 @@ namespace R2API {
             if( _detourSet_stateType == null ) {
                 _detourSet_stateType = new Hook(
                     typeof( SerializableEntityStateType ).GetMethodCached( "set_stateType" ),
-                    typeof( LoadoutAPI ).GetMethodCached( nameof( set_stateType_Hook ) )
+                    typeof( LoadoutAPI ).GetMethodCached( nameof( Set_stateType_Hook ) )
                 );
             }
             _detourSet_stateType.Apply();
             if( _detourSet_typeName == null ) {
                 _detourSet_typeName = new Hook(
                     typeof( SerializableEntityStateType ).GetMethodCached( "set_typeName" ),
-                    typeof( LoadoutAPI ).GetMethodCached( nameof( set_typeName_Hook ) )
+                    typeof( LoadoutAPI ).GetMethodCached( nameof( Set_typeName_Hook ) )
                 );
             }
             _detourSet_typeName.Apply();
@@ -71,7 +71,7 @@ namespace R2API {
         private static Hook _detourSet_typeName;
         // ReSharper restore InconsistentNaming
 
-        private static Assembly ror2Assembly {
+        private static Assembly Ror2Assembly {
             get {
                 if( _ror2Assembly == null ) _ror2Assembly = typeof( EntityState ).Assembly;
                 return _ror2Assembly;
@@ -81,19 +81,19 @@ namespace R2API {
 
         private static Dictionary<string,Type> nameToStateTypeLookup;
 
-        internal static void set_stateType_Hook( ref SerializableEntityStateType self, Type value ) =>
+        internal static void Set_stateType_Hook( ref SerializableEntityStateType self, Type value ) =>
             self.SetStructFieldValue( "_typeName",
             IsValidEntityStateType( value )
             ? value.AssemblyQualifiedName
             : "" );
 
-        internal static void set_typeName_Hook( ref SerializableEntityStateType self, string value ) =>
-            set_stateType_Hook( ref self, Type.GetType( value ) ?? GetTypeAllAssemblies( value ) );
+        internal static void Set_typeName_Hook( ref SerializableEntityStateType self, string value ) =>
+            Set_stateType_Hook( ref self, Type.GetType( value ) ?? GetTypeAllAssemblies( value ) );
 
         private static Type GetTypeAllAssemblies( string name ) {
             Type type = null;
 
-            type = ror2Assembly.GetType( name );
+            type = Ror2Assembly.GetType( name );
             if( IsValidEntityStateType( type ) ) return type; else type = null;
 
             type = Type.GetType( name );
@@ -103,7 +103,7 @@ namespace R2API {
 
             for( int i = 0; i < assemblies.Length; ++i ) {
                 var asm = assemblies[i];
-                if( asm == ror2Assembly ) continue;
+                if( asm == Ror2Assembly ) continue;
 
                 type = asm.GetType( name );
                 if( IsValidEntityStateType( type ) ) return type; else type = null;
