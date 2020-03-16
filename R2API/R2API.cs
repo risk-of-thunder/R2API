@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -77,7 +77,8 @@ namespace R2API {
         }
 
         public void Start() {
-            R2APIStart.Invoke(this, null);
+            if(R2APIStart!=null)
+                R2APIStart.Invoke(this, null);
         }
 
 
