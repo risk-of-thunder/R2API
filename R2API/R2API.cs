@@ -28,6 +28,9 @@ namespace R2API {
 
         internal static DetourModManager ModManager;
 
+        internal static event EventHandler R2APIStart;
+
+        internal static HashSet<string> loadedSubmodules;
 
         public R2API() {
             Logger = base.Logger;
@@ -40,7 +43,7 @@ namespace R2API {
 
             On.RoR2.RoR2Application.UnitySystemConsoleRedirector.Redirect += orig => { };
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
-            submoduleHandler.LoadRequested();
+            loadedSubmodules = submoduleHandler.LoadRequested();
 
             RoR2Application.isModded = true;
 
@@ -74,7 +77,20 @@ namespace R2API {
         }
 
         public void Start() {
-            ModListAPI.BuildModList();
+            R2APIStart.Invoke(this, null);
+        }
+
+
+        /// <summary>
+        /// Return true if the specified submodule is loaded.
+        /// </summary>
+        /// <param name="submodule">nameof the submodule</param>
+        public static bool IsLoaded( string submodule ) {
+            if( loadedSubmodules == null ) {
+                Logger.LogWarning( "IsLoaded called before submodules were loaded, result may not reflect actual load status." );
+                return false;
+            }
+            return loadedSubmodules.Contains( submodule );
         }
 
         private static void AddHookLogging() {
