@@ -36,7 +36,7 @@ The most recent changelog can always be found on the [Github](https://github.com
 
 **2.4.2**
 
-* [Fix R2API nullReffing on start when not loading R2API](https://github.com/risk-of-thunder/R2API/pull/119)
+* [Fix R2API nullReffing on start when not loading R2API](https://github.com/risk-of-thunder/R2API/pull/121)
 
 **2.4.1**
 
