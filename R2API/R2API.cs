@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -77,7 +77,8 @@ namespace R2API {
         }
 
         public void Start() {
-            R2APIStart.Invoke(this, null);
+            if (R2APIStart != null)
+                R2APIStart.Invoke(this, null);
         }
 
 
@@ -94,22 +95,30 @@ namespace R2API {
         }
 
         private static void AddHookLogging() {
-            ModManager.OnHook += (assembly, @base, arg3, arg4) => LogMethod(@base);
-            ModManager.OnDetour += (assembly, @base, arg3) => LogMethod(@base);
-            ModManager.OnNativeDetour += (assembly, @base, arg3, arg4) => LogMethod(@base);
+            ModManager.OnHook += (hookOwner, @base, arg3, arg4) => LogMethod(@base, hookOwner);
+            ModManager.OnDetour += (hookOwner, @base, arg3) => LogMethod(@base, hookOwner);
+            ModManager.OnNativeDetour += (hookOwner, @base, arg3, arg4) => LogMethod(@base, hookOwner);
 
-            HookEndpointManager.OnAdd += (@base, @delegate) => LogMethod(@base);
-            HookEndpointManager.OnModify += (@base, @delegate) => LogMethod(@base);
+            HookEndpointManager.OnAdd += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
+            HookEndpointManager.OnModify += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
         }
 
-        private static bool LogMethod(MemberInfo @base) {
+        private static bool LogMethod(MemberInfo @base, Assembly hookOwnerAssembly) {
             if (@base == null) {
                 return true;
             }
+
+            var hookOwnerDllName = "Not Found";
+            if (hookOwnerAssembly != null) {
+                // Get the dll name instead of assembly manifest name as this one one could be not correctly set by mod maker.
+                hookOwnerDllName = System.IO.Path.GetFileName(hookOwnerAssembly.Location);
+            }
+
             var declaringType = @base.DeclaringType;
             var name = @base.Name;
             var identifier = declaringType != null ? $"{declaringType}.{name}" : name;
-            Logger.LogDebug($"Hook added for: {identifier}");
+
+            Logger.LogDebug($"Hook added by assembly: {hookOwnerDllName} for: {identifier}");
             return true;
         }
 
