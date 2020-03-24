@@ -87,6 +87,11 @@ namespace R2API.Utils {
                 x.GetMethods(flags).Where(m => m.GetCustomAttribute<ConCommandAttribute>() != null));
 
             foreach (var methodInfo in methods) {
+                if (!methodInfo.IsStatic) {
+                    Debug.LogErrorFormat("ConCommand defined as {0} in {1} could not be registered. ConCommands must be static methods.", methodInfo.Name, assembly.FullName);
+                    continue;
+                }
+                    
                 var attributes = methodInfo.GetCustomAttributes<ConCommandAttribute>();
                 foreach (var attribute in attributes) {
                     var conCommand = Reflection.GetNestedType<RoR2.Console>("ConCommand").Instantiate();
