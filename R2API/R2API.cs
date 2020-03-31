@@ -22,7 +22,7 @@ namespace R2API {
         public const string PluginVersion = "0.0.1";
 
 
-        private const int GameBuild = 4478858;
+        private const int GameBuild = 4811921;
 
         internal new static ManualLogSource Logger { get; set; }
 
@@ -45,10 +45,16 @@ namespace R2API {
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
             loadedSubmodules = submoduleHandler.LoadRequested();
 
-            RoR2Application.isModded = true;
-
             //Currently disabled until manifest v2
             //ModListAPI.Init();
+
+            RoR2Application.isModded = true;
+
+            // Temporary fix as the new quickplay button currently don't have the DisableIfGameModded Script attached to it
+            On.RoR2.UI.QuickPlayButtonController.Start += (orig, self) => {
+                orig(self);
+                self.gameObject.SetActive(false);
+            };
 
             On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
                 // TODO: If we can enable quick play without regrets, uncomment.
