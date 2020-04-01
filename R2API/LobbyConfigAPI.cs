@@ -273,7 +273,7 @@ namespace R2API {
             _controllers = self.GetFieldValue<List<RuleCategoryController>>("categoryControllers");
         }
 
-        private static void _hookToggleCollapsed_RuleCategoryController(On.RoR2.UI.RuleCategoryController.orig_ToggleCollapsed orig, RuleCategoryController self) {
+        private static void _hookTogglePopoutPanel_RuleCategoryController(On.RoR2.UI.RuleCategoryController.orig_TogglePopoutPanel orig, RuleCategoryController self) {
             orig(self);
 
             CollapseCategory?.Invoke(null, self);
@@ -285,7 +285,7 @@ namespace R2API {
         internal static void SetHooks() {
             On.RoR2.PreGameController.Awake += _hookAwake_PreGameController;
             On.RoR2.UI.RuleBookViewer.Start += _hookStart_RuleBookViewer;
-            On.RoR2.UI.RuleCategoryController.ToggleCollapsed += _hookToggleCollapsed_RuleCategoryController;
+            On.RoR2.UI.RuleCategoryController.TogglePopoutPanel += _hookTogglePopoutPanel_RuleCategoryController;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
