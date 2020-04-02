@@ -42,6 +42,7 @@ namespace R2API {
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
             On.RoR2.RoR2Application.UnitySystemConsoleRedirector.Redirect += orig => { };
+
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
             loadedSubmodules = submoduleHandler.LoadRequested();
 
@@ -75,11 +76,14 @@ namespace R2API {
                 Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
             };
 
+            // Make sure that modded dedicated servers are recognizable from the server browser
             On.RoR2.SteamworksServerManager.UpdateHostName += (orig, self, hostname) => {
                 orig(self, $"[MOD] {hostname}");
                 var server = ((SteamworksServerManager)self).GetFieldValue<Server>("steamworksServer");
                 server.GameTags = "mod," + server.GameTags;
             };
+
+            SurvivorAPI.SafetyCheck();
         }
 
         public void Start() {
