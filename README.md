@@ -37,6 +37,7 @@ The most recent changelog can always be found on the [Github](https://github.com
 
 **2.4.5**
 
+* [Fix for the descriptionToken of custom survivors](https://github.com/risk-of-thunder/R2API/pull/130)
 * [Update for latest game update](https://github.com/risk-of-thunder/R2API/pull/128)
 * [Add UnbundledResourceProvider (allows to add generated assets easily)](https://github.com/risk-of-thunder/R2API/pull/125)
 
