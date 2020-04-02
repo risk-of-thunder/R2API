@@ -34,9 +34,10 @@ Note that such builds may be **unstable**.
 
 The most recent changelog can always be found on the [Github](https://github.com/risk-of-thunder/R2API/commits/master). In this readme, only the most recent *minor* version will have a changelog.
 
-=======
-**2.4.4**
 
+**2.4.5**
+
+* [Update for latest game update](https://github.com/risk-of-thunder/R2API/pull/128)
 * [Add UnbundledResourceProvider (allows to add generated assets easily)](https://github.com/risk-of-thunder/R2API/pull/125)
 
 **2.4.2**
