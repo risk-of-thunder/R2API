@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
 
@@ -92,6 +95,62 @@ namespace R2API {
                 // Add that new survivor to the order array so the game knows where to put it in character select
                 SurvivorCatalog.idealSurvivorOrder[existingSurvivorCount++] = (SurvivorIndex)existingSurvivorCount;
             }
+        }
+
+        // Add a safety check for SurvivorDef that are lacking
+        // a Environement.NewLine in their descriptionToken
+        // The game code use IndexOf, assuming there is always one in there.
+        internal static void SafetyCheck() {
+            IL.RoR2.CharacterSelectBarController.Build += il => {
+                var c = new ILCursor(il);
+                int locSurvivorDef = 0;
+                int locDescriptionToken = 0;
+
+                // ReSharper disable once InconsistentNaming
+                void ILFailMessage() {
+                    R2API.Logger.LogError(
+                        $"{nameof(SurvivorAPI)}: Safety Check: Could not find IL Instructions. " +
+                        "Aborting. Instabilities related to custom Survivors may, or may not happens.");
+                }
+
+                // Retrieve the loc index for the survivorDef
+                if (!c.TryGotoNext(MoveType.After,
+                    i => i.MatchLdloc(out _),
+                    i => i.MatchCallOrCallvirt(typeof(SurvivorCatalog).GetMethodCached("GetSurvivorDef")),
+                    i => i.MatchStloc(out locSurvivorDef)
+                )) {
+                    ILFailMessage();
+                    return;
+                }
+
+                // Safety check for the descriptionToken NewLine
+                if (c.TryGotoNext(MoveType.After,
+                        i => i.MatchLdloc(out locDescriptionToken),
+                        i => i.MatchCallOrCallvirt(typeof(Environment).GetMethodCached("get_NewLine")),
+                        i => i.MatchCallOrCallvirt(typeof(string).GetMethodCached("IndexOf", new []{ typeof(string) })),
+                        i => i.MatchStloc(out _)
+                    )) {
+                    c.Index--;
+
+                    // orig : length = text.IndexOf(Environment.NewLine);
+                    // modified : length = text.IndexOf(Environment.NewLine); if length == -1 then length = text.Length;
+                    c.Emit(OpCodes.Ldloc, locSurvivorDef);
+                    c.Emit(OpCodes.Ldloc, locDescriptionToken);
+                    c.EmitDelegate<Func<int, SurvivorDef, string, int>>((indexOf, survivorDef, descriptionToken) => {
+                        if (indexOf == -1) {
+                            R2API.Logger.LogWarning(
+                                $"A Custom Survivor called {survivorDef.displayNameToken} doesn't have a Environement.NewLine " +
+                                "like its supposed to have for separating the preview sentence to the tips underneath it");
+                            return descriptionToken.Length;
+                        }
+
+                        return indexOf;
+                    });
+                }
+                else {
+                    ILFailMessage();
+                }
+            };
         }
     }
 }
