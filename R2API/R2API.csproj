@@ -11,9 +11,9 @@
    </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoMod" Version="19.11.5.1" />
-    <PackageReference Include="MonoMod.RuntimeDetour" Version="19.11.5.1" />
-    <PackageReference Include="MonoMod.Utils" Version="19.11.5.1" />
+    <PackageReference Include="MonoMod" Version="20.3.5.1" />
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="20.3.5.1" />
+    <PackageReference Include="MonoMod.Utils" Version="20.3.5.1" />
   </ItemGroup>
 
   <ItemGroup>
