@@ -270,7 +270,8 @@ namespace R2API {
         private static void _hookStart_RuleBookViewer(On.RoR2.UI.RuleBookViewer.orig_Start orig, RuleBookViewer self) {
             orig(self);
 
-            _controllers = self.GetFieldValue<List<RuleCategoryController>>("categoryControllers");
+            _controllers = self.GetFieldValue<UIElementAllocator<RuleCategoryController>>("categoryElementAllocator")
+                .GetFieldValue<List<RuleCategoryController>>("elementControllerComponentsList");
         }
 
         private static void _hookTogglePopoutPanel_RuleCategoryController(On.RoR2.UI.RuleCategoryController.orig_TogglePopoutPanel orig, RuleCategoryController self) {
