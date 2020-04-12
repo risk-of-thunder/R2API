@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Mono.Cecil.Cil;
-using MonoMod.Cil;
 using MonoMod.Utils;
 
 namespace R2API.Utils {
@@ -206,13 +205,16 @@ namespace R2API.Utils {
         }
 
         private static GetDelegate<TReturn> GetFieldGetDelegate<TReturn>(this FieldInfo field) =>
-            (GetDelegate<TReturn>)FieldGetDelegateCache.GetOrAdd(field, x => x.CreateGetDelegate<TReturn>());
+            FieldGetDelegateCache.GetOrAdd(field, x => x.CreateGetDelegate<TReturn>())
+                .CastDelegate<GetDelegate<TReturn>>();
 
         private static SetDelegate<TValue> GetFieldSetDelegate<TValue>(this FieldInfo field) =>
-            (SetDelegate<TValue>)FieldSetDelegateCache.GetOrAdd(field, x => x.CreateSetDelegate<TValue>());
+            FieldSetDelegateCache.GetOrAdd(field, x => x.CreateSetDelegate<TValue>())
+                .CastDelegate<SetDelegate<TValue>>();
 
         private static SetDelegateRef<TInstance, TValue> GetFieldSetDelegateRef<TInstance, TValue>(this FieldInfo field) where TInstance : struct =>
-            (SetDelegateRef<TInstance, TValue>)FieldSetDelegateCache.GetOrAdd(field, x => x.CreateSetDelegateRef<TInstance, TValue>());
+            FieldSetDelegateCache.GetOrAdd(field, x => x.CreateSetDelegateRef<TInstance, TValue>())
+                .CastDelegate<SetDelegateRef<TInstance, TValue>>();
 
         #endregion
 
@@ -324,20 +326,23 @@ namespace R2API.Utils {
                 (ref instance);
 
         private static GetDelegate<TReturn> GetPropertyGetDelegate<TReturn>(this PropertyInfo property) =>
-            (GetDelegate<TReturn>)PropertyGetDelegateCache.GetOrAdd(property, prop => prop.CreateGetDelegate<TReturn>());
+            PropertyGetDelegateCache.GetOrAdd(property, prop => prop.CreateGetDelegate<TReturn>())
+                .CastDelegate<GetDelegate<TReturn>>();
 
         private static GetDelegateRef<TInstance, TReturn> GetPropertyGetDelegateRef<TInstance, TReturn>(this PropertyInfo property)
             where TInstance : struct =>
-            (GetDelegateRef<TInstance, TReturn>)PropertyGetDelegateCache.GetOrAdd(property, prop => prop.CreateGetDelegate<TInstance, TReturn>());
+            PropertyGetDelegateCache.GetOrAdd(property, prop => prop.CreateGetDelegate<TInstance, TReturn>())
+                .CastDelegate<GetDelegateRef<TInstance, TReturn>>();
 
         private static SetDelegate<TValue> GetPropertySetDelegate<TValue>(this PropertyInfo property) =>
-            (SetDelegate<TValue>)PropertySetDelegateCache.GetOrAdd(property, prop => prop.CreateSetDelegate<TValue>());
+            PropertySetDelegateCache.GetOrAdd(property, prop => prop.CreateSetDelegate<TValue>())
+                .CastDelegate<SetDelegate<TValue>>();
 
         private static SetDelegateRef<TInstance, TValue> GetPropertySetDelegateRef<TInstance, TValue>(
             this PropertyInfo property)
             where TInstance : struct =>
-            (SetDelegateRef<TInstance, TValue>)PropertySetDelegateCache.GetOrAdd(property,
-                prop => prop.CreateSetDelegateRef<TInstance, TValue>());
+            PropertySetDelegateCache.GetOrAdd(property, prop => prop.CreateSetDelegateRef<TInstance, TValue>())
+                .CastDelegate<SetDelegateRef<TInstance, TValue>>();
 
         #endregion
 
@@ -480,7 +485,7 @@ namespace R2API.Utils {
 
 
         private static FastReflectionDelegate GetMethodDelegateCached(this MethodInfo methodInfo) =>
-            DelegateCache.GetOrAdd(methodInfo, method => (FastReflectionDelegate)method.CreateFastDelegate());
+            DelegateCache.GetOrAdd(methodInfo, method => method.CreateFastDelegate());
 
         #endregion
 
