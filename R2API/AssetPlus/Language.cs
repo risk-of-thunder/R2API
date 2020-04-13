@@ -19,9 +19,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddPath(string path)
         {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
             LanguageAPI.AddPath(path);
         }
 
@@ -33,9 +30,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddToken(string key, string value)
         {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
             LanguageAPI.Add(key, value);
         }
 
@@ -48,9 +42,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddToken(string key, string value, bool reload = true)
         {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
             LanguageAPI.Add(key, value);
         }
 
@@ -63,9 +54,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddToken(string key, string value, string language)
         {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
             LanguageAPI.Add(key, value, language);
         }
 
@@ -79,9 +67,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddToken(string key, string value, string language, bool reload = true)
         {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
             LanguageAPI.Add(key, value, language);
         }
 
@@ -90,11 +75,8 @@ namespace R2API.AssetPlus {
         /// </summary>
         /// <param name="languageDictionary">dictionary of languages containing dictionaries of key-value (eg ["en"]["mytoken"]="mystring")</param>
         [Obsolete("Moved to R2API/LanguageAPI")]
-        public static void AddToken(Dictionary<string, Dictionary<string, string>> languageDictionary)
+        public static void AddToken(Dictionary<string, Dictionary<string, string>> languageDictionary) 
         {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
             LanguageAPI.Add(languageDictionary);
         }
 
@@ -104,11 +86,8 @@ namespace R2API.AssetPlus {
         /// <param name="languageDictionary">dictionary of languages containing dictionaries of key-value (eg ["en"]["mytoken"]="mystring")</param>
         /// <param name="reload">if the dictionary of the game should be reloaded</param>
         [Obsolete("Moved to R2API/LanguageAPI")]
-        public static void AddToken(Dictionary<string, Dictionary<string, string>> languageDictionary, bool reload = true)
-        {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
+        public static void AddToken(Dictionary<string, Dictionary<string, string>> languageDictionary, bool reload = true) {
+
             LanguageAPI.Add(languageDictionary);
         }
 
@@ -120,9 +99,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddToken(Dictionary<string, string> tokenDictionary, string language)
         {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
             LanguageAPI.Add(tokenDictionary, language);
         }
 
@@ -134,9 +110,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddToken(Dictionary<string, string> tokenDictionary, string language, bool reload = true)
         {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
             LanguageAPI.Add(tokenDictionary, language);
         }
 
@@ -147,9 +120,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddToken(Dictionary<string, string> tokenDictionary)
         {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
             LanguageAPI.Add(tokenDictionary);
         }
 
@@ -159,11 +129,8 @@ namespace R2API.AssetPlus {
         /// <param name="languageDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         /// <param name="reload">if the dictionary of the game should be reloaded</param>
         [Obsolete("Moved to R2API/LanguageAPI")]
-        public static void AddToken(Dictionary<string, string> tokenDictionary, bool reload = true)
+        public static void AddToken(Dictionary<string, string> tokenDictionary, bool reload = true) 
         {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
             LanguageAPI.Add(tokenDictionary);
         }
 
@@ -174,9 +141,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void Add(string file)
         {
-            if (!LanguageAPI.Loaded) {
-                LanguageAPI.LanguageAwake();
-            }
             LanguageAPI.Add(file);
         }
 

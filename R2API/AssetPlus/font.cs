@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using R2API.Utils;
 
 namespace R2API.AssetPlus {
     /// <summary>
@@ -16,9 +15,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/FontAPI/Fonts")]
         public static void Add(string path)
         {
-            if (!FontAPI.Loaded) {
-                FontAPI.FontAwake();
-            }
             FontAPI.Fonts.Add(path);
         }
 
@@ -30,9 +26,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/FontAPI/Fonts")]
         public static void Add(byte[] fontFile)
         {
-            if (!FontAPI.Loaded) {
-                FontAPI.FontAwake();
-            }
             FontAPI.Fonts.Add(fontFile);
         }
 
@@ -43,9 +36,6 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/FontAPI/Fonts")]
         public static void Add(TMPro.TMP_FontAsset fontAsset)
         {
-            if (!FontAPI.Loaded) {
-                FontAPI.FontAwake();
-            }
             FontAPI.Fonts.Add(fontAsset);
         }
     }

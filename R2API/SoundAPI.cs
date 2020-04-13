@@ -14,17 +14,12 @@ namespace R2API {
     [R2APISubmodule]
     public static class SoundAPI
     {
-        public static bool Loaded {
-            get; internal set;
-        }
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SoundAwake()
         {
             // Disable SoundPlus if RoR2 is running with its graphics and sound engine disabled (Dedicated Servers) to avoid any bad side effects.
             if (Application.isBatchMode)
                 return;
-
-            Loaded = true;
 
             var files = Directory.GetFiles(Paths.PluginPath, "*.sound", SearchOption.AllDirectories);
 
