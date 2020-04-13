@@ -19,6 +19,9 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/SoundAPI/SoundBanks")]
         public static uint Add(byte[] bank)
         {
+            if (!SoundAPI.Loaded) {
+                SoundAPI.SoundAwake();
+            }
             return SoundAPI.SoundBanks.Add(bank);
         }
 
@@ -29,6 +32,9 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/SoundAPI/SoundBanks")]
         public static uint Add(string path)
         {
+            if (!SoundAPI.Loaded) {
+                SoundAPI.SoundAwake();
+            }
             return SoundAPI.SoundBanks.Add(path);
         }
 
@@ -40,6 +46,9 @@ namespace R2API.AssetPlus {
         [Obsolete("Moved to R2API/SoundAPI/SoundBanks")]
         public static AKRESULT Remove(uint ID)
         {
+            if (!SoundAPI.Loaded) {
+                SoundAPI.SoundAwake();
+            }
             return SoundAPI.SoundBanks.Remove(ID);
         }
     }

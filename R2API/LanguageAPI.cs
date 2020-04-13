@@ -13,8 +13,14 @@ namespace R2API {
     /// </summary>
     [R2APISubmodule]
     public static class LanguageAPI {
+        public static bool Loaded {
+            get; private set;
+        }
+
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void LanguageAwake() {
+            Loaded = true;
+
             var languagePaths = Directory.GetFiles(Paths.PluginPath, "*.language", SearchOption.AllDirectories);
             foreach (var path in languagePaths) {
                 AddPath(path);

@@ -112,12 +112,6 @@ namespace R2API.Utils {
                 }
             }
 
-            if (_moduleSet.Contains(nameof(AssetPlus.AssetPlus))) {
-                _moduleSet.Add(nameof(FontAPI));
-                _moduleSet.Add(nameof(SoundAPI));
-                _moduleSet.Add(nameof(LanguageAPI));
-            }
-
             var moduleTypes = Assembly.GetExecutingAssembly().GetTypes().Where(APISubmoduleFilter).ToList();
 
             foreach (var moduleType in moduleTypes) {
