@@ -23,14 +23,14 @@ namespace R2API {
 
         private static void Language_SetCurrentLanguage(On.RoR2.Language.orig_SetCurrentLanguage orig, string language) {
             orig(language);
-            if (Fonts._fontAsset) {
-                RoR2.UI.HGTextMeshProUGUI.defaultLanguageFont = Fonts._fontAsset;
+            if (Fonts._fontAssets.Count != 0) {
+                RoR2.UI.HGTextMeshProUGUI.defaultLanguageFont = Fonts._fontAssets[0];
             }
         }
 
         private static void HGTextMeshProUGUI_OnCurrentLanguageChanged(On.RoR2.UI.HGTextMeshProUGUI.orig_OnCurrentLanguageChanged orig) {
-            if (Fonts._fontAsset) {
-                RoR2.UI.HGTextMeshProUGUI.defaultLanguageFont = Fonts._fontAsset;
+            if (Fonts._fontAssets.Count != 0) {
+                RoR2.UI.HGTextMeshProUGUI.defaultLanguageFont = Fonts._fontAssets[0];
             }
         }
 
@@ -66,14 +66,10 @@ namespace R2API {
             /// </summary>
             /// <param name="fontAsset">The loaded fontasset</param>
             public static void Add(TMPro.TMP_FontAsset fontAsset) {
-                if (fontAsset) {
-                    R2API.Logger.LogWarning("multiple fonts as custom font, loading the first added");
-                    return;
-                }
-                _fontAsset = fontAsset;
+                _fontAssets.Add(fontAsset);
             }
 
-            internal static TMPro.TMP_FontAsset _fontAsset = null;
+            internal static List<TMPro.TMP_FontAsset> _fontAssets = new List<TMPro.TMP_FontAsset>();
         }
     }
 }
