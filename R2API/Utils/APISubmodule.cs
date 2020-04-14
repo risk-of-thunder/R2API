@@ -68,11 +68,7 @@ namespace R2API.Utils {
             Assembly[] GetAssemblies() {
                 var assemblies = new List<Assembly>();
 
-                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-                while (!path.ToLower().EndsWith("ins")) {
-                    path = Directory.GetParent(path).FullName;
-                }
+                var path = BepInEx.Paths.PluginPath;
 
                 foreach (string dll in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories)) {
                     var fileName = Path.GetFileName(dll);
