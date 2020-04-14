@@ -208,12 +208,12 @@ namespace R2API {
 
         [Obsolete("Use the Add() method that will directly returns the correct enum type (BuffIndex) instead.")]
         public static int AddCustomBuff(CustomBuff buff) {
-            return (int)BuffAPI.Add(buff);
+            return (int)Add(buff);
         }
 
         [Obsolete("Use the Add() method that will directly returns the correct enum type (EliteIndex) instead.")]
         public static int AddCustomElite(CustomElite elite) {
-            return (int)EliteAPI.Add(elite);
+            return (int)Add(elite);
         }
         #endregion
 
