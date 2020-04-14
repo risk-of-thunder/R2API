@@ -9,8 +9,17 @@ namespace R2API {
     /// </summary>
     [R2APISubmodule]
     public static class FontAPI {
+        public static bool Loaded {
+            get; private set;
+        }
+
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void FontAwake() {
+            if (Loaded) {
+                return;
+            }
+
+            Loaded = true;
             var fontFiles = Directory.GetFiles(Paths.PluginPath, "*.font", SearchOption.AllDirectories);
 
             foreach (var fontFile in fontFiles) {

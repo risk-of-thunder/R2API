@@ -12,5 +12,11 @@ namespace R2API.AssetPlus {
     [Obsolete("Use SoundAPI, LanguageAPI and FontAPI instead")]
     public static class AssetPlus
     {
+        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
+        internal static void RedirectAwake() {
+            SoundAPI.SoundAwake();
+            FontAPI.FontAwake();
+            LanguageAPI.LanguageAwake();
+        }
     }
 }
