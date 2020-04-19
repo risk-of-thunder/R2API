@@ -8,18 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-	  <Reference Include="Mono.Cecil">
-		<HintPath>..\R2API\libs\Mono.Cecil.dll</HintPath>
-		<Private>false</Private>
-	  </Reference>
-	  <Reference Include="MonoMod.RuntimeDetour">
-		<HintPath>..\R2API\libs\MonoMod.RuntimeDetour.dll</HintPath>
-		<Private>false</Private>
-	  </Reference>
-	  <Reference Include="MonoMod.Utils">
-		<HintPath>..\R2API\libs\MonoMod.Utils.dll</HintPath>
-		<Private>false</Private>
-	  </Reference>
+      <PackageReference Include="Mono.Cecil" Version="0.11.2" />
+      <PackageReference Include="MonoMod" Version="20.3.5.1" />
+      <PackageReference Include="MonoMod.Utils" Version="20.3.5.1" />
+    </ItemGroup>
+
+    <ItemGroup>
 	  <Reference Include="MonoMod.Utils">
 		<HintPath>..\R2API\libs\MonoMod.exe</HintPath>
 		<Private>false</Private>
@@ -28,11 +22,6 @@
             <HintPath>..\R2API\libs\Assembly-CSharp.dll</HintPath>
             <Private>false</Private>
         </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference PrivateAssets="all" Include="..\R2API\R2API.csproj">
-        </ProjectReference>
     </ItemGroup>
 
 </Project>
