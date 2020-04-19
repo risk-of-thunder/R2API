@@ -36,6 +36,7 @@ The most recent changelog can always be found on the [Github](https://github.com
 
 **Current**
 
+* [Remove faulty hook around chests' item rolling.](https://github.com/risk-of-thunder/R2API/pull/138)
 * [Remove savety hooks for userporfile as RoR2 does that now out of the box](https://github.com/risk-of-thunder/R2API/pull/135)
 * [Seperate BuffAPI and EliteAPI from ItemAPI](https://github.com/risk-of-thunder/R2API/pull/135)
 * [Fix Reflection utils](https://github.com/risk-of-thunder/R2API/pull/135)
