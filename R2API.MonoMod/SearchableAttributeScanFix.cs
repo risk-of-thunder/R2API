@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using MonoMod;
-using R2API.Utils;
 
 namespace RoR2 {
     internal class patch_SearchableAttribute : Attribute {
@@ -167,7 +166,7 @@ namespace RoR2 {
                 "Assembly"
             };
             try {
-                typeof(SearchableAttribute).InvokeMethod("Scan");
+                typeof(SearchableAttribute).GetMethod("Scan", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).Invoke(null,null);
             }
             catch (Exception ex) {
                 System.Console.WriteLine(ex.Message);
