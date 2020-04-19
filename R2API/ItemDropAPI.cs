@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RoR2;
 using Mono.Cecil.Cil;
@@ -319,14 +319,14 @@ namespace R2API {
         public static void ReplaceDrops(ItemDropLocation dropLocation,
             params PickupSelection[] pickupSelections) {
             Logger.LogInfo(
-                $"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
+                $"Adding drop information for {dropLocation}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
 
             Selection[dropLocation] = pickupSelections.ToList();
         }
 
         public static void ReplaceDrops(ItemDropLocation dropLocation, List<PickupSelection> pickupSelections) {
             Logger.LogInfo(
-                $"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
+                $"Adding drop information for {dropLocation}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
 
             Selection[dropLocation] = pickupSelections;
         }
