@@ -212,7 +212,7 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.BossGroup.DropRewards += DropRewards;
-            On.RoR2.ChestBehavior.RollItem += ChestBehaviorOnRollItem;
+            //On.RoR2.ChestBehavior.RollItem += ChestBehaviorOnRollItem;
             IL.RoR2.ShrineChanceBehavior.AddShrineStack += ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
         }
@@ -220,7 +220,7 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             IL.RoR2.BossGroup.DropRewards -= DropRewards;
-            On.RoR2.ChestBehavior.RollItem -= ChestBehaviorOnRollItem;
+            //On.RoR2.ChestBehavior.RollItem -= ChestBehaviorOnRollItem;
             IL.RoR2.ShrineChanceBehavior.AddShrineStack -= ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable -= RunOnBuildDropTable;
         }
@@ -262,6 +262,7 @@ namespace R2API {
             self.largeChestDropTierSelector.Clear();
         }
 
+        /*
         private static void ChestBehaviorOnRollItem(On.RoR2.ChestBehavior.orig_RollItem orig, ChestBehavior self) {
             if (!NetworkServer.active) {
                 Debug.LogWarning("[Server] function 'System.Void RoR2.ChestBehavior::RollItem()' called on client");
@@ -298,6 +299,7 @@ namespace R2API {
                     Run.instance.treasureRng.nextNormalizedFloat));
             }
         }
+        */
 
         private static void ShrineChanceBehaviorOnAddShrineStack(ILContext il) {
             var cursor = new ILCursor(il).Goto(0);
