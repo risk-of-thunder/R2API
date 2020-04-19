@@ -11,7 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Test", "R2API.Test\R2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3A26DDA8-2697-4D64-962B-DB9E2DC00EF6}"
 	ProjectSection(SolutionItems) = preProject
-		CHANGELOG.md = CHANGELOG.md
 		manifest.json = manifest.json
 		README.md = README.md
 	EndProjectSection
