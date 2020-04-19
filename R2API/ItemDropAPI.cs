@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using RoR2;
 using Mono.Cecil.Cil;
@@ -140,31 +140,6 @@ namespace R2API {
 
         public static int? BossDropParticipatingPlayerCount = null;
         public static bool IncludeSpecialBossDrops = true;
-
-        private const string SmallChest = "Chest1";
-        private const string MediumChest = "Chest2";
-        private const string LargeChest = "GoldChest";
-        private const string LunarChest = "LunarChest";
-        private const string Lockbox = "Lockbox";
-        private const string CloakedChest = "Chest1Stealthed";
-        private const string UtilityChest = "CategoryChestUtility";
-        private const string DamageChest = "CategoryChestDamage";
-        private const string HealingChest = "CategoryChestHealing";
-        private const string ScavBackpack = "ScavBackpack";
-        private const string ScavLunarBackpack = "ScavLunarBackpack";
-
-        private static readonly Dictionary<string, ItemDropLocation> ChestLookup =
-            new Dictionary<string, ItemDropLocation>(StringComparer.OrdinalIgnoreCase) {
-                { SmallChest, ItemDropLocation.SmallChest },
-                { MediumChest, ItemDropLocation.MediumChest },
-                { LargeChest, ItemDropLocation.LargeChest },
-                { LunarChest, ItemDropLocation.LunarChest },
-                { UtilityChest, ItemDropLocation.UtilityChest },
-                { DamageChest, ItemDropLocation.DamageChest },
-                { HealingChest, ItemDropLocation.HealingChest },
-                { CloakedChest, ItemDropLocation.SmallChest},
-                { ScavBackpack, ItemDropLocation.ScavBackPack}
-            };
 
         public static float DefaultSmallChestTier1DropChance = 0.8f;
         public static float DefaultSmallChestTier2DropChance = 0.2f;
