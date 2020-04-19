@@ -212,7 +212,6 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.BossGroup.DropRewards += DropRewards;
-            //On.RoR2.ChestBehavior.RollItem += ChestBehaviorOnRollItem;
             IL.RoR2.ShrineChanceBehavior.AddShrineStack += ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
         }
@@ -220,7 +219,6 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             IL.RoR2.BossGroup.DropRewards -= DropRewards;
-            //On.RoR2.ChestBehavior.RollItem -= ChestBehaviorOnRollItem;
             IL.RoR2.ShrineChanceBehavior.AddShrineStack -= ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable -= RunOnBuildDropTable;
         }
@@ -261,45 +259,6 @@ namespace R2API {
             self.mediumChestDropTierSelector.AddChoice(self.availableTier3DropList, DefaultMediumChestTier2SelectorDropChance);
             self.largeChestDropTierSelector.Clear();
         }
-
-        /*
-        private static void ChestBehaviorOnRollItem(On.RoR2.ChestBehavior.orig_RollItem orig, ChestBehavior self) {
-            if (!NetworkServer.active) {
-                Debug.LogWarning("[Server] function 'System.Void RoR2.ChestBehavior::RollItem()' called on client");
-                return;
-            }
-
-            if (self.GetFieldValue<PickupIndex>("dropPickup") != PickupIndex.none) {
-                return;
-            }
-
-            var chestName = self.name.Replace("(Clone)", "").Trim();
-            Logger.LogDebug($"Dropping {self.name} - {self.requiredItemTag}");
-
-
-            if (ChestLookup.ContainsKey(chestName)) {
-
-                self.SetFieldValue("dropPickup", GetSelection(ChestLookup[chestName],
-                    Run.instance.treasureRng.nextNormalizedFloat));
-            } else if (self.name.ToLower().Contains(Lockbox.ToLower())) {
-                Logger.LogDebug("Dropping Lockbox");
-
-                var lockboxes = CharacterMaster.readOnlyInstancesList.Sum(x => x.inventory.GetItemCount(ItemIndex.TreasureCache));
-                Selection[ItemDropLocation.Lockbox][1].DropChance = DefaultSmallChestTier2DropChance * lockboxes;
-                Selection[ItemDropLocation.Lockbox][2].DropChance = DefaultSmallChestTier3DropChance * Mathf.Pow(lockboxes, 2f);
-                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.Lockbox,
-                    Run.instance.treasureRng.nextNormalizedFloat));
-            } else if (self.name.ToLower().Contains("scavlunarbackpack"))
-            {
-                self.SetFieldValue<PickupIndex>("dropPickup", PickupCatalog.FindPickupIndex("LunarCoin.Coin0"));
-            } else {
-                Logger.LogError($"Unidentified chest type: {self.name}. Dropping normal loot instead.");
-
-                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.SmallChest,
-                    Run.instance.treasureRng.nextNormalizedFloat));
-            }
-        }
-        */
 
         private static void ShrineChanceBehaviorOnAddShrineStack(ILContext il) {
             var cursor = new ILCursor(il).Goto(0);
