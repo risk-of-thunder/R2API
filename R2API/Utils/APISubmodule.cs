@@ -5,9 +5,6 @@ using System.Linq;
 using System.Reflection;
 using BepInEx.Logging;
 using Mono.Cecil;
-using Mono.Collections.Generic;
-using UnityEngine;
-using CustomAttributeNamedArgument = Mono.Cecil.CustomAttributeNamedArgument;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ClassNeverInstantiated.Global
