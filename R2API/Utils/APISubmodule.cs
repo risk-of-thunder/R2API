@@ -86,9 +86,29 @@ namespace R2API.Utils {
                 }
             }
             _moduleSet = new HashSet<string>();
-
-
             var typeName = typeof(R2APISubmoduleDependency).FullName;
+
+            List<AssemblyDefinition> assemblyWithAttribute = new List<AssemblyDefinition>();
+            foreach (var assembly in assemblies) {
+                if (!assembly.HasCustomAttributes) {
+                    continue;
+                }
+
+                foreach (var attribute in assembly.CustomAttributes) {
+                    if (attribute.AttributeType.FullName == typeName) {
+                        foreach (var arg in attribute.ConstructorArguments) {
+                            foreach (var stringElement in (CustomAttributeArgument[])arg.Value) {
+                                _moduleSet.Add((string)stringElement.Value);
+                                if (!assemblyWithAttribute.Contains(assembly)) {
+                                    assemblyWithAttribute.Add(assembly);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            assemblies.RemoveAll(asm => assemblyWithAttribute.Contains(asm));
 
             var types = assemblies
                 .SelectMany(assembly => assembly.MainModule.Types);
