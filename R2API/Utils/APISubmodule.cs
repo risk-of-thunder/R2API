@@ -4,6 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using BepInEx.Logging;
+using Mono.Cecil;
+using Mono.Collections.Generic;
+using UnityEngine;
+using CustomAttributeNamedArgument = Mono.Cecil.CustomAttributeNamedArgument;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ClassNeverInstantiated.Global
 
@@ -65,48 +70,41 @@ namespace R2API.Utils {
         public bool IsLoaded(string submodule) => LoadedModules.Contains(submodule);
 
         internal HashSet<string> LoadRequested() {
-            Assembly[] GetAssemblies() {
-                var assemblies = new List<Assembly>();
-
-                var path = BepInEx.Paths.PluginPath;
-
-                foreach (string dll in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories)) {
-                    var fileName = Path.GetFileName(dll);
-                    if (!fileName.ToLower().Contains("r2api") && !fileName.ToLower().Contains("mmhook")) {
-                        try // bepis code
-                        {
-                            assemblies.Add(Assembly.LoadFile(dll));
-                        }
-                        catch (BadImageFormatException) { } //unmanaged dll
-                        catch (ReflectionTypeLoadException) { }
-                    }
-
+            var assemblies = new List<AssemblyDefinition>();
+            var path = BepInEx.Paths.PluginPath;
+            foreach (string dll in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories))
+            {
+                var fileName = Path.GetFileName(dll);
+                if (fileName.ToLower().Contains("r2api") || fileName.ToLower().Contains("mmhook")) {
+                    continue;
                 }
 
-                return assemblies.ToArray();
+                try {
+                    assemblies.Add(AssemblyDefinition.ReadAssembly(dll));
+                }
+                catch (Exception e) {
+                }
             }
-
-            var allTypes = GetAssemblies()
-                .SelectMany(assembly => {
-                    try {
-                        return assembly.GetTypes();
-                    }
-                    catch (ReflectionTypeLoadException) {
-                        return Enumerable.Empty<Type>();
-                    }
-                })
-                .ToList();
-
             _moduleSet = new HashSet<string>();
 
-            foreach (var type in allTypes) {
-                var subModules = type.GetCustomAttributes<R2APISubmoduleDependency>();
-                foreach (var subModule in subModules) {
-                    foreach (var name in subModule.SubmoduleNames) {
-                        _moduleSet.Add(name);
+
+            var typeName = typeof(R2APISubmoduleDependency).FullName;
+
+            var types = assemblies
+                .SelectMany(assembly => assembly.MainModule.Types);
+
+            foreach (var type in types) {
+                foreach (var attribute in type.CustomAttributes) {
+                    if (attribute.AttributeType.FullName == typeName) {
+                        foreach (var arg in attribute.ConstructorArguments) {
+                            foreach (var stringElement in (CustomAttributeArgument[])arg.Value) {
+                                _moduleSet.Add((string) stringElement.Value);
+                            }
+                        }
                     }
                 }
             }
+
 
             var moduleTypes = Assembly.GetExecutingAssembly().GetTypes().Where(APISubmoduleFilter).ToList();
 
