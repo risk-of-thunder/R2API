@@ -271,7 +271,7 @@ namespace R2API {
                         if (customRules != null) {
                             //if a specific rule for this model exists, or the model has no rules for this equipment
                             if (customRules.TryGetRules(name, out ItemDisplayRule[] rules) || cm.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null) {
-                                cm.itemDisplayRuleSet.SetItemDisplayRuleGroup(customEquipment.EquipmentDef.name, new DisplayRuleGroup { rules = rules });
+                                cm.itemDisplayRuleSet.SetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.name, new DisplayRuleGroup { rules = rules });
                             }
                         }
                     }
