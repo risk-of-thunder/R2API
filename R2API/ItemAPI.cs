@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
-using System.Text;
+
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
 using UnityEngine;
-using Console = System.Console;
 using Object = UnityEngine.Object;
+using System.Xml;
+using System.Xml.Linq;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
 #pragma warning disable 618 // PickupIndex being obsolete (but still being used in the game code)
@@ -136,9 +137,20 @@ namespace R2API {
                 return ItemIndex.None;
             }
 
-            item.ItemDef.itemIndex = (ItemIndex)OriginalItemCount + CustomItemCount++;
-            ItemDefinitions.Add(item);
-            return item.ItemDef.itemIndex;
+            bool xmlSafe = false;
+            try {
+                XElement element = new XElement(item.ItemDef.name);
+                xmlSafe = true;
+            }
+            catch {
+                R2API.Logger.LogError($"Custom item '{item.ItemDef.name}' is not XMLsafe. Item not added.");
+            }
+            if (xmlSafe) {
+                item.ItemDef.itemIndex = (ItemIndex)OriginalItemCount + CustomItemCount++;
+                ItemDefinitions.Add(item);
+                return item.ItemDef.itemIndex;
+            }
+            return ItemIndex.None;
         }
 
         /// <summary>
@@ -159,9 +171,21 @@ namespace R2API {
                 return EquipmentIndex.None;
             }
 
-            item.EquipmentDef.equipmentIndex = (EquipmentIndex)OriginalEquipmentCount + CustomEquipmentCount++;
-            EquipmentDefinitions.Add(item);
-            return item.EquipmentDef.equipmentIndex;
+            bool xmlSafe = false;
+            try {
+                XElement element = new XElement(item.EquipmentDef.name);
+                xmlSafe = true;
+            }
+            catch {
+                R2API.Logger.LogError($"Custom equipment '{item.EquipmentDef.name}' is not XMLsafe. Item not added.");
+            }
+            if (xmlSafe) {
+
+                item.EquipmentDef.equipmentIndex = (EquipmentIndex)OriginalEquipmentCount + CustomEquipmentCount++;
+                EquipmentDefinitions.Add(item);
+                return item.EquipmentDef.equipmentIndex;
+            }
+            return EquipmentIndex.None;
         }
 
         [Obsolete("Use the Add() method from BuffAPI instead.")]
