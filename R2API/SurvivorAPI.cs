@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
@@ -103,7 +102,7 @@ namespace R2API {
         internal static void SafetyCheck() {
             IL.RoR2.CharacterSelectBarController.Build += il => {
                 var c = new ILCursor(il);
-                int locSurvivorDef = 0;
+                int locSurvivorDef2 = 0;
                 int locDescriptionToken = 0;
 
                 // ReSharper disable once InconsistentNaming
@@ -113,11 +112,21 @@ namespace R2API {
                         "Aborting. Instabilities related to custom Survivors may, or may not happens.");
                 }
 
-                // Retrieve the loc index for the survivorDef
-                if (!c.TryGotoNext(MoveType.After,
+                // Retrieve the loc index for local variable survivorDef2
+                var findLocSurvivorDef = new Func<Instruction, bool>[]
+                {
                     i => i.MatchLdloc(out _),
                     i => i.MatchCallOrCallvirt(typeof(SurvivorCatalog).GetMethodCached("GetSurvivorDef")),
-                    i => i.MatchStloc(out locSurvivorDef)
+                    i => i.MatchStloc(out locSurvivorDef2)
+                };
+                if (!c.TryGotoNext(MoveType.After,
+                    findLocSurvivorDef
+                )) {
+                    ILFailMessage();
+                    return;
+                }
+                if (!c.TryGotoNext(MoveType.After,
+                    findLocSurvivorDef
                 )) {
                     ILFailMessage();
                     return;
@@ -134,13 +143,13 @@ namespace R2API {
 
                     // orig : length = text.IndexOf(Environment.NewLine);
                     // modified : length = text.IndexOf(Environment.NewLine); if length == -1 then length = text.Length;
-                    c.Emit(OpCodes.Ldloc, locSurvivorDef);
+                    c.Emit(OpCodes.Ldloc, locSurvivorDef2);
                     c.Emit(OpCodes.Ldloc, locDescriptionToken);
                     c.EmitDelegate<Func<int, SurvivorDef, string, int>>((indexOf, survivorDef, descriptionToken) => {
                         if (indexOf == -1) {
                             R2API.Logger.LogWarning(
                                 $"A Custom Survivor called {survivorDef.displayNameToken} doesn't have a Environement.NewLine " +
-                                "like its supposed to have for separating the preview sentence to the tips underneath it");
+                                "like its supposed to have in its descriptionToken for separating the preview sentence to the tips underneath it");
                             return descriptionToken.Length;
                         }
 
