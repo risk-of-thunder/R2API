@@ -290,13 +290,6 @@ namespace R2API {
             cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethodCached("get_itemIndex"));
         }
 
-        public static void AddDrops(ItemDropLocation dropLocation, PickupSelection pickups) {
-            if (!Selection.ContainsKey(dropLocation)) {
-                Selection[dropLocation] = new List<PickupSelection>();
-            }
-            Selection[dropLocation].Add(pickups);
-        }
-
         public static void AddDrops(ItemDropLocation dropLocation, params PickupSelection[] pickups) {
             if (!Selection.ContainsKey(dropLocation)) {
                 Selection[dropLocation] = new List<PickupSelection>();
