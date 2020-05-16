@@ -329,6 +329,21 @@ namespace R2API {
                 AdditionalTierItems[itemTier].Remove(item);
         }
 
+        public static void AddToDefaultAllTiers(params KeyValuePair<ItemIndex, ItemTier>[] items) {
+            foreach (var list in AdditionalTierItems)
+                AddToDefaultByTier(list.Key,
+                    items.Where(item => list.Key == item.Value)
+                    .Select(item => item.Key)
+                    .ToArray());
+        }
+
+        public static void RemoveFromDefaultAllTiers(params KeyValuePair<ItemIndex, ItemTier>[] items) {
+            foreach (var list in AdditionalTierItems)
+                RemoveFromDefaultByTier(list.Key,
+                    items.Where(item => list.Key == item.Value)
+                    .Select(item => item.Key)
+                    .ToArray());
+        }
 
         public static void AddToDefaultEquipment(params EquipmentIndex[] equipment) {
             AdditionalEquipment.AddRange(equipment);
