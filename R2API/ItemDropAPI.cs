@@ -304,6 +304,14 @@ namespace R2API {
             Selection[dropLocation].AddRange(pickups);
         }
 
+        public static void RemoveDrops(ItemDropLocation dropLocation, params PickupSelection[] pickups) {
+            if (!Selection.ContainsKey(dropLocation))
+                return;
+
+            foreach (var pickup in pickups)
+                Selection[dropLocation].Remove(pickup);
+        }
+
         public static void AddToDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
             if (itemTier == ItemTier.NoTier) {
                 return;
@@ -311,9 +319,24 @@ namespace R2API {
 
             AdditionalTierItems[itemTier].AddRange(items);
         }
+        
+        public static void RemoveFromDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
+            if (itemTier == ItemTier.NoTier) {
+                return;
+            }
+
+            foreach (var item in items)
+                AdditionalTierItems[itemTier].Remove(item);
+        }
+
 
         public static void AddToDefaultEquipment(params EquipmentIndex[] equipment) {
             AdditionalEquipment.AddRange(equipment);
+        }
+
+        public static void RemoveFromDefaultEquipment(params EquipmentIndex[] equipments) {
+            foreach (var equipment in equipments)
+                AdditionalEquipment.Remove(equipment);
         }
 
         public static void ReplaceDrops(ItemDropLocation dropLocation,
