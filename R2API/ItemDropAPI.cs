@@ -319,7 +319,7 @@ namespace R2API {
             }
 
             foreach (var item in items)
-                AdditionalTierItems[itemTier].Remove(item);
+                AdditionalTierItems[itemTier].RemoveAll(i => i.Equals(item));
         }
 
         public static void AddToDefaultAllTiers(params KeyValuePair<ItemIndex, ItemTier>[] items) {
@@ -344,7 +344,7 @@ namespace R2API {
 
         public static void RemoveFromDefaultEquipment(params EquipmentIndex[] equipments) {
             foreach (var equipment in equipments)
-                AdditionalEquipment.Remove(equipment);
+                AdditionalEquipment.RemoveAll(e => e.Equals(equipment));
         }
 
         public static void ReplaceDrops(ItemDropLocation dropLocation,
