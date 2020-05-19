@@ -174,15 +174,15 @@ namespace R2API {
         public static Dictionary<ItemDropLocation, List<PickupSelection>> Selection { get; set; } =
             new Dictionary<ItemDropLocation, List<PickupSelection>>();
 
-        private static readonly Dictionary<ItemTier, List<ItemIndex>> AdditionalTierItems = new Dictionary<ItemTier, List<ItemIndex>> {
-            { ItemTier.Tier1, new List<ItemIndex>() },
-            { ItemTier.Tier2, new List<ItemIndex>() },
-            { ItemTier.Tier3, new List<ItemIndex>() },
-            { ItemTier.Boss, new List<ItemIndex>() },
-            { ItemTier.Lunar, new List<ItemIndex>() }
+        private static readonly Dictionary<ItemTier, HashSet<ItemIndex>> AdditionalTierItems = new Dictionary<ItemTier, HashSet<ItemIndex>> {
+            { ItemTier.Tier1, new HashSet<ItemIndex>() },
+            { ItemTier.Tier2, new HashSet<ItemIndex>() },
+            { ItemTier.Tier3, new HashSet<ItemIndex>() },
+            { ItemTier.Boss, new HashSet<ItemIndex>() },
+            { ItemTier.Lunar, new HashSet<ItemIndex>() }
         };
 
-        private static readonly List<EquipmentIndex> AdditionalEquipment = new List<EquipmentIndex>();
+        private static readonly HashSet<EquipmentIndex> AdditionalEquipment = new HashSet<EquipmentIndex>();
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
@@ -310,7 +310,7 @@ namespace R2API {
                 return;
             }
 
-            AdditionalTierItems[itemTier].AddRange(items);
+            AdditionalTierItems[itemTier].UnionWith(items);
         }
         
         public static void RemoveFromDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
@@ -318,8 +318,7 @@ namespace R2API {
                 return;
             }
 
-            foreach (var item in items)
-                AdditionalTierItems[itemTier].RemoveAll(i => i.Equals(item));
+            AdditionalTierItems[itemTier].ExceptWith(items);
         }
 
         public static void AddToDefaultAllTiers(params KeyValuePair<ItemIndex, ItemTier>[] items) {
@@ -339,12 +338,11 @@ namespace R2API {
         }
 
         public static void AddToDefaultEquipment(params EquipmentIndex[] equipment) {
-            AdditionalEquipment.AddRange(equipment);
+            AdditionalEquipment.UnionWith(equipment);
         }
 
         public static void RemoveFromDefaultEquipment(params EquipmentIndex[] equipments) {
-            foreach (var equipment in equipments)
-                AdditionalEquipment.RemoveAll(e => e.Equals(equipment));
+            AdditionalEquipment.ExceptWith(equipments);
         }
 
         public static void ReplaceDrops(ItemDropLocation dropLocation,
