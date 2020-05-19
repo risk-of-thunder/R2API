@@ -321,7 +321,7 @@ namespace R2API {
             AdditionalTierItems[itemTier].ExceptWith(items);
         }
 
-        public static void AddToDefaultAllTiers(params KeyValuePair<ItemIndex, ItemTier>[] items) {
+        public static void AddToDefaultByTier(params KeyValuePair<ItemIndex, ItemTier>[] items) {
             foreach (var list in AdditionalTierItems)
                 AddToDefaultByTier(list.Key,
                     items.Where(item => list.Key == item.Value)
@@ -329,7 +329,7 @@ namespace R2API {
                     .ToArray());
         }
 
-        public static void RemoveFromDefaultAllTiers(params KeyValuePair<ItemIndex, ItemTier>[] items) {
+        public static void RemoveFromDefaultByTier(params KeyValuePair<ItemIndex, ItemTier>[] items) {
             foreach (var list in AdditionalTierItems)
                 RemoveFromDefaultByTier(list.Key,
                     items.Where(item => list.Key == item.Value)
