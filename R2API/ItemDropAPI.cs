@@ -144,7 +144,10 @@ namespace R2API {
 
         private static void RemoveDefaultDrops(ItemDropLocation location) {
             if (ItemDropAPI.Selection.ContainsKey(location))
-                ItemDropAPI.RemoveDrops(location, ItemDropAPI.Selection[location].Where(sel => sel.IsDefaults).ToArray());
+                ItemDropAPI.RemoveDrops(location,
+                    ItemDropAPI.Selection[location]
+                    .Where(sel => sel.IsDefaults)
+                    .ToArray());
         }
     }
 
