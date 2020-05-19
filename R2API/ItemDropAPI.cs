@@ -13,6 +13,7 @@ namespace R2API {
     public class PickupSelection {
         public List<PickupIndex> Pickups { get; set; }
         public float DropChance { get; set; } = 1.0f;
+        public bool IsDefaults { get; internal set; } = false;
     }
 
     public static class DefaultItemDrops {
@@ -38,6 +39,10 @@ namespace R2API {
                 eq.ToSelection(ItemDropAPI.DefaultShrineEquipmentWeight)
             };
 
+            foreach (var sel in shrineSelections)
+                sel.IsDefaults = true;
+
+            RemoveDefaultDrops(ItemDropLocation.Shrine);
             ItemDropAPI.AddDrops(ItemDropLocation.Shrine, shrineSelections);
         }
 
@@ -83,6 +88,17 @@ namespace R2API {
                 ItemDropAPI.GetDefaultDropList(ItemTier.Lunar).ToSelection(ItemDropAPI.DefaultScavBackpackLunarDropChance),
             };
 
+            var allSelections = new[] {chestSelections, lockboxSelections, utilitySelections, damageSelections, healingSelections, scavSelections};
+            foreach (var selGroup in allSelections)
+                foreach (var sel in selGroup)
+                    sel.IsDefaults = true;
+
+            var allLocations = new[] {ItemDropLocation.UtilityChest, ItemDropLocation.DamageChest, ItemDropLocation.HealingChest,
+                ItemDropLocation.Lockbox, ItemDropLocation.SmallChest, ItemDropLocation.MediumChest, ItemDropLocation.LargeChest, ItemDropLocation.ScavBackPack};
+
+            foreach (var selLoc in allLocations)
+                RemoveDefaultDrops(selLoc);
+
             ItemDropAPI.AddDrops(ItemDropLocation.UtilityChest, utilitySelections);
             ItemDropAPI.AddDrops(ItemDropLocation.DamageChest, damageSelections);
             ItemDropAPI.AddDrops(ItemDropLocation.HealingChest, healingSelections);
@@ -97,12 +113,21 @@ namespace R2API {
         public static void AddEquipmentChestDefaultDrops() {
             var eq = ItemDropAPI.GetDefaultEquipmentDropList();
 
+            var equipmentSelections = eq.ToSelection();
+            equipmentSelections.IsDefaults = true;
+
+            RemoveDefaultDrops(ItemDropLocation.EquipmentChest);
             ItemDropAPI.AddDrops(ItemDropLocation.EquipmentChest, eq.ToSelection());
         }
 
         public static void AddLunarChestDefaultDrops() {
             var lun = ItemDropAPI.GetDefaultLunarDropList();
-            ItemDropAPI.AddDrops(ItemDropLocation.LunarChest, lun.ToSelection());
+
+            var lunarSelections = lun.ToSelection();
+            lunarSelections.IsDefaults = true;
+
+            RemoveDefaultDrops(ItemDropLocation.LunarChest);
+            ItemDropAPI.AddDrops(ItemDropLocation.LunarChest, lunarSelections);
         }
 
         public static void AddBossDefaultDrops() {
@@ -110,7 +135,16 @@ namespace R2API {
 
             var t2 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier2);
 
-            ItemDropAPI.AddDrops(ItemDropLocation.Boss, t2.ToSelection());
+            var t2selections = t2.ToSelection();
+            t2selections.IsDefaults = true;
+
+            RemoveDefaultDrops(ItemDropLocation.Boss);
+            ItemDropAPI.AddDrops(ItemDropLocation.Boss, t2selections);
+        }
+
+        private static void RemoveDefaultDrops(ItemDropLocation location) {
+            if (ItemDropAPI.Selection.ContainsKey(location))
+                ItemDropAPI.RemoveDrops(location, ItemDropAPI.Selection[location].Where(sel => sel.IsDefaults).ToArray());
         }
     }
 
