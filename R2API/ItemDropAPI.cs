@@ -477,6 +477,9 @@ namespace R2API {
             }
 
             list.AddRange(AdditionalTierItems[ItemTier.Lunar].Select(x => PickupCatalog.FindPickupIndex(x)));
+            list.AddRange(AdditionalEquipment
+                .Where(x => EquipmentCatalog.GetEquipmentDef(x).isLunar)
+                .Select(x => PickupCatalog.FindPickupIndex(x)));
             return list;
         }
 
@@ -495,7 +498,7 @@ namespace R2API {
                 }
             }
 
-            list.AddRange(AdditionalEquipment);
+            list.AddRange(AdditionalEquipment.Where(x => !EquipmentCatalog.GetEquipmentDef(x).isLunar));
             return list;
         }
 

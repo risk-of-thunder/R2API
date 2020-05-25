@@ -107,11 +107,9 @@ namespace R2API {
                 R2API.Logger.LogInfo($"Custom Equipment: {customEquipment.EquipmentDef.nameToken} added");
             }
 
-            var equipments = EquipmentDefinitions.Where(c => c.EquipmentDef.canDrop && !c.EquipmentDef.isLunar).Select(x => x.EquipmentDef.equipmentIndex).ToArray();
-            var lunarEquipments = EquipmentDefinitions.Where(c => c.EquipmentDef.canDrop && c.EquipmentDef.isLunar).Select(x => x.EquipmentDef.equipmentIndex).ToList();
+            var equipments = EquipmentDefinitions.Where(c => c.EquipmentDef.canDrop).Select(x => x.EquipmentDef.equipmentIndex).ToArray();
 
             ItemDropAPI.AddToDefaultEquipment(equipments);
-            ItemDropAPI.AddDrops(ItemDropLocation.LunarChest, lunarEquipments.ToSelection());
 
             _equipmentCatalogInitialized = true;
         }
