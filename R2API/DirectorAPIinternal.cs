@@ -73,6 +73,9 @@ namespace R2API {
                 case "limbo":
                     stageInfo.stage = Stage.MomentWhole;
                     break;
+                case "skymeadow":
+                     stageInfo.stage = Stage.SkyMeadow
+                     break;
                 default:
                     stageInfo.stage = Stage.Custom;
                     stageInfo.CustomStageName = scene.baseSceneName;
