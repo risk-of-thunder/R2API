@@ -74,8 +74,11 @@ namespace R2API {
                     stageInfo.stage = Stage.MomentWhole;
                     break;
                 case "skymeadow":
-                     stageInfo.stage = Stage.SkyMeadow
+                    stageInfo.stage = Stage.SkyMeadow;
                      break;
+                case "artifactworld":
+                    stageInfo.stage = Stage.ArtifactReliquary;
+                    break;
                 default:
                     stageInfo.stage = Stage.Custom;
                     stageInfo.CustomStageName = scene.baseSceneName;

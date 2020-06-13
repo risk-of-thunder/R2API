@@ -121,7 +121,8 @@ namespace R2API {
             Bazaar = 2048,
             VoidCell = 4096,
             MomentWhole = 8192,
-            SkyMeadow = 16384
+            SkyMeadow = 16384,
+            ArtifactReliquary = 32768
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 
