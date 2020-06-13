@@ -1,0 +1,92 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+    <Version>2.0.0</Version>
+  </PropertyGroup>
+   
+   <PropertyGroup>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoMod" Version="20.3.5.1" />
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="20.3.5.1" />
+    <PackageReference Include="MonoMod.Utils" Version="20.3.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>libs\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>libs\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Facepunch.Steamworks, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>libs\Facepunch.Steamworks.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="MMHOOK_Assembly-CSharp">
+      <HintPath>libs\MMHOOK_Assembly-CSharp.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>libs\Mono.Cecil.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>libs\MonoMod.RuntimeDetour.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>libs\MonoMod.Utils.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>libs\Unity.TextMeshPro.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>libs\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>libs\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>libs\UnityEngine.Networking.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>libs\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>libs\UnityEngine.UIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Wwise">
+      <HintPath>libs\Wwise.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+	  <Reference Include="Zio">
+		  <HintPath>libs\Zio.dll</HintPath>
+		  <Private>false</Private>
+	  </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="libs\MMHOOK_Assembly-CSharp.dll">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

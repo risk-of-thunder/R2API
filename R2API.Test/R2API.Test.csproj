@@ -1,0 +1,95 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+	  <OutputType>Library</OutputType>
+		<LangVersion>7.2</LangVersion>
+		<IsPackable>false</IsPackable>
+	  <TestProjectType>UnitTest</TestProjectType>
+
+	</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\R2API\libs\Assembly-CSharp.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+
+    <Reference Include="MonoMod.Utils">
+	    <HintPath>..\R2API\libs\MonoMod.Utils.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+	    <HintPath>..\R2API\libs\UnityEngine.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+	    <HintPath>..\R2API\libs\UnityEngine.CoreModule.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="BepInEx">
+	    <HintPath>..\R2API\libs\BepInEx.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="MMHOOK_Assembly-CSharp">
+	    <HintPath>..\R2API\libs\MMHOOK_Assembly-CSharp.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+	    <HintPath>..\R2API\libs\Mono.Cecil.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour">
+	    <HintPath>..\R2API\libs\MonoMod.RuntimeDetour.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="MonoMod.Utils">
+	    <HintPath>..\R2API\libs\MonoMod.Utils.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+	    <HintPath>..\R2API\libs\UnityEngine.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+	    <HintPath>..\R2API\libs\UnityEngine.CoreModule.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+	    <HintPath>..\R2API\libs\UnityEngine.Networking.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+	    <HintPath>..\R2API\libs\UnityEngine.UI.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+	    <HintPath>..\R2API\libs\UnityEngine.UIModule.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <Reference Include="Zio">
+	    <HintPath>..\R2API\libs\Zio.dll</HintPath>
+	    <Private>true</Private>
+    </Reference>
+    <!--<Reference Include="UnityEngine.Networking">
+	    <HintPath>..\R2API\libs\UnityEngine.Networking.dll</HintPath>
+	    <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+	    <HintPath>..\R2API\libs\UnityEngine.UI.dll</HintPath>
+	    <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+	    <HintPath>..\R2API\libs\UnityEngine.UIModule.dll</HintPath>
+	    <Private>false</Private>
+    </Reference>-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\R2API\R2API.csproj" />
+  </ItemGroup>
+
+</Project>

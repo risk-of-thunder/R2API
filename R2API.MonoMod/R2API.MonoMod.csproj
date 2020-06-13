@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>Assembly-CSharp.R2API.mm</AssemblyName>
+        <RootNamespace>RoR2</RootNamespace>
+        <LangVersion>7.1</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Mono.Cecil" Version="0.11.2" />
+      <PackageReference Include="MonoMod" Version="20.3.5.1" />
+      <PackageReference Include="MonoMod.Utils" Version="20.3.5.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+	  <Reference Include="MonoMod.Utils">
+		<HintPath>..\R2API\libs\MonoMod.exe</HintPath>
+		<Private>false</Private>
+	  </Reference>
+        <Reference Include="Assembly-CSharp">
+            <HintPath>..\R2API\libs\Assembly-CSharp.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+
+</Project>
