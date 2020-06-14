@@ -11,6 +11,7 @@ using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.Utils;
 using RoR2;
+using UnityEngine;
 
 namespace R2API {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
@@ -65,6 +66,10 @@ namespace R2API {
                 self.gameObject.SetActive(false);
             };
 
+            On.RoR2.Networking.SteamLobbyFinder.CCSteamQuickplayStart += (orig, args) => {
+                Debug.Log("QuickPlay is disabled in mods due to social contracts and lack of general support");
+            };
+
             SteamworksClientManager.onLoaded += () => {
                 var buildId =
                     SteamworksClientManager.instance.GetFieldValue<Client>("steamworksClient").BuildId;
@@ -96,12 +101,12 @@ namespace R2API {
         /// Return true if the specified submodule is loaded.
         /// </summary>
         /// <param name="submodule">nameof the submodule</param>
-        public static bool IsLoaded( string submodule ) {
-            if( loadedSubmodules == null ) {
-                Logger.LogWarning( "IsLoaded called before submodules were loaded, result may not reflect actual load status." );
+        public static bool IsLoaded(string submodule) {
+            if (loadedSubmodules == null) {
+                Logger.LogWarning("IsLoaded called before submodules were loaded, result may not reflect actual load status.");
                 return false;
             }
-            return loadedSubmodules.Contains( submodule );
+            return loadedSubmodules.Contains(submodule);
         }
 
         private static void AddHookLogging() {
