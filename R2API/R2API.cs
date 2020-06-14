@@ -11,6 +11,7 @@ using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.Utils;
 using RoR2;
+using UnityEngine;
 
 namespace R2API {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
@@ -66,7 +67,7 @@ namespace R2API {
             };
 
             On.RoR2.Networking.SteamLobbyFinder.CCSteamQuickplayStart += (orig, args) => {
-                Logger.LogInfo("QuickPlay is disabled in mods due to social contracts and lack of general support");
+                Debug.Log("QuickPlay is disabled in mods due to social contracts and lack of general support");
             };
 
             SteamworksClientManager.onLoaded += () => {
