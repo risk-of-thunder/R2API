@@ -49,7 +49,7 @@ namespace R2API {
             cursor.GotoNext(
                 i => i.MatchLdcI4(out OriginalEliteCount),
                 i => i.MatchNewarr<EliteDef>()
-            );
+           );
         }
 
         private static void AddEliteAction(List<EliteDef> eliteDefinitions) {
