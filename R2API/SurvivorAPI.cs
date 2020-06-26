@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
@@ -20,7 +21,10 @@ namespace R2API {
 
         private static bool _loaded;
 
-        private static bool survivorsAlreadyAdded = false;
+        private static readonly int VanillaSurvivorCount = SurvivorCatalog.idealSurvivorOrder.Length;
+        private static readonly int VanillaSurvivorMaxCount = SurvivorCatalog.survivorMaxCount;
+
+        private static bool _survivorsAlreadyAdded;
 
         public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
         /// <summary>
@@ -38,7 +42,7 @@ namespace R2API {
                 R2API.Logger.LogError("SurvivorAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
             }
 
-            if (survivorsAlreadyAdded) {
+            if (_survivorsAlreadyAdded) {
                 R2API.Logger.LogError($"Tried to add survivor: {survivor.displayNameToken} after survivor list was created");
                 return false;
             }
@@ -57,27 +61,43 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             SurvivorCatalog.getAdditionalSurvivorDefs += AddSurvivorAction;
+            On.RoR2.SurvivorCatalog.Init += FixCharacterSelectIcons;
+            IL.RoR2.CharacterSelectBarController.Build += DescriptionTokenSafetyCheck;
+        }
+
+        private static void FixCharacterSelectIcons(On.RoR2.SurvivorCatalog.orig_Init orig) {
+            orig();
+
+            var survivorDefs = typeof(SurvivorCatalog).GetFieldValue<SurvivorDef[]>("survivorDefs");
+
+            // The size of the vanilla array doesnt match the number of registered vanilla survivors
+            var allSurvivorCount = survivorDefs.Count(s => s != null);
+            var customSurvivorCount = allSurvivorCount - VanillaSurvivorCount;
+
+            // Increase the size of the order array to accomodate the added survivors
+            Array.Resize(ref SurvivorCatalog.idealSurvivorOrder, allSurvivorCount);
+            
+            // Add the new survivors to the order array so the game knows where to put them in character select
+            for (int i = VanillaSurvivorCount, j = 0; i < allSurvivorCount; i++, j++) {
+                var customSurvivorDef = survivorDefs[(int) SurvivorIndex.Count + j];
+                SurvivorCatalog.idealSurvivorOrder[i] = customSurvivorDef.survivorIndex;
+                R2API.Logger.LogInfo($"Survivor: {customSurvivorDef.displayNameToken} added");
+            }
+
+            // Increase the max survivor count variable to keep the vanilla WIP icon for future vanilla survivors.
+            SurvivorCatalog.survivorMaxCount = VanillaSurvivorMaxCount + customSurvivorCount;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             SurvivorCatalog.getAdditionalSurvivorDefs -= AddSurvivorAction;
+            On.RoR2.SurvivorCatalog.Init -= FixCharacterSelectIcons;
+            IL.RoR2.CharacterSelectBarController.Build -= DescriptionTokenSafetyCheck;
         }
 
         private static void AddSurvivorAction(List<SurvivorDef> survivorDefinitions) {
             // Set this to true so no more survivors can be added to the list while this is happening, or afterwards
-            survivorsAlreadyAdded = true;
-
-            // Get the count of the new survivors added, and the number of vanilla survivors
-            var newSurvivorCount = SurvivorDefinitions.Count;
-            var existingSurvivorCount = SurvivorCatalog.idealSurvivorOrder.Length;
-
-            // Increase the size of the order array to accomodate the added survivors
-            Array.Resize(ref SurvivorCatalog.idealSurvivorOrder, existingSurvivorCount + newSurvivorCount);
-
-            // Increase the max survivor count to ensure there is enough space on the char select bar
-            SurvivorCatalog.survivorMaxCount += newSurvivorCount;
-
+            _survivorsAlreadyAdded = true;
 
             foreach (var survivor in SurvivorDefinitions) {
 
@@ -87,79 +107,72 @@ namespace R2API {
                     R2API.Logger.LogWarning($"Survivor: {survivor.displayNameToken} is not properly registered in {nameof(BodyCatalog)}");
                 }
 
-                R2API.Logger.LogInfo($"Survivor: {survivor.displayNameToken} added");
-
                 survivorDefinitions.Add(survivor);
-
-                // Add that new survivor to the order array so the game knows where to put it in character select
-                SurvivorCatalog.idealSurvivorOrder[existingSurvivorCount++] = (SurvivorIndex)existingSurvivorCount;
             }
         }
 
         // Add a safety check for SurvivorDef that are lacking
         // a Environement.NewLine in their descriptionToken
         // The game code use IndexOf, assuming there is always one in there.
-        internal static void SafetyCheck() {
-            IL.RoR2.CharacterSelectBarController.Build += il => {
-                var c = new ILCursor(il);
-                int locSurvivorDef2 = 0;
-                int locDescriptionToken = 0;
+        private static void DescriptionTokenSafetyCheck(ILContext il) {
+            var c = new ILCursor(il);
+            int locSurvivorDef2 = 0;
+            int locDescriptionToken = 0;
 
-                // ReSharper disable once InconsistentNaming
-                void ILFailMessage() {
-                    R2API.Logger.LogError(
-                        $"{nameof(SurvivorAPI)}: Safety Check: Could not find IL Instructions. " +
-                        "Aborting. Instabilities related to custom Survivors may, or may not happens.");
-                }
+            // ReSharper disable once InconsistentNaming
+            void ILFailMessage() {
+                R2API.Logger.LogError(
+                    $"{nameof(SurvivorAPI)}: Safety Check: Could not find IL Instructions. " +
+                    "Aborting. Instabilities related to custom Survivors may, or may not happens.");
+            }
 
-                // Retrieve the loc index for local variable survivorDef2
-                var findLocSurvivorDef = new Func<Instruction, bool>[]
-                {
+            // Retrieve the loc index for local variable survivorDef2
+            var findLocSurvivorDef = new Func<Instruction, bool>[]
+            {
                     i => i.MatchLdloc(out _),
                     i => i.MatchCallOrCallvirt(typeof(SurvivorCatalog).GetMethodCached("GetSurvivorDef")),
                     i => i.MatchStloc(out locSurvivorDef2)
-                };
-                if (!c.TryGotoNext(MoveType.After,
-                    findLocSurvivorDef
-                )) {
-                    ILFailMessage();
-                    return;
-                }
-                if (!c.TryGotoNext(MoveType.After,
-                    findLocSurvivorDef
-                )) {
-                    ILFailMessage();
-                    return;
-                }
-
-                // Safety check for the descriptionToken NewLine
-                if (c.TryGotoNext(MoveType.After,
-                        i => i.MatchLdloc(out locDescriptionToken),
-                        i => i.MatchCallOrCallvirt(typeof(Environment).GetMethodCached("get_NewLine")),
-                        i => i.MatchCallOrCallvirt(typeof(string).GetMethodCached("IndexOf", new []{ typeof(string) })),
-                        i => i.MatchStloc(out _)
-                    )) {
-                    c.Index--;
-
-                    // orig : length = text.IndexOf(Environment.NewLine);
-                    // modified : length = text.IndexOf(Environment.NewLine); if length == -1 then length = text.Length;
-                    c.Emit(OpCodes.Ldloc, locSurvivorDef2);
-                    c.Emit(OpCodes.Ldloc, locDescriptionToken);
-                    c.EmitDelegate<Func<int, SurvivorDef, string, int>>((indexOf, survivorDef, descriptionToken) => {
-                        if (indexOf == -1) {
-                            R2API.Logger.LogWarning(
-                                $"A Custom Survivor called {survivorDef.displayNameToken} doesn't have a Environement.NewLine " +
-                                "like its supposed to have in its descriptionToken for separating the preview sentence to the tips underneath it");
-                            return descriptionToken.Length;
-                        }
-
-                        return indexOf;
-                    });
-                }
-                else {
-                    ILFailMessage();
-                }
             };
+            if (!c.TryGotoNext(MoveType.After,
+                findLocSurvivorDef
+           )) {
+                ILFailMessage();
+                return;
+            }
+            if (!c.TryGotoNext(MoveType.After,
+                findLocSurvivorDef
+           )) {
+                ILFailMessage();
+                return;
+            }
+
+            // Safety check for the descriptionToken NewLine
+            if (c.TryGotoNext(MoveType.After,
+                    i => i.MatchLdloc(out locDescriptionToken),
+                    i => i.MatchCallOrCallvirt(typeof(Environment).GetMethodCached("get_NewLine")),
+                    i => i.MatchCallOrCallvirt(typeof(string).GetMethodCached("IndexOf", new[] { typeof(string) })),
+                    i => i.MatchStloc(out _)
+               )) {
+                c.Index--;
+
+                // orig : length = text.IndexOf(Environment.NewLine);
+                // modified : length = text.IndexOf(Environment.NewLine); if length == -1 then length = text.Length;
+                c.Emit(OpCodes.Ldloc, locSurvivorDef2);
+                c.Emit(OpCodes.Ldloc, locDescriptionToken);
+                c.EmitDelegate<Func<int, SurvivorDef, string, int>>((indexOf, survivorDef, descriptionToken) => {
+                    if (indexOf == -1) {
+                        R2API.Logger.LogWarning(
+                            $"A Custom Survivor called {survivorDef.displayNameToken} doesn't have a Environement.NewLine " +
+                            "like its supposed to have in its descriptionToken for separating the preview sentence to the tips underneath it");
+                        return descriptionToken.Length;
+                    }
+
+                    return indexOf;
+                });
+            }
+            else {
+                ILFailMessage();
+            }
         }
     }
 }
