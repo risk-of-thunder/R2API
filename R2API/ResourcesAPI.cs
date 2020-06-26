@@ -33,21 +33,21 @@ namespace R2API {
             ResourcesLoadDetour = new NativeDetour(
                 typeof(Resources).GetMethod("Load", BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(string), typeof(Type) }, null),
                 typeof(ResourcesAPI).GetMethod(nameof(OnResourcesLoad), BindingFlags.Static | BindingFlags.NonPublic)
-            );
+           );
             _origLoad = ResourcesLoadDetour.GenerateTrampoline<d_ResourcesLoad>();
             ResourcesLoadDetour.Apply();
 
             ResourcesLoadAsyncDetour = new NativeDetour(
                 typeof(Resources).GetMethod("LoadAsyncInternal", BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(string), typeof(Type) }, null),
                 typeof(ResourcesAPI).GetMethod(nameof(OnResourcesLoadAsync), BindingFlags.Static | BindingFlags.NonPublic)
-            );
+           );
             _origResourcesLoadAsync = ResourcesLoadAsyncDetour.GenerateTrampoline<d_ResourcesAsyncLoad>();
             ResourcesLoadAsyncDetour.Apply();
 
             ResourcesLoadAllDetour = new NativeDetour(
                 typeof(Resources).GetMethod("LoadAll", BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(string), typeof(Type) }, null),
                 typeof(ResourcesAPI).GetMethod(nameof(OnResourcesLoadAll), BindingFlags.Static | BindingFlags.NonPublic)
-            );
+           );
             _origLoadAll = ResourcesLoadAllDetour.GenerateTrampoline<d_ResourcesLoadAll>();
             ResourcesLoadAllDetour.Apply();
         }

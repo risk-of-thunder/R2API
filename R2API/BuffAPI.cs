@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
@@ -50,7 +49,7 @@ namespace R2API {
             cursor.GotoNext(
                 i => i.MatchLdcI4(out OriginalBuffCount),
                 i => i.MatchNewarr<BuffDef>()
-            );
+           );
         }
 
         private static void AddBuffAction(List<BuffDef> buffDefinitions) {

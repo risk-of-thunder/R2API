@@ -5,7 +5,7 @@ using MonoMod.RuntimeDetour;
 using R2API.Utils;
 
 namespace R2API {
-    [Obsolete( "Please use LoadoutAPI instead")]
+    [Obsolete("Please use LoadoutAPI instead")]
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class EntityAPI {
@@ -15,12 +15,12 @@ namespace R2API {
         private static readonly Hook _detourSet_stateType = new Hook(
             typeof(SerializableEntityStateType).GetMethodCached("set_stateType"),
             typeof(EntityAPI).GetMethodCached(nameof(set_stateType_Hook))
-        );
+       );
 
         private static readonly Hook _detourSet_typeName = new Hook(
             typeof(SerializableEntityStateType).GetMethodCached("set_typeName"),
             typeof(EntityAPI).GetMethodCached(nameof(set_typeName_Hook))
-        );
+       );
         // ReSharper restore InconsistentNaming
 
         #endregion

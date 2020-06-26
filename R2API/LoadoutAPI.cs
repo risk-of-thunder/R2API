@@ -2,7 +2,6 @@ using R2API.Utils;
 using EntityStates;
 using MonoMod.RuntimeDetour;
 using System;
-using System.Linq;
 using RoR2;
 using RoR2.Skills;
 using System.Collections.Generic;
@@ -38,14 +37,14 @@ namespace R2API {
                 _detourSet_stateType = new Hook(
                     typeof(SerializableEntityStateType).GetMethodCached("set_stateType"),
                     typeof(LoadoutAPI).GetMethodCached(nameof(Set_stateType_Hook))
-                );
+               );
             }
             _detourSet_stateType.Apply();
             if (_detourSet_typeName == null) {
                 _detourSet_typeName = new Hook(
                     typeof(SerializableEntityStateType).GetMethodCached("set_typeName"),
                     typeof(LoadoutAPI).GetMethodCached(nameof(Set_typeName_Hook))
-                );
+               );
             }
             _detourSet_typeName.Apply();
         }
