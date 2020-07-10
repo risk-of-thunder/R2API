@@ -15,6 +15,12 @@ namespace R2API.Utils {
         private static Queue<Assembly> assemblies = new Queue<Assembly>();
         private static RoR2.Console console = null;
 
+        public static bool Loaded {
+            get => _loaded;
+            set => _loaded = value;
+        }
+
+        private static bool _loaded;
 
         /** <summary>
          * Scans the calling assembly for ConCommand attributes and Convar fields and adds these to the console.
@@ -61,7 +67,12 @@ namespace R2API.Utils {
         }
 
         private static void HandleCommandsConvars() {
-            if (console == null) return;
+            if (console == null) {
+                if (!_loaded) {
+                    R2API.Logger.LogError("CommandHelper is not loaded. Please use [R2APISubmoduleDependency(nameof(CommandHelper)]");
+                }
+                return;
+            }
 
             while (assemblies.Count > 0) {
                 Assembly assembly = assemblies.Dequeue();

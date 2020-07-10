@@ -48,19 +48,12 @@ namespace R2API {
                 );
             }
             _detourSet_typeName.Apply();
-
-            On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.IsSkillVariantLocked += CheckSkillVariantValid;
-            On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.IsSkinLocked += CheckSkinValid;
-            On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.ToXml += BodyLoadout_ToXml;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             _detourSet_stateType?.Undo();
             _detourSet_typeName?.Undo();
-            On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.IsSkillVariantLocked -= CheckSkillVariantValid;
-            On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.IsSkinLocked -= CheckSkinValid;
-            On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.ToXml -= BodyLoadout_ToXml;
         }
         #endregion
 
@@ -111,44 +104,6 @@ namespace R2API {
 
         private static bool IsValidEntityStateType(Type type) {
             return type != null && type.IsSubclassOf(typeof(EntityState)) && !type.IsAbstract;
-        }
-        #endregion
-
-        #region User Profile Fixes
-        private static bool CheckSkinValid(On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.orig_IsSkinLocked orig, object self, UserProfile userProfile) {
-            return !self.InvokeMethod<bool>("IsSkinValid") || orig(self, userProfile);
-        }
-
-        private static bool CheckSkillVariantValid(On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.orig_IsSkillVariantLocked orig, object self, int skillSlotIndex, UserProfile userProfile) {
-            return !self.InvokeMethod<bool>("IsSkillVariantValid", skillSlotIndex) || orig(self, skillSlotIndex, userProfile);
-        }
-
-        private static System.Xml.Linq.XElement BodyLoadout_ToXml(On.RoR2.Loadout.BodyLoadoutManager.BodyLoadout.orig_ToXml orig, object self, string elementName) {
-            var bodyIndex = self.GetFieldValue<int>("bodyIndex");
-            var bodySkinController = BodyCatalog.GetBodyPrefab(bodyIndex)?.GetComponent<ModelLocator>()?.modelTransform?.GetComponent<ModelSkinController>();
-            var skinPreference = self.GetFieldValue<uint>("skinPreference");
-            var skins = bodySkinController?.skins;
-            if (skins != null) {
-                if (skinPreference >= skins.Length || AddedSkins.Contains(skins[skinPreference])) {
-                    self.SetFieldValue("skinPreference", 0u);
-                }
-            }
-            var skillPreferences = self.GetFieldValue<uint[]>("skillPreferences");
-            var allBodyInfosObj = typeof(Loadout.BodyLoadoutManager).GetFieldValue<object>("allBodyInfos");
-            var allBodyInfos = ((Array)allBodyInfosObj).Cast<object>().ToArray();
-            var currentInfo = allBodyInfos[bodyIndex];
-            var prefabSkillSlotsObj = currentInfo.GetFieldValue<object>("prefabSkillSlots");
-            var prefabSkillSlots = ((Array)prefabSkillSlotsObj).Cast<object>().ToArray();
-            var skillFamilyIndices = currentInfo.GetFieldValue<int[]>("skillFamilyIndices");
-            for (int i = 0; i < prefabSkillSlots.Length; i++) {
-                var skillFamilyIndex = skillFamilyIndices[i];
-                SkillFamily family = SkillCatalog.GetSkillFamily(skillFamilyIndex);
-                SkillDef def = family.variants[skillPreferences[i]].skillDef;
-                if (AddedSkills.Contains(def)) {
-                    skillPreferences[i] = 0u;
-                }
-            }
-            return orig(self, elementName);
         }
         #endregion
 

@@ -11,6 +11,7 @@ using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.Utils;
 using RoR2;
+using UnityEngine;
 
 namespace R2API {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
@@ -22,7 +23,7 @@ namespace R2API {
         public const string PluginVersion = "0.0.1";
 
 
-        private const int GameBuild = 4478858;
+        private const int GameBuild = 4892828;
 
         internal new static ManualLogSource Logger { get; set; }
 
@@ -42,13 +43,20 @@ namespace R2API {
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
             On.RoR2.RoR2Application.UnitySystemConsoleRedirector.Redirect += orig => { };
+
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
             loadedSubmodules = submoduleHandler.LoadRequested();
 
-            RoR2Application.isModded = true;
-
             //Currently disabled until manifest v2
             //ModListAPI.Init();
+
+            RoR2Application.isModded = true;
+
+            // Temporary fix as the new quickplay button currently don't have the DisableIfGameModded Script attached to it
+            On.RoR2.UI.QuickPlayButtonController.Start += (orig, self) => {
+                orig(self);
+                self.gameObject.SetActive(false);
+            };
 
             On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
                 // TODO: If we can enable quick play without regrets, uncomment.
@@ -56,6 +64,10 @@ namespace R2API {
                 //    return;
 
                 self.gameObject.SetActive(false);
+            };
+
+            On.RoR2.Networking.SteamLobbyFinder.CCSteamQuickplayStart += (orig, args) => {
+                Debug.Log("QuickPlay is disabled in mods due to social contracts and lack of general support");
             };
 
             SteamworksClientManager.onLoaded += () => {
@@ -69,11 +81,14 @@ namespace R2API {
                 Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
             };
 
+            // Make sure that modded dedicated servers are recognizable from the server browser
             On.RoR2.SteamworksServerManager.UpdateHostName += (orig, self, hostname) => {
                 orig(self, $"[MOD] {hostname}");
                 var server = ((SteamworksServerManager)self).GetFieldValue<Server>("steamworksServer");
                 server.GameTags = "mod," + server.GameTags;
             };
+
+            SurvivorAPI.SafetyCheck();
         }
 
         public void Start() {
@@ -86,12 +101,12 @@ namespace R2API {
         /// Return true if the specified submodule is loaded.
         /// </summary>
         /// <param name="submodule">nameof the submodule</param>
-        public static bool IsLoaded( string submodule ) {
-            if( loadedSubmodules == null ) {
-                Logger.LogWarning( "IsLoaded called before submodules were loaded, result may not reflect actual load status." );
+        public static bool IsLoaded(string submodule) {
+            if (loadedSubmodules == null) {
+                Logger.LogWarning("IsLoaded called before submodules were loaded, result may not reflect actual load status.");
                 return false;
             }
-            return loadedSubmodules.Contains( submodule );
+            return loadedSubmodules.Contains(submodule);
         }
 
         private static void AddHookLogging() {

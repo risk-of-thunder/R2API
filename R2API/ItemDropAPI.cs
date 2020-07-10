@@ -13,6 +13,7 @@ namespace R2API {
     public class PickupSelection {
         public List<PickupIndex> Pickups { get; set; }
         public float DropChance { get; set; } = 1.0f;
+        public bool IsDefaults { get; internal set; } = false;
     }
 
     public static class DefaultItemDrops {
@@ -38,6 +39,10 @@ namespace R2API {
                 eq.ToSelection(ItemDropAPI.DefaultShrineEquipmentWeight)
             };
 
+            foreach (var sel in shrineSelections)
+                sel.IsDefaults = true;
+
+            RemoveDefaultDrops(ItemDropLocation.Shrine);
             ItemDropAPI.AddDrops(ItemDropLocation.Shrine, shrineSelections);
         }
 
@@ -83,6 +88,17 @@ namespace R2API {
                 ItemDropAPI.GetDefaultDropList(ItemTier.Lunar).ToSelection(ItemDropAPI.DefaultScavBackpackLunarDropChance),
             };
 
+            var allSelections = new[] {chestSelections, lockboxSelections, utilitySelections, damageSelections, healingSelections, scavSelections};
+            foreach (var selGroup in allSelections)
+                foreach (var sel in selGroup)
+                    sel.IsDefaults = true;
+
+            var allLocations = new[] {ItemDropLocation.UtilityChest, ItemDropLocation.DamageChest, ItemDropLocation.HealingChest,
+                ItemDropLocation.Lockbox, ItemDropLocation.SmallChest, ItemDropLocation.MediumChest, ItemDropLocation.LargeChest, ItemDropLocation.ScavBackPack};
+
+            foreach (var selLoc in allLocations)
+                RemoveDefaultDrops(selLoc);
+
             ItemDropAPI.AddDrops(ItemDropLocation.UtilityChest, utilitySelections);
             ItemDropAPI.AddDrops(ItemDropLocation.DamageChest, damageSelections);
             ItemDropAPI.AddDrops(ItemDropLocation.HealingChest, healingSelections);
@@ -97,12 +113,21 @@ namespace R2API {
         public static void AddEquipmentChestDefaultDrops() {
             var eq = ItemDropAPI.GetDefaultEquipmentDropList();
 
+            var equipmentSelections = eq.ToSelection();
+            equipmentSelections.IsDefaults = true;
+
+            RemoveDefaultDrops(ItemDropLocation.EquipmentChest);
             ItemDropAPI.AddDrops(ItemDropLocation.EquipmentChest, eq.ToSelection());
         }
 
         public static void AddLunarChestDefaultDrops() {
             var lun = ItemDropAPI.GetDefaultLunarDropList();
-            ItemDropAPI.AddDrops(ItemDropLocation.LunarChest, lun.ToSelection());
+
+            var lunarSelections = lun.ToSelection();
+            lunarSelections.IsDefaults = true;
+
+            RemoveDefaultDrops(ItemDropLocation.LunarChest);
+            ItemDropAPI.AddDrops(ItemDropLocation.LunarChest, lunarSelections);
         }
 
         public static void AddBossDefaultDrops() {
@@ -110,7 +135,19 @@ namespace R2API {
 
             var t2 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier2);
 
-            ItemDropAPI.AddDrops(ItemDropLocation.Boss, t2.ToSelection());
+            var t2selections = t2.ToSelection();
+            t2selections.IsDefaults = true;
+
+            RemoveDefaultDrops(ItemDropLocation.Boss);
+            ItemDropAPI.AddDrops(ItemDropLocation.Boss, t2selections);
+        }
+
+        private static void RemoveDefaultDrops(ItemDropLocation location) {
+            if (ItemDropAPI.Selection.ContainsKey(location))
+                ItemDropAPI.RemoveDrops(location,
+                    ItemDropAPI.Selection[location]
+                    .Where(sel => sel.IsDefaults)
+                    .ToArray());
         }
     }
 
@@ -140,31 +177,6 @@ namespace R2API {
 
         public static int? BossDropParticipatingPlayerCount = null;
         public static bool IncludeSpecialBossDrops = true;
-
-        private const string SmallChest = "Chest1";
-        private const string MediumChest = "Chest2";
-        private const string LargeChest = "GoldChest";
-        private const string LunarChest = "LunarChest";
-        private const string Lockbox = "Lockbox";
-        private const string CloakedChest = "Chest1Stealthed";
-        private const string UtilityChest = "CategoryChestUtility";
-        private const string DamageChest = "CategoryChestDamage";
-        private const string HealingChest = "CategoryChestHealing";
-        private const string ScavBackpack = "ScavBackpack";
-        private const string ScavLunarBackpack = "ScavLunarBackpack";
-
-        private static readonly Dictionary<string, ItemDropLocation> ChestLookup =
-            new Dictionary<string, ItemDropLocation>(StringComparer.OrdinalIgnoreCase) {
-                { SmallChest, ItemDropLocation.SmallChest },
-                { MediumChest, ItemDropLocation.MediumChest },
-                { LargeChest, ItemDropLocation.LargeChest },
-                { LunarChest, ItemDropLocation.LunarChest },
-                { UtilityChest, ItemDropLocation.UtilityChest },
-                { DamageChest, ItemDropLocation.DamageChest },
-                { HealingChest, ItemDropLocation.HealingChest },
-                { CloakedChest, ItemDropLocation.SmallChest},
-                { ScavBackpack, ItemDropLocation.ScavBackPack}
-            };
 
         public static float DefaultSmallChestTier1DropChance = 0.8f;
         public static float DefaultSmallChestTier2DropChance = 0.2f;
@@ -199,20 +211,19 @@ namespace R2API {
         public static Dictionary<ItemDropLocation, List<PickupSelection>> Selection { get; set; } =
             new Dictionary<ItemDropLocation, List<PickupSelection>>();
 
-        private static readonly Dictionary<ItemTier, List<ItemIndex>> AdditionalTierItems = new Dictionary<ItemTier, List<ItemIndex>> {
-            { ItemTier.Tier1, new List<ItemIndex>() },
-            { ItemTier.Tier2, new List<ItemIndex>() },
-            { ItemTier.Tier3, new List<ItemIndex>() },
-            { ItemTier.Boss, new List<ItemIndex>() },
-            { ItemTier.Lunar, new List<ItemIndex>() }
+        private static readonly Dictionary<ItemTier, HashSet<ItemIndex>> AdditionalTierItems = new Dictionary<ItemTier, HashSet<ItemIndex>> {
+            { ItemTier.Tier1, new HashSet<ItemIndex>() },
+            { ItemTier.Tier2, new HashSet<ItemIndex>() },
+            { ItemTier.Tier3, new HashSet<ItemIndex>() },
+            { ItemTier.Boss, new HashSet<ItemIndex>() },
+            { ItemTier.Lunar, new HashSet<ItemIndex>() }
         };
 
-        private static readonly List<EquipmentIndex> AdditionalEquipment = new List<EquipmentIndex>();
+        private static readonly HashSet<EquipmentIndex> AdditionalEquipment = new HashSet<EquipmentIndex>();
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.BossGroup.DropRewards += DropRewards;
-            On.RoR2.ChestBehavior.RollItem += ChestBehaviorOnRollItem;
             IL.RoR2.ShrineChanceBehavior.AddShrineStack += ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
         }
@@ -220,7 +231,6 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             IL.RoR2.BossGroup.DropRewards -= DropRewards;
-            On.RoR2.ChestBehavior.RollItem -= ChestBehaviorOnRollItem;
             IL.RoR2.ShrineChanceBehavior.AddShrineStack -= ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable -= RunOnBuildDropTable;
         }
@@ -260,43 +270,6 @@ namespace R2API {
             self.mediumChestDropTierSelector.AddChoice(self.availableTier2DropList, DefaultMediumChestTier1SelectorDropChance);
             self.mediumChestDropTierSelector.AddChoice(self.availableTier3DropList, DefaultMediumChestTier2SelectorDropChance);
             self.largeChestDropTierSelector.Clear();
-        }
-
-        private static void ChestBehaviorOnRollItem(On.RoR2.ChestBehavior.orig_RollItem orig, ChestBehavior self) {
-            if (!NetworkServer.active) {
-                Debug.LogWarning("[Server] function 'System.Void RoR2.ChestBehavior::RollItem()' called on client");
-                return;
-            }
-
-            if (self.GetFieldValue<PickupIndex>("dropPickup") != PickupIndex.none) {
-                return;
-            }
-
-            var chestName = self.name.Replace("(Clone)", "").Trim();
-            Logger.LogDebug($"Dropping {self.name} - {self.requiredItemTag}");
-
-
-            if (ChestLookup.ContainsKey(chestName)) {
-
-                self.SetFieldValue("dropPickup", GetSelection(ChestLookup[chestName],
-                    Run.instance.treasureRng.nextNormalizedFloat));
-            } else if (self.name.ToLower().Contains(Lockbox.ToLower())) {
-                Logger.LogDebug("Dropping Lockbox");
-
-                var lockboxes = CharacterMaster.readOnlyInstancesList.Sum(x => x.inventory.GetItemCount(ItemIndex.TreasureCache));
-                Selection[ItemDropLocation.Lockbox][1].DropChance = DefaultSmallChestTier2DropChance * lockboxes;
-                Selection[ItemDropLocation.Lockbox][2].DropChance = DefaultSmallChestTier3DropChance * Mathf.Pow(lockboxes, 2f);
-                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.Lockbox,
-                    Run.instance.treasureRng.nextNormalizedFloat));
-            } else if (self.name.ToLower().Contains("scavlunarbackpack"))
-            {
-                self.SetFieldValue<PickupIndex>("dropPickup", PickupCatalog.FindPickupIndex("LunarCoin.Coin0"));
-            } else {
-                Logger.LogError($"Unidentified chest type: {self.name}. Dropping normal loot instead.");
-
-                self.SetFieldValue("dropPickup", GetSelection(ItemDropLocation.SmallChest,
-                    Run.instance.treasureRng.nextNormalizedFloat));
-            }
         }
 
         private static void ShrineChanceBehaviorOnAddShrineStack(ILContext il) {
@@ -354,13 +327,6 @@ namespace R2API {
             cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethodCached("get_itemIndex"));
         }
 
-        public static void AddDrops(ItemDropLocation dropLocation, PickupSelection pickups) {
-            if (!Selection.ContainsKey(dropLocation)) {
-                Selection[dropLocation] = new List<PickupSelection>();
-            }
-            Selection[dropLocation].Add(pickups);
-        }
-
         public static void AddDrops(ItemDropLocation dropLocation, params PickupSelection[] pickups) {
             if (!Selection.ContainsKey(dropLocation)) {
                 Selection[dropLocation] = new List<PickupSelection>();
@@ -368,29 +334,65 @@ namespace R2API {
             Selection[dropLocation].AddRange(pickups);
         }
 
+        public static void RemoveDrops(ItemDropLocation dropLocation, params PickupSelection[] pickups) {
+            if (!Selection.ContainsKey(dropLocation))
+                return;
+
+            foreach (var pickup in pickups)
+                Selection[dropLocation].Remove(pickup);
+        }
+
         public static void AddToDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
             if (itemTier == ItemTier.NoTier) {
                 return;
             }
 
-            AdditionalTierItems[itemTier].AddRange(items);
+            AdditionalTierItems[itemTier].UnionWith(items);
+        }
+        
+        public static void RemoveFromDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
+            if (itemTier == ItemTier.NoTier) {
+                return;
+            }
+
+            AdditionalTierItems[itemTier].ExceptWith(items);
+        }
+
+        public static void AddToDefaultByTier(params KeyValuePair<ItemIndex, ItemTier>[] items) {
+            foreach (var list in AdditionalTierItems)
+                AddToDefaultByTier(list.Key,
+                    items.Where(item => list.Key == item.Value)
+                    .Select(item => item.Key)
+                    .ToArray());
+        }
+
+        public static void RemoveFromDefaultByTier(params KeyValuePair<ItemIndex, ItemTier>[] items) {
+            foreach (var list in AdditionalTierItems)
+                RemoveFromDefaultByTier(list.Key,
+                    items.Where(item => list.Key == item.Value)
+                    .Select(item => item.Key)
+                    .ToArray());
         }
 
         public static void AddToDefaultEquipment(params EquipmentIndex[] equipment) {
-            AdditionalEquipment.AddRange(equipment);
+            AdditionalEquipment.UnionWith(equipment);
+        }
+
+        public static void RemoveFromDefaultEquipment(params EquipmentIndex[] equipments) {
+            AdditionalEquipment.ExceptWith(equipments);
         }
 
         public static void ReplaceDrops(ItemDropLocation dropLocation,
             params PickupSelection[] pickupSelections) {
             Logger.LogInfo(
-                $"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
+                $"Adding drop information for {dropLocation}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
 
             Selection[dropLocation] = pickupSelections.ToList();
         }
 
         public static void ReplaceDrops(ItemDropLocation dropLocation, List<PickupSelection> pickupSelections) {
             Logger.LogInfo(
-                $"Adding drop information for {dropLocation.ToString()}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
+                $"Adding drop information for {dropLocation}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
 
             Selection[dropLocation] = pickupSelections;
         }
@@ -475,6 +477,9 @@ namespace R2API {
             }
 
             list.AddRange(AdditionalTierItems[ItemTier.Lunar].Select(x => PickupCatalog.FindPickupIndex(x)));
+            list.AddRange(AdditionalEquipment
+                .Where(x => EquipmentCatalog.GetEquipmentDef(x).isLunar)
+                .Select(x => PickupCatalog.FindPickupIndex(x)));
             return list;
         }
 
@@ -493,7 +498,7 @@ namespace R2API {
                 }
             }
 
-            list.AddRange(AdditionalEquipment);
+            list.AddRange(AdditionalEquipment.Where(x => !EquipmentCatalog.GetEquipmentDef(x).isLunar));
             return list;
         }
 
