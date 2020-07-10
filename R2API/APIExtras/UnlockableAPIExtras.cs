@@ -189,7 +189,7 @@ namespace R2API {
         public override void OnGranted() => base.OnGranted();
         /// <summary>
         /// This should be used to register to an event or apply a hook in order to detect when the achievement conditions are met
-        /// When you detect that the conditions are met, call base.Grant inside the method
+        /// When you detect that the conditions are met, call `base.Grant` inside the method
         /// </summary>
         public override void OnInstall() => base.OnInstall();
         /// <summary>
@@ -202,20 +202,20 @@ namespace R2API {
         /// <returns>TODO</returns>
         public override Single ProgressForAchievement() => base.ProgressForAchievement();
         /// <summary>
-        /// TODO
+        /// Used to specify if this achievement is limited to a certain character
         /// </summary>
-        /// <returns>TODO</returns>
+        /// <returns>The index of the character that is needed to unlock this achievement</returns>
         public override Int32 LookUpRequiredBodyIndex() => base.LookUpRequiredBodyIndex();
         /// <summary>
-        /// TODO
+        /// Called when the body changes to a body that does not meet the requirements for this achievement
         /// </summary>
         public override void OnBodyRequirementBroken() => base.OnBodyRequirementBroken();
         /// <summary>
-        /// TODO
+        /// Called when the body changes to a body that meets the requirements for this acheivement
         /// </summary>
         public override void OnBodyRequirementMet() => base.OnBodyRequirementMet();
         /// <summary>
-        /// TODO
+        /// This actually does nothing in vanilla, it is here in case that changes in future updates.
         /// </summary>
         public override Boolean wantsBodyCallbacks { get => base.wantsBodyCallbacks; }
         #endregion
