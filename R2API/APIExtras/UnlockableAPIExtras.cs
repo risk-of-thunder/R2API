@@ -13,37 +13,37 @@ namespace R2API {
         /// The identifier of the achievement being added
         /// Should be unique
         /// </summary>
-        string achievementIdentifier { get; }
+        string AchievementIdentifier { get; }
         /// <summary>
         /// The identifier of the unlockable granted when the achievement is completed
         /// Should be unique
         /// This is what is used when specifying an unlock condition for various things in the game
         /// </summary>
-        string unlockableIdentifier { get; }
+        string UnlockableIdentifier { get; }
         /// <summary>
         /// The unlockableIdentifier of a prerequisite
         /// Should be used for skill unlocks for a custom character if the character has an unlock condition
         /// Multiple prereqs are not supported (as far as I can tell)
         /// </summary>
-        string prerequisiteUnlockableIdentifier { get; }
+        string PrerequisiteUnlockableIdentifier { get; }
         /// <summary>
         /// The language token for the name to be shown in logbook for this achievement
         /// </summary>
-        string achievementNameToken { get; }
+        string AchievementNameToken { get; }
         /// <summary>
         /// The language token for the description to be shown in logbook for this achievement
         /// Also used to create the 'How to unlock' text
         /// </summary>
-        string achievementDescToken { get; }
+        string AchievementDescToken { get; }
         /// <summary>
         /// The language token for the unlockable
         /// Not 100% sure where this is shown in game
         /// </summary>
-        string unlockableNameToken { get; }
+        string UnlockableNameToken { get; }
         /// <summary>
         /// The path that is passed to Resources.Load when the sprite is loaded for this achievement
         /// </summary>
-        string spritePath { get; }
+        string SpritePath { get; }
     }
 
     /// <summary>
@@ -53,11 +53,11 @@ namespace R2API {
         /// <summary>
         /// The path that will be passed to Resources.Load to get the sprite
         /// </summary>
-        string pathString { get; }
+        string PathString { get; }
         /// <summary>
         /// The sprite that is being provided
         /// </summary>
-        Sprite sprite { get; }
+        Sprite Sprite { get; }
     }
     #endregion
 
@@ -65,15 +65,15 @@ namespace R2API {
     internal static class ModdedUnlockableDataProviderExtensions {
         internal static string GetHowToUnlock<TDataProvider>(this TDataProvider self)
             where TDataProvider : class, IModdedUnlockableDataProvider {
-            var name = Language.GetString(self.achievementNameToken);
-            var desc = Language.GetString(self.achievementDescToken);
+            var name = Language.GetString(self.AchievementNameToken);
+            var desc = Language.GetString(self.AchievementDescToken);
             return Language.GetStringFormatted("UNLOCK_VIA_ACHIEVEMENT_FORMAT", name, desc);
         }
 
         internal static String GetUnlocked<TDataProvider>(this TDataProvider self)
             where TDataProvider : class, IModdedUnlockableDataProvider {
-            var name = Language.GetString(self.achievementNameToken);
-            var desc = Language.GetString(self.achievementDescToken);
+            var name = Language.GetString(self.AchievementNameToken);
+            var desc = Language.GetString(self.AchievementDescToken);
             return Language.GetStringFormatted("UNLOCKED_FORMAT", name, desc);
         }
     }
@@ -91,18 +91,18 @@ namespace R2API {
         /// </summary>
         /// <param name="path">A path suitable for Resources.Load that will return the desired sprite</param>
         public VanillaSpriteProvider(String path) {
-            this.pathString = path;
-            this.sprite = UnityEngine.Resources.Load<Sprite>(path);
+            this.PathString = path;
+            this.Sprite = UnityEngine.Resources.Load<Sprite>(path);
         }
 
         /// <summary>
         /// The path that will be passed to Resources.Load to get the sprite
         /// </summary>
-        public string pathString { get; }
+        public string PathString { get; }
         /// <summary>
         /// Returns the cached sprite
         /// </summary>
-        public Sprite sprite { get; }
+        public Sprite Sprite { get; }
     }
 
     /// <summary>
@@ -115,17 +115,17 @@ namespace R2API {
         /// </summary>
         /// <param name="modPrefixedPath">The path used to retreive the sprite from the provider</param>
         public CustomSpriteProvider( String modPrefixedPath) {
-            this.pathString = modPrefixedPath;
+            this.PathString = modPrefixedPath;
         }
 
         /// <summary>
         /// The path that will be passed to Resources.Load to get the sprite
         /// </summary>
-        public String pathString { get; }
+        public String PathString { get; }
         /// <summary>
         /// Loads the sprite
         /// </summary>
-        public Sprite sprite { get => Resources.Load<Sprite>(this.pathString); }
+        public Sprite Sprite { get => Resources.Load<Sprite>(this.PathString); }
     }
 
 
@@ -141,7 +141,7 @@ namespace R2API {
         /// <summary>
         /// The path that will be passed to Resources.Load to get the sprite
         /// </summary>
-        public String spritePath { get => this.spriteProvider.pathString; }
+        public String SpritePath { get => this.spriteProvider.PathString; }
         #endregion
 
         #region Contract
@@ -153,33 +153,33 @@ namespace R2API {
         /// The identifier of the achievement being added
         /// Should be unique
         /// </summary>
-        public abstract String achievementIdentifier { get; }
+        public abstract String AchievementIdentifier { get; }
         /// <summary>
         /// The identifier of the unlockable granted when the achievement is completed
         /// Should be unique
         /// This is what is used when specifying an unlock condition for various things in the game
         /// </summary>
-        public abstract String unlockableIdentifier { get; }
+        public abstract String UnlockableIdentifier { get; }
         /// <summary>
         /// The unlockableIdentifier of a prerequisite
         /// Should be used for skill unlocks for a custom character if the character has an unlock condition
         /// Multiple prereqs are not supported (as far as I can tell)
         /// </summary>
-        public abstract String prerequisiteUnlockableIdentifier { get; }
+        public abstract String PrerequisiteUnlockableIdentifier { get; }
         /// <summary>
         /// The language token for the name to be shown in logbook for this achievement
         /// </summary>
-        public abstract String achievementNameToken { get; }
+        public abstract String AchievementNameToken { get; }
         /// <summary>
         /// The language token for the description to be shown in logbook for this achievement
         /// Also used to create the 'How to unlock' text
         /// </summary>
-        public abstract String achievementDescToken { get; }
+        public abstract String AchievementDescToken { get; }
         /// <summary>
         /// The language token for the unlockable
         /// Not 100% sure where this is shown in game
         /// </summary>
-        public abstract String unlockableNameToken { get; }
+        public abstract String UnlockableNameToken { get; }
         #endregion
 
         #region Virtuals
@@ -218,6 +218,7 @@ namespace R2API {
         /// This actually does nothing in vanilla, it is here in case that changes in future updates.
         /// </summary>
         public override Boolean wantsBodyCallbacks { get => base.wantsBodyCallbacks; }
+        // This cannot be capitalized because it needs to match the base class defined in ror2.
         #endregion
     }
     #endregion

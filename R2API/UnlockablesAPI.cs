@@ -42,24 +42,24 @@ namespace R2API {
             if (!AbleToAdd) throw new InvalidOperationException("Too late to add unlocks. Must be done during awake.");
 
             var instance = new TUnlockable();
-            var unlockableIdentifier = instance.unlockableIdentifier;
-            var identifier = instance.achievementIdentifier;
+            var unlockableIdentifier = instance.UnlockableIdentifier;
+            var identifier = instance.AchievementIdentifier;
 
             if (!usedRewardIds.Add(unlockableIdentifier)) throw new InvalidOperationException($"The unlockable identifier '{unlockableIdentifier}' is already used by another mod or the base game.");
 
             var ach = new AchievementDef {
-                identifier = instance.achievementIdentifier,
-                unlockableRewardIdentifier = instance.unlockableIdentifier,
-                prerequisiteAchievementIdentifier = instance.prerequisiteUnlockableIdentifier,
-                nameToken = instance.achievementNameToken,
-                descriptionToken = instance.achievementDescToken,
-                iconPath = instance.spritePath,
+                identifier = instance.AchievementIdentifier,
+                unlockableRewardIdentifier = instance.UnlockableIdentifier,
+                prerequisiteAchievementIdentifier = instance.PrerequisiteUnlockableIdentifier,
+                nameToken = instance.AchievementNameToken,
+                descriptionToken = instance.AchievementDescToken,
+                iconPath = instance.SpritePath,
                 type = serverTracked ? null : instance.GetType(),
                 serverTrackerType = serverTracked ? instance.GetType() : null,
             };
 
             var unl = new UnlockableDef {
-                nameToken = instance.unlockableNameToken,
+                nameToken = instance.UnlockableNameToken,
                 getHowToUnlockString = instance.GetHowToUnlock,
                 getUnlockedString = instance.GetUnlocked,
             };
