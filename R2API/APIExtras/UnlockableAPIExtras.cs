@@ -141,14 +141,14 @@ namespace R2API {
         /// <summary>
         /// The path that will be passed to Resources.Load to get the sprite
         /// </summary>
-        public String SpritePath { get => this.spriteProvider.PathString; }
+        public String SpritePath { get => this.SpriteProvider.PathString; }
         #endregion
 
         #region Contract
         /// <summary>
         /// This should return the sprite provider for this achievement
         /// </summary>
-        protected abstract TSpriteProvider spriteProvider { get; }
+        protected abstract TSpriteProvider SpriteProvider { get; }
         /// <summary>
         /// The identifier of the achievement being added
         /// Should be unique

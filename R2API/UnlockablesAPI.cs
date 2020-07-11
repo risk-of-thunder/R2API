@@ -143,7 +143,8 @@ namespace R2API {
 
             var cursor = new ILCursor(il);
             _ = cursor.GotoNext(MoveType.After,
-                x => x.MatchEndfinally()
+                x => x.MatchEndfinally(),
+                x => x.MatchLdloc( 1 )
             );
 
             void EmittedDelegate(List<AchievementDef> achievementDefs, Dictionary<string, AchievementDef> map, List<string> identifiers) {
