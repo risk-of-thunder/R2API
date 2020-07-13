@@ -54,7 +54,7 @@ namespace R2API {
                 nameToken = instance.AchievementNameToken,
                 descriptionToken = instance.AchievementDescToken,
                 iconPath = instance.SpritePath,
-                type = serverTracked ? null : instance.GetType(),
+                type = instance.GetType(),
                 serverTrackerType = serverTracked ? instance.GetType() : null,
             };
 
