@@ -142,6 +142,17 @@ namespace R2API {
         /// The path that will be passed to Resources.Load to get the sprite
         /// </summary>
         public String SpritePath { get => this.SpriteProvider.PathString; }
+
+        /// <summary>
+        /// Removes this achievement from the current profile.
+        /// </summary>
+        public void Revoke() {
+            if (base.userProfile.HasAchievement(this.AchievementIdentifier)) {
+                base.userProfile.RevokeAchievement(this.AchievementIdentifier);
+            }
+
+            base.userProfile.RevokeUnlockable(UnlockableCatalog.GetUnlockableDef(this.UnlockableIdentifier));
+        }
         #endregion
 
         #region Contract
