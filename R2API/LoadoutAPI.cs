@@ -48,12 +48,20 @@ namespace R2API {
                 );
             }
             _detourSet_typeName.Apply();
+            if (_detourGet_stateType == null) {
+                _detourGet_stateType = new Hook(
+                    typeof(SerializableEntityStateType).GetMethodCached("get_stateType"),
+                    typeof(LoadoutAPI).GetMethodCached(nameof(Get_stateType_Hook))
+                );
+            }
+            _detourGet_stateType.Apply();
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             _detourSet_stateType?.Undo();
             _detourSet_typeName?.Undo();
+            _detourGet_stateType?.Undo();
         }
         #endregion
 
@@ -62,6 +70,8 @@ namespace R2API {
         private static Hook _detourSet_stateType;
 
         private static Hook _detourSet_typeName;
+
+        private static Hook _detourGet_stateType;
         // ReSharper restore InconsistentNaming
 
         private static Assembly Ror2Assembly {
@@ -80,6 +90,16 @@ namespace R2API {
 
         internal static void Set_typeName_Hook(ref SerializableEntityStateType self, string value) =>
             Set_stateType_Hook(ref self, Type.GetType(value) ?? GetTypeAllAssemblies(value));
+
+        internal static Type Get_stateType_Hook(ref SerializableEntityStateType self) {
+            var typeName = self.GetFieldValue<string>("_typeName");
+            if (typeName == null) {
+                return null;
+            }
+            var type = Type.GetType(typeName) ?? GetTypeAllAssemblies(typeName);
+
+            return IsValidEntityStateType(type) ? type : null;
+        }
 
         private static Type GetTypeAllAssemblies(string name) {
             Type type = Ror2Assembly.GetType(name);
@@ -103,7 +123,7 @@ namespace R2API {
         }
 
         private static bool IsValidEntityStateType(Type type) {
-            return type != null && type.IsSubclassOf(typeof(EntityState)) && !type.IsAbstract;
+            return type != null && type.IsSubclassOf(typeof(EntityState));
         }
         #endregion
 
