@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using EntityStates.AI.Walker;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
