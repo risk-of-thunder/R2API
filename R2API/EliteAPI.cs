@@ -66,8 +66,6 @@ namespace R2API {
                 else {
                     var eliteTierIndex = customElite.EliteTier + 1;
                     var eliteTypeIndex = currentEliteTiers[eliteTierIndex].eliteTypes.Length;
-                    if (currentEliteTiers[eliteTierIndex].eliteTypes == null)
-                        currentEliteTiers[eliteTierIndex].eliteTypes = new EliteIndex[0];
                     Array.Resize(ref currentEliteTiers[eliteTierIndex].eliteTypes, eliteTypeIndex + 1);
                     currentEliteTiers[1].eliteTypes[eliteTypeIndex] = customElite.EliteDef.eliteIndex;
                 }
@@ -99,8 +97,11 @@ namespace R2API {
                 return EliteIndex.None;
             }
 
-            if (elite.EliteTier <= 0) {
-                R2API.Logger.LogError("Incorrect Elite Tier, must be greater than 0.");
+            var numberOfEliteTiersDefined = GetCombatDirectorEliteTiers().Length - 2;
+            if (elite.EliteTier <= 0 && elite.EliteTier <= numberOfEliteTiersDefined) {
+                R2API.Logger.LogError(
+                    "Incorrect Elite Tier, must be valid: greater than 0 and "
+                    + $"within the current elite tier defs range, current number of elite tiers defined : {numberOfEliteTiersDefined}.");
                 return EliteIndex.None;
             }
 
