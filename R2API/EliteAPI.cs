@@ -98,7 +98,7 @@ namespace R2API {
             }
 
             var numberOfEliteTiersDefined = GetCombatDirectorEliteTiers().Length - 2;
-            if (elite.EliteTier <= 0 && elite.EliteTier <= numberOfEliteTiersDefined) {
+            if (elite.EliteTier <= 0 && elite.EliteTier > numberOfEliteTiersDefined) {
                 R2API.Logger.LogError(
                     "Incorrect Elite Tier, must be valid: greater than 0 and "
                     + $"within the current elite tier defs range, current number of elite tiers defined : {numberOfEliteTiersDefined}.");
