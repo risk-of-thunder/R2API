@@ -29,7 +29,7 @@ namespace R2API {
                 x => x.MatchStloc(out _),
                 x => x.MatchLdarg(0),
                 x => x.MatchLdfld<ItemInventoryDisplay>("itemIcons")
-           );
+            );
             cursor.Emit(OpCodes.Dup);
             cursor.EmitDelegate<Action<ItemIcon>>(i => OnItemIconAdded?.Invoke(i));
         }

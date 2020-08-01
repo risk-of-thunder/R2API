@@ -135,13 +135,13 @@ namespace R2API {
             };
             if (!c.TryGotoNext(MoveType.After,
                 findLocSurvivorDef
-           )) {
+            )) {
                 ILFailMessage();
                 return;
             }
             if (!c.TryGotoNext(MoveType.After,
                 findLocSurvivorDef
-           )) {
+            )) {
                 ILFailMessage();
                 return;
             }
@@ -152,7 +152,7 @@ namespace R2API {
                     i => i.MatchCallOrCallvirt(typeof(Environment).GetMethodCached("get_NewLine")),
                     i => i.MatchCallOrCallvirt(typeof(string).GetMethodCached("IndexOf", new[] { typeof(string) })),
                     i => i.MatchStloc(out _)
-               )) {
+                )) {
                 c.Index--;
 
                 // orig : length = text.IndexOf(Environment.NewLine);
