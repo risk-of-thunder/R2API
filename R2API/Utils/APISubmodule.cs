@@ -157,9 +157,9 @@ namespace R2API.Utils {
             var attr = type.GetCustomAttribute<R2APISubmodule>();
 
             // Comment this out if you want to try every submodules working (or not) state
-            /*if (!_moduleSet.Contains(type.Name)) {
+            if (!_moduleSet.Contains(type.Name)) {
                 return false;
-            }*/
+            }
 
             if (attr == null)
                 return false;
