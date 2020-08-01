@@ -65,7 +65,7 @@ namespace R2API {
             cursor.GotoNext(
                 i => i.MatchLdcI4(out OriginalItemCount),
                 i => i.MatchNewarr<ItemDef>()
-           );
+            );
         }
 
         private static void GetOriginalEquipmentCountHook(ILContext il) {
@@ -74,7 +74,7 @@ namespace R2API {
             cursor.GotoNext(
                 i => i.MatchLdcI4(out OriginalEquipmentCount),
                 i => i.MatchCall<Array>("Resize")
-           );
+            );
         }
 
         private static void AddItemAction(List<ItemDef> itemDefinitions) {
@@ -249,12 +249,12 @@ namespace R2API {
                 i => i.MatchLdarg(0),
                 i => i.MatchLdfld("RoR2.CharacterModel", "parentedPrefabDisplays"),
                 i => i.MatchLdloc(out forCounterLoc)
-           );
+            );
 
             cursor.GotoNext(
                 i => i.MatchCall("RoR2.CharacterModel/ParentedPrefabDisplay", "get_itemDisplay"),
                 i => i.MatchStloc(out itemDisplayLoc)
-           );
+            );
             cursor.Index += 2;
 
             cursor.Emit(OpCodes.Ldloc, itemDisplayLoc);
@@ -264,7 +264,7 @@ namespace R2API {
 
             cursor.GotoNext(
                 i => i.MatchLdloc(forCounterLoc)
-           );
+            );
             var label = cursor.MarkLabel();
 
             cursor.Index = brFalsePos;

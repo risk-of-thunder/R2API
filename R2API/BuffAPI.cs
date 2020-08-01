@@ -49,7 +49,7 @@ namespace R2API {
             cursor.GotoNext(
                 i => i.MatchLdcI4(out OriginalBuffCount),
                 i => i.MatchNewarr<BuffDef>()
-           );
+            );
         }
 
         private static void AddBuffAction(List<BuffDef> buffDefinitions) {
