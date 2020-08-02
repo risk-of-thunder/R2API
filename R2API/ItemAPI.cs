@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-
+using System.Xml.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using System.Xml;
-using System.Xml.Linq;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -274,15 +272,16 @@ namespace R2API {
         }
 
         private static void AddingItemDisplayRulesToCharacterModels(object _, EventArgs __) {
-            foreach(GameObject o in BodyCatalog.allBodyPrefabs) {
+            foreach (GameObject o in BodyCatalog.allBodyPrefabs) {
                 CharacterModel cm = o.GetComponentInChildren<CharacterModel>();
-                if (cm!=null && cm.itemDisplayRuleSet!=null) {
+                if (cm != null && cm.itemDisplayRuleSet != null) {
                     string name = cm.name;
-                    foreach(var customItem in ItemDefinitions) {
+                    foreach (var customItem in ItemDefinitions) {
                         var customRules = customItem.ItemDisplayRules;
                         if (customRules != null) {
                             //if a specific rule for this model exists, or the model has no rules for this item
-                            if(customRules.TryGetRules(name, out ItemDisplayRule[] rules) || cm.itemDisplayRuleSet.GetItemDisplayRuleGroup(customItem.ItemDef.itemIndex).rules == null) {
+                            if (customRules.TryGetRules(name, out ItemDisplayRule[] rules) ||
+                                cm.itemDisplayRuleSet.GetItemDisplayRuleGroup(customItem.ItemDef.itemIndex).rules == null) {
                                 cm.itemDisplayRuleSet.SetItemDisplayRuleGroup(customItem.ItemDef.name, new DisplayRuleGroup { rules = rules });
                             }
                         }
@@ -292,11 +291,13 @@ namespace R2API {
                         var customRules = customEquipment.ItemDisplayRules;
                         if (customRules != null) {
                             //if a specific rule for this model exists, or the model has no rules for this equipment
-                            if (customRules.TryGetRules(name, out ItemDisplayRule[] rules) || cm.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null) {
+                            if (customRules.TryGetRules(name, out ItemDisplayRule[] rules) ||
+                                cm.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null) {
                                 cm.itemDisplayRuleSet.SetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.name, new DisplayRuleGroup { rules = rules });
                             }
                         }
                     }
+
                     cm.itemDisplayRuleSet.InvokeMethod("GenerateRuntimeValues");
                 }
             }

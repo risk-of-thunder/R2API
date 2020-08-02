@@ -440,7 +440,7 @@ namespace R2API.Utils {
                         .GetMethodCached(methodName)
                     : instance.GetType()
                         .GetMethodCached(methodName, methodParams.Select(x => x.GetType()).ToArray())
-                ) ?? throw new Exception($"Could not find method on type {instance.GetType()} with the name of {methodName} with the arguments specified.");
+               ) ?? throw new Exception($"Could not find method on type {instance.GetType()} with the name of {methodName} with the arguments specified.");
 
             return (TReturn)methodInfo.GetMethodDelegateCached()(instance, methodParams);
         }

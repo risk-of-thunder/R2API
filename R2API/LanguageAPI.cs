@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using BepInEx;
 using R2API.Utils;
 using SimpleJSON;
@@ -35,7 +34,7 @@ namespace R2API {
 
         private static string Language_GetString_string_string(On.RoR2.Language.orig_GetString_string_string orig, string token, string language) {
             if (LanguageSpecificTokens.ContainsKey(language)) {
-                if(LanguageSpecificTokens[language].ContainsKey(token)) {
+                if (LanguageSpecificTokens[language].ContainsKey(token)) {
                     return LanguageSpecificTokens[language][token];
                 }
             }
@@ -108,7 +107,7 @@ namespace R2API {
         }
 
         /// <summary>
-        /// adding an file via path (.language is added automatically )
+        /// adding an file via path (.language is added automatically)
         /// </summary>
         /// <param name="path">absolute path to file</param>
         public static void AddPath(string path) {

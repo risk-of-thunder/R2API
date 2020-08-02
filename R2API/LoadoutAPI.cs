@@ -2,7 +2,6 @@ using R2API.Utils;
 using EntityStates;
 using MonoMod.RuntimeDetour;
 using System;
-using System.Linq;
 using RoR2;
 using RoR2.Skills;
 using System.Collections.Generic;
