@@ -4,11 +4,7 @@ using System;
 
 namespace RoR2 {
     [MonoModCustomMethodAttribute("NoInlining")]
-    public class NoInlining : Attribute {
-    }
-
-    [MonoModPublic]
-    public class MakePublic : Attribute { }
+    public class NoInlining : Attribute { }
 }
 
 namespace MonoMod {
