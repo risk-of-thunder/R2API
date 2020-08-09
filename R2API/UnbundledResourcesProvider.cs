@@ -123,7 +123,7 @@ namespace R2API {
 
         public UnityObject[] LoadAll(Type type) {
             return typedResources
-                .Where(kv => kv.Key == type || kv.Key.IsSubclassOf(type))
+                .Where(kv => kv.Key == type || kv.Key.IsAssignableFrom(type))
                 .SelectMany(kv => kv.Value.Values).ToArray();
         }
 
