@@ -142,6 +142,11 @@ namespace R2API {
             }
         }
 
+        // For use in unit tests
+        private void Clear() {
+            typedResources.Clear();
+        }
+
         private string ConvertToFullpath(string key) {
             if (!IsValidKey(key)) throw new ArgumentException("Must not contain an @ or :", nameof(key));
             return $"{ModPrefix}:{key}";
