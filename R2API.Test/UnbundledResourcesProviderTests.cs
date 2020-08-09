@@ -7,7 +7,7 @@ namespace R2API.Test {
         private readonly UnbundledResourcesProvider _provider;
 
         public UnbundledResourcesProviderTests() {
-            this._provider = new UnbundledResourcesProvider("test");
+            this._provider = new UnbundledResourcesProvider("@test");
         }
 
         [Fact]
