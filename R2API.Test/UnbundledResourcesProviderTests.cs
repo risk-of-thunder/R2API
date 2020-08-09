@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using R2API.Utils;
 using UnityEngine;
 using Xunit;
 
 namespace R2API.Test {
-    public class UnbundledResourcesProviderTests {
+    public class UnbundledResourcesProviderTests : IClassFixture<UnbundledResourcesProviderFixture>, IDisposable {
         private readonly UnbundledResourcesProvider _provider;
 
-        public UnbundledResourcesProviderTests() {
-            this._provider = new UnbundledResourcesProvider("test");
+        public UnbundledResourcesProviderTests(UnbundledResourcesProviderFixture fixture) {
+            this._provider = fixture.Provider;
+        }
+
+        public void Dispose() {
+            this._provider.InvokeMethod("Clear");
         }
 
         [Fact]
@@ -31,5 +37,24 @@ namespace R2API.Test {
             Assert.Same(inputTexture2D, outputTexture2D);
             Assert.Same(inputTexture3D, outputTexture3D);
         }
+
+        [Fact]
+        public void TestStoringAndLoadingAssetsFromResourcesAPI() {
+            var inputTexture = new Texture2D(0, 0);
+            var path = this._provider.Store("test", inputTexture);
+            var outputTexure = typeof(ResourcesAPI).InvokeMethod<Texture2D>("ModResourcesLoad", path, typeof(Texture2D));
+
+            Assert.Same(inputTexture, outputTexure);
+        }
+    }
+
+    public class UnbundledResourcesProviderFixture {
+        public UnbundledResourcesProvider Provider { get; }
+
+        public UnbundledResourcesProviderFixture() {
+            this.Provider = new UnbundledResourcesProvider("@test");
+            ResourcesAPI.AddProvider(this.Provider);
+        }
+
     }
 }

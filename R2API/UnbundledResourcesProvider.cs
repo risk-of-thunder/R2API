@@ -15,10 +15,14 @@ namespace R2API {
         public string ModPrefix { get; }
 
         public UnbundledResourcesProvider(string modPrefix) {
+            if (!modPrefix.StartsWith("@"))
+                throw new ArgumentException("Mod prefix must start with @");
             ModPrefix = modPrefix;
         }
 
         public UnbundledResourcesProvider(string modPrefix, params (string key, UnityObject resource)[] resources) {
+            if (!modPrefix.StartsWith("@"))
+                throw new ArgumentException("Mod prefix must start with @");
             ModPrefix = modPrefix;
             foreach (var (key, resource) in resources)
             {
@@ -138,9 +142,14 @@ namespace R2API {
             }
         }
 
+        // For use in unit tests
+        private void Clear() {
+            typedResources.Clear();
+        }
+
         private string ConvertToFullpath(string key) {
             if (!IsValidKey(key)) throw new ArgumentException("Must not contain an @ or :", nameof(key));
-            return $"@{ModPrefix}:{key}";
+            return $"{ModPrefix}:{key}";
         }
 
         private bool IsValidFullPath(string fullPath) {
