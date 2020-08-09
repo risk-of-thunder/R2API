@@ -10,7 +10,7 @@ namespace R2API {
     /// This class allows loading of resources not stored in an assetbundle with Resources.Load. Primary use would be for generating an item icon in code.
     /// </summary>
     public sealed class UnbundledResourcesProvider : IResourceProvider {
-        private readonly Dictionary<string, UnityObject> resources = new Dictionary<string, UnityObject>();
+        private readonly Dictionary<Type, Dictionary<string, UnityObject>> typedResources = new Dictionary<Type, Dictionary<string, UnityObject>>();
 
         public string ModPrefix { get; }
 
@@ -20,13 +20,16 @@ namespace R2API {
 
         public UnbundledResourcesProvider(string modPrefix, params (string key, UnityObject resource)[] resources) {
             ModPrefix = modPrefix;
-            for (var i = 0; i < resources.Length; i++) {
-                var (key, resource) = resources[i];
+            foreach (var (key, resource) in resources)
+            {
                 _ = Store(key, resource, resource.GetType());
             }
         }
 
         public UnityObject Load(string path, Type type) {
+            if (!typedResources.TryGetValue(type, out var resources)) {
+                throw new KeyNotFoundException($"type: {type.FullName} was not found");
+            }
             var key = ConvertToKey(path);
             return resources[key];
         }
@@ -38,6 +41,10 @@ namespace R2API {
         public string Store(string path, UnityObject resource, Type type) {
             string key;
             string fullPath;
+
+            if (!typedResources.TryGetValue(type, out var resources)) {
+                typedResources[type] = resources = new Dictionary<string, UnityObject>();
+            }
 
             if (IsValidKey(path)) {
                 key = path;
@@ -59,7 +66,15 @@ namespace R2API {
             return fullPath;
         }
 
-        public void Remove(string path) {
+        public void Remove<TResource>(string path) {
+            Remove(path, typeof(TResource));
+        }
+
+        public void Remove(string path, Type type) {
+            if (!typedResources.TryGetValue(type, out var resources)) {
+                throw new KeyNotFoundException($"type: {type.FullName} was not found");
+            }
+
             string key;
             if (IsValidKey(path)) {
                 key = path;
@@ -72,12 +87,18 @@ namespace R2API {
             resources.Remove(key);
         }
 
-        public void Remove(UnityObject resource) {
+        public void Remove<TResource>(TResource resource) where TResource : UnityObject {
+            if (!typedResources.TryGetValue(typeof(TResource), out var resources)) {
+                throw new KeyNotFoundException($"type: {typeof(TResource).FullName} was not found");
+            }
             var fullPath = GetPathForResource(resource);
             resources.Remove(ConvertToKey(fullPath));
         }
 
-        public string GetPathForResource(UnityObject resource) {
+        public string GetPathForResource<TResource>(TResource resource) where TResource : UnityObject {
+            if (!typedResources.TryGetValue(typeof(TResource), out var resources)) {
+                throw new KeyNotFoundException($"type: {typeof(TResource).FullName} was not found");
+            }
             return $"{ModPrefix}:{resources.First((kvp) => kvp.Value == resource).Key}";
         }
 
@@ -101,7 +122,9 @@ namespace R2API {
         }
 
         public UnityObject[] LoadAll(Type type) {
-            return resources.Values.Where((obj) => obj.GetType() == type || obj.GetType().IsSubclassOf(type)).ToArray();
+            return typedResources
+                .Where(kv => kv.Key == type || kv.Key.IsAssignableFrom(type))
+                .SelectMany(kv => kv.Value.Values).ToArray();
         }
 
         private string ConvertToKey(string fullPath) {
