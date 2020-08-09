@@ -87,8 +87,6 @@ namespace R2API {
                 var server = ((SteamworksServerManager)self).GetFieldValue<Server>("steamworksServer");
                 server.GameTags = "mod," + server.GameTags;
             };
-
-            SurvivorAPI.SafetyCheck();
         }
 
         public void Start() {
