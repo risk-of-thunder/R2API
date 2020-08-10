@@ -14,6 +14,7 @@ namespace R2API.Test {
         private readonly ITestOutputHelper _helper;
 
         public ReflectionTests(ITestOutputHelper helper) {
+            Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "cecil");
             this._helper = helper;
         }
 
