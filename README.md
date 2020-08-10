@@ -46,8 +46,7 @@ The most recent changelog can always be found on the [Github](https://github.com
 * [Seperate BuffAPI and EliteAPI from ItemAPI](https://github.com/risk-of-thunder/R2API/pull/135)
 * [Fix Reflection utils](https://github.com/risk-of-thunder/R2API/pull/135)
 * [Update to latest BepInEx for building](https://github.com/risk-of-thunder/R2API/pull/134)
-* [Added DotAPI to handle Dots](https://github.com/risk-of-thunder/R2API/pull/161)
-
+* [Added DotAPI to handle Dots](https://github.com/risk-of-thunder/R2API/pull/161)\
 
 **2.4.10**
 
