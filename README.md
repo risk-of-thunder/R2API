@@ -36,12 +36,18 @@ The most recent changelog can always be found on the [Github](https://github.com
 
 **Current**
 
+* [Added NetworkingAPI now integrating networking components into R2API!](https://github.com/risk-of-thunder/R2API/pull/163)
+* [Fixed bug with ConvertToFullpath by enforcing that ModPrefix start with @](https://github.com/risk-of-thunder/R2API/pull/168)
+* [Fixed being unable to have assets with the same path but different type in UnbundledResourceProvider](https://github.com/risk-of-thunder/R2API/pull/167)
+* [Update EliteAPI to spawn correctly](https://github.com/risk-of-thunder/R2API/pull/160)
 * [Fix R2API plugin dependency of MonoMod patcher file](https://github.com/risk-of-thunder/R2API/pull/140)
 * [Remove faulty hook around chests' item rolling.](https://github.com/risk-of-thunder/R2API/pull/138)
 * [Remove savety hooks for userprofile as RoR2 does that now out of the box](https://github.com/risk-of-thunder/R2API/pull/135)
 * [Seperate BuffAPI and EliteAPI from ItemAPI](https://github.com/risk-of-thunder/R2API/pull/135)
 * [Fix Reflection utils](https://github.com/risk-of-thunder/R2API/pull/135)
 * [Update to latest BepInEx for building](https://github.com/risk-of-thunder/R2API/pull/134)
+* [Added DotAPI to handle Dots](https://github.com/risk-of-thunder/R2API/pull/161)
+
 
 **2.4.10**
 
