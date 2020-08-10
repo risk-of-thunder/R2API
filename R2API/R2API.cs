@@ -83,7 +83,6 @@ namespace R2API {
 
             // Make sure that modded dedicated servers are recognizable from the server browser
             On.RoR2.SteamworksServerManager.UpdateHostName += (orig, self, hostname) => {
-                orig(self, $"[MOD] {hostname}");
                 var server = ((SteamworksServerManager)self).GetFieldValue<Server>("steamworksServer");
                 server.GameTags = "mod," + server.GameTags;
             };
