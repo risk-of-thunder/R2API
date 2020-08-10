@@ -73,6 +73,10 @@
       <HintPath>libs\UnityEngine.UIModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="UnityEngine.UNETModule">
+      <HintPath>libs\UnityEngine.UNETModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="Wwise">
       <HintPath>libs\Wwise.dll</HintPath>
       <Private>false</Private>
