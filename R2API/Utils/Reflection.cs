@@ -485,7 +485,7 @@ namespace R2API.Utils {
 
 
         private static FastReflectionDelegate GetMethodDelegateCached(this MethodInfo methodInfo) =>
-            DelegateCache.GetOrAdd(methodInfo, method => method.CreateFastDelegate());
+            DelegateCache.GetOrAdd(methodInfo, method => method.GenerateCallDelegate());
 
         #endregion
 
@@ -772,71 +772,71 @@ namespace R2API.Utils {
 
         // Partial hack from https://github.com/0x0ade/MonoMod/blob/master/MonoMod.Utils/FastReflectionHelper.cs
         // to get fast call delegates
-        //private static CallDelegate GenerateCallDelegate(this MethodInfo method) {
-        //    if (method == null) {
-        //        throw new ArgumentException("Method cannot be null.", nameof(method));
-        //    }
+        private static FastReflectionDelegate GenerateCallDelegate(this MethodInfo method) {
+            if (method == null) {
+                throw new ArgumentException("Method cannot be null.", nameof(method));
+            }
 
-        //    var dmd = new DynamicMethodDefinition(
-        //        $"CallDelegate<{method.Name}>", typeof(object), new[] { typeof(object), typeof(object[]) });
-        //    var il = dmd.GetILProcessor();
+            var dmd = new DynamicMethodDefinition(
+                $"CallDelegate<{method.Name}>", typeof(object), new[] { typeof(object), typeof(object[]) });
+            var il = dmd.GetILProcessor();
 
-        //    var args = method.GetParameters();
+            var args = method.GetParameters();
 
-        //    if (!method.IsStatic) {
-        //        il.Emit(OpCodes.Ldarg_0);
-        //        if (method.DeclaringType.GetTypeInfo().IsValueType) {
-        //            il.Emit(OpCodes.Unbox_Any, method.DeclaringType);
-        //        }
-        //    }
+            if (!method.IsStatic) {
+                il.Emit(OpCodes.Ldarg_0);
+                if (method.DeclaringType.GetTypeInfo().IsValueType) {
+                    il.Emit(OpCodes.Unbox_Any, method.DeclaringType);
+                }
+            }
 
-        //    for (var i = 0; i < args.Length; i++) {
-        //        var argType = args[i].ParameterType;
-        //        var argIsByRef = argType.IsByRef;
-        //        if (argIsByRef)
-        //            argType = argType.GetElementType();
-        //        var argIsValueType = argType.GetTypeInfo().IsValueType;
+            for (var i = 0; i < args.Length; i++) {
+                var argType = args[i].ParameterType;
+                var argIsByRef = argType.IsByRef;
+                if (argIsByRef)
+                    argType = argType.GetElementType();
+                var argIsValueType = argType.GetTypeInfo().IsValueType;
 
-        //        if (argIsByRef && argIsValueType) {
-        //            // Used later when storing back the reference to the new box in the array.
-        //            il.Emit(OpCodes.Ldarg_1);
-        //            il.EmitFast_Ldc_I4(i);
-        //        }
+                if (argIsByRef && argIsValueType) {
+                    // Used later when storing back the reference to the new box in the array.
+                    il.Emit(OpCodes.Ldarg_1);
+                    il.EmitFast_Ldc_I4(i);
+                }
 
-        //        il.Emit(OpCodes.Ldarg_1);
-        //        il.EmitFast_Ldc_I4(i);
+                il.Emit(OpCodes.Ldarg_1);
+                il.EmitFast_Ldc_I4(i);
 
-        //        if (argIsByRef && !argIsValueType) {
-        //            il.Emit(OpCodes.Ldelema, typeof(object));
-        //        }
-        //        else {
-        //            il.Emit(OpCodes.Ldelem_Ref);
-        //            if (!argIsValueType) continue;
-        //            il.Emit(!argIsByRef ? OpCodes.Unbox_Any : OpCodes.Unbox, argType);
-        //        }
-        //    }
+                if (argIsByRef && !argIsValueType) {
+                    il.Emit(OpCodes.Ldelema, typeof(object));
+                }
+                else {
+                    il.Emit(OpCodes.Ldelem_Ref);
+                    if (!argIsValueType) continue;
+                    il.Emit(!argIsByRef ? OpCodes.Unbox_Any : OpCodes.Unbox, argType);
+                }
+            }
 
-        //    if (method.IsFinal || !method.IsVirtual) {
-        //        il.Emit(OpCodes.Call, method);
-        //    }
-        //    else {
-        //        il.Emit(OpCodes.Callvirt, method);
-        //    }
+            if (method.IsFinal || !method.IsVirtual) {
+                il.Emit(OpCodes.Call, method);
+            }
+            else {
+                il.Emit(OpCodes.Callvirt, method);
+            }
 
-        //    var returnType = method.IsConstructor ? method.DeclaringType : method.ReturnType;
-        //    if (returnType != typeof(void)) {
-        //        if (returnType.GetTypeInfo().IsValueType) {
-        //            il.Emit(OpCodes.Box, returnType);
-        //        }
-        //    }
-        //    else {
-        //        il.Emit(OpCodes.Ldnull);
-        //    }
+            var returnType = method.IsConstructor ? method.DeclaringType : method.ReturnType;
+            if (returnType != typeof(void)) {
+                if (returnType.GetTypeInfo().IsValueType) {
+                    il.Emit(OpCodes.Box, returnType);
+                }
+            }
+            else {
+                il.Emit(OpCodes.Ldnull);
+            }
 
-        //    il.Emit(OpCodes.Ret);
+            il.Emit(OpCodes.Ret);
 
-        //    return (CallDelegate) dmd.Generate().CreateDelegate(typeof(CallDelegate));
-        //}
+            return (FastReflectionDelegate)dmd.Generate().CreateDelegate(typeof(FastReflectionDelegate));
+        }
 
         // https://github.com/0x0ade/MonoMod/blob/master/MonoMod.Utils/FastReflectionHelper.cs
         public static void EmitFast_Ldc_I4(this ILProcessor il, int value) {
