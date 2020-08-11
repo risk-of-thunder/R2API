@@ -94,8 +94,6 @@ namespace R2API.AssetPlus {
         /// <summary>
         /// Adds multiple languagetokens and value to a specific language
         /// </summary>
-        /// <param name="languageDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
-        /// <param name="reload">if the dictionary of the game should be reloaded</param>
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddToken(Dictionary<string, string> tokenDictionary, string language)
         {
@@ -105,8 +103,6 @@ namespace R2API.AssetPlus {
         /// <summary>
         /// Adds multiple languagetokens and value to a specific language
         /// </summary>
-        /// <param name="languageDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
-        /// <param name="reload">if the dictionary of the game should be reloaded</param>
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddToken(Dictionary<string, string> tokenDictionary, string language, bool reload = true)
         {
@@ -116,7 +112,6 @@ namespace R2API.AssetPlus {
         /// <summary>
         /// Adds multiple languagetokens and value
         /// </summary>
-        /// <param name="languageDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddToken(Dictionary<string, string> tokenDictionary)
         {
@@ -126,8 +121,6 @@ namespace R2API.AssetPlus {
         /// <summary>
         /// Adds multiple languagetokens and value
         /// </summary>
-        /// <param name="languageDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
-        /// <param name="reload">if the dictionary of the game should be reloaded</param>
         [Obsolete("Moved to R2API/LanguageAPI")]
         public static void AddToken(Dictionary<string, string> tokenDictionary, bool reload = true) 
         {

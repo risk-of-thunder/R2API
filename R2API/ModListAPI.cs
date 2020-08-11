@@ -178,6 +178,7 @@ namespace R2API {
             _tempServerModList = null;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Network")]
         [NetworkMessageHandler(client = true, server = true, msgType = MessageIndex)]
         private static void HandleModListMessage(NetworkMessage netMsg) {
             ModListMessage modListMessage = null;
