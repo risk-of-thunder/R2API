@@ -29,7 +29,7 @@ namespace R2API {
 
         private static void ResizeDotDefs(int newSize) {
             var dotDefs = DotDefs;
-            Array.Resize(ref dotDefs, DotDefs.Length + 1);
+            Array.Resize(ref dotDefs, newSize);
             DotDefs = dotDefs;
         }
 

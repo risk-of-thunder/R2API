@@ -79,7 +79,7 @@ namespace R2API.Utils {
                 try {
                     assemblies.Add(AssemblyDefinition.ReadAssembly(dll));
                 }
-                catch (Exception e) {
+                catch (Exception) {
                 }
             }
             _moduleSet = new HashSet<string>();
@@ -177,7 +177,7 @@ namespace R2API.Utils {
                 .Any(a => ((R2APISubmoduleInit) a).Stage.HasFlag(stage))).ToList();
 
             if (method.Count == 0) {
-                _logger?.Log(LogLevel.Debug, $"{type.Name} has no static method registered for {stage.ToString()}");
+                _logger?.Log(LogLevel.Debug, $"{type.Name} has no static method registered for {stage}");
                 return;
             }
 
