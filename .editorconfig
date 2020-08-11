@@ -13,3 +13,7 @@ indent_style = space
 indent_size = 4
 
 csharp_new_line_before_open_brace = none
+
+
+# CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = suggestion
