@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MonoMod;
 // ReSharper disable InconsistentNaming
 #pragma warning disable 649
+#pragma warning disable IDE1006 // Naming Styles
 
 namespace RoR2 {
     [MonoModPatch("RoR2.CatalogModHelper`1")]
@@ -10,7 +11,6 @@ namespace RoR2 {
 
         public event Action<List<TEntry>> getAdditionalEntries;
         private readonly Action<int, TEntry> registrationDelegate;
-        private readonly Func<TEntry, string> nameGetter;
 
         public void CollectAndRegisterAdditionalEntries(ref TEntry[] entries) {
             int vanillaEntriesLength = entries.Length;
@@ -25,3 +25,5 @@ namespace RoR2 {
         }
     }
 }
+
+#pragma warning restore IDE1006 // Naming Styles

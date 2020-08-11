@@ -9,7 +9,12 @@ namespace R2API {
 
         private static bool difficultyAlreadyAdded = false;
 
+        
+        [Obsolete("Use DifficultyCatalogReady instead!")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Deprecated for this reason")]
         public static event EventHandler difficultyCatalogReady;
+
+        public static event EventHandler DifficultyCatalogReady;
 
         private const DifficultyIndex VanillaFinalIndex = DifficultyIndex.Hard;//We want to replace this 
 
@@ -35,7 +40,8 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            difficultyCatalogReady?.Invoke(null, null);
+            difficultyCatalogReady?.Invoke(null, null);//TODO: Remove this in future versions.
+            DifficultyCatalogReady?.Invoke(null, null);
             On.RoR2.DifficultyCatalog.GetDifficultyDef += GetExtendedDifficultyDef;
             On.RoR2.RuleDef.FromDifficulty += InitialiseRuleBookAndFinalizeList;
         }
