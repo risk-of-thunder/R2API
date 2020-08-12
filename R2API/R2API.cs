@@ -42,8 +42,6 @@ namespace R2API {
 
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
-            On.RoR2.RoR2Application.UnitySystemConsoleRedirector.Redirect += orig => { };
-
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
             loadedSubmodules = submoduleHandler.LoadRequested();
 
@@ -107,9 +105,9 @@ namespace R2API {
         }
 
         private static void AddHookLogging() {
-            ModManager.OnHook += (hookOwner, @base, arg3, arg4) => LogMethod(@base, hookOwner);
-            ModManager.OnDetour += (hookOwner, @base, arg3) => LogMethod(@base, hookOwner);
-            ModManager.OnNativeDetour += (hookOwner, @base, arg3, arg4) => LogMethod(@base, hookOwner);
+            ModManager.OnHook += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
+            ModManager.OnDetour += (hookOwner, @base, _) => LogMethod(@base, hookOwner);
+            ModManager.OnNativeDetour += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
 
             HookEndpointManager.OnAdd += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
             HookEndpointManager.OnModify += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
