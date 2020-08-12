@@ -5,19 +5,20 @@ using RoR2;
 using UnityEngine;
 
 namespace R2API {
-    // ReSharper disable once InconsistentNaming
-    //[R2APISubmodule]
+
+    /// <summary>
+    /// API for modifying the monster and scene directors.
+    /// </summary>
     public static partial class DirectorAPI {
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        // ReSharper disable once ConvertToAutoProperty
         public static bool Loaded {
             get => _loaded;
             set => _loaded = value;
         }
-
         private static bool _loaded;
+
         /// <summary>
         /// Event used to edit stage settings.
         /// </summary>
@@ -126,6 +127,9 @@ namespace R2API {
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 
+        /// <summary>
+        /// Struct for holding information about the stage.
+        /// </summary>
         public struct StageInfo {
             /// <summary>
             /// The current stage. If set to custom, check customStageName.
