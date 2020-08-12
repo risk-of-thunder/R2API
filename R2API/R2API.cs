@@ -42,6 +42,8 @@ namespace R2API {
 
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
+            On.RoR2.UnitySystemConsoleRedirector.Redirect += orig=>{ };
+
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
             loadedSubmodules = submoduleHandler.LoadRequested();
 
