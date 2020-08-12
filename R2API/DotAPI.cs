@@ -9,7 +9,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace R2API {
-    // ReSharper disable once InconsistentNaming
+    /// <summary>
+    /// API for adding damage over time effects to the game.
+    /// </summary>
     [R2APISubmodule]
     public static class DotAPI {
         /// <summary>
@@ -38,9 +40,18 @@ namespace R2API {
 
         private static readonly Dictionary<DotController, bool[]> ActiveCustomDots = new Dictionary<DotController, bool[]>();
 
+        /// <summary>
+        /// Allows for custom behaviours when applying the dot. EG, percentburn. <see cref="DotController.AddDot(GameObject, float, DotController.DotIndex, float)"/>
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="dotStack"></param>
         public delegate void CustomDotBehaviour(DotController self, DotController.DotStack dotStack);
         private static CustomDotBehaviour[] _customDotBehaviours = new CustomDotBehaviour[0];
 
+        /// <summary>
+        /// Allows custom visuals for your buff. think bleeding etc. <see cref="DotController.FixedUpdate"/>
+        /// </summary>
+        /// <param name="self"></param>
         public delegate void CustomDotVisual(DotController self);
         private static CustomDotVisual[] _customDotVisuals = new CustomDotVisual[0];
 
@@ -70,16 +81,28 @@ namespace R2API {
             R2API.Logger.LogInfo($"Custom Dot that uses Buff Index: {(int)dotDef.associatedBuff} added");
             return (DotController.DotIndex)dotDefIndex;
         }
-
+        /// <summary>
+        /// Unrolled version of RegisterDotDef(DotController.DotDef, CustomDotBehaviour, CustomDotVisual)
+        /// <see cref="RegisterDotDef(DotController.DotDef, CustomDotBehaviour, CustomDotVisual)"/>
+        /// </summary>
+        /// <param name="interval"></param>
+        /// <param name="damageCoefficient"></param>
+        /// <param name="colorIndex"></param>
+        /// <param name="associatedBuff"></param>
+        /// <param name="customDotBehaviour"></param>
+        /// <param name="customDotVisual"></param>
+        /// <returns></returns>
         public static DotController.DotIndex RegisterDotDef(float interval, float damageCoefficient,
             DamageColorIndex colorIndex, BuffIndex associatedBuff, CustomDotBehaviour customDotBehaviour = null,
-            CustomDotVisual customDotVisual = null) =>
-            RegisterDotDef(new DotController.DotDef {
-                associatedBuff = associatedBuff,
-                damageCoefficient = damageCoefficient,
-                interval = interval,
-                damageColorIndex = colorIndex
-            }, customDotBehaviour, customDotVisual);
+            CustomDotVisual customDotVisual = null) {
+            var dotDef = new DotController.DotDef {
+                            associatedBuff = associatedBuff,
+                            damageCoefficient = damageCoefficient,
+                            interval = interval,
+                            damageColorIndex = colorIndex
+                        };
+            return RegisterDotDef(dotDef, customDotBehaviour, customDotVisual);
+        }
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {

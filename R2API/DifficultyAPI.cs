@@ -4,20 +4,31 @@ using System;
 using System.Collections.ObjectModel;
 
 namespace R2API {
+
+    /// <summary>
+    /// API for adding difficulties like Drizzle, Rainstorm, and Monsoon to the game. Does not cover "very easy, easy, ..., HAHAHAHA".
+    /// </summary>
     [R2APISubmodule]
     public class DifficultyAPI {
 
         private static bool difficultyAlreadyAdded = false;
 
-        
+        /// <summary>
+        /// <see cref="DifficultyCatalogReady"/>
+        /// </summary>
         [Obsolete("Use DifficultyCatalogReady instead!")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Deprecated for this reason")]
         public static event EventHandler difficultyCatalogReady;
 
+        /// <summary>
+        /// Fired right before the hooks for the difficultyAPI are set. This is the last chance to add difficulties to the API.
+        /// </summary>
         public static event EventHandler DifficultyCatalogReady;
 
         private const DifficultyIndex VanillaFinalIndex = DifficultyIndex.Hard;//We want to replace this 
-
+        /// <summary>
+        /// An observable collection of ALL difficulty definitions. This includes both the vanilla ones and the ones added by R2API.
+        /// </summary>
         public static ObservableCollection<DifficultyDef> difficultyDefinitions = new ObservableCollection<DifficultyDef>();
         /// <summary>
         /// Add a DifficultyDef to the list of available difficulties.
