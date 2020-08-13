@@ -3,7 +3,6 @@ using MonoMod.Cil;
 using RoR2.UI;
 using System;
 using R2API.Utils;
-using UnityEngine;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming

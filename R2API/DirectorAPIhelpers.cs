@@ -1,9 +1,7 @@
 using System;
 using RoR2;
-// ReSharper disable UnusedMember.Global
 
 namespace R2API {
-    // ReSharper disable once InconsistentNaming
     //[R2APISubmodule]
     public static partial class DirectorAPI {
         /// <summary>

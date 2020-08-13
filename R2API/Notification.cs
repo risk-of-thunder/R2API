@@ -1,7 +1,6 @@
 ﻿using RoR2;
 using RoR2.UI;
 using System;
-using System.Reflection;
 using R2API.Utils;
 using UnityEngine;
 
@@ -13,6 +12,7 @@ namespace R2API {
         public Func<string> GetDescription { get; set; }
         public Transform Parent { get; set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "MonoBehaviour")]
         private void Awake() {
             // TODO: Figure out HUD transform for canvas and scaling
             Parent = RoR2Application.instance.mainCanvas.transform;
@@ -22,6 +22,7 @@ namespace R2API {
             GenericNotification.iconImage.enabled = false;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "MonoBehaviour")]
         private void Update() {
             if (GenericNotification == null) {
                 Destroy(this);
@@ -35,6 +36,7 @@ namespace R2API {
             GenericNotification.descriptionText.InvokeMethod("UpdateLabel");
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "MonoBehaviour")]
         private void OnDestroy() {
             Destroy(GenericNotification);
             Destroy(RootObject);

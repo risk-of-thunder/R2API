@@ -4,10 +4,8 @@ using System.Linq;
 using R2API.Utils;
 using RoR2;
 using UnityEngine;
-// ReSharper disable UnusedMember.Global
 
 namespace R2API {
-    // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static partial class DirectorAPI {
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]

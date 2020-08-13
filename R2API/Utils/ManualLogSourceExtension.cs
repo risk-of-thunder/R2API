@@ -5,7 +5,7 @@ using BepInEx.Logging;
 namespace R2API.Utils {
     public static class ManualLogSourceExtension {
         public static void LogBlockError(this ManualLogSource logger, IEnumerable<string> lines, int width = 70) =>
-        logger.LogBlock(LogLevel.Error, "ERROR", lines, width);
+            logger.LogBlock(LogLevel.Error, "ERROR", lines, width);
 
         public static void LogBlockWarning(this ManualLogSource logger, IEnumerable<string> lines, int width = 70) =>
             logger.LogBlock(LogLevel.Warning, "WARNING", lines, width);

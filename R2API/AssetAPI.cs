@@ -5,7 +5,10 @@ using MonoMod.Cil;
 using R2API.Utils;
 
 namespace R2API {
-    // ReSharper disable once InconsistentNaming
+
+    /// <summary>
+    /// An API for adding assets to the Master and Object Catalogs.
+    /// </summary>
     [R2APISubmodule]
     public static class AssetAPI {
         /// <summary>
