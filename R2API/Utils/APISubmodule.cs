@@ -105,7 +105,7 @@ namespace R2API.Utils {
 
             var scanRequest = new PluginScanner.AttributeScanRequest(typeof(R2APISubmoduleDependency).FullName,
                 AttributeTargets.Assembly | AttributeTargets.Class,
-                CallWhenAssembliesAreScanned,
+                CallWhenAssembliesAreScanned, false,
                 (assembly, arguments) => 
                     AddModuleToSet(arguments),
                 (type, arguments) => 
