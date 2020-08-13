@@ -11,7 +11,6 @@ using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.Utils;
 using RoR2;
-using UnityEngine;
 
 namespace R2API {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
@@ -23,7 +22,7 @@ namespace R2API {
         public const string PluginVersion = "0.0.1";
 
 
-        private const int GameBuild = 4892828;
+        private const int GameBuild = 5381045;
 
         internal new static ManualLogSource Logger { get; set; }
 
@@ -42,55 +41,33 @@ namespace R2API {
 
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
-            On.RoR2.RoR2Application.UnitySystemConsoleRedirector.Redirect += orig => { };
+            On.RoR2.UnitySystemConsoleRedirector.Redirect += orig => { };
 
+            var pluginScanner = new PluginScanner();
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
-            loadedSubmodules = submoduleHandler.LoadRequested();
-
-            //Currently disabled until manifest v2
-            //ModListAPI.Init();
+            loadedSubmodules = submoduleHandler.LoadRequested(pluginScanner);
+            var networkCompatibilityHandler = new NetworkCompatibilityHandler();
+            networkCompatibilityHandler.BuildModList(pluginScanner);
+            pluginScanner.ScanPlugins();
 
             RoR2Application.isModded = true;
 
-            // Temporary fix as the new quickplay button currently don't have the DisableIfGameModded Script attached to it
-            On.RoR2.UI.QuickPlayButtonController.Start += (orig, self) => {
-                orig(self);
-                self.gameObject.SetActive(false);
-            };
+            SteamworksClientManager.onLoaded += CheckIfUsedOnRightGameVersion;
+        }
 
-            On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
-                // TODO: If we can enable quick play without regrets, uncomment.
-                //if (self.name == "Button, QP")
-                //    return;
+        private static void CheckIfUsedOnRightGameVersion() {
+            var buildId =
+                SteamworksClientManager.instance.GetFieldValue<Client>("steamworksClient").BuildId;
 
-                self.gameObject.SetActive(false);
-            };
+            if (GameBuild == buildId)
+                return;
 
-            On.RoR2.Networking.SteamLobbyFinder.CCSteamQuickplayStart += (orig, args) => {
-                Debug.Log("QuickPlay is disabled in mods due to social contracts and lack of general support");
-            };
-
-            SteamworksClientManager.onLoaded += () => {
-                var buildId =
-                    SteamworksClientManager.instance.GetFieldValue<Client>("steamworksClient").BuildId;
-
-                if (GameBuild == buildId)
-                    return;
-
-                Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{buildId}\".");
-                Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
-            };
-
-            // Make sure that modded dedicated servers are recognizable from the server browser
-            On.RoR2.SteamworksServerManager.UpdateHostName += (orig, self, hostname) => {
-                var server = ((SteamworksServerManager)self).GetFieldValue<Server>("steamworksServer");
-                server.GameTags = "mod," + server.GameTags;
-            };
+            Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{buildId}\".");
+            Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
         }
 
         public void Start() {
-            if (R2APIStart != null)
-                R2APIStart.Invoke(this, null);
+            R2APIStart?.Invoke(this, null);
         }
 
 
