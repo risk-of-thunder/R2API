@@ -189,8 +189,6 @@ namespace R2API {
             if (c.TryGotoNext(
                 i => i.MatchStloc(out dotStackLoc),
                 i => i.MatchLdarg(out _),
-                i => i.MatchLdcI4(out _),
-                i => i.MatchSub(),
                 i => i.MatchSwitch(out _))) {
                 c.Index++;
                 c.Emit(OpCodes.Ldarg_0);
