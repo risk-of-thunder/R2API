@@ -2,7 +2,6 @@ using R2API.Utils;
 using EntityStates;
 using MonoMod.RuntimeDetour;
 using System;
-using System.Linq;
 using RoR2;
 using RoR2.Skills;
 using System.Collections.Generic;
@@ -272,6 +271,8 @@ namespace R2API {
             public CharacterModel.RendererInfo[] RendererInfos;
             public SkinDef.MeshReplacement[] MeshReplacements;
             public SkinDef.GameObjectActivation[] GameObjectActivations;
+            public SkinDef.ProjectileGhostReplacement[] ProjectileGhostReplacements;
+            public SkinDef.MinionSkinReplacement[] MinionSkinReplacements;
             public string Name;
         }
 
@@ -298,6 +299,8 @@ namespace R2API {
             newSkin.rendererInfos = skin.RendererInfos;
             newSkin.gameObjectActivations = skin.GameObjectActivations;
             newSkin.meshReplacements = skin.MeshReplacements;
+            newSkin.projectileGhostReplacements = skin.ProjectileGhostReplacements;
+            newSkin.minionSkinReplacements = skin.MinionSkinReplacements;
             newSkin.nameToken = skin.NameToken;
             newSkin.name = skin.Name;
 
@@ -395,7 +398,9 @@ namespace R2API {
                             mesh = skinnedRenderer.sharedMesh
                         }
                     },
-                    RendererInfos = charModel.baseRendererInfos
+                    RendererInfos = charModel.baseRendererInfos,
+                    ProjectileGhostReplacements = Array.Empty<SkinDef.ProjectileGhostReplacement>(),
+                    MinionSkinReplacements = Array.Empty<SkinDef.MinionSkinReplacement>()
                 };
 
                 var defaultSkinDef = CreateNewSkinDef(skinDefInfo);

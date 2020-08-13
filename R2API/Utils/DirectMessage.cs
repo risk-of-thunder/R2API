@@ -1,5 +1,4 @@
 ﻿using RoR2;
-using System;
 using UnityEngine.Networking;
 
 namespace R2API.Utils {

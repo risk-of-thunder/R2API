@@ -206,7 +206,7 @@ namespace R2API {
             private int _choiceNameSequence;
             private string ChoiceNameSequence() => $"{Def.globalName}_{++_choiceNameSequence:D3}";
 
-            internal void UpdateValue(object sender, RuleChoiceDef choiceDef) {
+            internal void UpdateValue(object _, RuleChoiceDef choiceDef) {
                 if (choiceDef.ruleDef != Def)
                     return;
 
@@ -253,28 +253,29 @@ namespace R2API {
 
         #region Hooks
 
-        private static void _hookAwake_PreGameController(On.RoR2.PreGameController.orig_Awake orig, PreGameController self) {
+     
+        private static void HookAwake_PreGameController(On.RoR2.PreGameController.orig_Awake orig, PreGameController self) {
             orig(self);
 
             // Late hooking, make sure to not hook twice.
-            On.RoR2.RuleBook.ApplyChoice -= _hookApplyChoice_RuleBook;
-            On.RoR2.RuleBook.ApplyChoice += _hookApplyChoice_RuleBook;
+            On.RoR2.RuleBook.ApplyChoice -= HookApplyChoice_RuleBook;
+            On.RoR2.RuleBook.ApplyChoice += HookApplyChoice_RuleBook;
         }
 
-        private static void _hookApplyChoice_RuleBook(On.RoR2.RuleBook.orig_ApplyChoice orig, RuleBook self, RuleChoiceDef choiceDef) {
+        private static void HookApplyChoice_RuleBook(On.RoR2.RuleBook.orig_ApplyChoice orig, RuleBook self, RuleChoiceDef choiceDef) {
             orig(self, choiceDef);
 
             UpdateValues?.Invoke(self, choiceDef);
         }
 
-        private static void _hookStart_RuleBookViewer(On.RoR2.UI.RuleBookViewer.orig_Start orig, RuleBookViewer self) {
+        private static void HookStart_RuleBookViewer(On.RoR2.UI.RuleBookViewer.orig_Start orig, RuleBookViewer self) {
             orig(self);
 
             _controllers = self.GetFieldValue<UIElementAllocator<RuleCategoryController>>("categoryElementAllocator")
                 .GetFieldValue<List<RuleCategoryController>>("elementControllerComponentsList");
         }
 
-        private static void _hookTogglePopoutPanel_RuleCategoryController(On.RoR2.UI.RuleCategoryController.orig_TogglePopoutPanel orig, RuleCategoryController self) {
+        private static void HookTogglePopoutPanel_RuleCategoryController(On.RoR2.UI.RuleCategoryController.orig_TogglePopoutPanel orig, RuleCategoryController self) {
             orig(self);
 
             CollapseCategory?.Invoke(null, self);
@@ -284,16 +285,16 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            On.RoR2.PreGameController.Awake += _hookAwake_PreGameController;
-            On.RoR2.UI.RuleBookViewer.Start += _hookStart_RuleBookViewer;
-            On.RoR2.UI.RuleCategoryController.TogglePopoutPanel += _hookTogglePopoutPanel_RuleCategoryController;
+            On.RoR2.PreGameController.Awake += HookAwake_PreGameController;
+            On.RoR2.UI.RuleBookViewer.Start += HookStart_RuleBookViewer;
+            On.RoR2.UI.RuleCategoryController.TogglePopoutPanel += HookTogglePopoutPanel_RuleCategoryController;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            On.RoR2.PreGameController.Awake -= _hookAwake_PreGameController;
-            On.RoR2.RuleBook.ApplyChoice -= _hookApplyChoice_RuleBook;
-            On.RoR2.UI.RuleBookViewer.Start -= _hookStart_RuleBookViewer;
+            On.RoR2.PreGameController.Awake -= HookAwake_PreGameController;
+            On.RoR2.RuleBook.ApplyChoice -= HookApplyChoice_RuleBook;
+            On.RoR2.UI.RuleBookViewer.Start -= HookStart_RuleBookViewer;
         }
     }
 }
