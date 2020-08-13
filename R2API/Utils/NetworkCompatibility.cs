@@ -74,7 +74,7 @@ namespace R2API.Utils {
                 }
             }
 
-            var classScanRequest = new PluginScanner.ClassScanRequest(typeof(BaseUnityPlugin).FullName, null,
+            var classScanRequest = new PluginScanner.ClassScanRequest(typeof(BaseUnityPlugin).FullName, null, false,
                 (type, attributes) => {
                     var networkCompatAttr = attributes.FirstOrDefault(attribute =>
                         attribute.AttributeType.FullName == typeof(NetworkCompatibility).FullName);
@@ -97,6 +97,7 @@ namespace R2API.Utils {
             var scanRequestForNetworkCompatAttr = new PluginScanner.AttributeScanRequest(typeof(NetworkCompatibility).FullName,
                 AttributeTargets.Assembly | AttributeTargets.Class,
                 CallWhenAssembliesAreScanned,
+                true,
                 (assembly, arguments) => {
                     TryGetNetworkCompatibilityArguments(arguments, out var compatibilityLevel, out var versionStrictness);
 
@@ -131,7 +132,7 @@ namespace R2API.Utils {
 
             var scanRequestForManualRegistration = new PluginScanner.AttributeScanRequest(typeof(ManualNetworkRegistrationAttribute).FullName,
                 AttributeTargets.Assembly,
-                null,
+                null, true,
                 (assembly, arguments) => {
                     if (modList.Contains(assembly.Name.FullName)) {
                         modList.Remove(assembly.Name.FullName);
