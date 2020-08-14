@@ -9,6 +9,7 @@ using RoR2;
 using System.Reflection;
 using BF = System.Reflection.BindingFlags;
 using RoR2.Achievements;
+using BepInEx;
 
 namespace R2API {
     [R2APISubmodule]
@@ -66,24 +67,78 @@ namespace R2API {
 
             moddedUnlocks.Add((ach, unl));
         }
+
+        /// <summary>
+        /// Adds an unlockable without a corresponding achievement. Generally useful for adding behind the scenes unlockables similar to finding all newt altars and eclipse tracking
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <param name="hidden"></param>
+        /// <param name="nameToken"></param>
+        /// <param name="displayModelPath"></param>
+        public static void AddUnlockableOnly(string identifier, bool hidden = false, string nameToken = null, string displayModelPath = null) {
+            if(!Loaded) throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Try requesting the submodule with '[R2APISubmoduleDependency]'");
+            if(!AbleToAdd) throw new InvalidOperationException("Too late to add unlocks. Must be done during awake.");
+            var def = new UnlockableDef {
+                name = identifier,
+                hidden = hidden,
+                nameToken = nameToken,
+                displayModelPath = displayModelPath,
+                getHowToUnlockString = null,
+                getUnlockedString = null,
+            };
+            moddedUnlocksWithoutAchievements.Add(def);
+        }
+
+        public static void AddEclipseUnlockablesForSurvivor(string modGuid, SurvivorDef survivor) {
+            if(!Loaded) throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Try requesting the submodule with '[R2APISubmoduleDependency]'");
+            if(!AbleToAdd) throw new InvalidOperationException("Too late to add unlocks. Must be done during awake.");
+            if(survivor is null) throw new ArgumentNullException(nameof(survivor));
+            if(survivor.name.IsNullOrWhiteSpace()) throw new ArgumentException("No name assigned", nameof(SurvivorDef));
+            var usedGuid = modGuid.Replace('.', '_');
+            eclipseUnlockInfos.Add((usedGuid, survivor));
+        }
+        private static readonly List<(string guid, SurvivorDef survivor)> eclipseUnlockInfos = new List<(string guid, SurvivorDef survivor)>();
+
         #endregion
         #region Internal
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.AchievementManager.CollectAchievementDefs += AchievementManager_CollectAchievementDefs;
             IL.RoR2.UnlockableCatalog.Init += UnlockableCatalog_Init;
+            On.RoR2.EclipseRun.GetEclipseBaseUnlockableString += EclipseRun_GetEclipseBaseUnlockableString;
             AbleToAdd = true;
         }
+
+
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             IL.RoR2.AchievementManager.CollectAchievementDefs -= AchievementManager_CollectAchievementDefs;
             IL.RoR2.UnlockableCatalog.Init -= UnlockableCatalog_Init;
+            On.RoR2.EclipseRun.GetEclipseBaseUnlockableString -= EclipseRun_GetEclipseBaseUnlockableString;
             AbleToAdd = false;
         }
 
         private static bool _loaded = false;
         private static bool _ableToAdd = false;
+
+        private static String EclipseRun_GetEclipseBaseUnlockableString(On.RoR2.EclipseRun.orig_GetEclipseBaseUnlockableString orig) {
+            var res = orig();
+            if(res == "") return res;
+            var spl = res.Split('.');
+            if(spl.Length != 2) return res;
+            if(Enum.TryParse<SurvivorIndex>(spl[1], out var i)) {
+                if(identities.TryGetValue(i, out var identity)) {
+                    return $"{spl[0]}.{identity}";
+                }
+            }
+            return res;
+        }
+        private static readonly Dictionary<SurvivorIndex,String> identities = new Dictionary<SurvivorIndex, String>();
+        private static String CreateOrGetIdentity(string mod, SurvivorDef survivor) {
+            if(identities.TryGetValue(survivor.survivorIndex, out var id)) return id;
+            return identities[survivor.survivorIndex] = $"{mod}_{survivor.name.Replace('.', '_')}";
+        }
 
         private static Action<string,UnlockableDef> RegisterUnlockable {
             get {
@@ -109,6 +164,7 @@ namespace R2API {
         private static Action<string, UnlockableDef> _registerUnlockable;
 
         private static readonly List<(AchievementDef achievementDef, UnlockableDef unlockableDef)> moddedUnlocks = new List<(AchievementDef, UnlockableDef)>();
+        private static readonly List<UnlockableDef> moddedUnlocksWithoutAchievements = new List<UnlockableDef>();
         private static readonly HashSet<string> usedRewardIds = new HashSet<string>();
         private static readonly Action<string, UnlockableDef> registerUnlockable;
 
@@ -118,6 +174,15 @@ namespace R2API {
                 for (Int32 i = 0; i < moddedUnlocks.Count; ++i) {
                     var (achievement, unlockable) = moddedUnlocks[i];
                     RegisterUnlockable(achievement.unlockableRewardIdentifier, unlockable);
+                }
+                for(Int32 i = 0; i < moddedUnlocksWithoutAchievements.Count; ++i) {
+                    RegisterUnlockable(moddedUnlocksWithoutAchievements[i].name, moddedUnlocksWithoutAchievements[i]);
+                }
+                foreach(var (modName, survivor) in eclipseUnlockInfos) {
+                    for(Int32 i = 1; i <= 8; ++i) {
+                        var str = $"Eclipse.{CreateOrGetIdentity(modName, survivor)}.{i}";
+                        RegisterUnlockable(str, new UnlockableDef());
+                    }
                 }
             }
 
