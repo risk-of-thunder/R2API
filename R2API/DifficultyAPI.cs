@@ -25,7 +25,8 @@ namespace R2API {
         /// </summary>
         public static event EventHandler DifficultyCatalogReady;
 
-        private const DifficultyIndex VanillaFinalIndex = DifficultyIndex.Hard;//We want to replace this 
+        private static readonly DifficultyIndex IndexToStartReplacing = DifficultyIndex.Count;
+
         /// <summary>
         /// An observable collection of ALL difficulty definitions. This includes both the vanilla ones and the ones added by R2API.
         /// </summary>
@@ -44,8 +45,7 @@ namespace R2API {
                 return DifficultyIndex.Invalid;
             }
             difficultyDefinitions.Add(difficulty);
-
-            return VanillaFinalIndex + difficultyDefinitions.Count;
+            return IndexToStartReplacing + difficultyDefinitions.Count - 1;
         }
 
 
@@ -79,13 +79,15 @@ namespace R2API {
                 }
             }
 
-            for (int i = vanillaDefs.Length; i < difficultyDefinitions.Count; i++) {//This basically replicates what the orig does, but that uses the hardcoded enum.Count to end it's loop, instead of the actual array length.
+            for (int i = (int) IndexToStartReplacing; i < difficultyDefinitions.Count; i++) {//This basically replicates what the orig does, but that uses the hardcoded enum.Count to end it's loop, instead of the actual array length.
                 DifficultyDef difficultyDef = difficultyDefinitions[i];
                 RuleChoiceDef choice = ruleChoices.AddChoice(Language.GetString(difficultyDef.nameToken), null, false);
                 choice.spritePath = difficultyDef.iconPath;
                 choice.tooltipNameToken = difficultyDef.nameToken;
                 choice.tooltipNameColor = difficultyDef.color;
                 choice.tooltipBodyToken = difficultyDef.descriptionToken;
+                choice.serverTag = difficultyDef.serverTag;
+                choice.excludeByDefault = false;
                 choice.difficultyIndex = (DifficultyIndex)i;
             }
 
