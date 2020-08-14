@@ -53,6 +53,12 @@ namespace R2API {
             RoR2Application.isModded = true;
 
             SteamworksClientManager.onLoaded += CheckIfUsedOnRightGameVersion;
+
+            // Temporary fix until the Eclipse Button in the main menu is correctly set by the game devs.
+            // It gets disabled when modded even though this option is currently singleplayer only.
+            On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
+                if (self.name != "GenericMenuButton (Eclipse)") orig(self);
+            };
         }
 
         private static void CheckIfUsedOnRightGameVersion() {
