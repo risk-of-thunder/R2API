@@ -126,7 +126,7 @@ namespace R2API {
             var res = orig();
             if(res == "") return res;
             var spl = res.Split('.');
-            if(spl.Length == 1 || spl.Length >= 3) return res;
+            if(spl.Length != 2) return res;
             if(Enum.TryParse<SurvivorIndex>(spl[1], out var i)) {
                 if(identities.TryGetValue(i, out var identity)) {
                     return $"{spl[0]}.{identity}";
@@ -180,7 +180,7 @@ namespace R2API {
                 }
                 foreach(var (modName, survivor) in eclipseUnlockInfos) {
                     for(Int32 i = 1; i <= 8; ++i) {
-                        var str = $"Eclipse{i}.{CreateOrGetIdentity(modName, survivor)}";
+                        var str = $"Eclipse.{CreateOrGetIdentity(modName, survivor)}.{i}";
                         RegisterUnlockable(str, new UnlockableDef());
                     }
                 }
