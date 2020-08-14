@@ -4,6 +4,10 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable NotAccessedField.Local
 
+#pragma warning disable IDE0052 // Remove unread private members
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE0044 // Add readonly modifier
+
 using System;
 using System.Collections.Generic;
 using MonoMod;
@@ -174,6 +178,12 @@ namespace RoR2 {
         }
 
         private static readonly Dictionary<Type, List<SearchableAttribute>> instancesListsByType;
+
+
         private static HashSet<string> assemblyBlacklist;
+
     }
 }
+#pragma warning restore IDE0052 // Remove unread private members
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore IDE0044 // Add readonly modifier

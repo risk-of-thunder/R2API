@@ -10,6 +10,6 @@ namespace RoR2 {
 namespace MonoMod {
     internal static class MonoModRules {
         // ReSharper disable once UnusedParameter.Global
-        public static void NoInlining(MethodDefinition method, CustomAttribute attrib) => method.NoInlining = true;
+        public static void NoInlining(MethodDefinition method, CustomAttribute _) => method.NoInlining = true;
     }
 }

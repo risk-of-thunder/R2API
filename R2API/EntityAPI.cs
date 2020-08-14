@@ -14,12 +14,12 @@ namespace R2API {
         // ReSharper disable InconsistentNaming
         private static readonly Hook _detourSet_stateType = new Hook(
             typeof(SerializableEntityStateType).GetMethodCached("set_stateType"),
-            typeof(EntityAPI).GetMethodCached(nameof(set_stateType_Hook))
+            typeof(EntityAPI).GetMethodCached(nameof(Set_stateType_Hook))
         );
 
         private static readonly Hook _detourSet_typeName = new Hook(
             typeof(SerializableEntityStateType).GetMethodCached("set_typeName"),
-            typeof(EntityAPI).GetMethodCached(nameof(set_typeName_Hook))
+            typeof(EntityAPI).GetMethodCached(nameof(Set_typeName_Hook))
         );
         // ReSharper restore InconsistentNaming
 
@@ -38,15 +38,15 @@ namespace R2API {
             _detourSet_typeName.Undo();
         }
 
-
-        internal static void set_stateType_Hook(ref SerializableEntityStateType self, Type value) =>
+        internal static void Set_stateType_Hook(ref SerializableEntityStateType self, Type value) =>
             self.SetStructFieldValue("_typeName",
                 value != null && value.IsSubclassOf(typeof(EntityState))
                     ? value.AssemblyQualifiedName
                     : "");
 
-        internal static void set_typeName_Hook(ref SerializableEntityStateType self, string value) =>
-            set_stateType_Hook(ref self, Type.GetType(value) ?? GetTypeAllAssemblies(value));
+
+        internal static void Set_typeName_Hook(ref SerializableEntityStateType self, string value) =>
+            Set_stateType_Hook(ref self, Type.GetType(value) ?? GetTypeAllAssemblies(value));
 
 
         private static Type GetTypeAllAssemblies(string name) {

@@ -14,7 +14,7 @@ namespace R2API.Utils {
         }
 
         /// <summary>
-        /// Send a message to the chat in the format "<see cref="messageFrom"/>: <see cref="message"/>"
+        /// Send a message to the chat in the format "messageFrom: message"
         /// </summary>
         /// <param name="message"></param>
         /// <param name="messageFrom"></param>

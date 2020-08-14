@@ -142,7 +142,8 @@ namespace R2API {
             }
         }
 
-        // For use in unit tests
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "For use in unit tests")]
         private void Clear() {
             typedResources.Clear();
         }
