@@ -24,6 +24,6 @@ jobs:
         echo "Patch: ${{ steps.gitversion.outputs.patch }}"
     - uses: actions/setup-dotnet@v1
     - run: dotnet build .
-    - name: Run Tets
+    - name: Run Tests
       run: |
         dotnet test
