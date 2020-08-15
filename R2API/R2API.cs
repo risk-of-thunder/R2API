@@ -23,7 +23,6 @@ namespace R2API {
         public const string PluginName = "R2API";
         public const string PluginVersion = "0.0.1";
 
-
         private const int GameBuild = 5400041;
 
         internal new static ManualLogSource Logger { get; set; }
@@ -116,9 +115,9 @@ namespace R2API {
         }
 
         private static void AddHookLogging() {
-            ModManager.OnHook += (hookOwner, @base, arg3, arg4) => LogMethod(@base, hookOwner);
-            ModManager.OnDetour += (hookOwner, @base, arg3) => LogMethod(@base, hookOwner);
-            ModManager.OnNativeDetour += (hookOwner, @base, arg3, arg4) => LogMethod(@base, hookOwner);
+            ModManager.OnHook += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
+            ModManager.OnDetour += (hookOwner, @base, _) => LogMethod(@base, hookOwner);
+            ModManager.OnNativeDetour += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
 
             HookEndpointManager.OnAdd += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
             HookEndpointManager.OnModify += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);

@@ -362,10 +362,33 @@ namespace R2API.Utils {
         /// </summary>
         /// <param name="T">The type to search</param>
         /// <param name="name">The name of the method to find</param>
-        /// <returns></returns>
+        /// <returns>The found <see cref="MethodInfo"/></returns>
         public static MethodInfo GetMethodCached(this Type T, string name) =>
             MethodCache.GetOrAddOnNull((T, name), x => x.T.GetMethod(x.name, AllFlags)
                 ?? throw new Exception($"Could not find {nameof(MethodInfo)} on {T.FullName} with the name {name}"));
+
+        /// <summary>
+        /// Gets the generic method of the specified type with the specified generic type definition parameter
+        /// </summary>
+        /// <param name="T">The type to search</param>
+        /// <param name="name">The name of the method to find</param>
+        /// <param name="genericTypeDefinition">The generic type definition parameter</param>
+        /// <returns>The found <see cref="MethodInfo"/></returns>
+        public static MethodInfo GetMethodWithConstructedGenericParameter(this Type T, string name, Type genericTypeDefinition) {
+            return T.GetMethods().First(method => {
+                if (method.Name != name) {
+                    return false;
+                }
+
+                var parameterType = method.GetParameters().First().ParameterType;
+                if (!parameterType.IsConstructedGenericType) {
+                    return false;
+                }
+
+                var t = parameterType.GetGenericArguments().First();
+                return parameterType == genericTypeDefinition.MakeGenericType(t);
+            });
+        }
 
         /// <summary>
         /// Gets the method on the specified type and caches it. This overload is used when the method is ambiguous
@@ -777,7 +800,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Method cannot be null.", nameof(method));
             }
 
-            var dmd = new DynamicMethodDefinition(
+            using var dmd = new DynamicMethodDefinition(
                 $"CallDelegate<{method.Name}>", typeof(object), new[] { typeof(object), typeof(object[]) });
             var il = dmd.GetILProcessor();
 
