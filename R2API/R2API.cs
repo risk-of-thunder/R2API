@@ -87,8 +87,10 @@ namespace R2API {
                 {
                     static GameNetworkManager.SimpleLocalizedKickReason SwapToStandardMessage(GameNetworkManager.ModMismatchKickReason reason)
                     {
-                        reason.GetDisplayTokenAndFormatParams(out var token, out var format);
-                        return new GameNetworkManager.SimpleLocalizedKickReason(token, (string[])format);
+                        reason.GetDisplayTokenAndFormatParams(out var token, out _);               
+                        return new GameNetworkManager.SimpleLocalizedKickReason(token,
+                            "This information is not yet available, find below the list of all mods the server needs you to have : ",
+                            string.Join("\n", NetworkModCompatibilityHelper.networkModList));
                     }
                     c.Index++;
                     c.EmitDelegate<Func<GameNetworkManager.ModMismatchKickReason, GameNetworkManager.SimpleLocalizedKickReason>>(SwapToStandardMessage);
