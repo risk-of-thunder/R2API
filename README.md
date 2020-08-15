@@ -4,6 +4,16 @@
 ![GitHub Actions Build](https://github.com/risk-of-thunder/R2API/workflows/CI%20Build/badge.svg)
 
 
+## RoR2 1.0 - IMPORTANT NOTICE
+
+In the Release version of RoR2, Hopoo Games made a `NetworkModCompatibilityHelper` class, which can be given a mod list that is then transformed into a hash that will be checked upon client connection in multiplayer.
+If the hash doesnt correspond between the server and the connecting client, the connection is refused.
+
+R2API will add mods to that mod list if they:
+
+* Use the `NetworkCompatibility` Attribute, either as an custom assembly attribute, or at the top of their plugin class inheriting from `BaseUnityPlugin` with the first argument being `CompatibilityLevel.EveryoneMustHaveMod`.
+* Don't have the `NetworkCompatibility` Attribute or the `ManualNetworkRegistrationAttribute` anywhere in their assembly.
+
 ## About
 
 R2API is a modding framework for other mods to work in, providing centralized and simplified APIs for Risk of Rain 2. This helps keeping mods compatible with each other.
@@ -37,7 +47,8 @@ The most recent changelog can always be found on the [Github](https://github.com
 
 **Current**
 
-* [Fix things for 1.0 release](ammend this!)
+* Fix things for 1.0 release
+* **IMPORTANT FOR MOD DEVS:** [Add NetworkCompatibility Helper](https://github.com/risk-of-thunder/R2API/pull/188)
 * [Remove 'MOD' from dedicated server listings as it's already shown in the tags](https://github.com/risk-of-thunder/R2API/pull/150)
 * [Fixed bug with ConvertToFullpath by enforcing that ModPrefix start with @](https://github.com/risk-of-thunder/R2API/pull/168)
 * [Fixed being unable to have assets with the same path but different type in UnbundledResourceProvider](https://github.com/risk-of-thunder/R2API/pull/167)
