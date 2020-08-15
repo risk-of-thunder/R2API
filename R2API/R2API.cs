@@ -89,7 +89,7 @@ namespace R2API {
                     {
                         reason.GetDisplayTokenAndFormatParams(out var token, out _);               
                         return new GameNetworkManager.SimpleLocalizedKickReason(token,
-                            "This information is not yet available, find below the list of all mods the server needs you to have : ",
+                            "This information is not yet available, see below the list of all mods the server needs you to have : ",
                             string.Join("\n", NetworkModCompatibilityHelper.networkModList));
                     }
                     c.Index++;

@@ -61,6 +61,8 @@ namespace R2API.Utils {
     public class ManualNetworkRegistrationAttribute : Attribute { }
 
     internal class NetworkCompatibilityHandler {
+        internal const char ModGuidAndModVersionSeparator = ';';
+
         internal void BuildModList(PluginScanner pluginScanner) {
             var modList = new HashSet<string>();
 
@@ -87,7 +89,7 @@ namespace R2API.Utils {
 
                     if (networkCompatAttr == null) {
                         if (bepinPluginAttribute != null) {
-                            modList.Add(modGuid + modVersion);
+                            modList.Add(modGuid + ModGuidAndModVersionSeparator + modVersion);
                         }
                         else {
                             R2API.Logger.LogDebug($"Found {nameof(BaseUnityPlugin)} type but no {nameof(BepInPlugin)} attribute");
@@ -119,7 +121,7 @@ namespace R2API.Utils {
                         if (bepinPluginAttribute != null) {
                             var (modGuid, modVersion) = GetBepinPluginInfo(bepinPluginAttribute.ConstructorArguments);
                             modList.Add(versionStrictness == VersionStrictness.EveryoneNeedSameModVersion
-                                ? modGuid + modVersion
+                                ? modGuid + ModGuidAndModVersionSeparator + modVersion
                                 : modGuid);
                         }
                         else {
