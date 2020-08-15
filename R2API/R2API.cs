@@ -7,10 +7,12 @@ using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Logging;
 using Facepunch.Steamworks;
+using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.Utils;
 using RoR2;
+using RoR2.Networking;
 
 namespace R2API {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
@@ -30,7 +32,7 @@ namespace R2API {
 
         internal static event EventHandler R2APIStart;
 
-        internal static HashSet<string> loadedSubmodules;
+        internal static HashSet<string> LoadedSubmodules;
 
         public R2API() {
             Logger = base.Logger;
@@ -45,7 +47,7 @@ namespace R2API {
 
             var pluginScanner = new PluginScanner();
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
-            loadedSubmodules = submoduleHandler.LoadRequested(pluginScanner);
+            LoadedSubmodules = submoduleHandler.LoadRequested(pluginScanner);
             var networkCompatibilityHandler = new NetworkCompatibilityHandler();
             networkCompatibilityHandler.BuildModList(pluginScanner);
             pluginScanner.ScanPlugins();
@@ -54,11 +56,7 @@ namespace R2API {
 
             SteamworksClientManager.onLoaded += CheckIfUsedOnRightGameVersion;
 
-            // Temporary fix until the Eclipse Button in the main menu is correctly set by the game devs.
-            // It gets disabled when modded even though this option is currently singleplayer only.
-            On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
-                if (self.name != "GenericMenuButton (Eclipse)") orig(self);
-            };
+            VanillaFixes();
         }
 
         private static void CheckIfUsedOnRightGameVersion() {
@@ -72,6 +70,32 @@ namespace R2API {
             Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
         }
 
+        private static void VanillaFixes() {
+            // Temporary fix until the Eclipse Button in the main menu is correctly set by the game devs.
+            // It gets disabled when modded even though this option is currently singleplayer only.
+            On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
+                if (self.name != "GenericMenuButton (Eclipse)") orig(self);
+            };
+
+            // Temporary fix for the game not correctly firing the mod mismatch kick reason
+            // because of a lack of default constructor.
+            IL.RoR2.Networking.ServerAuthManager.HandleSetClientAuth += il => {
+                var c = new ILCursor(il);
+                if (c.TryGotoNext(MoveType.AfterLabel,
+                    x => x.MatchNewobj(typeof(GameNetworkManager.ModMismatchKickReason).GetConstructor(new[] { typeof(IEnumerable<string>) })),
+                    x => x.MatchStloc(out _)))
+                {
+                    static GameNetworkManager.SimpleLocalizedKickReason SwapToStandardMessage(GameNetworkManager.ModMismatchKickReason reason)
+                    {
+                        reason.GetDisplayTokenAndFormatParams(out var token, out var format);
+                        return new GameNetworkManager.SimpleLocalizedKickReason(token, (string[])format);
+                    }
+                    c.Index++;
+                    c.EmitDelegate<Func<GameNetworkManager.ModMismatchKickReason, GameNetworkManager.SimpleLocalizedKickReason>>(SwapToStandardMessage);
+                }
+            };
+        }
+
         public void Start() {
             R2APIStart?.Invoke(this, null);
         }
@@ -82,11 +106,11 @@ namespace R2API {
         /// </summary>
         /// <param name="submodule">nameof the submodule</param>
         public static bool IsLoaded(string submodule) {
-            if (loadedSubmodules == null) {
+            if (LoadedSubmodules == null) {
                 Logger.LogWarning("IsLoaded called before submodules were loaded, result may not reflect actual load status.");
                 return false;
             }
-            return loadedSubmodules.Contains(submodule);
+            return LoadedSubmodules.Contains(submodule);
         }
 
         private static void AddHookLogging() {
