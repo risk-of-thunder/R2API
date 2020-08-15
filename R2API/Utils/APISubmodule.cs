@@ -66,87 +66,53 @@ namespace R2API.Utils {
         /// <param name="submodule">nameof the submodule</param>
         public bool IsLoaded(string submodule) => LoadedModules.Contains(submodule);
 
-        internal HashSet<string> LoadRequested() {
-            var assemblies = new List<AssemblyDefinition>();
-            var path = BepInEx.Paths.PluginPath;
-            foreach (string dll in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories))
-            {
-                var fileName = Path.GetFileName(dll);
-                if (fileName.ToLower().Contains("r2api") || fileName.ToLower().Contains("mmhook")) {
-                    continue;
-                }
-
-                try {
-                    assemblies.Add(AssemblyDefinition.ReadAssembly(dll));
-                }
-                catch (Exception) {
-                }
-            }
+        internal HashSet<string> LoadRequested(PluginScanner pluginScanner) {
             _moduleSet = new HashSet<string>();
-            var typeName = typeof(R2APISubmoduleDependency).FullName;
 
-            List<AssemblyDefinition> assemblyWithAttribute = new List<AssemblyDefinition>();
-            foreach (var assembly in assemblies) {
-                if (!assembly.HasCustomAttributes) {
-                    continue;
-                }
-
-                foreach (var attribute in assembly.CustomAttributes) {
-                    if (attribute.AttributeType.FullName == typeName) {
-                        foreach (var arg in attribute.ConstructorArguments) {
-                            foreach (var stringElement in (CustomAttributeArgument[])arg.Value) {
-                                _moduleSet.Add((string)stringElement.Value);
-                                if (!assemblyWithAttribute.Contains(assembly)) {
-                                    assemblyWithAttribute.Add(assembly);
-                                }
-                            }
-                        }
+            void AddModuleToSet(IEnumerable<CustomAttributeArgument> arguments) {
+                foreach (var arg in arguments) {
+                    foreach (var stringElement in (CustomAttributeArgument[])arg.Value) {
+                        _moduleSet.Add((string)stringElement.Value);
                     }
                 }
             }
 
-            assemblies.RemoveAll(asm => assemblyWithAttribute.Contains(asm));
+            void CallWhenAssembliesAreScanned() {
+                var moduleTypes = Assembly.GetExecutingAssembly().GetTypes().Where(APISubmoduleFilter).ToList();
 
-            var types = assemblies
-                .SelectMany(assembly => assembly.MainModule.Types);
-
-            foreach (var type in types) {
-                foreach (var attribute in type.CustomAttributes) {
-                    if (attribute.AttributeType.FullName == typeName) {
-                        foreach (var arg in attribute.ConstructorArguments) {
-                            foreach (var stringElement in (CustomAttributeArgument[])arg.Value) {
-                                _moduleSet.Add((string) stringElement.Value);
-                            }
-                        }
-                    }
+                foreach (var moduleType in moduleTypes) {
+                    R2API.Logger.LogInfo($"Enabling R2API Submodule: {moduleType.Name}");
                 }
-            }
-
-
-            var moduleTypes = Assembly.GetExecutingAssembly().GetTypes().Where(APISubmoduleFilter).ToList();
-
-            foreach (var moduleType in moduleTypes) {
-                R2API.Logger.LogInfo($"Enabling R2API Submodule: {moduleType.Name}");
-            }
             
-            var faults = new Dictionary<Type, Exception>();
-            LoadedModules = new HashSet<string>();
+                var faults = new Dictionary<Type, Exception>();
+                LoadedModules = new HashSet<string>();
 
-            moduleTypes
-                .ForEachTry(t => InvokeStage(t, InitStage.SetHooks), faults);
-            moduleTypes.Where(t => !faults.ContainsKey(t))
-                .ForEachTry(t => InvokeStage(t, InitStage.Load), faults);
+                moduleTypes
+                    .ForEachTry(t => InvokeStage(t, InitStage.SetHooks), faults);
+                moduleTypes.Where(t => !faults.ContainsKey(t))
+                    .ForEachTry(t => InvokeStage(t, InitStage.Load), faults);
 
-            faults.Keys.ForEachTry(t => {
-                _logger?.Log(LogLevel.Error, $"{t.Name} could not be initialized and has been disabled:\n\n{faults[t]}");
-                InvokeStage(t, InitStage.UnsetHooks);
-            });
+                faults.Keys.ForEachTry(t => {
+                    _logger?.Log(LogLevel.Error, $"{t.Name} could not be initialized and has been disabled:\n\n{faults[t]}");
+                    InvokeStage(t, InitStage.UnsetHooks);
+                });
 
-            moduleTypes.Where(t => !faults.ContainsKey(t))
-                .ForEachTry(t => t.SetFieldValue("_loaded", true));
-            moduleTypes.Where(t => !faults.ContainsKey(t))
-                .ForEachTry(t => LoadedModules.Add(t.Name));
+                moduleTypes.Where(t => !faults.ContainsKey(t))
+                    .ForEachTry(t => t.SetFieldValue("_loaded", true));
+                moduleTypes.Where(t => !faults.ContainsKey(t))
+                    .ForEachTry(t => LoadedModules.Add(t.Name));
+            }
 
+            var scanRequest = new PluginScanner.AttributeScanRequest(attributeTypeFullName: typeof(R2APISubmoduleDependency).FullName,
+                attributeTargets: AttributeTargets.Assembly | AttributeTargets.Class,
+                CallWhenAssembliesAreScanned, oneMatchPerAssembly: false,
+                foundOnAssemblyAttributes: (assembly, arguments) => 
+                    AddModuleToSet(arguments),
+                foundOnAssemblyTypes: (type, arguments) => 
+                    AddModuleToSet(arguments)
+                );
+
+            pluginScanner.AddScanRequest(scanRequest);
 
             return LoadedModules;
         }
@@ -165,7 +131,7 @@ namespace R2API.Utils {
                 return false;
 
             if (attr.Build != default && attr.Build != _build)
-                _logger?.Log(LogLevel.Message,
+                _logger?.Log(LogLevel.Debug,
                     $"{type.Name} was built for build {attr.Build}, current build is {_build}.");
 
             return true;
@@ -177,7 +143,7 @@ namespace R2API.Utils {
                 .Any(a => ((R2APISubmoduleInit) a).Stage.HasFlag(stage))).ToList();
 
             if (method.Count == 0) {
-                _logger?.Log(LogLevel.Debug, $"{type.Name} has no static method registered for {stage}");
+                _logger?.Log(LogLevel.Debug, $"{type.Name} has no static method registered for {stage.ToString()}");
                 return;
             }
 
