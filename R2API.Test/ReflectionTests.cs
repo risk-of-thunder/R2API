@@ -216,14 +216,6 @@ namespace R2API.Test {
             var cm = new CharacterMaster();
             Assert.Throws<Exception>(() => cm.GetFieldValue<Inventory>("inventory"));
         }
-
-        [Fact]
-        public void TestGetFieldCached() {
-            var fieldInfo = typeof(HealthComponent).GetFieldCached("increaseHealingCount");
-            Assert.NotNull(fieldInfo);
-            var fieldInfo2 = typeof(HealthComponent).GetFieldCached("repeatHealCount");
-            Assert.NotNull(fieldInfo2);
-        }
     }
 
     public enum TestEnum {
