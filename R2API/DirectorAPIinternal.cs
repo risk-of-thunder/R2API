@@ -77,6 +77,9 @@ namespace R2API {
                 case "artifactworld":
                     stageInfo.stage = Stage.ArtifactReliquary;
                     break;
+                case "moon":
+                    stageInfo.stage = Stage.Commencement;
+                    break;
                 default:
                     stageInfo.stage = Stage.Custom;
                     stageInfo.CustomStageName = scene.baseSceneName;
