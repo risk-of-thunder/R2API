@@ -66,16 +66,19 @@ namespace R2API.Utils {
 
             void CallWhenAssembliesAreScanned() {
                 if (modList.Count != 0) {
+                    var sortedModList = modList.ToList();
+                    sortedModList.Sort();
                     R2API.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
-                    foreach (var mod in modList) {
+                    foreach (var mod in sortedModList) {
                         R2API.Logger.LogInfo(mod);
                         NetworkModCompatibilityHelper.networkModList = NetworkModCompatibilityHelper.networkModList.Append(mod);
                     }
                 }
             }
 
-            var classScanRequest = new PluginScanner.ClassScanRequest(typeof(BaseUnityPlugin).FullName, null, false,
-                (type, attributes) => {
+            var classScanRequest = new PluginScanner.ClassScanRequest(typeof(BaseUnityPlugin).FullName,
+                whenRequestIsDone: null, oneMatchPerAssembly: false,
+                foundOnAssemblyTypes: (type, attributes) => {
                     var networkCompatAttr = attributes.FirstOrDefault(attribute =>
                         attribute.AttributeType.FullName == typeof(NetworkCompatibility).FullName);
                     var bepinPluginAttribute = attributes.FirstOrDefault(attribute =>
@@ -94,11 +97,11 @@ namespace R2API.Utils {
 
             pluginScanner.AddScanRequest(classScanRequest);
 
-            var scanRequestForNetworkCompatAttr = new PluginScanner.AttributeScanRequest(typeof(NetworkCompatibility).FullName,
-                AttributeTargets.Assembly | AttributeTargets.Class,
+            var scanRequestForNetworkCompatAttr = new PluginScanner.AttributeScanRequest(attributeTypeFullName: typeof(NetworkCompatibility).FullName,
+                attributeTargets: AttributeTargets.Assembly | AttributeTargets.Class,
                 CallWhenAssembliesAreScanned,
-                true,
-                (assembly, arguments) => {
+                oneMatchPerAssembly: true,
+                foundOnAssemblyAttributes: (assembly, arguments) => {
                     TryGetNetworkCompatibilityArguments(arguments, out var compatibilityLevel, out var versionStrictness);
 
                     if (compatibilityLevel == CompatibilityLevel.EveryoneMustHaveMod) {
@@ -106,12 +109,13 @@ namespace R2API.Utils {
                             ? assembly.Name.FullName
                             : assembly.Name.Name);
                     }
-                }, (type, arguments) => {
+                }, foundOnAssemblyTypes: (type, arguments) => {
                     TryGetNetworkCompatibilityArguments(arguments, out var compatibilityLevel, out var versionStrictness);
 
                     if (compatibilityLevel == CompatibilityLevel.EveryoneMustHaveMod) {
                         var bepinPluginAttribute = type.CustomAttributes.FirstOrDefault(attr =>
                             attr.AttributeType.Resolve().IsSubtypeOf(typeof(BepInPlugin)));
+
                         if (bepinPluginAttribute != null) {
                             var (modGuid, modVersion) = GetBepinPluginInfo(bepinPluginAttribute.ConstructorArguments);
                             modList.Add(versionStrictness == VersionStrictness.EveryoneNeedSameModVersion
@@ -126,13 +130,13 @@ namespace R2API.Utils {
                                                 $"put the {nameof(NetworkCompatibility)} attribute as an Assembly attribute instead");
                         }
                     }
-                }, typeof(BaseUnityPlugin).FullName);
+                }, attributeMustBeOnTypeFullName: typeof(BaseUnityPlugin).FullName);
 
             pluginScanner.AddScanRequest(scanRequestForNetworkCompatAttr);
 
             var scanRequestForManualRegistration = new PluginScanner.AttributeScanRequest(typeof(ManualNetworkRegistrationAttribute).FullName,
                 AttributeTargets.Assembly,
-                null, true,
+                whenRequestIsDone: null, oneMatchPerAssembly: true,
                 (assembly, arguments) => {
                     if (modList.Contains(assembly.Name.FullName)) {
                         modList.Remove(assembly.Name.FullName);
