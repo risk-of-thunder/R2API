@@ -106,9 +106,9 @@ namespace R2API {
             IL.RoR2.AchievementManager.CollectAchievementDefs += AchievementManager_CollectAchievementDefs;
             IL.RoR2.UnlockableCatalog.Init += UnlockableCatalog_Init;
             On.RoR2.EclipseRun.GetEclipseBaseUnlockableString += EclipseRun_GetEclipseBaseUnlockableString;
+            IL.RoR2.UI.EclipseRunScreenController.SelectSurvivor += EclipseRunScreenController_SelectSurvivor;
             AbleToAdd = true;
         }
-
 
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
@@ -116,11 +116,21 @@ namespace R2API {
             IL.RoR2.AchievementManager.CollectAchievementDefs -= AchievementManager_CollectAchievementDefs;
             IL.RoR2.UnlockableCatalog.Init -= UnlockableCatalog_Init;
             On.RoR2.EclipseRun.GetEclipseBaseUnlockableString -= EclipseRun_GetEclipseBaseUnlockableString;
+            IL.RoR2.UI.EclipseRunScreenController.SelectSurvivor -= EclipseRunScreenController_SelectSurvivor;
             AbleToAdd = false;
         }
 
         private static bool _loaded = false;
         private static bool _ableToAdd = false;
+
+        private static String GetEclipseUnlockableName(String current, SurvivorIndex index) => identities.TryGetValue(index, out var id) ? $"Eclipse.{id}" : current;
+
+        private static void EclipseRunScreenController_SelectSurvivor(ILContext il) => new ILCursor(il)
+            .GotoNext(x => x.MatchLdstr("Eclipse.{0}"))
+            .GotoNext(MoveType.AfterLabel, x => x.MatchStloc(0))
+            .Emit(OpCodes.Ldarg_1)
+            .EmitDelegate<Func<String, SurvivorIndex, String>>(GetEclipseUnlockableName);
+
 
         private static String EclipseRun_GetEclipseBaseUnlockableString(On.RoR2.EclipseRun.orig_GetEclipseBaseUnlockableString orig) {
             var res = orig();
@@ -179,7 +189,7 @@ namespace R2API {
                     RegisterUnlockable(moddedUnlocksWithoutAchievements[i].name, moddedUnlocksWithoutAchievements[i]);
                 }
                 foreach(var (modName, survivor) in eclipseUnlockInfos) {
-                    for(Int32 i = 1; i <= 8; ++i) {
+                    for(Int32 i = 2; i <= 8; ++i) {
                         var str = $"Eclipse.{CreateOrGetIdentity(modName, survivor)}.{i}";
                         RegisterUnlockable(str, new UnlockableDef());
                     }
