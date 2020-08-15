@@ -4,15 +4,15 @@
 ![GitHub Actions Build](https://github.com/risk-of-thunder/R2API/workflows/CI%20Build/badge.svg)
 
 
-## IMPORTANT NOTICE
+## RoR2 1.0 - IMPORTANT NOTICE
 
-In the Release version of the game, Hopoo Games made a NetworkModCompatibilityHelper class, which can be given a mod list that is then transformed into a hash that will be checked upon client connections in multiplayer.
+In the Release version of RoR2, Hopoo Games made a `NetworkModCompatibilityHelper` class, which can be given a mod list that is then transformed into a hash that will be checked upon client connection in multiplayer.
 If the hash doesnt correspond between the server and the connecting client, the connection is refused.
 
-R2API will add mods to the network mod list if they :
+R2API will add mods to that mod list if they:
 
-* Use the NetworkCompatibility Attribute, either as an custom assembly attribute, or at the top of their plugin class heriting from BaseUnityPlugin with the first argument being CompatibilityLevel.EveryoneMustHaveMod.
-* Don't have the NetworkCompatibility Attribute and the ManualNetworkRegistrationAttribute anywhere in their assembly.
+* Use the `NetworkCompatibility` Attribute, either as an custom assembly attribute, or at the top of their plugin class inheriting from `BaseUnityPlugin` with the first argument being `CompatibilityLevel.EveryoneMustHaveMod`.
+* Don't have the `NetworkCompatibility` Attribute or the `ManualNetworkRegistrationAttribute` anywhere in their assembly.
 
 ## About
 
