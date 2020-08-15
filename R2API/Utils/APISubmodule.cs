@@ -103,12 +103,12 @@ namespace R2API.Utils {
                     .ForEachTry(t => LoadedModules.Add(t.Name));
             }
 
-            var scanRequest = new PluginScanner.AttributeScanRequest(typeof(R2APISubmoduleDependency).FullName,
-                AttributeTargets.Assembly | AttributeTargets.Class,
-                CallWhenAssembliesAreScanned, false,
-                (assembly, arguments) => 
+            var scanRequest = new PluginScanner.AttributeScanRequest(attributeTypeFullName: typeof(R2APISubmoduleDependency).FullName,
+                attributeTargets: AttributeTargets.Assembly | AttributeTargets.Class,
+                CallWhenAssembliesAreScanned, oneMatchPerAssembly: false,
+                foundOnAssemblyAttributes: (assembly, arguments) => 
                     AddModuleToSet(arguments),
-                (type, arguments) => 
+                foundOnAssemblyTypes: (type, arguments) => 
                     AddModuleToSet(arguments)
                 );
 
