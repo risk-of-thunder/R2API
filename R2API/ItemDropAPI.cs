@@ -242,19 +242,19 @@ namespace R2API {
             }
             // These lists should be replaced soon.
             self.availableTier1DropList.Clear();
-            self.availableTier1DropList.AddRange(GetDefaultDropList(ItemTier.Tier1).Select(x => PickupCatalog.FindPickupIndex(x))
+            self.availableTier1DropList.AddRange(GetDefaultDropList(ItemTier.Tier1).Select(PickupCatalog.FindPickupIndex)
                 .ToList());
 
             self.availableTier2DropList.Clear();
-            self.availableTier2DropList.AddRange(GetDefaultDropList(ItemTier.Tier2).Select(x => PickupCatalog.FindPickupIndex(x))
+            self.availableTier2DropList.AddRange(GetDefaultDropList(ItemTier.Tier2).Select(PickupCatalog.FindPickupIndex)
                 .ToList());
 
             self.availableTier3DropList.Clear();
-            self.availableTier3DropList.AddRange(GetDefaultDropList(ItemTier.Tier3).Select(x => PickupCatalog.FindPickupIndex(x))
+            self.availableTier3DropList.AddRange(GetDefaultDropList(ItemTier.Tier3).Select(PickupCatalog.FindPickupIndex)
                 .ToList());
 
             self.availableEquipmentDropList.Clear();
-            self.availableEquipmentDropList.AddRange(GetDefaultEquipmentDropList().Select(x => PickupCatalog.FindPickupIndex(x))
+            self.availableEquipmentDropList.AddRange(GetDefaultEquipmentDropList().Select(PickupCatalog.FindPickupIndex)
                 .ToList());
 
             self.availableLunarDropList.Clear();
@@ -290,20 +290,13 @@ namespace R2API {
 
             cursor.Emit(OpCodes.Stloc_0);
 
-            cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetMethodCached("get_itemIndex")));
-
-            var itemIndex = Reflection.ReadLocalIndex(cursor.Next.Next.OpCode, cursor.Next.Next.Operand);
-
-            cursor.GotoNext(x => x.MatchCall(typeof(PickupIndex).GetConstructorCached(new[] { typeof(ItemIndex) })));
-            cursor.GotoPrev(x => x.OpCode == OpCodes.Ldloca_S);
-
-            var pickupIndex = (VariableDefinition)cursor.Next.Operand;
+            var nextElementUniform = typeof(Xoroshiro128Plus)
+                .GetMethodWithConstructedGenericParameter("NextElementUniform", typeof(List<>))
+                .MakeGenericMethod(typeof(PickupIndex));
+            cursor.GotoNext(MoveType.After, x => x.MatchCallOrCallvirt(nextElementUniform));
+            var pickupIndex = Reflection.ReadLocalIndex(cursor.Next.OpCode, cursor.Next.Operand);
 
             cursor.Goto(0);
-
-            cursor.GotoNext(x => x.MatchStloc(itemIndex));
-            cursor.Emit(OpCodes.Stloc_S, itemIndex);
-
 
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.Emit(OpCodes.Dup);
@@ -321,8 +314,6 @@ namespace R2API {
             });
 
             cursor.Emit(OpCodes.Stloc_S, pickupIndex);
-            cursor.Emit(OpCodes.Ldloca_S, pickupIndex);
-            cursor.Emit(OpCodes.Call, typeof(PickupIndex).GetMethodCached("get_itemIndex"));
         }
 
         public static void AddDrops(ItemDropLocation dropLocation, params PickupSelection[] pickups) {

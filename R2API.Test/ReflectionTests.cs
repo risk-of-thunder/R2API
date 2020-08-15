@@ -199,30 +199,17 @@ namespace R2API.Test {
 
         [Fact]
         public void TestReflectionItemDropAPI() {
-            var method = typeof(PickupIndex).GetMethodCached("get_itemIndex");
-            Assert.NotNull(method);
-
-
-            var nextElementUniform = typeof(Xoroshiro128Plus)
-                .GetMethods()
-                .First(x => x.Name == "NextElementUniform"
-                            && x.GetParameters()[0].ParameterType.GUID == typeof(List<>).GUID);
-
+            var nextElementUniform = typeof(Xoroshiro128Plus).GetMethodWithConstructedGenericParameter("NextElementUniform", typeof(List<>));
             Assert.NotNull(nextElementUniform);
+
+            var nextElementUniformExact = nextElementUniform.MakeGenericMethod(typeof(PickupIndex));
+            Assert.NotNull(nextElementUniformExact);
         }
 
         [Fact]
         public void TestGetFieldValueException() {
             var cm = new CharacterMaster();
             Assert.Throws<Exception>(() => cm.GetFieldValue<Inventory>("inventory"));
-        }
-
-        [Fact]
-        public void TestGetFieldCached() {
-            var fieldInfo = typeof(HealthComponent).GetFieldCached("increaseHealingCount");
-            Assert.NotNull(fieldInfo);
-            var fieldInfo2 = typeof(HealthComponent).GetFieldCached("repeatHealCount");
-            Assert.NotNull(fieldInfo2);
         }
     }
 

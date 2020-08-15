@@ -7,11 +7,12 @@ using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Logging;
 using Facepunch.Steamworks;
+using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.Utils;
 using RoR2;
-using UnityEngine;
+using RoR2.Networking;
 
 namespace R2API {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
@@ -22,8 +23,7 @@ namespace R2API {
         public const string PluginName = "R2API";
         public const string PluginVersion = "0.0.1";
 
-
-        private const int GameBuild = 4892828;
+        private const int GameBuild = 5400041;
 
         internal new static ManualLogSource Logger { get; set; }
 
@@ -31,7 +31,7 @@ namespace R2API {
 
         internal static event EventHandler R2APIStart;
 
-        internal static HashSet<string> loadedSubmodules;
+        internal static HashSet<string> LoadedSubmodules;
 
         public R2API() {
             Logger = base.Logger;
@@ -44,53 +44,61 @@ namespace R2API {
 
             On.RoR2.UnitySystemConsoleRedirector.Redirect += orig => { };
 
+            var pluginScanner = new PluginScanner();
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
-            loadedSubmodules = submoduleHandler.LoadRequested();
-
-            //Currently disabled until manifest v2
-            //ModListAPI.Init();
+            LoadedSubmodules = submoduleHandler.LoadRequested(pluginScanner);
+            var networkCompatibilityHandler = new NetworkCompatibilityHandler();
+            networkCompatibilityHandler.BuildModList(pluginScanner);
+            pluginScanner.ScanPlugins();
 
             RoR2Application.isModded = true;
 
-            // Temporary fix as the new quickplay button currently don't have the DisableIfGameModded Script attached to it
-            On.RoR2.UI.QuickPlayButtonController.Start += (orig, self) => {
-                orig(self);
-                self.gameObject.SetActive(false);
-            };
+            SteamworksClientManager.onLoaded += CheckIfUsedOnRightGameVersion;
 
+            VanillaFixes();
+        }
+
+        private static void CheckIfUsedOnRightGameVersion() {
+            var buildId =
+                SteamworksClientManager.instance.GetFieldValue<Client>("steamworksClient").BuildId;
+
+            if (GameBuild == buildId)
+                return;
+
+            Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{buildId}\".");
+            Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
+        }
+
+        private static void VanillaFixes() {
+            // Temporary fix until the Eclipse Button in the main menu is correctly set by the game devs.
+            // It gets disabled when modded even though this option is currently singleplayer only.
             On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
-                // TODO: If we can enable quick play without regrets, uncomment.
-                //if (self.name == "Button, QP")
-                //    return;
-
-                self.gameObject.SetActive(false);
+                if (self.name != "GenericMenuButton (Eclipse)") orig(self);
             };
 
-            On.RoR2.Networking.SteamLobbyFinder.CCSteamQuickplayStart += (orig, args) => {
-                Debug.Log("QuickPlay is disabled in mods due to social contracts and lack of general support");
-            };
-
-            SteamworksClientManager.onLoaded += () => {
-                var buildId =
-                    SteamworksClientManager.instance.GetFieldValue<Client>("steamworksClient").BuildId;
-
-                if (GameBuild == buildId)
-                    return;
-
-                Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{buildId}\".");
-                Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
-            };
-
-            // Make sure that modded dedicated servers are recognizable from the server browser
-            On.RoR2.SteamworksServerManager.UpdateHostName += (orig, self, hostname) => {
-                var server = ((SteamworksServerManager)self).GetFieldValue<Server>("steamworksServer");
-                server.GameTags = "mod," + server.GameTags;
+            // Temporary fix for the game not correctly firing the mod mismatch kick reason
+            // because of a lack of default constructor.
+            IL.RoR2.Networking.ServerAuthManager.HandleSetClientAuth += il => {
+                var c = new ILCursor(il);
+                if (c.TryGotoNext(MoveType.AfterLabel,
+                    x => x.MatchNewobj(typeof(GameNetworkManager.ModMismatchKickReason).GetConstructor(new[] { typeof(IEnumerable<string>) })),
+                    x => x.MatchStloc(out _)))
+                {
+                    static GameNetworkManager.SimpleLocalizedKickReason SwapToStandardMessage(GameNetworkManager.ModMismatchKickReason reason)
+                    {
+                        reason.GetDisplayTokenAndFormatParams(out var token, out _);               
+                        return new GameNetworkManager.SimpleLocalizedKickReason(token,
+                            "This information is not yet available, see below the list of all mods the server needs you to have : ",
+                            string.Join("\n", NetworkModCompatibilityHelper.networkModList));
+                    }
+                    c.Index++;
+                    c.EmitDelegate<Func<GameNetworkManager.ModMismatchKickReason, GameNetworkManager.SimpleLocalizedKickReason>>(SwapToStandardMessage);
+                }
             };
         }
 
         public void Start() {
-            if (R2APIStart != null)
-                R2APIStart.Invoke(this, null);
+            R2APIStart?.Invoke(this, null);
         }
 
 
@@ -99,17 +107,17 @@ namespace R2API {
         /// </summary>
         /// <param name="submodule">nameof the submodule</param>
         public static bool IsLoaded(string submodule) {
-            if (loadedSubmodules == null) {
+            if (LoadedSubmodules == null) {
                 Logger.LogWarning("IsLoaded called before submodules were loaded, result may not reflect actual load status.");
                 return false;
             }
-            return loadedSubmodules.Contains(submodule);
+            return LoadedSubmodules.Contains(submodule);
         }
 
         private static void AddHookLogging() {
-            ModManager.OnHook += (hookOwner, @base, arg3, arg4) => LogMethod(@base, hookOwner);
-            ModManager.OnDetour += (hookOwner, @base, arg3) => LogMethod(@base, hookOwner);
-            ModManager.OnNativeDetour += (hookOwner, @base, arg3, arg4) => LogMethod(@base, hookOwner);
+            ModManager.OnHook += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
+            ModManager.OnDetour += (hookOwner, @base, _) => LogMethod(@base, hookOwner);
+            ModManager.OnNativeDetour += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
 
             HookEndpointManager.OnAdd += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
             HookEndpointManager.OnModify += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
