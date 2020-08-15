@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using BepInEx;
+using MonoMod.Utils;
 using R2API.Utils;
+using RoR2;
 using SimpleJSON;
 using UnityEngine;
 
@@ -29,34 +31,32 @@ namespace R2API {
                 AddPath(path);
             }
 
-            On.RoR2.Language.GetString_string_string += Language_GetString_string_string;
+            Language.onCurrentLanguageChanged += OnCurrentLanguageChanged;
         }
 
-        private static string Language_GetString_string_string(On.RoR2.Language.orig_GetString_string_string orig, string token, string language) {
-            if (LanguageSpecificTokens.ContainsKey(language)) {
-                if (LanguageSpecificTokens[language].ContainsKey(token)) {
-                    return LanguageSpecificTokens[language][token];
-                }
+        private static void OnCurrentLanguageChanged() {
+            var currentLanguage = Language.currentLanguage;
+            if (currentLanguage is null)
+                return;
+
+            if (LanguageSpecificTokens.ContainsKey(currentLanguage.name)) {
+                currentLanguage.stringsByToken.AddRange(LanguageSpecificTokens);
             }
 
-            if (GenericTokens.ContainsKey(token)) {
-                return GenericTokens[token];
-            }
-
-            return orig(token, language);
+            currentLanguage.stringsByToken.AddRange(GenericTokens);
         }
 
         //based upon RoR2.language.LoadTokensFromFile but with specific language support
         private static void LoadCustomTokensFromFile(string file) {
             try {
-                JSONNode jsonnode = JSON.Parse(file);
-                if (jsonnode == null) {
+                JSONNode jsonNode = JSON.Parse(file);
+                if (jsonNode == null) {
                     return;
                 }
 
-                var languageTokens = jsonnode.Keys;
+                var languageTokens = jsonNode.Keys;
                 foreach (var language in languageTokens) {
-                    JSONNode generic = jsonnode[language];
+                    JSONNode generic = jsonNode[language];
                     if (generic == null) {
                         return;
                     }
@@ -66,10 +66,7 @@ namespace R2API {
                 }
             }
             catch (Exception ex) {
-                Debug.LogFormat("Parsing error in language file , Error: {0}", new object[]
-                {
-                        ex
-                });
+                Debug.LogFormat("Parsing error in language file , Error: {0}", ex);
             }
         }
 
@@ -129,7 +126,6 @@ namespace R2API {
         /// </summary>
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         public static void Add(Dictionary<string, string> tokenDictionary) {
-            Add(tokenDictionary);
             foreach (var token in tokenDictionary.Keys) {
                 Add(token, tokenDictionary[token]);
             }
