@@ -189,7 +189,7 @@ namespace R2API {
                     RegisterUnlockable(moddedUnlocksWithoutAchievements[i].name, moddedUnlocksWithoutAchievements[i]);
                 }
                 foreach(var (modName, survivor) in eclipseUnlockInfos) {
-                    for(Int32 i = 1; i <= 8; ++i) {
+                    for(Int32 i = 2; i <= 8; ++i) {
                         var str = $"Eclipse.{CreateOrGetIdentity(modName, survivor)}.{i}";
                         RegisterUnlockable(str, new UnlockableDef());
                     }
