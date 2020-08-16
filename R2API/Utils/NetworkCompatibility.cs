@@ -66,18 +66,6 @@ namespace R2API.Utils {
         internal void BuildModList(PluginScanner pluginScanner) {
             var modList = new HashSet<string>();
 
-            void CallWhenAssembliesAreScanned() {
-                if (modList.Count != 0) {
-                    var sortedModList = modList.ToList();
-                    sortedModList.Sort();
-                    R2API.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
-                    foreach (var mod in sortedModList) {
-                        R2API.Logger.LogInfo(mod);
-                        NetworkModCompatibilityHelper.networkModList = NetworkModCompatibilityHelper.networkModList.Append(mod);
-                    }
-                }
-            }
-
             var scanForBepinExUnityPlugins = new PluginScanner.ClassScanRequest(typeof(BaseUnityPlugin).FullName,
                 whenRequestIsDone: null, oneMatchPerAssembly: false,
                 foundOnAssemblyTypes: (type, attributes) => {
@@ -87,7 +75,7 @@ namespace R2API.Utils {
                     var bepinPluginAttribute = attributes.FirstOrDefault(attribute =>
                         attribute.AttributeType.FullName == typeof(BepInPlugin).FullName);
 
-                    var (modGuid, modVersion) = GetBepinPluginInfo(bepinPluginAttribute?.ConstructorArguments);
+                    var (modGuid, modVersion) = PluginScanner.GetBepinPluginInfo(bepinPluginAttribute?.ConstructorArguments);
 
                     var haveManualRegistrationAttribute = type.Module.Assembly.CustomAttributes?.FirstOrDefault(a =>
                         a.AttributeType.FullName == typeof(ManualNetworkRegistrationAttribute).FullName) != null;
@@ -126,7 +114,7 @@ namespace R2API.Utils {
                             attr.AttributeType.Resolve().IsSubtypeOf(typeof(BepInPlugin)));
 
                         if (bepinPluginAttribute != null) {
-                            var (modGuid, modVersion) = GetBepinPluginInfo(bepinPluginAttribute.ConstructorArguments);
+                            var (modGuid, modVersion) = PluginScanner.GetBepinPluginInfo(bepinPluginAttribute.ConstructorArguments);
                             modList.Add(versionStrictness == VersionStrictness.EveryoneNeedSameModVersion
                                 ? modGuid + ModGuidAndModVersionSeparator + modVersion
                                 : modGuid);
@@ -142,23 +130,24 @@ namespace R2API.Utils {
                 }, attributeMustBeOnTypeFullName: typeof(BaseUnityPlugin).FullName);
 
             pluginScanner.AddScanRequest(scanRequestForNetworkCompatAttr);
+
+            void CallWhenAssembliesAreScanned() {
+                if (modList.Count != 0) {
+                    var sortedModList = modList.ToList();
+                    sortedModList.Sort();
+                    R2API.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
+                    foreach (var mod in sortedModList) {
+                        R2API.Logger.LogInfo(mod);
+                        NetworkModCompatibilityHelper.networkModList = NetworkModCompatibilityHelper.networkModList.Append(mod);
+                    }
+                }
+            }
         }
 
         private static void TryGetNetworkCompatibilityArguments(IList<CustomAttributeArgument> attributeArguments,
             out CompatibilityLevel compatibilityLevel, out VersionStrictness versionStrictness) {
             compatibilityLevel = attributeArguments[0].Value as CompatibilityLevel? ?? CompatibilityLevel.EveryoneMustHaveMod;
             versionStrictness = attributeArguments[1].Value as VersionStrictness? ?? VersionStrictness.EveryoneNeedSameModVersion;
-        }
-
-        private static (string modGuid, string modVersion) GetBepinPluginInfo(IList<CustomAttributeArgument> attributeArguments) {
-            if (attributeArguments == null) {
-                return (null, null);
-            }
-
-            var modGuid = (string)attributeArguments[0].Value;
-            var modVersion = (string)attributeArguments[2].Value;
-
-            return (modGuid, modVersion);
         }
     }
 }
