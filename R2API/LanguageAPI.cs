@@ -39,8 +39,8 @@ namespace R2API {
             if (currentLanguage is null)
                 return;
 
-            if (LanguageSpecificTokens.ContainsKey(currentLanguage.name)) {
-                currentLanguage.stringsByToken.AddRange(LanguageSpecificTokens);
+            if (LanguageSpecificTokens.TryGetValue(currentLanguage.name, out var languageSpecificDic)) {
+                currentLanguage.stringsByToken.AddRange(languageSpecificDic);
             }
 
             currentLanguage.stringsByToken.AddRange(GenericTokens);
