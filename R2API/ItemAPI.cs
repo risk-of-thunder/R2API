@@ -133,6 +133,16 @@ namespace R2API {
                 return ItemIndex.None;
             }
 
+            if (item.ItemDef == null) {
+                R2API.Logger.LogError("Your ItemDef is null ! Can't add your item.");
+                return ItemIndex.None;
+            }
+
+            if (string.IsNullOrEmpty(item.ItemDef.name)) {
+                R2API.Logger.LogError("Your ItemDef.name is null ! Can't add your item.");
+                return ItemIndex.None;
+            }
+
             bool xmlSafe = false;
             try {
                 XElement element = new XElement(item.ItemDef.name);
@@ -164,6 +174,16 @@ namespace R2API {
 
             if (_equipmentCatalogInitialized) {
                 R2API.Logger.LogError($"Too late ! Tried to add equipment item: {item.EquipmentDef.nameToken} after the equipment list was created");
+                return EquipmentIndex.None;
+            }
+
+            if (item.EquipmentDef == null) {
+                R2API.Logger.LogError("Your EquipmentDef is null ! Can't add your Equipment.");
+                return EquipmentIndex.None;
+            }
+
+            if (string.IsNullOrEmpty(item.EquipmentDef.name)) {
+                R2API.Logger.LogError("Your EquipmentDef.name is null ! Can't add your Equipment.");
                 return EquipmentIndex.None;
             }
 
