@@ -78,17 +78,24 @@ namespace R2API.Utils {
                 }
             }
 
-            var classScanRequest = new PluginScanner.ClassScanRequest(typeof(BaseUnityPlugin).FullName,
+            var scanForBepinExUnityPlugins = new PluginScanner.ClassScanRequest(typeof(BaseUnityPlugin).FullName,
                 whenRequestIsDone: null, oneMatchPerAssembly: false,
                 foundOnAssemblyTypes: (type, attributes) => {
-                    var networkCompatAttr = attributes.FirstOrDefault(attribute =>
-                        attribute.AttributeType.FullName == typeof(NetworkCompatibility).FullName);
+                    var haveNetworkCompatAttribute = attributes.FirstOrDefault(attribute =>
+                        attribute.AttributeType.FullName == typeof(NetworkCompatibility).FullName) != null;
+
                     var bepinPluginAttribute = attributes.FirstOrDefault(attribute =>
                         attribute.AttributeType.FullName == typeof(BepInPlugin).FullName);
+
                     var (modGuid, modVersion) = GetBepinPluginInfo(bepinPluginAttribute?.ConstructorArguments);
 
-                    if (networkCompatAttr == null) {
-                        if (bepinPluginAttribute != null) {
+                    var haveManualRegistrationAttribute = type.Module.Assembly.CustomAttributes?.FirstOrDefault(a =>
+                        a.AttributeType.FullName == typeof(ManualNetworkRegistrationAttribute).FullName) != null;
+
+                    // By default, any plugins that don't have the NetworkCompatibility attribute and
+                    // don't have the ManualNetworkRegistration attribute are added to the networked mod list
+                    if (!haveNetworkCompatAttribute) {
+                        if (bepinPluginAttribute != null && !haveManualRegistrationAttribute) {
                             modList.Add(modGuid + ModGuidAndModVersionSeparator + modVersion);
                         }
                         else {
@@ -97,7 +104,7 @@ namespace R2API.Utils {
                     }
                 });
 
-            pluginScanner.AddScanRequest(classScanRequest);
+            pluginScanner.AddScanRequest(scanForBepinExUnityPlugins);
 
             var scanRequestForNetworkCompatAttr = new PluginScanner.AttributeScanRequest(attributeTypeFullName: typeof(NetworkCompatibility).FullName,
                 attributeTargets: AttributeTargets.Assembly | AttributeTargets.Class,
@@ -135,17 +142,6 @@ namespace R2API.Utils {
                 }, attributeMustBeOnTypeFullName: typeof(BaseUnityPlugin).FullName);
 
             pluginScanner.AddScanRequest(scanRequestForNetworkCompatAttr);
-
-            var scanRequestForManualRegistration = new PluginScanner.AttributeScanRequest(typeof(ManualNetworkRegistrationAttribute).FullName,
-                AttributeTargets.Assembly,
-                whenRequestIsDone: null, oneMatchPerAssembly: true,
-                (assembly, arguments) => {
-                    if (modList.Contains(assembly.Name.FullName)) {
-                        modList.Remove(assembly.Name.FullName);
-                    }
-                });
-
-            pluginScanner.AddScanRequest(scanRequestForManualRegistration);
         }
 
         private static void TryGetNetworkCompatibilityArguments(IList<CustomAttributeArgument> attributeArguments,
