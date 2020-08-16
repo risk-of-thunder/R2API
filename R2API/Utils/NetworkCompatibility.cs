@@ -146,8 +146,14 @@ namespace R2API.Utils {
 
         private static void TryGetNetworkCompatibilityArguments(IList<CustomAttributeArgument> attributeArguments,
             out CompatibilityLevel compatibilityLevel, out VersionStrictness versionStrictness) {
-            compatibilityLevel = attributeArguments[0].Value as CompatibilityLevel? ?? CompatibilityLevel.EveryoneMustHaveMod;
-            versionStrictness = attributeArguments[1].Value as VersionStrictness? ?? VersionStrictness.EveryoneNeedSameModVersion;
+            if (attributeArguments[0].Value is int && attributeArguments[1].Value is int) {
+                compatibilityLevel = (CompatibilityLevel)attributeArguments[0].Value;
+                versionStrictness = (VersionStrictness)attributeArguments[1].Value;
+            }
+            else {
+                compatibilityLevel = CompatibilityLevel.EveryoneMustHaveMod;
+                versionStrictness = VersionStrictness.EveryoneNeedSameModVersion;
+            }
         }
     }
 }
