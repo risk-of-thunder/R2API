@@ -29,13 +29,19 @@ namespace R2API.Networking {
         private static readonly Dictionary<int, RequestPerformerBase> NetRequests = new Dictionary<int, RequestPerformerBase>();
 
         public static bool RegisterMessageType<TMessage>() where TMessage : INetMessage, new() {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(NetworkingAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(NetworkingAPI)})]");
             }
-            var inst = new TMessage();
-            var type = inst.GetType();
 
+            return RegisterMessageTypeInternal<TMessage>();
+        }
+
+        internal static bool RegisterMessageTypeInternal<TMessage>() where TMessage : INetMessage, new () {
+            var inst = new TMessage();
+
+            var type = inst.GetType();
             int hash = GetNetworkHash(type);
+
             if (NetMessages.ContainsKey(hash)) {
                 R2API.Logger.LogError("Tried to register a message type with a duplicate hash");
                 return false;
@@ -47,10 +53,16 @@ namespace R2API.Networking {
         }
 
         public static bool RegisterCommandType<TCommand>() where TCommand : INetCommand, new() {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(NetworkingAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(NetworkingAPI)})]");
             }
+
+            return RegisterCommandTypeInternal<TCommand>();
+        }
+
+        public static bool RegisterCommandTypeInternal<TCommand>() where TCommand : INetCommand, new() {
             var inst = new TCommand();
+
             var type = inst.GetType();
             int hash = GetNetworkHash(type);
 
@@ -67,9 +79,16 @@ namespace R2API.Networking {
         public static bool RegisterRequestTypes<TRequest, TReply>()
             where TRequest : INetRequest<TRequest, TReply>, new()
             where TReply : INetRequestReply<TRequest, TReply>, new() {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(NetworkingAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(NetworkingAPI)})]");
             }
+
+            return RegisterRequestTypesInternal<TRequest, TReply>();
+        }
+
+        internal static bool RegisterRequestTypesInternal<TRequest, TReply>()
+            where TRequest : INetRequest<TRequest, TReply>, new()
+            where TReply : INetRequestReply<TRequest, TReply>, new() {
             var request = new TRequest();
             var reply = new TReply();
 
@@ -86,12 +105,12 @@ namespace R2API.Networking {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            RegisterMessageType<DamageMessage>();
-            RegisterMessageType<BuffMessage>();
-            RegisterMessageType<DotMessage>();
+            RegisterMessageTypeInternal<DamageMessage>();
+            RegisterMessageTypeInternal<BuffMessage>();
+            RegisterMessageTypeInternal<DotMessage>();
 
-            RegisterMessageType<ExampleMessage>();
-            RegisterRequestTypes<ExamplePing, ExamplePingReply>();
+            RegisterMessageTypeInternal<ExampleMessage>();
+            RegisterRequestTypesInternal<ExamplePing, ExamplePingReply>();
 
             GameNetworkManager.onStartServerGlobal += RegisterServerHandlers;
             GameNetworkManager.onStartClientGlobal += RegisterClientHandlers;
