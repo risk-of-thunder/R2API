@@ -1,5 +1,7 @@
 ﻿using BepInEx;
 using R2API.Utils;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -52,6 +54,9 @@ namespace R2API {
             /// </summary>
             /// <param name="path">absolute path to the assetbundle</param>
             public static void Add(string path) {
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(FontAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(FontAPI)})]");
+                }
                 var fontBundle = UnityEngine.AssetBundle.LoadFromFile(path);
                 var fonts = fontBundle.LoadAllAssets<TMPro.TMP_FontAsset>();
                 foreach (var font in fonts) {
@@ -75,6 +80,9 @@ namespace R2API {
             /// </summary>
             /// <param name="fontAsset">The loaded fontasset</param>
             public static void Add(TMPro.TMP_FontAsset fontAsset) {
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(FontAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(FontAPI)})]");
+                }
                 _fontAssets.Add(fontAsset);
             }
 

@@ -27,6 +27,15 @@ namespace R2API {
         // TODO: implement late load for MasterCatalog the same way as for BodyCatalog
         public static List<GameObject> MasterCatalog { get; private set; } = new List<GameObject>();
 
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
+        public static bool Loaded {
+            get => _loaded;
+            internal set => _loaded = value;
+        }
+        private static bool _loaded;
+
 
         #region BodyCatalog
 

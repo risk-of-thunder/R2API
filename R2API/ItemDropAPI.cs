@@ -14,6 +14,8 @@ namespace R2API {
         public bool IsDefaults { get; internal set; } = false;
     }
 
+    // TODO: Add loaded checks and throw when not loaded
+
     public static class DefaultItemDrops {
         public static void AddDefaults() {
             AddDefaultShrineDrops();
@@ -202,6 +204,15 @@ namespace R2API {
         public static float DefaultScavBackpackTier2DropChance = 0.2f;
         public static float DefaultScavBackpackTier3DropChance = 0.01f;
         public static float DefaultScavBackpackLunarDropChance = 0f;
+
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
+        public static bool Loaded {
+            get => _loaded;
+            internal set => _loaded = value;
+        }
+        private static bool _loaded;
 
 
         public static bool DefaultDrops { get; set; } = true;
