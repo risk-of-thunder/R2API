@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using BepInEx;
 using MonoMod.Utils;
 using R2API.Utils;
@@ -39,11 +40,20 @@ namespace R2API {
             if (currentLanguage is null)
                 return;
 
-            if (LanguageSpecificTokens.ContainsKey(currentLanguage.name)) {
-                currentLanguage.stringsByToken.AddRange(LanguageSpecificTokens);
-            }
+            currentLanguage.stringsByToken = currentLanguage.stringsByToken.ReplaceAndAddRange(GenericTokens);
+                
+            if (LanguageSpecificTokens.TryGetValue(currentLanguage.name, out var languageSpecificDic)) {
 
-            currentLanguage.stringsByToken.AddRange(GenericTokens);
+                currentLanguage.stringsByToken = currentLanguage.stringsByToken.ReplaceAndAddRange(languageSpecificDic);
+            }
+        }
+
+        private static Dictionary<string, string> ReplaceAndAddRange(this Dictionary<string, string> dict, Dictionary<string, string> other) {
+            dict = dict.Where(kvp => !other.ContainsKey(kvp.Key))
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            dict.AddRange(other);
+
+            return dict;
         }
 
         //based upon RoR2.language.LoadTokensFromFile but with specific language support
@@ -71,7 +81,7 @@ namespace R2API {
         }
 
         /// <summary>
-        /// Adds a single languagetoken and value
+        /// Adds a single languagetoken and its associated value to all languages
         /// </summary>
         /// <param name="key">Token the game asks</param>
         /// <param name="value">Value it gives back</param>
@@ -96,7 +106,8 @@ namespace R2API {
             }
 
             if (LanguageSpecificTokens[language].ContainsKey(key)) {
-                GenericTokens[key] = value;
+                R2API.Logger.LogDebug($"Overriding token {key} in {language} dictionary");
+                LanguageSpecificTokens[language][key] = value;
             }
             else {
                 LanguageSpecificTokens[language].Add(key, value);

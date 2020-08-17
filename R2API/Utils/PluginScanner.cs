@@ -34,11 +34,38 @@ namespace R2API.Utils {
                         }
                     }
 
+                    DetectAndRemoveDuplicateAssemblies(ref assemblies);
                     _pluginsAssemblyDefinitions = assemblies;
                 }
 
                 return _pluginsAssemblyDefinitions;
             }
+        }
+
+        private static void DetectAndRemoveDuplicateAssemblies(ref List<AssemblyDefinition> assemblies) {
+            var bepinPluginAttributes = assemblies.SelectMany(assemblyDef =>
+                    assemblyDef.MainModule.Types.SelectMany(typeDef => typeDef.CustomAttributes))
+                .Where(attribute => attribute.AttributeType.FullName == typeof(BepInPlugin).FullName);
+
+            var duplicateOldAssemblies = new HashSet<AssemblyDefinition>();
+            foreach (var bepinPlugin in bepinPluginAttributes) {
+                var (modGuid, modVer) = GetBepinPluginInfo(bepinPlugin.ConstructorArguments);
+                foreach (var bepinPlugin2 in bepinPluginAttributes) {
+                    if (bepinPlugin == bepinPlugin2)
+                        continue;
+
+                    var (modGuid2, modVer2) = GetBepinPluginInfo(bepinPlugin2.ConstructorArguments);
+
+                    if (modGuid == modGuid2) {
+                        var comparedTo = string.Compare(modVer, modVer2, StringComparison.Ordinal);
+                        if (comparedTo >= 0) {
+                            duplicateOldAssemblies.Add(bepinPlugin2.AttributeType.Module.Assembly);
+                        }
+                    }
+                }
+            }
+
+            assemblies = assemblies.Except(duplicateOldAssemblies).ToList();
         }
 
         private readonly List<ScanRequest> _scanRequests = new List<ScanRequest>();
@@ -226,6 +253,17 @@ namespace R2API.Utils {
 
                 return isCoherent;
             }
+        }
+
+        internal static (string modGuid, string modVersion) GetBepinPluginInfo(IList<CustomAttributeArgument> attributeArguments) {
+            if (attributeArguments == null) {
+                return (null, null);
+            }
+
+            var modGuid = (string)attributeArguments[0].Value;
+            var modVersion = (string)attributeArguments[2].Value;
+
+            return (modGuid, modVersion);
         }
     }
 }
