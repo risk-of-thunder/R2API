@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Logging;
 using Facepunch.Steamworks;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
@@ -93,6 +94,48 @@ namespace R2API {
                     }
                     c.Index++;
                     c.EmitDelegate<Func<GameNetworkManager.ModMismatchKickReason, GameNetworkManager.SimpleLocalizedKickReason>>(SwapToStandardMessage);
+                }
+            };
+
+            // Temporary fix until the KVP Foreach properly check for null Value before calling Equals on them
+            IL.RoR2.SteamworksLobbyDataGenerator.RebuildLobbyData += il => {
+                var c = new ILCursor(il);
+
+                // ReSharper disable once InconsistentNaming
+                void ILFailMessage(int i) {
+                    R2API.Logger.LogError(
+                        $"Failed finding IL Instructions. Aborting RebuildLobbyData IL Hook ({i})");
+                }
+
+                if (c.TryGotoNext(i => i.MatchLdstr("v"))) {
+                    if (c.TryGotoPrev(i => i.MatchLdloca(out _),
+                        i => i.MatchCallOrCallvirt(out _))) {
+                        var labelBeginningForEach = c.MarkLabel();
+
+                        if (c.TryGotoPrev(i => i.MatchCallOrCallvirt<string>("Equals"))) {
+                            var kvpLoc = 0;
+                            if (c.TryGotoPrev(
+                                i => i.MatchLdloc(out _),
+                                i => i.MatchLdloca(out kvpLoc),
+                                i => i.MatchCallOrCallvirt(out _))) {
+                                c.Emit(OpCodes.Ldloc, kvpLoc);
+                                c.EmitDelegate<Func<KeyValuePair<string, string>, bool>>(kvp => kvp.Value == null);
+                                c.Emit(OpCodes.Brtrue, labelBeginningForEach);
+                            }
+                            else {
+                                ILFailMessage(4);
+                            }
+                        }
+                        else {
+                            ILFailMessage(3);
+                        }
+                    }
+                    else {
+                        ILFailMessage(2);
+                    }
+                }
+                else {
+                    ILFailMessage(1);
                 }
             };
         }

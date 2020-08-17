@@ -413,7 +413,8 @@ namespace R2API {
                 if (!Run.instance.availableItems.HasItem(itemIndex))
                     continue;
 
-                if (ItemCatalog.GetItemDef(itemIndex).tier == itemTier) {
+                var itemDef = ItemCatalog.GetItemDef(itemIndex);
+                if (itemDef.tier == itemTier && itemDef.DoesNotContainTag(ItemTag.WorldUnique)) {
                     list.Add(itemIndex);
                 }
             }
@@ -431,7 +432,7 @@ namespace R2API {
                     continue;
 
                 var itemDef = ItemCatalog.GetItemDef(itemIndex);
-                if (itemDef.tier == itemTier && itemDef.ContainsTag(requiredTag)) {
+                if (itemDef.tier == itemTier && itemDef.ContainsTag(requiredTag) && itemDef.DoesNotContainTag(ItemTag.WorldUnique)) {
                     list.Add(itemIndex);
                 }
             }
@@ -460,7 +461,8 @@ namespace R2API {
                 if (!Run.instance.availableItems.HasItem(itemIndex))
                     continue;
 
-                if (ItemCatalog.GetItemDef(itemIndex).tier == ItemTier.Lunar) {
+                var itemDef = ItemCatalog.GetItemDef(itemIndex);
+                if (itemDef.tier == ItemTier.Lunar && itemDef.DoesNotContainTag(ItemTag.WorldUnique)) {
                     list.Add(PickupCatalog.FindPickupIndex(itemIndex));
                 }
             }
