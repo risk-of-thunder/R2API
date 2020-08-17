@@ -14,6 +14,17 @@ namespace R2API {
     /// </summary>
     [R2APISubmodule]
     public static class ResourcesAPI {
+
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
+        public static bool Loaded {
+            get => _loaded;
+            internal set => _loaded = value;
+        }
+        private static bool _loaded;
+
+
         private static readonly Dictionary<string, IResourceProvider> Providers = new Dictionary<string, IResourceProvider>();
 
         private static NativeDetour ResourcesLoadDetour;
@@ -66,6 +77,9 @@ namespace R2API {
         /// </summary>
         /// <param name="provider">assetbundle provider to give, usually made with an AssetBundleResourcesProvider(prefix, assetbundle)</param>
         public static void AddProvider(IResourceProvider provider) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(ResourcesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ResourcesAPI)})]");
+            }
             Providers.Add(provider.ModPrefix, provider);
         }
 

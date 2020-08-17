@@ -11,6 +11,15 @@ namespace R2API {
     [R2APISubmodule(Build = 4892828)]
     public static class LobbyConfigAPI {
 
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
+        public static bool Loaded {
+            get => _loaded;
+            internal set => _loaded = value;
+        }
+        private static bool _loaded;
+
         private static int _ruleNameSequence;
         internal static string RuleNameSequence() => $"LCAPI_{++_ruleNameSequence:D5}";
 

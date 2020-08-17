@@ -21,7 +21,7 @@ namespace R2API {
         // ReSharper disable once ConvertToAutoProperty
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
 
         private static bool _loaded;
@@ -115,9 +115,8 @@ namespace R2API {
         /// <param name="t">The type to add</param>
         /// <returns>True if succesfully added</returns>
         public static bool AddSkill(Type t) {
-            if (!Loaded) {
-                R2API.Logger.LogError("LoadoutAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
-                return false;
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             if (t == null || !t.IsSubclassOf(typeof(EntityState)) || t.IsAbstract) {
                 R2API.Logger.LogError("Invalid skill type.");
@@ -140,15 +139,25 @@ namespace R2API {
         }
 
         /// <summary>
+        /// Creates a SerializableEntityStateType with a much simpler syntax
+        /// Effectively the same as new SerializableEntityStateType(typeof(T))
+        /// </summary>
+        /// <typeparam name="T">The state type</typeparam>
+        /// <returns>The created SerializableEntityStateType</returns>
+        public static SerializableEntityStateType StateTypeOf<T>()
+            where T : EntityState, new() {
+            return new SerializableEntityStateType(typeof(T));
+        }
+
+        /// <summary>
         /// Registers an event to add a SkillDef to the SkillDefCatalog.
         /// Must be called before Catalog init (during Awake() or OnEnable())
         /// </summary>
         /// <param name="s">The SkillDef to add</param>
         /// <returns>True if the event was registered</returns>
         public static bool AddSkillDef(SkillDef s) {
-            if (!Loaded) {
-                R2API.Logger.LogError("LoadoutAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
-                return false;
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             if (!s) {
                 R2API.Logger.LogError("Invalid SkillDef");
@@ -168,9 +177,8 @@ namespace R2API {
         /// <param name="sf">The skillfamily to add</param>
         /// <returns>True if the event was registered</returns>
         public static bool AddSkillFamily(SkillFamily sf) {
-            if (!Loaded) {
-                R2API.Logger.LogError("LoadoutAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
-                return false;
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             if (!sf) {
                 R2API.Logger.LogError("Invalid SkillFamily");
@@ -195,6 +203,9 @@ namespace R2API {
         /// <param name="left">The color of the left portion</param>
         /// <returns>The icon sprite</returns>
         public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
+            }
             return CreateSkinIcon(top, right, bottom, left, new Color(0.6f, 0.6f, 0.6f));
         }
         /// <summary>
@@ -207,6 +218,9 @@ namespace R2API {
         /// <param name="line">The color of the dividing lines</param>
         /// <returns></returns>
         public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left, Color line) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
+            }
             var tex = new Texture2D(128, 128, TextureFormat.RGBA32, false);
             new IconTexJob {
                 Top = top,
@@ -284,9 +298,8 @@ namespace R2API {
         /// <param name="skin"></param>
         /// <returns></returns>
         public static SkinDef CreateNewSkinDef(SkinDefInfo skin) {
-            if (!Loaded) {
-                R2API.Logger.LogError("LoadoutAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
-                return null;
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             On.RoR2.SkinDef.Awake += DoNothing;
 
@@ -319,6 +332,9 @@ namespace R2API {
         /// <param name="skin">The SkinDefInfo for the skin to add</param>
         /// <returns>True if successful</returns>
         public static bool AddSkinToCharacter(GameObject bodyPrefab, SkinDefInfo skin) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
+            }
             var skinDef = CreateNewSkinDef(skin);
             return AddSkinToCharacter(bodyPrefab, skinDef);
         }
@@ -332,6 +348,9 @@ namespace R2API {
         /// <param name="skin">The SkinDef to add</param>
         /// <returns>True if successful</returns>
         public static bool AddSkinToCharacter(GameObject bodyPrefab, SkinDef skin) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
+            }
             if (bodyPrefab == null) {
                 R2API.Logger.LogError("Tried to add skin to null body prefab.");
                 return false;

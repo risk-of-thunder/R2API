@@ -1,9 +1,12 @@
 using R2API.Utils;
+
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
+using UnityObject = UnityEngine.Object;
 using UnityEngine.Networking;
 // ReSharper disable UnusedMember.Global
 
@@ -18,7 +21,7 @@ namespace R2API {
         // ReSharper disable once ConvertToAutoProperty
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
 
         private static bool _loaded;
@@ -38,11 +41,10 @@ namespace R2API {
         /// <param name="registerNetwork">Should the object be registered to network</param>
         /// <returns>The GameObject of the clone</returns>
         public static GameObject InstantiateClone(this GameObject g, string nameToSet, bool registerNetwork = true, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0) {
-            if (!Loaded) {
-                R2API.Logger.LogError("PrefabAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
-                return null;
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(PrefabAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(PrefabAPI)})]");
             }
-            var prefab = Object.Instantiate(g, GetParent().transform);
+            var prefab = UnityObject.Instantiate(g, GetParent().transform);
             prefab.name = nameToSet;
             if (registerNetwork) {
                 RegisterPrefabInternal(prefab, file, member, line);
@@ -78,7 +80,7 @@ namespace R2API {
         private static GameObject GetParent() {
             if (!_parent) {
                 _parent = new GameObject("ModdedPrefabs");
-                Object.DontDestroyOnLoad(_parent);
+                UnityObject.DontDestroyOnLoad(_parent);
                 _parent.SetActive(false);
 
                 On.RoR2.Util.IsPrefab += (orig, obj) => {

@@ -27,11 +27,13 @@ namespace R2API {
         public static int OriginalItemCount, OriginalEquipmentCount;
         public static int CustomItemCount, CustomEquipmentCount;
 
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
-
         private static bool _loaded;
 
         #region ModHelper Events and Hooks
@@ -123,9 +125,8 @@ namespace R2API {
         /// <param name="item">The item to add.</param>
         /// <returns>the ItemIndex of your item if added. -1 otherwise</returns>
         public static ItemIndex Add(CustomItem item) {
-            if (!Loaded) {
-                R2API.Logger.LogError("ItemAPI is not loaded. Please use [R2APISubmoduleDependency(nameof(ItemAPI)]");
-                return ItemIndex.None;
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
             if (_itemCatalogInitialized) {
@@ -167,9 +168,8 @@ namespace R2API {
         /// <param name="item">The equipment item to add.</param>
         /// <returns>the EquipmentIndex of your item if added. -1 otherwise</returns>
         public static EquipmentIndex Add(CustomEquipment item) {
-            if (!Loaded) {
-                R2API.Logger.LogError("ItemAPI is not loaded. Please use [R2APISubmoduleDependency(nameof(ItemAPI)]");
-                return EquipmentIndex.None;
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
             if (_equipmentCatalogInitialized) {
@@ -206,6 +206,9 @@ namespace R2API {
 
         [Obsolete("Use the Add() method from BuffAPI instead.")]
         public static BuffIndex Add(CustomBuff buff) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
+            }
             if (!BuffAPI.Loaded) {
                 try {
                     BuffAPI.SetHooks();
@@ -222,6 +225,9 @@ namespace R2API {
 
         [Obsolete("Use the Add() method from EliteAPI instead.")]
         public static EliteIndex Add(CustomElite elite) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
+            }
             if (!EliteAPI.Loaded) {
                 try {
                     EliteAPI.SetHooks();
