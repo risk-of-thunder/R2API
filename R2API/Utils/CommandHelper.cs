@@ -15,11 +15,13 @@ namespace R2API.Utils {
         private static Queue<Assembly> assemblies = new Queue<Assembly>();
         private static RoR2.Console console = null;
 
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
-
         private static bool _loaded;
 
         /** <summary>
@@ -28,6 +30,9 @@ namespace R2API.Utils {
          * </summary>
          */
         public static void AddToConsoleWhenReady() {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(CommandHelper)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(CommandHelper)})]");
+            }
             Assembly assembly = Assembly.GetCallingAssembly();
             if (assembly == null) {
                 return;
@@ -42,6 +47,9 @@ namespace R2API.Utils {
          */
         [Obsolete("Use 'AddToConsoleWhenReady()' instead.")]
         public static void RegisterCommands(RoR2.Console _) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(CommandHelper)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(CommandHelper)})]");
+            }
             Assembly assembly = Assembly.GetCallingAssembly();
             if (assembly == null) {
                 return;

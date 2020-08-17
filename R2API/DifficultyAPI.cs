@@ -16,6 +16,15 @@ namespace R2API {
         private static bool difficultyAlreadyAdded = false;
 
         /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
+        public static bool Loaded {
+            get => _loaded;
+            internal set => _loaded = value;
+        }
+        private static bool _loaded;
+
+        /// <summary>
         /// <see cref="DifficultyCatalogReady"/>
         /// </summary>
         [Obsolete("Use DifficultyCatalogReady instead!")]
@@ -56,6 +65,10 @@ namespace R2API {
         /// <param name="preferPositive">If you prefer to be appended to the array. In game version 1.0.0.X this means you will get all Eclipse modifiers as well when your difficulty is selected. </param>
         /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
         public static DifficultyIndex AddDifficulty(DifficultyDef difficulty, bool preferPositive = false) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(DifficultyAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DifficultyAPI)})]");
+            }
+
             if (difficultyAlreadyAdded) {
                 R2API.Logger.LogError($"Tried to add difficulty: {difficulty.nameToken} after difficulty list was created");
                 return DifficultyIndex.Invalid;

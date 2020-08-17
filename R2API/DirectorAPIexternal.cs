@@ -15,7 +15,7 @@ namespace R2API {
         /// </summary>
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
         private static bool _loaded;
 

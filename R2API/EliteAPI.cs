@@ -21,11 +21,13 @@ namespace R2API {
         public static int OriginalEliteCount;
         public static int CustomEliteCount;
 
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
-
         private static bool _loaded;
 
         #region ModHelper Events and Hooks
@@ -87,9 +89,8 @@ namespace R2API {
         /// <param name="elite">The elite to add.</param>
         /// <returns>the EliteIndex of your item if added. -1 otherwise</returns>
         public static EliteIndex Add(CustomElite elite) {
-            if (!Loaded) {
-                R2API.Logger.LogError("EliteAPI is not loaded. Please use [R2APISubmoduleDependency(nameof(EliteAPI)]");
-                return EliteIndex.None;
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
             }
 
             if (_eliteCatalogInitialized) {
@@ -137,6 +138,9 @@ namespace R2API {
         /// </summary>
         /// <param name="eliteTierDef">The new elite tier to add.</param>
         public static int AddCustomEliteTier(CombatDirector.EliteTierDef eliteTierDef) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
+            }
             var currentEliteTiers = GetCombatDirectorEliteTiers();
             var index = currentEliteTiers.Length;
             Array.Resize(ref currentEliteTiers, index + 1);

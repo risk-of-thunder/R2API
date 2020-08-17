@@ -52,6 +52,10 @@ namespace R2API.Test {
         public UnbundledResourcesProvider Provider { get; }
 
         public UnbundledResourcesProviderFixture() {
+            // Need reflection because this is internal
+            // Simulates a plugin with a submodule dependency for ResourcesAPI
+            _ = typeof(ResourcesAPI).GetProperty(nameof(ResourcesAPI.Loaded)).GetSetMethod(true).Invoke(null, new object[] { true });
+
             this.Provider = new UnbundledResourcesProvider("@test");
             ResourcesAPI.AddProvider(this.Provider);
         }
