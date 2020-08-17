@@ -16,7 +16,7 @@ namespace R2API {
         /// </summary>
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
 
         private static bool _loaded;
@@ -38,8 +38,8 @@ namespace R2API {
         /// <param name="survivor">The survivor to add.</param>
         /// <returns>true if survivor will be added</returns>
         public static bool AddSurvivor(SurvivorDef survivor) {
-            if (!Loaded) {
-                R2API.Logger.LogError("SurvivorAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(SurvivorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SurvivorAPI)})]");
             }
 
             if (_survivorsAlreadyAdded) {

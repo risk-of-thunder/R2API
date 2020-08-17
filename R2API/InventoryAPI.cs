@@ -8,6 +8,17 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class InventoryAPI {
+
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
+        public static bool Loaded {
+            get => _loaded;
+            internal set => _loaded = value;
+        }
+        private static bool _loaded;
+
+
         public static event Action<ItemIcon> OnItemIconAdded;
         public static event Action<EquipmentIcon> OnEquipmentIconAdded;
 

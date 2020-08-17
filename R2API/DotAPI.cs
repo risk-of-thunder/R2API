@@ -19,7 +19,7 @@ namespace R2API {
         /// </summary>
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
 
         private static bool _loaded;
@@ -67,6 +67,9 @@ namespace R2API {
         /// <returns></returns>
         public static DotController.DotIndex RegisterDotDef(DotController.DotDef dotDef,
             CustomDotBehaviour customDotBehaviour = null, CustomDotVisual customDotVisual = null) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(DotAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DotAPI)})]");
+            }
             var dotDefIndex = DotDefs.Length;
             ResizeDotDefs(dotDefIndex + 1);
             DotDefs[dotDefIndex] = dotDef;

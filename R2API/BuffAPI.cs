@@ -35,7 +35,7 @@ namespace R2API {
         /// </summary>
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
         private static bool _loaded;
 
@@ -85,8 +85,7 @@ namespace R2API {
         /// <returns>the BuffIndex of your item if added. -1 otherwise</returns>
         public static BuffIndex Add(CustomBuff buff) {
             if (!Loaded) {
-                R2API.Logger.LogError("BuffAPI is not loaded. Please use [R2APISubmoduleDependency(nameof(BuffAPI)]");
-                return BuffIndex.None;
+                throw new InvalidOperationException($"{nameof(BuffAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(BuffAPI)})]");
             }
 
             if (_buffCatalogInitialized) {

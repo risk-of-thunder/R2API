@@ -15,9 +15,8 @@ namespace R2API.Networking {
         /// </summary>
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
-
         private static bool _loaded;
 
         internal static short MessageIndex => 2048;
@@ -30,6 +29,9 @@ namespace R2API.Networking {
         private static readonly Dictionary<int, RequestPerformerBase> NetRequests = new Dictionary<int, RequestPerformerBase>();
 
         public static bool RegisterMessageType<TMessage>() where TMessage : INetMessage, new() {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(NetworkingAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(NetworkingAPI)})]");
+            }
             var inst = new TMessage();
             var type = inst.GetType();
 
@@ -45,6 +47,9 @@ namespace R2API.Networking {
         }
 
         public static bool RegisterCommandType<TCommand>() where TCommand : INetCommand, new() {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(NetworkingAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(NetworkingAPI)})]");
+            }
             var inst = new TCommand();
             var type = inst.GetType();
             int hash = GetNetworkHash(type);
@@ -62,6 +67,9 @@ namespace R2API.Networking {
         public static bool RegisterRequestTypes<TRequest, TReply>()
             where TRequest : INetRequest<TRequest, TReply>, new()
             where TReply : INetRequestReply<TRequest, TReply>, new() {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(NetworkingAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(NetworkingAPI)})]");
+            }
             var request = new TRequest();
             var reply = new TReply();
 

@@ -86,6 +86,9 @@ namespace R2API {
         /// <param name="key">Token the game asks</param>
         /// <param name="value">Value it gives back</param>
         public static void Add(string key, string value) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
+            }
             if (GenericTokens.ContainsKey(key)) {
                 GenericTokens[key] = value;
             }
@@ -101,6 +104,9 @@ namespace R2API {
         /// <param name="value">Value it gives back</param>
         /// <param name="language">Language you want to add this to</param>
         public static void Add(string key, string value, string language) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
+            }
             if (!LanguageSpecificTokens.ContainsKey(language)) {
                 LanguageSpecificTokens.Add(language, new Dictionary<string, string>());
             }
@@ -119,6 +125,9 @@ namespace R2API {
         /// </summary>
         /// <param name="path">absolute path to file</param>
         public static void AddPath(string path) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
+            }
             if (File.Exists(path)) {
                 Add(File.ReadAllText(path));
             }
@@ -129,6 +138,9 @@ namespace R2API {
         /// </summary>
         /// <param name="file">entire file as string</param>
         public static void Add(string file) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
+            }
             LoadCustomTokensFromFile(file);
         }
 
@@ -137,6 +149,9 @@ namespace R2API {
         /// </summary>
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         public static void Add(Dictionary<string, string> tokenDictionary) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
+            }
             foreach (var token in tokenDictionary.Keys) {
                 Add(token, tokenDictionary[token]);
             }
@@ -148,6 +163,9 @@ namespace R2API {
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         /// <param name="language">Language you want to add this to</param>
         public static void Add(Dictionary<string, string> tokenDictionary, string language) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
+            }
             foreach (var token in tokenDictionary.Keys) {
                 Add(token, tokenDictionary[token], language);
             }
@@ -158,6 +176,9 @@ namespace R2API {
         /// </summary>
         /// <param name="languageDictionary">dictionary of languages containing dictionaries of key-value (eg ["en"]["mytoken"]="mystring")</param>
         public static void Add(Dictionary<string, Dictionary<string, string>> languageDictionary) {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
+            }
             foreach (var language in languageDictionary.Keys) {
                 foreach (var token in languageDictionary[language].Keys) {
                     Add(languageDictionary[language][token], token, language);

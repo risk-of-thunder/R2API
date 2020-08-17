@@ -13,7 +13,7 @@ namespace R2API {
         /// </summary>
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
 
         private static bool _loaded;
@@ -31,9 +31,8 @@ namespace R2API {
         /// <param name="t">The type of the orb being added</param>
         /// <returns>True if orb will be added</returns>
         public static bool AddOrb(Type t) {
-            if (!Loaded) {
-                R2API.Logger.LogError("OrbAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
-                return false;
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(OrbAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(OrbAPI)})]");
             }
             if (_orbsAlreadyAdded) {
                 R2API.Logger.LogError($"Tried to add Orb type: {nameof(t)} after orb catalog was generated");

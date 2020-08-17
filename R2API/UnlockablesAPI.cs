@@ -20,7 +20,7 @@ namespace R2API {
         /// </summary>
         public static bool Loaded {
             get => _loaded;
-            set => _loaded = value;
+            internal set => _loaded = value;
         }
 
         /// <summary>
@@ -39,7 +39,9 @@ namespace R2API {
         /// <param name="serverTracked">True if the achievement tracking is host side, false if client side</param>
         public static void AddUnlockable<TUnlockable>(Boolean serverTracked)
             where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
-            if (!Loaded) throw new InvalidOperationException( $"{nameof(UnlockablesAPI)} is not loaded. Try requesting the submodule with '[R2APISubmoduleDependency]'");
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockablesAPI)})]");
+            }
             if (!AbleToAdd) throw new InvalidOperationException("Too late to add unlocks. Must be done during awake.");
 
             var instance = new TUnlockable();
@@ -76,7 +78,9 @@ namespace R2API {
         /// <param name="nameToken"></param>
         /// <param name="displayModelPath"></param>
         public static void AddUnlockableOnly(string identifier, bool hidden = false, string nameToken = null, string displayModelPath = null) {
-            if(!Loaded) throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Try requesting the submodule with '[R2APISubmoduleDependency]'");
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockablesAPI)})]");
+            }
             if(!AbleToAdd) throw new InvalidOperationException("Too late to add unlocks. Must be done during awake.");
             var def = new UnlockableDef {
                 name = identifier,
@@ -90,7 +94,9 @@ namespace R2API {
         }
 
         public static void AddEclipseUnlockablesForSurvivor(string modGuid, SurvivorDef survivor) {
-            if(!Loaded) throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Try requesting the submodule with '[R2APISubmoduleDependency]'");
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockablesAPI)})]");
+            }
             if(!AbleToAdd) throw new InvalidOperationException("Too late to add unlocks. Must be done during awake.");
             if(survivor is null) throw new ArgumentNullException(nameof(survivor));
             if(survivor.name.IsNullOrWhiteSpace()) throw new ArgumentException("No name assigned", nameof(SurvivorDef));

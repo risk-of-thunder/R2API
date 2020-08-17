@@ -1,4 +1,7 @@
 using System;
+
+using R2API.Utils;
+
 using RoR2;
 
 namespace R2API {
@@ -116,7 +119,9 @@ namespace R2API {
             /// <param name="monsterName">The name of the monster to edit</param>
             /// <param name="elitesAllowed">Should elites be allowed?</param>
             public static void PreventElites(string monsterName, bool elitesAllowed) {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 MonsterActions += (monsters, currentStage) => {
                     foreach (var holder in monsters) {
                         if (string.Equals(holder.Card.spawnCard.name, monsterName, StringComparison.CurrentCultureIgnoreCase)) {
@@ -132,7 +137,9 @@ namespace R2API {
             /// <param name="monsterCard">The DirectorCard for the monster</param>
             /// <param name="category">The category to add the monster to</param>
             public static void AddNewMonster(DirectorCard monsterCard, MonsterCategory category) {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 DirectorCardHolder card = new DirectorCardHolder
                 {
                     Card = monsterCard,
@@ -153,7 +160,9 @@ namespace R2API {
             /// <param name="stage">The stage to add the monster to</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void AddNewMonsterToStage(DirectorCard monsterCard, MonsterCategory category, Stage stage, string customStageName = "") {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 DirectorCardHolder card = new DirectorCardHolder
                 {
                     Card = monsterCard,
@@ -175,7 +184,9 @@ namespace R2API {
             /// <param name="interactableCard">The DirectorCard for the interactable</param>
             /// <param name="category">The category of the interactable</param>
             public static void AddNewInteractable(DirectorCard interactableCard, InteractableCategory category) {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 DirectorCardHolder card = new DirectorCardHolder
                 {
                     Card = interactableCard,
@@ -196,7 +207,9 @@ namespace R2API {
             /// <param name="stage">The stage to add the interactable to</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void AddNewInteractableToStage(DirectorCard interactableCard, InteractableCategory category, Stage stage, string customStageName = "") {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 DirectorCardHolder card = new DirectorCardHolder
                 {
                     Card = interactableCard,
@@ -217,7 +230,9 @@ namespace R2API {
             /// </summary>
             /// <param name="monsterName">The name of the monster card to remove</param>
             public static void RemoveExistingMonster(string monsterName) {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 MonsterActions += (monsters, currentStage) => {
                     monsters.RemoveAll((card) => (card.Card.spawnCard.name.ToLower() == monsterName.ToLower()));
                 };
@@ -231,7 +246,9 @@ namespace R2API {
             /// <param name="stage">The stage to remove on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void RemoveExistingMonsterFromStage(string monsterName, Stage stage, string customStageName = "") {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 MonsterActions += (monsters, currentStage) => {
                     if (currentStage.stage == stage) {
                         if ((stage != Stage.Custom) ^ (currentStage.CustomStageName == customStageName)) {
@@ -246,7 +263,9 @@ namespace R2API {
             /// </summary>
             /// <param name="interactableName">Name of the interactable to remove</param>
             public static void RemoveExistingInteractable(string interactableName) {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 InteractableActions += (interactables, currentStage) => {
                     interactables.RemoveAll((card) => (card.Card.spawnCard.name.ToLower() == interactableName.ToLower()));
                 };
@@ -260,7 +279,9 @@ namespace R2API {
             /// <param name="stage">The stage to remove on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void RemoveExistingInteractableFromStage(string interactableName, Stage stage, string customStageName = "") {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 InteractableActions += (interactables, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -278,7 +299,9 @@ namespace R2API {
             /// <param name="stage">The stage to add on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void AddSceneMonsterCredits(int increase, Stage stage, string customStageName = "") {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -296,7 +319,9 @@ namespace R2API {
             /// <param name="stage">The stage to add on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void AddSceneInteractableCredits(int increase, Stage stage, string customStageName = "") {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -314,7 +339,9 @@ namespace R2API {
             /// <param name="stage">The stage to multiply on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void MultiplySceneMonsterCredits(int multiplier, Stage stage, string customStageName = "") {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -332,7 +359,9 @@ namespace R2API {
             /// <param name="stage">The stage to multiply on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void MultiplySceneInteractableCredits(int multiplier, Stage stage, string customStageName = "") {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -350,7 +379,9 @@ namespace R2API {
             /// <param name="stage">The stage to divide on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void ReduceSceneMonsterCredits(int divisor, Stage stage, string customStageName = "") {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -368,7 +399,9 @@ namespace R2API {
             /// <param name="stage">The stage to divide on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void ReduceSceneInteractableCredits(int divisor, Stage stage, string customStageName = "") {
-                
+                if(!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
