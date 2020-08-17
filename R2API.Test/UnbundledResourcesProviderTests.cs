@@ -18,6 +18,8 @@ namespace R2API.Test {
 
         [Fact]
         public void TestStoringAndLoadingAsset() {
+            // Need reflection because this is internal
+            _ = typeof(ResourcesAPI).GetProperty(nameof(ResourcesAPI.Loaded)).GetSetMethod(true).Invoke(null, new object[] { true });
             var inputTexture = new Texture2D(0, 0);
             var path = this._provider.Store("test", inputTexture);
             var outputTexure = this._provider.Load(path, typeof(Texture2D));
@@ -27,6 +29,8 @@ namespace R2API.Test {
 
         [Fact]
         public void TestStoringAndLoadingAssetsWithSamePathButDifferentType() {
+            _ = typeof(ResourcesAPI).GetProperty(nameof(ResourcesAPI.Loaded)).GetSetMethod(true).Invoke(null, new object[] { true });
+
             var inputTexture2D = new Texture2D(0, 0);
             var inputTexture3D = new Texture3D(0, 0, 0, TextureFormat.R8, false);
             var texture2DPath = this._provider.Store("test", inputTexture2D);
@@ -40,6 +44,8 @@ namespace R2API.Test {
 
         [Fact]
         public void TestStoringAndLoadingAssetsFromResourcesAPI() {
+            _ = typeof(ResourcesAPI).GetProperty(nameof(ResourcesAPI.Loaded)).GetSetMethod(true).Invoke(null, new object[] { true });
+
             var inputTexture = new Texture2D(0, 0);
             var path = this._provider.Store("test", inputTexture);
             var outputTexure = typeof(ResourcesAPI).InvokeMethod<Texture2D>("ModResourcesLoad", path, typeof(Texture2D));
