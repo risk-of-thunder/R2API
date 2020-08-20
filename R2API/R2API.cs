@@ -89,12 +89,34 @@ namespace R2API {
                     {
                         reason.GetDisplayTokenAndFormatParams(out var token, out _);               
                         return new GameNetworkManager.SimpleLocalizedKickReason(token,
-                            "This information is not yet available, see below the list of all mods the server needs you to have : ",
+                            "",
                             string.Join("\n", NetworkModCompatibilityHelper.networkModList));
                     }
                     c.Index++;
                     c.EmitDelegate<Func<GameNetworkManager.ModMismatchKickReason, GameNetworkManager.SimpleLocalizedKickReason>>(SwapToStandardMessage);
                 }
+            };
+
+            // Temporary fix for displaying correctly the mods that the user is missing when trying to connect
+            On.RoR2.Networking.GameNetworkManager.SimpleLocalizedKickReason.GetDisplayTokenAndFormatParams +=
+            (On.RoR2.Networking.GameNetworkManager.SimpleLocalizedKickReason.orig_GetDisplayTokenAndFormatParams orig,
+                GameNetworkManager.SimpleLocalizedKickReason self, out string token, out object[] formatArgs) => {
+                var baseToken = self.baseToken;
+                var args = self.formatArgs;
+                token = baseToken;
+                if (baseToken != "KICK_REASON_MOD_MISMATCH")
+                {
+                    token = baseToken;
+                    formatArgs = args;
+                    return;
+                }
+                var mods = args[1].Split('\n');
+                var myMods = NetworkModCompatibilityHelper.networkModList;
+
+                var extraMods = string.Join("\n", myMods.Except(mods));
+                var missingMods = string.Join("\n", mods.Except(myMods));
+
+                formatArgs = new object[] { extraMods, missingMods };
             };
 
             // Temporary fix until the KVP Foreach properly check for null Value before calling Equals on them
@@ -221,12 +243,17 @@ namespace R2API {
         private static void CheckR2APIMonomodPatch() {
             var isHere = AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.FullName.ToLower().Contains("r2api.mm.monomodrules"));
 
-            if (!isHere) {
+            if (isHere) {
                 var message = new List<string> {
                     "The Monomod patch of R2API seems to be missing",
                     "Please make sure that a file called:",
                     "Assembly-CSharp.R2API.mm.dll",
                     "is present in the Risk of Rain 2\\BepInEx\\monomod\\ folder",
+                    "or",
+                    "You are missing the monomod loader that is normally located in,",
+                    "the Risk of Rain 2\\BepInEx\\patchers\\BepInEx.MonoMod.Loader folder.",
+                    "If you don't have this folder, please download BepInEx again from the",
+                    "thunderstore and make sure to follow the installation instructions."
                 };
                 Logger.LogBlockError(message);
             }
