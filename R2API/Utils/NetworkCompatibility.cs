@@ -12,7 +12,8 @@ namespace R2API.Utils {
     /// </summary>
     public enum CompatibilityLevel {
         NoNeedForSync,
-        EveryoneMustHaveMod
+        EveryoneMustHaveMod,
+        BreaksMultiplayer
     }
 
     /// <summary>
@@ -83,8 +84,13 @@ namespace R2API.Utils {
                     // By default, any plugins that don't have the NetworkCompatibility attribute and
                     // don't have the ManualNetworkRegistration attribute are added to the networked mod list
                     if (!haveNetworkCompatAttribute) {
-                        if (bepinPluginAttribute != null && !haveManualRegistrationAttribute) {
-                            modList.Add(modGuid + ModGuidAndModVersionSeparator + modVersion);
+                        if (bepinPluginAttribute != null){
+                            if (!haveManualRegistrationAttribute) {
+                                modList.Add(modGuid + ModGuidAndModVersionSeparator + modVersion);
+                            }
+                            else {
+                                R2API.Logger.LogDebug($"Found {nameof(ManualNetworkRegistrationAttribute)} type. Ignoring.");
+                            }
                         }
                         else {
                             R2API.Logger.LogDebug($"Found {nameof(BaseUnityPlugin)} type but no {nameof(BepInPlugin)} attribute");
