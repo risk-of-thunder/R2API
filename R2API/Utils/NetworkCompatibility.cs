@@ -4,11 +4,13 @@ using System.ComponentModel;
 using System.Linq;
 using BepInEx;
 using Mono.Cecil;
+using R2API.Networking;
 using RoR2;
 
 namespace R2API.Utils {
     /// <summary>
     /// Enum used for telling whether or not the mod should be needed by everyone in multiplayer games.
+    /// Also can specify if the mod does not work in multiplayer.
     /// </summary>
     public enum CompatibilityLevel {
         NoNeedForSync,
@@ -139,6 +141,9 @@ namespace R2API.Utils {
 
             void CallWhenAssembliesAreScanned() {
                 if (modList.Count != 0) {
+                    if (IsR2APIAffectingNetwork()) {
+                        modList.Add(R2API.PluginGUID + ModGuidAndModVersionSeparator + R2API.PluginVersion);
+                    }
                     var sortedModList = modList.ToList();
                     sortedModList.Sort();
                     R2API.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
@@ -148,6 +153,10 @@ namespace R2API.Utils {
                     }
                 }
             }
+        }
+
+        internal static bool IsR2APIAffectingNetwork() {
+            return APISubmoduleHandler.IsLoaded(nameof(NetworkingAPI));
         }
 
         private static void TryGetNetworkCompatibilityArguments(IList<CustomAttributeArgument> attributeArguments,
