@@ -64,14 +64,23 @@ namespace R2API {
                     return;
                 }
 
-                var languageTokens = jsonNode.Keys;
-                foreach (var language in languageTokens) {
-                    JSONNode generic = jsonNode[language];
-                    if (generic == null) {
+                var genericsAdded = false;
+                var languages = jsonNode.Keys;
+                foreach (var language in languages) {
+                    JSONNode languageTokens = jsonNode[language];
+                    if (languageTokens == null) {
                         return;
                     }
-                    foreach (string text in generic.Keys) {
-                        Add(text, generic[text].Value);
+
+                    if (!genericsAdded) {
+                        foreach (string text in languageTokens.Keys) {
+                            Add(text, languageTokens[text].Value);
+                        }
+                        genericsAdded = true;
+                    }
+
+                    foreach (string text in languageTokens.Keys) {
+                        Add(text, languageTokens[text].Value, language);
                     }
                 }
             }
