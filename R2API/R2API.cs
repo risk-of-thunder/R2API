@@ -243,7 +243,7 @@ namespace R2API {
         private static void CheckR2APIMonomodPatch() {
             var isHere = AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.FullName.ToLower().Contains("r2api.mm.monomodrules"));
 
-            if (isHere) {
+            if (!isHere) {
                 var message = new List<string> {
                     "The Monomod patch of R2API seems to be missing",
                     "Please make sure that a file called:",
