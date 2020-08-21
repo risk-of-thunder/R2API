@@ -15,7 +15,7 @@ namespace R2API.Utils {
     public enum CompatibilityLevel {
         NoNeedForSync,
         EveryoneMustHaveMod,
-        BreaksMultiplayer
+        //BreaksMultiplayer //todo
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ namespace R2API.Utils {
     /// you want to specify if the mod should be installed by everyone in multiplayer games or not.
     /// If the mod is required to be installed by everyone, you'll need to also specify if the same mod version should be used by everyone or not.
     /// By default, it's supposed that everyone needs the mod and the same version.
-    /// e.g: [NetworkCompatibility(CompatibilityLevel.NoNeedForSync, VersionStrictness.DifferentModVersionsAreOk)]
+    /// e.g: [NetworkCompatibility(CompatibilityLevel.NoNeedForSync)]
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly)]
     public class NetworkCompatibility : Attribute {
