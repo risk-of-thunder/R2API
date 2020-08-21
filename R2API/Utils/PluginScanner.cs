@@ -51,9 +51,13 @@ namespace R2API.Utils {
             var duplicateOldAssemblies = new HashSet<AssemblyDefinition>();
 
             foreach (var assemblyDef in assemblies) {
+                if (duplicateOldAssemblies.Contains(assemblyDef))
+                    continue;
                 var bepinPluginAttributes = assemblyDef.MainModule.Types.SelectMany(typeDef => typeDef.CustomAttributes)
                     .Where(attribute => attribute.AttributeType.FullName == typeof(BepInPlugin).FullName).ToList();
                 foreach (var otherAssemblyDef in assemblies) {
+                    if (duplicateOldAssemblies.Contains(otherAssemblyDef))
+                        continue;
                     if (assemblyDef == otherAssemblyDef)
                         continue;
 
@@ -65,37 +69,35 @@ namespace R2API.Utils {
                     AssemblyDefinition oldDuplicateAssembly = null;
                     string oldDuplicateModVer = null;
 
-                    var count = bepinPluginAttributes.Count;
-                    if (count > 0) {
-                        if (count == otherBepinPluginAttributes.Count) {
-                            for (int i = 0; i < count; i++) {
-                                var (modGuid, modVer) = GetBepinPluginInfo(bepinPluginAttributes[i].ConstructorArguments);
-                                var (otherModGuid, otherModVer) = GetBepinPluginInfo(otherBepinPluginAttributes[i].ConstructorArguments);
+                    foreach (var bepinPluginAttribute in bepinPluginAttributes) {
+                        var (modGuid, modVer) = GetBepinPluginInfo(bepinPluginAttribute.ConstructorArguments);
 
-                                if (modGuid == null)
-                                    break;
+                        if (modGuid == null)
+                            break;
 
-                                if (modGuid == otherModGuid) {
-                                    var comparedTo = string.Compare(modVer, otherModVer, StringComparison.Ordinal);
-                                    if (comparedTo >= 0) {
-                                        goodAssembly = bepinPluginAttributes[i].AttributeType.Module.Assembly;
-                                        goodAssemblyVer = modVer;
-                                        oldDuplicateAssembly = otherBepinPluginAttributes[i].AttributeType.Module.Assembly;
-                                        oldDuplicateModVer = otherModVer;
-                                    }
-                                }
-                                else {
-                                    oldDuplicateAssembly = null;
-                                    break;
+                        foreach (var otherBepinPluginAttribute in otherBepinPluginAttributes) {
+                            var (otherModGuid, otherModVer) = GetBepinPluginInfo(otherBepinPluginAttribute.ConstructorArguments);
+                            if (modGuid == otherModGuid) {
+                                var comparedTo = string.Compare(modVer, otherModVer, StringComparison.Ordinal);
+                                var isModVerMoreRecentThanOtherModVer = comparedTo >= 0;
+                                if (isModVerMoreRecentThanOtherModVer) {
+                                    goodAssembly = bepinPluginAttribute.AttributeType.Module.Assembly;
+                                    goodAssemblyVer = modVer;
+                                    oldDuplicateAssembly = otherBepinPluginAttribute.AttributeType.Module.Assembly;
+                                    oldDuplicateModVer = otherModVer;
                                 }
                             }
-
-                            if (oldDuplicateAssembly != null) {
-                                R2API.Logger.LogDebug($"Removing {oldDuplicateAssembly.MainModule.FileName} (ModVer : {oldDuplicateModVer}) from the list " +
-                                                      $"because it's a duplicate of {goodAssembly.MainModule.FileName} (ModVer : {goodAssemblyVer}).");
-                                duplicateOldAssemblies.Add(oldDuplicateAssembly);
+                            else {
+                                oldDuplicateAssembly = null;
+                                break;
                             }
                         }
+                    }
+
+                    if (oldDuplicateAssembly != null) {
+                        R2API.Logger.LogDebug($"Removing {oldDuplicateAssembly.MainModule.FileName} (ModVer : {oldDuplicateModVer}) from the list " +
+                                              $"because it's a duplicate of {goodAssembly.MainModule.FileName} (ModVer : {goodAssemblyVer}).");
+                        duplicateOldAssemblies.Add(oldDuplicateAssembly);
                     }
                 }
             }
