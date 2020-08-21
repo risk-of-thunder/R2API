@@ -53,7 +53,7 @@ namespace R2API.Utils {
         private readonly int _build;
         private readonly ManualLogSource _logger;
         private HashSet<string> _moduleSet;
-        private HashSet<string> LoadedModules;
+        private static HashSet<string> LoadedModules;
 
         internal APISubmoduleHandler(int build, ManualLogSource logger = null) {
             _build = build;
@@ -64,7 +64,7 @@ namespace R2API.Utils {
         /// Return true if the specified submodule is loaded.
         /// </summary>
         /// <param name="submodule">nameof the submodule</param>
-        public bool IsLoaded(string submodule) => LoadedModules.Contains(submodule);
+        public static bool IsLoaded(string submodule) => LoadedModules.Contains(submodule);
 
         internal HashSet<string> LoadRequested(PluginScanner pluginScanner) {
             _moduleSet = new HashSet<string>();

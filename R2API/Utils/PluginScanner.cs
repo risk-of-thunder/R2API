@@ -15,9 +15,13 @@ namespace R2API.Utils {
                     var assemblies = new List<AssemblyDefinition>();
                     var resolver = new DefaultAssemblyResolver();
                     var gameDirectory = new DirectoryInfo(Paths.GameRootPath);
+
+                    // todo: make resolver able to resolve embedded assemblies
                     foreach (var directory in gameDirectory.EnumerateDirectories("*", SearchOption.AllDirectories)) {
                         resolver.AddSearchDirectory(directory.FullName);
                     }
+
+                    R2API.Logger.LogDebug("Adding to the list of assemblies to scan:");
                     foreach (string dll in Directory.GetFiles(Paths.PluginPath, "*.dll", SearchOption.AllDirectories))
                     {
                         var fileName = Path.GetFileName(dll);
@@ -28,9 +32,10 @@ namespace R2API.Utils {
                         try {
                             assemblies.Add(AssemblyDefinition.ReadAssembly(dll,
                                 new ReaderParameters { AssemblyResolver = resolver }));
+                            R2API.Logger.LogDebug($"{fileName}");
                         }
                         catch (Exception) {
-                            // ignored
+                            R2API.Logger.LogDebug($"Cecil ReadAssembly couldn't read {dll}");
                         }
                     }
 
@@ -43,24 +48,56 @@ namespace R2API.Utils {
         }
 
         private static void DetectAndRemoveDuplicateAssemblies(ref List<AssemblyDefinition> assemblies) {
-            var bepinPluginAttributes = assemblies.SelectMany(assemblyDef =>
-                    assemblyDef.MainModule.Types.SelectMany(typeDef => typeDef.CustomAttributes))
-                .Where(attribute => attribute.AttributeType.FullName == typeof(BepInPlugin).FullName);
-
             var duplicateOldAssemblies = new HashSet<AssemblyDefinition>();
-            foreach (var bepinPlugin in bepinPluginAttributes) {
-                var (modGuid, modVer) = GetBepinPluginInfo(bepinPlugin.ConstructorArguments);
-                foreach (var bepinPlugin2 in bepinPluginAttributes) {
-                    if (bepinPlugin == bepinPlugin2)
+
+            foreach (var assemblyDef in assemblies) {
+                if (duplicateOldAssemblies.Contains(assemblyDef))
+                    continue;
+                var bepinPluginAttributes = assemblyDef.MainModule.Types.SelectMany(typeDef => typeDef.CustomAttributes)
+                    .Where(attribute => attribute.AttributeType.FullName == typeof(BepInPlugin).FullName).ToList();
+                foreach (var otherAssemblyDef in assemblies) {
+                    if (duplicateOldAssemblies.Contains(otherAssemblyDef))
+                        continue;
+                    if (assemblyDef == otherAssemblyDef)
                         continue;
 
-                    var (modGuid2, modVer2) = GetBepinPluginInfo(bepinPlugin2.ConstructorArguments);
+                    var otherBepinPluginAttributes = otherAssemblyDef.MainModule.Types.SelectMany(typeDef => typeDef.CustomAttributes)
+                        .Where(attribute => attribute.AttributeType.FullName == typeof(BepInPlugin).FullName).ToList();
 
-                    if (modGuid == modGuid2) {
-                        var comparedTo = string.Compare(modVer, modVer2, StringComparison.Ordinal);
-                        if (comparedTo >= 0) {
-                            duplicateOldAssemblies.Add(bepinPlugin2.AttributeType.Module.Assembly);
+                    AssemblyDefinition goodAssembly = null;
+                    string goodAssemblyVer = null;
+                    AssemblyDefinition oldDuplicateAssembly = null;
+                    string oldDuplicateModVer = null;
+
+                    foreach (var bepinPluginAttribute in bepinPluginAttributes) {
+                        var (modGuid, modVer) = GetBepinPluginInfo(bepinPluginAttribute.ConstructorArguments);
+
+                        if (modGuid == null)
+                            break;
+
+                        foreach (var otherBepinPluginAttribute in otherBepinPluginAttributes) {
+                            var (otherModGuid, otherModVer) = GetBepinPluginInfo(otherBepinPluginAttribute.ConstructorArguments);
+                            if (modGuid == otherModGuid) {
+                                var comparedTo = string.Compare(modVer, otherModVer, StringComparison.Ordinal);
+                                var isModVerMoreRecentThanOtherModVer = comparedTo >= 0;
+                                if (isModVerMoreRecentThanOtherModVer) {
+                                    goodAssembly = bepinPluginAttribute.AttributeType.Module.Assembly;
+                                    goodAssemblyVer = modVer;
+                                    oldDuplicateAssembly = otherBepinPluginAttribute.AttributeType.Module.Assembly;
+                                    oldDuplicateModVer = otherModVer;
+                                }
+                            }
+                            else {
+                                oldDuplicateAssembly = null;
+                                break;
+                            }
                         }
+                    }
+
+                    if (oldDuplicateAssembly != null) {
+                        R2API.Logger.LogDebug($"Removing {oldDuplicateAssembly.MainModule.FileName} (ModVer : {oldDuplicateModVer}) from the list " +
+                                              $"because it's a duplicate of {goodAssembly.MainModule.FileName} (ModVer : {goodAssemblyVer}).");
+                        duplicateOldAssemblies.Add(oldDuplicateAssembly);
                     }
                 }
             }
@@ -135,8 +172,15 @@ namespace R2API.Utils {
                                     }
                                 }
                             }
-                            catch (Exception) {
-                                // ignored
+                            catch (Exception ex) {
+                                // AssemblyResolutionException will happen on types that are resolved from
+                                // dynamicaly loaded / soft dependency assemblies 
+                                if (!(ex is AssemblyResolutionException)) {
+                                    R2API.Logger.LogDebug(
+                                        $"Catched ex when handling attribute scan request : {ex}\n" +
+                                        $"We were looking for {attributeScanRequest.SearchedTypeFullName} " +
+                                        $"in the assembly called {typeDef.Module.FileName}");
+                                }
                             }
                         }
                     }
@@ -153,8 +197,15 @@ namespace R2API.Utils {
                                     }
                                 }
                             }
-                            catch (Exception) {
-                                // ignored
+                            catch (Exception ex) {
+                                // AssemblyResolutionException will happen on types that are resolved from
+                                // dynamicaly loaded / soft dependency assemblies 
+                                if (!(ex is AssemblyResolutionException)) {
+                                    R2API.Logger.LogDebug(
+                                        $"Catched ex when handling class scan request : {ex}\n" +
+                                        $"We were looking for {classScanRequest.SearchedTypeFullName} " +
+                                        $"in the assembly called {typeDef.Module.FileName}");
+                                }
                             }
                         }
                     }
