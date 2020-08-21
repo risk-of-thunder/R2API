@@ -4,15 +4,18 @@ using System.ComponentModel;
 using System.Linq;
 using BepInEx;
 using Mono.Cecil;
+using R2API.Networking;
 using RoR2;
 
 namespace R2API.Utils {
     /// <summary>
     /// Enum used for telling whether or not the mod should be needed by everyone in multiplayer games.
+    /// Also can specify if the mod does not work in multiplayer.
     /// </summary>
     public enum CompatibilityLevel {
         NoNeedForSync,
-        EveryoneMustHaveMod
+        EveryoneMustHaveMod,
+        //BreaksMultiplayer //todo
     }
 
     /// <summary>
@@ -29,7 +32,7 @@ namespace R2API.Utils {
     /// you want to specify if the mod should be installed by everyone in multiplayer games or not.
     /// If the mod is required to be installed by everyone, you'll need to also specify if the same mod version should be used by everyone or not.
     /// By default, it's supposed that everyone needs the mod and the same version.
-    /// e.g: [NetworkCompatibility(CompatibilityLevel.NoNeedForSync, VersionStrictness.DifferentModVersionsAreOk)]
+    /// e.g: [NetworkCompatibility(CompatibilityLevel.NoNeedForSync)]
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly)]
     public class NetworkCompatibility : Attribute {
@@ -83,8 +86,13 @@ namespace R2API.Utils {
                     // By default, any plugins that don't have the NetworkCompatibility attribute and
                     // don't have the ManualNetworkRegistration attribute are added to the networked mod list
                     if (!haveNetworkCompatAttribute) {
-                        if (bepinPluginAttribute != null && !haveManualRegistrationAttribute) {
-                            modList.Add(modGuid + ModGuidAndModVersionSeparator + modVersion);
+                        if (bepinPluginAttribute != null){
+                            if (!haveManualRegistrationAttribute) {
+                                modList.Add(modGuid + ModGuidAndModVersionSeparator + modVersion);
+                            }
+                            else {
+                                R2API.Logger.LogDebug($"Found {nameof(ManualNetworkRegistrationAttribute)} type. Ignoring.");
+                            }
                         }
                         else {
                             R2API.Logger.LogDebug($"Found {nameof(BaseUnityPlugin)} type but no {nameof(BepInPlugin)} attribute");
@@ -133,6 +141,9 @@ namespace R2API.Utils {
 
             void CallWhenAssembliesAreScanned() {
                 if (modList.Count != 0) {
+                    if (IsR2APIAffectingNetwork()) {
+                        modList.Add(R2API.PluginGUID + ModGuidAndModVersionSeparator + R2API.PluginVersion);
+                    }
                     var sortedModList = modList.ToList();
                     sortedModList.Sort();
                     R2API.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
@@ -144,15 +155,22 @@ namespace R2API.Utils {
             }
         }
 
+        internal static bool IsR2APIAffectingNetwork() {
+            return APISubmoduleHandler.IsLoaded(nameof(NetworkingAPI));
+        }
+
         private static void TryGetNetworkCompatibilityArguments(IList<CustomAttributeArgument> attributeArguments,
             out CompatibilityLevel compatibilityLevel, out VersionStrictness versionStrictness) {
-            if (attributeArguments[0].Value is int && attributeArguments[1].Value is int) {
-                compatibilityLevel = (CompatibilityLevel)attributeArguments[0].Value;
-                versionStrictness = (VersionStrictness)attributeArguments[1].Value;
-            }
-            else {
-                compatibilityLevel = CompatibilityLevel.EveryoneMustHaveMod;
-                versionStrictness = VersionStrictness.EveryoneNeedSameModVersion;
+            compatibilityLevel = CompatibilityLevel.EveryoneMustHaveMod;
+            versionStrictness = VersionStrictness.EveryoneNeedSameModVersion;
+
+            if (attributeArguments != null && attributeArguments.Count > 0) {
+                if (attributeArguments[0].Value is int) {
+                    compatibilityLevel = (CompatibilityLevel)attributeArguments[0].Value;
+                }
+                if (attributeArguments[1].Value is int) {
+                    versionStrictness = (VersionStrictness)attributeArguments[1].Value;
+                }
             }
         }
     }
