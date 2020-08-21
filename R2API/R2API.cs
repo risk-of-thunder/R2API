@@ -241,7 +241,9 @@ namespace R2API {
 
         // ReSharper disable once InconsistentNaming
         private static void CheckR2APIMonomodPatch() {
-            var isHere = AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.FullName.ToLower().Contains("r2api.mm.monomodrules"));
+            // This type is injected by the R2API MonoMod patch with MonoModRules
+            const string R2APIMonoModPatchWasHereName = "R2API.R2APIMonoModPatchWasHere";
+            var isHere = typeof(RoR2Application).Assembly.GetType(R2APIMonoModPatchWasHereName, false) != null;
 
             if (!isHere) {
                 var message = new List<string> {
