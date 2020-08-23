@@ -20,15 +20,16 @@ namespace R2API.Networking.Interfaces {
                         if (conn == null) {
                             continue;
                         }
+                        if(NetworkServer.localClientActive && NetworkServer.localConnections.Contains(conn)) {
+                            continue;
+                        }
 
                         using (Writer netWriter = NetworkingAPI.GetWriter(NetworkingAPI.CommandIndex, conn, QosType.Reliable)) {
                             NetworkWriter writer = netWriter;
                             writer.Write(header);
                         }
                     }
-                }
-                
-                if (NetworkClient.active) {
+                } else if (NetworkClient.active) {
                     using (var netWriter = NetworkingAPI.GetWriter(NetworkingAPI.CommandIndex, ClientScene.readyConnection, QosType.Reliable)) {
                         NetworkWriter writer = netWriter;
                         writer.Write(header);
