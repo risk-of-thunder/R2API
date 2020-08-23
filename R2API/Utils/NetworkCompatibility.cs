@@ -6,6 +6,7 @@ using System.Reflection;
 using R2API.MiscHelpers;
 using R2API.Networking;
 using RoR2;
+using Console = System.Console;
 
 namespace R2API.Utils {
     /// <summary>
@@ -72,28 +73,36 @@ namespace R2API.Utils {
         }
 
         private void ScanPluginsForNetworkCompat(object _, EventArgs __) {
-            foreach (var (_, pluginInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos) {
-                var pluginAssembly = pluginInfo.Instance.GetType().Assembly;
-                var modGuid = pluginInfo.Metadata.GUID;
-                var modVer = pluginInfo.Metadata.Version;
+            try {
+                foreach (var (_, pluginInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos) {
+                    var pluginAssembly = pluginInfo.Instance.GetType().Assembly;
+                    var modGuid = pluginInfo.Metadata.GUID;
+                    var modVer = pluginInfo.Metadata.Version;
 
-                if (modGuid == R2API.PluginGUID) {
-                    continue;
+                    if (modGuid == R2API.PluginGUID) {
+                        continue;
+                    }
+
+                    if (AssemblyHasManualRegistration(pluginAssembly)) {
+                        continue;
+                    }
+
+                    TryGetNetworkCompatibility(pluginInfo.Instance.GetType(), out var networkCompatibility);
+                    if (networkCompatibility.CompatibilityLevel == CompatibilityLevel.EveryoneMustHaveMod) {
+                        ModList.Add(networkCompatibility.VersionStrictness == VersionStrictness.EveryoneNeedSameModVersion
+                            ? modGuid + ModGuidAndModVersionSeparator + modVer
+                            : modGuid);
+                    }
                 }
 
-                if (AssemblyHasManualRegistration(pluginAssembly)) {
-                    continue;
-                }
-
-                TryGetNetworkCompatibility(pluginInfo.Instance.GetType(), out var networkCompatibility);
-                if (networkCompatibility.CompatibilityLevel == CompatibilityLevel.EveryoneMustHaveMod) {
-                    ModList.Add(networkCompatibility.VersionStrictness == VersionStrictness.EveryoneNeedSameModVersion
-                        ? modGuid + ModGuidAndModVersionSeparator + modVer
-                        : modGuid);
-                }
+                AddToNetworkModList();
             }
-
-            AddToNetworkModList();
+            catch (Exception e) {
+                R2API.Logger.LogDebug($"Exception in ScanPluginsForNetworkCompat : {e}");
+            }
+            finally {
+                R2API.R2APIStart -= ScanPluginsForNetworkCompat;
+            }
         }
 
         private static bool AssemblyHasManualRegistration(Assembly assembly) {
