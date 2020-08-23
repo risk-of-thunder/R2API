@@ -57,7 +57,6 @@ namespace R2API {
         private static void AddEliteAction(List<EliteDef> eliteDefinitions) {
             foreach (var customElite in EliteDefinitions) {
                 eliteDefinitions.Add(customElite.EliteDef);
-
                 var currentEliteTiers = GetCombatDirectorEliteTiers();
                 if (customElite.EliteTier == 1) {
                     var index = currentEliteTiers[1].eliteTypes.Length;
@@ -69,7 +68,7 @@ namespace R2API {
                     var eliteTierIndex = customElite.EliteTier + 1;
                     var eliteTypeIndex = currentEliteTiers[eliteTierIndex].eliteTypes.Length;
                     Array.Resize(ref currentEliteTiers[eliteTierIndex].eliteTypes, eliteTypeIndex + 1);
-                    currentEliteTiers[1].eliteTypes[eliteTypeIndex] = customElite.EliteDef.eliteIndex;
+                    currentEliteTiers[eliteTierIndex].eliteTypes[eliteTypeIndex] = customElite.EliteDef.eliteIndex;
                 }
                 OverrideCombatDirectorEliteTiers(currentEliteTiers);
 
