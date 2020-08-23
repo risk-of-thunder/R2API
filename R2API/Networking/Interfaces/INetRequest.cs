@@ -30,6 +30,9 @@ namespace R2API.Networking.Interfaces {
                         if (conn == null) {
                             continue;
                         }
+                        if(NetworkServer.localClientActive && NetworkServer.localConnections.Contains(conn)) {
+                            continue;
+                        }
 
                         using (Writer netWriter = NetworkingAPI.GetWriter(NetworkingAPI.RequestIndex, conn, QosType.Reliable)) {
                             NetworkWriter writer = netWriter;
@@ -37,9 +40,7 @@ namespace R2API.Networking.Interfaces {
                             writer.Write(request);
                         }
                     }
-                }
-
-                if (NetworkClient.active) {
+                } else if (NetworkClient.active) {
                     using (Writer netWriter = NetworkingAPI.GetWriter(NetworkingAPI.RequestIndex, ClientScene.readyConnection, QosType.Reliable)) {
                         NetworkWriter writer = netWriter;
                         writer.Write(header);

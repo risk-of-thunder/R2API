@@ -236,12 +236,12 @@ namespace R2API.Networking {
                     if (i == receivedFrom) {
                         continue;
                     }
+                    
 
                     NetworkConnection conn = NetworkServer.connections[i];
                     if (conn == null) {
                         continue;
                     }
-
                     using (Writer netWriter = GetWriter(MessageIndex, conn, QosType.Reliable)) {
                         NetworkWriter writer = netWriter;
                         writer.Write(header);
