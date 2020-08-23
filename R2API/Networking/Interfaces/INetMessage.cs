@@ -7,6 +7,7 @@ namespace R2API.Networking.Interfaces {
 
     public static class NetMessageExtensions {
         public static void Send(this INetMessage message, NetworkDestination destination) {
+
             if (destination.ShouldRun()) {
                 message.OnReceived();
             }
@@ -20,6 +21,9 @@ namespace R2API.Networking.Interfaces {
                         if (conn == null) {
                             continue;
                         }
+                        if(NetworkServer.localClientActive && NetworkServer.localConnections.Contains(conn)) {
+                            continue;
+                        }
 
                         using (Writer netWriter = NetworkingAPI.GetWriter(NetworkingAPI.MessageIndex, conn, QosType.Reliable)) {
                             NetworkWriter writer = netWriter;
@@ -27,9 +31,7 @@ namespace R2API.Networking.Interfaces {
                             writer.Write(message);
                         }
                     }
-                }
-
-                if (NetworkClient.active) {
+                } else if (NetworkClient.active) {
                     using (Writer netWriter = NetworkingAPI.GetWriter(NetworkingAPI.MessageIndex, ClientScene.readyConnection, QosType.Reliable)) {
                         NetworkWriter writer = netWriter;
                         writer.Write(header);
