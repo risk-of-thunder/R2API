@@ -6,7 +6,6 @@ using System.Reflection;
 using R2API.MiscHelpers;
 using R2API.Networking;
 using RoR2;
-using Console = System.Console;
 
 namespace R2API.Utils {
     /// <summary>
