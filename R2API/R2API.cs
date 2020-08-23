@@ -48,9 +48,10 @@ namespace R2API {
             var pluginScanner = new PluginScanner();
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
             LoadedSubmodules = submoduleHandler.LoadRequested(pluginScanner);
-            var networkCompatibilityHandler = new NetworkCompatibilityHandler();
-            networkCompatibilityHandler.BuildModList(pluginScanner);
             pluginScanner.ScanPlugins();
+
+            var networkCompatibilityHandler = new NetworkCompatibilityHandler();
+            networkCompatibilityHandler.BuildModList();
 
             RoR2Application.isModded = true;
 
@@ -258,6 +259,7 @@ namespace R2API {
                     "thunderstore and make sure to follow the installation instructions."
                 };
                 Logger.LogBlockError(message);
+                DirectoryUtilities.LogFolderStructureAsTree(Paths.GameRootPath);
             }
         }
     }
