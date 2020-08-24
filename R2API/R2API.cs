@@ -88,7 +88,7 @@ namespace R2API {
                 {
                     static GameNetworkManager.SimpleLocalizedKickReason SwapToStandardMessage(GameNetworkManager.ModMismatchKickReason reason)
                     {
-                        reason.GetDisplayTokenAndFormatParams(out var token, out _);               
+                        reason.GetDisplayTokenAndFormatParams(out var token, out _);
                         return new GameNetworkManager.SimpleLocalizedKickReason(token,
                             "",
                             string.Join("\n", NetworkModCompatibilityHelper.networkModList));
@@ -184,9 +184,11 @@ namespace R2API {
             ModManager.OnHook += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
             ModManager.OnDetour += (hookOwner, @base, _) => LogMethod(@base, hookOwner);
             ModManager.OnNativeDetour += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
+            ModManager.OnILHook += (hookOwner, @base, _) => LogMethod(@base, hookOwner);
 
             HookEndpointManager.OnAdd += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
             HookEndpointManager.OnModify += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
+            HookEndpointManager.OnRemove += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
         }
 
         private static bool LogMethod(MemberInfo @base, Assembly hookOwnerAssembly) {
