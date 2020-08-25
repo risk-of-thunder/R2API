@@ -44,8 +44,17 @@ namespace R2API {
             currentLanguage.stringsByToken = currentLanguage.stringsByToken.ReplaceAndAddRange(GenericTokens);
                 
             if (LanguageSpecificTokens.TryGetValue(currentLanguage.name, out var languageSpecificDic)) {
-
                 currentLanguage.stringsByToken = currentLanguage.stringsByToken.ReplaceAndAddRange(languageSpecificDic);
+            }
+
+            GenericOverlays.Clear();
+            LanguageSpecificOverlays.Clear();
+            onSetupLanguageOverlays?.Invoke();
+
+            currentLanguage.stringsByToken = currentLanguage.stringsByToken.ReplaceAndAddRange(GenericOverlays);
+                
+            if (LanguageSpecificOverlays.TryGetValue(currentLanguage.name, out var languageSpecificOverlayDic)) {
+                currentLanguage.stringsByToken = currentLanguage.stringsByToken.ReplaceAndAddRange(languageSpecificOverlayDic);
             }
         }
 
