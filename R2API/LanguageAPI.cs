@@ -259,10 +259,7 @@ namespace R2API {
                             LanguageSpecificOverlays.Add(overlay.lang, new Dictionary<string, string>());
                         targetDict = LanguageSpecificOverlays[overlay.lang];
                     }
-                    if(targetDict.ContainsKey(overlay.key))
-                        targetDict[overlay.key] = overlay.value;
-                    else
-                        targetDict.Add(overlay.key, overlay.value);
+                    targetDict[overlay.key] = overlay.value;
                 }
             }
         }
