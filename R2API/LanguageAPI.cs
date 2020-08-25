@@ -152,7 +152,7 @@ namespace R2API {
             }
             if (File.Exists(path)) {
                 Add(File.ReadAllText(path));
-            }
+            } else R2API.Logger.LogError($"LanguageAPI.AddPath: Couldn't find language file at path \"{path}\"");
         }
 
         /// <summary>
