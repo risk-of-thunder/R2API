@@ -41,6 +41,9 @@ namespace R2API {
             if (currentLanguage is null)
                 return;
 
+            _originalTokens.Clear();
+            _originalTokens.AddRange(currentLanguage.stringsByToken);
+
             currentLanguage.stringsByToken = currentLanguage.stringsByToken.ReplaceAndAddRange(GenericTokens);
                 
             if (LanguageSpecificTokens.TryGetValue(currentLanguage.name, out var languageSpecificDic)) {
@@ -208,6 +211,9 @@ namespace R2API {
         internal static Dictionary<string, string> GenericTokens = new Dictionary<string, string>();
 
         internal static Dictionary<string, Dictionary<string, string>> LanguageSpecificTokens = new Dictionary<string, Dictionary<string, string>>();
+        
+        internal static Dictionary<string, string> _originalTokens = new Dictionary<string, string>();
+        public static ReadOnlyDictionary<string, string> OriginalTokens = new ReadOnlyDictionary<string, string>(_originalTokens);
 
         internal static Dictionary<string, string> GenericOverlays = new Dictionary<string, string>();
 
