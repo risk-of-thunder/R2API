@@ -319,11 +319,11 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
             var data = LoadOverlayTokensFromFile(file);
-            if(data.Length == 0) {
+            if(data.Count == 0) {
                 R2API.Logger.LogError("LanguageAPI.AddOverlay(string file): Result contains zero tokens");
                 return null;
             }
-            return new LanguageOverlay(data);
+            return new LanguageOverlay(data.ToArray());
         }
         
         /// <summary>
@@ -366,12 +366,12 @@ namespace R2API {
             return overlay;
         }
         
-        private static OverlayTokenData[] LoadOverlayTokensFromFile(string file) {
+        private static List<OverlayTokenData> LoadOverlayTokensFromFile(string file) {
             var data = new List<OverlayTokenData>();
             try {
                 JSONNode jsonNode = JSON.Parse(file);
                 if (jsonNode == null) {
-                    return new OverlayTokenData[0];
+                    return data;
                 }
 
                 var genericsAdded = false;
@@ -379,7 +379,7 @@ namespace R2API {
                 foreach (var language in languages) {
                     JSONNode languageTokens = jsonNode[language];
                     if (languageTokens == null) {
-                        return new OverlayTokenData[0];
+                        return data;
                     }
 
                     if (!genericsAdded) {
@@ -393,11 +393,11 @@ namespace R2API {
                         data.Add(new OverlayTokenData(text, languageTokens[text].Value, language));
                     }
                 }
-                return data.ToArray();
+                return data;
             }
             catch (Exception ex) {
                 Debug.LogFormat("Parsing error in language file , Error: {0}", ex);
-                return new OverlayTokenData[0];
+                return data;
             }
         }
 
