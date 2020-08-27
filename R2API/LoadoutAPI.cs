@@ -146,6 +146,10 @@ namespace R2API {
         /// <returns>The created SerializableEntityStateType</returns>
         public static SerializableEntityStateType StateTypeOf<T>()
             where T : EntityState, new() {
+            if(!Loaded) {
+                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
+            }
+            LoadoutAPI.AddSkill(typeof(T));
             return new SerializableEntityStateType(typeof(T));
         }
 
