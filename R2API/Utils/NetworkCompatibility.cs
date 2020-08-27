@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using BepInEx;
-using Mono.Cecil;
+using System.Reflection;
+using R2API.MiscHelpers;
 using R2API.Networking;
 using RoR2;
 
@@ -39,13 +39,13 @@ namespace R2API.Utils {
         /// <summary>
         /// Used for telling whether or not the mod should be needed by everyone in multiplayer games.
         /// </summary>
-        internal CompatibilityLevel CompatibilityLevel { get; }
+        public CompatibilityLevel CompatibilityLevel { get; internal set; }
 
         /// <summary>
         /// Enum used for telling whether or not the same mod version should be used by both the server and the clients.
         /// This enum is only useful if CompatibilityLevel.EveryoneMustHaveMod was chosen.
         /// </summary>
-        internal VersionStrictness VersionStrictness { get; }
+        public VersionStrictness VersionStrictness { get; internal set; }
 
         public NetworkCompatibility(
             CompatibilityLevel compatibility = CompatibilityLevel.EveryoneMustHaveMod,
@@ -65,113 +65,92 @@ namespace R2API.Utils {
 
     internal class NetworkCompatibilityHandler {
         internal const char ModGuidAndModVersionSeparator = ';';
+        internal readonly HashSet<string> ModList = new HashSet<string>();
 
-        internal void BuildModList(PluginScanner pluginScanner) {
-            var modList = new HashSet<string>();
+        internal void BuildModList() {
+            R2API.R2APIStart += ScanPluginsForNetworkCompat;
+        }
 
-            var scanForBepinExUnityPlugins = new PluginScanner.ClassScanRequest(typeof(BaseUnityPlugin).FullName,
-                whenRequestIsDone: null, oneMatchPerAssembly: false,
-                foundOnAssemblyTypes: (type, attributes) => {
-                    var haveNetworkCompatAttribute = attributes.FirstOrDefault(attribute =>
-                        attribute.AttributeType.FullName == typeof(NetworkCompatibility).FullName) != null;
+        private void ScanPluginsForNetworkCompat(object _, EventArgs __) {
+            try {
+                foreach (var (_, pluginInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos) {
+                    var pluginAssembly = pluginInfo.Instance.GetType().Assembly;
+                    var modGuid = pluginInfo.Metadata.GUID;
+                    var modVer = pluginInfo.Metadata.Version;
 
-                    var bepinPluginAttribute = attributes.FirstOrDefault(attribute =>
-                        attribute.AttributeType.FullName == typeof(BepInPlugin).FullName);
-
-                    var (modGuid, modVersion) = PluginScanner.GetBepinPluginInfo(bepinPluginAttribute?.ConstructorArguments);
-
-                    var haveManualRegistrationAttribute = type.Module.Assembly.CustomAttributes?.FirstOrDefault(a =>
-                        a.AttributeType.FullName == typeof(ManualNetworkRegistrationAttribute).FullName) != null;
-
-                    // By default, any plugins that don't have the NetworkCompatibility attribute and
-                    // don't have the ManualNetworkRegistration attribute are added to the networked mod list
-                    if (!haveNetworkCompatAttribute) {
-                        if (bepinPluginAttribute != null){
-                            if (!haveManualRegistrationAttribute) {
-                                modList.Add(modGuid + ModGuidAndModVersionSeparator + modVersion);
-                            }
-                            else {
-                                R2API.Logger.LogDebug($"Found {nameof(ManualNetworkRegistrationAttribute)} type. Ignoring.");
-                            }
-                        }
-                        else {
-                            R2API.Logger.LogDebug($"Found {nameof(BaseUnityPlugin)} type but no {nameof(BepInPlugin)} attribute");
-                        }
+                    if (modGuid == R2API.PluginGUID) {
+                        continue;
                     }
-                });
 
-            pluginScanner.AddScanRequest(scanForBepinExUnityPlugins);
-
-            var scanRequestForNetworkCompatAttr = new PluginScanner.AttributeScanRequest(attributeTypeFullName: typeof(NetworkCompatibility).FullName,
-                attributeTargets: AttributeTargets.Assembly | AttributeTargets.Class,
-                CallWhenAssembliesAreScanned,
-                oneMatchPerAssembly: true,
-                foundOnAssemblyAttributes: (assembly, arguments) => {
-                    TryGetNetworkCompatibilityArguments(arguments, out var compatibilityLevel, out var versionStrictness);
-
-                    if (compatibilityLevel == CompatibilityLevel.EveryoneMustHaveMod) {
-                        modList.Add(versionStrictness == VersionStrictness.EveryoneNeedSameModVersion
-                            ? assembly.Name.FullName
-                            : assembly.Name.Name);
+                    if (AssemblyHasManualRegistration(pluginAssembly)) {
+                        continue;
                     }
-                }, foundOnAssemblyTypes: (type, arguments) => {
-                    TryGetNetworkCompatibilityArguments(arguments, out var compatibilityLevel, out var versionStrictness);
 
-                    if (compatibilityLevel == CompatibilityLevel.EveryoneMustHaveMod) {
-                        var bepinPluginAttribute = type.CustomAttributes.FirstOrDefault(attr =>
-                            attr.AttributeType.Resolve().IsSubtypeOf(typeof(BepInPlugin)));
-
-                        if (bepinPluginAttribute != null) {
-                            var (modGuid, modVersion) = PluginScanner.GetBepinPluginInfo(bepinPluginAttribute.ConstructorArguments);
-                            modList.Add(versionStrictness == VersionStrictness.EveryoneNeedSameModVersion
-                                ? modGuid + ModGuidAndModVersionSeparator + modVersion
-                                : modGuid);
-                        }
-                        else {
-                            throw new Exception($"Could not find corresponding {nameof(BepInPlugin)} Attribute of your plugin, " +
-                                                $"make sure that the {nameof(NetworkCompatibility)} attribute is " +
-                                                $"on the same class as the {nameof(BepInPlugin)} attribute. " +
-                                                $"If you don't have a plugin that has a class heriting from {nameof(BaseUnityPlugin)}, " +
-                                                $"put the {nameof(NetworkCompatibility)} attribute as an Assembly attribute instead");
-                        }
+                    TryGetNetworkCompatibility(pluginInfo.Instance.GetType(), out var networkCompatibility);
+                    if (networkCompatibility.CompatibilityLevel == CompatibilityLevel.EveryoneMustHaveMod) {
+                        ModList.Add(networkCompatibility.VersionStrictness == VersionStrictness.EveryoneNeedSameModVersion
+                            ? modGuid + ModGuidAndModVersionSeparator + modVer
+                            : modGuid);
                     }
-                }, attributeMustBeOnTypeFullName: typeof(BaseUnityPlugin).FullName);
+                }
 
-            pluginScanner.AddScanRequest(scanRequestForNetworkCompatAttr);
+                AddToNetworkModList();
+            }
+            catch (Exception e) {
+                R2API.Logger.LogDebug($"Exception in ScanPluginsForNetworkCompat : {e}");
+            }
+            finally {
+                R2API.R2APIStart -= ScanPluginsForNetworkCompat;
+            }
+        }
 
-            void CallWhenAssembliesAreScanned() {
-                if (modList.Count != 0) {
-                    if (IsR2APIAffectingNetwork()) {
-                        modList.Add(R2API.PluginGUID + ModGuidAndModVersionSeparator + R2API.PluginVersion);
-                    }
-                    var sortedModList = modList.ToList();
-                    sortedModList.Sort();
-                    R2API.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
-                    foreach (var mod in sortedModList) {
-                        R2API.Logger.LogInfo(mod);
-                        NetworkModCompatibilityHelper.networkModList = NetworkModCompatibilityHelper.networkModList.Append(mod);
-                    }
+        private static bool AssemblyHasManualRegistration(Assembly assembly) {
+            foreach (var assemblyAttribute in assembly.CustomAttributes) {
+                if (assemblyAttribute.AttributeType.FullName == typeof(ManualNetworkRegistrationAttribute).FullName) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static void TryGetNetworkCompatibility(Type baseUnityPluginType, out NetworkCompatibility networkCompatibility) {
+            networkCompatibility = new NetworkCompatibility();
+
+            foreach (var assemblyAttribute in baseUnityPluginType.Assembly.CustomAttributes) {
+                if (assemblyAttribute.AttributeType == typeof(NetworkCompatibility)) {
+                    networkCompatibility.CompatibilityLevel = (CompatibilityLevel)assemblyAttribute.ConstructorArguments[0].Value;
+                    networkCompatibility.VersionStrictness = (VersionStrictness)assemblyAttribute.ConstructorArguments[1].Value;
+
+                    return;
+                }
+            }
+
+            foreach (var attribute in baseUnityPluginType.CustomAttributes) {
+                if (attribute.AttributeType == typeof(NetworkCompatibility)) {
+                    networkCompatibility.CompatibilityLevel = (CompatibilityLevel)attribute.ConstructorArguments[0].Value;
+                    networkCompatibility.VersionStrictness = (VersionStrictness)attribute.ConstructorArguments[1].Value;
                 }
             }
         }
 
-        internal static bool IsR2APIAffectingNetwork() {
+        private void AddToNetworkModList() {
+            if (ModList.Count != 0) {
+                if (IsR2APIAffectingNetwork()) {
+                    ModList.Add(R2API.PluginGUID + ModGuidAndModVersionSeparator + R2API.PluginVersion);
+                }
+                var sortedModList = ModList.ToList();
+                sortedModList.Sort();
+                R2API.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
+                foreach (var mod in sortedModList) {
+                    R2API.Logger.LogInfo(mod);
+                    NetworkModCompatibilityHelper.networkModList = NetworkModCompatibilityHelper.networkModList.Append(mod);
+                }
+            }
+        }
+
+        private static bool IsR2APIAffectingNetwork() {
             return APISubmoduleHandler.IsLoaded(nameof(NetworkingAPI));
-        }
-
-        private static void TryGetNetworkCompatibilityArguments(IList<CustomAttributeArgument> attributeArguments,
-            out CompatibilityLevel compatibilityLevel, out VersionStrictness versionStrictness) {
-            compatibilityLevel = CompatibilityLevel.EveryoneMustHaveMod;
-            versionStrictness = VersionStrictness.EveryoneNeedSameModVersion;
-
-            if (attributeArguments != null && attributeArguments.Count > 0) {
-                if (attributeArguments[0].Value is int) {
-                    compatibilityLevel = (CompatibilityLevel)attributeArguments[0].Value;
-                }
-                if (attributeArguments[1].Value is int) {
-                    versionStrictness = (VersionStrictness)attributeArguments[1].Value;
-                }
-            }
         }
     }
 }

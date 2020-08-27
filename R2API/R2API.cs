@@ -48,9 +48,10 @@ namespace R2API {
             var pluginScanner = new PluginScanner();
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
             LoadedSubmodules = submoduleHandler.LoadRequested(pluginScanner);
-            var networkCompatibilityHandler = new NetworkCompatibilityHandler();
-            networkCompatibilityHandler.BuildModList(pluginScanner);
             pluginScanner.ScanPlugins();
+
+            var networkCompatibilityHandler = new NetworkCompatibilityHandler();
+            networkCompatibilityHandler.BuildModList();
 
             RoR2Application.isModded = true;
 
@@ -87,7 +88,7 @@ namespace R2API {
                 {
                     static GameNetworkManager.SimpleLocalizedKickReason SwapToStandardMessage(GameNetworkManager.ModMismatchKickReason reason)
                     {
-                        reason.GetDisplayTokenAndFormatParams(out var token, out _);               
+                        reason.GetDisplayTokenAndFormatParams(out var token, out _);
                         return new GameNetworkManager.SimpleLocalizedKickReason(token,
                             "",
                             string.Join("\n", NetworkModCompatibilityHelper.networkModList));
@@ -183,9 +184,11 @@ namespace R2API {
             ModManager.OnHook += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
             ModManager.OnDetour += (hookOwner, @base, _) => LogMethod(@base, hookOwner);
             ModManager.OnNativeDetour += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
+            ModManager.OnILHook += (hookOwner, @base, _) => LogMethod(@base, hookOwner);
 
             HookEndpointManager.OnAdd += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
             HookEndpointManager.OnModify += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
+            HookEndpointManager.OnRemove += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
         }
 
         private static bool LogMethod(MemberInfo @base, Assembly hookOwnerAssembly) {
@@ -241,7 +244,9 @@ namespace R2API {
 
         // ReSharper disable once InconsistentNaming
         private static void CheckR2APIMonomodPatch() {
-            var isHere = AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.FullName.ToLower().Contains("r2api.mm.monomodrules"));
+            // This type is injected by the R2API MonoMod patch with MonoModRules
+            const string R2APIMonoModPatchWasHereName = "R2API.R2APIMonoModPatchWasHere";
+            var isHere = typeof(RoR2Application).Assembly.GetType(R2APIMonoModPatchWasHereName, false) != null;
 
             if (!isHere) {
                 var message = new List<string> {
@@ -256,6 +261,7 @@ namespace R2API {
                     "thunderstore and make sure to follow the installation instructions."
                 };
                 Logger.LogBlockError(message);
+                DirectoryUtilities.LogFolderStructureAsTree(Paths.GameRootPath);
             }
         }
     }
