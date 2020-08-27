@@ -13,15 +13,6 @@ namespace R2API.Utils {
             get {
                 if (_pluginsAssemblyDefinitions == null) {
                     var assemblies = new List<AssemblyDefinition>();
-                    var resolver = new DefaultAssemblyResolver();
-                    var gameDirectory = new DirectoryInfo(Paths.GameRootPath);
-
-                    // todo: make resolver able to resolve embedded assemblies
-                    foreach (var directory in gameDirectory.EnumerateDirectories("*", SearchOption.AllDirectories)) {
-                        resolver.AddSearchDirectory(directory.FullName);
-                    }
-
-                    R2API.Logger.LogDebug("Adding to the list of assemblies to scan:");
                     foreach (string dll in Directory.GetFiles(Paths.PluginPath, "*.dll", SearchOption.AllDirectories))
                     {
                         var fileName = Path.GetFileName(dll);
@@ -31,8 +22,7 @@ namespace R2API.Utils {
 
                         try {
                             assemblies.Add(AssemblyDefinition.ReadAssembly(dll,
-                                new ReaderParameters { AssemblyResolver = resolver }));
-                            R2API.Logger.LogDebug($"{fileName}");
+                                BepInEx.Bootstrap.TypeLoader.ReaderParameters));
                         }
                         catch (Exception) {
                             R2API.Logger.LogDebug($"Cecil ReadAssembly couldn't read {dll}");
