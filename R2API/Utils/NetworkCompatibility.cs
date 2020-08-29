@@ -6,6 +6,7 @@ using System.Reflection;
 using R2API.MiscHelpers;
 using R2API.Networking;
 using RoR2;
+using Console = System.Console;
 
 namespace R2API.Utils {
     /// <summary>
@@ -72,8 +73,8 @@ namespace R2API.Utils {
         }
 
         private void ScanPluginsForNetworkCompat(object _, EventArgs __) {
-            try {
-                foreach (var (_, pluginInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos) {
+            foreach (var (_, pluginInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos) {
+                try {
                     var pluginAssembly = pluginInfo.Instance.GetType().Assembly;
                     var modGuid = pluginInfo.Metadata.GUID;
                     var modVer = pluginInfo.Metadata.Version;
@@ -93,15 +94,13 @@ namespace R2API.Utils {
                             : modGuid);
                     }
                 }
+                catch (Exception e) {
+                    R2API.Logger.LogDebug($"Exception in ScanPluginsForNetworkCompat while scanning plugin {pluginInfo.Metadata.GUID} : {e}");
+                }
+            }
 
-                AddToNetworkModList();
-            }
-            catch (Exception e) {
-                R2API.Logger.LogDebug($"Exception in ScanPluginsForNetworkCompat : {e}");
-            }
-            finally {
-                R2API.R2APIStart -= ScanPluginsForNetworkCompat;
-            }
+            AddToNetworkModList();
+            R2API.R2APIStart -= ScanPluginsForNetworkCompat;
         }
 
         private static bool AssemblyHasManualRegistration(Assembly assembly) {
