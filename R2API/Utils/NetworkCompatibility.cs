@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using R2API.MiscHelpers;
@@ -95,7 +96,11 @@ namespace R2API.Utils {
                     }
                 }
                 catch (Exception e) {
-                    R2API.Logger.LogDebug($"Exception in ScanPluginsForNetworkCompat while scanning plugin {pluginInfo.Metadata.GUID} : {e}");
+                    R2API.Logger.LogError($"Exception in ScanPluginsForNetworkCompat while scanning plugin {pluginInfo.Metadata.GUID}");
+                    R2API.Logger.LogError("R2API Failed to properly scan the assembly." + Environment.NewLine +
+                                          "Please make sure you are compiling against net standard 2.0 " +
+                                          "and not anything else when making a plugin for Risk of Rain 2 !" +
+                                          Environment.NewLine + e);
                 }
             }
 
