@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using R2API.MiscHelpers;
 using R2API.Networking;
 using RoR2;
+using Console = System.Console;
 
 namespace R2API.Utils {
     /// <summary>
@@ -72,8 +74,8 @@ namespace R2API.Utils {
         }
 
         private void ScanPluginsForNetworkCompat(object _, EventArgs __) {
-            try {
-                foreach (var (_, pluginInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos) {
+            foreach (var (_, pluginInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos) {
+                try {
                     var pluginAssembly = pluginInfo.Instance.GetType().Assembly;
                     var modGuid = pluginInfo.Metadata.GUID;
                     var modVer = pluginInfo.Metadata.Version;
@@ -93,15 +95,17 @@ namespace R2API.Utils {
                             : modGuid);
                     }
                 }
+                catch (Exception e) {
+                    R2API.Logger.LogError($"Exception in ScanPluginsForNetworkCompat while scanning plugin {pluginInfo.Metadata.GUID}");
+                    R2API.Logger.LogError("R2API Failed to properly scan the assembly." + Environment.NewLine +
+                                          "Please make sure you are compiling against net standard 2.0 " +
+                                          "and not anything else when making a plugin for Risk of Rain 2 !" +
+                                          Environment.NewLine + e);
+                }
+            }
 
-                AddToNetworkModList();
-            }
-            catch (Exception e) {
-                R2API.Logger.LogDebug($"Exception in ScanPluginsForNetworkCompat : {e}");
-            }
-            finally {
-                R2API.R2APIStart -= ScanPluginsForNetworkCompat;
-            }
+            AddToNetworkModList();
+            R2API.R2APIStart -= ScanPluginsForNetworkCompat;
         }
 
         private static bool AssemblyHasManualRegistration(Assembly assembly) {
