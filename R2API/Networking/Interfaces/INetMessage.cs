@@ -21,7 +21,8 @@ namespace R2API.Networking.Interfaces {
                         if (conn == null) {
                             continue;
                         }
-                        if(NetworkServer.localClientActive && NetworkServer.localConnections.Contains(conn)) {
+
+                        if (NetworkServer.localClientActive && NetworkServer.localConnections.Contains(conn)) {
                             continue;
                         }
 

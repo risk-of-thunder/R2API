@@ -199,12 +199,16 @@ namespace R2API.Networking {
                         continue;
                     }
 
-                    NetworkConnection targetConn = NetworkServer.connections[i];
-                    if (targetConn == null) {
+                    NetworkConnection conn = NetworkServer.connections[i];
+                    if (conn == null) {
                         continue;
                     }
 
-                    using (Writer netWriter = GetWriter(CommandIndex, targetConn, QosType.Reliable)) {
+                    if (NetworkServer.localClientActive && NetworkServer.localConnections.Contains(conn)) {
+                        continue;
+                    }
+
+                    using (Writer netWriter = GetWriter(CommandIndex, conn, QosType.Reliable)) {
                         NetworkWriter writer = netWriter;
                         writer.Write(header);
                     }
@@ -237,11 +241,15 @@ namespace R2API.Networking {
                         continue;
                     }
                     
-
                     NetworkConnection conn = NetworkServer.connections[i];
                     if (conn == null) {
                         continue;
                     }
+
+                    if (NetworkServer.localClientActive && NetworkServer.localConnections.Contains(conn)) {
+                        continue;
+                    }
+
                     using (Writer netWriter = GetWriter(MessageIndex, conn, QosType.Reliable)) {
                         NetworkWriter writer = netWriter;
                         writer.Write(header);
@@ -286,6 +294,10 @@ namespace R2API.Networking {
                         continue;
                     }
 
+                    if (NetworkServer.localClientActive && NetworkServer.localConnections.Contains(conn)) {
+                        continue;
+                    }
+
                     using (Writer netWriter = GetWriter(RequestIndex, conn, QosType.Reliable)) {
                         NetworkWriter writer = netWriter;
                         writer.Write(header);
@@ -319,6 +331,10 @@ namespace R2API.Networking {
 
                     NetworkConnection conn = NetworkServer.connections[i];
                     if (conn == null) {
+                        continue;
+                    }
+
+                    if (NetworkServer.localClientActive && NetworkServer.localConnections.Contains(conn)) {
                         continue;
                     }
 
