@@ -421,7 +421,7 @@ namespace R2API {
             var list = new List<ItemIndex>();
 
             for (var itemIndex = ItemIndex.Syringe; itemIndex < ItemIndex.Count; itemIndex++) {
-                if (!Run.instance.availableItems.HasItem(itemIndex))
+                if (!Run.instance.availableItems.Contains(itemIndex))
                     continue;
 
                 var itemDef = ItemCatalog.GetItemDef(itemIndex);
@@ -439,7 +439,7 @@ namespace R2API {
             var list = new List<ItemIndex>();
 
             for (var itemIndex = ItemIndex.Syringe; itemIndex < ItemIndex.Count; itemIndex++) {
-                if (!Run.instance.availableItems.HasItem(itemIndex))
+                if (!Run.instance.availableItems.Contains(itemIndex))
                     continue;
 
                 var itemDef = ItemCatalog.GetItemDef(itemIndex);
@@ -457,7 +457,7 @@ namespace R2API {
             for (var equipmentIndex = EquipmentIndex.CommandMissile;
                 equipmentIndex < EquipmentIndex.Count;
                 equipmentIndex++) {
-                if (!Run.instance.availableEquipment.HasEquipment(equipmentIndex))
+                if (!Run.instance.availableEquipment.Contains(equipmentIndex))
                     continue;
 
                 var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
@@ -469,7 +469,7 @@ namespace R2API {
             for (var itemIndex = ItemIndex.Syringe;
                 itemIndex < ItemIndex.Count;
                 itemIndex++) {
-                if (!Run.instance.availableItems.HasItem(itemIndex))
+                if (!Run.instance.availableItems.Contains(itemIndex))
                     continue;
 
                 var itemDef = ItemCatalog.GetItemDef(itemIndex);
@@ -491,7 +491,7 @@ namespace R2API {
             for (var equipmentIndex = EquipmentIndex.CommandMissile;
                 equipmentIndex < EquipmentIndex.Count;
                 equipmentIndex++) {
-                if (!Run.instance.availableEquipment.HasEquipment(equipmentIndex))
+                if (!Run.instance.availableEquipment.Contains(equipmentIndex))
                     continue;
 
                 var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
