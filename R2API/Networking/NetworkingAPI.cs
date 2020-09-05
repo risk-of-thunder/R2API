@@ -60,7 +60,7 @@ namespace R2API.Networking {
             return RegisterCommandTypeInternal<TCommand>();
         }
 
-        public static bool RegisterCommandTypeInternal<TCommand>() where TCommand : INetCommand, new() {
+        internal static bool RegisterCommandTypeInternal<TCommand>() where TCommand : INetCommand, new() {
             var inst = new TCommand();
 
             var type = inst.GetType();
