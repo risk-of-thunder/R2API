@@ -98,6 +98,12 @@ namespace R2API {
             ItemDropAPI.AddToDefaultByTier(ItemTier.Lunar, lunarItems);
             ItemDropAPI.AddToDefaultByTier(ItemTier.Boss, bossItems);
 
+            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Tier1, t1Items);
+            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Tier2, t2Items);
+            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Tier3, t3Items);
+            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Lunar, lunarItems);
+            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Boss, bossItems);
+
             _itemCatalogInitialized = true;
         }
 
@@ -111,6 +117,7 @@ namespace R2API {
             var equipments = EquipmentDefinitions.Where(c => c.EquipmentDef.canDrop).Select(x => x.EquipmentDef.equipmentIndex).ToArray();
 
             ItemDropAPI.AddToDefaultEquipment(equipments);
+            MonsterItemsAPI.AddToDefaultEquipment(equipments);
 
             _equipmentCatalogInitialized = true;
         }
