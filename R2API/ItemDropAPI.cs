@@ -317,6 +317,7 @@ namespace R2API {
             On.RoR2.GlobalEventManager.OnCharacterDeath -= OnCharacterDeath;
         }
 
+
         private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
             Catalogue.PopulateItemCatalogues();
             orig(run);
