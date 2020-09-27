@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using RoR2;
 using Mono.Cecil.Cil;
@@ -6,6 +7,9 @@ using MonoMod.Cil;
 using System;
 using BepInEx.Logging;
 using R2API.Utils;
+using R2API.ItemDropAPITools;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace R2API {
     public class PickupSelection {
@@ -205,6 +209,9 @@ namespace R2API {
         public static float DefaultScavBackpackTier3DropChance = 0.01f;
         public static float DefaultScavBackpackLunarDropChance = 0f;
 
+        static public DropList playerDropList = new DropList();
+        static public InteractableCalculator playerInteractables = new InteractableCalculator();
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -230,66 +237,303 @@ namespace R2API {
 
         private static readonly HashSet<EquipmentIndex> AdditionalEquipment = new HashSet<EquipmentIndex>();
 
+        private static Dictionary<ItemTier, List<PickupIndex>> _itemsToAdd = new Dictionary<ItemTier, List<PickupIndex>>() {
+            { ItemTier.Tier1, new List<PickupIndex>() },
+            { ItemTier.Tier2, new List<PickupIndex>() },
+            { ItemTier.Tier3, new List<PickupIndex>() },
+            { ItemTier.Boss, new List<PickupIndex>() },
+            { ItemTier.Lunar, new List<PickupIndex>() },
+            { ItemTier.NoTier, new List<PickupIndex>() },
+        };
+
+        private static Dictionary<ItemTier, List<PickupIndex>> _itemsToRemove = new Dictionary<ItemTier, List<PickupIndex>>() {
+            { ItemTier.Tier1, new List<PickupIndex>() },
+            { ItemTier.Tier2, new List<PickupIndex>() },
+            { ItemTier.Tier3, new List<PickupIndex>() },
+            { ItemTier.Boss, new List<PickupIndex>() },
+            { ItemTier.Lunar, new List<PickupIndex>() },
+            { ItemTier.NoTier, new List<PickupIndex>() },
+        };
+
+        private static Dictionary<ItemTier, List<PickupIndex>> _equipmentToAdd = new Dictionary<ItemTier, List<PickupIndex>>() {
+            { ItemTier.Tier1, new List<PickupIndex>() },
+            { ItemTier.Lunar, new List<PickupIndex>() },
+            { ItemTier.NoTier, new List<PickupIndex>() },
+        };
+
+        private static Dictionary<ItemTier, List<PickupIndex>> _equipmentToRemove = new Dictionary<ItemTier, List<PickupIndex>>() {
+            { ItemTier.Tier1, new List<PickupIndex>() },
+            { ItemTier.Lunar, new List<PickupIndex>() },
+            { ItemTier.NoTier, new List<PickupIndex>() },
+        };
+
+        static public Dictionary<ItemTier, List<PickupIndex>> itemsToAdd {
+            get { return _itemsToAdd; }
+            private set { _itemsToAdd = value; }
+        }
+
+        static public Dictionary<ItemTier, List<PickupIndex>> itemsToRemove {
+            get { return _itemsToRemove; }
+            private set { _itemsToRemove = value; }
+        }
+
+        static public Dictionary<ItemTier, List<PickupIndex>> equipmentToAdd {
+            get { return _equipmentToAdd; }
+            private set { _equipmentToAdd = value; }
+        }
+
+        static public Dictionary<ItemTier, List<PickupIndex>> equipmentToRemove {
+            get { return _equipmentToRemove; }
+            private set { _equipmentToRemove = value; }
+        }
+
+        // THIS MODULE MUST ONLY BE INITIALIZED AFTER CUSTOM ITEMS HAVE BEEN ADDED
+        // IF MONSTERDROPAPI IS GOING TO BE INITIALIZED IT MUST BE INITIALIZED BEFORE THIS MODULE IS
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            IL.RoR2.BossGroup.DropRewards += DropRewards;
-            IL.RoR2.ShrineChanceBehavior.AddShrineStack += ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
+            On.RoR2.SceneDirector.PopulateScene += PopulateScene;
+            On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer += GenerateNewPickupServer;
+            On.RoR2.DirectorCore.TrySpawnObject += TrySpawnObject;
+            On.RoR2.ShrineChanceBehavior.AddShrineStack += AddShrineStack;
+            On.RoR2.BossGroup.DropRewards += DropRewards;
+            IL.RoR2.BossGroup.DropRewards += DropRewards;
+            On.RoR2.PickupPickerController.SetOptionsServer += SetOptionsServer;
+            On.RoR2.ArenaMissionController.EndRound += EndRound;
+            On.RoR2.GlobalEventManager.OnCharacterDeath += OnCharacterDeath;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            IL.RoR2.BossGroup.DropRewards -= DropRewards;
-            IL.RoR2.ShrineChanceBehavior.AddShrineStack -= ShrineChanceBehaviorOnAddShrineStack;
             On.RoR2.Run.BuildDropTable -= RunOnBuildDropTable;
+            On.RoR2.SceneDirector.PopulateScene -= PopulateScene;
+            On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer -= GenerateNewPickupServer;
+            On.RoR2.DirectorCore.TrySpawnObject -= TrySpawnObject;
+            On.RoR2.ShrineChanceBehavior.AddShrineStack -= AddShrineStack;
+            On.RoR2.BossGroup.DropRewards -= DropRewards;
+            IL.RoR2.BossGroup.DropRewards -= DropRewards;
+            On.RoR2.PickupPickerController.SetOptionsServer -= SetOptionsServer;
+            On.RoR2.ArenaMissionController.EndRound -= EndRound;
+            On.RoR2.GlobalEventManager.OnCharacterDeath -= OnCharacterDeath;
         }
 
-        private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run self) {
-            orig(self);
+        private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
+            Catalogue.PopulateItemCatalogues();
+            orig(run);
+            playerDropList.DuplicateDropLists(run);
+            playerDropList.ClearAllLists(run);
+            playerDropList.GenerateItems(AdditionalTierItems, AdditionalEquipment, itemsToAdd, itemsToRemove, equipmentToAdd, equipmentToRemove);
+            playerDropList.SetItems(run);
+            playerInteractables.CalculateInvalidInteractables(playerDropList);
+        }
 
-            if (DefaultDrops) {
-                // Setup default item lists
-                DefaultItemDrops.AddDefaults();
+        static private void PopulateScene(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector sceneDirector) {
+            RoR2.InteractableSpawnCard[] allInteractables = UnityEngine.Resources.LoadAll<RoR2.InteractableSpawnCard>("SpawnCards/InteractableSpawnCard");
+            foreach (RoR2.InteractableSpawnCard spawnCard in allInteractables) {
+                string interactableName = InteractableCalculator.GetSpawnCardName(spawnCard);
+                if (interactableName == "Lockbox" || interactableName == "ScavBackpack") {
+                    DropOdds.UpdateChestTierOdds(spawnCard, interactableName);
+                } else if (interactableName == "CasinoChest") {
+                    DropOdds.UpdateDropTableTierOdds(spawnCard, interactableName);
+                } else if (interactableName == "ShrineCleanse") {
+                    ExplicitPickupDropTable dropTable = spawnCard.prefab.GetComponent<RoR2.ShopTerminalBehavior>().dropTable as ExplicitPickupDropTable;
+                    DropOdds.UpdateDropTableItemOdds(playerDropList, dropTable, interactableName);
+                }
             }
-            // These lists should be replaced soon.
-            self.availableTier1DropList.Clear();
-            self.availableTier1DropList.AddRange(GetDefaultDropList(ItemTier.Tier1).Select(PickupCatalog.FindPickupIndex)
-                .ToList());
 
-            self.availableTier2DropList.Clear();
-            self.availableTier2DropList.AddRange(GetDefaultDropList(ItemTier.Tier2).Select(PickupCatalog.FindPickupIndex)
-                .ToList());
-
-            self.availableTier3DropList.Clear();
-            self.availableTier3DropList.AddRange(GetDefaultDropList(ItemTier.Tier3).Select(PickupCatalog.FindPickupIndex)
-                .ToList());
-
-            self.availableEquipmentDropList.Clear();
-            self.availableEquipmentDropList.AddRange(GetDefaultEquipmentDropList().Select(PickupCatalog.FindPickupIndex)
-                .ToList());
-
-            self.availableLunarDropList.Clear();
-            self.availableLunarDropList.AddRange(GetDefaultLunarDropList());
-
-            self.smallChestDropTierSelector.Clear();
-            self.smallChestDropTierSelector.AddChoice(self.availableTier1DropList, DefaultSmallChestTier1SelectorDropChance);
-            self.smallChestDropTierSelector.AddChoice(self.availableTier2DropList, DefaultSmallChestTier2SelectorDropChance);
-            self.smallChestDropTierSelector.AddChoice(self.availableTier3DropList, DefaultSmallChestTier3SelectorDropChance);
-            self.mediumChestDropTierSelector.Clear();
-            self.mediumChestDropTierSelector.AddChoice(self.availableTier2DropList, DefaultMediumChestTier1SelectorDropChance);
-            self.mediumChestDropTierSelector.AddChoice(self.availableTier3DropList, DefaultMediumChestTier2SelectorDropChance);
-            self.largeChestDropTierSelector.Clear();
+            if (ClassicStageInfo.instance != null) {
+                int categoriesLength = ClassicStageInfo.instance.interactableCategories.categories.Length;
+                for (int categoryIndex = 0; categoryIndex < categoriesLength; categoryIndex++) {
+                    List<DirectorCard> directorCards = new List<DirectorCard>();
+                    foreach (DirectorCard directorCard in ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].cards) {
+                        string interactableName = InteractableCalculator.GetSpawnCardName(directorCard.spawnCard);
+                        if (new List<string>() { }.Contains(interactableName)) {
+                        }
+                        if (playerInteractables.interactablesInvalid.Contains(interactableName)) {
+                        } else {
+                            DropOdds.UpdateChestTierOdds(directorCard.spawnCard, interactableName);
+                            DropOdds.UpdateShrineTierOdds(directorCard, interactableName);
+                            directorCards.Add(directorCard);
+                        }
+                    }
+                    DirectorCard[] directorCardArray = new DirectorCard[directorCards.Count];
+                    for (int cardIndex = 0; cardIndex < directorCards.Count; cardIndex++) {
+                        directorCardArray[cardIndex] = directorCards[cardIndex];
+                    }
+                    if (directorCardArray.Length == 0) {
+                        ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].selectionWeight = 0;
+                    }
+                    ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].cards = directorCardArray;
+                }
+            }
+            orig(sceneDirector);
         }
 
-        private static void ShrineChanceBehaviorOnAddShrineStack(ILContext il) {
-            var cursor = new ILCursor(il).Goto(0);
-
-            cursor.GotoNext(x => x.MatchCallvirt(typeof(WeightedSelection<PickupIndex>).GetMethodCached("Evaluate")));
-            cursor.Next.OpCode = OpCodes.Nop;
-            cursor.Next.Operand = null;
-            cursor.EmitDelegate<Func<WeightedSelection<PickupIndex>, float, PickupIndex>>((_, x) =>
-                GetSelection(ItemDropLocation.Shrine, x));
+        static private void GenerateNewPickupServer(On.RoR2.ShopTerminalBehavior.orig_GenerateNewPickupServer orig, ShopTerminalBehavior shopTerminalBehavior) {
+            List<PickupIndex> shopList = new List<PickupIndex>();
+            if (shopTerminalBehavior.itemTier == ItemTier.Tier1) {
+                shopList = Run.instance.availableTier1DropList;
+            } else if (shopTerminalBehavior.itemTier == ItemTier.Tier2) {
+                shopList = Run.instance.availableTier2DropList;
+            } else if (shopTerminalBehavior.itemTier == ItemTier.Tier3) {
+                shopList = Run.instance.availableTier3DropList;
+            } else if (shopTerminalBehavior.itemTier == ItemTier.Boss) {
+                shopList = Run.instance.availableBossDropList;
+            } else if (shopTerminalBehavior.itemTier == ItemTier.Lunar) {
+                shopList = Run.instance.availableLunarDropList;
+            }
+            if (shopList.Count > 0) {
+                orig(shopTerminalBehavior);
+            } else {
+                shopTerminalBehavior.SetNoPickup();
+                RoR2.PurchaseInteraction purchaseInteraction = shopTerminalBehavior.GetComponent<RoR2.PurchaseInteraction>();
+                if (purchaseInteraction != null) {
+                    purchaseInteraction.SetAvailable(false);
+                }
+            }
         }
+
+        static private GameObject TrySpawnObject(On.RoR2.DirectorCore.orig_TrySpawnObject orig, DirectorCore directorCore, DirectorSpawnRequest directorSpawnRequest) {
+            if (directorSpawnRequest.spawnCard.name == "iscScavBackpack") {
+                if (playerInteractables.interactablesInvalid.Contains("ScavBackpack")) {
+                    return null;
+                }
+            }
+            return orig(directorCore, directorSpawnRequest);
+        }
+
+        static private void AddShrineStack(On.RoR2.ShrineChanceBehavior.orig_AddShrineStack orig, ShrineChanceBehavior shrineChangeBehavior, Interactor interactor) {
+            List<PickupIndex> tier1Adjusted = playerDropList.availableTier1DropList;
+            if (tier1Adjusted.Count == 0) {
+                tier1Adjusted = DropList.tier1DropListOriginal;
+            }
+            List<PickupIndex> tier2Adjusted = playerDropList.availableTier2DropList;
+            if (tier2Adjusted.Count == 0) {
+                tier2Adjusted = DropList.tier2DropListOriginal;
+            }
+            List<PickupIndex> tier3Adjusted = playerDropList.availableTier3DropList;
+            if (tier3Adjusted.Count == 0) {
+                tier3Adjusted = DropList.tier3DropListOriginal;
+            }
+            List<PickupIndex> equipmentAdjusted = playerDropList.availableEquipmentDropList;
+            if (equipmentAdjusted.Count == 0) {
+                equipmentAdjusted = DropList.equipmentDropListOriginal;
+            }
+
+            DropList.SetDropLists(tier1Adjusted, tier2Adjusted, tier3Adjusted, equipmentAdjusted);
+            orig(shrineChangeBehavior, interactor);
+            DropList.RevertDropLists();
+        }
+
+        static private void DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup bossGroup) {
+            System.Reflection.FieldInfo info = typeof(BossGroup).GetField("bossDrops", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            ICollection collection = info.GetValue(bossGroup) as ICollection;
+            List<PickupIndex> bossDrops = new List<PickupIndex>();
+            List<PickupIndex> bossDropsAdjusted = new List<PickupIndex>();
+            foreach (object bossDrop in collection) {
+                PickupIndex pickupIndex = (PickupIndex)bossDrop;
+                bossDrops.Add(pickupIndex);
+                if (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && playerDropList.availableBossDropList.Contains(pickupIndex)) {
+                    bossDropsAdjusted.Add(pickupIndex);
+                }
+            }
+            int normalCount = Run.instance.availableTier2DropList.Count;
+            if (bossGroup.forceTier3Reward) {
+                normalCount = Run.instance.availableTier3DropList.Count;
+            }
+            if (normalCount != 0 || bossDropsAdjusted.Count != 0) {
+                float bossDropChanceOld = bossGroup.bossDropChance;
+                if (normalCount == 0) {
+                    DropList.SetDropLists(new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>());
+                    bossGroup.bossDropChance = 1;
+                } else if (bossDropsAdjusted.Count == 0) {
+                    bossGroup.bossDropChance = 0;
+                }
+                info.SetValue(bossGroup, bossDropsAdjusted);
+                orig(bossGroup);
+                info.SetValue(bossGroup, bossDrops);
+                bossGroup.bossDropChance = bossDropChanceOld;
+                if (normalCount == 0) {
+                    DropList.RevertDropLists();
+                }
+            }
+        }
+
+        static private void SetOptionsServer(On.RoR2.PickupPickerController.orig_SetOptionsServer orig, RoR2.PickupPickerController pickupPickerController, RoR2.PickupPickerController.Option[] options) {
+            List<RoR2.PickupPickerController.Option> optionsAdjusted = new List<PickupPickerController.Option>();
+            foreach (RoR2.PickupPickerController.Option option in options) {
+                if (pickupPickerController.contextString.Contains("SCRAPPER")) {
+                    if (playerDropList.availableSpecialItems.Contains(PickupCatalog.FindPickupIndex(Catalogue.GetScrapIndex(ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(option.pickupIndex).itemIndex).tier)))) {
+                        optionsAdjusted.Add(option);
+                    }
+                } else {
+                    optionsAdjusted.Add(option);
+                }
+            }
+            if (pickupPickerController.contextString.Contains("COMMAND_CUBE")) {
+                if (options.Length > 0) {
+                    ItemIndex itemIndex = PickupCatalog.GetPickupDef(options[0].pickupIndex).itemIndex;
+                    ItemTier itemTier = ItemTier.NoTier;
+                    if (itemIndex != ItemIndex.None) {
+                        itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
+                    }
+                    List<PickupIndex> tierList = playerDropList.GetDropList(itemTier);
+                    optionsAdjusted.Clear();
+                    foreach (PickupIndex pickupIndex in tierList) {
+                        PickupPickerController.Option newOption = new PickupPickerController.Option();
+                        newOption.available = true;
+                        newOption.pickupIndex = pickupIndex;
+                        optionsAdjusted.Add(newOption);
+                    }
+                }
+            }
+            options = new RoR2.PickupPickerController.Option[optionsAdjusted.Count];
+            for (int optionIndex = 0; optionIndex < optionsAdjusted.Count; optionIndex++) {
+                options[optionIndex] = optionsAdjusted[optionIndex];
+            }
+            orig(pickupPickerController, options);
+        }
+
+        static private void EndRound(On.RoR2.ArenaMissionController.orig_EndRound orig, RoR2.ArenaMissionController arenaMissionController) {
+            List<PickupIndex> list = Run.instance.availableTier1DropList;
+            if (arenaMissionController.currentRound > 4) {
+                list = Run.instance.availableTier2DropList;
+            }
+            if (arenaMissionController.currentRound == arenaMissionController.totalRoundsMax) {
+                list = Run.instance.availableTier3DropList;
+            }
+            if (list.Count == 0) {
+                GameObject rewardSpawnPositionOld = arenaMissionController.rewardSpawnPosition;
+                arenaMissionController.rewardSpawnPosition = null;
+                orig(arenaMissionController);
+                arenaMissionController.rewardSpawnPosition = rewardSpawnPositionOld;
+            } else {
+                orig(arenaMissionController);
+            }
+        }
+
+        static private void OnCharacterDeath(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, RoR2.GlobalEventManager globalEventManager, RoR2.DamageReport damageReport) {
+            TeamIndex teamIndex = TeamIndex.None;
+            if (damageReport.victimBody.teamComponent != null) {
+                teamIndex = damageReport.victimBody.teamComponent.teamIndex;
+            }
+            System.Reflection.PropertyInfo propertyInfo = null;
+            if (teamIndex == TeamIndex.Monster) {
+                if (damageReport.victimBody.isElite) {
+                    if (damageReport.victimBody.equipmentSlot != null) {
+                        if (!playerDropList.availableEliteEquipment.Contains(PickupCatalog.FindPickupIndex(damageReport.victimBody.equipmentSlot.equipmentIndex))) {
+                            propertyInfo = typeof(RoR2.CharacterBody).GetProperty("isElite", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                            propertyInfo.SetValue(damageReport.victimBody, false);
+                        }
+                    }
+                }
+            }
+            orig(globalEventManager, damageReport);
+            if (propertyInfo != null) {
+                propertyInfo.SetValue(damageReport.victimBody, true);
+            }
+        }
+
 
         private static void DropRewards(ILContext il) {
             var cursor = new ILCursor(il).Goto(0);
@@ -326,6 +570,73 @@ namespace R2API {
 
             cursor.Emit(OpCodes.Stloc_S, pickupIndex);
         }
+
+        public static void AddItemByTier(ItemTier itemTier, ItemIndex itemIndex) {
+            if (itemsToAdd.ContainsKey(itemTier)) {
+                if (!itemsToAdd[itemTier].Contains(PickupCatalog.FindPickupIndex(itemIndex))) {
+                    itemsToAdd[itemTier].Add(PickupCatalog.FindPickupIndex(itemIndex));
+                }
+            }
+        }
+
+        public static void UnaddItemByTier(ItemTier itemTier, ItemIndex itemIndex) {
+            if (itemsToAdd.ContainsKey(itemTier)) {
+                if (itemsToAdd[itemTier].Contains(PickupCatalog.FindPickupIndex(itemIndex))) {
+                    itemsToAdd[itemTier].Remove(PickupCatalog.FindPickupIndex(itemIndex));
+                }
+            }
+        }
+
+        public static void RemoveItemByTier(ItemTier itemTier, ItemIndex itemIndex) {
+            if (itemsToRemove.ContainsKey(itemTier)) {
+                if (!itemsToRemove[itemTier].Contains(PickupCatalog.FindPickupIndex(itemIndex))) {
+                    itemsToRemove[itemTier].Add(PickupCatalog.FindPickupIndex(itemIndex));
+                }
+            }
+        }
+
+        public static void UnremoveItemByTier(ItemTier itemTier, ItemIndex itemIndex) {
+            if (itemsToRemove.ContainsKey(itemTier)) {
+                if (itemsToRemove[itemTier].Contains(PickupCatalog.FindPickupIndex(itemIndex))) {
+                    itemsToRemove[itemTier].Remove(PickupCatalog.FindPickupIndex(itemIndex));
+                }
+            }
+        }
+
+        public static void AddEquipmentByTier(ItemTier itemTier, EquipmentIndex equipmentIndex) {
+            if (equipmentToAdd.ContainsKey(itemTier)) {
+                if (!equipmentToAdd[itemTier].Contains(PickupCatalog.FindPickupIndex(equipmentIndex))) {
+                    equipmentToAdd[itemTier].Add(PickupCatalog.FindPickupIndex(equipmentIndex));
+                }
+            }
+        }
+
+        public static void UnaddEquipmentByTier(ItemTier itemTier, EquipmentIndex equipmentIndex) {
+            if (equipmentToAdd.ContainsKey(itemTier)) {
+                if (equipmentToAdd[itemTier].Contains(PickupCatalog.FindPickupIndex(equipmentIndex))) {
+                    equipmentToAdd[itemTier].Remove(PickupCatalog.FindPickupIndex(equipmentIndex));
+                }
+            }
+        }
+
+        public static void RemoveEquipmentByTier(ItemTier itemTier, EquipmentIndex equipmentIndex) {
+            if (equipmentToRemove.ContainsKey(itemTier)) {
+                if (!equipmentToRemove[itemTier].Contains(PickupCatalog.FindPickupIndex(equipmentIndex))) {
+                    equipmentToRemove[itemTier].Add(PickupCatalog.FindPickupIndex(equipmentIndex));
+                }
+            }
+        }
+
+        public static void UnremoveEquipmentByTier(ItemTier itemTier, EquipmentIndex equipmentIndex) {
+            if (equipmentToRemove.ContainsKey(itemTier)) {
+                if (equipmentToRemove[itemTier].Contains(PickupCatalog.FindPickupIndex(equipmentIndex))) {
+                    equipmentToRemove[itemTier].Remove(PickupCatalog.FindPickupIndex(equipmentIndex));
+                }
+            }
+        }
+
+
+
 
         public static void AddDrops(ItemDropLocation dropLocation, params PickupSelection[] pickups) {
             if (!Selection.ContainsKey(dropLocation)) {
@@ -373,6 +684,8 @@ namespace R2API {
                     .Select(item => item.Key)
                     .ToArray());
         }
+
+
 
         public static void AddToDefaultEquipment(params EquipmentIndex[] equipment) {
             AdditionalEquipment.UnionWith(equipment);
