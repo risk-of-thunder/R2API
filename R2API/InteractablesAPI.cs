@@ -173,15 +173,19 @@ namespace R2API {
                             directorCards.Add(directorCard);
                         }
                     }
-                    int cardIndex = 0;
-                    DirectorCard[] directorCardsArray = new DirectorCard[directorCards.Count];
-                    foreach (DirectorCard directorCard in directorCards) {
-                        directorCardsArray[cardIndex] = directorCard;
-                        cardIndex += 1;
+                    if (directorCards.Count > 0) {
+                        int cardIndex = 0;
+                        DirectorCard[] directorCardsArray = new DirectorCard[directorCards.Count];
+                        foreach (DirectorCard directorCard in directorCards) {
+                            directorCardsArray[cardIndex] = directorCard;
+                            cardIndex += 1;
+                        }
+                        DirectorCardCategorySelection.Category category = categories[categoryName];
+                        category.cards = directorCardsArray;
+                        categories[categoryName] = category;
+                    } else {
+                        categories.Remove(categoryName);
                     }
-                    DirectorCardCategorySelection.Category category = categories[categoryName];
-                    category.cards = directorCardsArray;
-                    categories[categoryName] = category;
                 }
             }
             foreach (string categoryName in categoryWeight.Keys) {
@@ -207,6 +211,9 @@ namespace R2API {
                 categoryIndex += 1;
             }
             ClassicStageInfo.instance.interactableCategories.categories = categoriesArray;
+            if (categories.Count == 0) {
+                sceneDirector.interactableCredit = 0;
+            }
             orig(sceneDirector);
         }
 
