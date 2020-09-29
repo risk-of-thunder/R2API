@@ -36,6 +36,14 @@ namespace R2API {
             private set { _categoriesToAdd = value; }
         }
 
+        private static List<string> _categoriesToRemove = new List<string>() {
+        };
+
+        static public List<string> categoriesToRemove {
+            get { return _categoriesToRemove; }
+            private set { _categoriesToRemove = value; }
+        }
+
         private static Dictionary<string, Dictionary<string, InteractableSpawnCard>> _interactablesToAdd = new Dictionary<string, Dictionary<string, InteractableSpawnCard>>() {
         };
 
@@ -44,13 +52,18 @@ namespace R2API {
             private set { _interactablesToAdd = value; }
         }
 
-        private static Dictionary<string, Dictionary<string, int>> _interactablesToAddWeight = new Dictionary<string, Dictionary<string, int>>() {
+        private static Dictionary<string, Dictionary<string, int>> interactablesToAddWeight = new Dictionary<string, Dictionary<string, int>>() {
         };
 
-        static public Dictionary<string, Dictionary<string, int>> interactablesToAddWeight {
-            get { return _interactablesToAddWeight; }
-            private set { _interactablesToAddWeight = value; }
+        private static Dictionary<string, List<string>> _interactablesToRemove = new Dictionary<string, List<string>>() {
+        };
+
+        static public Dictionary<string, List<string>> interactablesToRemove {
+            get { return _interactablesToRemove; }
+            private set { _interactablesToRemove = value; }
         }
+
+
 
         private static Dictionary<string, float> _categoryWeight = new Dictionary<string, float>() {
         };
@@ -119,6 +132,11 @@ namespace R2API {
                     categories.Add(categoryName, categoriesToAdd[categoryName]);
                 }
             }
+            foreach (string categoryName in categoriesToRemove) {
+                if (categories.ContainsKey(categoryName)) {
+                    categories.Remove(categoryName);
+                }
+            }
             foreach (string categoryName in interactablesToAdd.Keys) {
                 if (categories.ContainsKey(categoryName)) {
                     Dictionary<string, DirectorCard> directorCards = new Dictionary<string, DirectorCard>();
@@ -139,6 +157,25 @@ namespace R2API {
                     int cardIndex = 0;
                     DirectorCard[] directorCardsArray = new DirectorCard[directorCards.Count];
                     foreach (DirectorCard directorCard in directorCards.Values) {
+                        directorCardsArray[cardIndex] = directorCard;
+                        cardIndex += 1;
+                    }
+                    DirectorCardCategorySelection.Category category = categories[categoryName];
+                    category.cards = directorCardsArray;
+                    categories[categoryName] = category;
+                }
+            }
+            foreach (string categoryName in interactablesToRemove.Keys) {
+                if (categories.ContainsKey(categoryName)) {
+                    List<DirectorCard> directorCards = new List<DirectorCard>();
+                    foreach (DirectorCard directorCard in categories[categoryName].cards) {
+                        if (!interactablesToRemove[categoryName].Contains(directorCard.spawnCard.name)) {
+                            directorCards.Add(directorCard);
+                        }
+                    }
+                    int cardIndex = 0;
+                    DirectorCard[] directorCardsArray = new DirectorCard[directorCards.Count];
+                    foreach (DirectorCard directorCard in directorCards) {
                         directorCardsArray[cardIndex] = directorCard;
                         cardIndex += 1;
                     }
@@ -226,6 +263,18 @@ namespace R2API {
             }
         }
 
+        public static void RemoveCategory(string category) {
+            if (!categoriesToRemove.Contains(category)) {
+                categoriesToRemove.Add(category);
+            }
+        }
+
+        public static void UnremoveCategory(string category) {
+            if (categoriesToRemove.Contains(category)) {
+                categoriesToRemove.Remove(category);
+            }
+        }
+
         public static void AddInteractable(string category, InteractableSpawnCard interactable, int weight) {
             if (!interactablesToAdd.ContainsKey(category)) {
                 interactablesToAdd.Add(category, new Dictionary<string, InteractableSpawnCard>());
@@ -247,6 +296,26 @@ namespace R2API {
                     if (interactablesToAdd[category].Keys.Count == 0) {
                         interactablesToAdd.Remove(category);
                         interactablesToAddWeight.Remove(category);
+                    }
+                }
+            }
+        }
+
+        public static void RemoveInteractable(string category, string interactable) {
+            if (!interactablesToRemove.ContainsKey(category)) {
+                interactablesToRemove.Add(category, new List<string>());
+            }
+            if (!interactablesToRemove[category].Contains(interactable)) {
+                interactablesToRemove[category].Add(interactable);
+            }
+        }
+
+        public static void UnremoveInteractable(string category, string interactable) {
+            if (interactablesToRemove.ContainsKey(category)) {
+                if (interactablesToRemove[category].Contains(interactable)) {
+                    interactablesToRemove[category].Remove(interactable);
+                    if (interactablesToRemove[category].Count == 0) {
+                        interactablesToRemove.Remove(category);
                     }
                 }
             }
