@@ -9,6 +9,7 @@ namespace R2API {
     namespace ItemDropAPITools {
         public class Catalogue : MonoBehaviour {
             static public bool loaded = false;
+            static public List<ItemIndex> specialBossItems = new List<ItemIndex>();
             static public Dictionary<ItemTier, ItemIndex> scrapItems = new Dictionary<ItemTier, ItemIndex>();
             static public List<EquipmentIndex> eliteEquipment = new List<EquipmentIndex>();
             
@@ -20,13 +21,47 @@ namespace R2API {
             static public void PopulateItemCatalogues() {                
                 if (!loaded) {
                     foreach (ItemIndex itemIndex in RoR2.ItemCatalog.allItems) {
-                        if (itemIndex.ToString().ToLower().Contains("scrap")) {
-                            scrapItems.Add(RoR2.ItemCatalog.GetItemDef(itemIndex).tier, itemIndex);
+                        ItemDef itemDef = ItemCatalog.GetItemDef(itemIndex);
+                        foreach (ItemTag itemTag in itemDef.tags) {
+                            if (itemTag == ItemTag.Scrap) {
+                                if (!scrapItems.ContainsKey(itemDef.tier)) {
+                                    scrapItems.Add(itemDef.tier, itemIndex);
+                                }
+                            }
+                        }
+                        if (!RoR2.ItemCatalog.tier1ItemList.Contains(itemIndex) &&
+                            !RoR2.ItemCatalog.tier2ItemList.Contains(itemIndex) &&
+                            !RoR2.ItemCatalog.tier3ItemList.Contains(itemIndex) &&
+                            !RoR2.ItemCatalog.lunarItemList.Contains(itemIndex)) {
+                            if (!scrapItems.ContainsValue(itemIndex) && itemDef.tier != ItemTier.NoTier && itemDef.pickupIconSprite != null && itemDef.pickupIconSprite.name != "texNullIcon") {
+                                foreach (ItemTag itemTag in itemDef.tags) {
+                                    if (itemTag == ItemTag.WorldUnique) {
+                                        specialBossItems.Add(itemIndex);
+                                    }
+                                }
+                            }
                         }
                     }
                     foreach (EquipmentIndex equipmentIndex in RoR2.EquipmentCatalog.allEquipment) {
+                        EquipmentDef equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
                         if (!RoR2.EquipmentCatalog.equipmentList.Contains(equipmentIndex)) {
-                            eliteEquipment.Add(equipmentIndex);
+                            if (equipmentDef.pickupIconSprite != null && equipmentDef.pickupIconSprite.name != "texNullIcon") {
+                                eliteEquipment.Add(equipmentIndex);
+                            }
+                        }
+                    }
+                    foreach (ItemIndex itemIndex in RoR2.ItemCatalog.lunarItemList) {
+                        ItemDef itemDef = ItemCatalog.GetItemDef(itemIndex);
+                        bool cleansable = false;
+                        foreach (ItemTag itemTag in itemDef.tags) {
+                            if (itemTag == ItemTag.Cleansable) {
+                                cleansable = true;
+                            }
+                        }
+                        if (!cleansable) {
+                            if (!scrapItems.ContainsValue(itemIndex) && itemDef.tier != ItemTier.NoTier && itemDef.pickupIconSprite != null && itemDef.pickupIconSprite.name != "texNullIcon") {
+                                //print(itemIndex);
+                            }
                         }
                     }
                     loaded = true;

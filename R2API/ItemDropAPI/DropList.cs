@@ -16,7 +16,7 @@ namespace R2API {
             static public List<PickupIndex> normalEquipmentDropListOriginal = new List<PickupIndex>();
             static public List<PickupIndex> lunarEquipmentDropListOriginal = new List<PickupIndex>();
             static public List<PickupIndex> specialItemsOriginal = new List<PickupIndex>();
-            static public List<PickupIndex> eliteEquipmentOriginal = new List<PickupIndex>();
+            static public List<PickupIndex> specialEquipmentOriginal = new List<PickupIndex>();
 
 
             static private List<PickupIndex> tier1DropListBackup = new List<PickupIndex>();
@@ -33,7 +33,7 @@ namespace R2API {
             public List<PickupIndex> availableNormalEquipmentDropList = new List<PickupIndex>();
             public List<PickupIndex> availableLunarEquipmentDropList = new List<PickupIndex>();
             public List<PickupIndex> availableSpecialItems = new List<PickupIndex>();
-            public List<PickupIndex> availableEliteEquipment = new List<PickupIndex>();
+            public List<PickupIndex> availableSpecialEquipment = new List<PickupIndex>();
 
             public List<PickupIndex> GetDropList( ItemTier itemTier) {
                 if (itemTier == ItemTier.Tier1) {
@@ -124,22 +124,24 @@ namespace R2API {
                     DuplicateDropList(run.availableTier2DropList, tier2DropListOriginal);
                     DuplicateDropList(run.availableTier3DropList, tier3DropListOriginal);
                     DuplicateDropList(run.availableBossDropList, bossDropListOriginal);
+                    foreach (ItemIndex bossItem in Catalogue.specialBossItems) {
+                        if (!bossDropListOriginal.Contains(PickupCatalog.FindPickupIndex(bossItem))) {
+                            bossDropListOriginal.Add(PickupCatalog.FindPickupIndex(bossItem));
+                        }
+                    }
                     DuplicateDropList(run.availableLunarDropList, lunarDropListOriginal);
                     DuplicateDropList(run.availableEquipmentDropList, equipmentDropListOriginal);
                     DuplicateDropList(run.availableNormalEquipmentDropList, normalEquipmentDropListOriginal);
                     DuplicateDropList(run.availableLunarEquipmentDropList, lunarEquipmentDropListOriginal);
                     specialItemsOriginal.Clear();
                     foreach (ItemIndex itemIndex in Catalogue.scrapItems.Values) {
-                        Sprite sprite = ItemCatalog.GetItemDef(itemIndex).pickupIconSprite;
-                        if (sprite != null && !sprite.name.Contains("texNullIcon")) {
-                            specialItemsOriginal.Add(PickupCatalog.FindPickupIndex(itemIndex));
-                        }
+                        specialItemsOriginal.Add(PickupCatalog.FindPickupIndex(itemIndex));
                     }
-                    eliteEquipmentOriginal.Clear();
+                    specialEquipmentOriginal.Clear();
                     foreach (EquipmentIndex equipmentIndex in Catalogue.eliteEquipment) {
                         Sprite sprite = EquipmentCatalog.GetEquipmentDef(equipmentIndex).pickupIconSprite;
                         if (sprite != null && !sprite.name.Contains("texNullIcon")) {
-                            eliteEquipmentOriginal.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
+                            specialEquipmentOriginal.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
                         }
                     }
                     originalListsSaved = true;
@@ -172,7 +174,7 @@ namespace R2API {
 
                 AdjustList(availableNormalEquipmentDropList, additionalEquipment, normalEquipmentDropListOriginal, addEquipment[ItemTier.Tier1], removeEquipment[ItemTier.Tier1], ItemTier.Tier1);
                 AdjustList(availableLunarEquipmentDropList, additionalEquipment, lunarEquipmentDropListOriginal, addEquipment[ItemTier.Lunar], removeEquipment[ItemTier.Lunar], ItemTier.Lunar);
-                AdjustList(availableEliteEquipment, additionalEquipment, eliteEquipmentOriginal, addEquipment[ItemTier.NoTier], removeEquipment[ItemTier.NoTier], ItemTier.NoTier);
+                AdjustList(availableSpecialEquipment, additionalEquipment, specialEquipmentOriginal, addEquipment[ItemTier.NoTier], removeEquipment[ItemTier.NoTier], ItemTier.NoTier);
             }
 
             public void AdjustList(

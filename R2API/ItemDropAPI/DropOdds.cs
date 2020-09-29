@@ -154,7 +154,6 @@ namespace R2API {
 
                     if (dropTableItemOdds.ContainsKey(interactableName)) {
                         for (int entryIndex = 0; entryIndex < dropTable.entries.Length; entryIndex++) {
-
                             dropTable.entries[entryIndex].pickupWeight = dropTableItemOdds[interactableName][entryIndex];
                         }
                     }
@@ -163,9 +162,9 @@ namespace R2API {
                             dropTable.entries[entryIndex].pickupWeight = 0;
                         }
                     }
-                    System.Type type = typeof(RoR2.ExplicitPickupDropTable);
-                    System.Reflection.MethodInfo method = type.GetMethod("GenerateWeightedSelection", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    method.Invoke(dropTable, new object[0]);
+                    //System.Type type = typeof(RoR2.ExplicitPickupDropTable);
+                    //System.Reflection.MethodInfo method = type.GetMethod("GenerateWeightedSelection", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    //method.Invoke(dropTable, new object[0]);
                 }
             }
         }

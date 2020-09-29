@@ -287,8 +287,6 @@ namespace R2API {
             private set { _equipmentToRemove = value; }
         }
 
-        // THIS MODULE MUST ONLY BE INITIALIZED AFTER CUSTOM ITEMS HAVE BEEN ADDED
-        // IF MONSTERDROPAPI IS GOING TO BE INITIALIZED IT MUST BE INITIALIZED BEFORE THIS MODULE IS
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
@@ -382,7 +380,7 @@ namespace R2API {
             } else if (shopTerminalBehavior.itemTier == ItemTier.Lunar) {
                 shopList = Run.instance.availableLunarDropList;
             }
-            if (shopList.Count > 0) {
+            if (shopList.Count > 0 || shopTerminalBehavior.dropTable != null) {
                 orig(shopTerminalBehavior);
             } else {
                 shopTerminalBehavior.SetNoPickup();
@@ -521,7 +519,7 @@ namespace R2API {
             if (teamIndex == TeamIndex.Monster) {
                 if (damageReport.victimBody.isElite) {
                     if (damageReport.victimBody.equipmentSlot != null) {
-                        if (!playerDropList.availableEliteEquipment.Contains(PickupCatalog.FindPickupIndex(damageReport.victimBody.equipmentSlot.equipmentIndex))) {
+                        if (!playerDropList.availableSpecialEquipment.Contains(PickupCatalog.FindPickupIndex(damageReport.victimBody.equipmentSlot.equipmentIndex))) {
                             propertyInfo = typeof(RoR2.CharacterBody).GetProperty("isElite", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
                             propertyInfo.SetValue(damageReport.victimBody, false);
                         }
