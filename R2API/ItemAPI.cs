@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.ItemDrop;
 using R2API.Utils;
 using RoR2;
 using UnityEngine;
@@ -83,7 +84,8 @@ namespace R2API {
             foreach (var customItem in ItemDefinitions) {
                 itemDefinitions.Add(customItem.ItemDef);
 
-                R2API.Logger.LogInfo($"Custom Item: {customItem.ItemDef.nameToken} added");
+                R2API.Logger.LogInfo($"Custom Item: {customItem.ItemDef.nameToken} " +
+                                     $"(index: {(int)customItem.ItemDef.itemIndex}) added");
             }
 
             var t1Items = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Tier1).Select(x => x.ItemDef.itemIndex).ToArray();
@@ -92,17 +94,17 @@ namespace R2API {
             var lunarItems = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Lunar).Select(x => x.ItemDef.itemIndex).ToArray();
             var bossItems = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Boss).Select(x => x.ItemDef.itemIndex).ToArray();
 
-            ItemDropAPI.AddToDefaultByTier(ItemTier.Tier1, t1Items);
-            ItemDropAPI.AddToDefaultByTier(ItemTier.Tier2, t2Items);
-            ItemDropAPI.AddToDefaultByTier(ItemTier.Tier3, t3Items);
-            ItemDropAPI.AddToDefaultByTier(ItemTier.Lunar, lunarItems);
-            ItemDropAPI.AddToDefaultByTier(ItemTier.Boss, bossItems);
+            ItemDropAPI.AddItemByTier(ItemTier.Tier1, t1Items);
+            ItemDropAPI.AddItemByTier(ItemTier.Tier2, t2Items);
+            ItemDropAPI.AddItemByTier(ItemTier.Tier3, t3Items);
+            ItemDropAPI.AddItemByTier(ItemTier.Lunar, lunarItems);
+            ItemDropAPI.AddItemByTier(ItemTier.Boss, bossItems);
 
-            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Tier1, t1Items);
-            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Tier2, t2Items);
-            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Tier3, t3Items);
-            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Lunar, lunarItems);
-            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Boss, bossItems);
+            MonsterItemsAPI.AddItemByTier(ItemTier.Tier1, t1Items);
+            MonsterItemsAPI.AddItemByTier(ItemTier.Tier2, t2Items);
+            MonsterItemsAPI.AddItemByTier(ItemTier.Tier3, t3Items);
+            MonsterItemsAPI.AddItemByTier(ItemTier.Lunar, lunarItems);
+            MonsterItemsAPI.AddItemByTier(ItemTier.Boss, bossItems);
 
             _itemCatalogInitialized = true;
         }
@@ -111,13 +113,17 @@ namespace R2API {
             foreach (var customEquipment in EquipmentDefinitions) {
                 equipmentDefinitions.Add(customEquipment.EquipmentDef);
 
-                R2API.Logger.LogInfo($"Custom Equipment: {customEquipment.EquipmentDef.nameToken} added");
+                R2API.Logger.LogInfo($"Custom Equipment: {customEquipment.EquipmentDef.nameToken} " +
+                                     $"(index: {(int)customEquipment.EquipmentDef.equipmentIndex}) added");
             }
 
-            var equipments = EquipmentDefinitions.Where(c => c.EquipmentDef.canDrop).Select(x => x.EquipmentDef.equipmentIndex).ToArray();
+            var droppableEquipments = EquipmentDefinitions
+                .Where(c => c.EquipmentDef.canDrop)
+                .Select(c => c.EquipmentDef.equipmentIndex)
+                .ToArray();
 
-            ItemDropAPI.AddToDefaultEquipment(equipments);
-            MonsterItemsAPI.AddToDefaultEquipment(equipments);
+            ItemDropAPI.AddEquipment(droppableEquipments);
+            MonsterItemsAPI.AddEquipment(droppableEquipments);
 
             _equipmentCatalogInitialized = true;
         }
@@ -147,7 +153,7 @@ namespace R2API {
             }
 
             if (string.IsNullOrEmpty(item.ItemDef.name)) {
-                R2API.Logger.LogError("Your ItemDef.name is null ! Can't add your item.");
+                R2API.Logger.LogError("Your ItemDef.name is null or empty ! Can't add your item.");
                 return ItemIndex.None;
             }
 
@@ -190,7 +196,7 @@ namespace R2API {
             }
 
             if (string.IsNullOrEmpty(item.EquipmentDef.name)) {
-                R2API.Logger.LogError("Your EquipmentDef.name is null ! Can't add your Equipment.");
+                R2API.Logger.LogError("Your EquipmentDef.name is null or empty ! Can't add your Equipment.");
                 return EquipmentIndex.None;
             }
 
@@ -379,10 +385,10 @@ namespace R2API {
     public class ItemDisplayRuleDict {
         public ItemDisplayRule[] this[string CharacterModelName] {
             get {
-                if (string.IsNullOrEmpty(CharacterModelName) || !Dictionary.ContainsKey(CharacterModelName))
+                if (string.IsNullOrEmpty(CharacterModelName) || !_dictionary.ContainsKey(CharacterModelName))
                     return DefaultRules;
                 else
-                    return Dictionary[CharacterModelName];
+                    return _dictionary[CharacterModelName];
             }
             set {
                 if (string.IsNullOrEmpty(CharacterModelName))
@@ -391,10 +397,10 @@ namespace R2API {
                     DefaultRules = value;
                     return;
                 }
-                if (Dictionary.ContainsKey(CharacterModelName)) {
-                    Dictionary[CharacterModelName] = value;
+                if (_dictionary.ContainsKey(CharacterModelName)) {
+                    _dictionary[CharacterModelName] = value;
                 } else {
-                    Dictionary.Add(CharacterModelName, value);
+                    _dictionary.Add(CharacterModelName, value);
                 }
             }
         }
@@ -421,10 +427,10 @@ namespace R2API {
 
         public ItemDisplayRule[] DefaultRules {get; private set;}
 
-        private Dictionary<string, ItemDisplayRule[]> Dictionary;
+        private readonly Dictionary<string, ItemDisplayRule[]> _dictionary;
         public ItemDisplayRuleDict(params ItemDisplayRule[] defaultRules) {
             DefaultRules = defaultRules;
-            Dictionary = new Dictionary<string, ItemDisplayRule[]>();
+            _dictionary = new Dictionary<string, ItemDisplayRule[]>();
         }
     }
 }
