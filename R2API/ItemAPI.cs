@@ -94,6 +94,7 @@ namespace R2API {
             var lunarItems = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Lunar).Select(x => x.ItemDef.itemIndex).ToArray();
             var bossItems = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Boss).Select(x => x.ItemDef.itemIndex).ToArray();
 
+            LoadRelatedAPIs();
             ItemDropAPI.AddItemByTier(ItemTier.Tier1, t1Items);
             ItemDropAPI.AddItemByTier(ItemTier.Tier2, t2Items);
             ItemDropAPI.AddItemByTier(ItemTier.Tier3, t3Items);
@@ -122,10 +123,35 @@ namespace R2API {
                 .Select(c => c.EquipmentDef.equipmentIndex)
                 .ToArray();
 
+            LoadRelatedAPIs();
             ItemDropAPI.AddEquipment(droppableEquipments);
             MonsterItemsAPI.AddEquipment(droppableEquipments);
 
             _equipmentCatalogInitialized = true;
+        }
+
+        private static void LoadRelatedAPIs() {
+            if (!ItemDropAPI.Loaded) {
+                try {
+                    ItemDropAPI.SetHooks();
+                    ItemDropAPI.Loaded = true;
+                }
+                catch (Exception e) {
+                    R2API.Logger.LogError($"ItemDropAPI hooks failed to initialize. Disabling the submodule. {e}");
+                    ItemDropAPI.UnsetHooks();
+                }
+            }
+
+            if (!MonsterItemsAPI.Loaded) {
+                try {
+                    MonsterItemsAPI.SetHooks();
+                    MonsterItemsAPI.Loaded = true;
+                }
+                catch (Exception e) {
+                    R2API.Logger.LogError($"MonsterItemsAPI hooks failed to initialize. Disabling the submodule. {e}");
+                    MonsterItemsAPI.UnsetHooks();
+                }
+            }
         }
         #endregion
 
