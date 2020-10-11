@@ -50,7 +50,7 @@ namespace R2API {
         /// <typeparam name="TUnlockable">The type that represents the achievement</typeparam>
         /// <param name="serverTracked">True if the achievement tracking is host side, false if client side</param>
         /// <param name="serverTrackedType">Use this if you need a BaseServerAchievement type to be tracked</param>
-        public static void AddUnlockable<TUnlockable>(Boolean serverTracked, Type serverTrackedType)
+        public static void AddUnlockable<TUnlockable>(Boolean serverTracked, Type? serverTrackedType)
             where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockablesAPI)})]");
@@ -91,7 +91,7 @@ namespace R2API {
         /// <param name="hidden"></param>
         /// <param name="nameToken"></param>
         /// <param name="displayModelPath"></param>
-        public static void AddUnlockableOnly(string identifier, bool hidden = false, string nameToken = null, string displayModelPath = null) {
+        public static void AddUnlockableOnly(string? identifier, bool hidden = false, string? nameToken = null, string? displayModelPath = null) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockablesAPI)})]");
             }
@@ -107,7 +107,7 @@ namespace R2API {
             moddedUnlocksWithoutAchievements.Add(def);
         }
 
-        public static void AddEclipseUnlockablesForSurvivor(string modGuid, SurvivorDef survivor) {
+        public static void AddEclipseUnlockablesForSurvivor(string? modGuid, SurvivorDef? survivor) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockablesAPI)})]");
             }

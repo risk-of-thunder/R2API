@@ -13,7 +13,7 @@ namespace R2API {
         /// <summary>
         /// Creates an AssetBundleResourcesProvider with the specified modPrefix.
         /// </summary>
-        public AssetBundleResourcesProvider(string modPrefix, AssetBundle bundle) {
+        public AssetBundleResourcesProvider(string? modPrefix, AssetBundle? bundle) {
             ModPrefix = modPrefix;
             _bundle = bundle;
         }
@@ -29,7 +29,7 @@ namespace R2API {
         /// <param name="path">The path to the asset</param>
         /// <param name="type">The type of the asset to find</param>
         /// <returns>object of type <paramref name="type"/></returns>
-        public Object Load(string path, Type type) {
+        public Object Load(string? path, Type? type) {
             return _bundle.LoadAsset(ToBundlePath(path), type);
         }
 
@@ -39,7 +39,7 @@ namespace R2API {
         /// <param name="path">the path to the asset</param>
         /// <param name="type">the type of the asset to find</param>
         /// <returns>object of type <paramref name="type"/></returns>
-        public ResourceRequest LoadAsync(string path, Type type) {
+        public ResourceRequest LoadAsync(string? path, Type? type) {
             var req = new ResourceRequest();
             var bundleReq = _bundle.LoadAssetAsync(ToBundlePath(path), type);
             bundleReq.completed += op => {
@@ -58,7 +58,7 @@ namespace R2API {
         /// </summary>
         /// <param name="type">The type to match</param>
         /// <returns>Array of the type</returns>
-        public Object[] LoadAll(Type type) {
+        public Object[] LoadAll(Type? type) {
             return _bundle.LoadAllAssets(type);
         }
 

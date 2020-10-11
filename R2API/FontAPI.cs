@@ -53,7 +53,7 @@ namespace R2API {
             /// for adding an TMP_FontAsset inside an seperate assetbundle (.font is loaded automatically)
             /// </summary>
             /// <param name="path">absolute path to the assetbundle</param>
-            public static void Add(string path) {
+            public static void Add(string? path) {
                 if(!Loaded) {
                     throw new InvalidOperationException($"{nameof(FontAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(FontAPI)})]");
                 }
@@ -68,7 +68,7 @@ namespace R2API {
             /// for adding an TMP_FontAsset while it is still in an assetbundle
             /// </summary>
             /// <param name="fontFile">the assetbundle file</param>
-            public static void Add(byte[] fontFile) {
+            public static void Add(byte[]? fontFile) {
                 var fonts = UnityEngine.AssetBundle.LoadFromMemory(fontFile).LoadAllAssets<TMPro.TMP_FontAsset>();
                 foreach (var font in fonts) {
                     Fonts.Add(font);
@@ -79,7 +79,7 @@ namespace R2API {
             /// for adding an TMP_FontAsset directly
             /// </summary>
             /// <param name="fontAsset">The loaded fontasset</param>
-            public static void Add(TMPro.TMP_FontAsset fontAsset) {
+            public static void Add(TMPro.TMP_FontAsset? fontAsset) {
                 if(!Loaded) {
                     throw new InvalidOperationException($"{nameof(FontAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(FontAPI)})]");
                 }

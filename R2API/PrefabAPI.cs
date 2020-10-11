@@ -40,7 +40,7 @@ namespace R2API {
         /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
         /// <param name="registerNetwork">Should the object be registered to network</param>
         /// <returns>The GameObject of the clone</returns>
-        public static GameObject InstantiateClone(this GameObject g, string nameToSet, bool registerNetwork = true, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0) {
+        public static GameObject InstantiateClone(this GameObject? g, string? nameToSet, bool registerNetwork = true, [CallerFilePath] string? file = "", [CallerMemberName] string? member = "", [CallerLineNumber] int line = 0) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(PrefabAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(PrefabAPI)})]");
             }
@@ -58,7 +58,7 @@ namespace R2API {
         /// Do not override the file, member, and line number parameters. They are used to generate a unique hash for the network ID.
         /// </summary>
         /// <param name="g">The prefab to register</param>
-        public static void RegisterNetworkPrefab(this GameObject g, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0) {
+        public static void RegisterNetworkPrefab(this GameObject? g, [CallerFilePath] string? file = "", [CallerMemberName] string? member = "", [CallerLineNumber] int line = 0) {
             if (!Loaded) {
                 R2API.Logger.LogError("PrefabAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
                 return;

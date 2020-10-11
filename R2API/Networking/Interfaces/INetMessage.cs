@@ -6,7 +6,7 @@ namespace R2API.Networking.Interfaces {
     }
 
     public static class NetMessageExtensions {
-        public static void Send(this INetMessage message, NetworkDestination destination) {
+        public static void Send(this INetMessage? message, NetworkDestination destination) {
 
             if (destination.ShouldRun()) {
                 message.OnReceived();

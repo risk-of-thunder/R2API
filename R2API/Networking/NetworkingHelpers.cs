@@ -9,7 +9,7 @@ namespace R2API.Networking {
     /// Helper functions for various RoR2 networking needs
     /// </summary>
     public static class NetworkingHelpers {
-        public static void DealDamage(this DamageInfo damage, HurtBox target,
+        public static void DealDamage(this DamageInfo? damage, HurtBox? target,
             bool callDamage, bool callHitEnemy, bool callHitWorld) {
             if (NetworkServer.active) {
                 if (callDamage) {
@@ -35,7 +35,7 @@ namespace R2API.Networking {
             }
         }
 
-        public static void ApplyBuff(this CharacterBody body,
+        public static void ApplyBuff(this CharacterBody? body,
             BuffIndex buff, int stacks = 1, float duration = -1f) {
             if (NetworkServer.active) {
                 if (duration < 0f) {

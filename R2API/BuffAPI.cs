@@ -17,7 +17,7 @@ namespace R2API {
         /// <summary>
         /// All custom buffs added by the API.
         /// </summary>
-        public static ObservableCollection<CustomBuff> BuffDefinitions = new ObservableCollection<CustomBuff>();
+        public static ObservableCollection<CustomBuff?>? BuffDefinitions = new ObservableCollection<CustomBuff>();
 
         private static bool _buffCatalogInitialized;
 
@@ -83,7 +83,7 @@ namespace R2API {
         /// </summary>
         /// <param name="buff">The buff to add.</param>
         /// <returns>the BuffIndex of your item if added. -1 otherwise</returns>
-        public static BuffIndex Add(CustomBuff buff) {
+        public static BuffIndex Add(CustomBuff? buff) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(BuffAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(BuffAPI)})]");
             }
@@ -112,13 +112,13 @@ namespace R2API {
         /// <summary>
         /// Definition of the Buff
         /// </summary>
-        public BuffDef BuffDef;
+        public BuffDef? BuffDef;
 
         /// <summary>
         /// Create a custom buff to add into the game.
         /// If you are doing a buff for a custom elite, don't forget to register your CustomElite before too to fill the eliteIndex field !
         /// </summary>
-        public CustomBuff(string name, string iconPath, Color buffColor, bool isDebuff = false, bool canStack = false) {
+        public CustomBuff(string? name, string? iconPath, Color buffColor, bool isDebuff = false, bool canStack = false) {
             BuffDef = new BuffDef {
                 name = name,
                 iconPath = iconPath,
@@ -133,7 +133,7 @@ namespace R2API {
         /// you may omit the buffIndex in the BuffDef, as that will be assigned by the API.
         /// If you are doing a buff for a custom elite, don't forget to register your CustomElite before too to fill the eliteIndex field !
         /// </summary>
-        public CustomBuff(BuffDef buffDef) {
+        public CustomBuff(BuffDef? buffDef) {
             BuffDef = buffDef;
         }
 
@@ -142,7 +142,7 @@ namespace R2API {
         /// Create a custom buff to add into the game.
         /// </summary>
         [Obsolete("Use the constructor that allows you to input the fields of an BuffDef or use the one that take an BuffDef as parameter directly.")]
-        public CustomBuff(string name, BuffDef buffDef) {
+        public CustomBuff(string name, BuffDef? buffDef) {
             BuffDef = buffDef;
         }
     }

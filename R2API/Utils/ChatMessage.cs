@@ -6,7 +6,7 @@ namespace R2API.Utils {
         /// Send a message to the chat
         /// </summary>
         /// <param name="message"></param>
-        public static void Send(string message) {
+        public static void Send(string? message) {
             Chat.SendBroadcastChat(new Chat.SimpleChatMessage {
                 baseToken = "{0}",
                 paramTokens = new[] { message }
@@ -18,47 +18,47 @@ namespace R2API.Utils {
         /// </summary>
         /// <param name="message"></param>
         /// <param name="messageFrom"></param>
-        public static void Send(string message, string messageFrom) {
+        public static void Send(string? message, string? messageFrom) {
             Chat.SendBroadcastChat(new Chat.SimpleChatMessage {
                 baseToken = "{0}: {1}",
                 paramTokens = new[] { messageFrom, message }
             });
         }
 
-        public static void SendColored(string message, string colorHex) {
+        public static void SendColored(string? message, string? colorHex) {
             Chat.SendBroadcastChat(new Chat.SimpleChatMessage {
                 baseToken = $"<color={colorHex}>{{0}}</color>",
                 paramTokens = new[] { message }
             });
         }
 
-        public static void SendColored(string message, ColorCatalog.ColorIndex color) {
+        public static void SendColored(string? message, ColorCatalog.ColorIndex color) {
             SendColored(message, ColorCatalog.GetColorHexString(color));
         }
 
-        public static void SendColored(string message, System.Drawing.Color color) {
+        public static void SendColored(string? message, System.Drawing.Color color) {
             SendColored(message, ColorToHexString(color));
         }
-        public static void SendColored(string message, UnityEngine.Color color) {
+        public static void SendColored(string? message, UnityEngine.Color color) {
             SendColored(message, ColorToHexString(color));
         }
 
-        public static void SendColored(string message, string colorHex, string messageFrom) {
+        public static void SendColored(string? message, string? colorHex, string? messageFrom) {
             Chat.SendBroadcastChat(new Chat.SimpleChatMessage {
                 baseToken = $"<color={colorHex}>{{0}}: {{1}}</color>",
                 paramTokens = new[] { messageFrom, message }
             });
         }
 
-        public static void SendColored(string message, ColorCatalog.ColorIndex color, string messageFrom) {
+        public static void SendColored(string? message, ColorCatalog.ColorIndex color, string? messageFrom) {
             SendColored(message, ColorCatalog.GetColorHexString(color), messageFrom);
         }
 
-        public static void SendColored(string message, System.Drawing.Color color, string messageFrom) {
+        public static void SendColored(string? message, System.Drawing.Color color, string? messageFrom) {
             SendColored(message, ColorToHexString(color), messageFrom);
         }
 
-        public static void SendColored(string message, UnityEngine.Color color, string messageFrom) {
+        public static void SendColored(string? message, UnityEngine.Color color, string? messageFrom) {
             SendColored(message, ColorToHexString(color), messageFrom);
         }
 

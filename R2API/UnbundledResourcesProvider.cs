@@ -14,13 +14,13 @@ namespace R2API {
 
         public string ModPrefix { get; }
 
-        public UnbundledResourcesProvider(string modPrefix) {
+        public UnbundledResourcesProvider(string? modPrefix) {
             if (!modPrefix.StartsWith("@"))
                 throw new ArgumentException("Mod prefix must start with @");
             ModPrefix = modPrefix;
         }
 
-        public UnbundledResourcesProvider(string modPrefix, params (string key, UnityObject resource)[] resources) {
+        public UnbundledResourcesProvider(string? modPrefix, params (string? key, UnityObject? resource)[]? resources) {
             if (!modPrefix.StartsWith("@"))
                 throw new ArgumentException("Mod prefix must start with @");
             ModPrefix = modPrefix;
@@ -30,7 +30,7 @@ namespace R2API {
             }
         }
 
-        public UnityObject Load(string path, Type type) {
+        public UnityObject Load(string? path, Type? type) {
             if (!typedResources.TryGetValue(type, out var resources)) {
                 throw new KeyNotFoundException($"type: {type.FullName} was not found");
             }
@@ -38,11 +38,11 @@ namespace R2API {
             return resources[key];
         }
 
-        public string Store<TResource>(string path, TResource resource) where TResource : UnityObject {
+        public string Store<TResource>(string? path, TResource? resource) where TResource : UnityObject {
             return Store(path, resource, typeof(TResource));
         }
 
-        public string Store(string path, UnityObject resource, Type type) {
+        public string Store(string? path, UnityObject? resource, Type? type) {
             string key;
             string fullPath;
 
@@ -70,11 +70,11 @@ namespace R2API {
             return fullPath;
         }
 
-        public void Remove<TResource>(string path) {
+        public void Remove<TResource>(string? path) {
             Remove(path, typeof(TResource));
         }
 
-        public void Remove(string path, Type type) {
+        public void Remove(string? path, Type? type) {
             if (!typedResources.TryGetValue(type, out var resources)) {
                 throw new KeyNotFoundException($"type: {type.FullName} was not found");
             }
@@ -91,7 +91,7 @@ namespace R2API {
             resources.Remove(key);
         }
 
-        public void Remove<TResource>(TResource resource) where TResource : UnityObject {
+        public void Remove<TResource>(TResource? resource) where TResource : UnityObject {
             if (!typedResources.TryGetValue(typeof(TResource), out var resources)) {
                 throw new KeyNotFoundException($"type: {typeof(TResource).FullName} was not found");
             }
@@ -99,14 +99,14 @@ namespace R2API {
             resources.Remove(ConvertToKey(fullPath));
         }
 
-        public string GetPathForResource<TResource>(TResource resource) where TResource : UnityObject {
+        public string GetPathForResource<TResource>(TResource? resource) where TResource : UnityObject {
             if (!typedResources.TryGetValue(typeof(TResource), out var resources)) {
                 throw new KeyNotFoundException($"type: {typeof(TResource).FullName} was not found");
             }
             return $"{ModPrefix}:{resources.First((kvp) => kvp.Value == resource).Key}";
         }
 
-        public UnityEngine.ResourceRequest LoadAsync(string path, Type type) {
+        public UnityEngine.ResourceRequest LoadAsync(string? path, Type? type) {
             var req = new UnityEngine.ResourceRequest();
             var asset = Load(path, type);
 
@@ -119,13 +119,13 @@ namespace R2API {
             return req;
         }
 
-        private IEnumerator CallbackRoutine(UnityEngine.ResourceRequest request, Action<UnityEngine.AsyncOperation> callback, UnityEngine.MonoBehaviour self) {
+        private IEnumerator CallbackRoutine(UnityEngine.ResourceRequest? request, Action<UnityEngine.AsyncOperation>? callback, UnityEngine.MonoBehaviour? self) {
             yield return new UnityEngine.WaitForEndOfFrame();
             callback.Invoke(request);
             UnityObject.Destroy(self.gameObject);
         }
 
-        public UnityObject[] LoadAll(Type type) {
+        public UnityObject[] LoadAll(Type? type) {
             return typedResources
                 .Where(kv => kv.Key == type || kv.Key.IsAssignableFrom(type))
                 .SelectMany(kv => kv.Value.Values).ToArray();

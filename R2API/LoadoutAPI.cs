@@ -114,7 +114,7 @@ namespace R2API {
         /// </summary>
         /// <param name="t">The type to add</param>
         /// <returns>True if succesfully added</returns>
-        public static bool AddSkill(Type t) {
+        public static bool AddSkill(Type? t) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
@@ -159,7 +159,7 @@ namespace R2API {
         /// </summary>
         /// <param name="s">The SkillDef to add</param>
         /// <returns>True if the event was registered</returns>
-        public static bool AddSkillDef(SkillDef s) {
+        public static bool AddSkillDef(SkillDef? s) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
@@ -180,7 +180,7 @@ namespace R2API {
         /// </summary>
         /// <param name="sf">The skillfamily to add</param>
         /// <returns>True if the event was registered</returns>
-        public static bool AddSkillFamily(SkillFamily sf) {
+        public static bool AddSkillFamily(SkillFamily? sf) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
@@ -281,17 +281,17 @@ namespace R2API {
         /// Use this to set skinDef values, then call CreateNewSkinDef().
         /// </summary>
         public struct SkinDefInfo {
-            public SkinDef[] BaseSkins;
-            public Sprite Icon;
-            public string NameToken;
-            public string UnlockableName;
-            public GameObject RootObject;
-            public CharacterModel.RendererInfo[] RendererInfos;
-            public SkinDef.MeshReplacement[] MeshReplacements;
-            public SkinDef.GameObjectActivation[] GameObjectActivations;
-            public SkinDef.ProjectileGhostReplacement[] ProjectileGhostReplacements;
-            public SkinDef.MinionSkinReplacement[] MinionSkinReplacements;
-            public string Name;
+            public SkinDef?[]? BaseSkins;
+            public Sprite? Icon;
+            public string? NameToken;
+            public string? UnlockableName;
+            public GameObject? RootObject;
+            public CharacterModel.RendererInfo[]? RendererInfos;
+            public SkinDef.MeshReplacement[]? MeshReplacements;
+            public SkinDef.GameObjectActivation[]? GameObjectActivations;
+            public SkinDef.ProjectileGhostReplacement[]? ProjectileGhostReplacements;
+            public SkinDef.MinionSkinReplacement[]? MinionSkinReplacements;
+            public string? Name;
         }
 
         /// <summary>
@@ -335,7 +335,7 @@ namespace R2API {
         /// <param name="bodyPrefab">The body to add the skin to</param>
         /// <param name="skin">The SkinDefInfo for the skin to add</param>
         /// <returns>True if successful</returns>
-        public static bool AddSkinToCharacter(GameObject bodyPrefab, SkinDefInfo skin) {
+        public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDefInfo skin) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
@@ -351,7 +351,7 @@ namespace R2API {
         /// <param name="bodyPrefab">The body to add the skin to</param>
         /// <param name="skin">The SkinDef to add</param>
         /// <returns>True if successful</returns>
-        public static bool AddSkinToCharacter(GameObject bodyPrefab, SkinDef skin) {
+        public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDef? skin) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }

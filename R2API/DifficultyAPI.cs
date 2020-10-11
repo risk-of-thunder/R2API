@@ -29,19 +29,19 @@ namespace R2API {
         /// </summary>
         [Obsolete("Use DifficultyCatalogReady instead!")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Deprecated for this reason")]
-        public static event EventHandler difficultyCatalogReady;
+        public static event EventHandler? difficultyCatalogReady;
 
         /// <summary>
         /// Fired right before the hooks for the difficultyAPI are set. This is the last chance to add difficulties to the API.
         /// </summary>
-        public static event EventHandler DifficultyCatalogReady;
+        public static event EventHandler? DifficultyCatalogReady;
 
         private static readonly DifficultyIndex MinimumIndex = DifficultyIndex.Invalid;
 
         /// <summary>
         /// A dictionairy with ALL difficulty definitions. Post start, this includes both the vanilla ones and the ones added by R2API. Not all indexes are promised to be populated. Iterate over the keyset instead.
         /// </summary>
-        public static ConcurrentDictionary<DifficultyIndex,DifficultyDef> difficultyDefinitions = new ConcurrentDictionary<DifficultyIndex,DifficultyDef>();
+        public static ConcurrentDictionary<DifficultyIndex,DifficultyDef?>? difficultyDefinitions = new ConcurrentDictionary<DifficultyIndex,DifficultyDef?>();
 
         /// <summary>
         /// Add a DifficultyDef to the list of available difficulties.
@@ -51,7 +51,7 @@ namespace R2API {
         /// </summary>
         /// <param name="difficulty">The difficulty definition to add.</param>
         /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
-        public static DifficultyIndex AddDifficulty(DifficultyDef difficulty) {
+        public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty) {
             return AddDifficulty(difficulty, false);
         }
 
@@ -64,7 +64,7 @@ namespace R2API {
         /// <param name="difficulty">The difficulty definition to add.</param>
         /// <param name="preferPositive">If you prefer to be appended to the array. In game version 1.0.0.X this means you will get all Eclipse modifiers as well when your difficulty is selected. </param>
         /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
-        public static DifficultyIndex AddDifficulty(DifficultyDef difficulty, bool preferPositive = false) {
+        public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty, bool preferPositive = false) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(DifficultyAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DifficultyAPI)})]");
             }
@@ -87,8 +87,11 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            difficultyCatalogReady?.Invoke(null, null);//TODO: Remove this in future versions.
+            // TODO: Whenever this code is removed, remove this nullable disable
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+            difficultyCatalogReady?.Invoke(null, null);//TODO: Remove this in future versions. 
             DifficultyCatalogReady?.Invoke(null, null);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
             On.RoR2.DifficultyCatalog.GetDifficultyDef += GetExtendedDifficultyDef;
             On.RoR2.RuleDef.FromDifficulty += InitialiseRuleBookAndFinalizeList;
         }
