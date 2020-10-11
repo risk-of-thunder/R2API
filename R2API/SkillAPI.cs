@@ -6,6 +6,7 @@
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 using System;
 using System.Collections.Generic;
@@ -84,3 +85,4 @@ namespace R2API {
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.

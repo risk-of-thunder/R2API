@@ -1,5 +1,4 @@
-﻿// TODO: This really needs to be removed or updated, should add obselete tag
-//Disabled nullable in deprecated apis
+﻿//Disabled nullable in deprecated apis
 #pragma warning disable CS8605 // Unboxing a possibly null value.
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning disable CS8603 // Possible null reference return.
