@@ -39,6 +39,19 @@ namespace R2API {
         /// <param name="serverTracked">True if the achievement tracking is host side, false if client side</param>
         public static void AddUnlockable<TUnlockable>(Boolean serverTracked)
             where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
+
+            AddUnlockable<TUnlockable>(serverTracked, null);
+        }
+
+        /// <summary>
+        /// Adds an unlockable type and queues it to be registered
+        /// In the vast majority of cases the type used should inherit from ModdedUnlockable, which handles most of the messy stuff for you
+        /// </summary>
+        /// <typeparam name="TUnlockable">The type that represents the achievement</typeparam>
+        /// <param name="serverTracked">True if the achievement tracking is host side, false if client side</param>
+        /// <param name="serverTrackedType">Use this if you need a BaseServerAchievement type to be tracked</param>
+        public static void AddUnlockable<TUnlockable>(Boolean serverTracked, Type serverTrackedType)
+            where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockablesAPI)})]");
             }
@@ -46,7 +59,8 @@ namespace R2API {
 
             var instance = new TUnlockable();
             var unlockableIdentifier = instance.UnlockableIdentifier;
-            var identifier = instance.AchievementIdentifier;
+
+            Type serverAchievementType = serverTrackedType != null ? serverTrackedType : instance.GetType();
 
             if (!usedRewardIds.Add(unlockableIdentifier)) throw new InvalidOperationException($"The unlockable identifier '{unlockableIdentifier}' is already used by another mod or the base game.");
 
@@ -58,7 +72,7 @@ namespace R2API {
                 descriptionToken = instance.AchievementDescToken,
                 iconPath = instance.SpritePath,
                 type = instance.GetType(),
-                serverTrackerType = serverTracked ? instance.GetType() : null,
+                serverTrackerType = serverTracked ? serverAchievementType : null,
             };
 
             var unl = new UnlockableDef {

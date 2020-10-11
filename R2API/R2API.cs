@@ -6,14 +6,12 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Logging;
-using Facepunch.Steamworks;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.Utils;
 using RoR2;
-using RoR2.Networking;
 
 namespace R2API {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
@@ -24,7 +22,7 @@ namespace R2API {
         public const string PluginName = "R2API";
         public const string PluginVersion = "0.0.1";
 
-        private const int GameBuild = 5400041;
+        private const int GameBuild = 5440050;
 
         internal new static ManualLogSource Logger { get; set; }
 
@@ -61,8 +59,7 @@ namespace R2API {
         }
 
         private static void CheckIfUsedOnRightGameVersion() {
-            var buildId =
-                SteamworksClientManager.instance.GetFieldValue<Client>("steamworksClient").BuildId;
+            var buildId = SteamworksClientManager.instance.steamworksClient.BuildId;
 
             if (GameBuild == buildId)
                 return;
@@ -76,48 +73,6 @@ namespace R2API {
             // It gets disabled when modded even though this option is currently singleplayer only.
             On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
                 if (self.name != "GenericMenuButton (Eclipse)") orig(self);
-            };
-
-            // Temporary fix for the game not correctly firing the mod mismatch kick reason
-            // because of a lack of default constructor.
-            IL.RoR2.Networking.ServerAuthManager.HandleSetClientAuth += il => {
-                var c = new ILCursor(il);
-                if (c.TryGotoNext(MoveType.AfterLabel,
-                    x => x.MatchNewobj(typeof(GameNetworkManager.ModMismatchKickReason).GetConstructor(new[] { typeof(IEnumerable<string>) })),
-                    x => x.MatchStloc(out _)))
-                {
-                    static GameNetworkManager.SimpleLocalizedKickReason SwapToStandardMessage(GameNetworkManager.ModMismatchKickReason reason)
-                    {
-                        reason.GetDisplayTokenAndFormatParams(out var token, out _);
-                        return new GameNetworkManager.SimpleLocalizedKickReason(token,
-                            "",
-                            string.Join("\n", NetworkModCompatibilityHelper.networkModList));
-                    }
-                    c.Index++;
-                    c.EmitDelegate<Func<GameNetworkManager.ModMismatchKickReason, GameNetworkManager.SimpleLocalizedKickReason>>(SwapToStandardMessage);
-                }
-            };
-
-            // Temporary fix for displaying correctly the mods that the user is missing when trying to connect
-            On.RoR2.Networking.GameNetworkManager.SimpleLocalizedKickReason.GetDisplayTokenAndFormatParams +=
-            (On.RoR2.Networking.GameNetworkManager.SimpleLocalizedKickReason.orig_GetDisplayTokenAndFormatParams orig,
-                GameNetworkManager.SimpleLocalizedKickReason self, out string token, out object[] formatArgs) => {
-                var baseToken = self.baseToken;
-                var args = self.formatArgs;
-                token = baseToken;
-                if (baseToken != "KICK_REASON_MOD_MISMATCH")
-                {
-                    token = baseToken;
-                    formatArgs = args;
-                    return;
-                }
-                var mods = args[1].Split('\n');
-                var myMods = NetworkModCompatibilityHelper.networkModList;
-
-                var extraMods = string.Join("\n", myMods.Except(mods));
-                var missingMods = string.Join("\n", mods.Except(myMods));
-
-                formatArgs = new object[] { extraMods, missingMods };
             };
 
             // Temporary fix until the KVP Foreach properly check for null Value before calling Equals on them
@@ -188,10 +143,10 @@ namespace R2API {
 
             HookEndpointManager.OnAdd += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
             HookEndpointManager.OnModify += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
-            HookEndpointManager.OnRemove += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
+            HookEndpointManager.OnRemove += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly, false);
         }
 
-        private static bool LogMethod(MemberInfo @base, Assembly hookOwnerAssembly) {
+        private static bool LogMethod(MemberInfo @base, Assembly hookOwnerAssembly, bool added = true) {
             if (@base == null) {
                 return true;
             }
@@ -206,7 +161,7 @@ namespace R2API {
             var name = @base.Name;
             var identifier = declaringType != null ? $"{declaringType}.{name}" : name;
 
-            Logger.LogDebug($"Hook added by assembly: {hookOwnerDllName} for: {identifier}");
+            Logger.LogDebug($"Hook {(added ? "added" : "removed")} by assembly: {hookOwnerDllName} for: {identifier}");
             return true;
         }
 
