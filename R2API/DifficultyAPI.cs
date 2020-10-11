@@ -29,12 +29,12 @@ namespace R2API {
         /// </summary>
         [Obsolete("Use DifficultyCatalogReady instead!")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Deprecated for this reason")]
-        public static event EventHandler difficultyCatalogReady;
+        public static event EventHandler? difficultyCatalogReady;
 
         /// <summary>
         /// Fired right before the hooks for the difficultyAPI are set. This is the last chance to add difficulties to the API.
         /// </summary>
-        public static event EventHandler DifficultyCatalogReady;
+        public static event EventHandler? DifficultyCatalogReady;
 
         private static readonly DifficultyIndex MinimumIndex = DifficultyIndex.Invalid;
 
@@ -87,8 +87,11 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            difficultyCatalogReady?.Invoke(null, null);//TODO: Remove this in future versions.
+            // TODO: Whenever this code is removed, remove this nullable disable
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+            difficultyCatalogReady?.Invoke(null, null);//TODO: Remove this in future versions. 
             DifficultyCatalogReady?.Invoke(null, null);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
             On.RoR2.DifficultyCatalog.GetDifficultyDef += GetExtendedDifficultyDef;
             On.RoR2.RuleDef.FromDifficulty += InitialiseRuleBookAndFinalizeList;
         }
