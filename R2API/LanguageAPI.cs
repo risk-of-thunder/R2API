@@ -170,7 +170,7 @@ namespace R2API {
         /// Adds multiple languagetokens and value
         /// </summary>
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
-        public static void Add(Dictionary<string?, string?>? tokenDictionary) {
+        public static void Add(Dictionary<string, string?>? tokenDictionary) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -184,7 +184,7 @@ namespace R2API {
         /// </summary>
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         /// <param name="language">Language you want to add this to</param>
-        public static void Add(Dictionary<string?, string?>? tokenDictionary, string? language) {
+        public static void Add(Dictionary<string, string?>? tokenDictionary, string? language) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -197,7 +197,7 @@ namespace R2API {
         /// Adds multiple languagetokens and value to languages
         /// </summary>
         /// <param name="languageDictionary">dictionary of languages containing dictionaries of key-value (eg ["en"]["mytoken"]="mystring")</param>
-        public static void Add(Dictionary<string?, Dictionary<string?, string?>?>? languageDictionary) {
+        public static void Add(Dictionary<string, Dictionary<string, string?>?>? languageDictionary) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -328,7 +328,7 @@ namespace R2API {
         /// </summary>
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
-        public static LanguageOverlay AddOverlay(Dictionary<string?, string?>? tokenDictionary) {
+        public static LanguageOverlay AddOverlay(Dictionary<string, string?>? tokenDictionary) {
             var overlay = new LanguageOverlay(tokenDictionary.Select(kvp => {return new OverlayTokenData(kvp.Key, kvp.Value);}).ToArray());
             overlay.Add();
             return overlay;
@@ -340,7 +340,7 @@ namespace R2API {
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         /// <param name="language">Language you want to add this to</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
-        public static LanguageOverlay AddOverlay(Dictionary<string?, string?>? tokenDictionary, string? language) {
+        public static LanguageOverlay AddOverlay(Dictionary<string, string?>? tokenDictionary, string? language) {
             var overlay = new LanguageOverlay(tokenDictionary.Select(kvp => {return new OverlayTokenData(kvp.Key, kvp.Value, language);}).ToArray());
             overlay.Add();
             return overlay;
@@ -351,7 +351,7 @@ namespace R2API {
         /// </summary>
         /// <param name="languageDictionary">dictionary of languages containing dictionaries of key-value (eg ["en"]["mytoken"]="mystring")</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
-        public static LanguageOverlay AddOverlay(Dictionary<string?, Dictionary<string?, string?>?>? languageDictionary) {
+        public static LanguageOverlay AddOverlay(Dictionary<string, Dictionary<string, string?>?>? languageDictionary) {
             var overlay = new LanguageOverlay(
                 languageDictionary.SelectMany(subdict => {
                     return subdict.Value.Select(kvp => {
