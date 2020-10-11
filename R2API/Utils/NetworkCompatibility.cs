@@ -73,7 +73,7 @@ namespace R2API.Utils {
             R2API.R2APIStart += ScanPluginsForNetworkCompat;
         }
 
-        private void ScanPluginsForNetworkCompat(object _, EventArgs __) {
+        private void ScanPluginsForNetworkCompat(object? _, EventArgs __) {
             foreach (var (_, pluginInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos) {
                 try {
                     var pluginAssembly = pluginInfo.Instance.GetType().Assembly;
@@ -118,12 +118,16 @@ namespace R2API.Utils {
             return false;
         }
 
+        // TODO: Should remove disable of nullable context, but changes here require extra testing.
+        #pragma warning disable CS8605 // Unboxing a possibly null value.
         private static void TryGetNetworkCompatibility(Type baseUnityPluginType, out NetworkCompatibility networkCompatibility) {
             networkCompatibility = new NetworkCompatibility();
 
             foreach (var assemblyAttribute in baseUnityPluginType.Assembly.CustomAttributes) {
                 if (assemblyAttribute.AttributeType == typeof(NetworkCompatibility)) {
+
                     networkCompatibility.CompatibilityLevel = (CompatibilityLevel)assemblyAttribute.ConstructorArguments[0].Value;
+
                     networkCompatibility.VersionStrictness = (VersionStrictness)assemblyAttribute.ConstructorArguments[1].Value;
 
                     return;
@@ -137,6 +141,7 @@ namespace R2API.Utils {
                 }
             }
         }
+        #pragma warning restore CS8605 // Unboxing a possibly null value.
 
         private void AddToNetworkModList() {
             if (ModList.Count != 0) {
