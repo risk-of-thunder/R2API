@@ -38,7 +38,7 @@ namespace R2API {
             /// <param name="title">The category's title.</param>
             /// <param name="color">The category's color</param>
             /// <param name="description">Should the category be empty, you can show this description.</param>
-            public LobbyCategory(string title, Color color, string description) {
+            public LobbyCategory(string? title, Color color, string? description) {
                 typeof(RuleCatalog).GetMethodCached("AddCategory"
                     , new[] {typeof(string), typeof(Color), typeof(string), typeof(Func<bool>)})
                     .Invoke(null, new object[] {title, color, description, null});
@@ -50,7 +50,7 @@ namespace R2API {
             /// Wraps a rule category for the lobby.
             /// </summary>
             /// <param name="category">The category.</param>
-            public LobbyCategory(RuleCategoryDef category) {
+            public LobbyCategory(RuleCategoryDef? category) {
                 Def = category;
             }
 
@@ -89,7 +89,7 @@ namespace R2API {
             /// </summary>
             /// <param name="category">The child.</param>
             /// <returns>'this', for chaining.</returns>
-            public LobbyCategory AddChildCategory(LobbyCategory category) {
+            public LobbyCategory AddChildCategory(LobbyCategory? category) {
                 if (category == this)
                     throw new ArgumentException("Cannot be own parent.");
 
@@ -136,7 +136,7 @@ namespace R2API {
             /// Gets invoked if the rule is added to a category and the value changed.
             /// Sender is 'this', args is 'this.Value'.
             /// </summary>
-            public event EventHandler<T> ValueChanged;
+            public event EventHandler<T>? ValueChanged;
 
             /// <summary>
             /// Construct a rule. Does not affect the game until you push the rule to a category.
@@ -155,8 +155,8 @@ namespace R2API {
             /// <param name="descriptionColor"></param>
             /// <param name="sprite">A path to the sprite for this choice.</param>
             /// <returns>'this', for chaining.</returns>
-            public LobbyRule<T> AddChoice(T value, string title, string description
-                , Color titleColor, Color descriptionColor, string sprite = "") {
+            public LobbyRule<T> AddChoice(T value, string? title, string? description
+                , Color titleColor, Color descriptionColor, string? sprite = "") {
                 if (Pushed)
                     throw new NotSupportedException("Cannot add choice after rule has been pushed.");
 
@@ -199,7 +199,7 @@ namespace R2API {
             /// <param name="name">An internal name for this choice.</param>
             /// <returns>'this', for chaining.</returns>
             [Obsolete("There should be no reason to specify internal names.")]
-            public LobbyRule<T> AddChoice(T value, string title, string description
+            public LobbyRule<T> AddChoice(T value, string? title, string? description
                 , Color titleColor, Color descriptionColor, string sprite, string name) {
                 return AddChoice(value, title, description, titleColor, descriptionColor, sprite);
             }
@@ -240,7 +240,7 @@ namespace R2API {
         /// <param name="emptyDescription">Should the category be empty, you can show this description.</param>
         /// <returns>The RuleCategoryDef, keep if you want to add rules.</returns>
         [Obsolete("Use the LobbyCategory constructor instead.")]
-        public static RuleCategoryDef AddCategory(string title, Color color, string emptyDescription = null) {
+        public static RuleCategoryDef AddCategory(string? title, Color color, string? emptyDescription = null) {
             var category = RuleCatalog.allCategoryDefs.FirstOrDefault(x => x.displayToken == title);
 
             return category ?? new LobbyCategory(title, color, emptyDescription).Def;
@@ -253,7 +253,7 @@ namespace R2API {
         /// <param name="rule">The rule to add.</param>
         /// <typeparam name="T">The type of value this rule holds.</typeparam>
         [Obsolete("Use LobbyCategory.PushRule instead.")]
-        public static void AddToCategory<T>(RuleCategoryDef category, LobbyRule<T> rule) {
+        public static void AddToCategory<T>(RuleCategoryDef? category, LobbyRule<T>? rule) {
             new LobbyCategory(category).PushRule(rule);
         }
 

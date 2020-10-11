@@ -44,7 +44,7 @@ namespace R2API.Utils {
         /// </summary>
         /// <param name="message">The message to send</param>
         /// <param name="connection">The network connection to send to.</param>
-        public static void SendDirectMessage(string message, NetworkConnection connection) {
+        public static void SendDirectMessage(string? message, NetworkConnection? connection) {
             SendDirectMessage(new Chat.SimpleChatMessage() { baseToken = "{0}", paramTokens = new[] { message } }, connection);
         }
 
@@ -53,7 +53,7 @@ namespace R2API.Utils {
         /// </summary>
         /// <param name="message">The message to send</param>
         /// <param name="user">The network user to send to.</param>
-        public static void SendDirectMessage(string message, RoR2.NetworkUser user) {
+        public static void SendDirectMessage(string? message, RoR2.NetworkUser? user) {
             SendDirectMessage(message, ResolveUserToConnection(user));
         }
 
@@ -62,7 +62,7 @@ namespace R2API.Utils {
         /// </summary>
         /// <param name="message">The message to send</param>
         /// <param name="connection">The network connection to send to.</param>
-        public static void SendDirectMessage(Chat.ChatMessageBase message, NetworkConnection connection) {
+        public static void SendDirectMessage(Chat.ChatMessageBase? message, NetworkConnection? connection) {
             NetworkWriter writer = new NetworkWriter();
             writer.StartMessage((short)59);
             writer.Write(message.GetTypeIndex());

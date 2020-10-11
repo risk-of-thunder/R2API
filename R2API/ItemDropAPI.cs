@@ -1,4 +1,13 @@
-﻿using System.Collections;
+﻿// TODO: Re-enable nullable after ideath makes PR with refactors here.
+#pragma warning disable CS8605 // Unboxing a possibly null value.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8603 // Possible null reference return.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using RoR2;
@@ -13,7 +22,9 @@ using UnityEngine.Events;
 
 namespace R2API {
     public class PickupSelection {
+
         public List<PickupIndex> Pickups { get; set; }
+
         public float DropChance { get; set; } = 1.0f;
         public bool IsDefaults { get; internal set; } = false;
     }
@@ -334,8 +345,12 @@ namespace R2API {
                 } else if (interactableName == "CasinoChest") {
                     DropOdds.UpdateDropTableTierOdds(spawnCard, interactableName);
                 } else if (interactableName == "ShrineCleanse") {
+
                     ExplicitPickupDropTable dropTable = spawnCard.prefab.GetComponent<RoR2.ShopTerminalBehavior>().dropTable as ExplicitPickupDropTable;
+
+
                     DropOdds.UpdateDropTableItemOdds(playerDropList, dropTable, interactableName);
+
                 }
             }
 
@@ -428,7 +443,9 @@ namespace R2API {
             ICollection collection = info.GetValue(bossGroup) as ICollection;
             List<PickupIndex> bossDrops = new List<PickupIndex>();
             List<PickupIndex> bossDropsAdjusted = new List<PickupIndex>();
+
             foreach (object bossDrop in collection) {
+
                 PickupIndex pickupIndex = (PickupIndex)bossDrop;
                 bossDrops.Add(pickupIndex);
                 if (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && playerDropList.availableBossDropList.Contains(pickupIndex)) {
@@ -816,10 +833,12 @@ namespace R2API {
         }
 
         public static PickupSelection ToSelection(this List<ItemIndex> indices, float dropChance = 1.0f) {
+
             return indices == null ? null : new PickupSelection {
                 DropChance = dropChance,
                 Pickups = indices.Select(x => PickupCatalog.FindPickupIndex(x)).ToList()
             };
+
         }
 
         public static PickupSelection ToSelection(this List<EquipmentIndex> indices, float dropChance = 1.0f) {
@@ -830,10 +849,20 @@ namespace R2API {
         }
 
         public static PickupSelection ToSelection(this List<PickupIndex> pickups, float dropChance = 1.0f) {
+
             return pickups == null ? null : new PickupSelection {
                 Pickups = pickups,
                 DropChance = dropChance
             };
+
         }
     }
 }
+#pragma warning restore CS8605 // Unboxing a possibly null value.
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning restore CS8603 // Possible null reference return.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.

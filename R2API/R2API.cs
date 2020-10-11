@@ -165,7 +165,7 @@ namespace R2API {
             return true;
         }
 
-        public static bool SupportsVersion(string version) {
+        public static bool SupportsVersion(string? version) {
             var own = Version.Parse(PluginVersion);
             var v = Version.Parse(version);
 
