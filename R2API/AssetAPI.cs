@@ -1,4 +1,14 @@
-﻿using System;
+﻿// TODO: This really needs to be removed or updated, should add obselete tag
+//Disabled nullable in deprecated apis
+#pragma warning disable CS8605 // Unboxing a possibly null value.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8603 // Possible null reference return.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using MonoMod.Cil;
@@ -62,7 +72,9 @@ namespace R2API {
         /// <param name="bodyPrefab"></param>
         /// <param name="portraitIcon"></param>
         /// <returns>The index of your BodyPrefab.</returns>
+
         public static int AddToBodyCatalog(GameObject bodyPrefab, Texture2D portraitIcon = null) {
+
             BodyCatalog.Add(bodyPrefab);
 
             if (!_bodyCatalogReady)
@@ -148,3 +160,11 @@ namespace R2API {
         }
     }
 }
+#pragma warning restore CS8605 // Unboxing a possibly null value.
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning restore CS8603 // Possible null reference return.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
