@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace R2API {
     public class Notification : MonoBehaviour {
-        public GameObject RootObject { get; set; }
-        public GenericNotification GenericNotification { get; set; }
-        public Func<string> GetTitle { get; set; }
-        public Func<string> GetDescription { get; set; }
-        public Transform Parent { get; set; }
+        public GameObject? RootObject { get; set; }
+        public GenericNotification? GenericNotification { get; set; }
+        public Func<string>? GetTitle { get; set; }
+        public Func<string>? GetDescription { get; set; }
+        public Transform? Parent { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "MonoBehaviour")]
         private void Awake() {
@@ -42,7 +42,7 @@ namespace R2API {
             Destroy(RootObject);
         }
 
-        public void SetIcon(Texture texture) {
+        public void SetIcon(Texture? texture) {
             GenericNotification.iconImage.enabled = true;
             GenericNotification.iconImage.texture = texture;
         }

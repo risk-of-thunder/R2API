@@ -25,7 +25,7 @@ namespace R2API {
         /// <summary>
         /// Mimics events found in CatalogModHelpers, can be used to add or sort effects.
         /// </summary>
-        public static event Action<List<EffectDef>> GetAdditionalEntries;
+        public static event Action<List<EffectDef>>? GetAdditionalEntries;
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
@@ -53,7 +53,7 @@ namespace R2API {
         /// </summary>
         /// <param name="effect">The prefab of the effect to be added</param>
         /// <returns>True if the effect was added</returns>
-        public static bool AddEffect(GameObject effect) {
+        public static bool AddEffect(GameObject? effect) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");
             }
@@ -91,7 +91,7 @@ namespace R2API {
         /// </summary>
         /// <param name="effect">The EffectDef to addZ</param>
         /// <returns>False if the EffectDef was null</returns>
-        public static bool AddEffect(EffectDef effect) {
+        public static bool AddEffect(EffectDef? effect) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");
             }

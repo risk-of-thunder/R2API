@@ -61,7 +61,7 @@ namespace R2API {
         /// <param name="onSceneObjectsLoaded">Your action delegate that will be executed when the scene is loaded,
         /// the GameObject[] will contains the scene root game objects.</param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void AddAssetRequest(string sceneName, Action<GameObject[]> onSceneObjectsLoaded) {
+        public static void AddAssetRequest(string? sceneName, Action<GameObject[]>? onSceneObjectsLoaded) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(SceneAssetAPI)} is not loaded. " +
                                                     $"Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SceneAssetAPI)})]");

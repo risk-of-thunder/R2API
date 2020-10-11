@@ -107,7 +107,7 @@ namespace R2API {
         /// </summary>
         /// <param name="key">Token the game asks</param>
         /// <param name="value">Value it gives back</param>
-        public static void Add(string key, string value) {
+        public static void Add(string? key, string? value) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -125,7 +125,7 @@ namespace R2API {
         /// <param name="key">Token the game asks</param>
         /// <param name="value">Value it gives back</param>
         /// <param name="language">Language you want to add this to</param>
-        public static void Add(string key, string value, string language) {
+        public static void Add(string? key, string? value, string? language) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -146,7 +146,7 @@ namespace R2API {
         /// adding an file via path (.language is added automatically)
         /// </summary>
         /// <param name="path">absolute path to file</param>
-        public static void AddPath(string path) {
+        public static void AddPath(string? path) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -159,7 +159,7 @@ namespace R2API {
         /// Adding an file which is read into an string
         /// </summary>
         /// <param name="file">entire file as string</param>
-        public static void Add(string file) {
+        public static void Add(string? file) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -170,7 +170,7 @@ namespace R2API {
         /// Adds multiple languagetokens and value
         /// </summary>
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
-        public static void Add(Dictionary<string, string> tokenDictionary) {
+        public static void Add(Dictionary<string?, string?>? tokenDictionary) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -184,7 +184,7 @@ namespace R2API {
         /// </summary>
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         /// <param name="language">Language you want to add this to</param>
-        public static void Add(Dictionary<string, string> tokenDictionary, string language) {
+        public static void Add(Dictionary<string?, string?>? tokenDictionary, string? language) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -197,7 +197,7 @@ namespace R2API {
         /// Adds multiple languagetokens and value to languages
         /// </summary>
         /// <param name="languageDictionary">dictionary of languages containing dictionaries of key-value (eg ["en"]["mytoken"]="mystring")</param>
-        public static void Add(Dictionary<string, Dictionary<string, string>> languageDictionary) {
+        public static void Add(Dictionary<string?, Dictionary<string?, string?>?>? languageDictionary) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -226,11 +226,11 @@ namespace R2API {
         /// Manages temporary language token changes.
         /// </summary>
         public class LanguageOverlay {
-            private readonly OverlayTokenData[] overlays;
+            private readonly OverlayTokenData[]? overlays;
             /// <summary>Contains information about the language token changes this LanguageOverlay makes.</summary>
             public readonly ReadOnlyCollection<OverlayTokenData> readOnlyOverlays;
 
-            internal LanguageOverlay(OverlayTokenData[] _overlays) {
+            internal LanguageOverlay(OverlayTokenData[]? _overlays) {
                 overlays = _overlays;
                 readOnlyOverlays = new ReadOnlyCollection<OverlayTokenData>(overlays);
             }
@@ -270,7 +270,7 @@ namespace R2API {
         /// <param name="key">Token the game asks</param>
         /// <param name="value">Value it gives back</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. May be safely disposed after calling .Remove().</returns>
-        public static LanguageOverlay AddOverlay(string key, string value) {
+        public static LanguageOverlay AddOverlay(string? key, string? value) {
             var overlay = new LanguageOverlay(new OverlayTokenData(key, value));
             overlay.Add();
             return overlay;
@@ -283,7 +283,7 @@ namespace R2API {
         /// <param name="value">Value it gives back</param>
         /// <param name="lang">Language you want to add this to</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. May be safely disposed after calling .Remove().</returns>
-        public static LanguageOverlay AddOverlay(string key, string value, string lang) {
+        public static LanguageOverlay AddOverlay(string? key, string? value, string? lang) {
             var overlay = new LanguageOverlay(new OverlayTokenData(key, value, lang));
             overlay.Add();
             return overlay;
@@ -294,7 +294,7 @@ namespace R2API {
         /// </summary>
         /// <param name="path">absolute path to file</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. Returns null if the target file is missing or cannot be parsed, or if no changes would otherwise be made.</returns>
-        public static LanguageOverlay AddOverlayPath(string path) {
+        public static LanguageOverlay AddOverlayPath(string? path) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -311,7 +311,7 @@ namespace R2API {
         /// </summary>
         /// <param name="file">entire file as string</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. Returns null if no changes would be made.</returns>
-        public static LanguageOverlay AddOverlay(string file) {
+        public static LanguageOverlay AddOverlay(string? file) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
             }
@@ -328,7 +328,7 @@ namespace R2API {
         /// </summary>
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
-        public static LanguageOverlay AddOverlay(Dictionary<string, string> tokenDictionary) {
+        public static LanguageOverlay AddOverlay(Dictionary<string?, string?>? tokenDictionary) {
             var overlay = new LanguageOverlay(tokenDictionary.Select(kvp => {return new OverlayTokenData(kvp.Key, kvp.Value);}).ToArray());
             overlay.Add();
             return overlay;
@@ -340,7 +340,7 @@ namespace R2API {
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         /// <param name="language">Language you want to add this to</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
-        public static LanguageOverlay AddOverlay(Dictionary<string, string> tokenDictionary, string language) {
+        public static LanguageOverlay AddOverlay(Dictionary<string?, string?>? tokenDictionary, string? language) {
             var overlay = new LanguageOverlay(tokenDictionary.Select(kvp => {return new OverlayTokenData(kvp.Key, kvp.Value, language);}).ToArray());
             overlay.Add();
             return overlay;
@@ -351,7 +351,7 @@ namespace R2API {
         /// </summary>
         /// <param name="languageDictionary">dictionary of languages containing dictionaries of key-value (eg ["en"]["mytoken"]="mystring")</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
-        public static LanguageOverlay AddOverlay(Dictionary<string, Dictionary<string, string>> languageDictionary) {
+        public static LanguageOverlay AddOverlay(Dictionary<string?, Dictionary<string?, string?>?>? languageDictionary) {
             var overlay = new LanguageOverlay(
                 languageDictionary.SelectMany(subdict => {
                     return subdict.Value.Select(kvp => {
@@ -363,7 +363,7 @@ namespace R2API {
             return overlay;
         }
         
-        private static List<OverlayTokenData> LoadOverlayTokensFromFile(string file) {
+        private static List<OverlayTokenData> LoadOverlayTokensFromFile(string? file) {
             var data = new List<OverlayTokenData>();
             try {
                 JSONNode jsonNode = JSON.Parse(file);
@@ -403,21 +403,21 @@ namespace R2API {
         /// </summary>
         public struct OverlayTokenData {
             /// <summary>The token identifier to add/replace the value of.</summary>
-            public string key;
+            public string? key;
             /// <summary>The value to set the target token to.</summary>
-            public string value;
+            public string? value;
             /// <summary>The language which the target token belongs to, if isGeneric = false.</summary>
-            public string lang;
+            public string? lang;
             /// <summary>Whether the target token is generic (applies to all languages which don't contain the token).</summary>
             public bool isGeneric;
 
-            internal OverlayTokenData(string _key, string _value, string _lang) {
+            internal OverlayTokenData(string? _key, string? _value, string? _lang) {
                 key = _key;
                 value = _value;
                 lang = _lang;
                 isGeneric = false;
             }
-            internal OverlayTokenData(string _key, string _value) {
+            internal OverlayTokenData(string? _key, string? _value) {
                 key = _key;
                 value = _value;
                 lang = "";

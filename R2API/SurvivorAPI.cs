@@ -26,7 +26,7 @@ namespace R2API {
 
         private static bool _survivorsAlreadyAdded;
 
-        public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
+        public static ObservableCollection<SurvivorDef?>? SurvivorDefinitions = new ObservableCollection<SurvivorDef?>();
         /// <summary>
         /// Add a SurvivorDef to the list of available survivors.
         /// This must be called before the SurvivorCatalog inits, so before plugin.Start()
@@ -37,7 +37,7 @@ namespace R2API {
         /// </summary>
         /// <param name="survivor">The survivor to add.</param>
         /// <returns>true if survivor will be added</returns>
-        public static bool AddSurvivor(SurvivorDef survivor) {
+        public static bool AddSurvivor(SurvivorDef? survivor) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(SurvivorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SurvivorAPI)})]");
             }

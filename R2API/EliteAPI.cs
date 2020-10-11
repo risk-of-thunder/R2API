@@ -14,7 +14,7 @@ namespace R2API {
     [R2APISubmodule]
     // ReSharper disable once InconsistentNaming
     public static class EliteAPI {
-        public static ObservableCollection<CustomElite> EliteDefinitions = new ObservableCollection<CustomElite>();
+        public static ObservableCollection<CustomElite?>? EliteDefinitions = new ObservableCollection<CustomElite?>();
         
         private static bool _eliteCatalogInitialized;
 
@@ -87,7 +87,7 @@ namespace R2API {
         /// </summary>
         /// <param name="elite">The elite to add.</param>
         /// <returns>the EliteIndex of your item if added. -1 otherwise</returns>
-        public static EliteIndex Add(CustomElite elite) {
+        public static EliteIndex Add(CustomElite? elite) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
             }
@@ -115,7 +115,7 @@ namespace R2API {
         /// <summary>
         /// Returns the current elite tier definitions used by the Combat Director for doing its elite spawning while doing a run.
         /// </summary>
-        public static CombatDirector.EliteTierDef[] GetCombatDirectorEliteTiers() {
+        public static CombatDirector.EliteTierDef?[]? GetCombatDirectorEliteTiers() {
             return typeof(CombatDirector).GetFieldValue<CombatDirector.EliteTierDef[]>("eliteTiers");
         }
 
@@ -124,7 +124,7 @@ namespace R2API {
         /// You can get the current array used by the director with EliteAPI.GetCombatDirectorEliteTiers()
         /// </summary>
         /// <param name="newEliteTiers">The new elite tiers that will be used by the combat director.</param>
-        public static void OverrideCombatDirectorEliteTiers(CombatDirector.EliteTierDef[] newEliteTiers) {
+        public static void OverrideCombatDirectorEliteTiers(CombatDirector.EliteTierDef?[]? newEliteTiers) {
             typeof(CombatDirector).SetFieldValue("eliteTiers", newEliteTiers);
         }
 
@@ -136,7 +136,7 @@ namespace R2API {
         /// Returns the elite tier (normally starts at 3, 2 vanilla tiers atm)
         /// </summary>
         /// <param name="eliteTierDef">The new elite tier to add.</param>
-        public static int AddCustomEliteTier(CombatDirector.EliteTierDef eliteTierDef) {
+        public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
             }
@@ -161,7 +161,7 @@ namespace R2API {
         /// <summary>
         /// Elite definition
         /// </summary>
-        public EliteDef EliteDef;
+        public EliteDef? EliteDef;
 
         /// <summary>
         /// Elite tier, vanilla game currently have two different tiers :
@@ -175,7 +175,7 @@ namespace R2API {
         /// Also, don't forget to give it a valid eliteTier so that your custom elite correctly get spawned.
         /// You can also make a totally new tier, by using OverrideCombatDirectorEliteTiers for example.
         /// </summary>
-        public CustomElite(string name, EquipmentIndex equipmentIndex, Color32 color, string modifierToken, int eliteTier) {
+        public CustomElite(string? name, EquipmentIndex equipmentIndex, Color32 color, string? modifierToken, int eliteTier) {
             EliteDef = new EliteDef
             {
                 name = name,
@@ -192,13 +192,13 @@ namespace R2API {
         /// But don't forget to give it a valid eliteTier so that your custom elite correctly get spawned.
         /// You can also make a totally new tier, by using OverrideCombatDirectorEliteTiers for example.
         /// </summary>
-        public CustomElite(EliteDef eliteDef, int eliteTier) {
+        public CustomElite(EliteDef? eliteDef, int eliteTier) {
             EliteDef = eliteDef;
             EliteTier = eliteTier;
         }
 
         [Obsolete("Use the constructor that allows you to input the fields of an EliteDef or use the one that take an EliteDef as parameter directly.")]
-        public CustomElite(string nameUnusedObsolete, EliteDef eliteDef, CustomEquipment equipmentUnusedObsolete, CustomBuff buffUnusedObsolete, int tierUnusedObsolete = 1) {
+        public CustomElite(string? nameUnusedObsolete, EliteDef? eliteDef, CustomEquipment? equipmentUnusedObsolete, CustomBuff? buffUnusedObsolete, int tierUnusedObsolete = 1) {
             EliteDef = eliteDef;
         }
     }

@@ -22,19 +22,19 @@ namespace R2API {
         /// <summary>
         /// Event used to edit stage settings.
         /// </summary>
-        public static event Action<StageSettings, StageInfo> StageSettingsActions;
+        public static event Action<StageSettings, StageInfo>? StageSettingsActions;
         /// <summary>
         /// Event used to edit/add/remove the monsters spawned on a stage.
         /// </summary>
-        public static event Action<List<DirectorCardHolder>, StageInfo> MonsterActions;
+        public static event Action<List<DirectorCardHolder>, StageInfo>? MonsterActions;
         /// <summary>
         /// Event used to edit/add/remove interactables spawned on a stage.
         /// </summary>
-        public static event Action<List<DirectorCardHolder>, StageInfo> InteractableActions;
+        public static event Action<List<DirectorCardHolder>, StageInfo>? InteractableActions;
         /// <summary>
         /// Event used to edit/add/remove monster families on a stage.
         /// </summary>
-        public static event Action<List<MonsterFamilyHolder>, StageInfo> FamilyActions;
+        public static event Action<List<MonsterFamilyHolder>, StageInfo>? FamilyActions;
         /// <summary>
         /// If this is called then DirectorAPI will hook ClassicStageInfo.Awake and use the events to make changes
         /// </summary>
@@ -172,17 +172,17 @@ namespace R2API {
             /// If the GameObject key of the dictionary is enabled, then the scene director gains the value in extra interactable credits
             /// Used for things like the door in Abyssal Depths.
             /// </summary>
-            public Dictionary<GameObject, int> BonusCreditObjects;
+            public Dictionary<GameObject, int>? BonusCreditObjects;
 
             /// <summary>
             /// The weights for each monster category on this stage.
             /// </summary>
-            public Dictionary<MonsterCategory, float> MonsterCategoryWeights;
+            public Dictionary<MonsterCategory, float>? MonsterCategoryWeights;
 
             /// <summary>
             /// The weights for each interactable category on this stage.
             /// </summary>
-            public Dictionary<InteractableCategory, float> InteractableCategoryWeights;
+            public Dictionary<InteractableCategory, float>? InteractableCategoryWeights;
         }
         /// <summary>
         /// A wrapper class for DirectorCards. A list of these is passed to everything subscribed to monsterActions and interactableActions.
@@ -191,7 +191,7 @@ namespace R2API {
             /// <summary>
             /// The director card. This contains the majority of the information for an interactable or monster, including the prefab.
             /// </summary>
-            public DirectorCard Card;
+            public DirectorCard? Card;
             /// <summary>
             /// The monster category the card belongs to. Will be set to None for interactables.
             /// </summary>
@@ -208,15 +208,15 @@ namespace R2API {
             /// <summary>
             /// List of all basic monsters that can spawn during this family event.
             /// </summary>
-            public List<DirectorCard> FamilyBasicMonsters;
+            public List<DirectorCard>? FamilyBasicMonsters;
             /// <summary>
             /// List of all minibosses that can spawn during this family event.
             /// </summary>
-            public List<DirectorCard> FamilyMinibosses;
+            public List<DirectorCard>? FamilyMinibosses;
             /// <summary>
             /// List of all champions that can spawn during this family event.
             /// </summary>
-            public List<DirectorCard> FamilyChampions;
+            public List<DirectorCard>? FamilyChampions;
 
             /// <summary>
             /// The selection weight for basic monsters during the family event.
@@ -249,7 +249,7 @@ namespace R2API {
             /// <summary>
             /// The message sent to chat when this family is selected.
             /// </summary>
-            public string SelectionChatString;
+            public string? SelectionChatString;
         }
     }
 }

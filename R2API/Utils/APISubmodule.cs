@@ -36,7 +36,7 @@ namespace R2API.Utils {
     /// </summary>
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public class R2APISubmoduleDependency : Attribute {
-        public string[] SubmoduleNames { get; }
+        public string?[]? SubmoduleNames { get; }
 
         public R2APISubmoduleDependency(params string[] submoduleName) {
             SubmoduleNames = submoduleName;
@@ -50,11 +50,11 @@ namespace R2API.Utils {
     /// </summary>
     public class APISubmoduleHandler {
         private readonly int _build;
-        private readonly ManualLogSource _logger;
+        private readonly ManualLogSource? _logger;
         private HashSet<string> _moduleSet;
         private static HashSet<string> LoadedModules;
 
-        internal APISubmoduleHandler(int build, ManualLogSource logger = null) {
+        internal APISubmoduleHandler(int build, ManualLogSource? logger = null) {
             _build = build;
             _logger = logger;
         }
@@ -63,9 +63,9 @@ namespace R2API.Utils {
         /// Return true if the specified submodule is loaded.
         /// </summary>
         /// <param name="submodule">nameof the submodule</param>
-        public static bool IsLoaded(string submodule) => LoadedModules.Contains(submodule);
+        public static bool IsLoaded(string? submodule) => LoadedModules.Contains(submodule);
 
-        internal HashSet<string> LoadRequested(PluginScanner pluginScanner) {
+        internal HashSet<string> LoadRequested(PluginScanner? pluginScanner) {
             _moduleSet = new HashSet<string>();
 
             void AddModuleToSet(IEnumerable<CustomAttributeArgument> arguments) {
@@ -159,7 +159,7 @@ namespace R2API.Utils {
         /// <param name="action">the action to do on it</param>
         /// <param name="exceptions">the exception dictionary that will get filled, null by default if you simply want to silence the errors if any pop.</param>
         /// <typeparam name="T"></typeparam>
-        public static void ForEachTry<T>(this IEnumerable<T> list, Action<T> action, IDictionary<T, Exception> exceptions = null) {
+        public static void ForEachTry<T>(this IEnumerable<T?>? list, Action<T?>? action, IDictionary<T?, Exception?>? exceptions = null) {
             list.ToList().ForEach(element => {
                 try {
                     action(element);

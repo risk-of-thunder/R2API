@@ -21,7 +21,9 @@ namespace R2API {
 
         private static bool _orbsAlreadyAdded = false;
 
-        public static ObservableCollection<Type> OrbDefinitions = new ObservableCollection<Type>();
+        public static ObservableCollection<Type?>? OrbDefinitions = new ObservableCollection<Type?>();
+
+        // TODO: Add generic overload for AddOrb
 
         /// <summary>
         /// Adds an Orb to the orb catalog.
@@ -30,7 +32,7 @@ namespace R2API {
         /// </summary>
         /// <param name="t">The type of the orb being added</param>
         /// <returns>True if orb will be added</returns>
-        public static bool AddOrb(Type t) {
+        public static bool AddOrb(Type? t) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(OrbAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(OrbAPI)})]");
             }

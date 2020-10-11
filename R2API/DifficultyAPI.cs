@@ -41,7 +41,7 @@ namespace R2API {
         /// <summary>
         /// A dictionairy with ALL difficulty definitions. Post start, this includes both the vanilla ones and the ones added by R2API. Not all indexes are promised to be populated. Iterate over the keyset instead.
         /// </summary>
-        public static ConcurrentDictionary<DifficultyIndex,DifficultyDef> difficultyDefinitions = new ConcurrentDictionary<DifficultyIndex,DifficultyDef>();
+        public static ConcurrentDictionary<DifficultyIndex,DifficultyDef?>? difficultyDefinitions = new ConcurrentDictionary<DifficultyIndex,DifficultyDef?>();
 
         /// <summary>
         /// Add a DifficultyDef to the list of available difficulties.
@@ -51,7 +51,7 @@ namespace R2API {
         /// </summary>
         /// <param name="difficulty">The difficulty definition to add.</param>
         /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
-        public static DifficultyIndex AddDifficulty(DifficultyDef difficulty) {
+        public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty) {
             return AddDifficulty(difficulty, false);
         }
 
@@ -64,7 +64,7 @@ namespace R2API {
         /// <param name="difficulty">The difficulty definition to add.</param>
         /// <param name="preferPositive">If you prefer to be appended to the array. In game version 1.0.0.X this means you will get all Eclipse modifiers as well when your difficulty is selected. </param>
         /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
-        public static DifficultyIndex AddDifficulty(DifficultyDef difficulty, bool preferPositive = false) {
+        public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty, bool preferPositive = false) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(DifficultyAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DifficultyAPI)})]");
             }

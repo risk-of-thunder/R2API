@@ -46,7 +46,7 @@ namespace R2API.Utils {
         /// <param name="_"></param>
         /// <exception cref="InvalidOperationException"></exception>
         [Obsolete("Use 'AddToConsoleWhenReady()' instead.")]
-        public static void RegisterCommands(RoR2.Console _) {
+        public static void RegisterCommands(RoR2.Console? _) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(CommandHelper)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(CommandHelper)})]");
             }

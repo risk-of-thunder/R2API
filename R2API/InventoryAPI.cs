@@ -19,8 +19,8 @@ namespace R2API {
         private static bool _loaded;
 
 
-        public static event Action<ItemIcon> OnItemIconAdded;
-        public static event Action<EquipmentIcon> OnEquipmentIconAdded;
+        public static event Action<ItemIcon>? OnItemIconAdded;
+        public static event Action<EquipmentIcon>? OnEquipmentIconAdded;
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
