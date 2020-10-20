@@ -7,9 +7,9 @@ namespace R2API.Networking.Interfaces {
     }
 
     public static class SerializerExtensions {
-        public static void Write<TObject>(this NetworkWriter writer, TObject target, ISerializer<TObject> serializer) => serializer.Serialize(writer, target);
+        public static void Write<TObject>(this NetworkWriter? writer, TObject target, ISerializer<TObject>? serializer) => serializer.Serialize(writer, target);
 
-        public static TObject Read<TObject>(this NetworkReader reader, ref TObject destination, ISerializer<TObject> serializer) {
+        public static TObject Read<TObject>(this NetworkReader? reader, ref TObject destination, ISerializer<TObject>? serializer) {
             serializer.Deserialize(reader, destination);
             return destination;
         }

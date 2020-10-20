@@ -4,13 +4,13 @@ using BepInEx.Logging;
 
 namespace R2API.Utils {
     public static class ManualLogSourceExtension {
-        public static void LogBlockError(this ManualLogSource logger, IEnumerable<string> lines, int width = 70) =>
+        public static void LogBlockError(this ManualLogSource? logger, IEnumerable<string?>? lines, int width = 70) =>
             logger.LogBlock(LogLevel.Error, "ERROR", lines, width);
 
-        public static void LogBlockWarning(this ManualLogSource logger, IEnumerable<string> lines, int width = 70) =>
+        public static void LogBlockWarning(this ManualLogSource? logger, IEnumerable<string?>? lines, int width = 70) =>
             logger.LogBlock(LogLevel.Warning, "WARNING", lines, width);
 
-        public static void LogBlock(this ManualLogSource logger, LogLevel level, string header, IEnumerable<string> lines, int width = 70) {
+        public static void LogBlock(this ManualLogSource? logger, LogLevel level, string? header, IEnumerable<string?>? lines, int width = 70) {
             var barrier = new string('*', width + 2);
             var empty = CenterText("", width);
 
@@ -25,7 +25,7 @@ namespace R2API.Utils {
         }
 
         // ReSharper disable FormatStringProblem
-        public static string CenterText(string text = "", int width = 70) =>
+        public static string CenterText(string? text = "", int width = 70) =>
             string.Format("*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
         // ReSharper restore FormatStringProblem
     }

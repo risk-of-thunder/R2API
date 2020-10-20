@@ -6,7 +6,7 @@ namespace R2API.Networking.Interfaces {
     }
 
     public static class NetCommandExtensions {
-        public static void Send(this INetCommand command, NetworkDestination destination) {
+        public static void Send(this INetCommand? command, NetworkDestination destination) {
             if (destination.ShouldRun()) {
                 command.OnReceived();
             }

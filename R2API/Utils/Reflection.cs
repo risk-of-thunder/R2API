@@ -86,7 +86,7 @@ namespace R2API.Utils {
         /// <typeparam name="T">The type to search</typeparam>
         /// <param name="name">The name of the field to find</param>
         /// <returns></returns>
-        public static FieldInfo GetFieldCached<T>(string name) =>
+        public static FieldInfo GetFieldCached<T>(string? name) =>
             typeof(T).GetFieldCached(name);
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace R2API.Utils {
         /// <param name="T">The type to search</param>
         /// <param name="name">The name of the field to find</param>
         /// <returns></returns>
-        public static FieldInfo GetFieldCached(this Type T, string name) =>
+        public static FieldInfo GetFieldCached(this Type? T, string? name) =>
             FieldCache.GetOrAddOnNull((T, name), x => x.T.GetFieldFull(x.name)
                 ?? throw new Exception($"Could not find {nameof(FieldInfo)} on {T.FullName} with the name {name}"));
 
@@ -107,7 +107,7 @@ namespace R2API.Utils {
         /// <param name="fieldName">The name of the field to get the value of</param>
         /// <param name="instance">The object to get the field's value from</param>
         /// <returns></returns>
-        public static TReturn GetFieldValue<TReturn>(this object instance, string fieldName) =>
+        public static TReturn GetFieldValue<TReturn>(this object? instance, string? fieldName) =>
             instance.GetType()
                 .GetFieldCached(fieldName)
                 .GetFieldGetDelegate<TReturn>()
@@ -120,7 +120,7 @@ namespace R2API.Utils {
         /// <param name="staticType">The name of the static field to get the value of</param>
         /// <param name="fieldName">The type to get the specified static field's value on</param>
         /// <returns></returns>
-        public static TReturn GetFieldValue<TReturn>(this Type staticType, string fieldName) =>
+        public static TReturn GetFieldValue<TReturn>(this Type? staticType, string? fieldName) =>
             staticType
                 .GetFieldCached(fieldName)
                 .GetFieldGetDelegate<TReturn>()
@@ -135,7 +135,7 @@ namespace R2API.Utils {
         /// <param name="fieldName">The type to set the specified field's value on</param>
         /// <param name="value">The value to set</param>
         /// <returns></returns>
-        public static void SetFieldValue<TValue>(this object instance, string fieldName, TValue value) =>
+        public static void SetFieldValue<TValue>(this object? instance, string? fieldName, TValue value) =>
             instance.GetType()
                 .GetFieldCached(fieldName)
                 .GetFieldSetDelegate<TValue>()
@@ -149,7 +149,7 @@ namespace R2API.Utils {
         /// <param name="fieldName">The type to set the specified static field's value on</param>
         /// <param name="value">The value to set</param>
         /// <returns></returns>
-        public static void SetFieldValue<TValue>(this Type staticType, string fieldName, TValue value) =>
+        public static void SetFieldValue<TValue>(this Type? staticType, string? fieldName, TValue value) =>
             staticType
                 .GetFieldCached(fieldName)
                 .GetFieldSetDelegate<TValue>()
@@ -164,7 +164,7 @@ namespace R2API.Utils {
         /// <param name="fieldName">The type to set the specified field's value on</param>
         /// <param name="value">The value to set the field to</param>
         /// <returns></returns>
-        public static void SetStructFieldValue<TInstance, TValue>(this ref TInstance instance, string fieldName, TValue value)
+        public static void SetStructFieldValue<TInstance, TValue>(this ref TInstance instance, string? fieldName, TValue value)
             where TInstance : struct =>
             typeof(TInstance)
                 .GetFieldCached(fieldName)
@@ -226,7 +226,7 @@ namespace R2API.Utils {
         /// <typeparam name="T">The type on which to find the property</typeparam>
         /// <param name="name">The name of the property to get</param>
         /// <returns></returns>
-        public static PropertyInfo GetPropertyCached<T>(string name) =>
+        public static PropertyInfo GetPropertyCached<T>(string? name) =>
             typeof(T).GetPropertyCached(name);
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace R2API.Utils {
         /// <param name="T">The type to get the <see cref="PropertyInfo"/> from</param>
         /// <param name="name">The name of the property to get</param>
         /// <returns></returns>
-        public static PropertyInfo GetPropertyCached(this Type T, string name) =>
+        public static PropertyInfo GetPropertyCached(this Type? T, string? name) =>
             PropertyCache.GetOrAddOnNull((T, name), x => x.T.GetProperty(x.name, AllFlags));
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace R2API.Utils {
         /// <param name="instance">The object to get the property's value from</param>
         /// <param name="propName">The name of the field to get the value of</param>
         /// <returns></returns>
-        public static TReturn GetPropertyValue<TReturn>(this object instance, string propName) =>
+        public static TReturn GetPropertyValue<TReturn>(this object? instance, string? propName) =>
             instance.GetType()
                 .GetPropertyCached(propName)
                 .GetPropertyGetDelegate<TReturn>()
@@ -259,7 +259,7 @@ namespace R2API.Utils {
         /// <param name="staticType">The name of the static field to get the value of</param>
         /// <param name="propName">The type to get the specified static property's value on</param>
         /// <returns></returns>
-        public static TReturn GetPropertyValue<TReturn>(this Type staticType, string propName) =>
+        public static TReturn GetPropertyValue<TReturn>(this Type? staticType, string? propName) =>
             staticType
                 .GetPropertyCached(propName)
                 .GetPropertyGetDelegate<TReturn>()
@@ -267,14 +267,14 @@ namespace R2API.Utils {
 
         /// <summary>
         /// Sets the value of the property on the specified class; if you're setting the property on a
-        /// struct use <see cref="SetStructPropertyValue{TInstance, TValue}(ref TInstance, string, TValue)"/> instead
+        /// struct use <see cref="SetStructPropertyValue{TInstance, TValue}(ref TInstance, string?, TValue)"/> instead
         /// </summary>
         /// <typeparam name="TValue">The type of the value to set</typeparam>
         /// <param name="instance">The name of the field to set the value of</param>
         /// <param name="propName">The type to set the specified property's value on</param>
         /// <param name="value">The value to set</param>
         /// <returns></returns>
-        public static void SetPropertyValue<TValue>(this object instance, string propName, TValue value) =>
+        public static void SetPropertyValue<TValue>(this object? instance, string? propName, TValue value) =>
             instance.GetType()
                 .GetPropertyCached(propName)?
                 .GetPropertySetDelegate<TValue>()
@@ -288,7 +288,7 @@ namespace R2API.Utils {
         /// <param name="propName">The type to set the specified static property's value on</param>
         /// <param name="value">The value to set the property to</param>
         /// <returns></returns>
-        public static void SetPropertyValue<TValue>(this Type staticType, string propName, TValue value) =>
+        public static void SetPropertyValue<TValue>(this Type? staticType, string? propName, TValue value) =>
             staticType.GetPropertyCached(propName)?
                 .GetPropertySetDelegate<TValue>()
                 (null, value);
@@ -302,7 +302,7 @@ namespace R2API.Utils {
         /// <param name="propName">The type to set the specified property's value on</param>
         /// <param name="value">The value to set the property to</param>
         /// <returns></returns>
-        public static void SetStructPropertyValue<TInstance, TValue>(this ref TInstance instance, string propName,
+        public static void SetStructPropertyValue<TInstance, TValue>(this ref TInstance instance, string? propName,
             TValue value)
             where TInstance : struct =>
             typeof(TInstance)
@@ -318,7 +318,7 @@ namespace R2API.Utils {
         /// <param name="instance">The name of the field to set the value of</param>
         /// <param name="propName">The type to set the specified property's value on</param>
         /// <returns></returns>
-        public static TValue GetStructPropertyValue<TInstance, TValue>(this ref TInstance instance, string propName)
+        public static TValue GetStructPropertyValue<TInstance, TValue>(this ref TInstance instance, string? propName)
             where TInstance : struct =>
             typeof(TInstance)
                 .GetPropertyCached(propName)
@@ -354,7 +354,7 @@ namespace R2API.Utils {
         /// <typeparam name="T">The type to search</typeparam>
         /// <param name="name">The name of the method to find</param>
         /// <returns></returns>
-        public static MethodInfo GetMethodCached<T>(string name) =>
+        public static MethodInfo GetMethodCached<T>(string? name) =>
             typeof(T).GetMethodCached(name);
 
         /// <summary>
@@ -363,7 +363,7 @@ namespace R2API.Utils {
         /// <param name="T">The type to search</param>
         /// <param name="name">The name of the method to find</param>
         /// <returns>The found <see cref="MethodInfo"/></returns>
-        public static MethodInfo GetMethodCached(this Type T, string name) =>
+        public static MethodInfo GetMethodCached(this Type? T, string? name) =>
             MethodCache.GetOrAddOnNull((T, name), x => x.T.GetMethod(x.name, AllFlags)
                 ?? throw new Exception($"Could not find {nameof(MethodInfo)} on {T.FullName} with the name {name}"));
 
@@ -374,7 +374,7 @@ namespace R2API.Utils {
         /// <param name="name">The name of the method to find</param>
         /// <param name="genericTypeDefinition">The generic type definition parameter</param>
         /// <returns>The found <see cref="MethodInfo"/></returns>
-        public static MethodInfo GetMethodWithConstructedGenericParameter(this Type T, string name, Type genericTypeDefinition) {
+        public static MethodInfo GetMethodWithConstructedGenericParameter(this Type? T, string? name, Type? genericTypeDefinition) {
             return T.GetMethods().First(method => {
                 if (method.Name != name) {
                     return false;
@@ -397,7 +397,7 @@ namespace R2API.Utils {
         /// <param name="name">The name of the method to find</param>
         /// <param name="argumentTypes">The types of the argument</param>
         /// <returns></returns>
-        public static MethodInfo GetMethodCached<T>(string name, Type[] argumentTypes) =>
+        public static MethodInfo GetMethodCached<T>(string? name, Type?[]? argumentTypes) =>
             typeof(T).GetMethodCached(name, argumentTypes);
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace R2API.Utils {
         /// <param name="T">The type to search</param>
         /// <param name="name">The name of the method to find</param>
         /// <param name="argumentTypes">The types of the argument</param>
-        public static MethodInfo GetMethodCached(this Type T, string name, Type[] argumentTypes) =>
+        public static MethodInfo GetMethodCached(this Type? T, string? name, Type?[]? argumentTypes) =>
             OverloadedMethodCache.GetOrAddOnNull((T, name, argumentTypes),
                 x => x.T.GetMethod(x.name, AllFlags, null, x.argumentTypes, null)
                      ?? throw new Exception($"Could not find {nameof(MethodInfo)} on {T.FullName} with the name {name} and arguments: " +
@@ -419,7 +419,7 @@ namespace R2API.Utils {
         /// <param name="instance">The object to invoke the method on</param>
         /// <param name="methodName">The name of the method to invoke</param>
         /// <returns></returns>
-        public static TReturn InvokeMethod<TReturn>(this object instance, string methodName) =>
+        public static TReturn InvokeMethod<TReturn>(this object? instance, string? methodName) =>
             instance.InvokeMethod<TReturn>(methodName, null);
 
         /// <summary>
@@ -429,7 +429,7 @@ namespace R2API.Utils {
         /// <param name="staticType">The static type to search</param>
         /// <param name="methodName">The name of the method to invoke</param>
         /// <returns></returns>
-        public static TReturn InvokeMethod<TReturn>(this Type staticType, string methodName) =>
+        public static TReturn InvokeMethod<TReturn>(this Type? staticType, string? methodName) =>
             staticType.InvokeMethod<TReturn>(methodName, null);
 
         /// <summary>
@@ -437,7 +437,7 @@ namespace R2API.Utils {
         /// </summary>
         /// <param name="instance">The object to invoke the method on</param>
         /// <param name="methodName">The name of the method to invoke</param>
-        public static void InvokeMethod(this object instance, string methodName) =>
+        public static void InvokeMethod(this object? instance, string? methodName) =>
             instance.InvokeMethod<object>(methodName);
 
         /// <summary>
@@ -445,7 +445,7 @@ namespace R2API.Utils {
         /// </summary>
         /// <param name="staticType">The static type to search</param>
         /// <param name="methodName">The name of the method to invoke</param>
-        public static void InvokeMethod(this Type staticType, string methodName) =>
+        public static void InvokeMethod(this Type? staticType, string? methodName) =>
             staticType.InvokeMethod<object>(methodName);
 
         /// <summary>
@@ -456,7 +456,7 @@ namespace R2API.Utils {
         /// <param name="methodName">The name of the method to invoke</param>
         /// <param name="methodParams"></param>
         /// <returns></returns>
-        public static TReturn InvokeMethod<TReturn>(this object instance, string methodName,
+        public static TReturn InvokeMethod<TReturn>(this object? instance, string? methodName,
             params object[] methodParams) {
             var methodInfo = (methodParams == null
                     ? instance.GetType()
@@ -476,7 +476,7 @@ namespace R2API.Utils {
         /// <param name="methodName">The name of the method to invoke</param>
         /// <param name="methodParams">The method parameters</param>
         /// <returns></returns>
-        public static TReturn InvokeMethod<TReturn>(this Type staticType, string methodName,
+        public static TReturn InvokeMethod<TReturn>(this Type? staticType, string? methodName,
             params object[] methodParams) {
             var methodInfo = (methodParams == null
                 ? staticType
@@ -494,7 +494,7 @@ namespace R2API.Utils {
         /// <param name="instance">The object to invoke the method on</param>
         /// <param name="methodName">The name of the method to invoke</param>
         /// <param name="methodParams"></param>
-        public static void InvokeMethod(this object instance, string methodName, params object[] methodParams) =>
+        public static void InvokeMethod(this object? instance, string? methodName, params object?[]? methodParams) =>
             instance.InvokeMethod<object>(methodName, methodParams);
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace R2API.Utils {
         /// <param name="staticType">The static type to search</param>
         /// <param name="methodName">The name of the method to invoke</param>
         /// <param name="methodParams"></param>
-        public static void InvokeMethod(this Type staticType, string methodName, params object[] methodParams) =>
+        public static void InvokeMethod(this Type? staticType, string? methodName, params object?[]? methodParams) =>
             staticType.InvokeMethod<object>(methodName, methodParams);
 
 
@@ -520,7 +520,7 @@ namespace R2API.Utils {
         /// <typeparam name="T">The type to search</typeparam>
         /// <param name="argumentTypes">The types of the arguments on the constructor to find</param>
         /// <returns></returns>
-        public static ConstructorInfo GetConstructorCached<T>(Type[] argumentTypes) =>
+        public static ConstructorInfo GetConstructorCached<T>(Type?[]? argumentTypes) =>
             GetConstructorCached(typeof(T), argumentTypes);
 
         /// <summary>
@@ -529,7 +529,7 @@ namespace R2API.Utils {
         /// <param name="T">The type to search</param>
         /// <param name="argumentTypes">The types of the arguments on the constructor to find</param>
         /// <returns></returns>
-        public static ConstructorInfo GetConstructorCached(this Type T, Type[] argumentTypes) =>
+        public static ConstructorInfo GetConstructorCached(this Type? T, Type?[]? argumentTypes) =>
             ConstructorCache.GetOrAddOnNull((T, argumentTypes), x => x.T.GetConstructor(x.argumentTypes)
                 ?? throw new Exception($"Could not find {nameof(ConstructorInfo)} on {T.FullName} with the arguments {string.Join(",", argumentTypes.Select(a => a.FullName))}"));
 
@@ -539,7 +539,7 @@ namespace R2API.Utils {
         /// <typeparam name="T">The type to search</typeparam>
         /// <param name="name">The name of the nested type to find</param>
         /// <returns></returns>
-        public static Type GetNestedType<T>(string name) =>
+        public static Type GetNestedType<T>(string? name) =>
             typeof(T).GetNestedTypeCached(name);
 
         /// <summary>
@@ -548,7 +548,7 @@ namespace R2API.Utils {
         /// <typeparam name="T">The type to search</typeparam>
         /// <param name="name">The name of the nested type to find</param>
         /// <returns></returns>
-        public static Type GetNestedTypeCached<T>(string name) =>
+        public static Type GetNestedTypeCached<T>(string? name) =>
             typeof(T).GetNestedTypeCached(name);
 
         /// <summary>
@@ -557,7 +557,7 @@ namespace R2API.Utils {
         /// <param name="T">The static type to search</param>
         /// <param name="name">The name of the nested type to find</param>
         /// <returns></returns>
-        public static Type GetNestedTypeCached(this Type T, string name) =>
+        public static Type GetNestedTypeCached(this Type? T, string? name) =>
             NestedTypeCache.GetOrAddOnNull((T, name), x => x.T.GetNestedType(x.name, AllFlags)
                 ?? throw new Exception($"Could not find nested {nameof(Type)} on {T.FullName} with the name {name}"));
 
@@ -566,7 +566,7 @@ namespace R2API.Utils {
         /// </summary>
         /// <param name="type">The type to instantiate</param>
         /// <returns></returns>
-        public static object Instantiate(this Type type) =>
+        public static object Instantiate(this Type? type) =>
             Activator.CreateInstance(type, true);
 
         /// <summary>
@@ -575,7 +575,7 @@ namespace R2API.Utils {
         /// <param name="type">The type to instantiate</param>
         /// <param name="constructorArguments">The constructor arguments</param>
         /// <returns></returns>
-        public static object Instantiate(this Type type, params object[] constructorArguments) =>
+        public static object Instantiate(this Type? type, params object?[]? constructorArguments) =>
             type.GetConstructorCached(constructorArguments.Select(x => x.GetType()).ToArray())
                 .Invoke(constructorArguments);
 
@@ -585,7 +585,7 @@ namespace R2API.Utils {
         /// <typeparam name="TClass">The type to instantiate</typeparam>
         /// <param name="typeArgument">The type of the generic type argument</param>
         /// <returns></returns>
-        public static object InstantiateGeneric<TClass>(this Type typeArgument) =>
+        public static object InstantiateGeneric<TClass>(this Type? typeArgument) =>
             typeof(TClass).MakeGenericType(typeArgument).Instantiate();
 
         /// <summary>
@@ -594,7 +594,7 @@ namespace R2API.Utils {
         /// <typeparam name="TClass">The type to instantiate</typeparam>
         /// <param name="typeArgument">The types of the generic type arguments</param>
         /// <returns></returns>
-        public static object InstantiateGeneric<TClass>(this Type[] typeArgument) =>
+        public static object InstantiateGeneric<TClass>(this Type?[]? typeArgument) =>
             typeof(TClass).MakeGenericType(typeArgument).Instantiate();
 
         /// <summary>
@@ -602,7 +602,7 @@ namespace R2API.Utils {
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static IList InstantiateList(this Type type) =>
+        public static IList InstantiateList(this Type? type) =>
             (IList)typeof(List<>).MakeGenericType(type).Instantiate();
 
         #endregion
@@ -862,7 +862,7 @@ namespace R2API.Utils {
         }
 
         // https://github.com/0x0ade/MonoMod/blob/master/MonoMod.Utils/FastReflectionHelper.cs
-        public static void EmitFast_Ldc_I4(this ILProcessor il, int value) {
+        public static void EmitFast_Ldc_I4(this ILProcessor? il, int value) {
             switch (value) {
                 case -1:
                     il.Emit(OpCodes.Ldc_I4_M1);
@@ -902,7 +902,7 @@ namespace R2API.Utils {
                 il.Emit(OpCodes.Ldc_I4, value);
         }
 
-        public static byte ReadLocalIndex(OpCode opCode, object operand) {
+        public static byte ReadLocalIndex(OpCode opCode, object? operand) {
             if (opCode == OpCodes.Ldloc_0 || opCode == OpCodes.Stloc_0) {
                 return 0;
             }

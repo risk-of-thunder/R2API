@@ -65,8 +65,8 @@ namespace R2API {
         /// <param name="customDotBehaviour"></param>
         /// <param name="customDotVisual"></param>
         /// <returns></returns>
-        public static DotController.DotIndex RegisterDotDef(DotController.DotDef dotDef,
-            CustomDotBehaviour customDotBehaviour = null, CustomDotVisual customDotVisual = null) {
+        public static DotController.DotIndex RegisterDotDef(DotController.DotDef? dotDef,
+            CustomDotBehaviour? customDotBehaviour = null, CustomDotVisual? customDotVisual = null) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(DotAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DotAPI)})]");
             }

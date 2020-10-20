@@ -19,8 +19,8 @@ namespace R2API {
     [R2APISubmodule]
     // ReSharper disable once InconsistentNaming
     public static class ItemAPI {
-        public static ObservableCollection<CustomItem> ItemDefinitions = new ObservableCollection<CustomItem>();
-        public static ObservableCollection<CustomEquipment> EquipmentDefinitions = new ObservableCollection<CustomEquipment>();
+        public static ObservableCollection<CustomItem?>? ItemDefinitions = new ObservableCollection<CustomItem?>();
+        public static ObservableCollection<CustomEquipment?> EquipmentDefinitions = new ObservableCollection<CustomEquipment?>();
 
         private static bool _itemCatalogInitialized;
         private static bool _equipmentCatalogInitialized;
@@ -163,7 +163,7 @@ namespace R2API {
         /// </summary>
         /// <param name="item">The item to add.</param>
         /// <returns>the ItemIndex of your item if added. -1 otherwise</returns>
-        public static ItemIndex Add(CustomItem item) {
+        public static ItemIndex Add(CustomItem? item) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
@@ -206,7 +206,7 @@ namespace R2API {
         /// </summary>
         /// <param name="item">The equipment item to add.</param>
         /// <returns>the EquipmentIndex of your item if added. -1 otherwise</returns>
-        public static EquipmentIndex Add(CustomEquipment item) {
+        public static EquipmentIndex Add(CustomEquipment? item) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
@@ -244,7 +244,7 @@ namespace R2API {
         }
 
         [Obsolete("Use the Add() method from BuffAPI instead.")]
-        public static BuffIndex Add(CustomBuff buff) {
+        public static BuffIndex Add(CustomBuff? buff) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
@@ -263,7 +263,7 @@ namespace R2API {
         }
 
         [Obsolete("Use the Add() method from EliteAPI instead.")]
-        public static EliteIndex Add(CustomElite elite) {
+        public static EliteIndex Add(CustomElite? elite) {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
@@ -282,22 +282,22 @@ namespace R2API {
         }
 
         [Obsolete("Use the Add() method that will directly returns the correct enum type (ItemIndex) instead.")]
-        public static int AddCustomItem(CustomItem item) {
+        public static int AddCustomItem(CustomItem? item) {
             return (int)Add(item);
         }
 
         [Obsolete("Use the Add() method that will directly returns the correct enum type (EquipmentIndex) instead.")]
-        public static int AddCustomEquipment(CustomEquipment item) {
+        public static int AddCustomEquipment(CustomEquipment? item) {
             return (int)Add(item);
         }
 
         [Obsolete("Use the Add() method that will directly returns the correct enum type (BuffIndex) instead.")]
-        public static int AddCustomBuff(CustomBuff buff) {
+        public static int AddCustomBuff(CustomBuff? buff) {
             return (int)Add(buff);
         }
 
         [Obsolete("Use the Add() method that will directly returns the correct enum type (EliteIndex) instead.")]
-        public static int AddCustomElite(CustomElite elite) {
+        public static int AddCustomElite(CustomElite? elite) {
             return (int)Add(elite);
         }
         #endregion
@@ -379,42 +379,42 @@ namespace R2API {
 
 
     public class CustomItem {
-        public ItemDef ItemDef;
-        public ItemDisplayRuleDict ItemDisplayRules;
+        public ItemDef? ItemDef;
+        public ItemDisplayRuleDict? ItemDisplayRules;
 
-        public CustomItem(ItemDef itemDef, ItemDisplayRule[] itemDisplayRules) {
+        public CustomItem(ItemDef? itemDef, ItemDisplayRule[]? itemDisplayRules) {
             ItemDef = itemDef;
             ItemDisplayRules = new ItemDisplayRuleDict(itemDisplayRules);
         }
 
-        public CustomItem(ItemDef itemDef, ItemDisplayRuleDict itemDisplayRules) {
+        public CustomItem(ItemDef? itemDef, ItemDisplayRuleDict? itemDisplayRules) {
             ItemDef = itemDef;
             ItemDisplayRules = itemDisplayRules;
         }
     }
 
     public class CustomEquipment {
-        public EquipmentDef EquipmentDef;
-        public ItemDisplayRuleDict ItemDisplayRules;
+        public EquipmentDef? EquipmentDef;
+        public ItemDisplayRuleDict? ItemDisplayRules;
 
-        public CustomEquipment(EquipmentDef equipmentDef, ItemDisplayRule[] itemDisplayRules) {
+        public CustomEquipment(EquipmentDef? equipmentDef, ItemDisplayRule[]? itemDisplayRules) {
             EquipmentDef = equipmentDef;
             ItemDisplayRules = new ItemDisplayRuleDict(itemDisplayRules);
         }
 
-        public CustomEquipment(EquipmentDef equipmentDef, ItemDisplayRuleDict itemDisplayRules) {
+        public CustomEquipment(EquipmentDef? equipmentDef, ItemDisplayRuleDict? itemDisplayRules) {
             EquipmentDef = equipmentDef;
             ItemDisplayRules = itemDisplayRules;
         }
     }
 
     public class ItemDisplayRuleDict {
-        public ItemDisplayRule[] this[string CharacterModelName] {
+        public ItemDisplayRule[] this[string? CharacterModelName] {
             get {
-                if (string.IsNullOrEmpty(CharacterModelName) || !_dictionary.ContainsKey(CharacterModelName))
+                if (string.IsNullOrEmpty(CharacterModelName) || !Dictionary.ContainsKey(CharacterModelName))
                     return DefaultRules;
                 else
-                    return _dictionary[CharacterModelName];
+                    return Dictionary[CharacterModelName];
             }
             set {
                 if (string.IsNullOrEmpty(CharacterModelName))
@@ -423,10 +423,10 @@ namespace R2API {
                     DefaultRules = value;
                     return;
                 }
-                if (_dictionary.ContainsKey(CharacterModelName)) {
-                    _dictionary[CharacterModelName] = value;
+                if (Dictionary.ContainsKey(CharacterModelName)) {
+                    Dictionary[CharacterModelName] = value;
                 } else {
-                    _dictionary.Add(CharacterModelName, value);
+                    Dictionary.Add(CharacterModelName, value);
                 }
             }
         }
@@ -436,7 +436,7 @@ namespace R2API {
         /// </summary>
         /// <param name="CharacterModelName"></param>
         /// <param name="itemDisplayRules"></param>
-        public void Add(string CharacterModelName, params ItemDisplayRule[] itemDisplayRules) {
+        public void Add(string? CharacterModelName, params ItemDisplayRule[]? itemDisplayRules) {
             this[CharacterModelName] = itemDisplayRules;
         }
 
@@ -446,17 +446,17 @@ namespace R2API {
         /// <param name="CharacterModelName"></param>
         /// <param name="itemDisplayRules">The specific rules for this model, or if false is returned, the default rules.</param>
         /// <returns></returns>
-        public bool TryGetRules(string CharacterModelName, out ItemDisplayRule[] itemDisplayRules) {
+        public bool TryGetRules(string? CharacterModelName, out ItemDisplayRule[] itemDisplayRules) {
             itemDisplayRules = this[CharacterModelName];
             return itemDisplayRules == DefaultRules;
         }
 
-        public ItemDisplayRule[] DefaultRules {get; private set;}
+        public ItemDisplayRule[]? DefaultRules {get; private set;}
 
-        private readonly Dictionary<string, ItemDisplayRule[]> _dictionary;
-        public ItemDisplayRuleDict(params ItemDisplayRule[] defaultRules) {
+        private Dictionary<string, ItemDisplayRule[]> Dictionary;
+        public ItemDisplayRuleDict(params ItemDisplayRule[]? defaultRules) {
             DefaultRules = defaultRules;
-            _dictionary = new Dictionary<string, ItemDisplayRule[]>();
+            Dictionary = new Dictionary<string, ItemDisplayRule[]>();
         }
     }
 }

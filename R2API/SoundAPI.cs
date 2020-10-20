@@ -74,7 +74,7 @@ namespace R2API {
             /// Adds a soundbank to load, returns the ID used for unloading
             /// </summary>
             /// <param name="bank">byte array of the entire .bnk file</param>
-            public static uint Add(byte[] bank) {
+            public static uint Add(byte[]? bank) {
                 var bankToAdd = new Bank(bank);
                 soundBanks.Add(bankToAdd);
                 if (Loaded) {
@@ -87,7 +87,7 @@ namespace R2API {
             /// Adds an external soundbank to load, returns the ID used for unloading (.sound files are loaded automatically)
             /// </summary>
             /// <param name="path">the absolute path to the file</param>
-            public static uint Add(string path) {
+            public static uint Add(string? path) {
                 byte[] bank = File.ReadAllBytes(path);
 
                 return Add(bank);
