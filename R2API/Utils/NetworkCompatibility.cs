@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using R2API.MiscHelpers;
 using R2API.Networking;
 using RoR2;
-using Console = System.Console;
 
 namespace R2API.Utils {
     /// <summary>
@@ -149,7 +147,7 @@ namespace R2API.Utils {
                     ModList.Add(R2API.PluginGUID + ModGuidAndModVersionSeparator + R2API.PluginVersion);
                 }
                 var sortedModList = ModList.ToList();
-                sortedModList.Sort();
+                sortedModList.Sort(StringComparer.InvariantCulture);
                 R2API.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
                 foreach (var mod in sortedModList) {
                     R2API.Logger.LogInfo(mod);
