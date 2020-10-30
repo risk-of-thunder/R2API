@@ -162,7 +162,7 @@ namespace R2API.ItemDrop {
                     }
                 }
 
-                dropTable.GenerateWeightedSelection();
+                //dropTable.GenerateWeightedSelection();
             }
         }
     }

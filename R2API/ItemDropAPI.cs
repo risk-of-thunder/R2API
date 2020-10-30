@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Logging;
+using R2API.ItemDrop;
 using R2API.ItemDropAPITools;
 using R2API.MiscHelpers;
 using R2API.Utils;
 using RoR2;
 using UnityEngine;
 
-namespace R2API.ItemDrop {
+namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class ItemDropAPI {
@@ -166,7 +167,7 @@ namespace R2API.ItemDrop {
             } else if (shopTerminalBehavior.itemTier == ItemTier.Lunar) {
                 shopList = Run.instance.availableLunarDropList;
             }
-            if (shopList.Count > 0) {
+            if (shopList.Count > 0 || shopTerminalBehavior.dropTable != null) {
                 orig(shopTerminalBehavior);
             } else {
                 shopTerminalBehavior.SetNoPickup();
@@ -306,7 +307,7 @@ namespace R2API.ItemDrop {
             if (teamIndex == TeamIndex.Monster) {
                 if (damageReport.victimBody.isElite) {
                     if (damageReport.victimBody.equipmentSlot != null) {
-                        if (!PlayerDropList.AvailableEliteEquipment.Contains(PickupCatalog.FindPickupIndex(damageReport.victimBody.equipmentSlot.equipmentIndex))) {
+                        if (!PlayerDropList.AvailableSpecialEquipment.Contains(PickupCatalog.FindPickupIndex(damageReport.victimBody.equipmentSlot.equipmentIndex))) {
                             damageReport.victimBody.isElite = false;
                         }
                     }

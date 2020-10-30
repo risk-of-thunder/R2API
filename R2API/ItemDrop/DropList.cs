@@ -16,7 +16,7 @@ namespace R2API {
             public static List<PickupIndex> NormalEquipmentDropListOriginal = new List<PickupIndex>();
             public static List<PickupIndex> LunarEquipmentDropListOriginal = new List<PickupIndex>();
             public static List<PickupIndex> SpecialItemsOriginal = new List<PickupIndex>();
-            public static List<PickupIndex> EliteEquipmentOriginal = new List<PickupIndex>();
+            public static List<PickupIndex> SpecialEquipmentOriginal = new List<PickupIndex>();
 
 
             private static List<PickupIndex> Tier1DropListBackup = new List<PickupIndex>();
@@ -34,9 +34,9 @@ namespace R2API {
             public List<PickupIndex> AvailableNormalEquipmentDropList = new List<PickupIndex>();
             public List<PickupIndex> AvailableLunarEquipmentDropList = new List<PickupIndex>();
             public List<PickupIndex> AvailableSpecialItems = new List<PickupIndex>();
-            public List<PickupIndex> AvailableEliteEquipment = new List<PickupIndex>();
+            public List<PickupIndex> AvailableSpecialEquipment = new List<PickupIndex>();
 
-            private const string NullIconTextureName = "texNullIcon";
+            public const string NullIconTextureName = "texNullIcon";
 
             public List<PickupIndex> GetDropList( ItemTier itemTier) {
                 if (itemTier == ItemTier.Tier1) {
@@ -113,25 +113,29 @@ namespace R2API {
                     Tier1DropListOriginal = BackupDropList(run.availableTier1DropList);
                     Tier2DropListOriginal = BackupDropList(run.availableTier2DropList);
                     Tier3DropListOriginal = BackupDropList(run.availableTier3DropList);
-                    BossDropListOriginal = BackupDropList(run.availableBossDropList);
                     LunarDropListOriginal = BackupDropList(run.availableLunarDropList);
                     EquipmentDropListOriginal = BackupDropList(run.availableEquipmentDropList);
                     NormalEquipmentDropListOriginal = BackupDropList(run.availableNormalEquipmentDropList);
                     LunarEquipmentDropListOriginal = BackupDropList(run.availableLunarEquipmentDropList);
 
-                    SpecialItemsOriginal.Clear();
-                    foreach (var itemIndex in Catalog.ScrapItems.Values) {
-                        var sprite = ItemCatalog.GetItemDef(itemIndex).pickupIconSprite;
-                        if (sprite != null && !sprite.name.Contains(NullIconTextureName)) {
-                            SpecialItemsOriginal.Add(PickupCatalog.FindPickupIndex(itemIndex));
+                    BossDropListOriginal = BackupDropList(run.availableBossDropList);
+                    foreach (var bossItem in Catalog.SpecialBossItems) {
+                        var pickupIndex = PickupCatalog.FindPickupIndex(bossItem);
+                        if (!BossDropListOriginal.Contains(pickupIndex)) {
+                            BossDropListOriginal.Add(pickupIndex);
                         }
                     }
 
-                    EliteEquipmentOriginal.Clear();
+                    SpecialItemsOriginal.Clear();
+                    foreach (var itemIndex in Catalog.ScrapItems.Values) {
+                        SpecialItemsOriginal.Add(PickupCatalog.FindPickupIndex(itemIndex));
+                    }
+
+                    SpecialEquipmentOriginal.Clear();
                     foreach (var equipmentIndex in Catalog.EliteEquipment) {
                         var sprite = EquipmentCatalog.GetEquipmentDef(equipmentIndex).pickupIconSprite;
                         if (sprite != null && !sprite.name.Contains(NullIconTextureName)) {
-                            EliteEquipmentOriginal.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
+                            SpecialEquipmentOriginal.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
                         }
                     }
 
@@ -158,7 +162,7 @@ namespace R2API {
                 AvailableLunarEquipmentDropList = CreateDropList(LunarEquipmentDropListOriginal,
                     equipmentsToAdd[EquipmentDropType.Lunar], equipmentsToRemove[EquipmentDropType.Lunar]);
 
-                AvailableEliteEquipment = CreateDropList(EliteEquipmentOriginal,
+                AvailableSpecialEquipment = CreateDropList(SpecialEquipmentOriginal,
                     equipmentsToAdd[EquipmentDropType.Elite], equipmentsToRemove[EquipmentDropType.Elite]);
 
                 AvailableBossDropList = CreateDropList(BossDropListOriginal,

@@ -16,7 +16,8 @@ namespace R2API.ItemDrop {
             { "tier1", ItemTier.Tier1 },
             { "tier2", ItemTier.Tier2 },
             { "tier3", ItemTier.Tier3 },
-            { "boss", ItemTier.Boss }
+            { "boss", ItemTier.Boss },
+            { "lunar", ItemTier.Lunar }
         };
         private readonly List<string> _subsetChests = new List<string> {
             "CategoryChestDamage",
@@ -220,8 +221,7 @@ namespace R2API.ItemDrop {
                 var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
                 if (pickupDef != null) {
                     if (pickupDef.itemIndex != ItemIndex.None &&
-                        !Catalog.ScrapItems.ContainsValue(pickupDef.itemIndex) &&
-                        Catalog.Pearls.Contains(pickupDef.itemIndex)) {
+                        !Catalog.ScrapItems.ContainsValue(pickupDef.itemIndex)) {
                         TiersPresent["lunar"] = true;
                         break;
                     }
@@ -285,10 +285,12 @@ namespace R2API.ItemDrop {
                 }
             }
             var scrapTierKeys = InteractablesTiers["Scrapper"].Keys.ToList();
-            foreach (var tier in scrapTierKeys) {
+            foreach (string tier in scrapTierKeys) {
                 if (InteractablesTiers["Scrapper"][tier]) {
-                    if (!dropList.AvailableSpecialItems.Contains(PickupCatalog.FindPickupIndex(Catalog.ScrapItems[TierConversion[tier]]))) {
-                        InteractablesTiers["Scrapper"][tier] = false;
+                    if (Catalog.ScrapItems.ContainsKey(TierConversion[tier])) {
+                        if (!dropList.AvailableSpecialItems.Contains(PickupCatalog.FindPickupIndex(Catalog.ScrapItems[TierConversion[tier]]))) {
+                            InteractablesTiers["Scrapper"][tier] = false;
+                        }
                     }
                 }
             }

@@ -5,6 +5,7 @@ namespace R2API {
     namespace ItemDropAPITools {
         public static class Catalog {
             public static bool Loaded;
+            public static readonly List<ItemIndex> SpecialBossItems = new List<ItemIndex>();
             public static readonly Dictionary<ItemTier, ItemIndex> ScrapItems = new Dictionary<ItemTier, ItemIndex>();
             public static readonly List<EquipmentIndex> EliteEquipment = new List<EquipmentIndex>();
             
@@ -16,15 +17,54 @@ namespace R2API {
             public static void PopulateItemCatalog() {
                 if (!Loaded) {
                     foreach (var itemIndex in ItemCatalog.allItems) {
-                        if (itemIndex.ToString().ToLower().Contains("scrap")) {
-                            ScrapItems.Add(ItemCatalog.GetItemDef(itemIndex).tier, itemIndex);
+                        var itemDef = ItemCatalog.GetItemDef(itemIndex);
+                        foreach (var itemTag in itemDef.tags) {
+                            if (itemTag == ItemTag.Scrap) {
+                                if (!ScrapItems.ContainsKey(itemDef.tier)) {
+                                    ScrapItems.Add(itemDef.tier, itemIndex);
+                                }
+                            }
+                        }
+                        if (!ItemCatalog.tier1ItemList.Contains(itemIndex) &&
+                            !ItemCatalog.tier2ItemList.Contains(itemIndex) &&
+                            !ItemCatalog.tier3ItemList.Contains(itemIndex) &&
+                            !ItemCatalog.lunarItemList.Contains(itemIndex)) {
+                            if (!ScrapItems.ContainsValue(itemIndex) && itemDef.tier != ItemTier.NoTier &&
+                                itemDef.pickupIconSprite != null && itemDef.pickupIconSprite.name != DropList.NullIconTextureName) {
+                                foreach (var itemTag in itemDef.tags) {
+                                    if (itemTag == ItemTag.WorldUnique) {
+                                        SpecialBossItems.Add(itemIndex);
+                                    }
+                                }
+                            }
                         }
                     }
                     foreach (var equipmentIndex in EquipmentCatalog.allEquipment) {
+                        var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
                         if (!EquipmentCatalog.equipmentList.Contains(equipmentIndex)) {
-                            EliteEquipment.Add(equipmentIndex);
+                            if (equipmentDef.pickupIconSprite != null &&
+                                equipmentDef.pickupIconSprite.name != DropList.NullIconTextureName) {
+                                EliteEquipment.Add(equipmentIndex);
+                            }
                         }
                     }
+                    foreach (var itemIndex in ItemCatalog.lunarItemList) {
+                        var itemDef = ItemCatalog.GetItemDef(itemIndex);
+                        var cleansable = false;
+                        foreach (var itemTag in itemDef.tags) {
+                            if (itemTag == ItemTag.Cleansable) {
+                                cleansable = true;
+                            }
+                        }
+                        if (!cleansable) {
+                            if (!ScrapItems.ContainsValue(itemIndex) && itemDef.tier != ItemTier.NoTier &&
+                                itemDef.pickupIconSprite != null &&
+                                itemDef.pickupIconSprite.name != DropList.NullIconTextureName) {
+                                //print(itemIndex);
+                            }
+                        }
+                    }
+
                     Loaded = true;
                 }
             }
