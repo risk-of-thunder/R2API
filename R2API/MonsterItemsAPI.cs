@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MonoMod.Cil;
+using R2API.ItemDrop;
 using R2API.ItemDropAPITools;
 using R2API.Utils;
 using RoR2;
 using RoR2.Artifacts;
 
-namespace R2API.ItemDrop {
+namespace R2API {
     [R2APISubmodule]
     public class MonsterItemsAPI {
         public static bool Loaded {
