@@ -35,6 +35,9 @@
       <HintPath>libs\Facepunch.Steamworks.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="HGCSharpUtils">
+      <HintPath>libs\HGCSharpUtils.dll</HintPath>
+    </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
       <HintPath>libs\MMHOOK_Assembly-CSharp.dll</HintPath>
       <Private>true</Private>
