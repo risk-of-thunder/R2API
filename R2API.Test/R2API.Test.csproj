@@ -17,6 +17,9 @@
       <HintPath>..\R2API\libs\Assembly-CSharp.dll</HintPath>
 	    <Private>true</Private>
     </Reference>
+    <Reference Include="HGCSharpUtils">
+      <HintPath>..\R2API\libs\HGCSharpUtils.dll</HintPath>
+    </Reference>
 
     <Reference Include="MonoMod.Utils">
 	    <HintPath>..\R2API\libs\MonoMod.Utils.dll</HintPath>

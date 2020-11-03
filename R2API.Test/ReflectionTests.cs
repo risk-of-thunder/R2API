@@ -1,11 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using R2API.Utils;
 using RoR2;
-using RoR2.UI;
 using Xunit;
 using Xunit.Abstractions;
 
