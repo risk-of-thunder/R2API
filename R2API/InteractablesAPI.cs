@@ -1,29 +1,14 @@
-﻿// TODO: Re-enable nullable after ideath makes PR with refactors here.
-#pragma warning disable CS8605 // Unboxing a possibly null value.
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8603 // Possible null reference return.
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable CS8601 // Possible null reference assignment.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using RoR2;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using System;
-using BepInEx.Logging;
+﻿using System.Collections.Generic;
 using R2API.Utils;
-using R2API.ItemDropAPITools;
+using RoR2;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class InteractablesAPI {
+        public const string InteractableSpawnCardPath = "SpawnCards/InteractableSpawnCard";
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -34,162 +19,130 @@ namespace R2API {
         }
         private static bool _loaded;
 
-        private static bool defaultInteractablesLoaded = false;
-        public static Dictionary<string, InteractableSpawnCard> defaultInteractables = new Dictionary<string, InteractableSpawnCard>();
+        private static Dictionary<string, InteractableSpawnCard> _defaultInteractables =
+            new Dictionary<string, InteractableSpawnCard>();
 
-        private static Dictionary<string, DirectorCardCategorySelection.Category> _categoriesToAdd = new Dictionary<string, DirectorCardCategorySelection.Category>() {
-        };
+        public static Dictionary<string, InteractableSpawnCard> DefaultInteractables {
+            get {
+                if (_defaultInteractables == null) {
+                    _defaultInteractables = new Dictionary<string, InteractableSpawnCard>();
+                    var allInteractables = Resources.LoadAll<InteractableSpawnCard>(InteractableSpawnCardPath);
+                    foreach (var spawnCard in allInteractables) {
+                        if (!_defaultInteractables.ContainsKey(spawnCard.name)) {
+                            _defaultInteractables.Add(spawnCard.name, spawnCard);
+                        }
+                    }
+                }
 
-        static public Dictionary<string, DirectorCardCategorySelection.Category> categoriesToAdd {
-            get { return _categoriesToAdd; }
-            private set { _categoriesToAdd = value; }
+                return _defaultInteractables;
+            }
         }
 
-        private static List<string> _categoriesToRemove = new List<string>() {
-        };
+        public static Dictionary<string, DirectorCardCategorySelection.Category> CategoriesToAdd { get; } =
+            new Dictionary<string, DirectorCardCategorySelection.Category>();
 
-        static public List<string> categoriesToRemove {
-            get { return _categoriesToRemove; }
-            private set { _categoriesToRemove = value; }
-        }
+        public static Dictionary<string, Dictionary<string, InteractableSpawnCard>> InteractablesToAdd { get; } =
+            new Dictionary<string, Dictionary<string, InteractableSpawnCard>>();
 
-        private static Dictionary<string, Dictionary<string, InteractableSpawnCard>> _interactablesToAdd = new Dictionary<string, Dictionary<string, InteractableSpawnCard>>() {
-        };
+        private static readonly Dictionary<string, Dictionary<string, int>> InteractablesToAddWeight =
+            new Dictionary<string, Dictionary<string, int>>();
 
-        static public Dictionary<string, Dictionary<string, InteractableSpawnCard>> interactablesToAdd {
-            get { return _interactablesToAdd; }
-            private set { _interactablesToAdd = value; }
-        }
+        public static List<string> CategoriesToRemove { get; } = new List<string>();
 
-        private static Dictionary<string, Dictionary<string, int>> interactablesToAddWeight = new Dictionary<string, Dictionary<string, int>>() {
-        };
+        public static Dictionary<string, List<string>> InteractablesToRemove { get; } =
+            new Dictionary<string, List<string>>();
 
-        private static Dictionary<string, List<string>> _interactablesToRemove = new Dictionary<string, List<string>>() {
-        };
+        public static Dictionary<string, float> CategoryWeight { get; } = new Dictionary<string, float>();
 
-        static public Dictionary<string, List<string>> interactablesToRemove {
-            get { return _interactablesToRemove; }
-            private set { _interactablesToRemove = value; }
-        }
-
-
-
-        private static Dictionary<string, float> _categoryWeight = new Dictionary<string, float>() {
-        };
-
-        static public Dictionary<string, float> categoryWeight {
-            get { return _categoryWeight; }
-            private set { _categoryWeight = value; }
-        }
-
-        private static Dictionary<string, Dictionary<string, int>> _interactableWeight = new Dictionary<string, Dictionary<string, int>>() {
-        };
-
-        static public Dictionary<string, Dictionary<string, int>> interactableWeight {
-            get { return _interactableWeight; }
-            private set { _interactableWeight = value; }
-        }
+        public static Dictionary<string, Dictionary<string, int>> InteractableWeight { get; } =
+            new Dictionary<string, Dictionary<string, int>>();
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            GetDefaultInteractables();
-            On.RoR2.SceneDirector.PopulateScene += PopulateScene;
+            On.RoR2.SceneDirector.PopulateScene += OnPopulateScene;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            On.RoR2.SceneDirector.PopulateScene -= PopulateScene;
+            On.RoR2.SceneDirector.PopulateScene -= OnPopulateScene;
         }
 
         public static void LogAllCategories() {
             if (ClassicStageInfo.instance != null) {
-                R2API.print("----");
-                List<string> categoryNames = new List<string>();
-                foreach (DirectorCardCategorySelection.Category category in ClassicStageInfo.instance.interactableCategories.categories) {
-                    categoryNames.Add(category.name);
-                    R2API.print(category.name);
-                    foreach (DirectorCard directorCard in category.cards) {
-                        R2API.print(directorCard.spawnCard.name);
+                R2API.Logger.LogInfo("----");
+                foreach (var category in ClassicStageInfo.instance.interactableCategories.categories) {
+                    R2API.Logger.LogInfo(category.name);
+                    foreach (var directorCard in category.cards) {
+                        R2API.Logger.LogInfo(directorCard.spawnCard.name);
                     }
-                    R2API.print("-");
+                    R2API.Logger.LogInfo("-");
                 }
-                R2API.print("----");
+                R2API.Logger.LogInfo("----");
             }
         }
 
-        private static void GetDefaultInteractables() {
-            if (!defaultInteractablesLoaded) {
-                RoR2.InteractableSpawnCard[] allInteractables = UnityEngine.Resources.LoadAll<RoR2.InteractableSpawnCard>("SpawnCards/InteractableSpawnCard");
-                foreach (RoR2.InteractableSpawnCard spawnCard in allInteractables) {
-                    if (!defaultInteractables.ContainsKey(spawnCard.name)) {
-                        defaultInteractables.Add(spawnCard.name, spawnCard);
-                    }
-                }
-                defaultInteractablesLoaded = true;
-            }
-        }
-
-        static private void PopulateScene(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector sceneDirector) {
-            Dictionary<string, DirectorCardCategorySelection.Category> categories = new Dictionary<string, DirectorCardCategorySelection.Category>();
-            foreach (DirectorCardCategorySelection.Category category in ClassicStageInfo.instance.interactableCategories.categories) {
+        private static void OnPopulateScene(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector sceneDirector) {
+            var categories = new Dictionary<string, DirectorCardCategorySelection.Category>();
+            foreach (var category in ClassicStageInfo.instance.interactableCategories.categories) {
                 if (!categories.ContainsKey(category.name)) {
                     categories.Add(category.name, category);
                 }
             }
-            foreach (string categoryName in categoriesToAdd.Keys) {
+            foreach (var categoryName in CategoriesToAdd.Keys) {
                 if (!categories.ContainsKey(categoryName)) {
-                    categories.Add(categoryName, categoriesToAdd[categoryName]);
+                    categories.Add(categoryName, CategoriesToAdd[categoryName]);
                 }
             }
-            foreach (string categoryName in categoriesToRemove) {
+            foreach (var categoryName in CategoriesToRemove) {
                 if (categories.ContainsKey(categoryName)) {
                     categories.Remove(categoryName);
                 }
             }
-            foreach (string categoryName in interactablesToAdd.Keys) {
+            foreach (var categoryName in InteractablesToAdd.Keys) {
                 if (categories.ContainsKey(categoryName)) {
-                    Dictionary<string, DirectorCard> directorCards = new Dictionary<string, DirectorCard>();
-                    foreach (DirectorCard directorCard in categories[categoryName].cards) {
+                    var directorCards = new Dictionary<string, DirectorCard>();
+                    foreach (var directorCard in categories[categoryName].cards) {
                         if (!directorCards.ContainsKey(directorCard.spawnCard.name)) {
                             directorCards.Add(directorCard.spawnCard.name, directorCard);
                         }
                     }
-                    foreach (string interactableName in interactablesToAdd[categoryName].Keys) {
+                    foreach (var interactableName in InteractablesToAdd[categoryName].Keys) {
                         if (!directorCards.ContainsKey(interactableName)) {
-                            DirectorCard directorCard = new DirectorCard();
-                            directorCard.spawnCard = interactablesToAdd[categoryName][interactableName];
-                            directorCard.selectionWeight = interactablesToAddWeight[categoryName][interactableName];
+                            var directorCard = new DirectorCard {
+                                spawnCard = InteractablesToAdd[categoryName][interactableName],
+                                selectionWeight = InteractablesToAddWeight[categoryName][interactableName]
+                            };
                             directorCards.Add(interactableName, directorCard);
                         }
                     }
 
-                    int cardIndex = 0;
-                    DirectorCard[] directorCardsArray = new DirectorCard[directorCards.Count];
-                    foreach (DirectorCard directorCard in directorCards.Values) {
+                    var cardIndex = 0;
+                    var directorCardsArray = new DirectorCard[directorCards.Count];
+                    foreach (var directorCard in directorCards.Values) {
                         directorCardsArray[cardIndex] = directorCard;
                         cardIndex += 1;
                     }
-                    DirectorCardCategorySelection.Category category = categories[categoryName];
+                    var category = categories[categoryName];
                     category.cards = directorCardsArray;
                     categories[categoryName] = category;
                 }
             }
-            foreach (string categoryName in interactablesToRemove.Keys) {
+            foreach (var categoryName in InteractablesToRemove.Keys) {
                 if (categories.ContainsKey(categoryName)) {
-                    List<DirectorCard> directorCards = new List<DirectorCard>();
-                    foreach (DirectorCard directorCard in categories[categoryName].cards) {
-                        if (!interactablesToRemove[categoryName].Contains(directorCard.spawnCard.name)) {
+                    var directorCards = new List<DirectorCard>();
+                    foreach (var directorCard in categories[categoryName].cards) {
+                        if (!InteractablesToRemove[categoryName].Contains(directorCard.spawnCard.name)) {
                             directorCards.Add(directorCard);
                         }
                     }
                     if (directorCards.Count > 0) {
-                        int cardIndex = 0;
-                        DirectorCard[] directorCardsArray = new DirectorCard[directorCards.Count];
-                        foreach (DirectorCard directorCard in directorCards) {
+                        var cardIndex = 0;
+                        var directorCardsArray = new DirectorCard[directorCards.Count];
+                        foreach (var directorCard in directorCards) {
                             directorCardsArray[cardIndex] = directorCard;
                             cardIndex += 1;
                         }
-                        DirectorCardCategorySelection.Category category = categories[categoryName];
+                        var category = categories[categoryName];
                         category.cards = directorCardsArray;
                         categories[categoryName] = category;
                     } else {
@@ -197,25 +150,26 @@ namespace R2API {
                     }
                 }
             }
-            foreach (string categoryName in categoryWeight.Keys) {
+            foreach (var categoryName in CategoryWeight.Keys) {
                 if (categories.ContainsKey(categoryName)) {
-                    DirectorCardCategorySelection.Category category = categories[categoryName];
-                    category.selectionWeight = categoryWeight[categoryName];
+                    var category = categories[categoryName];
+                    category.selectionWeight = CategoryWeight[categoryName];
                     categories[categoryName] = category;
                 }
             }
-            foreach (string categoryName in interactableWeight.Keys) {
+            foreach (var categoryName in InteractableWeight.Keys) {
                 if (categories.ContainsKey(categoryName)) {
-                    for (int cardIndex = 0; cardIndex < categories[categoryName].cards.Length; cardIndex++) {
-                        if (interactableWeight[categoryName].ContainsKey(categories[categoryName].cards[cardIndex].spawnCard.name)) {
-                            categories[categoryName].cards[cardIndex].selectionWeight = interactableWeight[categoryName][categories[categoryName].cards[cardIndex].spawnCard.name];
+                    foreach (var directorCard in categories[categoryName].cards)
+                    {
+                        if (InteractableWeight[categoryName].ContainsKey(directorCard.spawnCard.name)) {
+                            directorCard.selectionWeight = InteractableWeight[categoryName][directorCard.spawnCard.name];
                         }
                     }
                 }
             }
-            int categoryIndex = 0;
-            DirectorCardCategorySelection.Category[] categoriesArray = new DirectorCardCategorySelection.Category[categories.Keys.Count];
-            foreach (DirectorCardCategorySelection.Category category in categories.Values) {
+            var categoryIndex = 0;
+            var categoriesArray = new DirectorCardCategorySelection.Category[categories.Keys.Count];
+            foreach (var category in categories.Values) {
                 categoriesArray[categoryIndex] = category;
                 categoryIndex += 1;
             }
@@ -230,16 +184,16 @@ namespace R2API {
             if (weight < 0) {
                 SetCategoryWeightToDefault(category);
             } else {
-                if (!categoryWeight.ContainsKey(category)) {
-                    categoryWeight.Add(category, 0);
+                if (!CategoryWeight.ContainsKey(category)) {
+                    CategoryWeight.Add(category, 0);
                 }
-                categoryWeight[category] = weight;
+                CategoryWeight[category] = weight;
             }
         }
 
         public static void SetCategoryWeightToDefault(string category) {
-            if (categoryWeight.ContainsKey(category)) {
-                categoryWeight.Remove(category);
+            if (CategoryWeight.ContainsKey(category)) {
+                CategoryWeight.Remove(category);
             }
         }
 
@@ -247,104 +201,84 @@ namespace R2API {
             if (weight < 0) {
                 SetInteractableWeightToDefault(category, interactable);
             } else {
-                if (!interactableWeight.ContainsKey(category)) {
-                    interactableWeight.Add(category, new Dictionary<string, int>());
+                if (!InteractableWeight.ContainsKey(category)) {
+                    InteractableWeight.Add(category, new Dictionary<string, int>());
                 }
-                if (!interactableWeight[category].ContainsKey(interactable)) {
-                    interactableWeight[category].Add(interactable, 0);
+                if (!InteractableWeight[category].ContainsKey(interactable)) {
+                    InteractableWeight[category].Add(interactable, 0);
                 }
-                interactableWeight[category][interactable] = weight;
+                InteractableWeight[category][interactable] = weight;
             }
         }
 
         public static void SetInteractableWeightToDefault(string category, string interactable) {
-            if (interactableWeight.ContainsKey(category) && interactableWeight[category].ContainsKey(interactable)) {
-                interactableWeight[category].Remove(interactable);
-                if (interactableWeight[category].Keys.Count == 0) {
-                    interactableWeight.Remove(category);
+            if (InteractableWeight.ContainsKey(category) && InteractableWeight[category].ContainsKey(interactable)) {
+                InteractableWeight[category].Remove(interactable);
+                if (InteractableWeight[category].Keys.Count == 0) {
+                    InteractableWeight.Remove(category);
                 }
             }
         }
 
         public static void AddCategory(DirectorCardCategorySelection.Category category) {
-            if (!categoriesToAdd.ContainsKey(category.name)) {
-                categoriesToAdd.Add(category.name, new DirectorCardCategorySelection.Category());
+            if (!CategoriesToAdd.ContainsKey(category.name)) {
+                CategoriesToAdd.Add(category.name, new DirectorCardCategorySelection.Category());
             }
-            categoriesToAdd[category.name] = category;
-        }
+            CategoriesToAdd[category.name] = category;
 
-        public static void UnaddCategory(string categoryName) {
-            if (categoriesToAdd.ContainsKey(categoryName)) {
-                categoriesToAdd.Remove(categoryName);
-            }
+            CategoriesToRemove.Remove(category.name);
         }
 
         public static void RemoveCategory(string category) {
-            if (!categoriesToRemove.Contains(category)) {
-                categoriesToRemove.Add(category);
+            if (!CategoriesToRemove.Contains(category)) {
+                CategoriesToRemove.Add(category);
             }
-        }
 
-        public static void UnremoveCategory(string category) {
-            if (categoriesToRemove.Contains(category)) {
-                categoriesToRemove.Remove(category);
-            }
+            CategoriesToAdd.Remove(category);
         }
 
         public static void AddInteractable(string category, InteractableSpawnCard interactable, int weight) {
-            if (!interactablesToAdd.ContainsKey(category)) {
-                interactablesToAdd.Add(category, new Dictionary<string, InteractableSpawnCard>());
-                interactablesToAddWeight.Add(category, new Dictionary<string, int>());
+            if (!InteractablesToAdd.ContainsKey(category)) {
+                InteractablesToAdd.Add(category, new Dictionary<string, InteractableSpawnCard>());
+                InteractablesToAddWeight.Add(category, new Dictionary<string, int>());
             }
-            if (!interactablesToAdd[category].ContainsKey(interactable.name)) {
+            if (!InteractablesToAdd[category].ContainsKey(interactable.name)) {
 
-                interactablesToAdd[category].Add(interactable.name, null);
+                InteractablesToAdd[category].Add(interactable.name, null);
 
-                interactablesToAddWeight[category].Add(interactable.name, 0);
+                InteractablesToAddWeight[category].Add(interactable.name, 0);
             }
-            interactablesToAdd[category][interactable.name] = interactable;
-            interactablesToAddWeight[category][interactable.name] = weight;
-        }
+            InteractablesToAdd[category][interactable.name] = interactable;
+            InteractablesToAddWeight[category][interactable.name] = weight;
 
-        public static void UnaddInteractable(string category, string interactable) {
-            if (interactablesToAdd.ContainsKey(category)) {
-                if (interactablesToAdd[category].ContainsKey(interactable)) {
-                    interactablesToAdd[category].Remove(interactable);
-                    interactablesToAddWeight[category].Remove(interactable);
-                    if (interactablesToAdd[category].Keys.Count == 0) {
-                        interactablesToAdd.Remove(category);
-                        interactablesToAddWeight.Remove(category);
+            if (InteractablesToRemove.ContainsKey(category)) {
+                if (InteractablesToRemove[category].Contains(interactable.name)) {
+                    InteractablesToRemove[category].Remove(interactable.name);
+                    if (InteractablesToRemove[category].Count == 0) {
+                        InteractablesToRemove.Remove(category);
                     }
                 }
             }
         }
 
         public static void RemoveInteractable(string category, string interactable) {
-            if (!interactablesToRemove.ContainsKey(category)) {
-                interactablesToRemove.Add(category, new List<string>());
+            if (!InteractablesToRemove.ContainsKey(category)) {
+                InteractablesToRemove.Add(category, new List<string>());
             }
-            if (!interactablesToRemove[category].Contains(interactable)) {
-                interactablesToRemove[category].Add(interactable);
+            if (!InteractablesToRemove[category].Contains(interactable)) {
+                InteractablesToRemove[category].Add(interactable);
             }
-        }
 
-        public static void UnremoveInteractable(string category, string interactable) {
-            if (interactablesToRemove.ContainsKey(category)) {
-                if (interactablesToRemove[category].Contains(interactable)) {
-                    interactablesToRemove[category].Remove(interactable);
-                    if (interactablesToRemove[category].Count == 0) {
-                        interactablesToRemove.Remove(category);
+            if (InteractablesToAdd.ContainsKey(category)) {
+                if (InteractablesToAdd[category].ContainsKey(interactable)) {
+                    InteractablesToAdd[category].Remove(interactable);
+                    InteractablesToAddWeight[category].Remove(interactable);
+                    if (InteractablesToAdd[category].Keys.Count == 0) {
+                        InteractablesToAdd.Remove(category);
+                        InteractablesToAddWeight.Remove(category);
                     }
                 }
             }
         }
     }
 }
-#pragma warning restore CS8605 // Unboxing a possibly null value.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning restore CS8603 // Possible null reference return.
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-#pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning restore CS8601 // Possible null reference assignment.
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.

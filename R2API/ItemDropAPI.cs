@@ -1,227 +1,19 @@
-﻿// TODO: Re-enable nullable after ideath makes PR with refactors here.
-#pragma warning disable CS8605 // Unboxing a possibly null value.
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8603 // Possible null reference return.
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable CS8601 // Possible null reference assignment.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RoR2;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using System;
 using BepInEx.Logging;
-using R2API.Utils;
+using R2API.ItemDrop;
 using R2API.ItemDropAPITools;
+using R2API.MiscHelpers;
+using R2API.Utils;
+using RoR2;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace R2API {
-    public class PickupSelection {
-
-        public List<PickupIndex> Pickups { get; set; }
-
-        public float DropChance { get; set; } = 1.0f;
-        public bool IsDefaults { get; internal set; } = false;
-    }
-
-    // TODO: Add loaded checks and throw when not loaded
-
-    public static class DefaultItemDrops {
-        public static void AddDefaults() {
-            AddDefaultShrineDrops();
-            AddChestDefaultDrops();
-            AddLunarChestDefaultDrops();
-            AddEquipmentChestDefaultDrops();
-            AddBossDefaultDrops();
-        }
-
-        public static void AddDefaultShrineDrops() {
-            var t1 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier1);
-            var t2 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier2);
-            var t3 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier3);
-            var eq = ItemDropAPI.GetDefaultEquipmentDropList();
-
-            var shrineSelections = new[] {
-                new List<ItemIndex> {ItemIndex.None}.ToSelection(ItemDropAPI.DefaultShrineFailureWeight),
-                t1.ToSelection(ItemDropAPI.DefaultShrineTier1Weight),
-                t2.ToSelection(ItemDropAPI.DefaultShrineTier2Weight),
-                t3.ToSelection(ItemDropAPI.DefaultShrineTier3Weight),
-                eq.ToSelection(ItemDropAPI.DefaultShrineEquipmentWeight)
-            };
-
-            foreach (var sel in shrineSelections)
-                sel.IsDefaults = true;
-
-            RemoveDefaultDrops(ItemDropLocation.Shrine);
-            ItemDropAPI.AddDrops(ItemDropLocation.Shrine, shrineSelections);
-        }
-
-        public static void AddChestDefaultDrops() {
-            var t1 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier1);
-            var t2 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier2);
-            var t3 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier3);
-
-            var chestSelections = new[] {
-                t1.ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
-                t2.ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
-                t3.ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance)
-            };
-
-            var lockboxSelections = new[] {
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1).ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier2).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier3).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance)
-            };
-
-            var utilitySelections = new[] {
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Utility).ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier2, ItemTag.Utility).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier3, ItemTag.Utility).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
-            };
-
-            var damageSelections = new[] {
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Damage).ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier2, ItemTag.Damage).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier3, ItemTag.Damage).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
-            };
-
-            var healingSelections = new[] {
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier1DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier2, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier2DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier3, ItemTag.Healing).ToSelection(ItemDropAPI.DefaultSmallChestTier3DropChance),
-            };
-
-            var scavSelections = new[] {
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier1).ToSelection(ItemDropAPI.DefaultScavBackpackTier1DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier2).ToSelection(ItemDropAPI.DefaultScavBackpackTier2DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Tier3).ToSelection(ItemDropAPI.DefaultScavBackpackTier3DropChance),
-                ItemDropAPI.GetDefaultDropList(ItemTier.Lunar).ToSelection(ItemDropAPI.DefaultScavBackpackLunarDropChance),
-            };
-
-            var allSelections = new[] {chestSelections, lockboxSelections, utilitySelections, damageSelections, healingSelections, scavSelections};
-            foreach (var selGroup in allSelections)
-                foreach (var sel in selGroup)
-                    sel.IsDefaults = true;
-
-            var allLocations = new[] {ItemDropLocation.UtilityChest, ItemDropLocation.DamageChest, ItemDropLocation.HealingChest,
-                ItemDropLocation.Lockbox, ItemDropLocation.SmallChest, ItemDropLocation.MediumChest, ItemDropLocation.LargeChest, ItemDropLocation.ScavBackPack};
-
-            foreach (var selLoc in allLocations)
-                RemoveDefaultDrops(selLoc);
-
-            ItemDropAPI.AddDrops(ItemDropLocation.UtilityChest, utilitySelections);
-            ItemDropAPI.AddDrops(ItemDropLocation.DamageChest, damageSelections);
-            ItemDropAPI.AddDrops(ItemDropLocation.HealingChest, healingSelections);
-
-            ItemDropAPI.AddDrops(ItemDropLocation.Lockbox, lockboxSelections);
-            ItemDropAPI.AddDrops(ItemDropLocation.SmallChest, chestSelections);
-            ItemDropAPI.AddDrops(ItemDropLocation.MediumChest, t2.ToSelection(ItemDropAPI.DefaultMediumChestTier2DropChance), t3.ToSelection(ItemDropAPI.DefaultMediumChestTier3DropChance));
-            ItemDropAPI.AddDrops(ItemDropLocation.LargeChest, t3.ToSelection(ItemDropAPI.DefaultLargeChestTier3DropChance));
-            ItemDropAPI.AddDrops(ItemDropLocation.ScavBackPack, scavSelections);
-        }
-
-        public static void AddEquipmentChestDefaultDrops() {
-            var eq = ItemDropAPI.GetDefaultEquipmentDropList();
-
-            var equipmentSelections = eq.ToSelection();
-            equipmentSelections.IsDefaults = true;
-
-            RemoveDefaultDrops(ItemDropLocation.EquipmentChest);
-            ItemDropAPI.AddDrops(ItemDropLocation.EquipmentChest, eq.ToSelection());
-        }
-
-        public static void AddLunarChestDefaultDrops() {
-            var lun = ItemDropAPI.GetDefaultLunarDropList();
-
-            var lunarSelections = lun.ToSelection();
-            lunarSelections.IsDefaults = true;
-
-            RemoveDefaultDrops(ItemDropLocation.LunarChest);
-            ItemDropAPI.AddDrops(ItemDropLocation.LunarChest, lunarSelections);
-        }
-
-        public static void AddBossDefaultDrops() {
-            ItemDropAPI.IncludeSpecialBossDrops = true;
-
-            var t2 = ItemDropAPI.GetDefaultDropList(ItemTier.Tier2);
-
-            var t2selections = t2.ToSelection();
-            t2selections.IsDefaults = true;
-
-            RemoveDefaultDrops(ItemDropLocation.Boss);
-            ItemDropAPI.AddDrops(ItemDropLocation.Boss, t2selections);
-        }
-
-        private static void RemoveDefaultDrops(ItemDropLocation location) {
-            if (ItemDropAPI.Selection.ContainsKey(location))
-                ItemDropAPI.RemoveDrops(location,
-                    ItemDropAPI.Selection[location]
-                    .Where(sel => sel.IsDefaults)
-                    .ToArray());
-        }
-    }
-
-    public enum ItemDropLocation {
-        //Mobs,
-        Boss,
-        EquipmentChest,
-        LunarChest,
-        SmallChest,
-        MediumChest,
-        LargeChest,
-        Lockbox,
-        Shrine,
-        UtilityChest,
-        HealingChest,
-        DamageChest,
-        ScavBackPack
-        //SmallChestSelector,
-        //MediumChestSelector,
-        //LargeChestSelector
-    }
-
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class ItemDropAPI {
-        public static ManualLogSource Logger => R2API.Logger;
-
-        public static int? BossDropParticipatingPlayerCount = null;
-        public static bool IncludeSpecialBossDrops = true;
-
-        public static float DefaultSmallChestTier1DropChance = 0.8f;
-        public static float DefaultSmallChestTier2DropChance = 0.2f;
-        public static float DefaultSmallChestTier3DropChance = 0.01f;
-
-        public static float DefaultMediumChestTier2DropChance = 0.8f;
-        public static float DefaultMediumChestTier3DropChance = 0.2f;
-
-        public static float DefaultLargeChestTier3DropChance = 1.0f;
-
-        public static float DefaultShrineEquipmentWeight = 2f;
-        public static float DefaultShrineFailureWeight = 10.1f;
-        public static float DefaultShrineTier1Weight = 8f;
-        public static float DefaultShrineTier2Weight = 2f;
-        public static float DefaultShrineTier3Weight = 0.2f;
-
-        public static float DefaultSmallChestTier1SelectorDropChance = 0.8f;
-        public static float DefaultSmallChestTier2SelectorDropChance = 0.2f;
-        public static float DefaultSmallChestTier3SelectorDropChance = 0.01f;
-
-        public static float DefaultMediumChestTier1SelectorDropChance = 0.8f;
-        public static float DefaultMediumChestTier2SelectorDropChance = 0.2f;
-
-        public static float DefaultScavBackpackTier1DropChance = 0.8f;
-        public static float DefaultScavBackpackTier2DropChance = 0.2f;
-        public static float DefaultScavBackpackTier3DropChance = 0.01f;
-        public static float DefaultScavBackpackLunarDropChance = 0f;
-
-        static public DropList playerDropList = new DropList();
-        static public InteractableCalculator playerInteractables = new InteractableCalculator();
+        private static ManualLogSource Logger => R2API.Logger;
 
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -230,83 +22,68 @@ namespace R2API {
             get => _loaded;
             internal set => _loaded = value;
         }
+
         private static bool _loaded;
 
+        private const string ScrapperContextString = "SCRAPPER";
+        private const string CommandCubeContextString = "COMMAND_CUBE";
 
-        public static bool DefaultDrops { get; set; } = true;
+        private const string AllInteractablesResourcesPath = "SpawnCards/InteractableSpawnCard";
 
-        public static Dictionary<ItemDropLocation, List<PickupSelection>> Selection { get; set; } =
-            new Dictionary<ItemDropLocation, List<PickupSelection>>();
+        private const string LockboxInteractableName = "Lockbox";
+        private const string ScavengerBackpackInteractableName = "ScavBackpack";
+        private const string AdaptiveChestInteractableName = "CasinoChest";
+        private const string CleansingPoolInteractableName = "ShrineCleanse";
+        private const string ScavengerBackpackSpawnCardName = "iscScavBackpack";
 
-        private static readonly Dictionary<ItemTier, HashSet<ItemIndex>> AdditionalTierItems = new Dictionary<ItemTier, HashSet<ItemIndex>> {
-            { ItemTier.Tier1, new HashSet<ItemIndex>() },
-            { ItemTier.Tier2, new HashSet<ItemIndex>() },
-            { ItemTier.Tier3, new HashSet<ItemIndex>() },
-            { ItemTier.Boss, new HashSet<ItemIndex>() },
-            { ItemTier.Lunar, new HashSet<ItemIndex>() }
+        private static readonly DropList PlayerDropList = new DropList();
+        internal static readonly InteractableCalculator PlayerInteractables = new InteractableCalculator();
+
+        public static Dictionary<ItemTier, List<ItemIndex>> AdditionalItemsReadOnly =>
+            ItemsToAdd.Except(ItemsToRemove).ToDictionary(p => p.Key, p => p.Value);
+        public static Dictionary<EquipmentDropType, List<EquipmentIndex>> AdditionalEquipmentsReadOnly =>
+            EquipmentsToAdd.Except(EquipmentsToRemove).ToDictionary(p => p.Key, p => p.Value);
+
+        private static Dictionary<ItemTier, List<ItemIndex>> ItemsToAdd { get; } = new Dictionary<ItemTier, List<ItemIndex>> {
+            { ItemTier.Tier1, new List<ItemIndex>() },
+            { ItemTier.Tier2, new List<ItemIndex>() },
+            { ItemTier.Tier3, new List<ItemIndex>() },
+            { ItemTier.Boss, new List<ItemIndex>() },
+            { ItemTier.Lunar, new List<ItemIndex>() },
+            { ItemTier.NoTier, new List<ItemIndex>() }
         };
 
-        private static readonly HashSet<EquipmentIndex> AdditionalEquipment = new HashSet<EquipmentIndex>();
-
-        private static Dictionary<ItemTier, List<PickupIndex>> _itemsToAdd = new Dictionary<ItemTier, List<PickupIndex>>() {
-            { ItemTier.Tier1, new List<PickupIndex>() },
-            { ItemTier.Tier2, new List<PickupIndex>() },
-            { ItemTier.Tier3, new List<PickupIndex>() },
-            { ItemTier.Boss, new List<PickupIndex>() },
-            { ItemTier.Lunar, new List<PickupIndex>() },
-            { ItemTier.NoTier, new List<PickupIndex>() },
+        private static Dictionary<ItemTier, List<ItemIndex>> ItemsToRemove { get; } = new Dictionary<ItemTier, List<ItemIndex>> {
+            { ItemTier.Tier1, new List<ItemIndex>() },
+            { ItemTier.Tier2, new List<ItemIndex>() },
+            { ItemTier.Tier3, new List<ItemIndex>() },
+            { ItemTier.Boss, new List<ItemIndex>() },
+            { ItemTier.Lunar, new List<ItemIndex>() },
+            { ItemTier.NoTier, new List<ItemIndex>() }
         };
 
-        private static Dictionary<ItemTier, List<PickupIndex>> _itemsToRemove = new Dictionary<ItemTier, List<PickupIndex>>() {
-            { ItemTier.Tier1, new List<PickupIndex>() },
-            { ItemTier.Tier2, new List<PickupIndex>() },
-            { ItemTier.Tier3, new List<PickupIndex>() },
-            { ItemTier.Boss, new List<PickupIndex>() },
-            { ItemTier.Lunar, new List<PickupIndex>() },
-            { ItemTier.NoTier, new List<PickupIndex>() },
+        private static Dictionary<EquipmentDropType, List<EquipmentIndex>> EquipmentsToAdd { get; } = new Dictionary<EquipmentDropType, List<EquipmentIndex>> {
+            { EquipmentDropType.Normal, new List<EquipmentIndex>() },
+            { EquipmentDropType.Boss, new List<EquipmentIndex>() },
+            { EquipmentDropType.Lunar, new List<EquipmentIndex>() },
+            { EquipmentDropType.Elite, new List<EquipmentIndex>() }
         };
 
-        private static Dictionary<ItemTier, List<PickupIndex>> _equipmentToAdd = new Dictionary<ItemTier, List<PickupIndex>>() {
-            { ItemTier.Tier1, new List<PickupIndex>() },
-            { ItemTier.Lunar, new List<PickupIndex>() },
-            { ItemTier.NoTier, new List<PickupIndex>() },
+        private static Dictionary<EquipmentDropType, List<EquipmentIndex>> EquipmentsToRemove { get; } = new Dictionary<EquipmentDropType, List<EquipmentIndex>> {
+            { EquipmentDropType.Normal, new List<EquipmentIndex>() },
+            { EquipmentDropType.Boss, new List<EquipmentIndex>() },
+            { EquipmentDropType.Lunar, new List<EquipmentIndex>() },
+            { EquipmentDropType.Elite, new List<EquipmentIndex>() }
         };
-
-        private static Dictionary<ItemTier, List<PickupIndex>> _equipmentToRemove = new Dictionary<ItemTier, List<PickupIndex>>() {
-            { ItemTier.Tier1, new List<PickupIndex>() },
-            { ItemTier.Lunar, new List<PickupIndex>() },
-            { ItemTier.NoTier, new List<PickupIndex>() },
-        };
-
-        static public Dictionary<ItemTier, List<PickupIndex>> itemsToAdd {
-            get { return _itemsToAdd; }
-            private set { _itemsToAdd = value; }
-        }
-
-        static public Dictionary<ItemTier, List<PickupIndex>> itemsToRemove {
-            get { return _itemsToRemove; }
-            private set { _itemsToRemove = value; }
-        }
-
-        static public Dictionary<ItemTier, List<PickupIndex>> equipmentToAdd {
-            get { return _equipmentToAdd; }
-            private set { _equipmentToAdd = value; }
-        }
-
-        static public Dictionary<ItemTier, List<PickupIndex>> equipmentToRemove {
-            get { return _equipmentToRemove; }
-            private set { _equipmentToRemove = value; }
-        }
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
             On.RoR2.SceneDirector.PopulateScene += PopulateScene;
             On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer += GenerateNewPickupServer;
-            On.RoR2.DirectorCore.TrySpawnObject += TrySpawnObject;
-            On.RoR2.ShrineChanceBehavior.AddShrineStack += AddShrineStack;
+            On.RoR2.DirectorCore.TrySpawnObject += CheckForInvalidInteractables;
+            On.RoR2.ShrineChanceBehavior.AddShrineStack += FixShrineBehaviour;
             On.RoR2.BossGroup.DropRewards += DropRewards;
-            IL.RoR2.BossGroup.DropRewards += DropRewards;
             On.RoR2.PickupPickerController.SetOptionsServer += SetOptionsServer;
             On.RoR2.ArenaMissionController.EndRound += EndRound;
             On.RoR2.GlobalEventManager.OnCharacterDeath += OnCharacterDeath;
@@ -317,60 +94,55 @@ namespace R2API {
             On.RoR2.Run.BuildDropTable -= RunOnBuildDropTable;
             On.RoR2.SceneDirector.PopulateScene -= PopulateScene;
             On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer -= GenerateNewPickupServer;
-            On.RoR2.DirectorCore.TrySpawnObject -= TrySpawnObject;
-            On.RoR2.ShrineChanceBehavior.AddShrineStack -= AddShrineStack;
+            On.RoR2.DirectorCore.TrySpawnObject -= CheckForInvalidInteractables;
+            On.RoR2.ShrineChanceBehavior.AddShrineStack -= FixShrineBehaviour;
             On.RoR2.BossGroup.DropRewards -= DropRewards;
-            IL.RoR2.BossGroup.DropRewards -= DropRewards;
             On.RoR2.PickupPickerController.SetOptionsServer -= SetOptionsServer;
             On.RoR2.ArenaMissionController.EndRound -= EndRound;
             On.RoR2.GlobalEventManager.OnCharacterDeath -= OnCharacterDeath;
         }
 
         private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
-            Catalogue.PopulateItemCatalogues();
+            Catalog.PopulateItemCatalog();
             orig(run);
-            playerDropList.DuplicateDropLists(run);
-            playerDropList.ClearAllLists(run);
-            playerDropList.GenerateItems(AdditionalTierItems, AdditionalEquipment, itemsToAdd, itemsToRemove, equipmentToAdd, equipmentToRemove);
-            playerDropList.SetItems(run);
-            playerInteractables.CalculateInvalidInteractables(playerDropList);
+            PlayerDropList.DuplicateDropLists(run);
+            PlayerDropList.ClearAllLists(run);
+            PlayerDropList.GenerateDropLists(ItemsToAdd, ItemsToRemove, EquipmentsToAdd, EquipmentsToRemove);
+            PlayerDropList.SetItems(run);
+            PlayerInteractables.CalculateInvalidInteractables(PlayerDropList);
         }
 
-        static private void PopulateScene(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector sceneDirector) {
-            RoR2.InteractableSpawnCard[] allInteractables = UnityEngine.Resources.LoadAll<RoR2.InteractableSpawnCard>("SpawnCards/InteractableSpawnCard");
-            foreach (RoR2.InteractableSpawnCard spawnCard in allInteractables) {
-                string interactableName = InteractableCalculator.GetSpawnCardName(spawnCard);
-                if (interactableName == "Lockbox" || interactableName == "ScavBackpack") {
+        private static void PopulateScene(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector sceneDirector) {
+            var allInteractables = Resources.LoadAll<InteractableSpawnCard>(AllInteractablesResourcesPath);
+            foreach (var spawnCard in allInteractables) {
+                var interactableName = InteractableCalculator.GetSpawnCardName(spawnCard);
+                if (interactableName == LockboxInteractableName || interactableName == ScavengerBackpackInteractableName) {
                     DropOdds.UpdateChestTierOdds(spawnCard, interactableName);
-                } else if (interactableName == "CasinoChest") {
+                } else if (interactableName == AdaptiveChestInteractableName) {
                     DropOdds.UpdateDropTableTierOdds(spawnCard, interactableName);
-                } else if (interactableName == "ShrineCleanse") {
-
-                    ExplicitPickupDropTable dropTable = spawnCard.prefab.GetComponent<RoR2.ShopTerminalBehavior>().dropTable as ExplicitPickupDropTable;
-
-
-                    DropOdds.UpdateDropTableItemOdds(playerDropList, dropTable, interactableName);
-
+                } else if (interactableName == CleansingPoolInteractableName) {
+                    var dropTable = spawnCard.prefab.GetComponent<ShopTerminalBehavior>().dropTable as ExplicitPickupDropTable;
+                    DropOdds.UpdateDropTableItemOdds(PlayerDropList, dropTable, interactableName);
                 }
             }
 
             if (ClassicStageInfo.instance != null) {
-                int categoriesLength = ClassicStageInfo.instance.interactableCategories.categories.Length;
-                for (int categoryIndex = 0; categoryIndex < categoriesLength; categoryIndex++) {
-                    List<DirectorCard> directorCards = new List<DirectorCard>();
-                    foreach (DirectorCard directorCard in ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].cards) {
-                        string interactableName = InteractableCalculator.GetSpawnCardName(directorCard.spawnCard);
-                        if (new List<string>() { }.Contains(interactableName)) {
+                var categoriesLength = ClassicStageInfo.instance.interactableCategories.categories.Length;
+                for (var categoryIndex = 0; categoryIndex < categoriesLength; categoryIndex++) {
+                    var directorCards = new List<DirectorCard>();
+                    foreach (var directorCard in ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].cards) {
+                        var interactableName = InteractableCalculator.GetSpawnCardName(directorCard.spawnCard);
+                        if (new List<string>().Contains(interactableName)) {
                         }
-                        if (playerInteractables.interactablesInvalid.Contains(interactableName)) {
+                        if (PlayerInteractables.InvalidInteractables.Contains(interactableName)) {
                         } else {
                             DropOdds.UpdateChestTierOdds(directorCard.spawnCard, interactableName);
                             DropOdds.UpdateShrineTierOdds(directorCard, interactableName);
                             directorCards.Add(directorCard);
                         }
                     }
-                    DirectorCard[] directorCardArray = new DirectorCard[directorCards.Count];
-                    for (int cardIndex = 0; cardIndex < directorCards.Count; cardIndex++) {
+                    var directorCardArray = new DirectorCard[directorCards.Count];
+                    for (var cardIndex = 0; cardIndex < directorCards.Count; cardIndex++) {
                         directorCardArray[cardIndex] = directorCards[cardIndex];
                     }
                     if (directorCardArray.Length == 0) {
@@ -382,8 +154,8 @@ namespace R2API {
             orig(sceneDirector);
         }
 
-        static private void GenerateNewPickupServer(On.RoR2.ShopTerminalBehavior.orig_GenerateNewPickupServer orig, ShopTerminalBehavior shopTerminalBehavior) {
-            List<PickupIndex> shopList = new List<PickupIndex>();
+        private static void GenerateNewPickupServer(On.RoR2.ShopTerminalBehavior.orig_GenerateNewPickupServer orig, ShopTerminalBehavior shopTerminalBehavior) {
+            var shopList = new List<PickupIndex>();
             if (shopTerminalBehavior.itemTier == ItemTier.Tier1) {
                 shopList = Run.instance.availableTier1DropList;
             } else if (shopTerminalBehavior.itemTier == ItemTier.Tier2) {
@@ -399,38 +171,38 @@ namespace R2API {
                 orig(shopTerminalBehavior);
             } else {
                 shopTerminalBehavior.SetNoPickup();
-                RoR2.PurchaseInteraction purchaseInteraction = shopTerminalBehavior.GetComponent<RoR2.PurchaseInteraction>();
+                var purchaseInteraction = shopTerminalBehavior.GetComponent<PurchaseInteraction>();
                 if (purchaseInteraction != null) {
                     purchaseInteraction.SetAvailable(false);
                 }
             }
         }
 
-        static private GameObject TrySpawnObject(On.RoR2.DirectorCore.orig_TrySpawnObject orig, DirectorCore directorCore, DirectorSpawnRequest directorSpawnRequest) {
-            if (directorSpawnRequest.spawnCard.name == "iscScavBackpack") {
-                if (playerInteractables.interactablesInvalid.Contains("ScavBackpack")) {
+        private static GameObject CheckForInvalidInteractables(On.RoR2.DirectorCore.orig_TrySpawnObject orig, DirectorCore directorCore, DirectorSpawnRequest directorSpawnRequest) {
+            if (directorSpawnRequest.spawnCard.name == ScavengerBackpackSpawnCardName) {
+                if (PlayerInteractables.InvalidInteractables.Contains(ScavengerBackpackInteractableName)) {
                     return null;
                 }
             }
             return orig(directorCore, directorSpawnRequest);
         }
 
-        static private void AddShrineStack(On.RoR2.ShrineChanceBehavior.orig_AddShrineStack orig, ShrineChanceBehavior shrineChangeBehavior, Interactor interactor) {
-            List<PickupIndex> tier1Adjusted = playerDropList.availableTier1DropList;
+        private static void FixShrineBehaviour(On.RoR2.ShrineChanceBehavior.orig_AddShrineStack orig, ShrineChanceBehavior shrineChangeBehavior, Interactor interactor) {
+            var tier1Adjusted = PlayerDropList.AvailableTier1DropList;
             if (tier1Adjusted.Count == 0) {
-                tier1Adjusted = DropList.tier1DropListOriginal;
+                tier1Adjusted = DropList.Tier1DropListOriginal;
             }
-            List<PickupIndex> tier2Adjusted = playerDropList.availableTier2DropList;
+            var tier2Adjusted = PlayerDropList.AvailableTier2DropList;
             if (tier2Adjusted.Count == 0) {
-                tier2Adjusted = DropList.tier2DropListOriginal;
+                tier2Adjusted = DropList.Tier2DropListOriginal;
             }
-            List<PickupIndex> tier3Adjusted = playerDropList.availableTier3DropList;
+            var tier3Adjusted = PlayerDropList.AvailableTier3DropList;
             if (tier3Adjusted.Count == 0) {
-                tier3Adjusted = DropList.tier3DropListOriginal;
+                tier3Adjusted = DropList.Tier3DropListOriginal;
             }
-            List<PickupIndex> equipmentAdjusted = playerDropList.availableEquipmentDropList;
+            var equipmentAdjusted = PlayerDropList.AvailableEquipmentDropList;
             if (equipmentAdjusted.Count == 0) {
-                equipmentAdjusted = DropList.equipmentDropListOriginal;
+                equipmentAdjusted = DropList.EquipmentDropListOriginal;
             }
 
             DropList.SetDropLists(tier1Adjusted, tier2Adjusted, tier3Adjusted, equipmentAdjusted);
@@ -438,35 +210,32 @@ namespace R2API {
             DropList.RevertDropLists();
         }
 
-        static private void DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup bossGroup) {
-            System.Reflection.FieldInfo info = typeof(BossGroup).GetField("bossDrops", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            ICollection collection = info.GetValue(bossGroup) as ICollection;
-            List<PickupIndex> bossDrops = new List<PickupIndex>();
-            List<PickupIndex> bossDropsAdjusted = new List<PickupIndex>();
-
-            foreach (object bossDrop in collection) {
-
-                PickupIndex pickupIndex = (PickupIndex)bossDrop;
+        private static void DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup bossGroup) {
+            var bossDrops = new List<PickupIndex>();
+            var bossDropsAdjusted = new List<PickupIndex>();
+            foreach (var bossDrop in bossGroup.bossDrops) {
+                var pickupIndex = bossDrop;
                 bossDrops.Add(pickupIndex);
-                if (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && playerDropList.availableBossDropList.Contains(pickupIndex)) {
+                if (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && PlayerDropList.AvailableBossDropList.Contains(pickupIndex)) {
                     bossDropsAdjusted.Add(pickupIndex);
                 }
             }
-            int normalCount = Run.instance.availableTier2DropList.Count;
+            var normalCount = Run.instance.availableTier2DropList.Count;
             if (bossGroup.forceTier3Reward) {
                 normalCount = Run.instance.availableTier3DropList.Count;
             }
             if (normalCount != 0 || bossDropsAdjusted.Count != 0) {
-                float bossDropChanceOld = bossGroup.bossDropChance;
+                var bossDropChanceOld = bossGroup.bossDropChance;
                 if (normalCount == 0) {
                     DropList.SetDropLists(new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>());
                     bossGroup.bossDropChance = 1;
                 } else if (bossDropsAdjusted.Count == 0) {
                     bossGroup.bossDropChance = 0;
                 }
-                info.SetValue(bossGroup, bossDropsAdjusted);
+
+                bossGroup.bossDrops = bossDropsAdjusted;
                 orig(bossGroup);
-                info.SetValue(bossGroup, bossDrops);
+                bossGroup.bossDrops = bossDrops;
                 bossGroup.bossDropChance = bossDropChanceOld;
                 if (normalCount == 0) {
                     DropList.RevertDropLists();
@@ -474,43 +243,44 @@ namespace R2API {
             }
         }
 
-        static private void SetOptionsServer(On.RoR2.PickupPickerController.orig_SetOptionsServer orig, RoR2.PickupPickerController pickupPickerController, RoR2.PickupPickerController.Option[] options) {
-            List<RoR2.PickupPickerController.Option> optionsAdjusted = new List<PickupPickerController.Option>();
-            foreach (RoR2.PickupPickerController.Option option in options) {
-                if (pickupPickerController.contextString.Contains("SCRAPPER")) {
-                    if (playerDropList.availableSpecialItems.Contains(PickupCatalog.FindPickupIndex(Catalogue.GetScrapIndex(ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(option.pickupIndex).itemIndex).tier)))) {
+        private static void SetOptionsServer(On.RoR2.PickupPickerController.orig_SetOptionsServer orig, PickupPickerController pickupPickerController, PickupPickerController.Option[] options) {
+            var optionsAdjusted = new List<PickupPickerController.Option>();
+            foreach (var option in options) {
+                if (pickupPickerController.contextString.Contains(ScrapperContextString)) {
+                    if (PlayerDropList.AvailableSpecialItems.Contains(PickupCatalog.FindPickupIndex(Catalog.GetScrapIndex(ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(option.pickupIndex).itemIndex).tier)))) {
                         optionsAdjusted.Add(option);
                     }
                 } else {
                     optionsAdjusted.Add(option);
                 }
             }
-            if (pickupPickerController.contextString.Contains("COMMAND_CUBE")) {
+            if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
                 if (options.Length > 0) {
-                    ItemIndex itemIndex = PickupCatalog.GetPickupDef(options[0].pickupIndex).itemIndex;
-                    ItemTier itemTier = ItemTier.NoTier;
+                    var itemIndex = PickupCatalog.GetPickupDef(options[0].pickupIndex).itemIndex;
+                    var itemTier = ItemTier.NoTier;
                     if (itemIndex != ItemIndex.None) {
                         itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
                     }
-                    List<PickupIndex> tierList = playerDropList.GetDropList(itemTier);
+
+                    var tierList = PlayerDropList.GetDropList(itemTier);
                     optionsAdjusted.Clear();
-                    foreach (PickupIndex pickupIndex in tierList) {
-                        PickupPickerController.Option newOption = new PickupPickerController.Option();
-                        newOption.available = true;
-                        newOption.pickupIndex = pickupIndex;
+                    foreach (var pickupIndex in tierList) {
+                        var newOption = new PickupPickerController.Option {
+                            available = true, pickupIndex = pickupIndex
+                        };
                         optionsAdjusted.Add(newOption);
                     }
                 }
             }
-            options = new RoR2.PickupPickerController.Option[optionsAdjusted.Count];
-            for (int optionIndex = 0; optionIndex < optionsAdjusted.Count; optionIndex++) {
+            options = new PickupPickerController.Option[optionsAdjusted.Count];
+            for (var optionIndex = 0; optionIndex < optionsAdjusted.Count; optionIndex++) {
                 options[optionIndex] = optionsAdjusted[optionIndex];
             }
             orig(pickupPickerController, options);
         }
 
-        static private void EndRound(On.RoR2.ArenaMissionController.orig_EndRound orig, RoR2.ArenaMissionController arenaMissionController) {
-            List<PickupIndex> list = Run.instance.availableTier1DropList;
+        private static void EndRound(On.RoR2.ArenaMissionController.orig_EndRound orig, ArenaMissionController arenaMissionController) {
+            var list = Run.instance.availableTier1DropList;
             if (arenaMissionController.currentRound > 4) {
                 list = Run.instance.availableTier2DropList;
             }
@@ -518,7 +288,7 @@ namespace R2API {
                 list = Run.instance.availableTier3DropList;
             }
             if (list.Count == 0) {
-                GameObject rewardSpawnPositionOld = arenaMissionController.rewardSpawnPosition;
+                var rewardSpawnPositionOld = arenaMissionController.rewardSpawnPosition;
                 arenaMissionController.rewardSpawnPosition = null;
                 orig(arenaMissionController);
                 arenaMissionController.rewardSpawnPosition = rewardSpawnPositionOld;
@@ -527,218 +297,188 @@ namespace R2API {
             }
         }
 
-        static private void OnCharacterDeath(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, RoR2.GlobalEventManager globalEventManager, RoR2.DamageReport damageReport) {
-            TeamIndex teamIndex = TeamIndex.None;
+        private static void OnCharacterDeath(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager globalEventManager, DamageReport damageReport) {
+            var teamIndex = TeamIndex.None;
             if (damageReport.victimBody.teamComponent != null) {
                 teamIndex = damageReport.victimBody.teamComponent.teamIndex;
             }
-            System.Reflection.PropertyInfo propertyInfo = null;
+
+            var isAnElite = damageReport.victimBody.isElite;
             if (teamIndex == TeamIndex.Monster) {
                 if (damageReport.victimBody.isElite) {
                     if (damageReport.victimBody.equipmentSlot != null) {
-                        if (!playerDropList.availableSpecialEquipment.Contains(PickupCatalog.FindPickupIndex(damageReport.victimBody.equipmentSlot.equipmentIndex))) {
-                            propertyInfo = typeof(RoR2.CharacterBody).GetProperty("isElite", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                            propertyInfo.SetValue(damageReport.victimBody, false);
+                        if (!PlayerDropList.AvailableSpecialEquipment.Contains(PickupCatalog.FindPickupIndex(damageReport.victimBody.equipmentSlot.equipmentIndex))) {
+                            damageReport.victimBody.isElite = false;
                         }
                     }
                 }
             }
             orig(globalEventManager, damageReport);
-            if (propertyInfo != null) {
-                propertyInfo.SetValue(damageReport.victimBody, true);
+            if (isAnElite) {
+                damageReport.victimBody.isElite = true;
             }
         }
 
-
-        private static void DropRewards(ILContext il) {
-            var cursor = new ILCursor(il).Goto(0);
-
-            cursor.GotoNext(MoveType.After, x => x.MatchCallvirt(typeof(Run).GetMethod("get_participatingPlayerCount")));
-            cursor.Index += 1;
-
-            cursor.EmitDelegate<Func<int>>(() => BossDropParticipatingPlayerCount ?? Run.instance.participatingPlayerCount);
-
-            cursor.Emit(OpCodes.Stloc_0);
-
-            var nextElementUniform = typeof(Xoroshiro128Plus)
-                .GetMethodWithConstructedGenericParameter("NextElementUniform", typeof(List<>))
-                .MakeGenericMethod(typeof(PickupIndex));
-            cursor.GotoNext(MoveType.After, x => x.MatchCallOrCallvirt(nextElementUniform));
-            var pickupIndex = Reflection.ReadLocalIndex(cursor.Next.OpCode, cursor.Next.Operand);
-
-            cursor.Goto(0);
-
-            cursor.Emit(OpCodes.Ldarg_0);
-            cursor.Emit(OpCodes.Dup);
-            cursor.Emit(OpCodes.Ldfld, typeof(BossGroup).GetFieldCached("rng"));
-            cursor.EmitDelegate<Func<BossGroup, Xoroshiro128Plus, PickupIndex>>((self, rng) => {
-                var norm = rng.nextNormalizedFloat;
-
-                if (self.forceTier3Reward) {
-                    var t3List = GetDefaultDropList(ItemTier.Tier3);
-                    var selection = t3List.ToSelection();
-                    return GetSelection(new List<PickupSelection> { selection }, norm);
-                } else {
-                    return GetSelection(ItemDropLocation.Boss, norm);
+        /// <summary>
+        /// Add the given items to the given drop table.
+        /// </summary>
+        /// <param name="itemTier">The drop table to add the items to.</param>
+        /// <param name="items">The item indices to add to the given drop table.</param>
+        public static void AddItemByTier(ItemTier itemTier, params ItemIndex[] items) {
+            if (ItemsToAdd.ContainsKey(itemTier)) {
+                foreach (var itemIndex in items) {
+                    if (!ItemsToAdd[itemTier].Contains(itemIndex)) {
+                        ItemsToAdd[itemTier].Add(itemIndex);
+                    }
                 }
-            });
-
-            cursor.Emit(OpCodes.Stloc_S, pickupIndex);
-        }
-
-        public static void AddItemByTier(ItemTier itemTier, ItemIndex itemIndex) {
-            if (itemsToAdd.ContainsKey(itemTier)) {
-                if (!itemsToAdd[itemTier].Contains(PickupCatalog.FindPickupIndex(itemIndex))) {
-                    itemsToAdd[itemTier].Add(PickupCatalog.FindPickupIndex(itemIndex));
+            }
+            else if (ItemsToRemove.ContainsKey(itemTier)) {
+                foreach (var itemIndex in items) {
+                    if (ItemsToRemove[itemTier].Contains(itemIndex)) {
+                        ItemsToRemove[itemTier].Remove(itemIndex);
+                    }   
                 }
             }
         }
 
-        public static void UnaddItemByTier(ItemTier itemTier, ItemIndex itemIndex) {
-            if (itemsToAdd.ContainsKey(itemTier)) {
-                if (itemsToAdd[itemTier].Contains(PickupCatalog.FindPickupIndex(itemIndex))) {
-                    itemsToAdd[itemTier].Remove(PickupCatalog.FindPickupIndex(itemIndex));
+        /// <summary>
+        /// Remove the given items to the given drop table.
+        /// </summary>
+        /// <param name="itemTier">The drop table to remove the items from.</param>
+        /// <param name="items">The item indices to remove from the given drop table.</param>
+        public static void RemoveItemByTier(ItemTier itemTier, params ItemIndex[] items) {
+            if (ItemsToRemove.ContainsKey(itemTier)) {
+                foreach (var itemIndex in items) {
+                    if (!ItemsToRemove[itemTier].Contains(itemIndex)) {
+                        ItemsToRemove[itemTier].Add(itemIndex);
+                    }   
+                }
+            }
+            else if (ItemsToAdd.ContainsKey(itemTier)) {
+                foreach (var itemIndex in items) {
+                    if (ItemsToAdd[itemTier].Contains(itemIndex)) {
+                        ItemsToAdd[itemTier].Remove(itemIndex);
+                    }   
                 }
             }
         }
 
-        public static void RemoveItemByTier(ItemTier itemTier, ItemIndex itemIndex) {
-            if (itemsToRemove.ContainsKey(itemTier)) {
-                if (!itemsToRemove[itemTier].Contains(PickupCatalog.FindPickupIndex(itemIndex))) {
-                    itemsToRemove[itemTier].Add(PickupCatalog.FindPickupIndex(itemIndex));
+        /// <summary>
+        /// Add the given equipments to the given drop table.
+        /// </summary>
+        /// <param name="equipmentDropType">The drop table to add the items to.</param>
+        /// <param name="equipments">The equipments indices to add to the given drop table.</param>
+        public static void AddEquipmentByDropType(EquipmentDropType equipmentDropType, params EquipmentIndex[] equipments) {
+            if (EquipmentsToAdd.ContainsKey(equipmentDropType)) {
+                foreach (var equipmentIndex in equipments) {
+                    if (!EquipmentsToAdd[equipmentDropType].Contains(equipmentIndex)) {
+                        EquipmentsToAdd[equipmentDropType].Add(equipmentIndex);
+                    }
                 }
             }
-        }
-
-        public static void UnremoveItemByTier(ItemTier itemTier, ItemIndex itemIndex) {
-            if (itemsToRemove.ContainsKey(itemTier)) {
-                if (itemsToRemove[itemTier].Contains(PickupCatalog.FindPickupIndex(itemIndex))) {
-                    itemsToRemove[itemTier].Remove(PickupCatalog.FindPickupIndex(itemIndex));
-                }
-            }
-        }
-
-        public static void AddEquipmentByTier(ItemTier itemTier, EquipmentIndex equipmentIndex) {
-            if (equipmentToAdd.ContainsKey(itemTier)) {
-                if (!equipmentToAdd[itemTier].Contains(PickupCatalog.FindPickupIndex(equipmentIndex))) {
-                    equipmentToAdd[itemTier].Add(PickupCatalog.FindPickupIndex(equipmentIndex));
-                }
-            }
-        }
-
-        public static void UnaddEquipmentByTier(ItemTier itemTier, EquipmentIndex equipmentIndex) {
-            if (equipmentToAdd.ContainsKey(itemTier)) {
-                if (equipmentToAdd[itemTier].Contains(PickupCatalog.FindPickupIndex(equipmentIndex))) {
-                    equipmentToAdd[itemTier].Remove(PickupCatalog.FindPickupIndex(equipmentIndex));
-                }
-            }
-        }
-
-        public static void RemoveEquipmentByTier(ItemTier itemTier, EquipmentIndex equipmentIndex) {
-            if (equipmentToRemove.ContainsKey(itemTier)) {
-                if (!equipmentToRemove[itemTier].Contains(PickupCatalog.FindPickupIndex(equipmentIndex))) {
-                    equipmentToRemove[itemTier].Add(PickupCatalog.FindPickupIndex(equipmentIndex));
-                }
-            }
-        }
-
-        public static void UnremoveEquipmentByTier(ItemTier itemTier, EquipmentIndex equipmentIndex) {
-            if (equipmentToRemove.ContainsKey(itemTier)) {
-                if (equipmentToRemove[itemTier].Contains(PickupCatalog.FindPickupIndex(equipmentIndex))) {
-                    equipmentToRemove[itemTier].Remove(PickupCatalog.FindPickupIndex(equipmentIndex));
+            else if (EquipmentsToRemove.ContainsKey(equipmentDropType)) {
+                foreach (var equipmentIndex in equipments) {
+                    if (EquipmentsToRemove[equipmentDropType].Contains(equipmentIndex)) {
+                        EquipmentsToRemove[equipmentDropType].Remove(equipmentIndex);
+                    }   
                 }
             }
         }
 
 
-
-
-        public static void AddDrops(ItemDropLocation dropLocation, params PickupSelection[] pickups) {
-            if (!Selection.ContainsKey(dropLocation)) {
-                Selection[dropLocation] = new List<PickupSelection>();
+        /// <summary>
+        /// Remove the given equipments from the given drop table.
+        /// </summary>
+        /// <param name="equipmentDropType">The drop table to remove the items from.</param>
+        /// <param name="equipments">The equipments indices to remove from the given drop table.</param>
+        public static void RemoveEquipmentByDropType(EquipmentDropType equipmentDropType, params EquipmentIndex[] equipments) {
+            if (EquipmentsToRemove.ContainsKey(equipmentDropType)) {
+                foreach (var equipmentIndex in equipments) {
+                    if (!EquipmentsToRemove[equipmentDropType].Contains(equipmentIndex)) {
+                        EquipmentsToRemove[equipmentDropType].Add(equipmentIndex);
+                    }   
+                }
             }
-            Selection[dropLocation].AddRange(pickups);
+            else if (EquipmentsToAdd.ContainsKey(equipmentDropType)) {
+                foreach (var equipmentIndex in equipments) {
+                    if (EquipmentsToAdd[equipmentDropType].Contains(equipmentIndex)) {
+                        EquipmentsToAdd[equipmentDropType].Remove(equipmentIndex);
+                    }   
+                }
+            }
         }
 
-        public static void RemoveDrops(ItemDropLocation dropLocation, params PickupSelection[] pickups) {
-            if (!Selection.ContainsKey(dropLocation))
-                return;
-
-            foreach (var pickup in pickups)
-                Selection[dropLocation].Remove(pickup);
+        /// <summary>
+        /// Add the given equipments to the given drop tables.
+        /// </summary>
+        /// <param name="equipmentDropTypes">The drop tables to add the items to.</param>
+        /// <param name="equipments">The equipments indices to add to the given drop tables.</param>
+        public static void AddEquipmentByDropType(IEnumerable<EquipmentDropType> equipmentDropTypes, params EquipmentIndex[] equipments) {
+            foreach (var equipmentDropType in equipmentDropTypes) {
+                AddEquipmentByDropType(equipmentDropType, equipments);
+            }
         }
 
+        /// <summary>
+        /// Remove the given equipments from the given drop tables.
+        /// </summary>
+        /// <param name="equipmentDropTypes">The drop tables to remove the items from.</param>
+        /// <param name="equipments">The equipments indices to remove from the given drop tables.</param>
+        public static void RemoveEquipmentByDropType(IEnumerable<EquipmentDropType> equipmentDropTypes, params EquipmentIndex[] equipments) {
+            foreach (var equipmentDropType in equipmentDropTypes) {
+                RemoveEquipmentByDropType(equipmentDropType, equipments);
+            }
+        }
+
+        /// <summary>
+        /// Add the given equipments to the drop tables automatically, the api will look up the equipmentDefs from the indices
+        /// and add the equipment depending on the information provided from the EquipmentDef. (isLunar, isElite, etc)
+        /// </summary>
+        /// <param name="equipments">Equipment Indices to add.</param>
+        public static void AddEquipment(params EquipmentIndex[] equipments) {
+            foreach (var equipmentIndex in equipments) {
+                var equipmentDropTypes = EquipmentDropTypeUtil.GetEquipmentTypesFromIndex(equipmentIndex);
+                foreach (var equipmentDropType in equipmentDropTypes) {
+                    AddEquipmentByDropType(equipmentDropType, equipmentIndex);   
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove the given equipments from the drop tables.
+        /// </summary>
+        /// <param name="equipments">Equipment Indices to remove.</param>
+        public static void RemoveEquipment(params EquipmentIndex[] equipments) {
+            foreach (var equipmentIndex in equipments) {
+                var equipmentDropTypes = EquipmentDropTypeUtil.GetEquipmentTypesFromIndex(equipmentIndex);
+                foreach (var equipmentDropType in equipmentDropTypes) {
+                    RemoveEquipmentByDropType(equipmentDropType, equipmentIndex);   
+                }
+            }
+        }
+
+        [Obsolete("Use the AddItemByTier method instead.")]
         public static void AddToDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
-            if (itemTier == ItemTier.NoTier) {
-                return;
-            }
-
-            AdditionalTierItems[itemTier].UnionWith(items);
+            AddItemByTier(itemTier, items);
         }
-        
+
+        [Obsolete("Use the RemoveItemByTier method instead.")]
         public static void RemoveFromDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
-            if (itemTier == ItemTier.NoTier) {
-                return;
-            }
-
-            AdditionalTierItems[itemTier].ExceptWith(items);
+            RemoveItemByTier(itemTier, items);
         }
 
+        [Obsolete("Use the AddItemByTier method instead.")]
         public static void AddToDefaultByTier(params KeyValuePair<ItemIndex, ItemTier>[] items) {
-            foreach (var list in AdditionalTierItems)
-                AddToDefaultByTier(list.Key,
-                    items.Where(item => list.Key == item.Value)
-                    .Select(item => item.Key)
-                    .ToArray());
+            foreach (var (itemIndex, itemTier) in items) {
+                AddItemByTier(itemTier, itemIndex);
+            }
         }
 
+        [Obsolete("Use the RemoveItemByTier method instead.")]
         public static void RemoveFromDefaultByTier(params KeyValuePair<ItemIndex, ItemTier>[] items) {
-            foreach (var list in AdditionalTierItems)
-                RemoveFromDefaultByTier(list.Key,
-                    items.Where(item => list.Key == item.Value)
-                    .Select(item => item.Key)
-                    .ToArray());
-        }
-
-
-
-        public static void AddToDefaultEquipment(params EquipmentIndex[] equipment) {
-            AdditionalEquipment.UnionWith(equipment);
-        }
-
-        public static void RemoveFromDefaultEquipment(params EquipmentIndex[] equipments) {
-            AdditionalEquipment.ExceptWith(equipments);
-        }
-
-        public static void ReplaceDrops(ItemDropLocation dropLocation,
-            params PickupSelection[] pickupSelections) {
-            Logger.LogInfo(
-                $"Adding drop information for {dropLocation}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
-
-            Selection[dropLocation] = pickupSelections.ToList();
-        }
-
-        public static void ReplaceDrops(ItemDropLocation dropLocation, List<PickupSelection> pickupSelections) {
-            Logger.LogInfo(
-                $"Adding drop information for {dropLocation}: {pickupSelections.Sum(x => x.Pickups.Count)} items");
-
-            Selection[dropLocation] = pickupSelections;
-        }
-
-        public static PickupIndex GetSelection(ItemDropLocation dropLocation, float normalizedIndex) {
-            if (!Selection.ContainsKey(dropLocation))
-                return PickupCatalog.FindPickupIndex(ItemIndex.None);
-
-            return GetSelection(Selection[dropLocation], normalizedIndex);
-        }
-
-        public static PickupIndex GetSelection(List<PickupSelection> selections, float normalizedIndex) {
-            var weightedSelection = new WeightedSelection<PickupIndex>();
-            foreach (var selection in selections.Where(x => x != null))
-                foreach (var pickup in selection.Pickups)
-                    weightedSelection.AddChoice(pickup, selection.DropChance / selection.Pickups.Count);
-
-            return weightedSelection.Evaluate(normalizedIndex);
+            foreach (var (itemIndex, itemTier) in items) {
+                RemoveItemByTier(itemTier, itemIndex);
+            }
         }
 
         public static List<ItemIndex> GetDefaultDropList(ItemTier itemTier) {
@@ -748,7 +488,7 @@ namespace R2API {
 
             var list = new List<ItemIndex>();
 
-            for (var itemIndex = ItemIndex.Syringe; itemIndex < ItemIndex.Count; itemIndex++) {
+            foreach (var (_, itemIndex) in ItemCatalog.itemNameToIndex) {
                 if (!Run.instance.availableItems.Contains(itemIndex))
                     continue;
 
@@ -758,7 +498,6 @@ namespace R2API {
                 }
             }
 
-            list.AddRange(AdditionalTierItems[itemTier]);
             return list;
         }
 
@@ -766,7 +505,7 @@ namespace R2API {
         public static List<ItemIndex> GetDefaultDropList(ItemTier itemTier, ItemTag requiredTag) {
             var list = new List<ItemIndex>();
 
-            for (var itemIndex = ItemIndex.Syringe; itemIndex < ItemIndex.Count; itemIndex++) {
+            foreach (var (_, itemIndex) in ItemCatalog.itemNameToIndex) {
                 if (!Run.instance.availableItems.Contains(itemIndex))
                     continue;
 
@@ -782,21 +521,17 @@ namespace R2API {
         public static List<PickupIndex> GetDefaultLunarDropList() {
             var list = new List<PickupIndex>();
 
-            for (var equipmentIndex = EquipmentIndex.CommandMissile;
-                equipmentIndex < EquipmentIndex.Count;
-                equipmentIndex++) {
+            foreach (var equipmentIndex in EquipmentCatalog.equipmentList) {
                 if (!Run.instance.availableEquipment.Contains(equipmentIndex))
                     continue;
 
                 var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
-                if (equipmentDef.canDrop && equipmentDef.isLunar) {
+                if (equipmentDef.isLunar) {
                     list.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
-                }
+                }   
             }
 
-            for (var itemIndex = ItemIndex.Syringe;
-                itemIndex < ItemIndex.Count;
-                itemIndex++) {
+            foreach (var (_, itemIndex) in ItemCatalog.itemNameToIndex) {
                 if (!Run.instance.availableItems.Contains(itemIndex))
                     continue;
 
@@ -806,63 +541,23 @@ namespace R2API {
                 }
             }
 
-            list.AddRange(AdditionalTierItems[ItemTier.Lunar].Select(x => PickupCatalog.FindPickupIndex(x)));
-            list.AddRange(AdditionalEquipment
-                .Where(x => EquipmentCatalog.GetEquipmentDef(x).isLunar)
-                .Select(x => PickupCatalog.FindPickupIndex(x)));
             return list;
         }
 
-        public static List<EquipmentIndex> GetDefaultEquipmentDropList() {
-            var list = new List<EquipmentIndex>();
+        public static List<PickupIndex> GetDefaultEquipmentDropList() {
+            var list = new List<PickupIndex>();
 
-            for (var equipmentIndex = EquipmentIndex.CommandMissile;
-                equipmentIndex < EquipmentIndex.Count;
-                equipmentIndex++) {
+            foreach (var equipmentIndex in EquipmentCatalog.equipmentList) {
                 if (!Run.instance.availableEquipment.Contains(equipmentIndex))
                     continue;
 
                 var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
-                if (equipmentDef.canDrop && !equipmentDef.isLunar) {
-                    list.Add(equipmentIndex);
-                }
+                if (!equipmentDef.isLunar) {
+                    list.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
+                }   
             }
 
-            list.AddRange(AdditionalEquipment.Where(x => !EquipmentCatalog.GetEquipmentDef(x).isLunar));
             return list;
-        }
-
-        public static PickupSelection ToSelection(this List<ItemIndex> indices, float dropChance = 1.0f) {
-
-            return indices == null ? null : new PickupSelection {
-                DropChance = dropChance,
-                Pickups = indices.Select(x => PickupCatalog.FindPickupIndex(x)).ToList()
-            };
-
-        }
-
-        public static PickupSelection ToSelection(this List<EquipmentIndex> indices, float dropChance = 1.0f) {
-            return indices == null ? null : new PickupSelection {
-                DropChance = dropChance,
-                Pickups = indices.Select(x => PickupCatalog.FindPickupIndex(x)).ToList()
-            };
-        }
-
-        public static PickupSelection ToSelection(this List<PickupIndex> pickups, float dropChance = 1.0f) {
-
-            return pickups == null ? null : new PickupSelection {
-                Pickups = pickups,
-                DropChance = dropChance
-            };
-
         }
     }
 }
-#pragma warning restore CS8605 // Unboxing a possibly null value.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning restore CS8603 // Possible null reference return.
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-#pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning restore CS8601 // Possible null reference assignment.
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.

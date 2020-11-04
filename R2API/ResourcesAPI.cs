@@ -24,7 +24,6 @@ namespace R2API {
         }
         private static bool _loaded;
 
-
         private static readonly Dictionary<string, IResourceProvider> Providers = new Dictionary<string, IResourceProvider>();
 
         private static NativeDetour ResourcesLoadDetour;
@@ -80,11 +79,21 @@ namespace R2API {
             if(!Loaded) {
                 throw new InvalidOperationException($"{nameof(ResourcesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ResourcesAPI)})]");
             }
-            Providers.Add(provider.ModPrefix, provider);
+
+            if (provider == null) {
+                throw new InvalidOperationException($"Given {nameof(IResourceProvider)} is null.");
+            }
+
+            if (provider.ModPrefix != null) {
+                Providers.Add(provider.ModPrefix, provider);
+            }
+            else {
+                throw new InvalidOperationException($"Given {nameof(IResourceProvider)}.{nameof(provider.ModPrefix)} is null.");
+            }
         }
 
-        private static Object OnResourcesLoad(string path, Type type) {
-            if (path.StartsWith("@")) {
+        private static Object OnResourcesLoad(string? path, Type type) {
+            if (path != null && path.StartsWith("@")) {
                 return ModResourcesLoad(path, type);
             }
 
@@ -97,11 +106,11 @@ namespace R2API {
                 R2API.Logger.LogError($"Modded resource paths must be of the form '@ModName:Path/To/Asset.ext'; provided path was '{path}'");
             }
 
-            return provider?.Load(path, type);
+            return provider.Load(path, type);
         }
 
-        private static ResourceRequest OnResourcesLoadAsync(string path, Type type) {
-            if (path.StartsWith("@")) {
+        private static ResourceRequest OnResourcesLoadAsync(string? path, Type type) {
+            if (path != null && path.StartsWith("@")) {
                 return ModResourcesLoadAsync(path, type);
             }
 
@@ -114,11 +123,11 @@ namespace R2API {
                 R2API.Logger.LogError($"Modded resource paths must be of the form '@ModName:Path/To/Asset.ext'; provided path was '{path}'");
             }
 
-            return provider?.LoadAsync(path, type);
+            return provider.LoadAsync(path, type);
         }
 
-        private static Object[] OnResourcesLoadAll(string path, Type type) {
-            if (path.StartsWith("@")) {
+        private static Object[] OnResourcesLoadAll(string? path, Type type) {
+            if (path != null && path.StartsWith("@")) {
                 return ModResourcesLoadAll(path, type);
             }
 
@@ -131,7 +140,7 @@ namespace R2API {
                 R2API.Logger.LogError($"Modded resource paths must be of the form '@ModName:Path/To/Asset.ext'; provided path was '{path}'");
             }
 
-            return provider?.LoadAll(type);
+            return provider.LoadAll(type);
         }
     }
 }

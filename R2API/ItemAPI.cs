@@ -5,9 +5,9 @@ using System.Linq;
 using System.Xml.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.ItemDrop;
 using R2API.Utils;
 using RoR2;
-using UnityEngine;
 using Object = UnityEngine.Object;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -83,7 +83,8 @@ namespace R2API {
             foreach (var customItem in ItemDefinitions) {
                 itemDefinitions.Add(customItem.ItemDef);
 
-                R2API.Logger.LogInfo($"Custom Item: {customItem.ItemDef.nameToken} added");
+                R2API.Logger.LogInfo($"Custom Item: {customItem.ItemDef.nameToken} " +
+                                     $"(index: {(int)customItem.ItemDef.itemIndex}) added");
             }
 
             var t1Items = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Tier1).Select(x => x.ItemDef.itemIndex).ToArray();
@@ -92,17 +93,18 @@ namespace R2API {
             var lunarItems = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Lunar).Select(x => x.ItemDef.itemIndex).ToArray();
             var bossItems = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Boss).Select(x => x.ItemDef.itemIndex).ToArray();
 
-            ItemDropAPI.AddToDefaultByTier(ItemTier.Tier1, t1Items);
-            ItemDropAPI.AddToDefaultByTier(ItemTier.Tier2, t2Items);
-            ItemDropAPI.AddToDefaultByTier(ItemTier.Tier3, t3Items);
-            ItemDropAPI.AddToDefaultByTier(ItemTier.Lunar, lunarItems);
-            ItemDropAPI.AddToDefaultByTier(ItemTier.Boss, bossItems);
+            LoadRelatedAPIs();
+            ItemDropAPI.AddItemByTier(ItemTier.Tier1, t1Items);
+            ItemDropAPI.AddItemByTier(ItemTier.Tier2, t2Items);
+            ItemDropAPI.AddItemByTier(ItemTier.Tier3, t3Items);
+            ItemDropAPI.AddItemByTier(ItemTier.Lunar, lunarItems);
+            ItemDropAPI.AddItemByTier(ItemTier.Boss, bossItems);
 
-            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Tier1, t1Items);
-            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Tier2, t2Items);
-            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Tier3, t3Items);
-            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Lunar, lunarItems);
-            MonsterItemsAPI.AddToDefaultByTier(ItemTier.Boss, bossItems);
+            MonsterItemsAPI.AddItemByTier(ItemTier.Tier1, t1Items);
+            MonsterItemsAPI.AddItemByTier(ItemTier.Tier2, t2Items);
+            MonsterItemsAPI.AddItemByTier(ItemTier.Tier3, t3Items);
+            MonsterItemsAPI.AddItemByTier(ItemTier.Lunar, lunarItems);
+            MonsterItemsAPI.AddItemByTier(ItemTier.Boss, bossItems);
 
             _itemCatalogInitialized = true;
         }
@@ -111,15 +113,44 @@ namespace R2API {
             foreach (var customEquipment in EquipmentDefinitions) {
                 equipmentDefinitions.Add(customEquipment.EquipmentDef);
 
-                R2API.Logger.LogInfo($"Custom Equipment: {customEquipment.EquipmentDef.nameToken} added");
+                R2API.Logger.LogInfo($"Custom Equipment: {customEquipment.EquipmentDef.nameToken} " +
+                                     $"(index: {(int)customEquipment.EquipmentDef.equipmentIndex}) added");
             }
 
-            var equipments = EquipmentDefinitions.Where(c => c.EquipmentDef.canDrop).Select(x => x.EquipmentDef.equipmentIndex).ToArray();
+            var droppableEquipments = EquipmentDefinitions
+                .Where(c => c.EquipmentDef.canDrop)
+                .Select(c => c.EquipmentDef.equipmentIndex)
+                .ToArray();
 
-            ItemDropAPI.AddToDefaultEquipment(equipments);
-            MonsterItemsAPI.AddToDefaultEquipment(equipments);
+            LoadRelatedAPIs();
+            ItemDropAPI.AddEquipment(droppableEquipments);
+            MonsterItemsAPI.AddEquipment(droppableEquipments);
 
             _equipmentCatalogInitialized = true;
+        }
+
+        private static void LoadRelatedAPIs() {
+            if (!ItemDropAPI.Loaded) {
+                try {
+                    ItemDropAPI.SetHooks();
+                    ItemDropAPI.Loaded = true;
+                }
+                catch (Exception e) {
+                    R2API.Logger.LogError($"ItemDropAPI hooks failed to initialize. Disabling the submodule. {e}");
+                    ItemDropAPI.UnsetHooks();
+                }
+            }
+
+            if (!MonsterItemsAPI.Loaded) {
+                try {
+                    MonsterItemsAPI.SetHooks();
+                    MonsterItemsAPI.Loaded = true;
+                }
+                catch (Exception e) {
+                    R2API.Logger.LogError($"MonsterItemsAPI hooks failed to initialize. Disabling the submodule. {e}");
+                    MonsterItemsAPI.UnsetHooks();
+                }
+            }
         }
         #endregion
 
@@ -147,7 +178,7 @@ namespace R2API {
             }
 
             if (string.IsNullOrEmpty(item.ItemDef.name)) {
-                R2API.Logger.LogError("Your ItemDef.name is null ! Can't add your item.");
+                R2API.Logger.LogError("Your ItemDef.name is null or empty ! Can't add your item.");
                 return ItemIndex.None;
             }
 
@@ -190,7 +221,7 @@ namespace R2API {
             }
 
             if (string.IsNullOrEmpty(item.EquipmentDef.name)) {
-                R2API.Logger.LogError("Your EquipmentDef.name is null ! Can't add your Equipment.");
+                R2API.Logger.LogError("Your EquipmentDef.name is null or empty ! Can't add your Equipment.");
                 return EquipmentIndex.None;
             }
 
@@ -304,18 +335,21 @@ namespace R2API {
             cursor.Next.Operand = label;
         }
 
+        // todo : allow override of existing item display rules
+        // This method only allow the addition of custom rules.
+        // 
         private static void AddingItemDisplayRulesToCharacterModels(object _, EventArgs __) {
-            foreach (GameObject o in BodyCatalog.allBodyPrefabs) {
-                CharacterModel cm = o.GetComponentInChildren<CharacterModel>();
-                if (cm != null && cm.itemDisplayRuleSet != null) {
-                    string name = cm.name;
+            foreach (var bodyPrefab in BodyCatalog.allBodyPrefabs) {
+                var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
+                if (characterModel != null && characterModel.itemDisplayRuleSet != null) {
+                    string name = characterModel.name;
                     foreach (var customItem in ItemDefinitions) {
                         var customRules = customItem.ItemDisplayRules;
                         if (customRules != null) {
                             //if a specific rule for this model exists, or the model has no rules for this item
                             if (customRules.TryGetRules(name, out ItemDisplayRule[] rules) ||
-                                cm.itemDisplayRuleSet.GetItemDisplayRuleGroup(customItem.ItemDef.itemIndex).rules == null) {
-                                cm.itemDisplayRuleSet.SetItemDisplayRuleGroup(customItem.ItemDef.name, new DisplayRuleGroup { rules = rules });
+                                characterModel.itemDisplayRuleSet.GetItemDisplayRuleGroup(customItem.ItemDef.itemIndex).rules == null) {
+                                characterModel.itemDisplayRuleSet.SetItemDisplayRuleGroup(customItem.ItemDef.name, new DisplayRuleGroup { rules = rules });
                             }
                         }
                     }
@@ -325,13 +359,13 @@ namespace R2API {
                         if (customRules != null) {
                             //if a specific rule for this model exists, or the model has no rules for this equipment
                             if (customRules.TryGetRules(name, out ItemDisplayRule[] rules) ||
-                                cm.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null) {
-                                cm.itemDisplayRuleSet.SetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.name, new DisplayRuleGroup { rules = rules });
+                                characterModel.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null) {
+                                characterModel.itemDisplayRuleSet.SetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.name, new DisplayRuleGroup { rules = rules });
                             }
                         }
                     }
 
-                    cm.itemDisplayRuleSet.InvokeMethod("GenerateRuntimeValues");
+                    characterModel.itemDisplayRuleSet.GenerateRuntimeValues();
                 }
             }
         }
