@@ -36,6 +36,11 @@ namespace R2API {
             Language.onCurrentLanguageChanged += OnCurrentLanguageChanged;
         }
 
+        [R2APISubmoduleInit(Stage = InitStage.LoadCheck)]
+        private static void ShouldLoad(out bool shouldload) {
+            shouldload = Directory.GetFiles(Paths.PluginPath, "*.language", SearchOption.AllDirectories).Length > 0;
+        }
+
         private static void OnCurrentLanguageChanged() {
             var currentLanguage = Language.currentLanguage;
             if (currentLanguage is null)

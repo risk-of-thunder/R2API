@@ -32,6 +32,11 @@ namespace R2API {
             On.RoR2.Language.SetCurrentLanguage += Language_SetCurrentLanguage;
         }
 
+        [R2APISubmoduleInit(Stage = InitStage.LoadCheck)]
+        private static void ShouldLoad(out bool shouldload) {
+            shouldload = Directory.GetFiles(Paths.PluginPath, "*.font", SearchOption.AllDirectories).Length > 0;
+        }
+
         private static void Language_SetCurrentLanguage(On.RoR2.Language.orig_SetCurrentLanguage orig, string language) {
             orig(language);
             if (Fonts._fontAssets.Count != 0) {
