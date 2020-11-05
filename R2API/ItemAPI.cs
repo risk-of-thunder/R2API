@@ -12,7 +12,6 @@ using Object = UnityEngine.Object;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
-#pragma warning disable 618 // PickupIndex being obsolete (but still being used in the game code)
 
 namespace R2API {
     [R2APISubmodule]
@@ -411,7 +410,14 @@ namespace R2API {
     }
 
     public class ItemDisplayRuleDict {
-        public ItemDisplayRule[] this[string? CharacterModelName] {
+
+#pragma warning disable CS8604 // Possible null reference argument. Proper NullChecking is in place.
+        /// <summary>
+        /// Get the applicable rule for this charactermodel. Returns the default rules if no specific rule is found.
+        /// </summary>
+        /// <param name="CharacterModelName">The model to look for. Null and empty strings are also accepted.</param>
+        /// <returns>The item display rules for this model, or the default rules if no specifics are found.</returns>
+        public ItemDisplayRule[]? this[string? CharacterModelName] {
             get {
                 if (string.IsNullOrEmpty(CharacterModelName) || !Dictionary.ContainsKey(CharacterModelName))
                     return DefaultRules;
@@ -425,13 +431,16 @@ namespace R2API {
                     DefaultRules = value;
                     return;
                 }
+
                 if (Dictionary.ContainsKey(CharacterModelName)) {
                     Dictionary[CharacterModelName] = value;
                 } else {
                     Dictionary.Add(CharacterModelName, value);
                 }
+
             }
         }
+#pragma warning restore CS8604 // Possible null reference argument.
 
         /// <summary>
         /// Equivalent to using the set property of the indexer, but added bonus is the ability to ignore the array wrapper normally needed.
@@ -447,18 +456,23 @@ namespace R2API {
         /// </summary>
         /// <param name="CharacterModelName"></param>
         /// <param name="itemDisplayRules">The specific rules for this model, or if false is returned, the default rules.</param>
-        /// <returns></returns>
+        /// <returns>True if there's a specific rule for this model. False otherwise.</returns>
         public bool TryGetRules(string? CharacterModelName, out ItemDisplayRule[] itemDisplayRules) {
+#pragma warning disable CS8601 // Possible null reference assignment. The indexer allows nulling.
             itemDisplayRules = this[CharacterModelName];
-            return itemDisplayRules == DefaultRules;
+#pragma warning restore CS8601 // Possible null reference assignment.
+            return CharacterModelName != null && Dictionary.ContainsKey(CharacterModelName);
         }
 
+        /// <summary>
+        /// The default rules to apply when no matching model is found.
+        /// </summary>
         public ItemDisplayRule[]? DefaultRules {get; private set;}
 
-        private Dictionary<string, ItemDisplayRule[]> Dictionary;
+        private readonly Dictionary<string, ItemDisplayRule[]?> Dictionary;
         public ItemDisplayRuleDict(params ItemDisplayRule[]? defaultRules) {
             DefaultRules = defaultRules;
-            Dictionary = new Dictionary<string, ItemDisplayRule[]>();
+            Dictionary = new Dictionary<string, ItemDisplayRule[]?>();
         }
     }
 }
