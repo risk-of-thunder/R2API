@@ -481,6 +481,16 @@ namespace R2API {
             }
         }
 
+        [Obsolete("Use the AddEquipment method instead.")]
+        public static void AddToDefaultEquipment(params EquipmentIndex[] equipments) {
+            AddEquipment(equipments);
+        }
+
+        [Obsolete("Use the RemoveEquipment method instead.")]
+        public static void RemoveFromDefaultEquipment(params EquipmentIndex[] equipments) {
+            RemoveEquipment(equipments);
+        }
+
         public static List<ItemIndex> GetDefaultDropList(ItemTier itemTier) {
             if (itemTier == ItemTier.NoTier) {
                 return null;
