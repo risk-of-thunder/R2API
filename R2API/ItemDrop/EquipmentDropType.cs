@@ -18,6 +18,17 @@ namespace R2API.ItemDrop {
         public static IEnumerable<EquipmentDropType> GetEquipmentTypesFromIndex(EquipmentIndex equipmentIndex) {
             var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
 
+            // Custom Equipment are not yet added into the equipmentDef array of the catalog.
+            if (equipmentDef == null) {
+                equipmentDef = ItemAPI.EquipmentDefinitions.FirstOrDefault(customEquip =>
+                    customEquip?.EquipmentDef?.equipmentIndex == equipmentIndex)?.EquipmentDef;
+
+                if (equipmentDef == null) {
+                    throw new NullReferenceException($"Couldn't find EquipmentDef for equipmentIndex : {equipmentIndex}. " +
+                                                     "Are you sure this equipment is registered ?");
+                }
+            }
+
             var equipmentDropType = EquipmentDropType.DefaultValue;
 
             if (equipmentDef.canDrop) {
