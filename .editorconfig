@@ -20,3 +20,9 @@ dotnet_diagnostic.CS1591.severity = suggestion
 
 # IDE0032: Use auto property
 dotnet_style_prefer_auto_properties = true:silent
+
+# CS8604: Possible null reference argument.
+dotnet_diagnostic.CS8604.severity = suggestion
+
+# CS8602: Dereference of a possibly null reference.
+dotnet_diagnostic.CS8602.severity = suggestion

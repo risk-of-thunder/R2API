@@ -42,6 +42,11 @@ namespace R2API {
             On.RoR2.RoR2Application.OnLoad += RoR2Application_OnLoad;
         }
 
+        [R2APISubmoduleInit(Stage = InitStage.LoadCheck)]
+        private static void ShouldLoad(out bool shouldload) {
+            shouldload = Directory.GetFiles(Paths.PluginPath, "*.sound", SearchOption.AllDirectories).Length > 0;
+        }
+
         private static void RoR2Application_OnLoad(On.RoR2.RoR2Application.orig_OnLoad orig, RoR2Application self)
         {
             orig(self);

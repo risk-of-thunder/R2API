@@ -11,10 +11,11 @@ using Mono.Cecil;
 namespace R2API.Utils {
     [Flags]
     internal enum InitStage {
-        SetHooks   = 0x01,
-        Load       = 0x02,
-        Unload     = 0x04,
-        UnsetHooks = 0x08
+        SetHooks   = 1 << 0,
+        Load       = 1 << 1,
+        Unload     = 1 << 2,
+        UnsetHooks = 1 << 3,
+        LoadCheck  = 1 << 4,
     }
 
     // ReSharper disable once InconsistentNaming
@@ -87,13 +88,13 @@ namespace R2API.Utils {
                 LoadedModules = new HashSet<string>();
 
                 moduleTypes
-                    .ForEachTry(t => InvokeStage(t, InitStage.SetHooks), faults);
+                    .ForEachTry(t => InvokeStage(t, InitStage.SetHooks, null), faults);
                 moduleTypes.Where(t => !faults.ContainsKey(t))
-                    .ForEachTry(t => InvokeStage(t, InitStage.Load), faults);
+                    .ForEachTry(t => InvokeStage(t, InitStage.Load, null), faults);
 
                 faults.Keys.ForEachTry(t => {
                     _logger?.Log(LogLevel.Error, $"{t.Name} could not be initialized and has been disabled:\n\n{faults[t]}");
-                    InvokeStage(t, InitStage.UnsetHooks);
+                    InvokeStage(t, InitStage.UnsetHooks, null);
                 });
 
                 moduleTypes.Where(t => !faults.ContainsKey(t))
@@ -121,13 +122,21 @@ namespace R2API.Utils {
         private bool APISubmoduleFilter(Type type) {
             var attr = type.GetCustomAttribute<R2APISubmodule>();
 
-            // Comment this out if you want to try every submodules working (or not) state
-            if (!_moduleSet.Contains(type.Name)) {
-                return false;
-            }
-
             if (attr == null)
                 return false;
+
+            // Comment this out if you want to try every submodules working (or not) state
+            if (!_moduleSet.Contains(type.Name)) {
+                var shouldload = new object[1];
+                InvokeStage(type, InitStage.LoadCheck, shouldload);
+                if (!(shouldload[0] is bool)) {
+                    return false;
+                }
+
+                if (!(bool)shouldload[0]) {
+                    return false;
+                }
+            }
 
             if (attr.Build != default && attr.Build != _build)
                 _logger?.Log(LogLevel.Debug,
@@ -136,7 +145,7 @@ namespace R2API.Utils {
             return true;
         }
 
-        private void InvokeStage(Type type, InitStage stage) {
+        private void InvokeStage(Type type, InitStage stage, object[]? parameters) {
             var method = type.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                 .Where(m => m.GetCustomAttributes(typeof(R2APISubmoduleInit))
                 .Any(a => ((R2APISubmoduleInit) a).Stage.HasFlag(stage))).ToList();
@@ -146,7 +155,7 @@ namespace R2API.Utils {
                 return;
             }
 
-            method.ForEach(m => m.Invoke(null, null));
+            method.ForEach(m => m.Invoke(null, parameters));
         }
     }
 
