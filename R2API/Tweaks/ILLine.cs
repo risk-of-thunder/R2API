@@ -37,6 +37,7 @@ namespace R2API.Tweaks {
 
             hook.Undo();
             hook = null;
+            Loaded = false;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.LoadCheck)]
