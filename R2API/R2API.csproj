@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>preview</LangVersion>
     <Version>2.0.0</Version>
-	<Nullable>enable</Nullable>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
-   
-   <PropertyGroup>
-     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-   </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MonoMod" Version="20.3.5.1" />
@@ -91,10 +91,10 @@
       <HintPath>libs\Wwise.dll</HintPath>
       <Private>false</Private>
     </Reference>
-	  <Reference Include="Zio">
-		  <HintPath>libs\Zio.dll</HintPath>
-		  <Private>false</Private>
-	  </Reference>
+    <Reference Include="Zio">
+      <HintPath>libs\Zio.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
