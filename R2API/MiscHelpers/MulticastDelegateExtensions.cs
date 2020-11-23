@@ -7,20 +7,25 @@ using MonoMod.Cil;
 
 namespace R2API.MiscHelpers {
     internal static class MulticastDelegateExtensions {
-        public static T InvokeSequential<T>(this Func<T, T> func, T initialValue) {
+        public static T InvokeSequential<T>(this Func<T, T> func, T initialValue, Boolean skipErrors = false) {
             var invList = func.GetInvocationList();
             if(invList is null || invList.Length <= 1) {
                 return func(initialValue);
             }
 
             foreach(var v in invList.Where(a => a is Func<T, T>).Cast<Func<T, T>>()) {
-                initialValue = v(initialValue);
+                try {
+                    initialValue = v(initialValue);
+                } catch(Exception e) {
+                    if(!skipErrors) throw e; else R2API.Logger.LogError(e);
+                }
+                
             }
 
             return initialValue;
         }
 
-        public static TOut InvokeSequential<TIn, TOut>(this Func<TIn, TOut> func, TIn initialValue, Func<TOut, TIn> inBetween) {
+        public static TOut InvokeSequential<TIn, TOut>(this Func<TIn, TOut> func, TIn initialValue, Func<TOut, TIn> inBetween, Boolean skipErrors = false) {
             var invList = func.GetInvocationList();
             if(invList is null || invList.Length <= 1) {
                 return func(initialValue);
@@ -30,8 +35,12 @@ namespace R2API.MiscHelpers {
             Boolean first = true;
             foreach(var v in invList.Where(a => a is Func<TIn, TOut>).Cast<Func<TIn, TOut>>()) {
                 if(first) {
-                    result = v(initialValue);
-                    first = false;
+                    try {
+                        result = v(initialValue);
+                        first = false;
+                    } catch(Exception e) {
+                        if(!skipErrors) throw e; else R2API.Logger.LogError(e);
+                    }           
                     continue;
                 }
 
