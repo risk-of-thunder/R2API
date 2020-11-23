@@ -89,40 +89,59 @@ namespace R2API {
 
 
         public static class ChestItems {
-            internal static List<PickupIndex> EmitTier1Modifier(List<PickupIndex> current) => EditDrops(current, tier1);
+            internal static List<PickupIndex> EmitTier1Modifier(List<PickupIndex> current) => current.EditDrops(tier1);
             public static event CustomModifier tier1;
-            internal static List<PickupIndex> EmitTier2Modifier(List<PickupIndex> current) => EditDrops(current, tier2);
+            internal static List<PickupIndex> EmitTier2Modifier(List<PickupIndex> current) => current.EditDrops(tier2);
             public static event CustomModifier tier2;
-            internal static List<PickupIndex> EmitTier3Modifier(List<PickupIndex> current) => EditDrops(current, tier3);
+            internal static List<PickupIndex> EmitTier3Modifier(List<PickupIndex> current) => current.EditDrops(tier3);
             public static event CustomModifier tier3;
-            internal static List<PickupIndex> EmitBossModifier(List<PickupIndex> current) => EditDrops(current, boss);
+            internal static List<PickupIndex> EmitBossModifier(List<PickupIndex> current) => current.EditDrops(boss);
             public static event CustomModifier boss;
-            internal static List<PickupIndex> EmitLunarModifier(List<PickupIndex> current) => EditDrops(current, lunar);
+            internal static List<PickupIndex> EmitLunarModifier(List<PickupIndex> current) => current.EditDrops(lunar);
             public static event CustomModifier lunar;
-            internal static List<PickupIndex> EmitEquipmentModifier(List<PickupIndex> current) => EditDrops(current, equipment);
+            internal static List<PickupIndex> EmitEquipmentModifier(List<PickupIndex> current) => current.EditDrops(equipment);
             public static event CustomModifier equipment;
-            internal static List<PickupIndex> EmitNormalEquipmentModifier(List<PickupIndex> current) => EditDrops(current, normalEquipment);
+            internal static List<PickupIndex> EmitNormalEquipmentModifier(List<PickupIndex> current) => current.EditDrops(normalEquipment);
             public static event CustomModifier normalEquipment;
-            internal static List<PickupIndex> EmitLunarEquipmentModifier(List<PickupIndex> current) => EditDrops(current, lunarEquipment);
+            internal static List<PickupIndex> EmitLunarEquipmentModifier(List<PickupIndex> current) => current.EditDrops(lunarEquipment);
             public static event CustomModifier lunarEquipment;
         }
-        private static List<PickupIndex> EditDrops(List<PickupIndex> input, CustomModifier? modifiers) => modifiers?.InvokeSequential(input)?.ToList() ?? input;
+
+        public static class EvolutionMonsterItems {
+            internal static List<PickupIndex> EmitTier1Modifier(List<PickupIndex> current) => current.EditDrops(tier1);
+            public static event CustomModifier tier1;
+            internal static List<PickupIndex> EmitTier2Modifier(List<PickupIndex> current) => current.EditDrops(tier2);
+            public static event CustomModifier tier2;
+            internal static List<PickupIndex> EmitTier3Modifier(List<PickupIndex> current) => current.EditDrops(tier3);
+            public static event CustomModifier tier3;
+        }
+
+        public static class BossTeleporterRewards {
+            internal static List<PickupIndex> EmitTier2Modifier(List<PickupIndex> current) => current.EditDrops(tier2);
+            public static event CustomModifier tier2;
+            internal static List<PickupIndex> EmitTier3Modifier(List<PickupIndex> current) => current.EditDrops(tier3);
+            public static event CustomModifier tier3;
+            internal static List<PickupIndex> EmitBossModifier(List<PickupIndex> current) => current.EditDrops(boss, false);
+            public static event CustomModifier boss;
+        }
+
+        private static List<PickupIndex> EditDrops(this List<PickupIndex> input, CustomModifier? modifiers, Boolean addIfEmpty = true) => (modifiers?.InvokeSequential(input)?.ToList() ?? input).AddEmptyIfNeeded(addIfEmpty);
+        private static List<PickupIndex> AddEmptyIfNeeded(this List<PickupIndex> input, Boolean run) {
+            if(input.Count == 0 && run) input.Add(PickupIndex.none);
+            return input;
+        }
+        // TODO: Does PickupIndex.none actually work for this?
 
         
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.Run.BuildDropTable += Run_BuildDropTable;
-            //On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
-            //On.RoR2.SceneDirector.PopulateScene += PopulateScene;
-            //On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer += GenerateNewPickupServer;
-            //On.RoR2.DirectorCore.TrySpawnObject += CheckForInvalidInteractables;
-            //On.RoR2.ShrineChanceBehavior.AddShrineStack += FixShrineBehaviour;
-            //On.RoR2.BossGroup.DropRewards += DropRewards;
-            //On.RoR2.PickupPickerController.SetOptionsServer += SetOptionsServer;
-            //On.RoR2.ArenaMissionController.EndRound += EndRound;
-            //On.RoR2.GlobalEventManager.OnCharacterDeath += OnCharacterDeath;
+            IL.RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.GenerateAvailableItemsSet += MonsterTeamGainsItemsArtifactManager_GenerateAvailableItemsSet;
+            IL.RoR2.BossGroup.DropRewards += BossGroup_DropRewards;
         }
+
+        
 
         private static readonly FieldInfo run_smallChestDropTierSelector = typeof(Run).GetField(nameof(Run.smallChestDropTierSelector), BF.Public | BF.NonPublic | BF.Instance);
         private static readonly FieldInfo run_availableTier1DropList = typeof(Run).GetField(nameof(Run.availableTier1DropList), BF.Public | BF.NonPublic | BF.Instance);
@@ -133,6 +152,7 @@ namespace R2API {
         private static readonly FieldInfo run_availableEquipmentDropList = typeof(Run).GetField(nameof(Run.availableEquipmentDropList), BF.Public | BF.NonPublic | BF.Instance);
         private static readonly FieldInfo run_availableLunarEquipmentDropList = typeof(Run).GetField(nameof(Run.availableLunarEquipmentDropList), BF.Public | BF.NonPublic | BF.Instance);
         private static readonly FieldInfo run_availableNormalEquipmentDropList = typeof(Run).GetField(nameof(Run.availableNormalEquipmentDropList), BF.Public | BF.NonPublic | BF.Instance);
+        private static readonly FieldInfo bossgroup_bossDrops = typeof(BossGroup).GetField(nameof(BossGroup.bossDrops), BF.Public | BF.NonPublic | BF.Instance);
 
         private static ILCursor EmitModifier(this ILCursor cursor, FieldInfo targetField, EmittedModifer modifier, Boolean isLast = false) => (isLast ? cursor : cursor.Emit(OpCodes.Dup))
             .Emit(OpCodes.Dup)
@@ -155,236 +175,253 @@ namespace R2API {
             .EmitModifier(run_availableLunarEquipmentDropList, ChestItems.EmitLunarEquipmentModifier, true);
         //It is fairly easy to also allow edits to the chest rarity distribution here, so potentially expand to include that as well?
 
+
+        private static void MonsterTeamGainsItemsArtifactManager_GenerateAvailableItemsSet(ILContext il) => new ILCursor(il)
+            .GotoNext(MoveType.After,
+                x => x.MatchLdfld(run_availableTier1DropList))
+            .EmitDel<EmittedModifer>(EvolutionMonsterItems.EmitTier1Modifier)
+            .GotoNext(MoveType.After,
+                x => x.MatchLdfld(run_availableTier2DropList))
+            .EmitDel<EmittedModifer>(EvolutionMonsterItems.EmitTier2Modifier)
+            .GotoNext(MoveType.After,
+                x => x.MatchLdfld(run_availableTier3DropList))
+            .EmitDel<EmittedModifer>(EvolutionMonsterItems.EmitTier3Modifier);
+
+
+        private static void BossGroup_DropRewards(ILContext il) => new ILCursor(il)
+            .Emit(OpCodes.Ldarg_0)
+            .EmitModifier(bossgroup_bossDrops, BossTeleporterRewards.EmitBossModifier, true)
+            .GotoNext(MoveType.After,
+                x => x.MatchLdfld(run_availableTier2DropList))
+            .EmitDel<EmittedModifer>(BossTeleporterRewards.EmitTier2Modifier)
+            .GotoNext(MoveType.After,
+                x => x.MatchLdfld(run_availableTier3DropList))
+            .EmitDel<EmittedModifer>(BossTeleporterRewards.EmitTier3Modifier);
+
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             IL.RoR2.Run.BuildDropTable -= Run_BuildDropTable;
-            //On.RoR2.Run.BuildDropTable -= RunOnBuildDropTable;
-            //On.RoR2.SceneDirector.PopulateScene -= PopulateScene;
-            //On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer -= GenerateNewPickupServer;
-            //On.RoR2.DirectorCore.TrySpawnObject -= CheckForInvalidInteractables;
-            //On.RoR2.ShrineChanceBehavior.AddShrineStack -= FixShrineBehaviour;
-            //On.RoR2.BossGroup.DropRewards -= DropRewards;
-            //On.RoR2.PickupPickerController.SetOptionsServer -= SetOptionsServer;
-            //On.RoR2.ArenaMissionController.EndRound -= EndRound;
-            //On.RoR2.GlobalEventManager.OnCharacterDeath -= OnCharacterDeath;
+            IL.RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.GenerateAvailableItemsSet -= MonsterTeamGainsItemsArtifactManager_GenerateAvailableItemsSet;
+            IL.RoR2.BossGroup.DropRewards -= BossGroup_DropRewards;
         }
 
-        private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
-            Catalog.PopulateItemCatalog();
-            orig(run);
-            PlayerDropList.DuplicateDropLists(run);
-            PlayerDropList.ClearAllLists(run);
-            PlayerDropList.GenerateDropLists(ItemsToAdd, ItemsToRemove, EquipmentsToAdd, EquipmentsToRemove);
-            PlayerDropList.SetItems(run);
-            PlayerInteractables.CalculateInvalidInteractables(PlayerDropList);
-        }
+        ////Implemented
+        //private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
+        //    Catalog.PopulateItemCatalog();
+        //    orig(run);
+        //    PlayerDropList.DuplicateDropLists(run);
+        //    PlayerDropList.ClearAllLists(run);
+        //    PlayerDropList.GenerateDropLists(ItemsToAdd, ItemsToRemove, EquipmentsToAdd, EquipmentsToRemove);
+        //    PlayerDropList.SetItems(run);
+        //    PlayerInteractables.CalculateInvalidInteractables(PlayerDropList);
+        //}
 
-        private static void PopulateScene(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector sceneDirector) {
-            var allInteractables = Resources.LoadAll<InteractableSpawnCard>(AllInteractablesResourcesPath);
-            foreach (var spawnCard in allInteractables) {
-                var interactableName = InteractableCalculator.GetSpawnCardName(spawnCard);
-                if (interactableName == LockboxInteractableName || interactableName == ScavengerBackpackInteractableName) {
-                    DropOdds.UpdateChestTierOdds(spawnCard, interactableName);
-                } else if (interactableName == AdaptiveChestInteractableName) {
-                    DropOdds.UpdateDropTableTierOdds(spawnCard, interactableName);
-                } else if (interactableName == CleansingPoolInteractableName) {
-                    var dropTable = spawnCard.prefab.GetComponent<ShopTerminalBehavior>().dropTable as ExplicitPickupDropTable;
-                    DropOdds.UpdateDropTableItemOdds(PlayerDropList, dropTable, interactableName);
-                }
-            }
+        //private static void PopulateScene(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector sceneDirector) {
+        //    var allInteractables = Resources.LoadAll<InteractableSpawnCard>(AllInteractablesResourcesPath);
+        //    foreach (var spawnCard in allInteractables) {
+        //        var interactableName = InteractableCalculator.GetSpawnCardName(spawnCard);
+        //        if (interactableName == LockboxInteractableName || interactableName == ScavengerBackpackInteractableName) {
+        //            DropOdds.UpdateChestTierOdds(spawnCard, interactableName);
+        //        } else if (interactableName == AdaptiveChestInteractableName) {
+        //            DropOdds.UpdateDropTableTierOdds(spawnCard, interactableName);
+        //        } else if (interactableName == CleansingPoolInteractableName) {
+        //            var dropTable = spawnCard.prefab.GetComponent<ShopTerminalBehavior>().dropTable as ExplicitPickupDropTable;
+        //            DropOdds.UpdateDropTableItemOdds(PlayerDropList, dropTable, interactableName);
+        //        }
+        //    }
 
-            if (ClassicStageInfo.instance != null) {
-                var categoriesLength = ClassicStageInfo.instance.interactableCategories.categories.Length;
-                for (var categoryIndex = 0; categoryIndex < categoriesLength; categoryIndex++) {
-                    var directorCards = new List<DirectorCard>();
-                    foreach (var directorCard in ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].cards) {
-                        var interactableName = InteractableCalculator.GetSpawnCardName(directorCard.spawnCard);
-                        if (new List<string>().Contains(interactableName)) {
-                        }
-                        if (PlayerInteractables.InvalidInteractables.Contains(interactableName)) {
-                        } else {
-                            DropOdds.UpdateChestTierOdds(directorCard.spawnCard, interactableName);
-                            DropOdds.UpdateShrineTierOdds(directorCard, interactableName);
-                            directorCards.Add(directorCard);
-                        }
-                    }
-                    var directorCardArray = new DirectorCard[directorCards.Count];
-                    for (var cardIndex = 0; cardIndex < directorCards.Count; cardIndex++) {
-                        directorCardArray[cardIndex] = directorCards[cardIndex];
-                    }
-                    if (directorCardArray.Length == 0) {
-                        ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].selectionWeight = 0;
-                    }
-                    ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].cards = directorCardArray;
-                }
-            }
-            orig(sceneDirector);
-        }
+        //    if (ClassicStageInfo.instance != null) {
+        //        var categoriesLength = ClassicStageInfo.instance.interactableCategories.categories.Length;
+        //        for (var categoryIndex = 0; categoryIndex < categoriesLength; categoryIndex++) {
+        //            var directorCards = new List<DirectorCard>();
+        //            foreach (var directorCard in ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].cards) {
+        //                var interactableName = InteractableCalculator.GetSpawnCardName(directorCard.spawnCard);
+        //                if (new List<string>().Contains(interactableName)) {
+        //                }
+        //                if (PlayerInteractables.InvalidInteractables.Contains(interactableName)) {
+        //                } else {
+        //                    DropOdds.UpdateChestTierOdds(directorCard.spawnCard, interactableName);
+        //                    DropOdds.UpdateShrineTierOdds(directorCard, interactableName);
+        //                    directorCards.Add(directorCard);
+        //                }
+        //            }
+        //            var directorCardArray = new DirectorCard[directorCards.Count];
+        //            for (var cardIndex = 0; cardIndex < directorCards.Count; cardIndex++) {
+        //                directorCardArray[cardIndex] = directorCards[cardIndex];
+        //            }
+        //            if (directorCardArray.Length == 0) {
+        //                ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].selectionWeight = 0;
+        //            }
+        //            ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].cards = directorCardArray;
+        //        }
+        //    }
+        //    orig(sceneDirector);
+        //}
 
-        private static void GenerateNewPickupServer(On.RoR2.ShopTerminalBehavior.orig_GenerateNewPickupServer orig, ShopTerminalBehavior shopTerminalBehavior) {
-            var shopList = new List<PickupIndex>();
-            if (shopTerminalBehavior.itemTier == ItemTier.Tier1) {
-                shopList = Run.instance.availableTier1DropList;
-            } else if (shopTerminalBehavior.itemTier == ItemTier.Tier2) {
-                shopList = Run.instance.availableTier2DropList;
-            } else if (shopTerminalBehavior.itemTier == ItemTier.Tier3) {
-                shopList = Run.instance.availableTier3DropList;
-            } else if (shopTerminalBehavior.itemTier == ItemTier.Boss) {
-                shopList = Run.instance.availableBossDropList;
-            } else if (shopTerminalBehavior.itemTier == ItemTier.Lunar) {
-                shopList = Run.instance.availableLunarDropList;
-            }
-            if (shopList.Count > 0 || shopTerminalBehavior.dropTable != null) {
-                orig(shopTerminalBehavior);
-            } else {
-                shopTerminalBehavior.SetNoPickup();
-                var purchaseInteraction = shopTerminalBehavior.GetComponent<PurchaseInteraction>();
-                if (purchaseInteraction != null) {
-                    purchaseInteraction.SetAvailable(false);
-                }
-            }
-        }
+        //private static void GenerateNewPickupServer(On.RoR2.ShopTerminalBehavior.orig_GenerateNewPickupServer orig, ShopTerminalBehavior shopTerminalBehavior) {
+        //    var shopList = new List<PickupIndex>();
+        //    if (shopTerminalBehavior.itemTier == ItemTier.Tier1) {
+        //        shopList = Run.instance.availableTier1DropList;
+        //    } else if (shopTerminalBehavior.itemTier == ItemTier.Tier2) {
+        //        shopList = Run.instance.availableTier2DropList;
+        //    } else if (shopTerminalBehavior.itemTier == ItemTier.Tier3) {
+        //        shopList = Run.instance.availableTier3DropList;
+        //    } else if (shopTerminalBehavior.itemTier == ItemTier.Boss) {
+        //        shopList = Run.instance.availableBossDropList;
+        //    } else if (shopTerminalBehavior.itemTier == ItemTier.Lunar) {
+        //        shopList = Run.instance.availableLunarDropList;
+        //    }
+        //    if (shopList.Count > 0 || shopTerminalBehavior.dropTable != null) {
+        //        orig(shopTerminalBehavior);
+        //    } else {
+        //        shopTerminalBehavior.SetNoPickup();
+        //        var purchaseInteraction = shopTerminalBehavior.GetComponent<PurchaseInteraction>();
+        //        if (purchaseInteraction != null) {
+        //            purchaseInteraction.SetAvailable(false);
+        //        }
+        //    }
+        //}
 
-        private static GameObject CheckForInvalidInteractables(On.RoR2.DirectorCore.orig_TrySpawnObject orig, DirectorCore directorCore, DirectorSpawnRequest directorSpawnRequest) {
-            if (directorSpawnRequest.spawnCard.name == ScavengerBackpackSpawnCardName) {
-                if (PlayerInteractables.InvalidInteractables.Contains(ScavengerBackpackInteractableName)) {
-                    return null;
-                }
-            }
-            return orig(directorCore, directorSpawnRequest);
-        }
+        //private static GameObject CheckForInvalidInteractables(On.RoR2.DirectorCore.orig_TrySpawnObject orig, DirectorCore directorCore, DirectorSpawnRequest directorSpawnRequest) {
+        //    if (directorSpawnRequest.spawnCard.name == ScavengerBackpackSpawnCardName) {
+        //        if (PlayerInteractables.InvalidInteractables.Contains(ScavengerBackpackInteractableName)) {
+        //            return null;
+        //        }
+        //    }
+        //    return orig(directorCore, directorSpawnRequest);
+        //}
 
-        private static void FixShrineBehaviour(On.RoR2.ShrineChanceBehavior.orig_AddShrineStack orig, ShrineChanceBehavior shrineChangeBehavior, Interactor interactor) {
-            var tier1Adjusted = PlayerDropList.AvailableTier1DropList;
-            if (tier1Adjusted.Count == 0) {
-                tier1Adjusted = DropList.Tier1DropListOriginal;
-            }
-            var tier2Adjusted = PlayerDropList.AvailableTier2DropList;
-            if (tier2Adjusted.Count == 0) {
-                tier2Adjusted = DropList.Tier2DropListOriginal;
-            }
-            var tier3Adjusted = PlayerDropList.AvailableTier3DropList;
-            if (tier3Adjusted.Count == 0) {
-                tier3Adjusted = DropList.Tier3DropListOriginal;
-            }
-            var equipmentAdjusted = PlayerDropList.AvailableEquipmentDropList;
-            if (equipmentAdjusted.Count == 0) {
-                equipmentAdjusted = DropList.EquipmentDropListOriginal;
-            }
+        //private static void FixShrineBehaviour(On.RoR2.ShrineChanceBehavior.orig_AddShrineStack orig, ShrineChanceBehavior shrineChangeBehavior, Interactor interactor) {
+        //    var tier1Adjusted = PlayerDropList.AvailableTier1DropList;
+        //    if (tier1Adjusted.Count == 0) {
+        //        tier1Adjusted = DropList.Tier1DropListOriginal;
+        //    }
+        //    var tier2Adjusted = PlayerDropList.AvailableTier2DropList;
+        //    if (tier2Adjusted.Count == 0) {
+        //        tier2Adjusted = DropList.Tier2DropListOriginal;
+        //    }
+        //    var tier3Adjusted = PlayerDropList.AvailableTier3DropList;
+        //    if (tier3Adjusted.Count == 0) {
+        //        tier3Adjusted = DropList.Tier3DropListOriginal;
+        //    }
+        //    var equipmentAdjusted = PlayerDropList.AvailableEquipmentDropList;
+        //    if (equipmentAdjusted.Count == 0) {
+        //        equipmentAdjusted = DropList.EquipmentDropListOriginal;
+        //    }
 
-            DropList.SetDropLists(tier1Adjusted, tier2Adjusted, tier3Adjusted, equipmentAdjusted);
-            orig(shrineChangeBehavior, interactor);
-            DropList.RevertDropLists();
-        }
+        //    DropList.SetDropLists(tier1Adjusted, tier2Adjusted, tier3Adjusted, equipmentAdjusted);
+        //    orig(shrineChangeBehavior, interactor);
+        //    DropList.RevertDropLists();
+        //}
 
-        private static void DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup bossGroup) {
-            var bossDrops = new List<PickupIndex>();
-            var bossDropsAdjusted = new List<PickupIndex>();
-            foreach (var bossDrop in bossGroup.bossDrops) {
-                var pickupIndex = bossDrop;
-                bossDrops.Add(pickupIndex);
-                if (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && PlayerDropList.AvailableBossDropList.Contains(pickupIndex)) {
-                    bossDropsAdjusted.Add(pickupIndex);
-                }
-            }
-            var normalCount = Run.instance.availableTier2DropList.Count;
-            if (bossGroup.forceTier3Reward) {
-                normalCount = Run.instance.availableTier3DropList.Count;
-            }
-            if (normalCount != 0 || bossDropsAdjusted.Count != 0) {
-                var bossDropChanceOld = bossGroup.bossDropChance;
-                if (normalCount == 0) {
-                    DropList.SetDropLists(new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>());
-                    bossGroup.bossDropChance = 1;
-                } else if (bossDropsAdjusted.Count == 0) {
-                    bossGroup.bossDropChance = 0;
-                }
+        //private static void DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup bossGroup) {
+        //    var bossDrops = new List<PickupIndex>();
+        //    var bossDropsAdjusted = new List<PickupIndex>();
+        //    foreach (var bossDrop in bossGroup.bossDrops) {
+        //        var pickupIndex = bossDrop;
+        //        bossDrops.Add(pickupIndex);
+        //        if (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && PlayerDropList.AvailableBossDropList.Contains(pickupIndex)) {
+        //            bossDropsAdjusted.Add(pickupIndex);
+        //        }
+        //    }
+        //    var normalCount = Run.instance.availableTier2DropList.Count;
+        //    if (bossGroup.forceTier3Reward) {
+        //        normalCount = Run.instance.availableTier3DropList.Count;
+        //    }
+        //    if (normalCount != 0 || bossDropsAdjusted.Count != 0) {
+        //        var bossDropChanceOld = bossGroup.bossDropChance;
+        //        if (normalCount == 0) {
+        //            DropList.SetDropLists(new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>());
+        //            bossGroup.bossDropChance = 1;
+        //        } else if (bossDropsAdjusted.Count == 0) {
+        //            bossGroup.bossDropChance = 0;
+        //        }
 
-                bossGroup.bossDrops = bossDropsAdjusted;
-                orig(bossGroup);
-                bossGroup.bossDrops = bossDrops;
-                bossGroup.bossDropChance = bossDropChanceOld;
-                if (normalCount == 0) {
-                    DropList.RevertDropLists();
-                }
-            }
-        }
+        //        bossGroup.bossDrops = bossDropsAdjusted;
+        //        orig(bossGroup);
+        //        bossGroup.bossDrops = bossDrops;
+        //        bossGroup.bossDropChance = bossDropChanceOld;
+        //        if (normalCount == 0) {
+        //            DropList.RevertDropLists();
+        //        }
+        //    }
+        //}
 
-        private static void SetOptionsServer(On.RoR2.PickupPickerController.orig_SetOptionsServer orig, PickupPickerController pickupPickerController, PickupPickerController.Option[] options) {
-            var optionsAdjusted = new List<PickupPickerController.Option>();
-            foreach (var option in options) {
-                if (pickupPickerController.contextString.Contains(ScrapperContextString)) {
-                    if (PlayerDropList.AvailableSpecialItems.Contains(PickupCatalog.FindPickupIndex(Catalog.GetScrapIndex(ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(option.pickupIndex).itemIndex).tier)))) {
-                        optionsAdjusted.Add(option);
-                    }
-                } else {
-                    optionsAdjusted.Add(option);
-                }
-            }
-            if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
-                if (options.Length > 0) {
-                    var itemIndex = PickupCatalog.GetPickupDef(options[0].pickupIndex).itemIndex;
-                    var itemTier = ItemTier.NoTier;
-                    if (itemIndex != ItemIndex.None) {
-                        itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
-                    }
+        //private static void SetOptionsServer(On.RoR2.PickupPickerController.orig_SetOptionsServer orig, PickupPickerController pickupPickerController, PickupPickerController.Option[] options) {
+        //    var optionsAdjusted = new List<PickupPickerController.Option>();
+        //    foreach (var option in options) {
+        //        if (pickupPickerController.contextString.Contains(ScrapperContextString)) {
+        //            if (PlayerDropList.AvailableSpecialItems.Contains(PickupCatalog.FindPickupIndex(Catalog.GetScrapIndex(ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(option.pickupIndex).itemIndex).tier)))) {
+        //                optionsAdjusted.Add(option);
+        //            }
+        //        } else {
+        //            optionsAdjusted.Add(option);
+        //        }
+        //    }
+        //    if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
+        //        if (options.Length > 0) {
+        //            var itemIndex = PickupCatalog.GetPickupDef(options[0].pickupIndex).itemIndex;
+        //            var itemTier = ItemTier.NoTier;
+        //            if (itemIndex != ItemIndex.None) {
+        //                itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
+        //            }
 
-                    var tierList = PlayerDropList.GetDropList(itemTier);
-                    optionsAdjusted.Clear();
-                    foreach (var pickupIndex in tierList) {
-                        var newOption = new PickupPickerController.Option {
-                            available = true, pickupIndex = pickupIndex
-                        };
-                        optionsAdjusted.Add(newOption);
-                    }
-                }
-            }
-            options = new PickupPickerController.Option[optionsAdjusted.Count];
-            for (var optionIndex = 0; optionIndex < optionsAdjusted.Count; optionIndex++) {
-                options[optionIndex] = optionsAdjusted[optionIndex];
-            }
-            orig(pickupPickerController, options);
-        }
+        //            var tierList = PlayerDropList.GetDropList(itemTier);
+        //            optionsAdjusted.Clear();
+        //            foreach (var pickupIndex in tierList) {
+        //                var newOption = new PickupPickerController.Option {
+        //                    available = true, pickupIndex = pickupIndex
+        //                };
+        //                optionsAdjusted.Add(newOption);
+        //            }
+        //        }
+        //    }
+        //    options = new PickupPickerController.Option[optionsAdjusted.Count];
+        //    for (var optionIndex = 0; optionIndex < optionsAdjusted.Count; optionIndex++) {
+        //        options[optionIndex] = optionsAdjusted[optionIndex];
+        //    }
+        //    orig(pickupPickerController, options);
+        //}
 
-        private static void EndRound(On.RoR2.ArenaMissionController.orig_EndRound orig, ArenaMissionController arenaMissionController) {
-            var list = Run.instance.availableTier1DropList;
-            if (arenaMissionController.currentRound > 4) {
-                list = Run.instance.availableTier2DropList;
-            }
-            if (arenaMissionController.currentRound == arenaMissionController.totalRoundsMax) {
-                list = Run.instance.availableTier3DropList;
-            }
-            if (list.Count == 0) {
-                var rewardSpawnPositionOld = arenaMissionController.rewardSpawnPosition;
-                arenaMissionController.rewardSpawnPosition = null;
-                orig(arenaMissionController);
-                arenaMissionController.rewardSpawnPosition = rewardSpawnPositionOld;
-            } else {
-                orig(arenaMissionController);
-            }
-        }
+        //private static void EndRound(On.RoR2.ArenaMissionController.orig_EndRound orig, ArenaMissionController arenaMissionController) {
+        //    var list = Run.instance.availableTier1DropList;
+        //    if (arenaMissionController.currentRound > 4) {
+        //        list = Run.instance.availableTier2DropList;
+        //    }
+        //    if (arenaMissionController.currentRound == arenaMissionController.totalRoundsMax) {
+        //        list = Run.instance.availableTier3DropList;
+        //    }
+        //    if (list.Count == 0) {
+        //        var rewardSpawnPositionOld = arenaMissionController.rewardSpawnPosition;
+        //        arenaMissionController.rewardSpawnPosition = null;
+        //        orig(arenaMissionController);
+        //        arenaMissionController.rewardSpawnPosition = rewardSpawnPositionOld;
+        //    } else {
+        //        orig(arenaMissionController);
+        //    }
+        //}
 
-        private static void OnCharacterDeath(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager globalEventManager, DamageReport damageReport) {
-            var teamIndex = TeamIndex.None;
-            if (damageReport.victimBody.teamComponent != null) {
-                teamIndex = damageReport.victimBody.teamComponent.teamIndex;
-            }
+        //private static void OnCharacterDeath(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager globalEventManager, DamageReport damageReport) {
+        //    var teamIndex = TeamIndex.None;
+        //    if (damageReport.victimBody.teamComponent != null) {
+        //        teamIndex = damageReport.victimBody.teamComponent.teamIndex;
+        //    }
 
-            var isAnElite = damageReport.victimBody.isElite;
-            if (teamIndex == TeamIndex.Monster) {
-                if (damageReport.victimBody.isElite) {
-                    if (damageReport.victimBody.equipmentSlot != null) {
-                        if (!PlayerDropList.AvailableSpecialEquipment.Contains(PickupCatalog.FindPickupIndex(damageReport.victimBody.equipmentSlot.equipmentIndex))) {
-                            damageReport.victimBody.isElite = false;
-                        }
-                    }
-                }
-            }
-            orig(globalEventManager, damageReport);
-            if (isAnElite) {
-                damageReport.victimBody.isElite = true;
-            }
-        }
+        //    var isAnElite = damageReport.victimBody.isElite;
+        //    if (teamIndex == TeamIndex.Monster) {
+        //        if (damageReport.victimBody.isElite) {
+        //            if (damageReport.victimBody.equipmentSlot != null) {
+        //                if (!PlayerDropList.AvailableSpecialEquipment.Contains(PickupCatalog.FindPickupIndex(damageReport.victimBody.equipmentSlot.equipmentIndex))) {
+        //                    damageReport.victimBody.isElite = false;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    orig(globalEventManager, damageReport);
+        //    if (isAnElite) {
+        //        damageReport.victimBody.isElite = true;
+        //    }
+        //}
 
         /// <summary>
         /// Add the given items to the given drop table.
@@ -392,20 +429,40 @@ namespace R2API {
         /// <param name="itemTier">The drop table to add the items to.</param>
         /// <param name="items">The item indices to add to the given drop table.</param>
         public static void AddItemByTier(ItemTier itemTier, params ItemIndex[] items) {
-            if (ItemsToAdd.ContainsKey(itemTier)) {
-                foreach (var itemIndex in items) {
-                    if (!ItemsToAdd[itemTier].Contains(itemIndex)) {
-                        ItemsToAdd[itemTier].Add(itemIndex);
-                    }
-                }
+            switch(itemTier) {
+                case ItemTier.Tier1:
+                    ChestItems.tier1 += x => x.Concat(items.Select(PickupCatalog.FindPickupIndex));
+                    break;
+                case ItemTier.Tier2:
+                    ChestItems.tier2 += x => x.Concat(items.Select(PickupCatalog.FindPickupIndex));
+                    break;
+                case ItemTier.Tier3:
+                    ChestItems.tier3 += x => x.Concat(items.Select(PickupCatalog.FindPickupIndex));
+                    break;
+                case ItemTier.Boss:
+                    ChestItems.boss += x => x.Concat(items.Select(PickupCatalog.FindPickupIndex));
+                    break;
+                case ItemTier.Lunar:
+                    ChestItems.lunar += x => x.Concat(items.Select(PickupCatalog.FindPickupIndex));
+                    break;
+                default:
+                    break;
             }
-            else if (ItemsToRemove.ContainsKey(itemTier)) {
-                foreach (var itemIndex in items) {
-                    if (ItemsToRemove[itemTier].Contains(itemIndex)) {
-                        ItemsToRemove[itemTier].Remove(itemIndex);
-                    }   
-                }
-            }
+
+            //if (ItemsToAdd.ContainsKey(itemTier)) {
+            //    foreach (var itemIndex in items) {
+            //        if (!ItemsToAdd[itemTier].Contains(itemIndex)) {
+            //            ItemsToAdd[itemTier].Add(itemIndex);
+            //        }
+            //    }
+            //}
+            //else if (ItemsToRemove.ContainsKey(itemTier)) {
+            //    foreach (var itemIndex in items) {
+            //        if (ItemsToRemove[itemTier].Contains(itemIndex)) {
+            //            ItemsToRemove[itemTier].Remove(itemIndex);
+            //        }   
+            //    }
+            //}
         }
 
         /// <summary>
@@ -414,67 +471,109 @@ namespace R2API {
         /// <param name="itemTier">The drop table to remove the items from.</param>
         /// <param name="items">The item indices to remove from the given drop table.</param>
         public static void RemoveItemByTier(ItemTier itemTier, params ItemIndex[] items) {
-            if (ItemsToRemove.ContainsKey(itemTier)) {
-                foreach (var itemIndex in items) {
-                    if (!ItemsToRemove[itemTier].Contains(itemIndex)) {
-                        ItemsToRemove[itemTier].Add(itemIndex);
-                    }   
-                }
+            switch(itemTier) {
+                case ItemTier.Tier1:
+                    ChestItems.tier1 += x => x.Where(x => !items.Contains(x.pickupDef.itemIndex));
+                    break;
+                case ItemTier.Tier2:
+                    ChestItems.tier2 += x => x.Where(x => !items.Contains(x.pickupDef.itemIndex));
+                    break;
+                case ItemTier.Tier3:
+                    ChestItems.tier3 += x => x.Where(x => !items.Contains(x.pickupDef.itemIndex));
+                    break;
+                case ItemTier.Boss:
+                    ChestItems.boss += x => x.Where(x => !items.Contains(x.pickupDef.itemIndex));
+                    break;
+                case ItemTier.Lunar:
+                    ChestItems.lunar += x => x.Where(x => !items.Contains(x.pickupDef.itemIndex));
+                    break;
+                default:
+                    break;
             }
-            else if (ItemsToAdd.ContainsKey(itemTier)) {
-                foreach (var itemIndex in items) {
-                    if (ItemsToAdd[itemTier].Contains(itemIndex)) {
-                        ItemsToAdd[itemTier].Remove(itemIndex);
-                    }   
-                }
-            }
+            //if (ItemsToRemove.ContainsKey(itemTier)) {
+            //    foreach (var itemIndex in items) {
+            //        if (!ItemsToRemove[itemTier].Contains(itemIndex)) {
+            //            ItemsToRemove[itemTier].Add(itemIndex);
+            //        }   
+            //    }
+            //}
+            //else if (ItemsToAdd.ContainsKey(itemTier)) {
+            //    foreach (var itemIndex in items) {
+            //        if (ItemsToAdd[itemTier].Contains(itemIndex)) {
+            //            ItemsToAdd[itemTier].Remove(itemIndex);
+            //        }   
+            //    }
+            //}
         }
 
+
+        [Obsolete]
         /// <summary>
         /// Add the given equipments to the given drop table.
         /// </summary>
         /// <param name="equipmentDropType">The drop table to add the items to.</param>
         /// <param name="equipments">The equipments indices to add to the given drop table.</param>
         public static void AddEquipmentByDropType(EquipmentDropType equipmentDropType, params EquipmentIndex[] equipments) {
-            if (EquipmentsToAdd.ContainsKey(equipmentDropType)) {
-                foreach (var equipmentIndex in equipments) {
-                    if (!EquipmentsToAdd[equipmentDropType].Contains(equipmentIndex)) {
-                        EquipmentsToAdd[equipmentDropType].Add(equipmentIndex);
-                    }
-                }
+            switch(equipmentDropType) {
+                case EquipmentDropType.Lunar:
+                    ChestItems.lunarEquipment += x => x.Concat(equipments.Select(PickupCatalog.FindPickupIndex));
+                    break;
+                case EquipmentDropType.Normal:
+                    ChestItems.normalEquipment += x => x.Concat(equipments.Select(PickupCatalog.FindPickupIndex));
+                    break;
+                default:
+                    break;
             }
-            else if (EquipmentsToRemove.ContainsKey(equipmentDropType)) {
-                foreach (var equipmentIndex in equipments) {
-                    if (EquipmentsToRemove[equipmentDropType].Contains(equipmentIndex)) {
-                        EquipmentsToRemove[equipmentDropType].Remove(equipmentIndex);
-                    }   
-                }
-            }
+            //if (EquipmentsToAdd.ContainsKey(equipmentDropType)) {
+            //    foreach (var equipmentIndex in equipments) {
+            //        if (!EquipmentsToAdd[equipmentDropType].Contains(equipmentIndex)) {
+            //            EquipmentsToAdd[equipmentDropType].Add(equipmentIndex);
+            //        }
+            //    }
+            //}
+            //else if (EquipmentsToRemove.ContainsKey(equipmentDropType)) {
+            //    foreach (var equipmentIndex in equipments) {
+            //        if (EquipmentsToRemove[equipmentDropType].Contains(equipmentIndex)) {
+            //            EquipmentsToRemove[equipmentDropType].Remove(equipmentIndex);
+            //        }   
+            //    }
+            //}
         }
 
-
+        [Obsolete]
         /// <summary>
         /// Remove the given equipments from the given drop table.
         /// </summary>
         /// <param name="equipmentDropType">The drop table to remove the items from.</param>
         /// <param name="equipments">The equipments indices to remove from the given drop table.</param>
         public static void RemoveEquipmentByDropType(EquipmentDropType equipmentDropType, params EquipmentIndex[] equipments) {
-            if (EquipmentsToRemove.ContainsKey(equipmentDropType)) {
-                foreach (var equipmentIndex in equipments) {
-                    if (!EquipmentsToRemove[equipmentDropType].Contains(equipmentIndex)) {
-                        EquipmentsToRemove[equipmentDropType].Add(equipmentIndex);
-                    }   
-                }
+            switch(equipmentDropType) {
+                case EquipmentDropType.Lunar:
+                    ChestItems.lunarEquipment += x => x.Where(x => !equipments.Contains(x.pickupDef.equipmentIndex));
+                    break;
+                case EquipmentDropType.Normal:
+                    ChestItems.normalEquipment += x => x.Where(x => !equipments.Contains(x.pickupDef.equipmentIndex));
+                    break;
+                default:
+                    break;
             }
-            else if (EquipmentsToAdd.ContainsKey(equipmentDropType)) {
-                foreach (var equipmentIndex in equipments) {
-                    if (EquipmentsToAdd[equipmentDropType].Contains(equipmentIndex)) {
-                        EquipmentsToAdd[equipmentDropType].Remove(equipmentIndex);
-                    }   
-                }
-            }
+            //if (EquipmentsToRemove.ContainsKey(equipmentDropType)) {
+            //    foreach (var equipmentIndex in equipments) {
+            //        if (!EquipmentsToRemove[equipmentDropType].Contains(equipmentIndex)) {
+            //            EquipmentsToRemove[equipmentDropType].Add(equipmentIndex);
+            //        }   
+            //    }
+            //}
+            //else if (EquipmentsToAdd.ContainsKey(equipmentDropType)) {
+            //    foreach (var equipmentIndex in equipments) {
+            //        if (EquipmentsToAdd[equipmentDropType].Contains(equipmentIndex)) {
+            //            EquipmentsToAdd[equipmentDropType].Remove(equipmentIndex);
+            //        }   
+            //    }
+            //}
         }
 
+        [Obsolete]
         /// <summary>
         /// Add the given equipments to the given drop tables.
         /// </summary>
@@ -486,6 +585,7 @@ namespace R2API {
             }
         }
 
+        [Obsolete]
         /// <summary>
         /// Remove the given equipments from the given drop tables.
         /// </summary>
@@ -497,6 +597,7 @@ namespace R2API {
             }
         }
 
+        [Obsolete]
         /// <summary>
         /// Add the given equipments to the drop tables automatically, the api will look up the equipmentDefs from the indices
         /// and add the equipment depending on the information provided from the EquipmentDef. (isLunar, isElite, etc)
@@ -511,17 +612,23 @@ namespace R2API {
             }
         }
 
+        [Obsolete]
         /// <summary>
         /// Remove the given equipments from the drop tables.
         /// </summary>
         /// <param name="equipments">Equipment Indices to remove.</param>
         public static void RemoveEquipment(params EquipmentIndex[] equipments) {
-            foreach (var equipmentIndex in equipments) {
-                var equipmentDropTypes = EquipmentDropTypeUtil.GetEquipmentTypesFromIndex(equipmentIndex);
-                foreach (var equipmentDropType in equipmentDropTypes) {
-                    RemoveEquipmentByDropType(equipmentDropType, equipmentIndex);   
-                }
-            }
+            Boolean Predicate(PickupIndex index) => !equipments.Contains(index.equipmentIndex);
+            ChestItems.equipment += x => x.Where(Predicate);
+            ChestItems.normalEquipment += x => x.Where(Predicate);
+            ChestItems.lunarEquipment += x => x.Where(Predicate);
+
+            //foreach (var equipmentIndex in equipments) {
+            //    var equipmentDropTypes = EquipmentDropTypeUtil.GetEquipmentTypesFromIndex(equipmentIndex);
+            //    foreach (var equipmentDropType in equipmentDropTypes) {
+            //        RemoveEquipmentByDropType(equipmentDropType, equipmentIndex);   
+            //    }
+            //}
         }
 
         [Obsolete("Use the AddItemByTier method instead.")]
@@ -558,83 +665,84 @@ namespace R2API {
             RemoveEquipment(equipments);
         }
 
-        public static List<ItemIndex> GetDefaultDropList(ItemTier itemTier) {
-            if (itemTier == ItemTier.NoTier) {
-                return null;
-            }
+        
+        //public static List<ItemIndex> GetDefaultDropList(ItemTier itemTier) {
+        //    if (itemTier == ItemTier.NoTier) {
+        //        return null;
+        //    }
 
-            var list = new List<ItemIndex>();
+        //    var list = new List<ItemIndex>();
 
-            foreach (var (_, itemIndex) in ItemCatalog.itemNameToIndex) {
-                if (!Run.instance.availableItems.Contains(itemIndex))
-                    continue;
+        //    foreach (var (_, itemIndex) in ItemCatalog.itemNameToIndex) {
+        //        if (!Run.instance.availableItems.Contains(itemIndex))
+        //            continue;
 
-                var itemDef = ItemCatalog.GetItemDef(itemIndex);
-                if (itemDef.tier == itemTier && itemDef.DoesNotContainTag(ItemTag.WorldUnique)) {
-                    list.Add(itemIndex);
-                }
-            }
+        //        var itemDef = ItemCatalog.GetItemDef(itemIndex);
+        //        if (itemDef.tier == itemTier && itemDef.DoesNotContainTag(ItemTag.WorldUnique)) {
+        //            list.Add(itemIndex);
+        //        }
+        //    }
 
-            return list;
-        }
+        //    return list;
+        //}
 
 
-        public static List<ItemIndex> GetDefaultDropList(ItemTier itemTier, ItemTag requiredTag) {
-            var list = new List<ItemIndex>();
+        //public static List<ItemIndex> GetDefaultDropList(ItemTier itemTier, ItemTag requiredTag) {
+        //    var list = new List<ItemIndex>();
 
-            foreach (var (_, itemIndex) in ItemCatalog.itemNameToIndex) {
-                if (!Run.instance.availableItems.Contains(itemIndex))
-                    continue;
+        //    foreach (var (_, itemIndex) in ItemCatalog.itemNameToIndex) {
+        //        if (!Run.instance.availableItems.Contains(itemIndex))
+        //            continue;
 
-                var itemDef = ItemCatalog.GetItemDef(itemIndex);
-                if (itemDef.tier == itemTier && itemDef.ContainsTag(requiredTag) && itemDef.DoesNotContainTag(ItemTag.WorldUnique)) {
-                    list.Add(itemIndex);
-                }
-            }
+        //        var itemDef = ItemCatalog.GetItemDef(itemIndex);
+        //        if (itemDef.tier == itemTier && itemDef.ContainsTag(requiredTag) && itemDef.DoesNotContainTag(ItemTag.WorldUnique)) {
+        //            list.Add(itemIndex);
+        //        }
+        //    }
 
-            return list;
-        }
+        //    return list;
+        //}
 
-        public static List<PickupIndex> GetDefaultLunarDropList() {
-            var list = new List<PickupIndex>();
+        //public static List<PickupIndex> GetDefaultLunarDropList() {
+        //    var list = new List<PickupIndex>();
 
-            foreach (var equipmentIndex in EquipmentCatalog.equipmentList) {
-                if (!Run.instance.availableEquipment.Contains(equipmentIndex))
-                    continue;
+        //    foreach (var equipmentIndex in EquipmentCatalog.equipmentList) {
+        //        if (!Run.instance.availableEquipment.Contains(equipmentIndex))
+        //            continue;
 
-                var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
-                if (equipmentDef.isLunar) {
-                    list.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
-                }   
-            }
+        //        var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
+        //        if (equipmentDef.isLunar) {
+        //            list.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
+        //        }   
+        //    }
 
-            foreach (var (_, itemIndex) in ItemCatalog.itemNameToIndex) {
-                if (!Run.instance.availableItems.Contains(itemIndex))
-                    continue;
+        //    foreach (var (_, itemIndex) in ItemCatalog.itemNameToIndex) {
+        //        if (!Run.instance.availableItems.Contains(itemIndex))
+        //            continue;
 
-                var itemDef = ItemCatalog.GetItemDef(itemIndex);
-                if (itemDef.tier == ItemTier.Lunar && itemDef.DoesNotContainTag(ItemTag.WorldUnique)) {
-                    list.Add(PickupCatalog.FindPickupIndex(itemIndex));
-                }
-            }
+        //        var itemDef = ItemCatalog.GetItemDef(itemIndex);
+        //        if (itemDef.tier == ItemTier.Lunar && itemDef.DoesNotContainTag(ItemTag.WorldUnique)) {
+        //            list.Add(PickupCatalog.FindPickupIndex(itemIndex));
+        //        }
+        //    }
 
-            return list;
-        }
+        //    return list;
+        //}
 
-        public static List<PickupIndex> GetDefaultEquipmentDropList() {
-            var list = new List<PickupIndex>();
+        //public static List<PickupIndex> GetDefaultEquipmentDropList() {
+        //    var list = new List<PickupIndex>();
 
-            foreach (var equipmentIndex in EquipmentCatalog.equipmentList) {
-                if (!Run.instance.availableEquipment.Contains(equipmentIndex))
-                    continue;
+        //    foreach (var equipmentIndex in EquipmentCatalog.equipmentList) {
+        //        if (!Run.instance.availableEquipment.Contains(equipmentIndex))
+        //            continue;
 
-                var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
-                if (!equipmentDef.isLunar) {
-                    list.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
-                }   
-            }
+        //        var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
+        //        if (!equipmentDef.isLunar) {
+        //            list.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
+        //        }   
+        //    }
 
-            return list;
-        }
+        //    return list;
+        //}
     }
 }
