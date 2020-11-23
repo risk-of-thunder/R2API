@@ -1,13 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+
 using BepInEx.Logging;
+
+using Mono.Cecil.Cil;
+
+using MonoMod.Cil;
+
 using R2API.ItemDrop;
 using R2API.ItemDropAPITools;
 using R2API.MiscHelpers;
 using R2API.Utils;
 using RoR2;
 using UnityEngine;
+
+using BF = System.Reflection.BindingFlags;
+using EmittedModifer = System.Func<System.Collections.Generic.List<RoR2.PickupIndex>, System.Collections.Generic.List<RoR2.PickupIndex>>;
+using CustomModifier = System.Func<System.Collections.Generic.IEnumerable<RoR2.PickupIndex>, System.Collections.Generic.IEnumerable<RoR2.PickupIndex>>;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
@@ -76,30 +87,86 @@ namespace R2API {
             { EquipmentDropType.Elite, new List<EquipmentIndex>() }
         };
 
+
+        public static class ChestItems {
+            internal static List<PickupIndex> EmitTier1Modifier(List<PickupIndex> current) => EditDrops(current, tier1);
+            public static event CustomModifier tier1;
+            internal static List<PickupIndex> EmitTier2Modifier(List<PickupIndex> current) => EditDrops(current, tier2);
+            public static event CustomModifier tier2;
+            internal static List<PickupIndex> EmitTier3Modifier(List<PickupIndex> current) => EditDrops(current, tier3);
+            public static event CustomModifier tier3;
+            internal static List<PickupIndex> EmitBossModifier(List<PickupIndex> current) => EditDrops(current, boss);
+            public static event CustomModifier boss;
+            internal static List<PickupIndex> EmitLunarModifier(List<PickupIndex> current) => EditDrops(current, lunar);
+            public static event CustomModifier lunar;
+            internal static List<PickupIndex> EmitEquipmentModifier(List<PickupIndex> current) => EditDrops(current, equipment);
+            public static event CustomModifier equipment;
+            internal static List<PickupIndex> EmitNormalEquipmentModifier(List<PickupIndex> current) => EditDrops(current, normalEquipment);
+            public static event CustomModifier normalEquipment;
+            internal static List<PickupIndex> EmitLunarEquipmentModifier(List<PickupIndex> current) => EditDrops(current, lunarEquipment);
+            public static event CustomModifier lunarEquipment;
+        }
+        private static List<PickupIndex> EditDrops(List<PickupIndex> input, CustomModifier? modifiers) => modifiers?.InvokeSequential(input)?.ToList() ?? input;
+
+        
+
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
-            On.RoR2.SceneDirector.PopulateScene += PopulateScene;
-            On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer += GenerateNewPickupServer;
-            On.RoR2.DirectorCore.TrySpawnObject += CheckForInvalidInteractables;
-            On.RoR2.ShrineChanceBehavior.AddShrineStack += FixShrineBehaviour;
-            On.RoR2.BossGroup.DropRewards += DropRewards;
-            On.RoR2.PickupPickerController.SetOptionsServer += SetOptionsServer;
-            On.RoR2.ArenaMissionController.EndRound += EndRound;
-            On.RoR2.GlobalEventManager.OnCharacterDeath += OnCharacterDeath;
+            IL.RoR2.Run.BuildDropTable += Run_BuildDropTable;
+            //On.RoR2.Run.BuildDropTable += RunOnBuildDropTable;
+            //On.RoR2.SceneDirector.PopulateScene += PopulateScene;
+            //On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer += GenerateNewPickupServer;
+            //On.RoR2.DirectorCore.TrySpawnObject += CheckForInvalidInteractables;
+            //On.RoR2.ShrineChanceBehavior.AddShrineStack += FixShrineBehaviour;
+            //On.RoR2.BossGroup.DropRewards += DropRewards;
+            //On.RoR2.PickupPickerController.SetOptionsServer += SetOptionsServer;
+            //On.RoR2.ArenaMissionController.EndRound += EndRound;
+            //On.RoR2.GlobalEventManager.OnCharacterDeath += OnCharacterDeath;
         }
+
+        private static readonly FieldInfo run_smallChestDropTierSelector = typeof(Run).GetField(nameof(Run.smallChestDropTierSelector), BF.Public | BF.NonPublic | BF.Instance);
+        private static readonly FieldInfo run_availableTier1DropList = typeof(Run).GetField(nameof(Run.availableTier1DropList), BF.Public | BF.NonPublic | BF.Instance);
+        private static readonly FieldInfo run_availableTier2DropList = typeof(Run).GetField(nameof(Run.availableTier2DropList), BF.Public | BF.NonPublic | BF.Instance);
+        private static readonly FieldInfo run_availableTier3DropList = typeof(Run).GetField(nameof(Run.availableTier3DropList), BF.Public | BF.NonPublic | BF.Instance);
+        private static readonly FieldInfo run_availableLunarDropList = typeof(Run).GetField(nameof(Run.availableLunarDropList), BF.Public | BF.NonPublic | BF.Instance);
+        private static readonly FieldInfo run_availableBossDropList = typeof(Run).GetField(nameof(Run.availableBossDropList), BF.Public | BF.NonPublic | BF.Instance);
+        private static readonly FieldInfo run_availableEquipmentDropList = typeof(Run).GetField(nameof(Run.availableEquipmentDropList), BF.Public | BF.NonPublic | BF.Instance);
+        private static readonly FieldInfo run_availableLunarEquipmentDropList = typeof(Run).GetField(nameof(Run.availableLunarEquipmentDropList), BF.Public | BF.NonPublic | BF.Instance);
+        private static readonly FieldInfo run_availableNormalEquipmentDropList = typeof(Run).GetField(nameof(Run.availableNormalEquipmentDropList), BF.Public | BF.NonPublic | BF.Instance);
+
+        private static ILCursor EmitModifier(this ILCursor cursor, FieldInfo targetField, EmittedModifer modifier, Boolean isLast = false) => (isLast ? cursor : cursor.Emit(OpCodes.Dup))
+            .Emit(OpCodes.Dup)
+            .Emit(OpCodes.Ldfld, targetField)
+            .EmitDel(modifier)
+            .Emit(OpCodes.Stfld, targetField);
+
+        private static void Run_BuildDropTable(ILContext il) => new ILCursor(il)
+            .GotoNext(MoveType.AfterLabel,
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld(run_smallChestDropTierSelector))
+            .Emit(OpCodes.Ldarg_0)
+            .EmitModifier(run_availableTier1DropList, ChestItems.EmitTier1Modifier)
+            .EmitModifier(run_availableTier2DropList, ChestItems.EmitTier2Modifier)
+            .EmitModifier(run_availableTier3DropList, ChestItems.EmitTier3Modifier)
+            .EmitModifier(run_availableBossDropList, ChestItems.EmitBossModifier)
+            .EmitModifier(run_availableLunarDropList, ChestItems.EmitLunarModifier)
+            .EmitModifier(run_availableEquipmentDropList, ChestItems.EmitEquipmentModifier)
+            .EmitModifier(run_availableNormalEquipmentDropList, ChestItems.EmitNormalEquipmentModifier)
+            .EmitModifier(run_availableLunarEquipmentDropList, ChestItems.EmitLunarEquipmentModifier, true);
+        //It is fairly easy to also allow edits to the chest rarity distribution here, so potentially expand to include that as well?
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            On.RoR2.Run.BuildDropTable -= RunOnBuildDropTable;
-            On.RoR2.SceneDirector.PopulateScene -= PopulateScene;
-            On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer -= GenerateNewPickupServer;
-            On.RoR2.DirectorCore.TrySpawnObject -= CheckForInvalidInteractables;
-            On.RoR2.ShrineChanceBehavior.AddShrineStack -= FixShrineBehaviour;
-            On.RoR2.BossGroup.DropRewards -= DropRewards;
-            On.RoR2.PickupPickerController.SetOptionsServer -= SetOptionsServer;
-            On.RoR2.ArenaMissionController.EndRound -= EndRound;
-            On.RoR2.GlobalEventManager.OnCharacterDeath -= OnCharacterDeath;
+            IL.RoR2.Run.BuildDropTable -= Run_BuildDropTable;
+            //On.RoR2.Run.BuildDropTable -= RunOnBuildDropTable;
+            //On.RoR2.SceneDirector.PopulateScene -= PopulateScene;
+            //On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer -= GenerateNewPickupServer;
+            //On.RoR2.DirectorCore.TrySpawnObject -= CheckForInvalidInteractables;
+            //On.RoR2.ShrineChanceBehavior.AddShrineStack -= FixShrineBehaviour;
+            //On.RoR2.BossGroup.DropRewards -= DropRewards;
+            //On.RoR2.PickupPickerController.SetOptionsServer -= SetOptionsServer;
+            //On.RoR2.ArenaMissionController.EndRound -= EndRound;
+            //On.RoR2.GlobalEventManager.OnCharacterDeath -= OnCharacterDeath;
         }
 
         private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
