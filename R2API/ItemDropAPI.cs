@@ -17,8 +17,6 @@ using RoR2;
 using UnityEngine;
 
 using BF = System.Reflection.BindingFlags;
-using EmittedModifer = System.Func<System.Collections.Generic.List<RoR2.PickupIndex>, System.Collections.Generic.List<RoR2.PickupIndex>>;
-using CustomModifier = System.Func<System.Collections.Generic.IEnumerable<RoR2.PickupIndex>, System.Collections.Generic.IEnumerable<RoR2.PickupIndex>>;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
@@ -36,44 +34,49 @@ namespace R2API {
 
         private static bool _loaded;
 
+
+        //public static class
+
         public static class ChestItems {
             internal static List<PickupIndex> EmitTier1Modifier(List<PickupIndex> current) => current.EditDrops(tier1);
-            public static event CustomModifier tier1;
+            public static event Modifier<IEnumerable<PickupIndex>> tier1;
             internal static List<PickupIndex> EmitTier2Modifier(List<PickupIndex> current) => current.EditDrops(tier2);
-            public static event CustomModifier tier2;
+            public static event Modifier<IEnumerable<PickupIndex>> tier2;
             internal static List<PickupIndex> EmitTier3Modifier(List<PickupIndex> current) => current.EditDrops(tier3);
-            public static event CustomModifier tier3;
+            public static event Modifier<IEnumerable<PickupIndex>> tier3;
             internal static List<PickupIndex> EmitBossModifier(List<PickupIndex> current) => current.EditDrops(boss);
-            public static event CustomModifier boss;
+            public static event Modifier<IEnumerable<PickupIndex>> boss;
             internal static List<PickupIndex> EmitLunarModifier(List<PickupIndex> current) => current.EditDrops(lunar);
-            public static event CustomModifier lunar;
+            public static event Modifier<IEnumerable<PickupIndex>> lunar;
             internal static List<PickupIndex> EmitEquipmentModifier(List<PickupIndex> current) => current.EditDrops(equipment);
-            public static event CustomModifier equipment;
+            public static event Modifier<IEnumerable<PickupIndex>> equipment;
             internal static List<PickupIndex> EmitNormalEquipmentModifier(List<PickupIndex> current) => current.EditDrops(normalEquipment);
-            public static event CustomModifier normalEquipment;
+            public static event Modifier<IEnumerable<PickupIndex>> normalEquipment;
             internal static List<PickupIndex> EmitLunarEquipmentModifier(List<PickupIndex> current) => current.EditDrops(lunarEquipment);
-            public static event CustomModifier lunarEquipment;
+            public static event Modifier<IEnumerable<PickupIndex>> lunarEquipment;
         }
 
         public static class EvolutionMonsterItems {
             internal static List<PickupIndex> EmitTier1Modifier(List<PickupIndex> current) => current.EditDrops(tier1);
-            public static event CustomModifier tier1;
+            public static event Modifier<IEnumerable<PickupIndex>> tier1;
             internal static List<PickupIndex> EmitTier2Modifier(List<PickupIndex> current) => current.EditDrops(tier2);
-            public static event CustomModifier tier2;
+            public static event Modifier<IEnumerable<PickupIndex>> tier2;
             internal static List<PickupIndex> EmitTier3Modifier(List<PickupIndex> current) => current.EditDrops(tier3);
-            public static event CustomModifier tier3;
+            public static event Modifier<IEnumerable<PickupIndex>> tier3;
         }
 
         public static class BossTeleporterRewards {
             internal static List<PickupIndex> EmitTier2Modifier(List<PickupIndex> current) => current.EditDrops(tier2);
-            public static event CustomModifier tier2;
+            public static event Modifier<IEnumerable<PickupIndex>> tier2;
             internal static List<PickupIndex> EmitTier3Modifier(List<PickupIndex> current) => current.EditDrops(tier3);
-            public static event CustomModifier tier3;
+            public static event Modifier<IEnumerable<PickupIndex>> tier3;
             internal static List<PickupIndex> EmitBossModifier(List<PickupIndex> current) => current.EditDrops(boss, false);
-            public static event CustomModifier boss;
+            public static event Modifier<IEnumerable<PickupIndex>> boss;
+
+            //public static event 
         }
 
-        private static List<PickupIndex> EditDrops(this List<PickupIndex> input, CustomModifier? modifiers, Boolean addIfEmpty = true) => (modifiers?.InvokeSequential(input)?.ToList() ?? input).AddEmptyIfNeeded(addIfEmpty);
+        private static List<PickupIndex> EditDrops(this List<PickupIndex> input, Modifier<IEnumerable<PickupIndex>>? modifiers, Boolean addIfEmpty = true) => (modifiers?.InvokeSequential(input)?.ToList() ?? input).AddEmptyIfNeeded(addIfEmpty);
         private static List<PickupIndex> AddEmptyIfNeeded(this List<PickupIndex> input, Boolean run) {
             if(input.Count == 0 && run) input.Add(PickupIndex.none);
             return input;
@@ -102,7 +105,7 @@ namespace R2API {
         private static readonly FieldInfo run_availableNormalEquipmentDropList = typeof(Run).GetField(nameof(Run.availableNormalEquipmentDropList), BF.Public | BF.NonPublic | BF.Instance);
         private static readonly FieldInfo bossgroup_bossDrops = typeof(BossGroup).GetField(nameof(BossGroup.bossDrops), BF.Public | BF.NonPublic | BF.Instance);
 
-        private static ILCursor EmitModifier(this ILCursor cursor, FieldInfo targetField, EmittedModifer modifier, Boolean isLast = false) => (isLast ? cursor : cursor.Emit(OpCodes.Dup))
+        private static ILCursor EmitModifier(this ILCursor cursor, FieldInfo targetField, Modifier<List<PickupIndex>> modifier, Boolean isLast = false) => (isLast ? cursor : cursor.Emit(OpCodes.Dup))
             .Emit(OpCodes.Dup)
             .Emit(OpCodes.Ldfld, targetField)
             .EmitDel(modifier)
@@ -127,13 +130,13 @@ namespace R2API {
         private static void MonsterTeamGainsItemsArtifactManager_GenerateAvailableItemsSet(ILContext il) => new ILCursor(il)
             .GotoNext(MoveType.After,
                 x => x.MatchLdfld(run_availableTier1DropList))
-            .EmitDel<EmittedModifer>(EvolutionMonsterItems.EmitTier1Modifier)
+            .EmitDel<Modifier<List<PickupIndex>>>(EvolutionMonsterItems.EmitTier1Modifier)
             .GotoNext(MoveType.After,
                 x => x.MatchLdfld(run_availableTier2DropList))
-            .EmitDel<EmittedModifer>(EvolutionMonsterItems.EmitTier2Modifier)
+            .EmitDel<Modifier<List<PickupIndex>>>(EvolutionMonsterItems.EmitTier2Modifier)
             .GotoNext(MoveType.After,
                 x => x.MatchLdfld(run_availableTier3DropList))
-            .EmitDel<EmittedModifer>(EvolutionMonsterItems.EmitTier3Modifier);
+            .EmitDel<Modifier<List<PickupIndex>>>(EvolutionMonsterItems.EmitTier3Modifier);
 
 
         private static void BossGroup_DropRewards(ILContext il) => new ILCursor(il)
@@ -141,10 +144,10 @@ namespace R2API {
             .EmitModifier(bossgroup_bossDrops, BossTeleporterRewards.EmitBossModifier, true)
             .GotoNext(MoveType.After,
                 x => x.MatchLdfld(run_availableTier2DropList))
-            .EmitDel<EmittedModifer>(BossTeleporterRewards.EmitTier2Modifier)
+            .EmitDel<Modifier<List<PickupIndex>>>(BossTeleporterRewards.EmitTier2Modifier)
             .GotoNext(MoveType.After,
                 x => x.MatchLdfld(run_availableTier3DropList))
-            .EmitDel<EmittedModifer>(BossTeleporterRewards.EmitTier3Modifier);
+            .EmitDel<Modifier<List<PickupIndex>>>(BossTeleporterRewards.EmitTier3Modifier);
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
@@ -209,7 +212,7 @@ namespace R2API {
         }
 
 
-        [Obsolete]
+        [Obsolete("Please use the events instead", true)]
         /// <summary>
         /// Add the given equipments to the given drop table.
         /// </summary>
@@ -228,7 +231,7 @@ namespace R2API {
             }
         }
 
-        [Obsolete]
+        [Obsolete("Please use the events instead", true)]
         /// <summary>
         /// Remove the given equipments from the given drop table.
         /// </summary>
@@ -247,7 +250,7 @@ namespace R2API {
             }
         }
 
-        [Obsolete]
+        [Obsolete("Please use the events instead", true)]
         /// <summary>
         /// Add the given equipments to the given drop tables.
         /// </summary>
@@ -259,7 +262,7 @@ namespace R2API {
             }
         }
 
-        [Obsolete]
+        [Obsolete("Please use the events instead", true)]
         /// <summary>
         /// Remove the given equipments from the given drop tables.
         /// </summary>
@@ -271,7 +274,7 @@ namespace R2API {
             }
         }
 
-        [Obsolete]
+        [Obsolete("Please use the events instead")]
         /// <summary>
         /// Add the given equipments to the drop tables automatically, the api will look up the equipmentDefs from the indices
         /// and add the equipment depending on the information provided from the EquipmentDef. (isLunar, isElite, etc)
@@ -286,7 +289,7 @@ namespace R2API {
             }
         }
 
-        [Obsolete]
+        [Obsolete("Please use the events instead", true)]
         /// <summary>
         /// Remove the given equipments from the drop tables.
         /// </summary>
@@ -298,36 +301,36 @@ namespace R2API {
             ChestItems.lunarEquipment += x => x.Where(Predicate);
         }
 
-        [Obsolete("Use the AddItemByTier method instead.")]
+        [Obsolete("Please use the events instead", true)]
         public static void AddToDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
             AddItemByTier(itemTier, items);
         }
 
-        [Obsolete("Use the RemoveItemByTier method instead.")]
+        [Obsolete("Please use the events instead", true)]
         public static void RemoveFromDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
             RemoveItemByTier(itemTier, items);
         }
 
-        [Obsolete("Use the AddItemByTier method instead.")]
+        [Obsolete("Please use the events instead", true)]
         public static void AddToDefaultByTier(params KeyValuePair<ItemIndex, ItemTier>[] items) {
             foreach (var (itemIndex, itemTier) in items) {
                 AddItemByTier(itemTier, itemIndex);
             }
         }
 
-        [Obsolete("Use the RemoveItemByTier method instead.")]
+        [Obsolete("Please use the events instead", true)]
         public static void RemoveFromDefaultByTier(params KeyValuePair<ItemIndex, ItemTier>[] items) {
             foreach (var (itemIndex, itemTier) in items) {
                 RemoveItemByTier(itemTier, itemIndex);
             }
         }
 
-        [Obsolete("Use the AddEquipment method instead.")]
+        [Obsolete("Please use the events instead", true)]
         public static void AddToDefaultEquipment(params EquipmentIndex[] equipments) {
             AddEquipment(equipments);
         }
 
-        [Obsolete("Use the RemoveEquipment method instead.")]
+        [Obsolete("Please use the events instead", true)]
         public static void RemoveFromDefaultEquipment(params EquipmentIndex[] equipments) {
             RemoveEquipment(equipments);
         }

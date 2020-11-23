@@ -99,11 +99,11 @@ namespace R2API {
             ItemDropAPI.AddItemByTier(ItemTier.Lunar, lunarItems);
             ItemDropAPI.AddItemByTier(ItemTier.Boss, bossItems);
 
-            MonsterItemsAPI.AddItemByTier(ItemTier.Tier1, t1Items);
-            MonsterItemsAPI.AddItemByTier(ItemTier.Tier2, t2Items);
-            MonsterItemsAPI.AddItemByTier(ItemTier.Tier3, t3Items);
-            MonsterItemsAPI.AddItemByTier(ItemTier.Lunar, lunarItems);
-            MonsterItemsAPI.AddItemByTier(ItemTier.Boss, bossItems);
+            //MonsterItemsAPI.AddItemByTier(ItemTier.Tier1, t1Items);
+            //MonsterItemsAPI.AddItemByTier(ItemTier.Tier2, t2Items);
+            //MonsterItemsAPI.AddItemByTier(ItemTier.Tier3, t3Items);
+            //MonsterItemsAPI.AddItemByTier(ItemTier.Lunar, lunarItems);
+            //MonsterItemsAPI.AddItemByTier(ItemTier.Boss, bossItems);
 
             _itemCatalogInitialized = true;
         }
@@ -123,7 +123,6 @@ namespace R2API {
 
             LoadRelatedAPIs();
             ItemDropAPI.AddEquipment(droppableEquipments);
-            MonsterItemsAPI.AddEquipment(droppableEquipments);
 
             _equipmentCatalogInitialized = true;
         }
@@ -137,17 +136,6 @@ namespace R2API {
                 catch (Exception e) {
                     R2API.Logger.LogError($"ItemDropAPI hooks failed to initialize. Disabling the submodule. {e}");
                     ItemDropAPI.UnsetHooks();
-                }
-            }
-
-            if (!MonsterItemsAPI.Loaded) {
-                try {
-                    MonsterItemsAPI.SetHooks();
-                    MonsterItemsAPI.Loaded = true;
-                }
-                catch (Exception e) {
-                    R2API.Logger.LogError($"MonsterItemsAPI hooks failed to initialize. Disabling the submodule. {e}");
-                    MonsterItemsAPI.UnsetHooks();
                 }
             }
         }

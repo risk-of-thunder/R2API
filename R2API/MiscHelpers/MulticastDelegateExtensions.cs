@@ -6,14 +6,15 @@ using System.Text;
 using MonoMod.Cil;
 
 namespace R2API.MiscHelpers {
+    public delegate T Modifier<T>(T input);
     internal static class MulticastDelegateExtensions {
-        public static T InvokeSequential<T>(this Func<T, T> func, T initialValue, Boolean skipErrors = false) {
+        public static T InvokeSequential<T>(this Modifier<T> func, T initialValue, Boolean skipErrors = false) {
             var invList = func.GetInvocationList();
             if(invList is null || invList.Length <= 1) {
                 return func(initialValue);
             }
 
-            foreach(var v in invList.Where(a => a is Func<T, T>).Cast<Func<T, T>>()) {
+            foreach(var v in invList.Where(a => a is Modifier<T>).Cast<Modifier<T>>()) {
                 try {
                     initialValue = v(initialValue);
                 } catch(Exception e) {
