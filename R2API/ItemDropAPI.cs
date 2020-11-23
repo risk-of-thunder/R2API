@@ -76,7 +76,7 @@ namespace R2API {
             //public static event 
         }
 
-        private static List<PickupIndex> EditDrops(this List<PickupIndex> input, Modifier<IEnumerable<PickupIndex>>? modifiers, Boolean addIfEmpty = true) => (modifiers?.InvokeSequential(input)?.ToList() ?? input).AddEmptyIfNeeded(addIfEmpty);
+        private static List<PickupIndex> EditDrops(this List<PickupIndex> input, Modifier<IEnumerable<PickupIndex>>? modifiers, Boolean addIfEmpty = true) => (modifiers?.InvokeSequential(input, true)?.ToList() ?? input).AddEmptyIfNeeded(addIfEmpty);
         private static List<PickupIndex> AddEmptyIfNeeded(this List<PickupIndex> input, Boolean run) {
             if(input.Count == 0 && run) input.Add(PickupIndex.none);
             return input;
