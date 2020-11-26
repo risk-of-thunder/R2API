@@ -85,6 +85,10 @@ namespace R2API {
             orig(run);
             MonsterDropList.DuplicateDropLists(run);
             MonsterDropList.GenerateDropLists(ItemsToAdd, ItemsToRemove, EquipmentsToAdd, EquipmentsToRemove);
+            ItemDropAPI.ClearItemOperations(ItemsToAdd);
+            ItemDropAPI.ClearItemOperations(ItemsToRemove);
+            ItemDropAPI.ClearEquipmentOperations(EquipmentsToAdd);
+            ItemDropAPI.ClearEquipmentOperations(EquipmentsToRemove);
         }
 
         private static void GenerateAvailableItemsSet(On.RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.orig_GenerateAvailableItemsSet orig) {
@@ -269,17 +273,19 @@ namespace R2API {
         }
 
         public static bool ListContainsValidItems(List<ItemTag> forbiddenTags, List<PickupIndex> givenList) {
-            foreach (var pickupIndex in givenList) {
-                var validItem = true;
-                var itemDef = ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
-                foreach (var itemTag in forbiddenTags) {
-                    if (itemDef.ContainsTag(itemTag)) {
-                        validItem = false;
-                        break;
+            if (DropList.IsValidList(givenList)) {
+                foreach (var pickupIndex in givenList) {
+                    var validItem = true;
+                    var itemDef = ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                    foreach (var itemTag in forbiddenTags) {
+                        if (itemDef.ContainsTag(itemTag)) {
+                            validItem = false;
+                            break;
+                        }
                     }
-                }
-                if (validItem) {
-                    return true;
+                    if (validItem) {
+                        return true;
+                    }
                 }
             }
             return false;

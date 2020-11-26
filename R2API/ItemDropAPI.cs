@@ -105,11 +105,28 @@ namespace R2API {
         private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
             Catalog.PopulateItemCatalog();
             orig(run);
+
             PlayerDropList.DuplicateDropLists(run);
             PlayerDropList.ClearAllLists(run);
             PlayerDropList.GenerateDropLists(ItemsToAdd, ItemsToRemove, EquipmentsToAdd, EquipmentsToRemove);
             PlayerDropList.SetItems(run);
             PlayerInteractables.CalculateInvalidInteractables(PlayerDropList);
+
+            ClearItemOperations(ItemsToAdd);
+            ClearItemOperations(ItemsToRemove);
+            ClearEquipmentOperations(EquipmentsToAdd);
+            ClearEquipmentOperations(EquipmentsToRemove);
+        }
+
+        public static void ClearItemOperations(Dictionary<ItemTier, List<ItemIndex>> givenDict) {
+            foreach (ItemTier itemTier in givenDict.Keys) {
+                givenDict[itemTier].Clear();
+            }
+        }
+        public static void ClearEquipmentOperations(Dictionary<EquipmentDropType, List<EquipmentIndex>> givenDict) {
+            foreach (EquipmentDropType equipmentDropType in givenDict.Keys) {
+                givenDict[equipmentDropType].Clear();
+            }
         }
 
         private static void PopulateScene(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector sceneDirector) {
@@ -216,17 +233,24 @@ namespace R2API {
             foreach (var bossDrop in bossGroup.bossDrops) {
                 var pickupIndex = bossDrop;
                 bossDrops.Add(pickupIndex);
-                if (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && PlayerDropList.AvailableBossDropList.Contains(pickupIndex)) {
+                bool worldUnique = false;
+                if (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupIndex).itemIndex).ContainsTag(ItemTag.WorldUnique)) {
+                    worldUnique = true;
+                }
+                if ((PlayerDropList.AvailableBossDropList.Contains(pickupIndex) && !worldUnique ) || (PlayerDropList.AvailableSpecialItems.Contains(pickupIndex) && worldUnique)) {
                     bossDropsAdjusted.Add(pickupIndex);
                 }
             }
-            var normalCount = Run.instance.availableTier2DropList.Count;
+
+            var dropList = Run.instance.availableTier2DropList;
             if (bossGroup.forceTier3Reward) {
-                normalCount = Run.instance.availableTier3DropList.Count;
+                dropList = Run.instance.availableTier3DropList;
             }
-            if (normalCount != 0 || bossDropsAdjusted.Count != 0) {
+            bool normalListValid = DropList.IsValidList(dropList);
+
+            if (normalListValid || bossDropsAdjusted.Count != 0) {
                 var bossDropChanceOld = bossGroup.bossDropChance;
-                if (normalCount == 0) {
+                if (!normalListValid) {
                     DropList.SetDropLists(new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>());
                     bossGroup.bossDropChance = 1;
                 } else if (bossDropsAdjusted.Count == 0) {
@@ -235,9 +259,10 @@ namespace R2API {
 
                 bossGroup.bossDrops = bossDropsAdjusted;
                 orig(bossGroup);
+
                 bossGroup.bossDrops = bossDrops;
                 bossGroup.bossDropChance = bossDropChanceOld;
-                if (normalCount == 0) {
+                if (!normalListValid) {
                     DropList.RevertDropLists();
                 }
             }
@@ -256,19 +281,37 @@ namespace R2API {
             }
             if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
                 if (options.Length > 0) {
+                    optionsAdjusted.Clear();
                     var itemIndex = PickupCatalog.GetPickupDef(options[0].pickupIndex).itemIndex;
+
                     var itemTier = ItemTier.NoTier;
                     if (itemIndex != ItemIndex.None) {
                         itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
                     }
-
                     var tierList = PlayerDropList.GetDropList(itemTier);
-                    optionsAdjusted.Clear();
-                    foreach (var pickupIndex in tierList) {
-                        var newOption = new PickupPickerController.Option {
-                            available = true, pickupIndex = pickupIndex
-                        };
-                        optionsAdjusted.Add(newOption);
+
+                    bool addEntireTier = true;
+                    if (options.Length == 1 && itemIndex != ItemIndex.None && ItemCatalog.GetItemDef(itemIndex).ContainsTag(ItemTag.WorldUnique)) {
+                        addEntireTier = false;
+                        if (itemTier != ItemTier.NoTier && tierList.Contains(options[0].pickupIndex)) {
+                            addEntireTier = true;
+                        }
+                    }
+
+                    if (addEntireTier) {
+                        foreach (var pickupIndex in tierList) {
+                            ItemIndex pickupItemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
+
+                            if (true || pickupItemIndex == ItemIndex.None || ItemCatalog.GetItemDef(pickupItemIndex).DoesNotContainTag(ItemTag.WorldUnique)) {
+                                var newOption = new PickupPickerController.Option {
+                                    available = true,
+                                    pickupIndex = pickupIndex
+                                };
+                                optionsAdjusted.Add(newOption);
+                            }
+                        }
+                    } else {
+                        optionsAdjusted.Add(options[0]);
                     }
                 }
             }
