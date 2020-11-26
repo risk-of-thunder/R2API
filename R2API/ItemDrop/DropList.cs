@@ -121,6 +121,7 @@ namespace R2API {
                     LunarEquipmentDropListOriginal = BackupDropList(run.availableLunarEquipmentDropList);
 
                     BossDropListOriginal = BackupDropList(run.availableBossDropList);
+
                     /*
                     foreach (var bossItem in Catalog.SpecialItems) {
                         var pickupIndex = PickupCatalog.FindPickupIndex(bossItem);
