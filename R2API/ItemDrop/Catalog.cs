@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using RoR2;
+using UnityEngine;
 
 namespace R2API {
     namespace ItemDropAPITools {
         public static class Catalog {
             public static bool Loaded;
-            public static readonly List<ItemIndex> SpecialBossItems = new List<ItemIndex>();
+            public static readonly List<ItemIndex> SpecialItems = new List<ItemIndex>();
             public static readonly Dictionary<ItemTier, ItemIndex> ScrapItems = new Dictionary<ItemTier, ItemIndex>();
             public static readonly List<EquipmentIndex> EliteEquipment = new List<EquipmentIndex>();
             
@@ -18,24 +19,13 @@ namespace R2API {
                 if (!Loaded) {
                     foreach (var itemIndex in ItemCatalog.allItems) {
                         var itemDef = ItemCatalog.GetItemDef(itemIndex);
-                        foreach (var itemTag in itemDef.tags) {
-                            if (itemTag == ItemTag.Scrap) {
+                        if (itemDef.tier != ItemTier.NoTier && itemDef.pickupIconSprite != null && itemDef.pickupIconSprite.name != DropList.NullIconTextureName) {
+                            if (itemDef.ContainsTag(ItemTag.Scrap)) {
                                 if (!ScrapItems.ContainsKey(itemDef.tier)) {
                                     ScrapItems.Add(itemDef.tier, itemIndex);
                                 }
-                            }
-                        }
-                        if (!ItemCatalog.tier1ItemList.Contains(itemIndex) &&
-                            !ItemCatalog.tier2ItemList.Contains(itemIndex) &&
-                            !ItemCatalog.tier3ItemList.Contains(itemIndex) &&
-                            !ItemCatalog.lunarItemList.Contains(itemIndex)) {
-                            if (!ScrapItems.ContainsValue(itemIndex) && itemDef.tier != ItemTier.NoTier &&
-                                itemDef.pickupIconSprite != null && itemDef.pickupIconSprite.name != DropList.NullIconTextureName) {
-                                foreach (var itemTag in itemDef.tags) {
-                                    if (itemTag == ItemTag.WorldUnique) {
-                                        SpecialBossItems.Add(itemIndex);
-                                    }
-                                }
+                            } else if (itemDef.ContainsTag(ItemTag.WorldUnique)) {
+                                SpecialItems.Add(itemIndex);
                             }
                         }
                     }

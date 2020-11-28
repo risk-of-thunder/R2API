@@ -2,6 +2,8 @@
 using System.Linq;
 using R2API.ItemDrop;
 using RoR2;
+using UnityEngine;
+
 
 namespace R2API {
     namespace ItemDropAPITools {
@@ -119,14 +121,20 @@ namespace R2API {
                     LunarEquipmentDropListOriginal = BackupDropList(run.availableLunarEquipmentDropList);
 
                     BossDropListOriginal = BackupDropList(run.availableBossDropList);
-                    foreach (var bossItem in Catalog.SpecialBossItems) {
+
+                    /*
+                    foreach (var bossItem in Catalog.SpecialItems) {
                         var pickupIndex = PickupCatalog.FindPickupIndex(bossItem);
                         if (!BossDropListOriginal.Contains(pickupIndex)) {
                             BossDropListOriginal.Add(pickupIndex);
                         }
                     }
+                    */
 
                     SpecialItemsOriginal.Clear();
+                    foreach (var itemIndex in Catalog.SpecialItems) {
+                        SpecialItemsOriginal.Add(PickupCatalog.FindPickupIndex(itemIndex));
+                    }
                     foreach (var itemIndex in Catalog.ScrapItems.Values) {
                         SpecialItemsOriginal.Add(PickupCatalog.FindPickupIndex(itemIndex));
                     }
@@ -149,25 +157,26 @@ namespace R2API {
                 Dictionary<EquipmentDropType, List<EquipmentIndex>> equipmentsToAdd,
                 Dictionary<EquipmentDropType, List<EquipmentIndex>> equipmentsToRemove) {
 
-                AvailableTier1DropList = CreateDropList(Tier1DropListOriginal, itemsToAdd[ItemTier.Tier1], itemsToRemove[ItemTier.Tier1]);
-                AvailableTier2DropList = CreateDropList(Tier2DropListOriginal, itemsToAdd[ItemTier.Tier2], itemsToRemove[ItemTier.Tier2]);
-                AvailableTier3DropList = CreateDropList(Tier3DropListOriginal, itemsToAdd[ItemTier.Tier3], itemsToRemove[ItemTier.Tier3]);
-                AvailableLunarDropList = CreateDropList(LunarDropListOriginal, itemsToAdd[ItemTier.Lunar], itemsToRemove[ItemTier.Lunar]);
-                AvailableSpecialItems = CreateDropList(SpecialItemsOriginal, itemsToAdd[ItemTier.NoTier], itemsToRemove[ItemTier.NoTier]);
+                AvailableTier1DropList = BackupDropList(CreateDropList(Tier1DropListOriginal, itemsToAdd[ItemTier.Tier1], itemsToRemove[ItemTier.Tier1]));
+                AvailableTier2DropList = BackupDropList(CreateDropList(Tier2DropListOriginal, itemsToAdd[ItemTier.Tier2], itemsToRemove[ItemTier.Tier2]));
+                AvailableTier3DropList = BackupDropList(CreateDropList(Tier3DropListOriginal, itemsToAdd[ItemTier.Tier3], itemsToRemove[ItemTier.Tier3]));
+                AvailableLunarDropList = BackupDropList(CreateDropList(LunarDropListOriginal, itemsToAdd[ItemTier.Lunar], itemsToRemove[ItemTier.Lunar]));
+                AvailableSpecialItems = BackupDropList(CreateDropList(SpecialItemsOriginal, itemsToAdd[ItemTier.NoTier], itemsToRemove[ItemTier.NoTier]));
 
-                AvailableEquipmentDropList = CreateDropList(NormalEquipmentDropListOriginal,
-                    equipmentsToAdd[EquipmentDropType.Normal], equipmentsToRemove[EquipmentDropType.Normal]);
+                AvailableEquipmentDropList = BackupDropList(CreateDropList(NormalEquipmentDropListOriginal,
+                    equipmentsToAdd[EquipmentDropType.Normal], equipmentsToRemove[EquipmentDropType.Normal]));
                 AvailableNormalEquipmentDropList = AvailableEquipmentDropList;
 
-                AvailableLunarEquipmentDropList = CreateDropList(LunarEquipmentDropListOriginal,
-                    equipmentsToAdd[EquipmentDropType.Lunar], equipmentsToRemove[EquipmentDropType.Lunar]);
+                AvailableLunarEquipmentDropList = BackupDropList(CreateDropList(LunarEquipmentDropListOriginal,
+                    equipmentsToAdd[EquipmentDropType.Lunar], equipmentsToRemove[EquipmentDropType.Lunar]));
 
-                AvailableSpecialEquipment = CreateDropList(SpecialEquipmentOriginal,
-                    equipmentsToAdd[EquipmentDropType.Elite], equipmentsToRemove[EquipmentDropType.Elite]);
+                AvailableSpecialEquipment = BackupDropList(CreateDropList(SpecialEquipmentOriginal,
+                    equipmentsToAdd[EquipmentDropType.Elite], equipmentsToRemove[EquipmentDropType.Elite]));
 
-                AvailableBossDropList = CreateDropList(BossDropListOriginal,
+                AvailableBossDropList = BackupDropList(CreateDropList(BossDropListOriginal,
                     itemsToAdd[ItemTier.Boss], equipmentsToAdd[EquipmentDropType.Boss],
-                    itemsToRemove[ItemTier.Boss], equipmentsToRemove[EquipmentDropType.Boss]);
+                    itemsToRemove[ItemTier.Boss], equipmentsToRemove[EquipmentDropType.Boss]));
+
             }
 
             private static List<PickupIndex> CreateDropList(IEnumerable<PickupIndex> vanillaDropList,
@@ -273,41 +282,67 @@ namespace R2API {
             }
 
             public void SetItems(Run run) {
-                foreach (var pickupIndex in AvailableTier1DropList) {
-                    run.availableTier1DropList.Add(pickupIndex);
-                    run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                if (IsValidList(AvailableTier1DropList)) {
+                    foreach (var pickupIndex in AvailableTier1DropList) {
+                        run.availableTier1DropList.Add(pickupIndex);
+                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                    }
                 }
 
-                foreach (var pickupIndex in AvailableTier2DropList) {
-                    run.availableTier2DropList.Add(pickupIndex);
-                    run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                if (IsValidList(AvailableTier2DropList)) {
+                    foreach (var pickupIndex in AvailableTier2DropList) {
+                        run.availableTier2DropList.Add(pickupIndex);
+                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                    }
                 }
 
-                foreach (var pickupIndex in AvailableTier3DropList) {
-                    run.availableTier3DropList.Add(pickupIndex);
-                    run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                if (IsValidList(AvailableTier3DropList)) {
+                    foreach (var pickupIndex in AvailableTier3DropList) {
+                        run.availableTier3DropList.Add(pickupIndex);
+                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                    }
                 }
 
-                foreach (var pickupIndex in AvailableBossDropList) {
-                    run.availableBossDropList.Add(pickupIndex);
-                    run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                if (IsValidList(AvailableBossDropList)) {
+                    foreach (var pickupIndex in AvailableBossDropList) {
+                        run.availableBossDropList.Add(pickupIndex);
+                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                    }
                 }
 
-                foreach (var pickupIndex in AvailableLunarDropList) {
-                    run.availableLunarDropList.Add(pickupIndex);
-                    run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                if (IsValidList(AvailableLunarDropList)) {
+                    foreach (var pickupIndex in AvailableLunarDropList) {
+                        run.availableLunarDropList.Add(pickupIndex);
+                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                    }
                 }
 
-                foreach (var pickupIndex in AvailableEquipmentDropList) {
-                    run.availableEquipmentDropList.Add(pickupIndex);
-                    run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
+                if (IsValidList(AvailableSpecialItems)) {
+                    foreach (var pickupIndex in AvailableSpecialItems) {
+                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                    }
+                }
+
+                if (IsValidList(AvailableEquipmentDropList)) {
+                    foreach (var pickupIndex in AvailableEquipmentDropList) {
+                        run.availableEquipmentDropList.Add(pickupIndex);
+                        run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
+                    }
                 }
                 // high probability of code smell from ror2 code
                 run.availableNormalEquipmentDropList = run.availableEquipmentDropList;
 
-                foreach (var pickupIndex in AvailableLunarEquipmentDropList) {
-                    run.availableLunarEquipmentDropList.Add(pickupIndex);
-                    run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
+                if (IsValidList(AvailableLunarEquipmentDropList)) {
+                    foreach (var pickupIndex in AvailableLunarEquipmentDropList) {
+                        run.availableLunarEquipmentDropList.Add(pickupIndex);
+                        run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
+                    }
+                }
+
+                if (IsValidList(AvailableSpecialEquipment)) {
+                    foreach (var pickupIndex in AvailableSpecialEquipment) {
+                        run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
+                    }
                 }
             }
 
@@ -317,6 +352,13 @@ namespace R2API {
 
             public static List<PickupIndex> ToPickupIndices(IEnumerable<EquipmentIndex> indices) {
                 return indices.Select(PickupCatalog.FindPickupIndex).ToList();
+            }
+
+            public static bool IsValidList(IEnumerable<PickupIndex> dropList) {
+                if (dropList.Count() == 1 && dropList.Contains(PickupIndex.none)) {
+                    return false;
+                }
+                return true;
             }
         }
     }

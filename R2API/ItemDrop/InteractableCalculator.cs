@@ -193,11 +193,10 @@ namespace R2API.ItemDrop {
                 }
             }
 
-            foreach (var pickupIndex in dropList.AvailableBossDropList) {
+            foreach (var pickupIndex in dropList.AvailableSpecialItems) {
                 var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
                 if (pickupDef != null) {
                     if (pickupDef.itemIndex != ItemIndex.None &&
-                        !Catalog.ScrapItems.ContainsValue(pickupDef.itemIndex) &&
                         Catalog.Pearls.Contains(pickupDef.itemIndex)) {
                         TiersPresent["pearl"] = true;
                         break;
@@ -209,8 +208,7 @@ namespace R2API.ItemDrop {
                 var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
                 if (pickupDef != null) {
                     if (pickupDef.itemIndex != ItemIndex.None &&
-                        !Catalog.ScrapItems.ContainsValue(pickupDef.itemIndex) &&
-                        !Catalog.Pearls.Contains(pickupDef.itemIndex)) {
+                        !Catalog.ScrapItems.ContainsValue(pickupDef.itemIndex)) {
                         TiersPresent["boss"] = true;
                         break;
                     }
@@ -262,10 +260,10 @@ namespace R2API.ItemDrop {
                     }
                 }
             }
-            if (dropList.AvailableNormalEquipmentDropList.Count > 0) {
+            if (DropList.IsValidList(dropList.AvailableNormalEquipmentDropList)) {
                 TiersPresent["equipment"] = true;
             }
-            if (dropList.AvailableLunarEquipmentDropList.Count > 0) {
+            if (DropList.IsValidList(dropList.AvailableLunarEquipmentDropList)) {
                 TiersPresent["lunar"] = true;
             }
             var interactableTypeKeys = InteractablesTiers.Keys.ToList();
