@@ -6,8 +6,11 @@ using R2API.ItemDrop;
 using R2API.ItemDropAPITools;
 using R2API.MiscHelpers;
 using R2API.Utils;
+using MonoMod.Cil;
+using Mono.Cecil.Cil;
 using RoR2;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace R2API {
     // ReSharper disable once InconsistentNaming
@@ -38,6 +41,8 @@ namespace R2API {
 
         private static readonly DropList PlayerDropList = new DropList();
         internal static readonly InteractableCalculator PlayerInteractables = new InteractableCalculator();
+        private static bool commandArtifact = false;
+        private static System.Reflection.MethodInfo rouletteGetEntryIndexForTime = typeof(RouletteChestController).GetMethod("GetEntryIndexForTime", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
         public static Dictionary<ItemTier, List<ItemIndex>> AdditionalItemsReadOnly =>
             ItemsToAdd.Except(ItemsToRemove).ToDictionary(p => p.Key, p => p.Value);
@@ -87,6 +92,22 @@ namespace R2API {
             On.RoR2.PickupPickerController.SetOptionsServer += SetOptionsServer;
             On.RoR2.ArenaMissionController.EndRound += EndRound;
             On.RoR2.GlobalEventManager.OnCharacterDeath += OnCharacterDeath;
+            IL.RoR2.ShopTerminalBehavior.GenerateNewPickupServer += GenerateNewPickupServer;
+
+            IL.RoR2.ChestBehavior.RollItem += RollItem;
+            On.RoR2.ChestBehavior.RollEquipment += RollEquipment;
+            On.RoR2.ChestBehavior.ItemDrop += ItemDrop;
+            IL.RoR2.ShrineChanceBehavior.AddShrineStack += AddShrineStack;
+            On.RoR2.RouletteChestController.GenerateEntriesServer += GenerateEntriesServer;
+            IL.RoR2.BasicPickupDropTable.GenerateDrop += GenerateDrop;
+            On.RoR2.RouletteChestController.EjectPickupServer += EjectPickupServer;
+            IL.RoR2.BossGroup.DropRewards += DropRewards;
+            IL.RoR2.GlobalEventManager.OnCharacterDeath += OnCharacterDeath;
+
+            IL.RoR2.PickupDropletController.CreatePickupDroplet += CreatePickupDroplet;
+            On.RoR2.PickupDropletController.OnCollisionEnter += OnCollisionEnter;
+            On.RoR2.PickupDropletController.CreatePickupDroplet += CreatePickupDroplet;
+            IL.RoR2.UI.PickupPickerPanel.SetPickupOptions += SetPickupOptions;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
@@ -100,9 +121,27 @@ namespace R2API {
             On.RoR2.PickupPickerController.SetOptionsServer -= SetOptionsServer;
             On.RoR2.ArenaMissionController.EndRound -= EndRound;
             On.RoR2.GlobalEventManager.OnCharacterDeath -= OnCharacterDeath;
+            IL.RoR2.ShopTerminalBehavior.GenerateNewPickupServer -= GenerateNewPickupServer;
+
+            IL.RoR2.ChestBehavior.RollItem -= RollItem;
+            On.RoR2.ChestBehavior.RollEquipment -= RollEquipment;
+            On.RoR2.ChestBehavior.ItemDrop -= ItemDrop;
+            IL.RoR2.ShrineChanceBehavior.AddShrineStack -= AddShrineStack;
+            On.RoR2.RouletteChestController.GenerateEntriesServer -= GenerateEntriesServer;
+            IL.RoR2.BasicPickupDropTable.GenerateDrop -= GenerateDrop;
+            On.RoR2.RouletteChestController.EjectPickupServer -= EjectPickupServer;
+            IL.RoR2.BossGroup.DropRewards -= DropRewards;
+            IL.RoR2.GlobalEventManager.OnCharacterDeath -= OnCharacterDeath;
+
+            IL.RoR2.PickupDropletController.CreatePickupDroplet -= CreatePickupDroplet;
+            On.RoR2.PickupDropletController.OnCollisionEnter -= OnCollisionEnter;
+            On.RoR2.PickupDropletController.CreatePickupDroplet -= CreatePickupDroplet;
+            IL.RoR2.UI.PickupPickerPanel.SetPickupOptions -= SetPickupOptions;
         }
 
         private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
+            commandArtifact = run.GetComponent<RunArtifactManager>().IsArtifactEnabled(RoR2Content.Artifacts.commandArtifactDef);
+
             Catalog.PopulateItemCatalog();
             orig(run);
 
@@ -130,6 +169,11 @@ namespace R2API {
         }
 
         private static void PopulateScene(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector sceneDirector) {
+            pickupDropletCommandArtifactLists.Clear();
+            rouletteCommandArtifactLists.Clear();
+            chestCommandArtifactLists.Clear();
+
+            sceneDirector.interactableCredit = sceneDirector.interactableCredit * 25;
             var allInteractables = Resources.LoadAll<InteractableSpawnCard>(AllInteractablesResourcesPath);
             foreach (var spawnCard in allInteractables) {
                 var interactableName = InteractableCalculator.GetSpawnCardName(spawnCard);
@@ -171,6 +215,429 @@ namespace R2API {
             orig(sceneDirector);
         }
 
+
+
+
+
+
+
+
+        // RETREIVES THE BACKED UP DROP LISTS TO SET THE COMMAND ARTIFACT MENU OPTIONS
+
+        private static List<PickupIndex> currentPickupList = new List<PickupIndex>();
+        private static bool uniquePickup = false;
+        private static Dictionary<PickupDropletController, List<PickupIndex>> pickupDropletCommandArtifactLists = new Dictionary<PickupDropletController, List<PickupIndex>>();
+        private static Dictionary<PickupDropletController, bool> pickupDropletCommandArtifactUniquePickup = new Dictionary<PickupDropletController, bool>();
+
+        private static void CreatePickupDroplet(ILContext ilContext) {
+            var spawnMethodInfo = typeof(UnityEngine.Networking.NetworkServer).GetMethod("Spawn", new[] { typeof(GameObject) });
+
+            var cursor = new ILCursor(ilContext);
+            cursor.GotoNext(
+                x => x.MatchCall(spawnMethodInfo)
+            );
+            cursor.Emit(OpCodes.Dup);
+            cursor.EmitDelegate<System.Action<GameObject>>((dropletGameObject) => {
+                pickupDropletCommandArtifactLists.Add(dropletGameObject.GetComponent<PickupDropletController>(), currentPickupList);
+                pickupDropletCommandArtifactUniquePickup.Add(dropletGameObject.GetComponent<PickupDropletController>(), uniquePickup);
+            });
+        }
+
+        private static void OnCollisionEnter(On.RoR2.PickupDropletController.orig_OnCollisionEnter orig, PickupDropletController pickupDropletController, Collision collision) {
+            if (pickupDropletCommandArtifactLists.ContainsKey(pickupDropletController)) {
+                currentPickupList = pickupDropletCommandArtifactLists[pickupDropletController];
+                uniquePickup = pickupDropletCommandArtifactUniquePickup[pickupDropletController];
+            }
+            orig(pickupDropletController, collision);
+        }
+
+        private static void CreatePickupDroplet(On.RoR2.PickupDropletController.orig_CreatePickupDroplet orig, PickupIndex pickupIndex, Vector3 position, Vector3 velocity) {
+            if (commandArtifact) {
+                pickupIndex = AdjustCommandPickupIndex(currentPickupList, pickupIndex);
+            }
+            orig(pickupIndex, position, velocity);
+        }
+
+        private static void SetPickupOptions(ILContext ilContext) {
+            var pickupIndexFieldInfo = typeof(PickupPickerController.Option).GetField("pickupIndex", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var getPickupDefMethodInfo = typeof(PickupCatalog).GetMethod("GetPickupDef", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+
+            var cursor = new ILCursor(ilContext);
+            cursor.GotoNext(
+                x => x.MatchLdarg(1),
+                x => x.MatchLdcI4(0),
+                x => x.MatchLdelema("RoR2.PickupPickerController/Option"),
+                x => x.MatchLdfld(pickupIndexFieldInfo),
+                x => x.MatchCall(getPickupDefMethodInfo),
+                x => x.MatchDup()
+            );
+            cursor.Index += 1;
+            cursor.RemoveRange(3);
+            cursor.EmitDelegate<Func<PickupPickerController.Option[], PickupIndex>>((options) => {
+                List<PickupIndex> pickupList = new List<PickupIndex>();
+                foreach (PickupPickerController.Option option in options) {
+                    pickupList.Add(option.pickupIndex);
+                }
+                return AdjustCommandPickupIndex(pickupList, pickupList[0]);
+            });
+        }
+
+        private static PickupIndex AdjustCommandPickupIndex(List<PickupIndex> pickupList, PickupIndex givenPickupIndex) {
+            if (PickupListsEqual(Run.instance.availableTier1DropList, pickupList)) {
+                return PickupCatalog.FindPickupIndex(ItemIndex.ScrapWhite);
+            } else if (PickupListsEqual(Run.instance.availableTier2DropList, pickupList)) {
+                return PickupCatalog.FindPickupIndex(ItemIndex.ScrapGreen);
+            } else if (PickupListsEqual(Run.instance.availableTier3DropList, pickupList)) {
+                return PickupCatalog.FindPickupIndex(ItemIndex.ScrapRed);
+            } else if (PickupListsEqual(Run.instance.availableBossDropList, pickupList)) {
+                return PickupCatalog.FindPickupIndex(ItemIndex.ScrapYellow);
+            } else if (PickupListsEqual(Run.instance.availableLunarDropList, pickupList)) {
+                return PickupCatalog.FindPickupIndex(ItemIndex.LunarDagger);
+            } else if (PickupListsEqual(Run.instance.availableEquipmentDropList, pickupList)) {
+                return PickupCatalog.FindPickupIndex(EquipmentIndex.CritOnUse);
+            }
+            return givenPickupIndex;
+        }
+
+        private static bool PickupListsEqual(List<PickupIndex> listA, List<PickupIndex> listB) {
+            if (listA.Count == listB.Count) {
+                bool listsEqual = true;
+                for (int listIndex = 0; listIndex < listA.Count; listIndex++) {
+                    if (listA[listIndex] != listB[listIndex]) {
+                        listsEqual = false;
+                        break;
+                    }
+                }
+                if (listsEqual) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // WILL BACKUP UP THE DROP LIST SELECTED BY CHESTS FOR USE WITH THE COMMAND ARTIFACT
+
+        private static Dictionary<ChestBehavior, List<PickupIndex>> chestCommandArtifactLists = new Dictionary<ChestBehavior, List<PickupIndex>>();
+
+        private static void RollItem(ILContext ilContext) {
+            var findPickupIndexMethodInfo = typeof(PickupCatalog).GetMethod("FindPickupIndex", new [] { typeof(string) });
+            var addMethodInfo = typeof(List<PickupIndex>).GetMethod("Add", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+            var rollItemAddMethodInfo = Utils.Reflection.GetNestedMethod(typeof(ChestBehavior), "<RollItem>g__Add|1");
+            var selectorFieldInfo = Utils.Reflection.GetNestedField(typeof(ChestBehavior), "selector");
+            var filterListMethodInfo = typeof(ItemDropAPI).GetMethod("FilterList", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+
+            var instanceMethodInfo = typeof(Run).GetProperty("instance", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).GetMethod;
+            var treasureRngFieldInfo = typeof(Run).GetField("treasureRng", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var nextNormalizedMethodInfo = typeof(Xoroshiro128Plus).GetProperty("nextNormalizedFloat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
+            var evaluateMethodInfo = typeof(WeightedSelection<List<PickupIndex>>).GetMethod("Evaluate", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+            var cursor = new ILCursor(ilContext);
+
+            cursor.GotoNext(
+                x => x.MatchLdloc(0),
+                x => x.MatchLdstr("LunarCoin.Coin0"),
+                x => x.MatchCall(findPickupIndexMethodInfo),
+                x => x.MatchCallvirt(addMethodInfo),
+                x => x.MatchDup()
+            );
+
+            while (cursor.TryGotoNext(x => x.MatchDup())) {
+                cursor.Index += 1;
+                cursor.Emit(OpCodes.Ldfld, selectorFieldInfo);
+            }
+
+            cursor.Index = 0;
+            while (cursor.TryGotoNext(x => x.MatchCallvirt(rollItemAddMethodInfo))) {
+                cursor.Remove();
+                cursor.Emit(OpCodes.Callvirt, filterListMethodInfo);
+            }
+            
+            cursor.GotoNext(
+                x => x.MatchLdfld(selectorFieldInfo),
+                x => x.MatchCall(instanceMethodInfo),
+                x => x.MatchLdfld(treasureRngFieldInfo),
+                x => x.MatchCallvirt(nextNormalizedMethodInfo),
+                x => x.MatchCallvirt(evaluateMethodInfo),
+                x => x.MatchStloc(1)
+            );
+            cursor.Index += 6;
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.Emit(OpCodes.Ldloc_1);
+            cursor.EmitDelegate<System.Action<ChestBehavior,List<PickupIndex>>>((chestBehavior, dropList) => {
+                chestCommandArtifactLists.Add(chestBehavior, dropList);
+            });
+        }
+
+        private static void FilterList(WeightedSelection<List<PickupIndex>> selector, List<PickupIndex> dropList, float dropChance) {
+            if ((double) dropChance <= 0) {
+                return;
+            }
+            List<PickupIndex> filteredDropList = new List<PickupIndex>();
+            foreach (PickupIndex pickupIndex in dropList) {
+                filteredDropList.Add(pickupIndex);
+            }
+            selector.AddChoice(filteredDropList, dropChance);
+        }
+
+        private static void RollEquipment(On.RoR2.ChestBehavior.orig_RollEquipment orig, ChestBehavior chestBehavior) {
+            chestCommandArtifactLists.Add(chestBehavior, Run.instance.availableEquipmentDropList);
+            orig(chestBehavior);
+        }
+
+        private static void ItemDrop(On.RoR2.ChestBehavior.orig_ItemDrop orig, ChestBehavior chestBehavior) {
+            if (chestCommandArtifactLists.ContainsKey(chestBehavior)) {
+                currentPickupList = chestCommandArtifactLists[chestBehavior];
+                chestCommandArtifactLists.Remove(chestBehavior);
+                uniquePickup = false;
+            }
+            orig(chestBehavior);
+        }
+
+        //WILL BACKUP UP THE DROP LIST SELECTED BY SHRINES OF CHANCE FOR USE WITH THE COMMAND ARTIFACT
+
+        private static List<List<PickupIndex>> shrineChanceDropLists = new List<List<PickupIndex>>();
+        private static WeightedSelection<List<PickupIndex>> shrineChanceWeightedSelection;
+
+        private static void AddShrineStack(ILContext ilContext) {
+            var rngFieldInfo = typeof(ShrineChanceBehavior).GetField("rng", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var instanceMethodInfo = typeof(Run).GetProperty("instance", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).GetMethod;
+            var addChoiceMethodInfo = typeof(WeightedSelection<PickupIndex>).GetMethod("AddChoice", new[] { typeof(PickupIndex), typeof(float) });
+            var nextNormalizedMethodInfo = typeof(Xoroshiro128Plus).GetProperty("nextNormalizedFloat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
+            var evaluateMethodInfo = typeof(WeightedSelection<PickupIndex>).GetMethod("Evaluate", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+            var cursor = new ILCursor(ilContext);
+
+            cursor.EmitDelegate<Action>(() => {
+                shrineChanceDropLists.Clear();
+                shrineChanceWeightedSelection = new WeightedSelection<List<PickupIndex>>(8);
+                shrineChanceDropLists.Add(new List<PickupIndex>() { PickupIndex.none });
+            });
+            
+            while (cursor.TryGotoNext(
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld(rngFieldInfo),
+                x => x.MatchCall(instanceMethodInfo),
+                x => x.OpCode == OpCodes.Ldfld,
+                x => x.OpCode == OpCodes.Callvirt
+                )) {
+                cursor.Index += 4;
+                cursor.Emit(OpCodes.Dup);
+                cursor.EmitDelegate<Action<List<PickupIndex>>>((dropList) => {
+                    shrineChanceDropLists.Add(dropList);
+                });
+            }
+
+            List<OpCode> ldloc = new List<OpCode>() { OpCodes.Ldloc, OpCodes.Ldloc_0, OpCodes.Ldloc_1, OpCodes.Ldloc_2, OpCodes.Ldloc_3, OpCodes.Ldloc_S };
+            while (cursor.TryGotoNext(
+                x => ldloc.Contains(x.OpCode),
+                x => x.MatchLdarg(0),
+                x => x.OpCode == OpCodes.Ldfld,
+                x => x.MatchCallvirt(addChoiceMethodInfo)
+                )) {
+                cursor.Index += 3;
+                cursor.Emit(OpCodes.Dup);
+                cursor.EmitDelegate<Action<float>>((dropChance) => {
+                    shrineChanceWeightedSelection.AddChoice(shrineChanceDropLists[0], dropChance);
+                    shrineChanceDropLists.RemoveAt(0);
+                });
+            }
+
+            cursor.GotoNext(
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld(rngFieldInfo),
+                x => x.MatchCallvirt(nextNormalizedMethodInfo),
+                x => x.MatchCallvirt(evaluateMethodInfo)
+            );
+            cursor.Emit(OpCodes.Pop);
+            cursor.Index += 3;
+            cursor.Remove();
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.Emit(OpCodes.Ldfld, rngFieldInfo);
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.EmitDelegate<Func<float, Xoroshiro128Plus, ShrineChanceBehavior, PickupIndex>>((treasureNormalizedFloat, rng, shrineChanceBehavior) => {
+                currentPickupList = shrineChanceWeightedSelection.Evaluate(treasureNormalizedFloat);
+                uniquePickup = false;
+                return rng.NextElementUniform(currentPickupList);
+            });
+        }
+
+        //WILL BACKUP UP THE DROP LIST SELECTED BY ROULETTE CHESTS FOR USE WITH THE COMMAND ARTIFACT
+        //WILL REMOVE DROP LIST FILTERING FOR CHESTS
+
+        private static bool rouletteChestEntriesAdding = false;
+        private static RouletteChestController currentRouletteChestController;
+        private static Dictionary<RouletteChestController, List<List<PickupIndex>>> rouletteCommandArtifactLists = new Dictionary<RouletteChestController, List<List<PickupIndex>>>();
+
+
+        private static void GenerateEntriesServer(On.RoR2.RouletteChestController.orig_GenerateEntriesServer orig, RouletteChestController rouletteChestController, Run.FixedTimeStamp fixedTimeStamp) {
+            if (commandArtifact) {
+                rouletteChestEntriesAdding = true;
+                currentRouletteChestController = rouletteChestController;
+            }
+            orig(rouletteChestController, fixedTimeStamp);
+            rouletteChestEntriesAdding = false;
+        }
+        
+        private static void GenerateDrop(ILContext ilContext) {
+            var selectorFieldInfo = typeof(BasicPickupDropTable).GetField("selector", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var nextNormalizedMethodInfo = typeof(Xoroshiro128Plus).GetProperty("nextNormalizedFloat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
+            var evaluateMethodInfo = typeof(WeightedSelection<List<PickupIndex>>).GetMethod("Evaluate", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+
+            var cursor = new ILCursor(ilContext);
+
+            cursor.GotoNext(
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld(selectorFieldInfo),
+                x => x.MatchLdarg(1),
+                x => x.MatchCallvirt(nextNormalizedMethodInfo),
+                x => x.MatchCallvirt(evaluateMethodInfo)
+            );
+            cursor.Index += 5;
+            cursor.Emit(OpCodes.Dup);
+            cursor.EmitDelegate<Action<List<PickupIndex>>>((dropList) => {
+                if (rouletteChestEntriesAdding) {
+                    if (!rouletteCommandArtifactLists.ContainsKey(currentRouletteChestController)) {
+                        rouletteCommandArtifactLists.Add(currentRouletteChestController, new List<List<PickupIndex>>());
+                    }
+                    rouletteCommandArtifactLists[currentRouletteChestController].Add(dropList);
+                }
+            });
+        }
+
+        private static void EjectPickupServer(On.RoR2.RouletteChestController.orig_EjectPickupServer orig, RouletteChestController rouletteChestController, PickupIndex pickupIndex) {
+            if (commandArtifact) {
+                object entryIndexForTimeObject = rouletteGetEntryIndexForTime.Invoke(rouletteChestController, new object[] { Run.FixedTimeStamp.now });
+                currentPickupList = rouletteCommandArtifactLists[currentRouletteChestController][(int)entryIndexForTimeObject];
+                uniquePickup = false;
+            }
+            orig(rouletteChestController, pickupIndex);
+        }
+
+        //WILL BACKUP UP THE DROP LIST SELECTED BY BOSSES FOR USE WITH THE COMMAND ARTIFACT
+
+        private static void DropRewards(ILContext ilContext) {
+            var bossDropsFieldInfo = typeof(BossGroup).GetField("bossDrops", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var countMethodInfo = typeof(List<PickupIndex>).GetProperty("Count", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
+
+            var rngFieldInfo = typeof(BossGroup).GetField("rng", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+
+
+            var selectorFieldInfo = typeof(BasicPickupDropTable).GetField("selector", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var nextNormalizedMethodInfo = typeof(Xoroshiro128Plus).GetProperty("nextNormalizedFloat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
+            var evaluateMethodInfo = typeof(WeightedSelection<List<PickupIndex>>).GetMethod("Evaluate", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+
+            var cursor = new ILCursor(ilContext);
+
+            cursor.GotoNext(
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld(bossDropsFieldInfo),
+                x => x.MatchCallvirt(countMethodInfo),
+                x => x.MatchLdcI4(0),
+                x => x.OpCode == OpCodes.Ble_S
+            );
+            cursor.Emit(OpCodes.Ldloc, 1);
+            cursor.EmitDelegate<Action<List<PickupIndex>>>((dropList) => {
+                uniquePickup = false;
+                currentPickupList = dropList;
+            });
+
+            cursor.GotoNext(
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld(rngFieldInfo),
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld(bossDropsFieldInfo),
+                x => x.OpCode == OpCodes.Callvirt,
+                x => x.MatchStloc(2)
+            );
+            cursor.Index += 5;
+            cursor.Emit(OpCodes.Dup);
+            cursor.EmitDelegate<Action<PickupIndex>>((pickupIndex) => {
+                if (PlayerDropList.AvailableBossDropList.Contains(pickupIndex)) {
+                    currentPickupList = PlayerDropList.AvailableBossDropList;
+                } else {
+                    currentPickupList = new List<PickupIndex>() { pickupIndex };
+                    uniquePickup = true;
+                }
+            });
+        }
+
+        //WILL BACKUP UP THE DROP LIST SELECTED BY ELITE MONSTERS FOR USE WITH THE COMMAND ARTIFACT
+
+        private static void OnCharacterDeath(ILContext ilContext) {
+            var checkRollMethodInfo = typeof(RoR2.Util).GetMethod("CheckRoll", new [] { typeof(float), typeof(RoR2.CharacterMaster)});
+            var implicitMethodInfo = typeof(UnityEngine.Object).GetMethod("op_Implicit", new[] { typeof(UnityEngine.Object) });
+            var isEliteMethodInfo = typeof(RoR2.CharacterBody).GetProperty("isElite", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
+
+
+            ILLabel ilLabel = null;
+            ILCursor cursor = new ILCursor(ilContext);
+            cursor.GotoNext(
+                //x => x.MatchLdcR4(0.025f),
+                x => x.OpCode == OpCodes.Ldc_R4,
+                x => x.OpCode == OpCodes.Ldloc_S,
+                x => x.MatchCall(checkRollMethodInfo),
+                x => x.MatchBrfalse(out ilLabel),
+                x => x.MatchLdloc(2),
+                x => x.MatchCall(implicitMethodInfo),
+                x => x.MatchBrfalse(out ilLabel),
+                x => x.MatchLdloc(2),
+                x => x.MatchCallvirt(isEliteMethodInfo),
+                x => x.MatchBrfalse(out ilLabel)
+            );
+            //cursor.Next.Operand = 100f;
+
+            cursor.Index += 10;
+            var onCharacterDeathLocalVariables = typeof(RoR2.GlobalEventManager).GetMethod("OnCharacterDeath", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethodBody().LocalVariables;
+            var equipmentIndexIndex = 0;
+            foreach (System.Reflection.LocalVariableInfo localVariableInfo in onCharacterDeathLocalVariables) {
+                if (localVariableInfo.LocalType == typeof(EquipmentIndex)) {
+                    equipmentIndexIndex = localVariableInfo.LocalIndex;
+                    break;
+                }
+            }
+            cursor.Emit(OpCodes.Ldloc, equipmentIndexIndex);
+            cursor.EmitDelegate<Action<EquipmentIndex>>((equipmentIndex) => {
+                currentPickupList = new List<PickupIndex>() { PickupCatalog.FindPickupIndex(equipmentIndex) };
+                uniquePickup = true;
+            });
+        }
+
+        //WILL REMOVE DROP LIST FILTERING FOR SHOP TERMINALS
+
+        private static void GenerateNewPickupServer(ILContext ilContext) {
+            var dropTableFieldInfo = typeof(ShopTerminalBehavior).GetField("dropTable", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var instanceMethodInfo = typeof(Run).GetProperty("instance", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).GetMethod;
+            var treasureRngFieldInfo = typeof(Run).GetField("treasureRng", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var generateDropMethodInfo = typeof(PickupDropTable).GetMethod("GenerateDrop", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+            ILCursor cursor = new ILCursor(ilContext);
+            cursor.GotoNext(
+                x => x.MatchLdarg(0),
+                x => x.MatchLdloc(1),
+                x => x.OpCode == OpCodes.Callvirt,
+                x => x.MatchStloc(0)
+            );
+            cursor.Index += 1;
+            cursor.Emit(OpCodes.Pop);
+            cursor.Index += 1;
+            cursor.Remove();
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.EmitDelegate<Func<List<PickupIndex>, ShopTerminalBehavior, PickupIndex>>((dropList, shopTerminalBehavior) => {
+                return Run.instance.treasureRng.NextElementUniform<PickupIndex>(dropList);
+            });
+        }
+
+
+
+
+
+
+
+
         private static void GenerateNewPickupServer(On.RoR2.ShopTerminalBehavior.orig_GenerateNewPickupServer orig, ShopTerminalBehavior shopTerminalBehavior) {
             var shopList = new List<PickupIndex>();
             if (shopTerminalBehavior.itemTier == ItemTier.Tier1) {
@@ -184,6 +651,7 @@ namespace R2API {
             } else if (shopTerminalBehavior.itemTier == ItemTier.Lunar) {
                 shopList = Run.instance.availableLunarDropList;
             }
+
             if (shopList.Count > 0 || shopTerminalBehavior.dropTable != null) {
                 orig(shopTerminalBehavior);
             } else {
@@ -270,18 +738,36 @@ namespace R2API {
 
         private static void SetOptionsServer(On.RoR2.PickupPickerController.orig_SetOptionsServer orig, PickupPickerController pickupPickerController, PickupPickerController.Option[] options) {
             var optionsAdjusted = new List<PickupPickerController.Option>();
+            if (pickupPickerController.contextString.Contains(ScrapperContextString)) {
+                foreach (var option in options) {
+                    if (PlayerDropList.AvailableSpecialItems.Contains(PickupCatalog.FindPickupIndex(Catalog.GetScrapIndex(ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(option.pickupIndex).itemIndex).tier)))) {
+                        optionsAdjusted.Add(option);
+                    }
+                }
+            } else if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
+                foreach (var pickupIndex in currentPickupList) {
+                    ItemIndex pickupItemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
+                    var newOption = new PickupPickerController.Option {
+                        available = true,
+                        pickupIndex = pickupIndex
+                    };
+                    optionsAdjusted.Add(newOption);
+                }
+            }
+            /*
             foreach (var option in options) {
                 if (pickupPickerController.contextString.Contains(ScrapperContextString)) {
                     if (PlayerDropList.AvailableSpecialItems.Contains(PickupCatalog.FindPickupIndex(Catalog.GetScrapIndex(ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(option.pickupIndex).itemIndex).tier)))) {
                         optionsAdjusted.Add(option);
                     }
                 } else {
-                    optionsAdjusted.Add(option);
+                    //optionsAdjusted.Add(option);
                 }
             }
             if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
                 if (options.Length > 0) {
                     optionsAdjusted.Clear();
+
                     var itemIndex = PickupCatalog.GetPickupDef(options[0].pickupIndex).itemIndex;
 
                     var itemTier = ItemTier.NoTier;
@@ -315,6 +801,7 @@ namespace R2API {
                     }
                 }
             }
+            */
             options = new PickupPickerController.Option[optionsAdjusted.Count];
             for (var optionIndex = 0; optionIndex < optionsAdjusted.Count; optionIndex++) {
                 options[optionIndex] = optionsAdjusted[optionIndex];
