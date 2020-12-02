@@ -709,7 +709,7 @@ namespace R2API {
                     bossDropsAdjusted.Add(pickupIndex);
                 }
             }
-
+            
             var dropType = InteractableCalculator.DropType.tier2;
             if (bossGroup.forceTier3Reward) {
                 dropType = InteractableCalculator.DropType.tier3;
@@ -767,7 +767,7 @@ namespace R2API {
             if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
                 if (options.Length > 0) {
                     optionsAdjusted.Clear();
-
+                    
                     var itemIndex = PickupCatalog.GetPickupDef(options[0].pickupIndex).itemIndex;
 
                     var itemTier = ItemTier.NoTier;
