@@ -927,21 +927,9 @@ namespace R2API.Utils {
         #endregion
 
         public static System.Reflection.FieldInfo GetNestedField(Type type, string fieldName) {
-            var nestedTypes = type.GetNestedTypes((System.Reflection.BindingFlags)(-1));
+            var nestedTypes = type.GetNestedTypes(AllFlags);
             foreach (Type nestedType in nestedTypes) {
-                var fieldInfo = nestedType.GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (fieldInfo != null) {
-                    return fieldInfo;
-                }
-                fieldInfo = nestedType.GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-                if (fieldInfo != null) {
-                    return fieldInfo;
-                }
-                fieldInfo = nestedType.GetField(fieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                if (fieldInfo != null) {
-                    return fieldInfo;
-                }
-                fieldInfo = nestedType.GetField(fieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                var fieldInfo = nestedType.GetField(fieldName, AllFlags);
                 if (fieldInfo != null) {
                     return fieldInfo;
                 }
@@ -950,38 +938,29 @@ namespace R2API.Utils {
         }
 
         public static System.Reflection.MethodInfo GetNestedMethod(Type type, string methodName) {
-            var nestedTypes = type.GetNestedTypes((System.Reflection.BindingFlags)(-1));
+            var nestedTypes = type.GetNestedTypes(AllFlags);
             foreach (Type nestedType in nestedTypes) {
-                var methodInfo = nestedType.GetMethod(methodName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (methodInfo != null) {
-                    return methodInfo;
-                }
-                methodInfo = nestedType.GetMethod(methodName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-                if (methodInfo != null) {
-                    return methodInfo;
-                }
-                methodInfo = nestedType.GetMethod(methodName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                if (methodInfo != null) {
-                    return methodInfo;
-                }
-                methodInfo = nestedType.GetMethod(methodName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                var methodInfo = nestedType.GetMethod(methodName, AllFlags);
                 if (methodInfo != null) {
                     return methodInfo;
                 }
             }
             return null;
         }
+
         public static void LogCursorOpcodes(ILCursor cursor) {
+            int indexOld = cursor.Index;
             cursor.Goto(0);
             while (cursor.Next != null) {
                 Debug.Log(cursor.Next.OpCode);
                 cursor.Index++;
                 cursor.Goto(cursor.Index);
             }
+            cursor.Index = indexOld;
         }
 
         public static MethodInfo GetGenericMethod(Type type, string name, Type[] parameters) {
-            var classMethods = type.GetMethods((System.Reflection.BindingFlags)(-1));
+            var classMethods = type.GetMethods(AllFlags);
             foreach (System.Reflection.MethodInfo methodInfo in classMethods) {
                 if (methodInfo.Name == name) {
                     System.Reflection.ParameterInfo[] parameterInfos = methodInfo.GetParameters();

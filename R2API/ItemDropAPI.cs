@@ -639,20 +639,20 @@ namespace R2API {
 
 
         private static void GenerateNewPickupServer(On.RoR2.ShopTerminalBehavior.orig_GenerateNewPickupServer orig, ShopTerminalBehavior shopTerminalBehavior) {
-            var shopList = new List<PickupIndex>();
+            var dropType = InteractableCalculator.DropType.none;
             if (shopTerminalBehavior.itemTier == ItemTier.Tier1) {
-                shopList = Run.instance.availableTier1DropList;
+                dropType = InteractableCalculator.DropType.tier1;
             } else if (shopTerminalBehavior.itemTier == ItemTier.Tier2) {
-                shopList = Run.instance.availableTier2DropList;
+                dropType = InteractableCalculator.DropType.tier2;
             } else if (shopTerminalBehavior.itemTier == ItemTier.Tier3) {
-                shopList = Run.instance.availableTier3DropList;
+                dropType = InteractableCalculator.DropType.tier3;
             } else if (shopTerminalBehavior.itemTier == ItemTier.Boss) {
-                shopList = Run.instance.availableBossDropList;
+                dropType = InteractableCalculator.DropType.boss;
             } else if (shopTerminalBehavior.itemTier == ItemTier.Lunar) {
-                shopList = Run.instance.availableLunarDropList;
+                dropType = InteractableCalculator.DropType.lunar;
             }
 
-            if (shopList.Count > 0 || shopTerminalBehavior.dropTable != null) {
+            if (PlayerInteractables.TiersPresent[dropType] || shopTerminalBehavior.dropTable != null) {
                 orig(shopTerminalBehavior);
             } else {
                 shopTerminalBehavior.SetNoPickup();
@@ -674,19 +674,19 @@ namespace R2API {
 
         private static void FixShrineBehaviour(On.RoR2.ShrineChanceBehavior.orig_AddShrineStack orig, ShrineChanceBehavior shrineChangeBehavior, Interactor interactor) {
             var tier1Adjusted = PlayerDropList.AvailableTier1DropList;
-            if (tier1Adjusted.Count == 0) {
+            if (!PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier1]) {
                 tier1Adjusted = DropList.Tier1DropListOriginal;
             }
             var tier2Adjusted = PlayerDropList.AvailableTier2DropList;
-            if (tier2Adjusted.Count == 0) {
+            if (!PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier2]) {
                 tier2Adjusted = DropList.Tier2DropListOriginal;
             }
             var tier3Adjusted = PlayerDropList.AvailableTier3DropList;
-            if (tier3Adjusted.Count == 0) {
+            if (!PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier3]) {
                 tier3Adjusted = DropList.Tier3DropListOriginal;
             }
             var equipmentAdjusted = PlayerDropList.AvailableEquipmentDropList;
-            if (equipmentAdjusted.Count == 0) {
+            if (!PlayerInteractables.TiersPresent[InteractableCalculator.DropType.equipment]) {
                 equipmentAdjusted = DropList.EquipmentDropListOriginal;
             }
 
@@ -710,11 +710,11 @@ namespace R2API {
                 }
             }
 
-            var dropList = Run.instance.availableTier2DropList;
+            var dropType = InteractableCalculator.DropType.tier2;
             if (bossGroup.forceTier3Reward) {
-                dropList = Run.instance.availableTier3DropList;
+                dropType = InteractableCalculator.DropType.tier3;
             }
-            bool normalListValid = DropList.IsValidList(dropList);
+            bool normalListValid = PlayerInteractables.TiersPresent[dropType];
 
             if (normalListValid || bossDropsAdjusted.Count != 0) {
                 var bossDropChanceOld = bossGroup.bossDropChance;
@@ -810,14 +810,14 @@ namespace R2API {
         }
 
         private static void EndRound(On.RoR2.ArenaMissionController.orig_EndRound orig, ArenaMissionController arenaMissionController) {
-            var list = Run.instance.availableTier1DropList;
+            var dropType = InteractableCalculator.DropType.tier1;
             if (arenaMissionController.currentRound > 4) {
-                list = Run.instance.availableTier2DropList;
+                dropType = InteractableCalculator.DropType.tier2;
             }
             if (arenaMissionController.currentRound == arenaMissionController.totalRoundsMax) {
-                list = Run.instance.availableTier3DropList;
+                dropType = InteractableCalculator.DropType.tier3;
             }
-            if (list.Count == 0) {
+            if (PlayerInteractables.TiersPresent[dropType]) {
                 var rewardSpawnPositionOld = arenaMissionController.rewardSpawnPosition;
                 arenaMissionController.rewardSpawnPosition = null;
                 orig(arenaMissionController);

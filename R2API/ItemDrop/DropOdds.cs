@@ -34,23 +34,23 @@ namespace R2API.ItemDrop {
                     chestBehavior.tier3Chance = ChestTierOdds[interactableName][2];
                 }
                 if (ItemDropAPI.PlayerInteractables.SubsetTiersPresent.ContainsKey(interactableName)) {
-                    if (!ItemDropAPI.PlayerInteractables.SubsetTiersPresent[interactableName]["tier1"]) {
+                    if (!ItemDropAPI.PlayerInteractables.SubsetTiersPresent[interactableName][InteractableCalculator.DropType.tier1]) {
                         chestBehavior.tier1Chance = 0;
                     }
-                    if (!ItemDropAPI.PlayerInteractables.SubsetTiersPresent[interactableName]["tier2"]) {
+                    if (!ItemDropAPI.PlayerInteractables.SubsetTiersPresent[interactableName][InteractableCalculator.DropType.tier2]) {
                         chestBehavior.tier2Chance = 0;
                     }
-                    if (!ItemDropAPI.PlayerInteractables.SubsetTiersPresent[interactableName]["tier3"]) {
+                    if (!ItemDropAPI.PlayerInteractables.SubsetTiersPresent[interactableName][InteractableCalculator.DropType.tier3]) {
                         chestBehavior.tier3Chance = 0;
                     }
                 } else {
-                    if (!ItemDropAPI.PlayerInteractables.TiersPresent["tier1"]) {
+                    if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier1]) {
                         chestBehavior.tier1Chance = 0;
                     }
-                    if (!ItemDropAPI.PlayerInteractables.TiersPresent["tier2"]) {
+                    if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier2]) {
                         chestBehavior.tier2Chance = 0;
                     }
-                    if (!ItemDropAPI.PlayerInteractables.TiersPresent["tier3"]) {
+                    if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier3]) {
                         chestBehavior.tier3Chance = 0;
                     }
                 }
@@ -81,16 +81,16 @@ namespace R2API.ItemDrop {
                     shrineBehavior.equipmentWeight = ShrineTierOdds[interactableName][3];
                 }
 
-                if (!ItemDropAPI.PlayerInteractables.TiersPresent["tier1"]) {
+                if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier1]) {
                     shrineBehavior.tier1Weight = 0;
                 }
-                if (!ItemDropAPI.PlayerInteractables.TiersPresent["tier2"]) {
+                if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier2]) {
                     shrineBehavior.tier2Weight = 0;
                 }
-                if (!ItemDropAPI.PlayerInteractables.TiersPresent["tier3"]) {
+                if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier3]) {
                     shrineBehavior.tier3Weight = 0;
                 }
-                if (!ItemDropAPI.PlayerInteractables.TiersPresent["equipment"]) {
+                if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.equipment]) {
                     shrineBehavior.equipmentWeight = 0;
                 }
             }
@@ -118,16 +118,16 @@ namespace R2API.ItemDrop {
                     dropTable.tier3Weight = DropTableTierOdds[interactableName][2];
                     dropTable.equipmentWeight = DropTableTierOdds[interactableName][3];
                 }
-                if (!ItemDropAPI.PlayerInteractables.TiersPresent["tier1"]) {
+                if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier1]) {
                     dropTable.tier1Weight = 0;
                 }
-                if (!ItemDropAPI.PlayerInteractables.TiersPresent["tier2"]) {
+                if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier2]) {
                     dropTable.tier2Weight = 0;
                 }
-                if (!ItemDropAPI.PlayerInteractables.TiersPresent["tier3"]) {
+                if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier3]) {
                     dropTable.tier3Weight = 0;
                 }
-                if (!ItemDropAPI.PlayerInteractables.TiersPresent["equipment"]) {
+                if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.equipment]) {
                     dropTable.equipmentWeight = 0;
                 }
 
