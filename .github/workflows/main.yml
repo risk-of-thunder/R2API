@@ -28,7 +28,7 @@ jobs:
     - uses: actions/setup-dotnet@v1.7.2
     - run: dotnet build .
     - name: Prepare Artifact
-    - run: |
+      run: |
         mkdir plugins
         cp R2API/bin/Debug/netstandard2.0/*.dll plugins/R2API/
         cp R2API/bin/Debug/netstandard2.0/*.xml plugins/R2API/
