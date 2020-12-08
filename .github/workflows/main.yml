@@ -30,6 +30,8 @@ jobs:
     - name: Prepare Artifact
       run: |
         mkdir plugins
+        mkdir plugins/R2API
+        mkdir monomod
         cp R2API/bin/Debug/netstandard2.0/*.dll plugins/R2API/
         cp R2API/bin/Debug/netstandard2.0/*.xml plugins/R2API/
         cp R2API.MonoMod/bin/Debug/netstandard2.0/*.mm.dll monomod/
