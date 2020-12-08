@@ -33,4 +33,4 @@ jobs:
         name: R2API
         path: |
           R2API/R2API/bin/Debug/netstandard2.0/publish/
-          R2API/R2API/R2API.MonoMod/bin/Debug/netstandard2.0/publish/
+          R2API/R2API.MonoMod/bin/Debug/netstandard2.0/publish/
