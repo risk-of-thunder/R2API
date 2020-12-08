@@ -22,15 +22,16 @@ jobs:
         echo "Major: ${{ steps.gitversion.outputs.major }}"
         echo "Minor: ${{ steps.gitversion.outputs.minor }}"
         echo "Patch: ${{ steps.gitversion.outputs.patch }}"
-    - uses: actions/setup-dotnet@v1.7.2
-    - run: dotnet publish .
     - name: Run Tests
       run: |
         dotnet test
+    - uses: actions/setup-dotnet@v1.7.2
+    - run: dotnet build .
     - name: Upload R2API Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: R2API
         path: |
-          R2API/bin/Debug/netstandard2.0/publish/
-          R2API.MonoMod/bin/Debug/netstandard2.0/publish/
+          R2API/bin/Debug/netstandard2.0/publish/*.dll
+          R2API/bin/Debug/netstandard2.0/publish/*.xml
+          R2API.MonoMod/bin/Debug/netstandard2.0/publish/*.mm.dll
