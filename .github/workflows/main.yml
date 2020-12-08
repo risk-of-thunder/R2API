@@ -27,14 +27,19 @@ jobs:
         dotnet test
     - uses: actions/setup-dotnet@v1.7.2
     - run: dotnet build .
+    - name: Prepare Artifact
+    - run: |
+        mkdir plugins
+        cp R2API/bin/Debug/netstandard2.0/*.dll plugins/R2API/
+        cp R2API/bin/Debug/netstandard2.0/*.xml plugins/R2API/
+        cp R2API.MonoMod/bin/Debug/netstandard2.0/*.mm.dll monomod/
     - name: Upload R2API Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: R2API
         path: |
-          R2API/bin/Debug/netstandard2.0/*.dll
-          R2API/bin/Debug/netstandard2.0/*.xml
-          R2API.MonoMod/bin/Debug/netstandard2.0/*.mm.dll
+          plugins/*
+          monomod/*
           manifest.json
           icon.png
           README.md
