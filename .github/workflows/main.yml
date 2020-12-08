@@ -22,7 +22,7 @@ jobs:
         echo "Major: ${{ steps.gitversion.outputs.major }}"
         echo "Minor: ${{ steps.gitversion.outputs.minor }}"
         echo "Patch: ${{ steps.gitversion.outputs.patch }}"
-    - uses: actions/setup-dotnet@v1
+    - uses: actions/setup-dotnet@v1.7.2
     - run: dotnet build .
     - name: Run Tests
       run: |
