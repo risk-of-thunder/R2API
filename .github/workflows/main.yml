@@ -27,3 +27,10 @@ jobs:
     - name: Run Tests
       run: |
         dotnet test
+    - name: Upload R2API Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: R2API
+        path: |
+          R2API/R2API/bin/Debug/netstandard2.0/publish/
+          R2API/R2API/R2API.MonoMod/bin/Debug/netstandard2.0/publish/
