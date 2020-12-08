@@ -32,6 +32,9 @@ jobs:
       with:
         name: R2API
         path: |
-          R2API/bin/Debug/netstandard2.0/publish/*.dll
-          R2API/bin/Debug/netstandard2.0/publish/*.xml
-          R2API.MonoMod/bin/Debug/netstandard2.0/publish/*.mm.dll
+          R2API/bin/Debug/netstandard2.0/*.dll
+          R2API/bin/Debug/netstandard2.0/*.xml
+          R2API.MonoMod/bin/Debug/netstandard2.0/*.mm.dll
+          manifest.json
+          icon.png
+          README.md
