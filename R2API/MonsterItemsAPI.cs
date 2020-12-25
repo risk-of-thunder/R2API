@@ -6,6 +6,7 @@ using R2API.ItemDropAPITools;
 using R2API.Utils;
 using RoR2;
 using RoR2.Artifacts;
+using UnityEngine;
 
 namespace R2API {
     [R2APISubmodule]
@@ -258,8 +259,9 @@ namespace R2API {
             if (!TierValidScav[ItemTier.Tier3]) {
                 scavengerItemGranter.tier3Types = 0;
             }
-
+            DropList.SetDropLists(MonsterDropList.AvailableTier1DropList, MonsterDropList.AvailableTier2DropList, MonsterDropList.AvailableTier3DropList, MonsterDropList.AvailableEquipmentDropList);
             orig(scavengerItemGranter);
+            DropList.RevertDropLists();
 
             scavengerItemGranter.tier1Types = scavTierTypesBackup[0];
             scavengerItemGranter.tier2Types = scavTierTypesBackup[1];

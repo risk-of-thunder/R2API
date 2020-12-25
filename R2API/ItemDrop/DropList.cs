@@ -355,7 +355,7 @@ namespace R2API {
             }
 
             public static bool IsValidList(IEnumerable<PickupIndex> dropList) {
-                if (dropList.Count() == 1 && dropList.Contains(PickupIndex.none)) {
+                if (dropList.Count() == 0 || (dropList.Count() == 1 && dropList.Contains(PickupIndex.none))) {
                     return false;
                 }
                 return true;
