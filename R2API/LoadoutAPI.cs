@@ -309,15 +309,15 @@ namespace R2API {
 
             var newSkin = ScriptableObject.CreateInstance<SkinDef>();
 
-            newSkin.baseSkins = skin.BaseSkins;
+            newSkin.baseSkins = skin.BaseSkins ?? Array.Empty<SkinDef>();
             newSkin.icon = skin.Icon;
             newSkin.unlockableName = skin.UnlockableName;
             newSkin.rootObject = skin.RootObject;
-            newSkin.rendererInfos = skin.RendererInfos;
-            newSkin.gameObjectActivations = skin.GameObjectActivations;
-            newSkin.meshReplacements = skin.MeshReplacements;
-            newSkin.projectileGhostReplacements = skin.ProjectileGhostReplacements;
-            newSkin.minionSkinReplacements = skin.MinionSkinReplacements;
+            newSkin.rendererInfos = skin.RendererInfos ?? Array.Empty<CharacterModel.RendererInfo>();
+            newSkin.gameObjectActivations = skin.GameObjectActivations ?? Array.Empty<SkinDef.GameObjectActivation>();
+            newSkin.meshReplacements = skin.MeshReplacements ?? Array.Empty<SkinDef.MeshReplacement>();
+            newSkin.projectileGhostReplacements = skin.ProjectileGhostReplacements ?? Array.Empty<SkinDef.ProjectileGhostReplacement>();
+            newSkin.minionSkinReplacements = skin.MinionSkinReplacements ?? Array.Empty<SkinDef.MinionSkinReplacement>();
             newSkin.nameToken = skin.NameToken;
             newSkin.name = skin.Name;
 
