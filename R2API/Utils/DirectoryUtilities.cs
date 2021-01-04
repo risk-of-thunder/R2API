@@ -4,6 +4,7 @@ using System.IO;
 namespace R2API.Utils {
     internal static class DirectoryUtilities {
         private static bool _alreadyPrintedFolderStructure;
+        private static bool _bepinexFolderPrinted;
 
         private static readonly HashSet<string> BannedFolders = new HashSet<string> {
             "MonoBleedingEdge",
@@ -14,6 +15,9 @@ namespace R2API.Utils {
             if (_alreadyPrintedFolderStructure)
                 return;
             WriteFolderStructure(directory);
+            if (!_bepinexFolderPrinted) {
+                WriteFolderStructure(BepInEx.Paths.BepInExRootPath);
+            }
             _alreadyPrintedFolderStructure = true;
         }
 
@@ -38,6 +42,10 @@ namespace R2API.Utils {
         private static void WriteFolderStructureRecursively(string directory, int spaces = 0) {
             var dirInfo = new DirectoryInfo(directory);
             R2API.Logger.LogDebug($"{GenerateSpaces(spaces)}|---+ {dirInfo.Name}");
+
+            if (!_bepinexFolderPrinted && BepInEx.Paths.BepInExRootPath == directory) {
+                _bepinexFolderPrinted = true;
+            }
 
             if (dirInfo.Parent != null && (BannedFolders.Contains(dirInfo.Name) ||
                                            BannedFolders.Contains($"{dirInfo.Parent.Name}/{dirInfo.Name}")))
