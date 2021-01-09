@@ -104,6 +104,12 @@ namespace R2API {
             IL.RoR2.BossGroup.DropRewards += DropRewards;
             IL.RoR2.GlobalEventManager.OnCharacterDeath += OnCharacterDeath;
 
+            On.RoR2.Run.Start += RunStart;
+            On.RoR2.MultiShopController.CreateTerminals += CreateTerminals;
+            IL.RoR2.ShopTerminalBehavior.OnSerialize += ShopTerminalOnSerialize;
+            IL.RoR2.ShopTerminalBehavior.OnDeserialize += ShopTerminalOnDeserialize;
+            On.RoR2.PickupDisplay.RebuildModel += RebuildModel;
+
             IL.RoR2.PickupDropletController.CreatePickupDroplet += CreatePickupDroplet;
             On.RoR2.PickupDropletController.OnCollisionEnter += OnCollisionEnter;
             On.RoR2.PickupDropletController.CreatePickupDroplet += CreatePickupDroplet;
@@ -133,10 +139,21 @@ namespace R2API {
             IL.RoR2.BossGroup.DropRewards -= DropRewards;
             IL.RoR2.GlobalEventManager.OnCharacterDeath -= OnCharacterDeath;
 
+            On.RoR2.Run.Start -= RunStart;
+            On.RoR2.MultiShopController.CreateTerminals -= CreateTerminals;
+            IL.RoR2.ShopTerminalBehavior.OnSerialize -= ShopTerminalOnSerialize;
+            IL.RoR2.ShopTerminalBehavior.OnDeserialize -= ShopTerminalOnDeserialize;
+            On.RoR2.PickupDisplay.RebuildModel -= RebuildModel;
+
             IL.RoR2.PickupDropletController.CreatePickupDroplet -= CreatePickupDroplet;
             On.RoR2.PickupDropletController.OnCollisionEnter -= OnCollisionEnter;
             On.RoR2.PickupDropletController.CreatePickupDroplet -= CreatePickupDroplet;
             IL.RoR2.UI.PickupPickerPanel.SetPickupOptions -= SetPickupOptions;
+        }
+
+        private static void RunStart(On.RoR2.Run.orig_Start orig, Run run) {
+            PopulateSafePickups();
+            orig(run);
         }
 
         private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
@@ -282,19 +299,32 @@ namespace R2API {
             });
         }
 
+        private static Dictionary<ItemTier, PickupIndex> safePickups;
+
+        private static void PopulateSafePickups() {
+            safePickups = new Dictionary<ItemTier, PickupIndex>() {
+                { ItemTier.Tier1, PickupCatalog.FindPickupIndex(ItemIndex.ScrapWhite) },
+                { ItemTier.Tier2, PickupCatalog.FindPickupIndex(ItemIndex.ScrapGreen) },
+                { ItemTier.Tier3, PickupCatalog.FindPickupIndex(ItemIndex.ScrapRed) },
+                { ItemTier.Boss, PickupCatalog.FindPickupIndex(ItemIndex.ScrapYellow) },
+                { ItemTier.Lunar, PickupCatalog.FindPickupIndex(ItemIndex.LunarDagger) },
+                { ItemTier.NoTier, PickupCatalog.FindPickupIndex(EquipmentIndex.CritOnUse) },
+            };
+        }
+
         private static PickupIndex AdjustCommandPickupIndex(List<PickupIndex> pickupList, PickupIndex givenPickupIndex) {
             if (PickupListsEqual(Run.instance.availableTier1DropList, pickupList)) {
-                return PickupCatalog.FindPickupIndex(ItemIndex.ScrapWhite);
+                return safePickups[ItemTier.Tier1];
             } else if (PickupListsEqual(Run.instance.availableTier2DropList, pickupList)) {
-                return PickupCatalog.FindPickupIndex(ItemIndex.ScrapGreen);
+                return safePickups[ItemTier.Tier2];
             } else if (PickupListsEqual(Run.instance.availableTier3DropList, pickupList)) {
-                return PickupCatalog.FindPickupIndex(ItemIndex.ScrapRed);
+                return safePickups[ItemTier.Tier3];
             } else if (PickupListsEqual(Run.instance.availableBossDropList, pickupList)) {
-                return PickupCatalog.FindPickupIndex(ItemIndex.ScrapYellow);
+                return safePickups[ItemTier.Boss];
             } else if (PickupListsEqual(Run.instance.availableLunarDropList, pickupList)) {
-                return PickupCatalog.FindPickupIndex(ItemIndex.LunarDagger);
+                return safePickups[ItemTier.Lunar];
             } else if (PickupListsEqual(Run.instance.availableEquipmentDropList, pickupList)) {
-                return PickupCatalog.FindPickupIndex(EquipmentIndex.CritOnUse);
+                return safePickups[ItemTier.NoTier];
             }
             return givenPickupIndex;
         }
@@ -350,6 +380,7 @@ namespace R2API {
             cursor.Index = 0;
             while (cursor.TryGotoNext(x => x.MatchCallvirt(rollItemAddMethodInfo))) {
                 cursor.Remove();
+                cursor.Emit(OpCodes.Ldarg_0);
                 cursor.Emit(OpCodes.Callvirt, filterListMethodInfo);
             }
             
@@ -369,13 +400,15 @@ namespace R2API {
             });
         }
 
-        private static void FilterList(WeightedSelection<List<PickupIndex>> selector, List<PickupIndex> dropList, float dropChance) {
+        private static void FilterList(WeightedSelection<List<PickupIndex>> selector, List<PickupIndex> dropList, float dropChance, ChestBehavior chestBehavior) {
             if ((double) dropChance <= 0) {
                 return;
             }
             List<PickupIndex> filteredDropList = new List<PickupIndex>();
             foreach (PickupIndex pickupIndex in dropList) {
-                filteredDropList.Add(pickupIndex);
+                if (chestBehavior.requiredItemTag == ItemTag.Any || (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupIndex).itemIndex).ContainsTag(chestBehavior.requiredItemTag))) {
+                    filteredDropList.Add(pickupIndex);
+                }
             }
             selector.AddChoice(filteredDropList, dropChance);
         }
@@ -637,6 +670,77 @@ namespace R2API {
 
 
 
+
+        private static void CreateTerminals(On.RoR2.MultiShopController.orig_CreateTerminals orig, MultiShopController multiShopController) {
+            orig(multiShopController);
+            ItemTier itemTier = multiShopController.itemTier;
+            if (multiShopController.doEquipmentInstead) {
+                itemTier = ItemTier.NoTier;
+            }
+            foreach (GameObject terminal in multiShopController.terminalGameObjects) {
+                terminal.GetComponent<ShopTerminalBehavior>().itemTier = itemTier;
+            }
+        }
+
+        private static void ShopTerminalOnSerialize(ILContext ilContext) {
+            var hasBeenPurchasedInfo = typeof(ShopTerminalBehavior).GetField("hasBeenPurchased", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var writeInfo = typeof(UnityEngine.Networking.NetworkWriter).GetMethod("Write", new Type[] { typeof(bool) });
+
+            ILCursor cursor = new ILCursor(ilContext);
+            cursor.GotoNext(
+                x => x.MatchLdarg(1),
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld(hasBeenPurchasedInfo),
+                x => x.MatchCallvirt(writeInfo)
+            );
+            cursor.Index += 4;
+            cursor.Emit(OpCodes.Ldarg, 0);
+            cursor.Emit(OpCodes.Ldarg, 1);
+            cursor.EmitDelegate<Action<ShopTerminalBehavior, NetworkWriter>>((shopTerminalBehavior, writer) => {
+                writer.WritePackedUInt32((uint)shopTerminalBehavior.itemTier);
+            });
+        }
+
+        private static void ShopTerminalOnDeserialize(ILContext ilContext) {
+            var readBooleanInfo = typeof(UnityEngine.Networking.NetworkReader).GetMethod("ReadBoolean", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var hasBeenPurchasedInfo = typeof(ShopTerminalBehavior).GetField("hasBeenPurchased", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            ILCursor cursor = new ILCursor(ilContext);
+            cursor.GotoNext(
+                x => x.MatchLdarg(0),
+                x => x.MatchLdarg(1),
+                x => x.MatchCallvirt(readBooleanInfo),
+                x => x.MatchStfld(hasBeenPurchasedInfo)
+            );
+            cursor.Index += 4;
+            cursor.Emit(OpCodes.Ldarg, 0);
+            cursor.Emit(OpCodes.Ldarg, 1);
+            cursor.EmitDelegate<Action<ShopTerminalBehavior, NetworkReader>>((shopTerminalBehavior, reader) => {
+                shopTerminalBehavior.itemTier = (ItemTier)reader.ReadPackedUInt32();
+            });
+        }
+
+        private static void RebuildModel(On.RoR2.PickupDisplay.orig_RebuildModel orig, PickupDisplay pickupDisplay) {
+            System.Reflection.FieldInfo hiddenInfo = typeof(RoR2.PickupDisplay).GetField("hidden", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            System.Reflection.FieldInfo pickupIndexInfo = typeof(RoR2.PickupDisplay).GetField("pickupIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            bool hidden = (bool)hiddenInfo.GetValue(pickupDisplay);
+            PickupIndex pickupIndex = (PickupIndex)pickupIndexInfo.GetValue(pickupDisplay);
+            ShopTerminalBehavior shopTerminalBehavior = null;
+            if (hidden) {
+                if (pickupDisplay.transform.parent != null && pickupDisplay.transform.parent.parent != null && pickupDisplay.transform.parent.parent.parent != null) {
+                    shopTerminalBehavior = pickupDisplay.transform.parent.parent.parent.GetComponent<ShopTerminalBehavior>();
+                    if (shopTerminalBehavior != null) {
+                        pickupIndexInfo.SetValue(pickupDisplay, safePickups[shopTerminalBehavior.itemTier]);
+                    }
+                }
+            }
+            orig(pickupDisplay);
+            if (hidden) {
+                if (shopTerminalBehavior != null) {
+                    pickupIndexInfo.SetValue(pickupDisplay, pickupIndex);
+                }
+            }
+        }
 
         private static void GenerateNewPickupServer(On.RoR2.ShopTerminalBehavior.orig_GenerateNewPickupServer orig, ShopTerminalBehavior shopTerminalBehavior) {
             var dropType = InteractableCalculator.DropType.none;
