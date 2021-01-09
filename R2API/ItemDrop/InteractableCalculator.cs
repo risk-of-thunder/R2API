@@ -264,9 +264,11 @@ namespace R2API.ItemDrop {
                             if (_subsetChests.Contains(interactableName)) {
                                 if (dropList.AvailableTier1DropList.Contains(pickupIndex)) {
                                     SubsetTiersPresent[interactableName][DropType.tier1] = true;
-                                } else if (dropList.AvailableTier2DropList.Contains(pickupIndex)) {
+                                }
+                                if (dropList.AvailableTier2DropList.Contains(pickupIndex)) {
                                     SubsetTiersPresent[interactableName][DropType.tier2] = true;
-                                } else if (dropList.AvailableTier3DropList.Contains(pickupIndex)) {
+                                }
+                                if (dropList.AvailableTier3DropList.Contains(pickupIndex)) {
                                     SubsetTiersPresent[interactableName][DropType.tier3] = true;
                                 }
                             }
@@ -292,17 +294,19 @@ namespace R2API.ItemDrop {
                     if (pickupDef != null) {
                         ItemIndex itemIndex = pickupDef.itemIndex;
                         if (itemIndex != ItemIndex.None) {
-                            ItemTier itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
-                            if (itemTier == ItemTier.Tier1) {
-                                TiersPresent[DropType.tier1Tier] = true;
-                            } else if (itemTier == ItemTier.Tier2) {
-                                TiersPresent[DropType.tier2Tier] = true;
-                            } else if (itemTier == ItemTier.Tier3) {
-                                TiersPresent[DropType.tier3Tier] = true;
-                            } else if (itemTier == ItemTier.Boss) {
-                                TiersPresent[DropType.bossTier] = true;
-                            } else if (itemTier == ItemTier.Lunar) {
-                                TiersPresent[DropType.lunarTier] = true;
+                            if (!ItemCatalog.GetItemDef(itemIndex).ContainsTag(ItemTag.Scrap)) {
+                                ItemTier itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
+                                if (itemTier == ItemTier.Tier1) {
+                                    TiersPresent[DropType.tier1Tier] = true;
+                                } else if (itemTier == ItemTier.Tier2) {
+                                    TiersPresent[DropType.tier2Tier] = true;
+                                } else if (itemTier == ItemTier.Tier3) {
+                                    TiersPresent[DropType.tier3Tier] = true;
+                                } else if (itemTier == ItemTier.Boss) {
+                                    TiersPresent[DropType.bossTier] = true;
+                                } else if (itemTier == ItemTier.Lunar) {
+                                    TiersPresent[DropType.lunarTier] = true;
+                                }
                             }
                         }
                         EquipmentIndex equipmentIndex = pickupDef.equipmentIndex;
