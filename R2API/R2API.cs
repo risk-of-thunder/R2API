@@ -32,7 +32,7 @@ namespace R2API {
 
         internal static HashSet<string> LoadedSubmodules;
 
-        public R2API() {
+        public void Awake() {
             Logger = base.Logger;
             ModManager = new DetourModManager();
             AddHookLogging();
