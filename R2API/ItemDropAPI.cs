@@ -190,7 +190,6 @@ namespace R2API {
             rouletteCommandArtifactLists.Clear();
             chestCommandArtifactLists.Clear();
 
-            sceneDirector.interactableCredit = sceneDirector.interactableCredit * 25;
             var allInteractables = Resources.LoadAll<InteractableSpawnCard>(AllInteractablesResourcesPath);
             foreach (var spawnCard in allInteractables) {
                 var interactableName = InteractableCalculator.GetSpawnCardName(spawnCard);
