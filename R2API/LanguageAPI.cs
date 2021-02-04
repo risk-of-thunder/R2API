@@ -47,6 +47,32 @@ namespace R2API {
             }
 
             On.RoR2.Language.GetLocalizedStringByToken += Language_GetLocalizedStringByToken;
+            On.RoR2.Language.TokenIsRegistered += Language_TokenIsRegistered;
+        }
+
+        private static bool Language_TokenIsRegistered(On.RoR2.Language.orig_TokenIsRegistered orig, Language self, string token) {
+            var languagename = self.name;
+            if (overlayLanuage.ContainsKey(languagename)) {
+                if (overlayLanuage[languagename].ContainsKey(token)) {
+                    return true;
+                }
+            }
+            if (overlayLanuage.ContainsKey(genericLanguage)) {
+                if (overlayLanuage[genericLanguage].ContainsKey(token)) {
+                    return true;
+                }
+            }
+            if (customLanguage.ContainsKey(languagename)) {
+                if (customLanguage[languagename].ContainsKey(token)) {
+                    return true;
+                }
+            }
+            if (customLanguage.ContainsKey(genericLanguage)) {
+                if (customLanguage[genericLanguage].ContainsKey(token)) {
+                    return true;
+                }
+            }
+            return orig(self, token);
         }
 
         private static string Language_GetLocalizedStringByToken(On.RoR2.Language.orig_GetLocalizedStringByToken orig, Language self, string token) {
