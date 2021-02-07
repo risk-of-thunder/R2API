@@ -1,18 +1,3 @@
 [submodule "Patchers/"]
 	path = Patchers/
 	url = https://github.com/harbingerofme/LighterPatcher.git
-[submodule "Patchers/HarbingerOfMe.LighterPatcher"]
-	path = Patchers/HarbingerOfMe.LighterPatcher
-	url = https://github.com/harbingerofme/LighterPatcher.git
-[submodule "Patchers/LighterPatcher"]
-	path = Patchers/LighterPatcher
-	url = https://github.com/harbingerofme/LighterPatcher.git
-[submodule "Patchers/--force"]
-	path = Patchers/--force
-	url = https://github.com/harbingerofme/LighterPatcher.git
-[submodule "Patchers/HarbingerOfMe.HookGen"]
-	path = Patchers/HarbingerOfMe.HookGen
-	url = https://github.com/harbingerofme/Bepinex.Monomod.HookGenPatcher.git
-[submodule "Patchers/BepInEx.MonoMod.Loader"]
-	path = Patchers/BepInEx.MonoMod.Loader
-	url = https://github.com/BepInEx/BepInEx.MonoMod.Loader
