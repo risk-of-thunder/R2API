@@ -4,6 +4,3 @@
 [submodule "Patchers/HarbingerOfMe.LighterPatcher"]
 	path = Patchers/HarbingerOfMe.LighterPatcher
 	url = https://github.com/harbingerofme/LighterPatcher.git
-[submodule "Patchers/HarbingerOfMe.HookGen"]
-	path = Patchers/HarbingerOfMe.HookGen
-	url = https://github.com/harbingerofme/Bepinex.Monomod.HookGenPatcher.git
