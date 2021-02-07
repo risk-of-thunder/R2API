@@ -1,6 +1,3 @@
 [submodule "Patchers/"]
 	path = Patchers/
 	url = https://github.com/harbingerofme/LighterPatcher.git
-[submodule "Patchers/HarbingerOfMe.LighterPatcher"]
-	path = Patchers/HarbingerOfMe.LighterPatcher
-	url = https://github.com/harbingerofme/LighterPatcher.git
