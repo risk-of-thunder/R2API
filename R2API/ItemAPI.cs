@@ -93,17 +93,6 @@ namespace R2API {
             var bossItems = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Boss).Select(x => x.ItemDef.itemIndex).ToArray();
 
             LoadRelatedAPIs();
-            ItemDropAPI.AddItemByTier(ItemTier.Tier1, t1Items);
-            ItemDropAPI.AddItemByTier(ItemTier.Tier2, t2Items);
-            ItemDropAPI.AddItemByTier(ItemTier.Tier3, t3Items);
-            ItemDropAPI.AddItemByTier(ItemTier.Lunar, lunarItems);
-            ItemDropAPI.AddItemByTier(ItemTier.Boss, bossItems);
-
-            MonsterItemsAPI.AddItemByTier(ItemTier.Tier1, t1Items);
-            MonsterItemsAPI.AddItemByTier(ItemTier.Tier2, t2Items);
-            MonsterItemsAPI.AddItemByTier(ItemTier.Tier3, t3Items);
-            MonsterItemsAPI.AddItemByTier(ItemTier.Lunar, lunarItems);
-            MonsterItemsAPI.AddItemByTier(ItemTier.Boss, bossItems);
 
             _itemCatalogInitialized = true;
         }
@@ -122,8 +111,6 @@ namespace R2API {
                 .ToArray();
 
             LoadRelatedAPIs();
-            ItemDropAPI.AddEquipment(droppableEquipments);
-            MonsterItemsAPI.AddEquipment(droppableEquipments);
 
             _equipmentCatalogInitialized = true;
         }

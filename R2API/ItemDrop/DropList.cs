@@ -133,12 +133,16 @@ namespace R2API {
 
                     SpecialItemsOriginal.Clear();
                     foreach (var itemIndex in Catalog.SpecialItems) {
-                        SpecialItemsOriginal.Add(PickupCatalog.FindPickupIndex(itemIndex));
+                        if (run.availableItems.Contains(itemIndex)) {
+                            SpecialItemsOriginal.Add(PickupCatalog.FindPickupIndex(itemIndex));
+                        }
                     }
                     foreach (var itemIndex in Catalog.ScrapItems.Values) {
-                        SpecialItemsOriginal.Add(PickupCatalog.FindPickupIndex(itemIndex));
+                        if (run.availableItems.Contains(itemIndex)) {
+                            SpecialItemsOriginal.Add(PickupCatalog.FindPickupIndex(itemIndex));
+                        }
                     }
-
+                    
                     SpecialEquipmentOriginal.Clear();
                     foreach (var equipmentIndex in Catalog.EliteEquipment) {
                         var sprite = EquipmentCatalog.GetEquipmentDef(equipmentIndex).pickupIconSprite;
@@ -176,7 +180,6 @@ namespace R2API {
                 AvailableBossDropList = BackupDropList(CreateDropList(BossDropListOriginal,
                     itemsToAdd[ItemTier.Boss], equipmentsToAdd[EquipmentDropType.Boss],
                     itemsToRemove[ItemTier.Boss], equipmentsToRemove[EquipmentDropType.Boss]));
-
             }
 
             private static List<PickupIndex> CreateDropList(IEnumerable<PickupIndex> vanillaDropList,
