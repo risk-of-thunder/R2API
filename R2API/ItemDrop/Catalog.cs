@@ -29,6 +29,7 @@ namespace R2API {
                             }
                         }
                     }
+                    
                     foreach (var equipmentIndex in EquipmentCatalog.allEquipment) {
                         var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
                         if (!EquipmentCatalog.equipmentList.Contains(equipmentIndex)) {
@@ -38,6 +39,7 @@ namespace R2API {
                             }
                         }
                     }
+
                     foreach (var itemIndex in ItemCatalog.lunarItemList) {
                         var itemDef = ItemCatalog.GetItemDef(itemIndex);
                         var cleansable = false;

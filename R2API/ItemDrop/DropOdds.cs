@@ -152,7 +152,6 @@ namespace R2API.ItemDrop {
 
                 if (DropTableItemOdds.ContainsKey(interactableName)) {
                     for (int entryIndex = 0; entryIndex < dropTable.entries.Length; entryIndex++) {
-
                         dropTable.entries[entryIndex].pickupWeight = DropTableItemOdds[interactableName][entryIndex];
                     }
                 }
