@@ -1,9 +1,10 @@
-﻿using System;
+﻿using RoR2;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using RoR2;
 
 namespace R2API.ItemDrop {
+
     [Flags]
     public enum EquipmentDropType {
         DefaultValue = 0,
@@ -15,6 +16,7 @@ namespace R2API.ItemDrop {
     }
 
     public static class EquipmentDropTypeUtil {
+
         public static IEnumerable<EquipmentDropType> GetEquipmentTypesFromIndex(EquipmentIndex equipmentIndex) {
             var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
 
@@ -47,7 +49,7 @@ namespace R2API.ItemDrop {
                 return equipmentDropType.GetFlags<EquipmentDropType>();
             }
             else {
-                return new[] {EquipmentDropType.NoDrop};
+                return new[] { EquipmentDropType.NoDrop };
             }
         }
 

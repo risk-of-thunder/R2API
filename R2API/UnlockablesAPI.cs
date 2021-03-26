@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using BepInEx;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.Utils;
 using R2API.Utils;
 using RoR2;
+using RoR2.Achievements;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using BF = System.Reflection.BindingFlags;
-using RoR2.Achievements;
-using BepInEx;
 
 namespace R2API {
+
     [R2APISubmodule]
     public static class UnlockablesAPI {
+
         #region External
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -39,7 +41,6 @@ namespace R2API {
         /// <param name="serverTracked">True if the achievement tracking is host side, false if client side</param>
         public static void AddUnlockable<TUnlockable>(Boolean serverTracked)
             where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
-
             AddUnlockable<TUnlockable>(serverTracked, null);
         }
 
@@ -52,7 +53,7 @@ namespace R2API {
         /// <param name="serverTrackedType">Use this if you need a BaseServerAchievement type to be tracked</param>
         public static void AddUnlockable<TUnlockable>(Boolean serverTracked, Type? serverTrackedType)
             where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockablesAPI)})]");
             }
             if (!AbleToAdd) throw new InvalidOperationException("Too late to add unlocks. Must be done during awake.");
@@ -92,10 +93,10 @@ namespace R2API {
         /// <param name="nameToken"></param>
         /// <param name="displayModelPath"></param>
         public static void AddUnlockableOnly(string? identifier, bool hidden = false, string? nameToken = null, string? displayModelPath = null) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockablesAPI)})]");
             }
-            if(!AbleToAdd) throw new InvalidOperationException("Too late to add unlocks. Must be done during awake.");
+            if (!AbleToAdd) throw new InvalidOperationException("Too late to add unlocks. Must be done during awake.");
             var def = new UnlockableDef {
                 name = identifier,
                 hidden = hidden,
@@ -108,19 +109,22 @@ namespace R2API {
         }
 
         public static void AddEclipseUnlockablesForSurvivor(string? modGuid, SurvivorDef? survivor) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(UnlockablesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockablesAPI)})]");
             }
-            if(!AbleToAdd) throw new InvalidOperationException("Too late to add unlocks. Must be done during awake.");
-            if(survivor is null) throw new ArgumentNullException(nameof(survivor));
-            if(survivor.name.IsNullOrWhiteSpace()) throw new ArgumentException("No name assigned", nameof(SurvivorDef));
+            if (!AbleToAdd) throw new InvalidOperationException("Too late to add unlocks. Must be done during awake.");
+            if (survivor is null) throw new ArgumentNullException(nameof(survivor));
+            if (survivor.name.IsNullOrWhiteSpace()) throw new ArgumentException("No name assigned", nameof(SurvivorDef));
             var usedGuid = modGuid.Replace('.', '_');
             eclipseUnlockInfos.Add((usedGuid, survivor));
         }
+
         private static readonly List<(string guid, SurvivorDef survivor)> eclipseUnlockInfos = new List<(string guid, SurvivorDef survivor)>();
 
-        #endregion
+        #endregion External
+
         #region Internal
+
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.AchievementManager.CollectAchievementDefs += AchievementManager_CollectAchievementDefs;
@@ -129,7 +133,6 @@ namespace R2API {
             IL.RoR2.UI.EclipseRunScreenController.SelectSurvivor += EclipseRunScreenController_SelectSurvivor;
             AbleToAdd = true;
         }
-
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
@@ -151,28 +154,29 @@ namespace R2API {
             .Emit(OpCodes.Ldarg_1)
             .EmitDelegate<Func<String, SurvivorIndex, String>>(GetEclipseUnlockableName);
 
-
         private static String EclipseRun_GetEclipseBaseUnlockableString(On.RoR2.EclipseRun.orig_GetEclipseBaseUnlockableString orig) {
             var res = orig();
-            if(res == "") return res;
+            if (res == "") return res;
             var spl = res.Split('.');
-            if(spl.Length != 2) return res;
-            if(Enum.TryParse<SurvivorIndex>(spl[1], out var i)) {
-                if(identities.TryGetValue(i, out var identity)) {
+            if (spl.Length != 2) return res;
+            if (Enum.TryParse<SurvivorIndex>(spl[1], out var i)) {
+                if (identities.TryGetValue(i, out var identity)) {
                     return $"{spl[0]}.{identity}";
                 }
             }
             return res;
         }
-        private static readonly Dictionary<SurvivorIndex,String> identities = new Dictionary<SurvivorIndex, String>();
+
+        private static readonly Dictionary<SurvivorIndex, String> identities = new Dictionary<SurvivorIndex, String>();
+
         private static String CreateOrGetIdentity(string mod, SurvivorDef survivor) {
-            if(identities.TryGetValue(survivor.survivorIndex, out var id)) return id;
+            if (identities.TryGetValue(survivor.survivorIndex, out var id)) return id;
             return identities[survivor.survivorIndex] = $"{mod}_{survivor.name.Replace('.', '_')}";
         }
 
-        private static Action<string,UnlockableDef> RegisterUnlockable {
+        private static Action<string, UnlockableDef> RegisterUnlockable {
             get {
-                if( _registerUnlockable is null ) {
+                if (_registerUnlockable is null) {
                     const string targetMethodName = "RegisterUnlockable";
                     MethodInfo targetMethod = typeof(UnlockableCatalog).GetMethod(targetMethodName, BF.Public | BF.Static | BF.NonPublic);
                     if (targetMethod is null) {
@@ -191,6 +195,7 @@ namespace R2API {
                 return _registerUnlockable;
             }
         }
+
         private static Action<string, UnlockableDef> _registerUnlockable;
 
         private static readonly List<(AchievementDef achievementDef, UnlockableDef unlockableDef)> moddedUnlocks = new List<(AchievementDef, UnlockableDef)>();
@@ -205,11 +210,11 @@ namespace R2API {
                     var (achievement, unlockable) = moddedUnlocks[i];
                     RegisterUnlockable(achievement.unlockableRewardIdentifier, unlockable);
                 }
-                for(Int32 i = 0; i < moddedUnlocksWithoutAchievements.Count; ++i) {
+                for (Int32 i = 0; i < moddedUnlocksWithoutAchievements.Count; ++i) {
                     RegisterUnlockable(moddedUnlocksWithoutAchievements[i].name, moddedUnlocksWithoutAchievements[i]);
                 }
-                foreach(var (modName, survivor) in eclipseUnlockInfos) {
-                    for(Int32 i = 2; i <= 8; ++i) {
+                foreach (var (modName, survivor) in eclipseUnlockInfos) {
+                    for (Int32 i = 2; i <= 8; ++i) {
                         var str = $"Eclipse.{CreateOrGetIdentity(modName, survivor)}.{i}";
                         RegisterUnlockable(str, new UnlockableDef());
                     }
@@ -228,10 +233,11 @@ namespace R2API {
             _ = c.GotoNext(MoveType.Before, x => x.MatchLdsfld(typeof(RoR2.UnlockableCatalog).GetField("nameToDefTable", BF.Public | BF.NonPublic | BF.Static)));
             _ = c.EmitDelegate<Action>(EmittedDelegate);
         }
+
         private static void AchievementManager_CollectAchievementDefs(ILContext il) {
             const string fieldName = "achievementIdentifiers";
             FieldInfo field = typeof(AchievementManager).GetField(fieldName, BF.Public | BF.Static | BF.NonPublic);
-            if( field is null ) {
+            if (field is null) {
                 R2API.Logger.LogError($"No field '{fieldName}' found in type '{nameof(AchievementManager)}', UnlockablesAPI will not function properly.");
                 return;
             }
@@ -239,7 +245,7 @@ namespace R2API {
             var cursor = new ILCursor(il);
             _ = cursor.GotoNext(MoveType.After,
                 x => x.MatchEndfinally(),
-                x => x.MatchLdloc( 1 )
+                x => x.MatchLdloc(1)
             );
 
             void EmittedDelegate(List<AchievementDef> achievementDefs, Dictionary<string, AchievementDef> map, List<string> identifiers) {
@@ -257,6 +263,7 @@ namespace R2API {
             _ = cursor.EmitDelegate<Action<List<AchievementDef>, Dictionary<string, AchievementDef>, List<string>>>(EmittedDelegate);
             _ = cursor.Emit(OpCodes.Ldloc_1);
         }
-        #endregion
+
+        #endregion Internal
     }
 }

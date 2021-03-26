@@ -1,13 +1,15 @@
+using R2API.Utils;
+using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using R2API.Utils;
-using RoR2;
 using UnityEngine;
 
 namespace R2API {
+
     [R2APISubmodule]
     public static partial class DirectorAPI {
+
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             On.RoR2.ClassicStageInfo.Awake += ClassicStageInfo_Awake;
@@ -28,8 +30,7 @@ namespace R2API {
         }
 
         private static StageInfo GetStageInfo(ClassicStageInfo stage) {
-            StageInfo stageInfo = new StageInfo
-            {
+            StageInfo stageInfo = new StageInfo {
                 stage = Stage.Custom,
                 CustomStageName = "",
             };
@@ -41,42 +42,55 @@ namespace R2API {
                 case "golemplains":
                     stageInfo.stage = Stage.TitanicPlains;
                     break;
+
                 case "blackbeach":
                     stageInfo.stage = Stage.DistantRoost;
                     break;
+
                 case "goolake":
                     stageInfo.stage = Stage.AbandonedAqueduct;
                     break;
+
                 case "foggyswamp":
                     stageInfo.stage = Stage.WetlandAspect;
                     break;
+
                 case "frozenwall":
                     stageInfo.stage = Stage.RallypointDelta;
                     break;
+
                 case "wispgraveyard":
                     stageInfo.stage = Stage.ScorchedAcres;
                     break;
+
                 case "dampcavesimple":
                     stageInfo.stage = Stage.AbyssalDepths;
                     break;
+
                 case "shipgraveyard":
                     stageInfo.stage = Stage.SirensCall;
                     break;
+
                 case "goldshores":
                     stageInfo.stage = Stage.GildedCoast;
                     break;
+
                 case "arena":
                     stageInfo.stage = Stage.VoidCell;
                     break;
+
                 case "limbo":
                     stageInfo.stage = Stage.MomentWhole;
                     break;
+
                 case "skymeadow":
                     stageInfo.stage = Stage.SkyMeadow;
-                     break;
+                    break;
+
                 case "artifactworld":
                     stageInfo.stage = Stage.ArtifactReliquary;
                     break;
+
                 default:
                     stageInfo.stage = Stage.Custom;
                     stageInfo.CustomStageName = scene.baseSceneName;
@@ -94,12 +108,10 @@ namespace R2API {
         private static void ApplyMonsterChanges(ClassicStageInfo self, StageInfo stage) {
             var monsters = self.GetFieldValue<DirectorCardCategorySelection>("monsterCategories");
             var monsterCards = new List<DirectorCardHolder>();
-            foreach (var cat in monsters.categories)
-            {
+            foreach (var cat in monsters.categories) {
                 MonsterCategory monstCat = GetMonsterCategory(cat.name);
                 InteractableCategory interCat = GetInteractableCategory(cat.name);
-                foreach (var t in cat.cards)
-                {
+                foreach (var t in cat.cards) {
                     monsterCards.Add(new DirectorCardHolder {
                         InteractableCategory = interCat,
                         MonsterCategory = monstCat,
@@ -111,15 +123,16 @@ namespace R2API {
             var monsterBasic = new List<DirectorCard>();
             var monsterSub = new List<DirectorCard>();
             var monsterChamp = new List<DirectorCard>();
-            foreach (var hold in monsterCards)
-            {
+            foreach (var hold in monsterCards) {
                 switch (hold.MonsterCategory) {
                     case MonsterCategory.BasicMonsters:
                         monsterBasic.Add(hold.Card);
                         break;
+
                     case MonsterCategory.Champions:
                         monsterChamp.Add(hold.Card);
                         break;
+
                     case MonsterCategory.Minibosses:
                         monsterSub.Add(hold.Card);
                         break;
@@ -131,9 +144,11 @@ namespace R2API {
                     case "Champions":
                         cat.cards = monsterChamp.ToArray();
                         break;
+
                     case "Minibosses":
                         cat.cards = monsterSub.ToArray();
                         break;
+
                     case "Basic Monsters":
                         cat.cards = monsterBasic.ToArray();
                         break;
@@ -145,12 +160,10 @@ namespace R2API {
         private static void ApplyInteractableChanges(ClassicStageInfo self, StageInfo stage) {
             var interactables = self.GetFieldValue<DirectorCardCategorySelection>("interactableCategories");
             var interactableCards = new List<DirectorCardHolder>();
-            foreach (var cat in interactables.categories)
-            {
+            foreach (var cat in interactables.categories) {
                 MonsterCategory monstCat = GetMonsterCategory(cat.name);
                 InteractableCategory interCat = GetInteractableCategory(cat.name);
-                foreach (var t in cat.cards)
-                {
+                foreach (var t in cat.cards) {
                     interactableCards.Add(new DirectorCardHolder {
                         InteractableCategory = interCat,
                         MonsterCategory = monstCat,
@@ -166,30 +179,36 @@ namespace R2API {
             var interMisc = new List<DirectorCard>();
             var interRare = new List<DirectorCard>();
             var interDupe = new List<DirectorCard>();
-            foreach (var hold in interactableCards)
-            {
+            foreach (var hold in interactableCards) {
                 switch (hold.InteractableCategory) {
                     case InteractableCategory.None:
                         R2API.Logger.LogWarning("InteractableCategory from DirectorCardHolder is None !");
                         break;
+
                     case InteractableCategory.Chests:
                         interChests.Add(hold.Card);
                         break;
+
                     case InteractableCategory.Barrels:
                         interBarrels.Add(hold.Card);
                         break;
+
                     case InteractableCategory.Drones:
                         interDrones.Add(hold.Card);
                         break;
+
                     case InteractableCategory.Duplicator:
                         interDupe.Add(hold.Card);
                         break;
+
                     case InteractableCategory.Misc:
                         interMisc.Add(hold.Card);
                         break;
+
                     case InteractableCategory.Rare:
                         interRare.Add(hold.Card);
                         break;
+
                     case InteractableCategory.Shrines:
                         interShrines.Add(hold.Card);
                         break;
@@ -201,21 +220,27 @@ namespace R2API {
                     case "Chests":
                         cat.cards = interChests.ToArray();
                         break;
+
                     case "Barrels":
                         cat.cards = interBarrels.ToArray();
                         break;
+
                     case "Shrines":
                         cat.cards = interShrines.ToArray();
                         break;
+
                     case "Drones":
                         cat.cards = interDrones.ToArray();
                         break;
+
                     case "Misc":
                         cat.cards = interMisc.ToArray();
                         break;
+
                     case "Rare":
                         cat.cards = interRare.ToArray();
                         break;
+
                     case "Duplicator":
                         cat.cards = interDupe.ToArray();
                         break;
@@ -239,20 +264,17 @@ namespace R2API {
                 SceneDirectorMonsterCredits = self.sceneDirectorMonsterCredits,
                 BonusCreditObjects = new Dictionary<GameObject, int>()
             };
-            foreach (var bonusObj in self.bonusInteractibleCreditObjects)
-            {
+            foreach (var bonusObj in self.bonusInteractibleCreditObjects) {
                 set.BonusCreditObjects[bonusObj.objectThatGrantsPointsIfEnabled] = bonusObj.points;
             }
             set.InteractableCategoryWeights = new Dictionary<InteractableCategory, float>();
             var interCats = self.GetFieldValue<DirectorCardCategorySelection>("interactableCategories");
-            foreach (var cat in interCats.categories)
-            {
+            foreach (var cat in interCats.categories) {
                 set.InteractableCategoryWeights[GetInteractableCategory(cat.name)] = cat.selectionWeight;
             }
             set.MonsterCategoryWeights = new Dictionary<MonsterCategory, float>();
             var monstCats = self.GetFieldValue<DirectorCardCategorySelection>("monsterCategories");
-            foreach (var cat in monstCats.categories)
-            {
+            foreach (var cat in monstCats.categories) {
                 set.MonsterCategoryWeights[GetMonsterCategory(cat.name)] = cat.selectionWeight;
             }
             return set;
@@ -287,59 +309,47 @@ namespace R2API {
         }
 
         private static MonsterCategory GetMonsterCategory(string s) {
-            switch (s) {
-                default:
-                    return MonsterCategory.None;
-                case "Champions":
-                    return MonsterCategory.Champions;
-                case "Minibosses":
-                    return MonsterCategory.Minibosses;
-                case "Basic Monsters":
-                    return MonsterCategory.BasicMonsters;
-            }
+            return s switch {
+                "Champions" => MonsterCategory.Champions,
+                "Minibosses" => MonsterCategory.Minibosses,
+                "Basic Monsters" => MonsterCategory.BasicMonsters,
+                _ => MonsterCategory.None,
+            };
         }
 
         private static InteractableCategory GetInteractableCategory(string s) {
-            switch (s) {
-                default:
-                    return InteractableCategory.None;
-                case "Chests":
-                    return InteractableCategory.Chests;
-                case "Barrels":
-                    return InteractableCategory.Barrels;
-                case "Shrines":
-                    return InteractableCategory.Shrines;
-                case "Drones":
-                    return InteractableCategory.Drones;
-                case "Misc":
-                    return InteractableCategory.Misc;
-                case "Rare":
-                    return InteractableCategory.Rare;
-                case "Duplicator":
-                    return InteractableCategory.Duplicator;
-            }
+            return s switch {
+                "Chests" => InteractableCategory.Chests,
+                "Barrels" => InteractableCategory.Barrels,
+                "Shrines" => InteractableCategory.Shrines,
+                "Drones" => InteractableCategory.Drones,
+                "Misc" => InteractableCategory.Misc,
+                "Rare" => InteractableCategory.Rare,
+                "Duplicator" => InteractableCategory.Duplicator,
+                _ => InteractableCategory.None,
+            };
         }
 
         private static MonsterFamilyHolder GetMonsterFamilyHolder(ClassicStageInfo.MonsterFamily family) {
-            var hold = new MonsterFamilyHolder
-            {
+            var hold = new MonsterFamilyHolder {
                 MaxStageCompletion = family.maximumStageCompletion,
                 MinStageCompletion = family.minimumStageCompletion,
                 FamilySelectionWeight = family.selectionWeight,
                 SelectionChatString = family.familySelectionChatString
             };
             var cards = family.monsterFamilyCategories.categories;
-            foreach (var cat in cards)
-            {
+            foreach (var cat in cards) {
                 switch (cat.name) {
                     case "Basic Monsters":
                         hold.FamilyBasicMonsterWeight = cat.selectionWeight;
                         hold.FamilyBasicMonsters = cat.cards.ToList();
                         break;
+
                     case "Minibosses":
                         hold.FamilyMinibossWeight = cat.selectionWeight;
                         hold.FamilyMinibosses = cat.cards.ToList();
                         break;
+
                     case "Champions":
                         hold.FamilyChampionWeight = cat.selectionWeight;
                         hold.FamilyChampions = cat.cards.ToList();

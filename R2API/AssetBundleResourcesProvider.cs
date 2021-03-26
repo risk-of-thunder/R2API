@@ -1,9 +1,10 @@
-﻿using System;
-using R2API.Utils;
+﻿using R2API.Utils;
+using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace R2API {
+
     /// <summary>
     /// This class provides a wrapper around an AssetBundle for integrating it into the regular Unity Resources library
     /// </summary>

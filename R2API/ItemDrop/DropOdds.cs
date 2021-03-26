@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
-using R2API.ItemDropAPITools;
+﻿using R2API.ItemDropAPITools;
 using RoR2;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace R2API.ItemDrop {
+
     public class DropOdds : MonoBehaviour {
+
         private static readonly List<string> ChestInteractables = new List<string> {
             "Chest1",
             "Chest2",
@@ -43,7 +45,8 @@ namespace R2API.ItemDrop {
                     if (!ItemDropAPI.PlayerInteractables.SubsetTiersPresent[interactableName][InteractableCalculator.DropType.tier3]) {
                         chestBehavior.tier3Chance = 0;
                     }
-                } else {
+                }
+                else {
                     if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier1]) {
                         chestBehavior.tier1Chance = 0;
                     }

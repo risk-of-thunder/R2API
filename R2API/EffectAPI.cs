@@ -1,15 +1,18 @@
+using R2API.Utils;
+using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using R2API.Utils;
-using RoR2;
 using UnityEngine;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
 
 namespace R2API {
+
     [R2APISubmodule]
     public static class EffectAPI {
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -45,7 +48,6 @@ namespace R2API {
             return effectList.ToArray();
         }
 
-
         /// <summary>
         /// Creates an EffectDef from a prefab and adds it to the EffectCatalog.
         /// The prefab must have an the following components: EffectComponent, VFXAttributes
@@ -54,7 +56,7 @@ namespace R2API {
         /// <param name="effect">The prefab of the effect to be added</param>
         /// <returns>True if the effect was added</returns>
         public static bool AddEffect(GameObject? effect) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");
             }
 
@@ -92,7 +94,7 @@ namespace R2API {
         /// <param name="effect">The EffectDef to addZ</param>
         /// <returns>False if the EffectDef was null</returns>
         public static bool AddEffect(EffectDef? effect) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");
             }
             if (effect == null) {

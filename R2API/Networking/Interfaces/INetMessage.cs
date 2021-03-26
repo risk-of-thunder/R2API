@@ -1,13 +1,15 @@
 ﻿using UnityEngine.Networking;
 
 namespace R2API.Networking.Interfaces {
+
     public interface INetMessage : ISerializableObject {
+
         void OnReceived();
     }
 
     public static class NetMessageExtensions {
-        public static void Send(this INetMessage? message, NetworkDestination destination) {
 
+        public static void Send(this INetMessage? message, NetworkDestination destination) {
             if (destination.ShouldRun()) {
                 message.OnReceived();
             }
@@ -32,7 +34,8 @@ namespace R2API.Networking.Interfaces {
                             writer.Write(message);
                         }
                     }
-                } else if (NetworkClient.active) {
+                }
+                else if (NetworkClient.active) {
                     using (Writer netWriter = NetworkingAPI.GetWriter(NetworkingAPI.MessageIndex, ClientScene.readyConnection, QosType.Reliable)) {
                         NetworkWriter writer = netWriter;
                         writer.Write(header);

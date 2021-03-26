@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace R2API.Networking.Messages {
+
     internal struct DotMessage : INetMessage {
+
         public void Serialize(NetworkWriter writer) {
             writer.Write(_victim);
             writer.Write(_attacker);

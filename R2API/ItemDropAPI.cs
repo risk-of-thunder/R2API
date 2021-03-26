@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using R2API.ItemDrop;
 using R2API.ItemDropAPITools;
 using R2API.MiscHelpers;
 using R2API.Utils;
-using MonoMod.Cil;
-using Mono.Cecil.Cil;
 using RoR2;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace R2API {
+
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class ItemDropAPI {
@@ -46,6 +47,7 @@ namespace R2API {
 
         public static Dictionary<ItemTier, List<ItemIndex>> AdditionalItemsReadOnly =>
             ItemsToAdd.Except(ItemsToRemove).ToDictionary(p => p.Key, p => p.Value);
+
         public static Dictionary<EquipmentDropType, List<EquipmentIndex>> AdditionalEquipmentsReadOnly =>
             EquipmentsToAdd.Except(EquipmentsToRemove).ToDictionary(p => p.Key, p => p.Value);
 
@@ -179,6 +181,7 @@ namespace R2API {
                 givenDict[itemTier].Clear();
             }
         }
+
         public static void ClearEquipmentOperations(Dictionary<EquipmentDropType, List<EquipmentIndex>> givenDict) {
             foreach (EquipmentDropType equipmentDropType in givenDict.Keys) {
                 givenDict[equipmentDropType].Clear();
@@ -195,9 +198,11 @@ namespace R2API {
                 var interactableName = InteractableCalculator.GetSpawnCardName(spawnCard);
                 if (interactableName == LockboxInteractableName || interactableName == ScavengerBackpackInteractableName) {
                     DropOdds.UpdateChestTierOdds(spawnCard, interactableName);
-                } else if (interactableName == AdaptiveChestInteractableName) {
+                }
+                else if (interactableName == AdaptiveChestInteractableName) {
                     DropOdds.UpdateDropTableTierOdds(spawnCard, interactableName);
-                } else if (interactableName == CleansingPoolInteractableName) {
+                }
+                else if (interactableName == CleansingPoolInteractableName) {
                     var dropTable = spawnCard.prefab.GetComponent<ShopTerminalBehavior>().dropTable as ExplicitPickupDropTable;
                     DropOdds.UpdateDropTableItemOdds(PlayerDropList, dropTable, interactableName);
                 }
@@ -212,7 +217,8 @@ namespace R2API {
                         if (new List<string>().Contains(interactableName)) {
                         }
                         if (PlayerInteractables.InvalidInteractables.Contains(interactableName)) {
-                        } else {
+                        }
+                        else {
                             DropOdds.UpdateChestTierOdds(directorCard.spawnCard, interactableName);
                             DropOdds.UpdateShrineTierOdds(directorCard, interactableName);
                             directorCards.Add(directorCard);
@@ -230,13 +236,6 @@ namespace R2API {
             }
             orig(sceneDirector);
         }
-
-
-
-
-
-
-
 
         // RETREIVES THE BACKED UP DROP LISTS TO SET THE COMMAND ARTIFACT MENU OPTIONS
 
@@ -314,15 +313,20 @@ namespace R2API {
         private static PickupIndex AdjustCommandPickupIndex(List<PickupIndex> pickupList, PickupIndex givenPickupIndex) {
             if (PickupListsEqual(Run.instance.availableTier1DropList, pickupList)) {
                 return safePickups[ItemTier.Tier1];
-            } else if (PickupListsEqual(Run.instance.availableTier2DropList, pickupList)) {
+            }
+            else if (PickupListsEqual(Run.instance.availableTier2DropList, pickupList)) {
                 return safePickups[ItemTier.Tier2];
-            } else if (PickupListsEqual(Run.instance.availableTier3DropList, pickupList)) {
+            }
+            else if (PickupListsEqual(Run.instance.availableTier3DropList, pickupList)) {
                 return safePickups[ItemTier.Tier3];
-            } else if (PickupListsEqual(Run.instance.availableBossDropList, pickupList)) {
+            }
+            else if (PickupListsEqual(Run.instance.availableBossDropList, pickupList)) {
                 return safePickups[ItemTier.Boss];
-            } else if (PickupListsEqual(Run.instance.availableLunarDropList, pickupList)) {
+            }
+            else if (PickupListsEqual(Run.instance.availableLunarDropList, pickupList)) {
                 return safePickups[ItemTier.Lunar];
-            } else if (PickupListsEqual(Run.instance.availableEquipmentDropList, pickupList)) {
+            }
+            else if (PickupListsEqual(Run.instance.availableEquipmentDropList, pickupList)) {
                 return safePickups[ItemTier.NoTier];
             }
             return givenPickupIndex;
@@ -349,7 +353,7 @@ namespace R2API {
         private static Dictionary<ChestBehavior, List<PickupIndex>> chestCommandArtifactLists = new Dictionary<ChestBehavior, List<PickupIndex>>();
 
         private static void RollItem(ILContext ilContext) {
-            var findPickupIndexMethodInfo = typeof(PickupCatalog).GetMethod("FindPickupIndex", new [] { typeof(string) });
+            var findPickupIndexMethodInfo = typeof(PickupCatalog).GetMethod("FindPickupIndex", new[] { typeof(string) });
             var addMethodInfo = typeof(List<PickupIndex>).GetMethod("Add", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
 
             var rollItemAddMethodInfo = Utils.Reflection.GetNestedMethod(typeof(ChestBehavior), "<RollItem>g__Add|1");
@@ -382,7 +386,7 @@ namespace R2API {
                 cursor.Emit(OpCodes.Ldarg_0);
                 cursor.Emit(OpCodes.Callvirt, filterListMethodInfo);
             }
-            
+
             cursor.GotoNext(
                 x => x.MatchLdfld(selectorFieldInfo),
                 x => x.MatchCall(instanceMethodInfo),
@@ -394,13 +398,13 @@ namespace R2API {
             cursor.Index += 6;
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.Emit(OpCodes.Ldloc_1);
-            cursor.EmitDelegate<System.Action<ChestBehavior,List<PickupIndex>>>((chestBehavior, dropList) => {
+            cursor.EmitDelegate<System.Action<ChestBehavior, List<PickupIndex>>>((chestBehavior, dropList) => {
                 chestCommandArtifactLists.Add(chestBehavior, dropList);
             });
         }
 
         private static void FilterList(WeightedSelection<List<PickupIndex>> selector, List<PickupIndex> dropList, float dropChance, ChestBehavior chestBehavior) {
-            if ((double) dropChance <= 0) {
+            if ((double)dropChance <= 0) {
                 return;
             }
             List<PickupIndex> filteredDropList = new List<PickupIndex>();
@@ -426,7 +430,7 @@ namespace R2API {
             orig(chestBehavior);
         }
 
-        //WILL BACKUP UP THE DROP LIST SELECTED BY SHRINES OF CHANCE FOR USE WITH THE COMMAND ARTIFACT
+        //Backs up the drop list selected by shrines of chance for use with the command Artifact.
 
         private static List<List<PickupIndex>> shrineChanceDropLists = new List<List<PickupIndex>>();
         private static WeightedSelection<List<PickupIndex>> shrineChanceWeightedSelection;
@@ -445,7 +449,7 @@ namespace R2API {
                 shrineChanceWeightedSelection = new WeightedSelection<List<PickupIndex>>(8);
                 shrineChanceDropLists.Add(new List<PickupIndex>() { PickupIndex.none });
             });
-            
+
             while (cursor.TryGotoNext(
                 x => x.MatchLdarg(0),
                 x => x.MatchLdfld(rngFieldInfo),
@@ -501,7 +505,6 @@ namespace R2API {
         private static RouletteChestController currentRouletteChestController;
         private static Dictionary<RouletteChestController, List<List<PickupIndex>>> rouletteCommandArtifactLists = new Dictionary<RouletteChestController, List<List<PickupIndex>>>();
 
-
         private static void GenerateEntriesServer(On.RoR2.RouletteChestController.orig_GenerateEntriesServer orig, RouletteChestController rouletteChestController, Run.FixedTimeStamp fixedTimeStamp) {
             if (commandArtifact) {
                 rouletteChestEntriesAdding = true;
@@ -510,12 +513,11 @@ namespace R2API {
             orig(rouletteChestController, fixedTimeStamp);
             rouletteChestEntriesAdding = false;
         }
-        
+
         private static void GenerateDrop(ILContext ilContext) {
             var selectorFieldInfo = typeof(BasicPickupDropTable).GetField("selector", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var nextNormalizedMethodInfo = typeof(Xoroshiro128Plus).GetProperty("nextNormalizedFloat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
             var evaluateMethodInfo = typeof(WeightedSelection<List<PickupIndex>>).GetMethod("Evaluate", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-
 
             var cursor = new ILCursor(ilContext);
 
@@ -555,12 +557,9 @@ namespace R2API {
 
             var rngFieldInfo = typeof(BossGroup).GetField("rng", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
-
-
             var selectorFieldInfo = typeof(BasicPickupDropTable).GetField("selector", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var nextNormalizedMethodInfo = typeof(Xoroshiro128Plus).GetProperty("nextNormalizedFloat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
             var evaluateMethodInfo = typeof(WeightedSelection<List<PickupIndex>>).GetMethod("Evaluate", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-
 
             var cursor = new ILCursor(ilContext);
 
@@ -590,7 +589,8 @@ namespace R2API {
             cursor.EmitDelegate<Action<PickupIndex>>((pickupIndex) => {
                 if (PlayerDropList.AvailableBossDropList.Contains(pickupIndex)) {
                     currentPickupList = PlayerDropList.AvailableBossDropList;
-                } else {
+                }
+                else {
                     currentPickupList = new List<PickupIndex>() { pickupIndex };
                     uniquePickup = true;
                 }
@@ -600,10 +600,9 @@ namespace R2API {
         //WILL BACKUP UP THE DROP LIST SELECTED BY ELITE MONSTERS FOR USE WITH THE COMMAND ARTIFACT
 
         private static void OnCharacterDeath(ILContext ilContext) {
-            var checkRollMethodInfo = typeof(RoR2.Util).GetMethod("CheckRoll", new [] { typeof(float), typeof(RoR2.CharacterMaster)});
+            var checkRollMethodInfo = typeof(RoR2.Util).GetMethod("CheckRoll", new[] { typeof(float), typeof(RoR2.CharacterMaster) });
             var implicitMethodInfo = typeof(UnityEngine.Object).GetMethod("op_Implicit", new[] { typeof(UnityEngine.Object) });
             var isEliteMethodInfo = typeof(RoR2.CharacterBody).GetProperty("isElite", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
-
 
             ILLabel ilLabel = null;
             ILCursor cursor = new ILCursor(ilContext);
@@ -662,13 +661,6 @@ namespace R2API {
                 return Run.instance.treasureRng.NextElementUniform<PickupIndex>(dropList);
             });
         }
-
-
-
-
-
-
-
 
         private static void CreateTerminals(On.RoR2.MultiShopController.orig_CreateTerminals orig, MultiShopController multiShopController) {
             orig(multiShopController);
@@ -745,19 +737,24 @@ namespace R2API {
             var dropType = InteractableCalculator.DropType.none;
             if (shopTerminalBehavior.itemTier == ItemTier.Tier1) {
                 dropType = InteractableCalculator.DropType.tier1;
-            } else if (shopTerminalBehavior.itemTier == ItemTier.Tier2) {
+            }
+            else if (shopTerminalBehavior.itemTier == ItemTier.Tier2) {
                 dropType = InteractableCalculator.DropType.tier2;
-            } else if (shopTerminalBehavior.itemTier == ItemTier.Tier3) {
+            }
+            else if (shopTerminalBehavior.itemTier == ItemTier.Tier3) {
                 dropType = InteractableCalculator.DropType.tier3;
-            } else if (shopTerminalBehavior.itemTier == ItemTier.Boss) {
+            }
+            else if (shopTerminalBehavior.itemTier == ItemTier.Boss) {
                 dropType = InteractableCalculator.DropType.boss;
-            } else if (shopTerminalBehavior.itemTier == ItemTier.Lunar) {
+            }
+            else if (shopTerminalBehavior.itemTier == ItemTier.Lunar) {
                 dropType = InteractableCalculator.DropType.lunar;
             }
 
             if (PlayerInteractables.TiersPresent[dropType] || shopTerminalBehavior.dropTable != null) {
                 orig(shopTerminalBehavior);
-            } else {
+            }
+            else {
                 shopTerminalBehavior.SetNoPickup();
                 var purchaseInteraction = shopTerminalBehavior.GetComponent<PurchaseInteraction>();
                 if (purchaseInteraction != null) {
@@ -808,11 +805,11 @@ namespace R2API {
                 if (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupIndex).itemIndex).ContainsTag(ItemTag.WorldUnique)) {
                     worldUnique = true;
                 }
-                if ((PlayerDropList.AvailableBossDropList.Contains(pickupIndex) && !worldUnique ) || (PlayerDropList.AvailableSpecialItems.Contains(pickupIndex) && worldUnique)) {
+                if ((PlayerDropList.AvailableBossDropList.Contains(pickupIndex) && !worldUnique) || (PlayerDropList.AvailableSpecialItems.Contains(pickupIndex) && worldUnique)) {
                     bossDropsAdjusted.Add(pickupIndex);
                 }
             }
-            
+
             var dropType = InteractableCalculator.DropType.tier2;
             if (bossGroup.forceTier3Reward) {
                 dropType = InteractableCalculator.DropType.tier3;
@@ -824,7 +821,8 @@ namespace R2API {
                 if (!normalListValid) {
                     DropList.SetDropLists(new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>());
                     bossGroup.bossDropChance = 1;
-                } else if (bossDropsAdjusted.Count == 0) {
+                }
+                else if (bossDropsAdjusted.Count == 0) {
                     bossGroup.bossDropChance = 0;
                 }
 
@@ -847,7 +845,8 @@ namespace R2API {
                         optionsAdjusted.Add(option);
                     }
                 }
-            } else if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
+            }
+            else if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
                 foreach (var pickupIndex in currentPickupList) {
                     ItemIndex pickupItemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
                     var newOption = new PickupPickerController.Option {
@@ -870,7 +869,7 @@ namespace R2API {
             if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
                 if (options.Length > 0) {
                     optionsAdjusted.Clear();
-                    
+
                     var itemIndex = PickupCatalog.GetPickupDef(options[0].pickupIndex).itemIndex;
 
                     var itemTier = ItemTier.NoTier;
@@ -925,7 +924,8 @@ namespace R2API {
                 arenaMissionController.rewardSpawnPosition = null;
                 orig(arenaMissionController);
                 arenaMissionController.rewardSpawnPosition = rewardSpawnPositionOld;
-            } else {
+            }
+            else {
                 orig(arenaMissionController);
             }
         }
@@ -969,7 +969,7 @@ namespace R2API {
                 foreach (var itemIndex in items) {
                     if (ItemsToRemove[itemTier].Contains(itemIndex)) {
                         ItemsToRemove[itemTier].Remove(itemIndex);
-                    }   
+                    }
                 }
             }
         }
@@ -984,14 +984,14 @@ namespace R2API {
                 foreach (var itemIndex in items) {
                     if (!ItemsToRemove[itemTier].Contains(itemIndex)) {
                         ItemsToRemove[itemTier].Add(itemIndex);
-                    }   
+                    }
                 }
             }
             else if (ItemsToAdd.ContainsKey(itemTier)) {
                 foreach (var itemIndex in items) {
                     if (ItemsToAdd[itemTier].Contains(itemIndex)) {
                         ItemsToAdd[itemTier].Remove(itemIndex);
-                    }   
+                    }
                 }
             }
         }
@@ -1013,11 +1013,10 @@ namespace R2API {
                 foreach (var equipmentIndex in equipments) {
                     if (EquipmentsToRemove[equipmentDropType].Contains(equipmentIndex)) {
                         EquipmentsToRemove[equipmentDropType].Remove(equipmentIndex);
-                    }   
+                    }
                 }
             }
         }
-
 
         /// <summary>
         /// Remove the given equipments from the given drop table.
@@ -1029,14 +1028,14 @@ namespace R2API {
                 foreach (var equipmentIndex in equipments) {
                     if (!EquipmentsToRemove[equipmentDropType].Contains(equipmentIndex)) {
                         EquipmentsToRemove[equipmentDropType].Add(equipmentIndex);
-                    }   
+                    }
                 }
             }
             else if (EquipmentsToAdd.ContainsKey(equipmentDropType)) {
                 foreach (var equipmentIndex in equipments) {
                     if (EquipmentsToAdd[equipmentDropType].Contains(equipmentIndex)) {
                         EquipmentsToAdd[equipmentDropType].Remove(equipmentIndex);
-                    }   
+                    }
                 }
             }
         }
@@ -1072,7 +1071,7 @@ namespace R2API {
             foreach (var equipmentIndex in equipments) {
                 var equipmentDropTypes = EquipmentDropTypeUtil.GetEquipmentTypesFromIndex(equipmentIndex);
                 foreach (var equipmentDropType in equipmentDropTypes) {
-                    AddEquipmentByDropType(equipmentDropType, equipmentIndex);   
+                    AddEquipmentByDropType(equipmentDropType, equipmentIndex);
                 }
             }
         }
@@ -1085,44 +1084,11 @@ namespace R2API {
             foreach (var equipmentIndex in equipments) {
                 var equipmentDropTypes = EquipmentDropTypeUtil.GetEquipmentTypesFromIndex(equipmentIndex);
                 foreach (var equipmentDropType in equipmentDropTypes) {
-                    RemoveEquipmentByDropType(equipmentDropType, equipmentIndex);   
+                    RemoveEquipmentByDropType(equipmentDropType, equipmentIndex);
                 }
             }
         }
 
-        [Obsolete("Use the AddItemByTier method instead.")]
-        public static void AddToDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
-            AddItemByTier(itemTier, items);
-        }
-
-        [Obsolete("Use the RemoveItemByTier method instead.")]
-        public static void RemoveFromDefaultByTier(ItemTier itemTier, params ItemIndex[] items) {
-            RemoveItemByTier(itemTier, items);
-        }
-
-        [Obsolete("Use the AddItemByTier method instead.")]
-        public static void AddToDefaultByTier(params KeyValuePair<ItemIndex, ItemTier>[] items) {
-            foreach (var (itemIndex, itemTier) in items) {
-                AddItemByTier(itemTier, itemIndex);
-            }
-        }
-
-        [Obsolete("Use the RemoveItemByTier method instead.")]
-        public static void RemoveFromDefaultByTier(params KeyValuePair<ItemIndex, ItemTier>[] items) {
-            foreach (var (itemIndex, itemTier) in items) {
-                RemoveItemByTier(itemTier, itemIndex);
-            }
-        }
-
-        [Obsolete("Use the AddEquipment method instead.")]
-        public static void AddToDefaultEquipment(params EquipmentIndex[] equipments) {
-            AddEquipment(equipments);
-        }
-
-        [Obsolete("Use the RemoveEquipment method instead.")]
-        public static void RemoveFromDefaultEquipment(params EquipmentIndex[] equipments) {
-            RemoveEquipment(equipments);
-        }
 
         public static List<ItemIndex> GetDefaultDropList(ItemTier itemTier) {
             if (itemTier == ItemTier.NoTier) {
@@ -1143,7 +1109,6 @@ namespace R2API {
 
             return list;
         }
-
 
         public static List<ItemIndex> GetDefaultDropList(ItemTier itemTier, ItemTag requiredTag) {
             var list = new List<ItemIndex>();
@@ -1171,7 +1136,7 @@ namespace R2API {
                 var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
                 if (equipmentDef.isLunar) {
                     list.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
-                }   
+                }
             }
 
             foreach (var (_, itemIndex) in ItemCatalog.itemNameToIndex) {
@@ -1197,7 +1162,7 @@ namespace R2API {
                 var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
                 if (!equipmentDef.isLunar) {
                     list.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
-                }   
+                }
             }
 
             return list;

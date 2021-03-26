@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using MonoMod.Cil;
+﻿using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
-
 
 namespace R2API {
 
@@ -14,6 +13,7 @@ namespace R2API {
     /// </summary>
     [R2APISubmodule]
     public static class BuffAPI {
+
         /// <summary>
         /// All custom buffs added by the API.
         /// </summary>
@@ -25,6 +25,7 @@ namespace R2API {
         /// The original buff count of the game.
         /// </summary>
         public static int OriginalBuffCount;
+
         /// <summary>
         /// Amount of custom Buffs added by R2API
         /// </summary>
@@ -37,9 +38,11 @@ namespace R2API {
             get => _loaded;
             internal set => _loaded = value;
         }
+
         private static bool _loaded;
 
         #region ModHelper Events and Hooks
+
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.BuffCatalog.Init += GetOriginalBuffCountHook;
@@ -72,7 +75,8 @@ namespace R2API {
 
             _buffCatalogInitialized = true;
         }
-        #endregion
+
+        #endregion ModHelper Events and Hooks
 
         #region Add Methods
 
@@ -94,12 +98,12 @@ namespace R2API {
                 return BuffIndex.None;
             }
 
-            buff.BuffDef.buffIndex = (BuffIndex) OriginalBuffCount + CustomBuffCount++;
+            buff.BuffDef.buffIndex = (BuffIndex)OriginalBuffCount + CustomBuffCount++;
             BuffDefinitions.Add(buff);
             return buff.BuffDef.buffIndex;
         }
 
-        #endregion
+        #endregion Add Methods
     }
 
     /// <summary>
@@ -109,6 +113,7 @@ namespace R2API {
     /// If you are doing a buff for a custom elite, don't forget to register your CustomElite before too to fill the eliteIndex field !
     /// </summary>
     public class CustomBuff {
+
         /// <summary>
         /// Definition of the Buff
         /// </summary>
@@ -134,15 +139,6 @@ namespace R2API {
         /// If you are doing a buff for a custom elite, don't forget to register your CustomElite before too to fill the eliteIndex field !
         /// </summary>
         public CustomBuff(BuffDef? buffDef) {
-            BuffDef = buffDef;
-        }
-
-        /// <summary>
-        /// DEPRECATED: Use the constructor that allows you to input the fields of an BuffDef or use the one that take an BuffDef as parameter directly.
-        /// Create a custom buff to add into the game.
-        /// </summary>
-        [Obsolete("Use the constructor that allows you to input the fields of an BuffDef or use the one that take an BuffDef as parameter directly.")]
-        public CustomBuff(string name, BuffDef? buffDef) {
             BuffDef = buffDef;
         }
     }

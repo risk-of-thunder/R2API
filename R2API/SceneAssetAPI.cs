@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using R2API.MiscHelpers;
+﻿using R2API.MiscHelpers;
 using R2API.Utils;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace R2API {
+
     /// <summary>
     /// API for retrieving assets from the game scenes.
     /// </summary>
     [R2APISubmodule]
     public static class SceneAssetAPI {
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>

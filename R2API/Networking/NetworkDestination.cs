@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 
 namespace R2API.Networking {
+
     [Flags]
     public enum NetworkDestination : byte {
         Clients = 1,
@@ -9,6 +10,7 @@ namespace R2API.Networking {
     }
 
     internal static class NetworkDestinationExtensions {
+
         internal static bool ShouldSend(this NetworkDestination dest) {
             var isServer = NetworkServer.active;
 

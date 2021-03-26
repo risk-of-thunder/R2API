@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using R2API.Utils;
+﻿using R2API.Utils;
 using RoR2;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace R2API {
+
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class InteractablesAPI {
@@ -12,11 +13,11 @@ namespace R2API {
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded
-        {
+        public static bool Loaded {
             get => _loaded;
             internal set => _loaded = value;
         }
+
         private static bool _loaded;
 
         private static Dictionary<string, InteractableSpawnCard> _defaultInteractables =
@@ -145,7 +146,8 @@ namespace R2API {
                         var category = categories[categoryName];
                         category.cards = directorCardsArray;
                         categories[categoryName] = category;
-                    } else {
+                    }
+                    else {
                         categories.Remove(categoryName);
                     }
                 }
@@ -159,8 +161,7 @@ namespace R2API {
             }
             foreach (var categoryName in InteractableWeight.Keys) {
                 if (categories.ContainsKey(categoryName)) {
-                    foreach (var directorCard in categories[categoryName].cards)
-                    {
+                    foreach (var directorCard in categories[categoryName].cards) {
                         if (InteractableWeight[categoryName].ContainsKey(directorCard.spawnCard.name)) {
                             directorCard.selectionWeight = InteractableWeight[categoryName][directorCard.spawnCard.name];
                         }
@@ -183,7 +184,8 @@ namespace R2API {
         public static void SetCategoryWeight(string category, float weight) {
             if (weight < 0) {
                 SetCategoryWeightToDefault(category);
-            } else {
+            }
+            else {
                 if (!CategoryWeight.ContainsKey(category)) {
                     CategoryWeight.Add(category, 0);
                 }
@@ -200,7 +202,8 @@ namespace R2API {
         public static void SetInteractableWeight(string category, string interactable, int weight) {
             if (weight < 0) {
                 SetInteractableWeightToDefault(category, interactable);
-            } else {
+            }
+            else {
                 if (!InteractableWeight.ContainsKey(category)) {
                     InteractableWeight.Add(category, new Dictionary<string, int>());
                 }
@@ -243,7 +246,6 @@ namespace R2API {
                 InteractablesToAddWeight.Add(category, new Dictionary<string, int>());
             }
             if (!InteractablesToAdd[category].ContainsKey(interactable.name)) {
-
                 InteractablesToAdd[category].Add(interactable.name, null);
 
                 InteractablesToAddWeight[category].Add(interactable.name, 0);

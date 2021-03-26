@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace R2API.MiscHelpers {
+
     public static class KeyValuePairExtensions {
+
         /// <summary>
         /// Extension to allow tuple style deconstruction of keys and values when enumerating a dictionary.
         /// Example: foreach(var (key, value) in myDictionary)

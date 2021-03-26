@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using R2API.Utils;
 using RoR2;
 using RoR2.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace R2API {
+
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule(Build = 4892828)]
     public static class LobbyConfigAPI {
@@ -18,9 +19,11 @@ namespace R2API {
             get => _loaded;
             internal set => _loaded = value;
         }
+
         private static bool _loaded;
 
         private static int _ruleNameSequence;
+
         internal static string RuleNameSequence() => $"LCAPI_{++_ruleNameSequence:D5}";
 
         private static readonly List<RuleChoiceDef> InternalRuleChoices =
@@ -29,9 +32,11 @@ namespace R2API {
         private static List<RuleCategoryController> _controllers;
 
         private static event EventHandler<RuleChoiceDef> UpdateValues;
+
         private static event EventHandler<RuleCategoryController> CollapseCategory;
 
         public class LobbyCategory {
+
             /// <summary>
             /// Adds a rule category to the lobby.
             /// </summary>
@@ -40,8 +45,8 @@ namespace R2API {
             /// <param name="description">Should the category be empty, you can show this description.</param>
             public LobbyCategory(string? title, Color color, string? description) {
                 typeof(RuleCatalog).GetMethodCached("AddCategory"
-                    , new[] {typeof(string), typeof(Color), typeof(string), typeof(Func<bool>)})
-                    .Invoke(null, new object[] {title, color, description, null});
+                    , new[] { typeof(string), typeof(Color), typeof(string), typeof(Func<bool>) })
+                    .Invoke(null, new object[] { title, color, description, null });
 
                 Def = RuleCatalog.allCategoryDefs.Last();
             }
@@ -65,8 +70,8 @@ namespace R2API {
 
                 rule.Def.globalIndex = RuleCatalog.ruleCount;
                 typeof(RuleCatalog).GetMethodCached("AddRule"
-                    , new[] {typeof(RuleDef)})
-                    .Invoke(null, new object[] {rule.Def});
+                    , new[] { typeof(RuleDef) })
+                    .Invoke(null, new object[] { rule.Def });
 
                 RuleCatalog.allCategoryDefs.Last()?.children.Remove(rule.Def);
                 RuleCatalog.allCategoryDefs.FirstOrDefault(x => x == Def)?.children.Add(rule.Def);
@@ -116,14 +121,13 @@ namespace R2API {
                     controller.SetFieldValue("collapsed", true);
 
                     if (controller)
-                        controller.gameObject.SetActive(! category.GetFieldValue<bool>("collapsed"));
+                        controller.gameObject.SetActive(!category.GetFieldValue<bool>("collapsed"));
 
                     child.HideChildren(null, controller);
                 });
-
             }
 
-            #endregion
+            #endregion internal
         }
 
         public class LobbyRule<T> {
@@ -132,6 +136,7 @@ namespace R2API {
             /// Value of the current choice of the rule.
             /// </summary>
             public T Value => (T)_val;
+
             /// <summary>
             /// Gets invoked if the rule is added to a category and the value changed.
             /// Sender is 'this', args is 'this.Value'.
@@ -185,27 +190,6 @@ namespace R2API {
                 return this;
             }
 
-            #region obsolete-2.x.x
-
-            /// <summary>
-            /// Adds a choice to the rule.
-            /// </summary>
-            /// <param name="value">The value this choice represents.</param>
-            /// <param name="title">Tooltip title.</param>
-            /// <param name="description">Tooltip description.</param>
-            /// <param name="titleColor"></param>
-            /// <param name="descriptionColor"></param>
-            /// <param name="sprite">A path to the sprite for this choice.</param>
-            /// <param name="name">An internal name for this choice.</param>
-            /// <returns>'this', for chaining.</returns>
-            [Obsolete("There should be no reason to specify internal names.")]
-            public LobbyRule<T> AddChoice(T value, string? title, string? description
-                , Color titleColor, Color descriptionColor, string sprite, string name) {
-                return AddChoice(value, title, description, titleColor, descriptionColor, sprite);
-            }
-
-            #endregion
-
             #region internal
 
             internal readonly RuleDef Def;
@@ -213,6 +197,7 @@ namespace R2API {
             private object _val;
 
             private int _choiceNameSequence;
+
             private string ChoiceNameSequence() => $"{Def.globalName}_{++_choiceNameSequence:D3}";
 
             internal void UpdateValue(object _, RuleChoiceDef choiceDef) {
@@ -226,43 +211,11 @@ namespace R2API {
                 ValueChanged?.Invoke(this, Value);
             }
 
-            #endregion
+            #endregion internal
         }
-
-
-        #region obsolete-2.x.x
-
-        /// <summary>
-        /// Adds a rule category to the lobby. If a category with the same title already exists, will return that.
-        /// </summary>
-        /// <param name="title">The category's title.</param>
-        /// <param name="color">The category's color</param>
-        /// <param name="emptyDescription">Should the category be empty, you can show this description.</param>
-        /// <returns>The RuleCategoryDef, keep if you want to add rules.</returns>
-        [Obsolete("Use the LobbyCategory constructor instead.")]
-        public static RuleCategoryDef AddCategory(string? title, Color color, string? emptyDescription = null) {
-            var category = RuleCatalog.allCategoryDefs.FirstOrDefault(x => x.displayToken == title);
-
-            return category ?? new LobbyCategory(title, color, emptyDescription).Def;
-        }
-
-        /// <summary>
-        /// Adds a rule to the category. DO NOT ADD CHOICES AFTER THIS.
-        /// </summary>
-        /// <param name="category">The category to add this rule to.</param>
-        /// <param name="rule">The rule to add.</param>
-        /// <typeparam name="T">The type of value this rule holds.</typeparam>
-        [Obsolete("Use LobbyCategory.PushRule instead.")]
-        public static void AddToCategory<T>(RuleCategoryDef? category, LobbyRule<T>? rule) {
-            new LobbyCategory(category).PushRule(rule);
-        }
-
-        #endregion
-
 
         #region Hooks
 
-     
         private static void HookAwake_PreGameController(On.RoR2.PreGameController.orig_Awake orig, PreGameController self) {
             orig(self);
 
@@ -290,7 +243,7 @@ namespace R2API {
             CollapseCategory?.Invoke(null, self);
         }
 
-        #endregion
+        #endregion Hooks
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {

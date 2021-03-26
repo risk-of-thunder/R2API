@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 
 namespace R2API.Networking.Messages {
+
     internal struct ExampleMessage : INetMessage {
         internal int Integer;
         internal string Str;

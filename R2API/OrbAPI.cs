@@ -1,13 +1,16 @@
+using R2API.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using R2API.Utils;
+
 // ReSharper disable UnusedMember.Global
 
 namespace R2API {
+
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class OrbAPI {
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -17,7 +20,6 @@ namespace R2API {
         }
 
         private static bool _loaded;
-
 
         private static bool _orbsAlreadyAdded = false;
 
@@ -33,7 +35,7 @@ namespace R2API {
         /// <param name="t">The type of the orb being added</param>
         /// <returns>True if orb will be added</returns>
         public static bool AddOrb(Type? t) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(OrbAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(OrbAPI)})]");
             }
             if (_orbsAlreadyAdded) {

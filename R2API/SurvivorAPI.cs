@@ -1,16 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace R2API {
+
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class SurvivorAPI {
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -27,6 +29,7 @@ namespace R2API {
         private static bool _survivorsAlreadyAdded;
 
         public static ObservableCollection<SurvivorDef?>? SurvivorDefinitions = new ObservableCollection<SurvivorDef?>();
+
         /// <summary>
         /// Add a SurvivorDef to the list of available survivors.
         /// This must be called before the SurvivorCatalog inits, so before plugin.Start()
@@ -38,7 +41,7 @@ namespace R2API {
         /// <param name="survivor">The survivor to add.</param>
         /// <returns>true if survivor will be added</returns>
         public static bool AddSurvivor(SurvivorDef? survivor) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(SurvivorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SurvivorAPI)})]");
             }
 
@@ -56,7 +59,6 @@ namespace R2API {
 
             return true;
         }
-
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
@@ -76,10 +78,10 @@ namespace R2API {
 
             // Increase the size of the order array to accomodate the added survivors
             Array.Resize(ref SurvivorCatalog.idealSurvivorOrder, allSurvivorCount);
-            
+
             // Add the new survivors to the order array so the game knows where to put them in character select
             for (int i = VanillaSurvivorCount, j = 0; i < allSurvivorCount; i++, j++) {
-                var customSurvivorDef = survivorDefs[(int) SurvivorIndex.Count + j];
+                var customSurvivorDef = survivorDefs[(int)SurvivorIndex.Count + j];
                 SurvivorCatalog.idealSurvivorOrder[i] = customSurvivorDef.survivorIndex;
                 R2API.Logger.LogInfo($"Survivor: {customSurvivorDef.displayNameToken} added");
             }
@@ -100,10 +102,8 @@ namespace R2API {
             _survivorsAlreadyAdded = true;
 
             foreach (var survivor in SurvivorDefinitions) {
-
                 //Check if the current survivor has been registered in bodycatalog. Log if it has not, but still add the survivor
                 if (BodyCatalog.FindBodyIndex(survivor.bodyPrefab) == -1 || BodyCatalog.GetBodyPrefab(BodyCatalog.FindBodyIndex(survivor.bodyPrefab)) != survivor.bodyPrefab) {
-
                     R2API.Logger.LogWarning($"Survivor: {survivor.displayNameToken} is not properly registered in {nameof(BodyCatalog)}");
                 }
 

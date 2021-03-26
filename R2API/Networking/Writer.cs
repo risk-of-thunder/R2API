@@ -2,7 +2,9 @@
 using UnityEngine.Networking;
 
 namespace R2API.Networking {
+
     internal class Writer : IDisposable {
+
         internal Writer(NetworkWriter writer, short messageIndex, NetworkConnection target, QosType qos) {
             _netWriter = writer;
             _target = target;

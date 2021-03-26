@@ -1,11 +1,12 @@
-﻿using System;
+﻿using BepInEx;
+using Mono.Cecil;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using BepInEx;
-using Mono.Cecil;
 
 namespace R2API.Utils {
+
     internal class PluginScanner {
         private List<AssemblyDefinition> _pluginsAssemblyDefinitions;
 
@@ -13,8 +14,7 @@ namespace R2API.Utils {
             get {
                 if (_pluginsAssemblyDefinitions == null) {
                     var assemblies = new List<AssemblyDefinition>();
-                    foreach (string dll in Directory.GetFiles(Paths.PluginPath, "*.dll", SearchOption.AllDirectories))
-                    {
+                    foreach (string dll in Directory.GetFiles(Paths.PluginPath, "*.dll", SearchOption.AllDirectories)) {
                         var fileName = Path.GetFileName(dll);
                         if (fileName.ToLower().Contains("r2api") || fileName.ToLower().Contains("mmhook")) {
                             continue;
@@ -164,7 +164,7 @@ namespace R2API.Utils {
                             }
                             catch (Exception ex) {
                                 // AssemblyResolutionException will happen on types that are resolved from
-                                // dynamicaly loaded / soft dependency assemblies 
+                                // dynamicaly loaded / soft dependency assemblies
                                 if (!(ex is AssemblyResolutionException)) {
                                     R2API.Logger.LogDebug(
                                         $"Catched ex when handling attribute scan request : {ex}\n" +
@@ -189,7 +189,7 @@ namespace R2API.Utils {
                             }
                             catch (Exception ex) {
                                 // AssemblyResolutionException will happen on types that are resolved from
-                                // dynamicaly loaded / soft dependency assemblies 
+                                // dynamicaly loaded / soft dependency assemblies
                                 if (!(ex is AssemblyResolutionException)) {
                                     R2API.Logger.LogDebug(
                                         $"Catched ex when handling class scan request : {ex}\n" +
