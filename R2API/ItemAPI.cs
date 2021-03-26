@@ -342,7 +342,6 @@ namespace R2API {
     }
 
     public class ItemDisplayRuleDict {
-#pragma warning disable CS8604 // Possible null reference argument. Proper NullChecking is in place.
 
         /// <summary>
         /// Get the applicable rule for this charactermodel. Returns the default rules if no specific rule is found.
@@ -372,7 +371,6 @@ namespace R2API {
             }
         }
 
-#pragma warning restore CS8604 // Possible null reference argument.
 
         /// <summary>
         /// Equivalent to using the set property of the indexer, but added bonus is the ability to ignore the array wrapper normally needed.
@@ -390,9 +388,7 @@ namespace R2API {
         /// <param name="itemDisplayRules">The specific rules for this model, or if false is returned, the default rules.</param>
         /// <returns>True if there's a specific rule for this model. False otherwise.</returns>
         public bool TryGetRules(string? CharacterModelName, out ItemDisplayRule[] itemDisplayRules) {
-#pragma warning disable CS8601 // Possible null reference assignment. The indexer allows nulling.
             itemDisplayRules = this[CharacterModelName];
-#pragma warning restore CS8601 // Possible null reference assignment.
             return CharacterModelName != null && Dictionary.ContainsKey(CharacterModelName);
         }
 

@@ -61,7 +61,7 @@ namespace R2API {
             var instance = new TUnlockable();
             var unlockableIdentifier = instance.UnlockableIdentifier;
 
-            Type serverAchievementType = serverTrackedType != null ? serverTrackedType : instance.GetType();
+            Type serverAchievementType = serverTrackedType ?? instance.GetType();
 
             if (!usedRewardIds.Add(unlockableIdentifier)) throw new InvalidOperationException($"The unlockable identifier '{unlockableIdentifier}' is already used by another mod or the base game.");
 
@@ -204,7 +204,7 @@ namespace R2API {
         private static readonly Action<string, UnlockableDef> registerUnlockable;
 
         private static void UnlockableCatalog_Init(ILContext il) {
-            void EmittedDelegate() {
+            static void EmittedDelegate() {
                 AbleToAdd = false;
                 for (Int32 i = 0; i < moddedUnlocks.Count; ++i) {
                     var (achievement, unlockable) = moddedUnlocks[i];
@@ -248,7 +248,7 @@ namespace R2API {
                 x => x.MatchLdloc(1)
             );
 
-            void EmittedDelegate(List<AchievementDef> achievementDefs, Dictionary<string, AchievementDef> map, List<string> identifiers) {
+            static void EmittedDelegate(List<AchievementDef> achievementDefs, Dictionary<string, AchievementDef> map, List<string> identifiers) {
                 AbleToAdd = false;
                 for (Int32 i = 0; i < moddedUnlocks.Count; ++i) {
                     var (ach, unl) = moddedUnlocks[i];

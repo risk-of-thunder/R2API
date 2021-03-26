@@ -17,7 +17,6 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class ItemDropAPI {
-        private static ManualLogSource Logger => R2API.Logger;
 
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -848,7 +847,7 @@ namespace R2API {
             }
             else if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
                 foreach (var pickupIndex in currentPickupList) {
-                    ItemIndex pickupItemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
+                    _ = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
                     var newOption = new PickupPickerController.Option {
                         available = true,
                         pickupIndex = pickupIndex
