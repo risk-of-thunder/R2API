@@ -9,14 +9,13 @@ namespace R2API {
             public static readonly List<ItemIndex> SpecialItems = new List<ItemIndex>();
             public static readonly Dictionary<ItemTier, ItemIndex> ScrapItems = new Dictionary<ItemTier, ItemIndex>();
             public static readonly List<EquipmentIndex> EliteEquipment = new List<EquipmentIndex>();
-            
-            public static readonly List<ItemIndex> Pearls = new List<ItemIndex> {
-                ItemIndex.Pearl,
-                ItemIndex.ShinyPearl
-            };
+
+            public static readonly List<ItemIndex> Pearls = new List<ItemIndex>();
 
             public static void PopulateItemCatalog() {
                 if (!Loaded) {
+                    Pearls.Add(ItemCatalog.FindItemIndex("Pearl"));
+                    Pearls.Add(ItemCatalog.FindItemIndex("ShinyPearl"));
                     foreach (var itemIndex in ItemCatalog.allItems) {
                         var itemDef = ItemCatalog.GetItemDef(itemIndex);
                         if (itemDef.tier != ItemTier.NoTier && itemDef.pickupIconSprite != null && itemDef.pickupIconSprite.name != DropList.NullIconTextureName) {

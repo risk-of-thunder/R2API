@@ -38,6 +38,12 @@ namespace R2API {
             public List<PickupIndex> AvailableSpecialItems = new List<PickupIndex>();
             public List<PickupIndex> AvailableSpecialEquipment = new List<PickupIndex>();
 
+            private static System.Reflection.FieldInfo availableTier1DropListFieldInfo = typeof(CharacterBody).GetField("availableTier1DropList", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            private static System.Reflection.FieldInfo availableTier2DropListFieldInfo = typeof(CharacterBody).GetField("availableTier2DropList", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            private static System.Reflection.FieldInfo availableTier3DropListFieldInfo = typeof(CharacterBody).GetField("availableTier3DropList", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            private static System.Reflection.FieldInfo availableEquipmentDropListFieldInfo = typeof(CharacterBody).GetField("availableEquipmentDropList", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            private static System.Reflection.FieldInfo availableNormalEquipmentDropListFieldInfo = typeof(CharacterBody).GetField("availableNormalEquipmentDropList", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
             public const string NullIconTextureName = "texNullIcon";
 
             public List<PickupIndex> GetDropList( ItemTier itemTier) {
@@ -76,10 +82,10 @@ namespace R2API {
                 Tier3DropListBackup = BackupDropList(run.availableTier3DropList);
                 EquipmentDropListBackup = BackupDropList(run.availableEquipmentDropList);
 
-                run.availableTier1DropList = availableItems[0];
-                run.availableTier2DropList = availableItems[1];
-                run.availableTier3DropList = availableItems[2];
-                run.availableEquipmentDropList = availableItems[3];
+                availableTier1DropListFieldInfo.SetValue(run, new object[] { availableItems[0] });
+                availableTier2DropListFieldInfo.SetValue(run, new object[] { availableItems[1] });
+                availableTier3DropListFieldInfo.SetValue(run, new object[] { availableItems[2] });
+                availableEquipmentDropListFieldInfo.SetValue(run, new object[] { availableItems[3] });
             }
 
             public static void RevertDropLists() {
@@ -91,10 +97,10 @@ namespace R2API {
                 };
 
                 var run = Run.instance;
-                run.availableTier1DropList = oldItems[0];
-                run.availableTier2DropList = oldItems[1];
-                run.availableTier3DropList = oldItems[2];
-                run.availableEquipmentDropList = oldItems[3];
+                availableTier1DropListFieldInfo.SetValue(run, new object[] { oldItems[0] });
+                availableTier2DropListFieldInfo.SetValue(run, new object[] { oldItems[1] });
+                availableTier3DropListFieldInfo.SetValue(run, new object[] { oldItems[2] });
+                availableEquipmentDropListFieldInfo.SetValue(run, new object[] { oldItems[3] });
             }
 
             public void ClearAllLists(Run run) {
@@ -333,7 +339,7 @@ namespace R2API {
                     }
                 }
                 // high probability of code smell from ror2 code
-                run.availableNormalEquipmentDropList = run.availableEquipmentDropList;
+                availableNormalEquipmentDropListFieldInfo.SetValue(run, new object[] { run.availableEquipmentDropList });
 
                 if (IsValidList(AvailableLunarEquipmentDropList)) {
                     foreach (var pickupIndex in AvailableLunarEquipmentDropList) {

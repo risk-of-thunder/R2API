@@ -43,6 +43,11 @@ namespace R2API {
         internal static readonly InteractableCalculator PlayerInteractables = new InteractableCalculator();
         private static bool commandArtifact = false;
         private static System.Reflection.MethodInfo rouletteGetEntryIndexForTime = typeof(RouletteChestController).GetMethod("GetEntryIndexForTime", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        private static System.Reflection.MethodInfo isEliteSetMethod = typeof(CharacterBody).GetProperty("isElite", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetSetMethod();
+        private static System.Reflection.FieldInfo terminalGameObjectsInfo = typeof(MultiShopController).GetField("terminalGameObjects", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        private static System.Reflection.FieldInfo bossDropsInfo = typeof(BossGroup).GetField("bossDrops", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        private static System.Reflection.FieldInfo hiddenInfo = typeof(RoR2.PickupDisplay).GetField("hidden", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        private static System.Reflection.FieldInfo pickupIndexInfo = typeof(RoR2.PickupDisplay).GetField("pickupIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
         public static Dictionary<ItemTier, List<ItemIndex>> AdditionalItemsReadOnly =>
             ItemsToAdd.Except(ItemsToRemove).ToDictionary(p => p.Key, p => p.Value);
@@ -302,12 +307,12 @@ namespace R2API {
 
         private static void PopulateSafePickups() {
             safePickups = new Dictionary<ItemTier, PickupIndex>() {
-                { ItemTier.Tier1, PickupCatalog.FindPickupIndex(ItemIndex.ScrapWhite) },
-                { ItemTier.Tier2, PickupCatalog.FindPickupIndex(ItemIndex.ScrapGreen) },
-                { ItemTier.Tier3, PickupCatalog.FindPickupIndex(ItemIndex.ScrapRed) },
-                { ItemTier.Boss, PickupCatalog.FindPickupIndex(ItemIndex.ScrapYellow) },
-                { ItemTier.Lunar, PickupCatalog.FindPickupIndex(ItemIndex.LunarDagger) },
-                { ItemTier.NoTier, PickupCatalog.FindPickupIndex(EquipmentIndex.CritOnUse) },
+                { ItemTier.Tier1, PickupCatalog.FindPickupIndex(ItemCatalog.FindItemIndex("ScrapWhite")) },
+                { ItemTier.Tier2, PickupCatalog.FindPickupIndex(ItemCatalog.FindItemIndex("ScrapGreen")) },
+                { ItemTier.Tier3, PickupCatalog.FindPickupIndex(ItemCatalog.FindItemIndex("ScrapRed")) },
+                { ItemTier.Boss, PickupCatalog.FindPickupIndex(ItemCatalog.FindItemIndex("ScrapYellow")) },
+                { ItemTier.Lunar, PickupCatalog.FindPickupIndex(ItemCatalog.FindItemIndex("LunarDagger")) },
+                { ItemTier.NoTier, PickupCatalog.FindPickupIndex(EquipmentCatalog.FindEquipmentIndex("CritOnUse")) },
             };
         }
 
@@ -676,7 +681,10 @@ namespace R2API {
             if (multiShopController.doEquipmentInstead) {
                 itemTier = ItemTier.NoTier;
             }
-            foreach (GameObject terminal in multiShopController.terminalGameObjects) {
+            
+            System.Collections.ICollection terminalGameObjectsCollection = (System.Collections.ICollection)terminalGameObjectsInfo.GetValue(multiShopController);
+            foreach (object terminalObject in terminalGameObjectsCollection) {
+                var terminal = (GameObject)terminalObject;
                 terminal.GetComponent<ShopTerminalBehavior>().itemTier = itemTier;
             }
         }
@@ -720,8 +728,6 @@ namespace R2API {
         }
 
         private static void RebuildModel(On.RoR2.PickupDisplay.orig_RebuildModel orig, PickupDisplay pickupDisplay) {
-            System.Reflection.FieldInfo hiddenInfo = typeof(RoR2.PickupDisplay).GetField("hidden", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            System.Reflection.FieldInfo pickupIndexInfo = typeof(RoR2.PickupDisplay).GetField("pickupIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             bool hidden = (bool)hiddenInfo.GetValue(pickupDisplay);
             PickupIndex pickupIndex = (PickupIndex)pickupIndexInfo.GetValue(pickupDisplay);
             ShopTerminalBehavior shopTerminalBehavior = null;
@@ -801,8 +807,10 @@ namespace R2API {
         private static void DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup bossGroup) {
             var bossDrops = new List<PickupIndex>();
             var bossDropsAdjusted = new List<PickupIndex>();
-            foreach (var bossDrop in bossGroup.bossDrops) {
-                var pickupIndex = bossDrop;
+            
+            System.Collections.ICollection bossDropsCollection = (System.Collections.ICollection)bossDropsInfo.GetValue(bossGroup);
+            foreach (object bossDropObject in bossDropsCollection) {
+                var pickupIndex = (PickupIndex)bossDropObject;
                 bossDrops.Add(pickupIndex);
                 bool worldUnique = false;
                 if (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupIndex).itemIndex).ContainsTag(ItemTag.WorldUnique)) {
@@ -827,11 +835,10 @@ namespace R2API {
                 } else if (bossDropsAdjusted.Count == 0) {
                     bossGroup.bossDropChance = 0;
                 }
-
-                bossGroup.bossDrops = bossDropsAdjusted;
+                bossDropsInfo.SetValue(bossGroup, bossDropsAdjusted);
                 orig(bossGroup);
 
-                bossGroup.bossDrops = bossDrops;
+                bossDropsInfo.SetValue(bossGroup, bossDrops);
                 bossGroup.bossDropChance = bossDropChanceOld;
                 if (!normalListValid) {
                     DropList.RevertDropLists();
@@ -941,14 +948,14 @@ namespace R2API {
                 if (damageReport.victimBody.isElite) {
                     if (damageReport.victimBody.equipmentSlot != null) {
                         if (!PlayerDropList.AvailableSpecialEquipment.Contains(PickupCatalog.FindPickupIndex(damageReport.victimBody.equipmentSlot.equipmentIndex))) {
-                            damageReport.victimBody.isElite = false;
+                            isEliteSetMethod.Invoke(damageReport.victimBody, new object[] { false });
                         }
                     }
                 }
             }
             orig(globalEventManager, damageReport);
             if (isAnElite) {
-                damageReport.victimBody.isElite = true;
+                isEliteSetMethod.Invoke(damageReport.victimBody, new object[] { true });
             }
         }
 

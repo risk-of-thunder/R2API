@@ -54,6 +54,9 @@ namespace R2API {
             { EquipmentDropType.Elite, new List<EquipmentIndex>() }
         };
 
+        private static System.Reflection.FieldInfo forbiddenTagsInfo = typeof(MonsterTeamGainsItemsArtifactManager).GetField("forbiddenTags", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        private static System.Reflection.FieldInfo patternInfo = typeof(MonsterTeamGainsItemsArtifactManager).GetField("pattern", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+
         private static readonly Dictionary<ItemTier, bool> TierValidMonsterTeam = new Dictionary<ItemTier, bool>();
         private static readonly Dictionary<ItemTier, bool> TierValidScav = new Dictionary<ItemTier, bool>();
         private static ItemTier[] _patternAdjusted = new ItemTier[0];
@@ -93,9 +96,11 @@ namespace R2API {
         }
 
         private static void GenerateAvailableItemsSet(On.RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.orig_GenerateAvailableItemsSet orig) {
-            var forbiddenTags = new List<ItemTag>();
-            foreach (var itemTag in MonsterTeamGainsItemsArtifactManager.forbiddenTags) {
-                forbiddenTags.Add(itemTag);
+            var forbiddenTags = new List<ItemTag>() {
+            };
+            System.Collections.ICollection forbiddenTagsCollection = (System.Collections.ICollection)forbiddenTagsInfo.GetValue(null);
+            foreach (object forbiddenTag in forbiddenTagsCollection) {
+                forbiddenTags.Add((ItemTag)forbiddenTag);
             }
 
             TierValidScav.Clear();
@@ -128,12 +133,14 @@ namespace R2API {
             DropList.RevertDropLists();
 
 
-            var patternAdjustedList = new List<ItemTier>();
-            var patternIndex = 0;
-            foreach (var itemTier in MonsterTeamGainsItemsArtifactManager.pattern) {
-                patternAdjustedList.Add(itemTier);
-                patternIndex += 1;
+            var patternAdjustedList = new List<ItemTier>() {
+            };
+            
+            System.Collections.ICollection patternCollection = (System.Collections.ICollection)patternInfo.GetValue(null);
+            foreach (object tier in patternCollection) {
+                patternAdjustedList.Add((ItemTier)tier);
             }
+
             if (!TierValidMonsterTeam[ItemTier.Tier1]) {
                 while (patternAdjustedList.Contains(ItemTier.Tier1)) {
                     patternAdjustedList.Remove(ItemTier.Tier1);
@@ -150,7 +157,7 @@ namespace R2API {
                 }
             }
             _patternAdjusted = new ItemTier[patternAdjustedList.Count];
-            patternIndex = 0;
+            var patternIndex = 0;
             foreach (var itemTier in patternAdjustedList) {
                 _patternAdjusted[patternIndex] = itemTier;
                 patternIndex += 1;

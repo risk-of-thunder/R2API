@@ -101,6 +101,7 @@ namespace R2API.ItemDrop {
         };
 
         private static readonly Dictionary<string, List<float>> DropTableTierOdds = new Dictionary<string, List<float>>();
+        private static System.Reflection.MethodInfo generateWeightedSelectionMethodInfo = typeof(BasicPickupDropTable).GetMethod("GenerateWeightedSelection", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
         public static void UpdateDropTableTierOdds(SpawnCard spawnCard, string interactableName) {
             if (DropTableInteractables.Contains(interactableName)) {
@@ -130,8 +131,7 @@ namespace R2API.ItemDrop {
                 if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.equipment]) {
                     dropTable.equipmentWeight = 0;
                 }
-
-                dropTable.GenerateWeightedSelection(Run.instance);
+                generateWeightedSelectionMethodInfo.Invoke(dropTable, new object[] { Run.instance });
             }
         }
 
