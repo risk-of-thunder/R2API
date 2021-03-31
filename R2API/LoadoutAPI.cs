@@ -284,7 +284,7 @@ namespace R2API {
             public SkinDef?[]? BaseSkins;
             public Sprite? Icon;
             public string? NameToken;
-            public string? UnlockableName;
+            public UnlockableDef? UnlockableDef;
             public GameObject? RootObject;
             public CharacterModel.RendererInfo[]? RendererInfos;
             public SkinDef.MeshReplacement[]? MeshReplacements;
@@ -311,7 +311,7 @@ namespace R2API {
 
             newSkin.baseSkins = skin.BaseSkins ?? Array.Empty<SkinDef>();
             newSkin.icon = skin.Icon;
-            newSkin.unlockableName = skin.UnlockableName;
+            newSkin.unlockableDef = skin.UnlockableDef;
             newSkin.rootObject = skin.RootObject;
             newSkin.rendererInfos = skin.RendererInfos ?? Array.Empty<CharacterModel.RendererInfo>();
             newSkin.gameObjectActivations = skin.GameObjectActivations ?? Array.Empty<SkinDef.GameObjectActivation>();
