@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HG;
-using R2API.Utils;
-using RoR2;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
