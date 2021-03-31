@@ -13,7 +13,7 @@ namespace R2API.Patcher {
 
         private const string SearchableAttributeTypeFullName = "RoR2.SearchableAttribute";
 
-        private static HashSet<string> AssemblyBlacklist = new HashSet<string> {
+        private static readonly HashSet<string> AssemblyBlacklist = new HashSet<string> {
             "BepInEx",
             "BepInEx.Preloader",
             "BepInEx.Harmony",
