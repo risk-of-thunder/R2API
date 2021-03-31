@@ -56,6 +56,8 @@ namespace R2API {
             SteamworksClientManager.onLoaded += CheckIfUsedOnRightGameVersion;
 
             VanillaFixes();
+
+            R2APIContentPackProvider.Init();
         }
 
         private static void CheckIfUsedOnRightGameVersion() {
@@ -80,7 +82,7 @@ namespace R2API {
                 var c = new ILCursor(il);
 
                 // ReSharper disable once InconsistentNaming
-                void ILFailMessage(int i) {
+                static void ILFailMessage(int i) {
                     R2API.Logger.LogError(
                         $"Failed finding IL Instructions. Aborting RebuildLobbyData IL Hook ({i})");
                 }
