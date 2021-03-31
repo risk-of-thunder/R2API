@@ -49,7 +49,7 @@ namespace R2API.Tweaks {
         private static void IlHook(ILContext il) {
             var cursor = new ILCursor(il);
             cursor.GotoNext(
-                x => x.MatchCallvirt(typeof(StackFrame).GetMethod("GetFileLineNumber", BindingFlags.Instance | BindingFlags.Public))
+                x => x.MatchCallOrCallvirt(typeof(StackFrame).GetMethod("GetFileLineNumber", BindingFlags.Instance | BindingFlags.Public))
             );
 
             cursor.RemoveRange(2);

@@ -50,7 +50,7 @@ namespace R2API {
         private static void OnEquipmentIconAddedHook(ILContext il) {
             var cursor = new ILCursor(il).Goto(0);
             var setSubscribedInventory = typeof(ItemInventoryDisplay).GetMethodCached("SetSubscribedInventory");
-            cursor.GotoNext(x => x.MatchCallvirt(setSubscribedInventory));
+            cursor.GotoNext(x => x.MatchCallOrCallvirt(setSubscribedInventory));
             cursor.Index += 1;
 
             cursor.Emit(OpCodes.Ldarg_0);
