@@ -119,7 +119,6 @@ namespace R2API.Utils {
         }
 
         // TODO: Should remove disable of nullable context, but changes here require extra testing.
-#pragma warning disable CS8605 // Unboxing a possibly null value.
 
         private static void TryGetNetworkCompatibility(Type baseUnityPluginType, out NetworkCompatibility networkCompatibility) {
             networkCompatibility = new NetworkCompatibility();
@@ -141,8 +140,6 @@ namespace R2API.Utils {
                 }
             }
         }
-
-#pragma warning restore CS8605 // Unboxing a possibly null value.
 
         private void AddToNetworkModList() {
             if (ModList.Count != 0) {

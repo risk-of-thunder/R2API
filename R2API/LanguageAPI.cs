@@ -32,9 +32,7 @@ namespace R2API {
         private const string genericLanguage = "generic";
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-#pragma warning disable IDE0051 // Remove unused private members
         internal static void LanguageAwake() {
-#pragma warning restore IDE0051 // Remove unused private members
             if (Loaded) {
                 return;
             }
@@ -101,9 +99,7 @@ namespace R2API {
         }
 
         [R2APISubmoduleInit(Stage = InitStage.LoadCheck)]
-#pragma warning disable IDE0051 // Remove unused private members
         private static void ShouldLoad(out bool shouldload) {
-#pragma warning restore IDE0051 // Remove unused private members
             shouldload = Directory.GetFiles(Paths.PluginPath, "*.language", SearchOption.AllDirectories).Length > 0;
         }
 
