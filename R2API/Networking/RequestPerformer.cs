@@ -19,8 +19,8 @@ namespace R2API.Networking {
             _reply = reply;
         }
 
-        private TRequest _request;
-        private TReply _reply;
+        private readonly TRequest _request;
+        private readonly TReply _reply;
 
         internal override ISerializableObject PerformRequest(NetworkReader reader) {
             _request.Deserialize(reader);
