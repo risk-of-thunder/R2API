@@ -197,26 +197,15 @@ namespace R2API {
             int dotStackLoc = 0;
 
             // ReSharper disable once InconsistentNaming
-            void ILFailMessage() {
+            void ILFailMessage(int index) {
                 R2API.Logger.LogError(
-                    "Failed finding IL Instructions. Aborting OnAddDot IL Hook");
+                    $"Failed finding IL Instructions. Aborting OnAddDot IL Hook {index}");
             }
 
-            if (c.TryGotoNext(
-                i => i.MatchBlt(out _),
-                i => i.MatchRet())) {
-                c.Index++;
-                c.Next.OpCode = OpCodes.Nop;
-            }
-            else {
-                ILFailMessage();
-            }
-
-            if (c.TryGotoNext(
-                i => i.MatchStloc(out dotStackLoc),
-                i => i.MatchLdarg(out _),
-                i => i.MatchSwitch(out _))) {
-                c.Index++;
+            if (c.TryGotoNext(MoveType.After,
+                i => i.MatchLdsfld<DotController>("dotStackPool"),
+                i => i.MatchCallOrCallvirt(out _),
+                i => i.MatchStloc(out dotStackLoc))) {
                 c.Emit(OpCodes.Ldarg_0);
                 c.Emit(OpCodes.Ldloc, dotStackLoc);
                 c.EmitDelegate<Action<DotController, DotController.DotStack>>((self, dotStack) => {
@@ -227,7 +216,7 @@ namespace R2API {
                 });
             }
             else {
-                ILFailMessage();
+                ILFailMessage(1);
             }
         }
 
