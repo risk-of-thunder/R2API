@@ -62,7 +62,7 @@ namespace R2API.Utils {
         /// </summary>
         /// <param name="message">The message to send</param>
         /// <param name="connection">The network connection to send to.</param>
-        public static void SendDirectMessage(Chat.ChatMessageBase? message, NetworkConnection? connection) {
+        public static void SendDirectMessage(ChatMessageBase message, NetworkConnection? connection) {
             NetworkWriter writer = new NetworkWriter();
             writer.StartMessage((short)59);
             writer.Write(message.GetTypeIndex());
