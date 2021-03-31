@@ -42,7 +42,7 @@ namespace R2API {
         private static readonly DropList PlayerDropList = new DropList();
         internal static readonly InteractableCalculator PlayerInteractables = new InteractableCalculator();
         private static bool commandArtifact = false;
-        private static System.Reflection.MethodInfo rouletteGetEntryIndexForTime = typeof(RouletteChestController).GetMethod("GetEntryIndexForTime", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        private static readonly System.Reflection.MethodInfo rouletteGetEntryIndexForTime = typeof(RouletteChestController).GetMethod("GetEntryIndexForTime", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
         public static Dictionary<ItemTier, List<ItemIndex>> AdditionalItemsReadOnly =>
             ItemsToAdd.Except(ItemsToRemove).ToDictionary(p => p.Key, p => p.Value);
@@ -240,8 +240,8 @@ namespace R2API {
 
         private static List<PickupIndex> currentPickupList = new List<PickupIndex>();
         private static bool uniquePickup = false;
-        private static Dictionary<PickupDropletController, List<PickupIndex>> pickupDropletCommandArtifactLists = new Dictionary<PickupDropletController, List<PickupIndex>>();
-        private static Dictionary<PickupDropletController, bool> pickupDropletCommandArtifactUniquePickup = new Dictionary<PickupDropletController, bool>();
+        private static readonly Dictionary<PickupDropletController, List<PickupIndex>> pickupDropletCommandArtifactLists = new Dictionary<PickupDropletController, List<PickupIndex>>();
+        private static readonly Dictionary<PickupDropletController, bool> pickupDropletCommandArtifactUniquePickup = new Dictionary<PickupDropletController, bool>();
 
         private static void CreatePickupDroplet(ILContext ilContext) {
             var spawnMethodInfo = typeof(UnityEngine.Networking.NetworkServer).GetMethod("Spawn", new[] { typeof(GameObject) });
@@ -349,7 +349,7 @@ namespace R2API {
 
         // WILL BACKUP UP THE DROP LIST SELECTED BY CHESTS FOR USE WITH THE COMMAND ARTIFACT
 
-        private static Dictionary<ChestBehavior, List<PickupIndex>> chestCommandArtifactLists = new Dictionary<ChestBehavior, List<PickupIndex>>();
+        private static readonly Dictionary<ChestBehavior, List<PickupIndex>> chestCommandArtifactLists = new Dictionary<ChestBehavior, List<PickupIndex>>();
 
         private static void RollItem(ILContext ilContext) {
             var findPickupIndexMethodInfo = typeof(PickupCatalog).GetMethod("FindPickupIndex", new[] { typeof(string) });
@@ -431,7 +431,7 @@ namespace R2API {
 
         //Backs up the drop list selected by shrines of chance for use with the command Artifact.
 
-        private static List<List<PickupIndex>> shrineChanceDropLists = new List<List<PickupIndex>>();
+        private static readonly List<List<PickupIndex>> shrineChanceDropLists = new List<List<PickupIndex>>();
         private static WeightedSelection<List<PickupIndex>> shrineChanceWeightedSelection;
 
         private static void AddShrineStack(ILContext ilContext) {
@@ -502,7 +502,7 @@ namespace R2API {
 
         private static bool rouletteChestEntriesAdding = false;
         private static RouletteChestController currentRouletteChestController;
-        private static Dictionary<RouletteChestController, List<List<PickupIndex>>> rouletteCommandArtifactLists = new Dictionary<RouletteChestController, List<List<PickupIndex>>>();
+        private static readonly Dictionary<RouletteChestController, List<List<PickupIndex>>> rouletteCommandArtifactLists = new Dictionary<RouletteChestController, List<List<PickupIndex>>>();
 
         private static void GenerateEntriesServer(On.RoR2.RouletteChestController.orig_GenerateEntriesServer orig, RouletteChestController rouletteChestController, Run.FixedTimeStamp fixedTimeStamp) {
             if (commandArtifact) {
