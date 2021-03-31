@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 
 namespace R2API.Networking.Messages {
+
     internal struct ExamplePing : INetRequest<ExamplePing, ExamplePingReply> {
         internal int Integer;
 

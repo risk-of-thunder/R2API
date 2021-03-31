@@ -1,13 +1,14 @@
-﻿using System;
+﻿using R2API.MiscHelpers;
+using R2API.Networking;
+using RoR2;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using R2API.MiscHelpers;
-using R2API.Networking;
-using RoR2;
 
 namespace R2API.Utils {
+
     /// <summary>
     /// Enum used for telling whether or not the mod should be needed by everyone in multiplayer games.
     /// Also can specify if the mod does not work in multiplayer.
@@ -36,6 +37,7 @@ namespace R2API.Utils {
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly)]
     public class NetworkCompatibility : Attribute {
+
         /// <summary>
         /// Used for telling whether or not the mod should be needed by everyone in multiplayer games.
         /// </summary>
@@ -117,13 +119,13 @@ namespace R2API.Utils {
         }
 
         // TODO: Should remove disable of nullable context, but changes here require extra testing.
-        #pragma warning disable CS8605 // Unboxing a possibly null value.
+#pragma warning disable CS8605 // Unboxing a possibly null value.
+
         private static void TryGetNetworkCompatibility(Type baseUnityPluginType, out NetworkCompatibility networkCompatibility) {
             networkCompatibility = new NetworkCompatibility();
 
             foreach (var assemblyAttribute in baseUnityPluginType.Assembly.CustomAttributes) {
                 if (assemblyAttribute.AttributeType == typeof(NetworkCompatibility)) {
-
                     networkCompatibility.CompatibilityLevel = (CompatibilityLevel)assemblyAttribute.ConstructorArguments[0].Value;
 
                     networkCompatibility.VersionStrictness = (VersionStrictness)assemblyAttribute.ConstructorArguments[1].Value;
@@ -139,7 +141,8 @@ namespace R2API.Utils {
                 }
             }
         }
-        #pragma warning restore CS8605 // Unboxing a possibly null value.
+
+#pragma warning restore CS8605 // Unboxing a possibly null value.
 
         private void AddToNetworkModList() {
             if (ModList.Count != 0) {

@@ -1,24 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using MonoMod.Cil;
+﻿using MonoMod.Cil;
 using R2API.ItemDrop;
 using R2API.ItemDropAPITools;
 using R2API.Utils;
 using RoR2;
 using RoR2.Artifacts;
-using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace R2API {
+
     [R2APISubmodule]
     public class MonsterItemsAPI {
+
         public static bool Loaded {
             get => _loaded;
             internal set => _loaded = value;
         }
+
         private static bool _loaded;
 
         public static Dictionary<ItemTier, List<ItemIndex>> AdditionalItemsReadOnly =>
             ItemsToAdd.Except(ItemsToRemove).ToDictionary(p => p.Key, p => p.Value);
+
         public static Dictionary<EquipmentDropType, List<EquipmentIndex>> AdditionalEquipmentsReadOnly =>
             EquipmentsToAdd.Except(EquipmentsToRemove).ToDictionary(p => p.Key, p => p.Value);
 
@@ -126,7 +129,6 @@ namespace R2API {
             DropList.SetDropLists(tier1Adjusted, tier2Adjusted, tier3Adjusted, equipmentAdjusted);
             orig();
             DropList.RevertDropLists();
-
 
             var patternAdjustedList = new List<ItemTier>();
             var patternIndex = 0;
@@ -310,7 +312,7 @@ namespace R2API {
                 foreach (var itemIndex in items) {
                     if (ItemsToRemove[itemTier].Contains(itemIndex)) {
                         ItemsToRemove[itemTier].Remove(itemIndex);
-                    }   
+                    }
                 }
             }
         }
@@ -325,14 +327,14 @@ namespace R2API {
                 foreach (var itemIndex in items) {
                     if (!ItemsToRemove[itemTier].Contains(itemIndex)) {
                         ItemsToRemove[itemTier].Add(itemIndex);
-                    }   
+                    }
                 }
             }
             else if (ItemsToAdd.ContainsKey(itemTier)) {
                 foreach (var itemIndex in items) {
                     if (ItemsToAdd[itemTier].Contains(itemIndex)) {
                         ItemsToAdd[itemTier].Remove(itemIndex);
-                    }   
+                    }
                 }
             }
         }
@@ -354,11 +356,10 @@ namespace R2API {
                 foreach (var equipmentIndex in equipments) {
                     if (EquipmentsToRemove[equipmentDropType].Contains(equipmentIndex)) {
                         EquipmentsToRemove[equipmentDropType].Remove(equipmentIndex);
-                    }   
+                    }
                 }
             }
         }
-
 
         /// <summary>
         /// Remove the given equipments from the given drop table.
@@ -370,14 +371,14 @@ namespace R2API {
                 foreach (var equipmentIndex in equipments) {
                     if (!EquipmentsToRemove[equipmentDropType].Contains(equipmentIndex)) {
                         EquipmentsToRemove[equipmentDropType].Add(equipmentIndex);
-                    }   
+                    }
                 }
             }
             else if (EquipmentsToAdd.ContainsKey(equipmentDropType)) {
                 foreach (var equipmentIndex in equipments) {
                     if (EquipmentsToAdd[equipmentDropType].Contains(equipmentIndex)) {
                         EquipmentsToAdd[equipmentDropType].Remove(equipmentIndex);
-                    }   
+                    }
                 }
             }
         }
@@ -413,7 +414,7 @@ namespace R2API {
             foreach (var equipmentIndex in equipments) {
                 var equipmentDropTypes = EquipmentDropTypeUtil.GetEquipmentTypesFromIndex(equipmentIndex);
                 foreach (var equipmentDropType in equipmentDropTypes) {
-                    AddEquipmentByDropType(equipmentDropType, equipmentIndex);   
+                    AddEquipmentByDropType(equipmentDropType, equipmentIndex);
                 }
             }
         }
@@ -426,7 +427,7 @@ namespace R2API {
             foreach (var equipmentIndex in equipments) {
                 var equipmentDropTypes = EquipmentDropTypeUtil.GetEquipmentTypesFromIndex(equipmentIndex);
                 foreach (var equipmentDropType in equipmentDropTypes) {
-                    RemoveEquipmentByDropType(equipmentDropType, equipmentIndex);   
+                    RemoveEquipmentByDropType(equipmentDropType, equipmentIndex);
                 }
             }
         }

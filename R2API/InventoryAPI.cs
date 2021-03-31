@@ -1,10 +1,11 @@
 ﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.Utils;
 using RoR2.UI;
 using System;
-using R2API.Utils;
 
 namespace R2API {
+
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class InventoryAPI {
@@ -16,10 +17,11 @@ namespace R2API {
             get => _loaded;
             internal set => _loaded = value;
         }
+
         private static bool _loaded;
 
-
         public static event Action<ItemIcon>? OnItemIconAdded;
+
         public static event Action<EquipmentIcon>? OnEquipmentIconAdded;
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]

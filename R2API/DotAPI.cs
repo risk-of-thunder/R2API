@@ -4,15 +4,19 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace R2API {
+
     /// <summary>
     /// API for adding damage over time effects to the game.
     /// </summary>
     [R2APISubmodule]
     public static class DotAPI {
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -45,6 +49,7 @@ namespace R2API {
         /// <param name="self"></param>
         /// <param name="dotStack"></param>
         public delegate void CustomDotBehaviour(DotController self, DotController.DotStack dotStack);
+
         private static CustomDotBehaviour[] _customDotBehaviours = new CustomDotBehaviour[0];
 
         /// <summary>
@@ -52,6 +57,7 @@ namespace R2API {
         /// </summary>
         /// <param name="self"></param>
         public delegate void CustomDotVisual(DotController self);
+
         private static CustomDotVisual[] _customDotVisuals = new CustomDotVisual[0];
 
         /// <summary>
@@ -66,7 +72,7 @@ namespace R2API {
         /// <returns></returns>
         public static DotController.DotIndex RegisterDotDef(DotController.DotDef? dotDef,
             CustomDotBehaviour? customDotBehaviour = null, CustomDotVisual? customDotVisual = null) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(DotAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DotAPI)})]");
             }
             var dotDefIndex = DotDefs.Length;
@@ -76,13 +82,14 @@ namespace R2API {
             var customArrayIndex = _customDotBehaviours.Length;
             Array.Resize(ref _customDotBehaviours, _customDotBehaviours.Length + 1);
             _customDotBehaviours[customArrayIndex] = customDotBehaviour;
-            
+
             Array.Resize(ref _customDotVisuals, _customDotVisuals.Length + 1);
             _customDotVisuals[customArrayIndex] = customDotVisual;
 
             R2API.Logger.LogInfo($"Custom Dot that uses Buff Index: {(int)dotDef.associatedBuff.buffIndex} added");
             return (DotController.DotIndex)dotDefIndex;
         }
+
         /// <summary>
         /// Unrolled version of RegisterDotDef(DotController.DotDef, CustomDotBehaviour, CustomDotVisual)
         /// <see cref="RegisterDotDef(DotController.DotDef, CustomDotBehaviour, CustomDotVisual)"/>
@@ -98,11 +105,11 @@ namespace R2API {
             DamageColorIndex colorIndex, BuffDef associatedBuff, CustomDotBehaviour customDotBehaviour = null,
             CustomDotVisual customDotVisual = null) {
             var dotDef = new DotController.DotDef {
-                            associatedBuff = associatedBuff,
-                            damageCoefficient = damageCoefficient,
-                            interval = interval,
-                            damageColorIndex = colorIndex
-                        };
+                associatedBuff = associatedBuff,
+                damageCoefficient = damageCoefficient,
+                interval = interval,
+                damageColorIndex = colorIndex
+            };
             return RegisterDotDef(dotDef, customDotBehaviour, customDotVisual);
         }
 

@@ -1,19 +1,19 @@
-﻿using System;
+﻿using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using R2API.Utils;
+using RoR2;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using R2API.ItemDrop;
-using R2API.Utils;
-using RoR2;
 using Object = UnityEngine.Object;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
 
 namespace R2API {
+
     [R2APISubmodule]
     // ReSharper disable once InconsistentNaming
     public static class ItemAPI {
@@ -33,9 +33,11 @@ namespace R2API {
             get => _loaded;
             internal set => _loaded = value;
         }
+
         private static bool _loaded;
 
         #region ModHelper Events and Hooks
+
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.ItemCatalog.DefineItems += GetOriginalItemCountHook;
@@ -138,9 +140,11 @@ namespace R2API {
                 }
             }
         }
-        #endregion
+
+        #endregion ModHelper Events and Hooks
 
         #region Add Methods
+
         /// <summary>
         /// Add a custom item to the list of available items.
         /// Value for ItemDef.ItemIndex can be ignored.
@@ -149,7 +153,7 @@ namespace R2API {
         /// <param name="item">The item to add.</param>
         /// <returns>the ItemIndex of your item if added. -1 otherwise</returns>
         public static ItemIndex Add(CustomItem? item) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
@@ -192,7 +196,7 @@ namespace R2API {
         /// <param name="item">The equipment item to add.</param>
         /// <returns>the EquipmentIndex of your item if added. -1 otherwise</returns>
         public static EquipmentIndex Add(CustomEquipment? item) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
@@ -220,7 +224,6 @@ namespace R2API {
                 R2API.Logger.LogError($"Custom equipment '{item.EquipmentDef.name}' is not XMLsafe. Item not added.");
             }
             if (xmlSafe) {
-
                 item.EquipmentDef.equipmentIndex = (EquipmentIndex)OriginalEquipmentCount + CustomEquipmentCount++;
                 EquipmentDefinitions.Add(item);
                 return item.EquipmentDef.equipmentIndex;
@@ -228,66 +231,10 @@ namespace R2API {
             return EquipmentIndex.None;
         }
 
-        [Obsolete("Use the Add() method from BuffAPI instead.")]
-        public static BuffIndex Add(CustomBuff? buff) {
-            if(!Loaded) {
-                throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
-            }
-            if (!BuffAPI.Loaded) {
-                try {
-                    BuffAPI.SetHooks();
-                    BuffAPI.Loaded = true;
-                }
-                catch (Exception e) {
-                    R2API.Logger.LogError($"BuffAPI hooks failed to initialize. Disabling the submodule. {e}");
-                    BuffAPI.UnsetHooks();
-                }
-            }
-                
-            return BuffAPI.Add(buff);
-        }
-
-        [Obsolete("Use the Add() method from EliteAPI instead.")]
-        public static EliteIndex Add(CustomElite? elite) {
-            if(!Loaded) {
-                throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
-            }
-            if (!EliteAPI.Loaded) {
-                try {
-                    EliteAPI.SetHooks();
-                    EliteAPI.Loaded = true;
-                }
-                catch (Exception e) {
-                    R2API.Logger.LogError($"EliteAPI hooks failed to initialize. Disabling the submodule. {e}");
-                    EliteAPI.UnsetHooks();
-                }
-            }
-                
-            return EliteAPI.Add(elite);
-        }
-
-        [Obsolete("Use the Add() method that will directly returns the correct enum type (ItemIndex) instead.")]
-        public static int AddCustomItem(CustomItem? item) {
-            return (int)Add(item);
-        }
-
-        [Obsolete("Use the Add() method that will directly returns the correct enum type (EquipmentIndex) instead.")]
-        public static int AddCustomEquipment(CustomEquipment? item) {
-            return (int)Add(item);
-        }
-
-        [Obsolete("Use the Add() method that will directly returns the correct enum type (BuffIndex) instead.")]
-        public static int AddCustomBuff(CustomBuff? buff) {
-            return (int)Add(buff);
-        }
-
-        [Obsolete("Use the Add() method that will directly returns the correct enum type (EliteIndex) instead.")]
-        public static int AddCustomElite(CustomElite? elite) {
-            return (int)Add(elite);
-        }
-        #endregion
+        #endregion Add Methods
 
         #region ItemDisplay Hooks
+
         // With how unfriendly it is to makes your 3D Prefab work with shaders from the game,
         // makes it so that if the custom prefab doesnt have rendering support for when the player is cloaked, or burning, still display the item on the player.
         private static void MaterialFixForItemDisplayOnCharacter(ILContext il) {
@@ -323,7 +270,7 @@ namespace R2API {
 
         // todo : allow override of existing item display rules
         // This method only allow the addition of custom rules.
-        // 
+        //
         private static void AddingItemDisplayRulesToCharacterModels(object _, EventArgs __) {
             foreach (var bodyPrefab in BodyCatalog.allBodyPrefabs) {
                 var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
@@ -356,15 +303,13 @@ namespace R2API {
             }
         }
 
+        #endregion ItemDisplay Hooks
 
-        #endregion
-        
         public static bool IsCustomItemOrEquipment(PickupIndex pickupIndex) {
             var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
             return (int)pickupDef.itemIndex >= OriginalItemCount || (int)pickupDef.equipmentIndex >= OriginalEquipmentCount;
         }
     }
-
 
     public class CustomItem {
         public ItemDef? ItemDef;
@@ -398,7 +343,6 @@ namespace R2API {
 
     public class ItemDisplayRuleDict {
 
-#pragma warning disable CS8604 // Possible null reference argument. Proper NullChecking is in place.
         /// <summary>
         /// Get the applicable rule for this charactermodel. Returns the default rules if no specific rule is found.
         /// </summary>
@@ -412,8 +356,7 @@ namespace R2API {
                     return Dictionary[CharacterModelName];
             }
             set {
-                if (string.IsNullOrEmpty(CharacterModelName))
-                {
+                if (string.IsNullOrEmpty(CharacterModelName)) {
                     R2API.Logger.LogWarning("DefaultRules overwritten with Indexer! Please set them with the constructor instead!");
                     DefaultRules = value;
                     return;
@@ -421,13 +364,13 @@ namespace R2API {
 
                 if (Dictionary.ContainsKey(CharacterModelName)) {
                     Dictionary[CharacterModelName] = value;
-                } else {
+                }
+                else {
                     Dictionary.Add(CharacterModelName, value);
                 }
-
             }
         }
-#pragma warning restore CS8604 // Possible null reference argument.
+
 
         /// <summary>
         /// Equivalent to using the set property of the indexer, but added bonus is the ability to ignore the array wrapper normally needed.
@@ -445,18 +388,17 @@ namespace R2API {
         /// <param name="itemDisplayRules">The specific rules for this model, or if false is returned, the default rules.</param>
         /// <returns>True if there's a specific rule for this model. False otherwise.</returns>
         public bool TryGetRules(string? CharacterModelName, out ItemDisplayRule[] itemDisplayRules) {
-#pragma warning disable CS8601 // Possible null reference assignment. The indexer allows nulling.
             itemDisplayRules = this[CharacterModelName];
-#pragma warning restore CS8601 // Possible null reference assignment.
             return CharacterModelName != null && Dictionary.ContainsKey(CharacterModelName);
         }
 
         /// <summary>
         /// The default rules to apply when no matching model is found.
         /// </summary>
-        public ItemDisplayRule[]? DefaultRules {get; private set;}
+        public ItemDisplayRule[]? DefaultRules { get; private set; }
 
         private readonly Dictionary<string, ItemDisplayRule[]?> Dictionary;
+
         public ItemDisplayRuleDict(params ItemDisplayRule[]? defaultRules) {
             DefaultRules = defaultRules;
             Dictionary = new Dictionary<string, ItemDisplayRule[]?>();

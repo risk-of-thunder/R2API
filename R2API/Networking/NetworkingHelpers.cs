@@ -5,10 +5,12 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace R2API.Networking {
+
     /// <summary>
     /// Helper functions for various RoR2 networking needs
     /// </summary>
     public static class NetworkingHelpers {
+
         public static void DealDamage(this DamageInfo? damage, HurtBox? target,
             bool callDamage, bool callHitEnemy, bool callHitWorld) {
             if (NetworkServer.active) {
@@ -40,7 +42,8 @@ namespace R2API.Networking {
             if (NetworkServer.active) {
                 if (duration < 0f) {
                     body.SetBuffCount(buff, stacks);
-                } else {
+                }
+                else {
                     if (stacks < 0) {
                         R2API.Logger.LogError("Cannot remove duration from a buff");
                         return;

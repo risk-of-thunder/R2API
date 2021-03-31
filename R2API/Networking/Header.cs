@@ -2,10 +2,12 @@
 using UnityEngine.Networking;
 
 namespace R2API.Networking {
-    internal class Header : ISerializableObject {
-        public Header() {
 
+    internal class Header : ISerializableObject {
+
+        public Header() {
         }
+
         internal Header(int typeCode, NetworkDestination dest) {
             TypeCode = typeCode;
             Destination = dest;
@@ -15,13 +17,13 @@ namespace R2API.Networking {
             get;
             private set;
         }
+
         internal NetworkDestination Destination {
             get;
             private set;
         }
 
         internal void RemoveDestination(NetworkDestination destination) => Destination &= ~destination;
-
 
         public void Serialize(NetworkWriter writer) {
             writer.Write(TypeCode);

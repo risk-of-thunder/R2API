@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
-using RoR2;
-using UnityEngine;
+﻿using RoR2;
+using System.Collections.Generic;
 
 namespace R2API {
+
     namespace ItemDropAPITools {
+
         public static class Catalog {
             public static bool Loaded;
             public static readonly List<ItemIndex> SpecialItems = new List<ItemIndex>();
             public static readonly Dictionary<ItemTier, ItemIndex> ScrapItems = new Dictionary<ItemTier, ItemIndex>();
             public static readonly List<EquipmentIndex> EliteEquipment = new List<EquipmentIndex>();
-            
+
             public static readonly List<ItemIndex> Pearls = new List<ItemIndex> {
                 ItemIndex.Pearl,
                 ItemIndex.ShinyPearl
@@ -24,7 +25,8 @@ namespace R2API {
                                 if (!ScrapItems.ContainsKey(itemDef.tier)) {
                                     ScrapItems.Add(itemDef.tier, itemIndex);
                                 }
-                            } else if (itemDef.ContainsTag(ItemTag.WorldUnique)) {
+                            }
+                            else if (itemDef.ContainsTag(ItemTag.WorldUnique)) {
                                 SpecialItems.Add(itemIndex);
                             }
                         }

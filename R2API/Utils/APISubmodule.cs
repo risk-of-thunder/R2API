@@ -1,30 +1,34 @@
+using BepInEx.Logging;
+using JetBrains.Annotations;
+using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using BepInEx.Logging;
-using Mono.Cecil;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ClassNeverInstantiated.Global
 
 namespace R2API.Utils {
+
     [Flags]
     internal enum InitStage {
-        SetHooks   = 1 << 0,
-        Load       = 1 << 1,
-        Unload     = 1 << 2,
+        SetHooks = 1 << 0,
+        Load = 1 << 1,
+        Unload = 1 << 2,
         UnsetHooks = 1 << 3,
-        LoadCheck  = 1 << 4,
+        LoadCheck = 1 << 4,
     }
 
     // ReSharper disable once InconsistentNaming
+    [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Class)]
     internal class R2APISubmodule : Attribute {
         public int Build;
     }
 
     // ReSharper disable once InconsistentNaming
+    [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Method)]
     internal class R2APISubmoduleInit : Attribute {
         public InitStage Stage;
@@ -44,10 +48,9 @@ namespace R2API.Utils {
         }
     }
 
-
     // ReSharper disable once InconsistentNaming
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class APISubmoduleHandler {
         private readonly int _build;
@@ -83,7 +86,7 @@ namespace R2API.Utils {
                 foreach (var moduleType in moduleTypes) {
                     R2API.Logger.LogInfo($"Enabling R2API Submodule: {moduleType.Name}");
                 }
-            
+
                 var faults = new Dictionary<Type, Exception>();
                 LoadedModules = new HashSet<string>();
 
@@ -106,9 +109,9 @@ namespace R2API.Utils {
             var scanRequest = new PluginScanner.AttributeScanRequest(attributeTypeFullName: typeof(R2APISubmoduleDependency).FullName,
                 attributeTargets: AttributeTargets.Assembly | AttributeTargets.Class,
                 CallWhenAssembliesAreScanned, oneMatchPerAssembly: false,
-                foundOnAssemblyAttributes: (assembly, arguments) => 
+                foundOnAssemblyAttributes: (assembly, arguments) =>
                     AddModuleToSet(arguments),
-                foundOnAssemblyTypes: (type, arguments) => 
+                foundOnAssemblyTypes: (type, arguments) =>
                     AddModuleToSet(arguments)
                 );
 
@@ -116,7 +119,6 @@ namespace R2API.Utils {
 
             return LoadedModules;
         }
-
 
         // ReSharper disable once InconsistentNaming
         private bool APISubmoduleFilter(Type type) {
@@ -148,10 +150,10 @@ namespace R2API.Utils {
         private void InvokeStage(Type type, InitStage stage, object[]? parameters) {
             var method = type.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                 .Where(m => m.GetCustomAttributes(typeof(R2APISubmoduleInit))
-                .Any(a => ((R2APISubmoduleInit) a).Stage.HasFlag(stage))).ToList();
+                .Any(a => ((R2APISubmoduleInit)a).Stage.HasFlag(stage))).ToList();
 
             if (method.Count == 0) {
-                _logger?.Log(LogLevel.Debug, $"{type.Name} has no static method registered for {stage.ToString()}");
+                _logger?.Log(LogLevel.Debug, $"{type.Name} has no static method registered for {stage}");
                 return;
             }
 
@@ -159,8 +161,8 @@ namespace R2API.Utils {
         }
     }
 
-
     public static class EnumerableExtensions {
+
         /// <summary>
         /// ForEach but with a try catch in it.
         /// </summary>

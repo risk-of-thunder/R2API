@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using MonoMod.Utils;
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using MonoMod.Utils;
 using UnityEngine;
 
 namespace R2API.Utils {
+
     public static class Reflection {
 
         private const BindingFlags AllFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static |
@@ -37,7 +38,6 @@ namespace R2API.Utils {
         private static readonly ConcurrentDictionary<FieldInfo, Delegate> FieldSetDelegateCache =
             new ConcurrentDictionary<FieldInfo, Delegate>();
 
-
         // Property
         private static readonly ConcurrentDictionary<(Type T, string name), PropertyInfo> PropertyCache =
             new ConcurrentDictionary<(Type T, string name), PropertyInfo>();
@@ -47,7 +47,6 @@ namespace R2API.Utils {
 
         private static readonly ConcurrentDictionary<PropertyInfo, Delegate> PropertySetDelegateCache =
             new ConcurrentDictionary<PropertyInfo, Delegate>();
-
 
         // Method
         private static readonly ConcurrentDictionary<(Type T, string name), MethodInfo> MethodCache =
@@ -60,14 +59,12 @@ namespace R2API.Utils {
         private static readonly ConcurrentDictionary<MethodInfo, FastReflectionDelegate> DelegateCache =
             new ConcurrentDictionary<MethodInfo, FastReflectionDelegate>();
 
-
         // Class
         private static readonly ConcurrentDictionary<(Type T, Type[] argumentTypes), ConstructorInfo> ConstructorCache =
             new ConcurrentDictionary<(Type T, Type[] argumentTypes), ConstructorInfo>();
 
         private static readonly ConcurrentDictionary<(Type T, string name), Type> NestedTypeCache =
             new ConcurrentDictionary<(Type T, string name), Type>();
-
 
         // Helper methods
         private static TValue GetOrAddOnNull<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key,
@@ -78,7 +75,7 @@ namespace R2API.Utils {
             return dict[key] = factory(key);
         }
 
-        #endregion
+        #endregion Caches
 
         #region Field
 
@@ -100,7 +97,6 @@ namespace R2API.Utils {
         public static FieldInfo GetFieldCached(this Type? T, string? name) =>
             FieldCache.GetOrAddOnNull((T, name), x => x.T.GetFieldFull(x.name)
                 ?? throw new Exception($"Could not find {nameof(FieldInfo)} on {T.FullName} with the name {name}"));
-
 
         /// <summary>
         /// Gets the value of the field on the object
@@ -173,7 +169,6 @@ namespace R2API.Utils {
                 .GetFieldSetDelegateRef<TInstance, TValue>()
                 (ref instance, value);
 
-
         /// <summary>
         /// Gets the <see cref="FieldInfo"/> on the specified <see cref="Type"/> and searches base types if not found.
         /// </summary>
@@ -218,7 +213,7 @@ namespace R2API.Utils {
             FieldSetDelegateCache.GetOrAdd(field, x => x.CreateSetDelegateRef<TInstance, TValue>())
                 .CastDelegate<SetDelegateRef<TInstance, TValue>>();
 
-        #endregion
+        #endregion Field
 
         #region Property
 
@@ -346,7 +341,7 @@ namespace R2API.Utils {
             PropertySetDelegateCache.GetOrAdd(property, prop => prop.CreateSetDelegateRef<TInstance, TValue>())
                 .CastDelegate<SetDelegateRef<TInstance, TValue>>();
 
-        #endregion
+        #endregion Property
 
         #region Method
 
@@ -508,11 +503,10 @@ namespace R2API.Utils {
         public static void InvokeMethod(this Type? staticType, string? methodName, params object?[]? methodParams) =>
             staticType.InvokeMethod<object>(methodName, methodParams);
 
-
         private static FastReflectionDelegate GetMethodDelegateCached(this MethodInfo methodInfo) =>
             DelegateCache.GetOrAdd(methodInfo, method => method.GenerateCallDelegate());
 
-        #endregion
+        #endregion Method
 
         #region Class
 
@@ -607,7 +601,7 @@ namespace R2API.Utils {
         public static IList InstantiateList(this Type? type) =>
             (IList)typeof(List<>).MakeGenericType(type).Instantiate();
 
-        #endregion
+        #endregion Class
 
         #region Fast Reflection
 
@@ -619,7 +613,6 @@ namespace R2API.Utils {
             if (!typeof(TReturn).IsAssignableFrom(field.FieldType)) {
                 throw new Exception($"Field type {field.FieldType} does not match the requested type {typeof(TReturn)}.");
             }
-
 
             using (var method = new DynamicMethodDefinition($"{field} Getter", typeof(TReturn), new[] { typeof(object) })) {
                 var il = method.GetILProcessor();
@@ -739,7 +732,6 @@ namespace R2API.Utils {
                 return (GetDelegateRef<TInstance, TReturn>)method.Generate().CreateDelegate(typeof(GetDelegateRef<TInstance, TReturn>));
             }
         }
-
 
         private static SetDelegate<TValue> CreateSetDelegate<TValue>(this PropertyInfo property) {
             if (property == null) {
@@ -869,30 +861,39 @@ namespace R2API.Utils {
                 case -1:
                     il.Emit(OpCodes.Ldc_I4_M1);
                     return;
+
                 case 0:
                     il.Emit(OpCodes.Ldc_I4_0);
                     return;
+
                 case 1:
                     il.Emit(OpCodes.Ldc_I4_1);
                     return;
+
                 case 2:
                     il.Emit(OpCodes.Ldc_I4_2);
                     return;
+
                 case 3:
                     il.Emit(OpCodes.Ldc_I4_3);
                     return;
+
                 case 4:
                     il.Emit(OpCodes.Ldc_I4_4);
                     return;
+
                 case 5:
                     il.Emit(OpCodes.Ldc_I4_5);
                     return;
+
                 case 6:
                     il.Emit(OpCodes.Ldc_I4_6);
                     return;
+
                 case 7:
                     il.Emit(OpCodes.Ldc_I4_7);
                     return;
+
                 case 8:
                     il.Emit(OpCodes.Ldc_I4_8);
                     return;
@@ -924,7 +925,7 @@ namespace R2API.Utils {
             throw new Exception($"Could not read index for opcode and operand: {opCode} - {operand}");
         }
 
-        #endregion
+        #endregion Fast Reflection
 
         public static System.Reflection.FieldInfo GetNestedField(Type type, string fieldName) {
             var nestedTypes = type.GetNestedTypes(AllFlags);

@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace R2API {
+
     /// <summary>
     /// API for replacing the ingame font
     /// </summary>
     [R2APISubmodule]
     public static class FontAPI {
+
         public static bool Loaded {
             get; private set;
         }
@@ -54,12 +56,13 @@ namespace R2API {
         /// use this class to add fonts
         /// </summary>
         public static class Fonts {
+
             /// <summary>
             /// for adding an TMP_FontAsset inside an seperate assetbundle (.font is loaded automatically)
             /// </summary>
             /// <param name="path">absolute path to the assetbundle</param>
             public static void Add(string? path) {
-                if(!Loaded) {
+                if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(FontAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(FontAPI)})]");
                 }
                 var fontBundle = UnityEngine.AssetBundle.LoadFromFile(path);
@@ -85,7 +88,7 @@ namespace R2API {
             /// </summary>
             /// <param name="fontAsset">The loaded fontasset</param>
             public static void Add(TMPro.TMP_FontAsset? fontAsset) {
-                if(!Loaded) {
+                if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(FontAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(FontAPI)})]");
                 }
                 _fontAssets.Add(fontAsset);

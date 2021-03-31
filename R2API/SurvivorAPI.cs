@@ -8,9 +8,11 @@ using RoR2;
 using UnityEngine;
 
 namespace R2API {
+
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class SurvivorAPI {
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -37,7 +39,7 @@ namespace R2API {
         /// <param name="survivor">The survivor to add.</param>
         /// <returns>true if survivor will be added</returns>
         public static bool AddSurvivor(SurvivorDef? survivor) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(SurvivorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SurvivorAPI)})]");
             }
 
@@ -56,7 +58,6 @@ namespace R2API {
 
             return true;
         }
-
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {

@@ -2,10 +2,12 @@
 using UnityEngine.Networking;
 
 namespace R2API.Utils {
+
     /// <summary>
     /// Class for sending messages directly to singular clients. Mostly useful for Dedicated servers.
     /// </summary>
     public static class DirectMessage {
+
         /// <summary>
 		/// returns NetworkUsers associated  to a NetworkConnection
 		/// </summary>
@@ -71,5 +73,4 @@ namespace R2API.Utils {
             connection.SendWriter(writer, RoR2.Networking.QosChannelIndex.chat.intVal);
         }
     }
-
 }

@@ -1,26 +1,26 @@
-﻿using System;
+﻿using BepInEx;
+using R2API.Utils;
+using RoR2;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using BepInEx;
-using R2API.Utils;
-using RoR2;
 using UnityEngine;
 
 namespace R2API {
+
     /// <summary>
     /// API for adding music with Wwise
     /// </summary>
     [R2APISubmodule]
-    public static class SoundAPI
-    {
+    public static class SoundAPI {
+
         public static bool Loaded {
             get; private set;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void SoundAwake()
-        {
+        internal static void SoundAwake() {
             // Disable SoundPlus if RoR2 is running with its graphics and sound engine disabled (Dedicated Servers) to avoid any bad side effects.
             if (Application.isBatchMode)
                 return;
@@ -33,8 +33,7 @@ namespace R2API {
 
             var files = Directory.GetFiles(Paths.PluginPath, "*.sound", SearchOption.AllDirectories);
 
-            foreach (var file in files)
-            {
+            foreach (var file in files) {
                 SoundBanks.Add(file);
             }
 
@@ -55,10 +54,8 @@ namespace R2API {
         /// <summary>
         /// Loads all the banks, can only be called once and after RoR2.RoR2Application.OnLoad because of the initialization of the init bank
         /// </summary>
-        private static void LoadBanks()
-        {
-            foreach (var bank in SoundBanks.soundBanks)
-            {
+        private static void LoadBanks() {
+            foreach (var bank in SoundBanks.soundBanks) {
                 bank.Load();
             }
 
@@ -69,6 +66,7 @@ namespace R2API {
         /// class for SoundBanks to load
         /// </summary>
         public static class SoundBanks {
+
             /// <summary>
             /// Makes sure to correctly load banks added before or after RoR2.RoR2Application.OnLoad()
             /// </summary>
@@ -111,11 +109,11 @@ namespace R2API {
             /// Class containing all the information of a bank
             /// </summary>
             internal class Bank {
+
                 internal Bank(byte[] bankData) {
                     BankData = bankData;
                     PublicID = _bankIteration++;
                 }
-
 
                 /// <summary>
                 /// Number keeping track of PublicID to give

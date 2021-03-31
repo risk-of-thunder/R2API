@@ -3,7 +3,9 @@ using RoR2;
 using UnityEngine.Networking;
 
 namespace R2API.Networking.Messages {
+
     internal struct BuffMessage : INetMessage {
+
         public void Serialize(NetworkWriter writer) {
             writer.Write(_body.gameObject);
             writer.WriteBuffIndex(_buff);

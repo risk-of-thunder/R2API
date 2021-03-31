@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using BepInEx;
-using MonoMod.Utils;
+﻿using BepInEx;
 using R2API.Utils;
 using RoR2;
 using SimpleJSON;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using UnityEngine;
 
 namespace R2API {
+
     /// <summary>
     /// class for language files to load
     /// </summary>
     [R2APISubmodule]
     public static class LanguageAPI {
+
         public static bool Loaded {
             get; private set;
         }
@@ -270,14 +270,17 @@ namespace R2API {
         /// Manages temporary language token changes.
         /// </summary>
         public class LanguageOverlay {
+
             internal LanguageOverlay(List<OverlayTokenData> data) {
                 overlayTokenDatas = data;
                 readOnlyOverlays = overlayTokenDatas.AsReadOnly();
                 temporaryOverlays.Add(this);
                 this.Add();
             }
+
             /// <summary>Contains information about the language token changes this LanguageOverlay makes.</summary>
             public readonly ReadOnlyCollection<OverlayTokenData> readOnlyOverlays;
+
             private List<OverlayTokenData> overlayTokenDatas;
 
             private void Add() {
@@ -317,7 +320,7 @@ namespace R2API {
 
             return AddOverlay(key, value, genericLanguage);
         }
-        
+
         /// <summary>
         /// Adds a single temporary language token, and its associated value, to a specific language. Please add multiple instead (dictionary- or file-based signatures) where possible. Overlays added later in time will take precedence. Call LanguageOverlay.Remove() on the result to undo your change to this language token.
         /// </summary>
@@ -342,7 +345,7 @@ namespace R2API {
 
             return new LanguageOverlay(list);
         }
-        
+
         /// <summary>
         /// Add temporary language tokens from a file via path (.language is added automatically). Call LanguageOverlay.Remove() on the result to undo all contained changes. May return null.
         /// </summary>
@@ -378,7 +381,7 @@ namespace R2API {
             }
             return AddOverlay(dict!);
         }
-        
+
         /// <summary>
         /// Adds multiple temporary language tokens, and corresponding values, to all languages. Language-specific tokens, as well as overlays added later in time, will take precedence. Call LanguageOverlay.Remove() on the result to remove your changes to these language tokens.
         /// </summary>
@@ -418,7 +421,7 @@ namespace R2API {
             }
             return new LanguageOverlay(list);
         }
-        
+
         /// <summary>
         /// Adds multiple temporary language tokens, and corresponding values, to mixed languages. Overlays added later in time will take precedence. Call LanguageOverlay.Remove() on the result to remove your changes to these language tokens.
         /// </summary>
@@ -452,12 +455,16 @@ namespace R2API {
         /// Contains information about a single temporary language token change.
         /// </summary>
         public struct OverlayTokenData {
+
             /// <summary>The token identifier to add/replace the value of.</summary>
             public string key;
+
             /// <summary>The value to set the target token to.</summary>
             public string value;
+
             /// <summary>The language which the target token belongs to, if isGeneric = false.</summary>
             public string lang;
+
             /// <summary>Whether the target token is generic (applies to all languages which don't contain the token).</summary>
             public bool isGeneric;
 
@@ -472,6 +479,7 @@ namespace R2API {
                 }
                 lang = _lang;
             }
+
             internal OverlayTokenData(string _key, string _value) {
                 key = _key;
                 value = _value;

@@ -2,14 +2,18 @@
 using UnityEngine.Networking;
 
 namespace R2API.Networking {
+
     internal abstract class RequestPerformerBase {
+
         internal abstract ISerializableObject PerformRequest(NetworkReader reader);
+
         internal abstract void PerformReply(NetworkReader reader);
     }
 
     internal sealed class RequestPerformer<TRequest, TReply> : RequestPerformerBase
         where TRequest : INetRequest<TRequest, TReply>
         where TReply : INetRequestReply<TRequest, TReply> {
+
         internal RequestPerformer(TRequest request, TReply reply) {
             _request = request;
             _reply = reply;

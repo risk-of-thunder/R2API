@@ -1,17 +1,17 @@
-﻿using R2API.Utils;
-using System;
+﻿using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
+using R2API.Utils;
+using System;
 using System.Diagnostics;
 using System.Reflection;
-using MonoMod.Cil;
 
 namespace R2API.Tweaks {
+
     /// <summary>
     /// class for language files to load
     /// </summary>
     [R2APISubmodule]
-    internal static class ILLine
-    {
+    internal static class ILLine {
         private static ILHook? hook;
 
         public static bool Loaded {

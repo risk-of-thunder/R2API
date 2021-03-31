@@ -1,19 +1,21 @@
 using R2API.Utils;
-
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
-using UnityObject = UnityEngine.Object;
 using UnityEngine.Networking;
+using UnityObject = UnityEngine.Object;
+
 // ReSharper disable UnusedMember.Global
 
 namespace R2API {
+
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class PrefabAPI {
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -31,6 +33,7 @@ namespace R2API {
         private static readonly List<HashStruct> ThingsToHash = new List<HashStruct>();
 
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+
         /// <summary>
         /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
         /// Also registers the clone to network if registerNetwork is not set to false.
@@ -41,7 +44,7 @@ namespace R2API {
         /// <param name="registerNetwork">Should the object be registered to network</param>
         /// <returns>The GameObject of the clone</returns>
         public static GameObject InstantiateClone(this GameObject? g, string? nameToSet, bool registerNetwork = true, [CallerFilePath] string? file = "", [CallerMemberName] string? member = "", [CallerLineNumber] int line = 0) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(PrefabAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(PrefabAPI)})]");
             }
             var prefab = UnityObject.Instantiate(g, GetParent().transform);
@@ -51,6 +54,7 @@ namespace R2API {
             }
             return prefab;
         }
+
         /// <summary>
         /// Registers a prefab so that NetworkServer.Spawn will function properly with it.
         /// Only will work on prefabs with a NetworkIdentity component.
@@ -65,16 +69,15 @@ namespace R2API {
             }
             RegisterPrefabInternal(g, file, member, line);
         }
+
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-        
+
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-
         }
 
         private static GameObject GetParent() {
@@ -101,8 +104,7 @@ namespace R2API {
         }
 
         private static void RegisterPrefabInternal(GameObject prefab, string callPath, string callMember, int callLine) {
-            var h = new HashStruct
-            {
+            var h = new HashStruct {
                 Prefab = prefab,
                 GoName = prefab.name,
                 CallPath = callPath,
@@ -120,8 +122,7 @@ namespace R2API {
             }
         }
 
-        private static readonly NetworkHash128 NullHash = new NetworkHash128
-        {
+        private static readonly NetworkHash128 NullHash = new NetworkHash128 {
             i0 = 0,
             i1 = 0,
             i2 = 0,
@@ -153,8 +154,7 @@ namespace R2API {
             hash.Dispose();
             var sb = new StringBuilder();
 
-            foreach (var t in prehash)
-            {
+            foreach (var t in prehash) {
                 sb.Append(t.ToString("x2"));
             }
 

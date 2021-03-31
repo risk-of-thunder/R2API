@@ -2,6 +2,7 @@
 using System.IO;
 
 namespace R2API.Utils {
+
     internal static class DirectoryUtilities {
         private static bool _alreadyPrintedFolderStructure;
         private static bool _bepinexFolderPrinted;
@@ -25,14 +26,12 @@ namespace R2API.Utils {
             R2API.Logger.LogDebug("");
             R2API.Logger.LogDebug($"+ {new DirectoryInfo(directory).Name}");
 
-            foreach (string dir in Directory.GetDirectories(directory))
-            {
+            foreach (string dir in Directory.GetDirectories(directory)) {
                 WriteFolderStructureRecursively(dir);
             }
 
             string[] files = Directory.GetFiles(directory);
-            for (int i = 1; i <= files.Length; i++)
-            {
+            for (int i = 1; i <= files.Length; i++) {
                 var fileInfo = new FileInfo(files[i - 1]);
                 R2API.Logger.LogDebug(
                     $"{GenerateSpaces(0)}{(i != files.Length ? "|" : "`")}---- {fileInfo.Name} ({ParseSize(fileInfo.Length)})");
@@ -48,14 +47,12 @@ namespace R2API.Utils {
             }
 
             if (dirInfo.Parent != null && (BannedFolders.Contains(dirInfo.Name) ||
-                                           BannedFolders.Contains($"{dirInfo.Parent.Name}/{dirInfo.Name}")))
-            {
+                                           BannedFolders.Contains($"{dirInfo.Parent.Name}/{dirInfo.Name}"))) {
                 R2API.Logger.LogDebug($"{GenerateSpaces(spaces + 4)}`---- (Folder content not shown)");
                 return;
             }
 
-            foreach (string dir in Directory.GetDirectories(directory))
-            {
+            foreach (string dir in Directory.GetDirectories(directory)) {
                 WriteFolderStructureRecursively(dir, spaces + 4);
             }
 
@@ -67,14 +64,12 @@ namespace R2API.Utils {
             }
         }
 
-        private static string ParseSize(long lSize)
-        {
+        private static string ParseSize(long lSize) {
             string[] units = { "B", "KB", "MB", "GB" };
             float size = lSize;
             int unit = 0;
 
-            while (size > 1024)
-            {
+            while (size > 1024) {
                 unit++;
                 size /= 1024;
             }
@@ -84,8 +79,7 @@ namespace R2API.Utils {
             return number + units[unit];
         }
 
-        private static string GenerateSpaces(int spaces)
-        {
+        private static string GenerateSpaces(int spaces) {
             string s = "";
             for (int i = 1; i <= spaces; i += 4)
                 s += "|   ";

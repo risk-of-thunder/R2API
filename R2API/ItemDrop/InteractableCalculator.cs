@@ -1,19 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using R2API.ItemDropAPITools;
+﻿using R2API.ItemDropAPITools;
 using RoR2;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace R2API.ItemDrop {
+
     public class InteractableCalculator {
         public const int PrefixLength = 3;
 
         public readonly List<string> InvalidInteractables = new List<string>();
 
-
-
         // tier1 REPRESENTS A VALID ITEM IN THE TIER1 DROP LIST
         // tier1Tier REPRESENTS A VALID TIER1 ITEM THAT CAN DROP FROM ANY DROP LIST
-        
+
         public enum DropType {
             tier1,
             tier2,
@@ -254,10 +253,12 @@ namespace R2API.ItemDrop {
                             if (itemTag == ItemTag.Damage) {
                                 TiersPresent[DropType.damage] = true;
                                 interactableName = "CategoryChestDamage";
-                            } else if (itemTag == ItemTag.Healing) {
+                            }
+                            else if (itemTag == ItemTag.Healing) {
                                 TiersPresent[DropType.healing] = true;
                                 interactableName = "CategoryChestHealing";
-                            } else if (itemTag == ItemTag.Utility) {
+                            }
+                            else if (itemTag == ItemTag.Utility) {
                                 TiersPresent[DropType.utility] = true;
                                 interactableName = "CategoryChestUtility";
                             }
@@ -298,13 +299,17 @@ namespace R2API.ItemDrop {
                                 ItemTier itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
                                 if (itemTier == ItemTier.Tier1) {
                                     TiersPresent[DropType.tier1Tier] = true;
-                                } else if (itemTier == ItemTier.Tier2) {
+                                }
+                                else if (itemTier == ItemTier.Tier2) {
                                     TiersPresent[DropType.tier2Tier] = true;
-                                } else if (itemTier == ItemTier.Tier3) {
+                                }
+                                else if (itemTier == ItemTier.Tier3) {
                                     TiersPresent[DropType.tier3Tier] = true;
-                                } else if (itemTier == ItemTier.Boss) {
+                                }
+                                else if (itemTier == ItemTier.Boss) {
                                     TiersPresent[DropType.bossTier] = true;
-                                } else if (itemTier == ItemTier.Lunar) {
+                                }
+                                else if (itemTier == ItemTier.Lunar) {
                                     TiersPresent[DropType.lunarTier] = true;
                                 }
                             }
@@ -357,7 +362,8 @@ namespace R2API.ItemDrop {
                 foreach (var tier in InteractablesTiers[interactableType].Keys) {
                     if (InteractablesTiers[interactableType][tier]) {
                         interactableValid = true;
-                    } else {
+                    }
+                    else {
                         allTrue = false;
                     }
                 }
