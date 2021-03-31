@@ -23,7 +23,6 @@ namespace R2API {
         private static bool _itemCatalogInitialized;
         private static bool _equipmentCatalogInitialized;
 
-        public static int OriginalItemCount, OriginalEquipmentCount;
         public static int CustomItemCount, CustomEquipmentCount;
 
         /// <summary>
@@ -40,79 +39,42 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            IL.RoR2.ItemCatalog.DefineItems += GetOriginalItemCountHook;
-            IL.RoR2.EquipmentCatalog.Init += GetOriginalEquipmentCountHook;
-
-            ItemCatalog.modHelper.getAdditionalEntries += AddItemAction;
-            EquipmentCatalog.modHelper.getAdditionalEntries += AddEquipmentAction;
+            On.RoR2.RoR2Application.LoadGameContent += AddItemsToGame;
 
             IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
             R2API.R2APIStart += AddingItemDisplayRulesToCharacterModels;
         }
 
+        private static System.Collections.IEnumerator AddItemsToGame(On.RoR2.RoR2Application.orig_LoadGameContent orig, RoR2Application self) {
+            _itemCatalogInitialized = true;
+            _equipmentCatalogInitialized = true;
+
+            R2APIContentPackProvider.ContentPack.itemDefs.Add(ItemDefinitions.Select(d => d.ItemDef).ToArray());
+            R2APIContentPackProvider.ContentPack.equipmentDefs.Add(EquipmentDefinitions.Select(d => d.EquipmentDef).ToArray());
+
+            yield return orig(self);
+        }
+
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            IL.RoR2.ItemCatalog.DefineItems -= GetOriginalItemCountHook;
-            IL.RoR2.EquipmentCatalog.Init -= GetOriginalEquipmentCountHook;
-
-            ItemCatalog.modHelper.getAdditionalEntries -= AddItemAction;
-            EquipmentCatalog.modHelper.getAdditionalEntries -= AddEquipmentAction;
+            On.RoR2.RoR2Application.LoadGameContent -= AddItemsToGame;
 
             IL.RoR2.CharacterModel.UpdateMaterials -= MaterialFixForItemDisplayOnCharacter;
             R2API.R2APIStart -= AddingItemDisplayRulesToCharacterModels;
         }
 
-        private static void GetOriginalItemCountHook(ILContext il) {
-            var cursor = new ILCursor(il);
-
-            cursor.GotoNext(
-                i => i.MatchLdcI4(out OriginalItemCount),
-                i => i.MatchNewarr<ItemDef>()
-            );
-        }
-
-        private static void GetOriginalEquipmentCountHook(ILContext il) {
-            var cursor = new ILCursor(il);
-
-            cursor.GotoNext(
-                i => i.MatchLdcI4(out OriginalEquipmentCount),
-                i => i.MatchCall<Array>("Resize")
-            );
-        }
-
-        private static void AddItemAction(List<ItemDef> itemDefinitions) {
-            foreach (var customItem in ItemDefinitions) {
-                itemDefinitions.Add(customItem.ItemDef);
-
-                R2API.Logger.LogInfo($"Custom Item: {customItem.ItemDef.nameToken} " +
-                                     $"(index: {(int)customItem.ItemDef.itemIndex}) added");
-            }
-
-            var t1Items = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Tier1).Select(x => x.ItemDef.itemIndex).ToArray();
-            var t2Items = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Tier2).Select(x => x.ItemDef.itemIndex).ToArray();
-            var t3Items = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Tier3).Select(x => x.ItemDef.itemIndex).ToArray();
-            var lunarItems = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Lunar).Select(x => x.ItemDef.itemIndex).ToArray();
-            var bossItems = ItemDefinitions.Where(x => x.ItemDef.tier == ItemTier.Boss).Select(x => x.ItemDef.itemIndex).ToArray();
-
+        private static void AddItemAction() {
             LoadRelatedAPIs();
+
+            R2APIContentPackProvider.ContentPack.itemDefs.Add(ItemDefinitions.Select(c => c.ItemDef).ToArray());
 
             _itemCatalogInitialized = true;
         }
 
-        private static void AddEquipmentAction(List<EquipmentDef> equipmentDefinitions) {
-            foreach (var customEquipment in EquipmentDefinitions) {
-                equipmentDefinitions.Add(customEquipment.EquipmentDef);
-
-                R2API.Logger.LogInfo($"Custom Equipment: {customEquipment.EquipmentDef.nameToken} " +
-                                     $"(index: {(int)customEquipment.EquipmentDef.equipmentIndex}) added");
-            }
-
-            var droppableEquipments = EquipmentDefinitions
-                .Where(c => c.EquipmentDef.canDrop)
-                .Select(c => c.EquipmentDef.equipmentIndex)
-                .ToArray();
-
+        private static void AddEquipmentAction() {
             LoadRelatedAPIs();
+
+            R2APIContentPackProvider.ContentPack.equipmentDefs.Add(EquipmentDefinitions.Select(c => c.EquipmentDef).ToArray());
 
             _equipmentCatalogInitialized = true;
         }
@@ -181,10 +143,9 @@ namespace R2API {
                 R2API.Logger.LogError($"Custom item '{item.ItemDef.name}' is not XMLsafe. Item not added.");
             }
             if (xmlSafe) {
-                item.ItemDef.itemIndex = (ItemIndex)OriginalItemCount + CustomItemCount++;
                 ItemDefinitions.Add(item);
-                return item.ItemDef.itemIndex;
             }
+
             return ItemIndex.None;
         }
 
@@ -224,10 +185,9 @@ namespace R2API {
                 R2API.Logger.LogError($"Custom equipment '{item.EquipmentDef.name}' is not XMLsafe. Item not added.");
             }
             if (xmlSafe) {
-                item.EquipmentDef.equipmentIndex = (EquipmentIndex)OriginalEquipmentCount + CustomEquipmentCount++;
                 EquipmentDefinitions.Add(item);
-                return item.EquipmentDef.equipmentIndex;
             }
+
             return EquipmentIndex.None;
         }
 
@@ -249,7 +209,7 @@ namespace R2API {
             );
 
             cursor.GotoNext(
-                i => i.MatchCall("RoR2.CharacterModel/ParentedPrefabDisplay", "get_itemDisplay"),
+                i => i.MatchCallOrCallvirt("RoR2.CharacterModel/ParentedPrefabDisplay", "get_itemDisplay"),
                 i => i.MatchStloc(out itemDisplayLoc)
             );
             cursor.Index += 2;
@@ -282,7 +242,7 @@ namespace R2API {
                             //if a specific rule for this model exists, or the model has no rules for this item
                             if (customRules.TryGetRules(name, out ItemDisplayRule[] rules) ||
                                 characterModel.itemDisplayRuleSet.GetItemDisplayRuleGroup(customItem.ItemDef.itemIndex).rules == null) {
-                                characterModel.itemDisplayRuleSet.SetItemDisplayRuleGroup(customItem.ItemDef.name, new DisplayRuleGroup { rules = rules });
+                                //characterModel.itemDisplayRuleSet.SetItemDisplayRuleGroup(customItem.ItemDef.name, new DisplayRuleGroup { rules = rules });
                             }
                         }
                     }
@@ -293,7 +253,7 @@ namespace R2API {
                             //if a specific rule for this model exists, or the model has no rules for this equipment
                             if (customRules.TryGetRules(name, out ItemDisplayRule[] rules) ||
                                 characterModel.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null) {
-                                characterModel.itemDisplayRuleSet.SetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.name, new DisplayRuleGroup { rules = rules });
+                                //characterModel.itemDisplayRuleSet.SetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.name, new DisplayRuleGroup { rules = rules });
                             }
                         }
                     }
@@ -304,11 +264,6 @@ namespace R2API {
         }
 
         #endregion ItemDisplay Hooks
-
-        public static bool IsCustomItemOrEquipment(PickupIndex pickupIndex) {
-            var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
-            return (int)pickupDef.itemIndex >= OriginalItemCount || (int)pickupDef.equipmentIndex >= OriginalEquipmentCount;
-        }
     }
 
     public class CustomItem {
