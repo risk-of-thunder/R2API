@@ -183,14 +183,11 @@ namespace R2API {
         /// Also, don't forget to give it a valid eliteTier so that your custom elite correctly get spawned.
         /// You can also make a totally new tier, by using OverrideCombatDirectorEliteTiers for example.
         /// </summary>
-        public CustomElite(string? name, EquipmentIndex equipmentIndex, Color32 color, string? modifierToken, int eliteTier) {
-            EliteDef = new EliteDef {
-                name = name,
-                eliteEquipmentIndex = equipmentIndex,
-                color = color,
-                modifierToken = modifierToken
-            };
-
+        public CustomElite(string? name, EquipmentDef equipmentDef, Color32 color, string? modifierToken, int eliteTier) {
+            EliteDef = ScriptableObject.CreateInstance<EliteDef>();
+            EliteDef.eliteEquipmentDef = equipmentDef;
+            EliteDef.color = color;
+            EliteDef.modifierToken = modifierToken;
             EliteTier = eliteTier;
         }
 

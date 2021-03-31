@@ -123,14 +123,13 @@ namespace R2API {
         /// Create a custom buff to add into the game.
         /// If you are doing a buff for a custom elite, don't forget to register your CustomElite before too to fill the eliteIndex field !
         /// </summary>
-        public CustomBuff(string? name, string? iconPath, Color buffColor, bool isDebuff = false, bool canStack = false) {
-            BuffDef = new BuffDef {
-                name = name,
-                iconPath = iconPath,
-                buffColor = buffColor,
-                isDebuff = isDebuff,
-                canStack = canStack
-            };
+        public CustomBuff(string? name, Sprite iconSprite, Color buffColor, bool isDebuff = false, bool canStack = false) {
+            BuffDef = ScriptableObject.CreateInstance<BuffDef>();
+            BuffDef.name = name;
+            BuffDef.iconSprite = iconSprite;
+            BuffDef.buffColor = buffColor;
+            BuffDef.isDebuff = isDebuff;
+            BuffDef.canStack = canStack;
         }
 
         /// <summary>
