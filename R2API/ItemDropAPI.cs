@@ -248,7 +248,7 @@ namespace R2API {
 
             var cursor = new ILCursor(ilContext);
             cursor.GotoNext(
-                x => x.MatchCall(spawnMethodInfo)
+                x => x.MatchCallOrCallvirt(spawnMethodInfo)
             );
             cursor.Emit(OpCodes.Dup);
             cursor.EmitDelegate<System.Action<GameObject>>((dropletGameObject) => {
@@ -282,7 +282,7 @@ namespace R2API {
                 x => x.MatchLdcI4(0),
                 x => x.MatchLdelema("RoR2.PickupPickerController/Option"),
                 x => x.MatchLdfld(pickupIndexFieldInfo),
-                x => x.MatchCall(getPickupDefMethodInfo),
+                x => x.MatchCallOrCallvirt(getPickupDefMethodInfo),
                 x => x.MatchDup()
             );
             cursor.Index += 1;
@@ -300,12 +300,12 @@ namespace R2API {
 
         private static void PopulateSafePickups() {
             safePickups = new Dictionary<ItemTier, PickupIndex>() {
-                { ItemTier.Tier1, PickupCatalog.FindPickupIndex(ItemIndex.ScrapWhite) },
-                { ItemTier.Tier2, PickupCatalog.FindPickupIndex(ItemIndex.ScrapGreen) },
-                { ItemTier.Tier3, PickupCatalog.FindPickupIndex(ItemIndex.ScrapRed) },
-                { ItemTier.Boss, PickupCatalog.FindPickupIndex(ItemIndex.ScrapYellow) },
-                { ItemTier.Lunar, PickupCatalog.FindPickupIndex(ItemIndex.LunarDagger) },
-                { ItemTier.NoTier, PickupCatalog.FindPickupIndex(EquipmentIndex.CritOnUse) },
+                { ItemTier.Tier1, PickupCatalog.FindPickupIndex(ItemCatalog.FindItemIndex("ScrapWhite")) },
+                { ItemTier.Tier2, PickupCatalog.FindPickupIndex(ItemCatalog.FindItemIndex("ScrapGreen")) },
+                { ItemTier.Tier3, PickupCatalog.FindPickupIndex(ItemCatalog.FindItemIndex("ScrapRed")) },
+                { ItemTier.Boss, PickupCatalog.FindPickupIndex(ItemCatalog.FindItemIndex("ScrapYellow")) },
+                { ItemTier.Lunar, PickupCatalog.FindPickupIndex(ItemCatalog.FindItemIndex("LunarDagger")) },
+                { ItemTier.NoTier, PickupCatalog.FindPickupIndex(EquipmentCatalog.FindEquipmentIndex("CritOnUse")) },
             };
         }
 
@@ -369,8 +369,8 @@ namespace R2API {
             cursor.GotoNext(
                 x => x.MatchLdloc(0),
                 x => x.MatchLdstr("LunarCoin.Coin0"),
-                x => x.MatchCall(findPickupIndexMethodInfo),
-                x => x.MatchCallvirt(addMethodInfo),
+                x => x.MatchCallOrCallvirt(findPickupIndexMethodInfo),
+                x => x.MatchCallOrCallvirt(addMethodInfo),
                 x => x.MatchDup()
             );
 
@@ -380,7 +380,7 @@ namespace R2API {
             }
 
             cursor.Index = 0;
-            while (cursor.TryGotoNext(x => x.MatchCallvirt(rollItemAddMethodInfo))) {
+            while (cursor.TryGotoNext(x => x.MatchCallOrCallvirt(rollItemAddMethodInfo))) {
                 cursor.Remove();
                 cursor.Emit(OpCodes.Ldarg_0);
                 cursor.Emit(OpCodes.Callvirt, filterListMethodInfo);
@@ -388,10 +388,10 @@ namespace R2API {
 
             cursor.GotoNext(
                 x => x.MatchLdfld(selectorFieldInfo),
-                x => x.MatchCall(instanceMethodInfo),
+                x => x.MatchCallOrCallvirt(instanceMethodInfo),
                 x => x.MatchLdfld(treasureRngFieldInfo),
-                x => x.MatchCallvirt(nextNormalizedMethodInfo),
-                x => x.MatchCallvirt(evaluateMethodInfo),
+                x => x.MatchCallOrCallvirt(nextNormalizedMethodInfo),
+                x => x.MatchCallOrCallvirt(evaluateMethodInfo),
                 x => x.MatchStloc(1)
             );
             cursor.Index += 6;
@@ -452,7 +452,7 @@ namespace R2API {
             while (cursor.TryGotoNext(
                 x => x.MatchLdarg(0),
                 x => x.MatchLdfld(rngFieldInfo),
-                x => x.MatchCall(instanceMethodInfo),
+                x => x.MatchCallOrCallvirt(instanceMethodInfo),
                 x => x.OpCode == OpCodes.Ldfld,
                 x => x.OpCode == OpCodes.Callvirt
                 )) {
@@ -468,7 +468,7 @@ namespace R2API {
                 x => ldloc.Contains(x.OpCode),
                 x => x.MatchLdarg(0),
                 x => x.OpCode == OpCodes.Ldfld,
-                x => x.MatchCallvirt(addChoiceMethodInfo)
+                x => x.MatchCallOrCallvirt(addChoiceMethodInfo)
                 )) {
                 cursor.Index += 3;
                 cursor.Emit(OpCodes.Dup);
@@ -481,8 +481,8 @@ namespace R2API {
             cursor.GotoNext(
                 x => x.MatchLdarg(0),
                 x => x.MatchLdfld(rngFieldInfo),
-                x => x.MatchCallvirt(nextNormalizedMethodInfo),
-                x => x.MatchCallvirt(evaluateMethodInfo)
+                x => x.MatchCallOrCallvirt(nextNormalizedMethodInfo),
+                x => x.MatchCallOrCallvirt(evaluateMethodInfo)
             );
             cursor.Emit(OpCodes.Pop);
             cursor.Index += 3;
@@ -524,8 +524,8 @@ namespace R2API {
                 x => x.MatchLdarg(0),
                 x => x.MatchLdfld(selectorFieldInfo),
                 x => x.MatchLdarg(1),
-                x => x.MatchCallvirt(nextNormalizedMethodInfo),
-                x => x.MatchCallvirt(evaluateMethodInfo)
+                x => x.MatchCallOrCallvirt(nextNormalizedMethodInfo),
+                x => x.MatchCallOrCallvirt(evaluateMethodInfo)
             );
             cursor.Index += 5;
             cursor.Emit(OpCodes.Dup);
@@ -563,25 +563,26 @@ namespace R2API {
             var cursor = new ILCursor(ilContext);
 
             cursor.GotoNext(
-                x => x.MatchLdarg(0),
+                x => x.MatchLdarg(out _),
                 x => x.MatchLdfld(bossDropsFieldInfo),
-                x => x.MatchCallvirt(countMethodInfo),
-                x => x.MatchLdcI4(0),
+                x => x.MatchCallOrCallvirt(countMethodInfo),
+                x => x.MatchLdcI4(out _),
                 x => x.OpCode == OpCodes.Ble_S
             );
-            cursor.Emit(OpCodes.Ldloc, 1);
+            const int listPickupLocalIndex = 1;
+            cursor.Emit(OpCodes.Ldloc, listPickupLocalIndex);
             cursor.EmitDelegate<Action<List<PickupIndex>>>((dropList) => {
                 uniquePickup = false;
                 currentPickupList = dropList;
             });
 
             cursor.GotoNext(
-                x => x.MatchLdarg(0),
+                x => x.MatchLdarg(out _),
                 x => x.MatchLdfld(rngFieldInfo),
-                x => x.MatchLdarg(0),
+                x => x.MatchLdarg(out _),
                 x => x.MatchLdfld(bossDropsFieldInfo),
-                x => x.OpCode == OpCodes.Callvirt,
-                x => x.MatchStloc(2)
+                x => x.MatchCallOrCallvirt(out _),
+                x => x.MatchStloc(out _)
             );
             cursor.Index += 5;
             cursor.Emit(OpCodes.Dup);
@@ -609,13 +610,13 @@ namespace R2API {
                 //x => x.MatchLdcR4(0.025f),
                 x => x.OpCode == OpCodes.Ldc_R4,
                 x => x.OpCode == OpCodes.Ldloc_S,
-                x => x.MatchCall(checkRollMethodInfo),
+                x => x.MatchCallOrCallvirt(checkRollMethodInfo),
                 x => x.MatchBrfalse(out ilLabel),
                 x => x.MatchLdloc(2),
-                x => x.MatchCall(implicitMethodInfo),
+                x => x.MatchCallOrCallvirt(implicitMethodInfo),
                 x => x.MatchBrfalse(out ilLabel),
                 x => x.MatchLdloc(2),
-                x => x.MatchCallvirt(isEliteMethodInfo),
+                x => x.MatchCallOrCallvirt(isEliteMethodInfo),
                 x => x.MatchBrfalse(out ilLabel)
             );
             //cursor.Next.Operand = 100f;
@@ -648,7 +649,7 @@ namespace R2API {
             cursor.GotoNext(
                 x => x.MatchLdarg(0),
                 x => x.MatchLdloc(1),
-                x => x.OpCode == OpCodes.Callvirt,
+                x => x.MatchCallOrCallvirt(out _),
                 x => x.MatchStloc(0)
             );
             cursor.Index += 1;
@@ -681,7 +682,7 @@ namespace R2API {
                 x => x.MatchLdarg(1),
                 x => x.MatchLdarg(0),
                 x => x.MatchLdfld(hasBeenPurchasedInfo),
-                x => x.MatchCallvirt(writeInfo)
+                x => x.MatchCallOrCallvirt(writeInfo)
             );
             cursor.Index += 4;
             cursor.Emit(OpCodes.Ldarg, 0);
@@ -699,7 +700,7 @@ namespace R2API {
             cursor.GotoNext(
                 x => x.MatchLdarg(0),
                 x => x.MatchLdarg(1),
-                x => x.MatchCallvirt(readBooleanInfo),
+                x => x.MatchCallOrCallvirt(readBooleanInfo),
                 x => x.MatchStfld(hasBeenPurchasedInfo)
             );
             cursor.Index += 4;
