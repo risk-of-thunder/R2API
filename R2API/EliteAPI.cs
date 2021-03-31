@@ -185,6 +185,7 @@ namespace R2API {
         /// </summary>
         public CustomElite(string? name, EquipmentDef equipmentDef, Color32 color, string? modifierToken, int eliteTier) {
             EliteDef = ScriptableObject.CreateInstance<EliteDef>();
+            EliteDef.name = name;
             EliteDef.eliteEquipmentDef = equipmentDef;
             EliteDef.color = color;
             EliteDef.modifierToken = modifierToken;
