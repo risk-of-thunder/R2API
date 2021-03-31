@@ -37,7 +37,7 @@ namespace R2API {
             ModManager = new DetourModManager();
             AddHookLogging();
             CheckForIncompatibleAssemblies();
-            CheckR2APIMonomodPatch();
+            CheckR2APIPatch();
 
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
 
@@ -198,21 +198,18 @@ namespace R2API {
         }
 
         // ReSharper disable once InconsistentNaming
-        private static void CheckR2APIMonomodPatch() {
+        private static void CheckR2APIPatch() {
             // This type is injected by the R2API MonoMod patch with MonoModRules
-            const string R2APIMonoModPatchWasHereName = "R2API.R2APIMonoModPatchWasHere";
-            var isHere = typeof(RoR2Application).Assembly.GetType(R2APIMonoModPatchWasHereName, false) != null;
+            const string searchableAttributeScanFixType = "R2API.SearchableAttributeScanFix";
+            var isHere = typeof(RoR2Application).Assembly.GetType(searchableAttributeScanFixType, false) != null;
 
             if (!isHere) {
                 var message = new List<string> {
-                    "The Monomod patch of R2API seems to be missing",
+                    "The patch of R2API seems to be missing",
                     "Please make sure that a file called:",
-                    "Assembly-CSharp.R2API.mm.dll",
-                    "is present in the Risk of Rain 2\\BepInEx\\monomod\\ folder",
-                    "or",
-                    "You are missing the monomod loader that is normally located in,",
-                    "the Risk of Rain 2\\BepInEx\\patchers\\BepInEx.MonoMod.Loader folder.",
-                    "If you don't have this folder, please download BepInEx again from the",
+                    "R2API.Patcher.dll",
+                    "is present in the Risk of Rain 2\\BepInEx\\patchers\\ folder",
+                    "If you don't have this folder or the dll, please download BepInEx again from the",
                     "thunderstore and make sure to follow the installation instructions."
                 };
                 Logger.LogBlockError(message);
