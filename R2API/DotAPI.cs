@@ -206,14 +206,18 @@ namespace R2API {
                 i => i.MatchLdsfld<DotController>("dotStackPool"),
                 i => i.MatchCallOrCallvirt(out _),
                 i => i.MatchStloc(out dotStackLoc))) {
-                c.Emit(OpCodes.Ldarg_0);
-                c.Emit(OpCodes.Ldloc, dotStackLoc);
-                c.EmitDelegate<Action<DotController, DotController.DotStack>>((self, dotStack) => {
-                    if ((int) dotStack.dotIndex >= VanillaDotCount) {
-                        var customDotIndex = (int)dotStack.dotIndex - VanillaDotCount;
-                        _customDotBehaviours[customDotIndex]?.Invoke(self, dotStack);
-                    }
-                });
+                if (c.TryGotoNext(
+                    i => i.MatchLdarg(out _),
+                    i => i.MatchSwitch(out _))) {
+                    c.Emit(OpCodes.Ldarg_0);
+                    c.Emit(OpCodes.Ldloc, dotStackLoc);
+                    c.EmitDelegate<Action<DotController, DotController.DotStack>>((self, dotStack) => {
+                        if ((int)dotStack.dotIndex >= VanillaDotCount) {
+                            var customDotIndex = (int)dotStack.dotIndex - VanillaDotCount;
+                            _customDotBehaviours[customDotIndex]?.Invoke(self, dotStack);
+                        }
+                    });
+                }
             }
             else {
                 ILFailMessage(1);
