@@ -1,19 +1,23 @@
 ﻿using UnityEngine.Networking;
 
 namespace R2API.Networking.Interfaces {
+
     public interface INetRequest<TRequest, TReply> : ISerializableObject
         where TRequest : INetRequest<TRequest, TReply>
         where TReply : INetRequestReply<TRequest, TReply> {
+
         TReply OnRequestReceived();
     }
 
     public interface INetRequestReply<TRequest, TReply> : ISerializableObject
         where TRequest : INetRequest<TRequest, TReply>
         where TReply : INetRequestReply<TRequest, TReply> {
+
         void OnReplyReceived();
     }
 
     public static class NetRequestExtensions {
+
         public static void Send<TRequest, TReply>(this TRequest request, NetworkDestination destination)
             where TRequest : INetRequest<TRequest, TReply>
             where TReply : INetRequestReply<TRequest, TReply> {
@@ -41,7 +45,8 @@ namespace R2API.Networking.Interfaces {
                             writer.Write(request);
                         }
                     }
-                } else if (NetworkClient.active) {
+                }
+                else if (NetworkClient.active) {
                     using (Writer netWriter = NetworkingAPI.GetWriter(NetworkingAPI.RequestIndex, ClientScene.readyConnection, QosType.Reliable)) {
                         NetworkWriter writer = netWriter;
                         writer.Write(header);

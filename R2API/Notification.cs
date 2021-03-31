@@ -1,10 +1,11 @@
-﻿using RoR2;
+﻿using R2API.Utils;
+using RoR2;
 using RoR2.UI;
 using System;
-using R2API.Utils;
 using UnityEngine;
 
 namespace R2API {
+
     public class Notification : MonoBehaviour {
         public GameObject? RootObject { get; set; }
         public GenericNotification? GenericNotification { get; set; }

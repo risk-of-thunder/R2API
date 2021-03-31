@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using R2API.Networking.Interfaces;
+﻿using R2API.Networking.Interfaces;
 using R2API.Networking.Messages;
 using R2API.Utils;
 using RoR2.Networking;
+using System;
+using System.Collections.Generic;
 using UnityEngine.Networking;
 
 namespace R2API.Networking {
+
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class NetworkingAPI {
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -17,6 +19,7 @@ namespace R2API.Networking {
             get => _loaded;
             internal set => _loaded = value;
         }
+
         private static bool _loaded;
 
         internal static short MessageIndex => 2048;
@@ -36,7 +39,7 @@ namespace R2API.Networking {
             return RegisterMessageTypeInternal<TMessage>();
         }
 
-        internal static bool RegisterMessageTypeInternal<TMessage>() where TMessage : INetMessage, new () {
+        internal static bool RegisterMessageTypeInternal<TMessage>() where TMessage : INetMessage, new() {
             var inst = new TMessage();
 
             var type = inst.GetType();
@@ -213,7 +216,6 @@ namespace R2API.Networking {
                         writer.Write(header);
                     }
                 }
-
             }
         }
 
@@ -240,7 +242,7 @@ namespace R2API.Networking {
                     if (i == receivedFrom) {
                         continue;
                     }
-                    
+
                     NetworkConnection conn = NetworkServer.connections[i];
                     if (conn == null) {
                         continue;

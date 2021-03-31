@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
 using R2API.Utils;
-using System.Linq;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityObject = UnityEngine.Object;
 
 namespace R2API {
+
     /// <summary>
     /// This class allows loading of resources not stored in an assetbundle with Resources.Load. Primary use would be for generating an item icon in code.
     /// </summary>
@@ -24,8 +25,7 @@ namespace R2API {
             if (!modPrefix.StartsWith("@"))
                 throw new ArgumentException("Mod prefix must start with @");
             ModPrefix = modPrefix;
-            foreach (var (key, resource) in resources)
-            {
+            foreach (var (key, resource) in resources) {
                 _ = Store(key, resource, resource.GetType());
             }
         }
@@ -53,7 +53,8 @@ namespace R2API {
             if (IsValidKey(path)) {
                 key = path;
                 fullPath = ConvertToFullpath(key);
-            } else {
+            }
+            else {
                 key = ConvertToKey(path);
                 fullPath = path;
             }
@@ -82,9 +83,11 @@ namespace R2API {
             string key;
             if (IsValidKey(path)) {
                 key = path;
-            } else if (IsValidFullPath(path)) {
+            }
+            else if (IsValidFullPath(path)) {
                 key = ConvertToKey(path);
-            } else {
+            }
+            else {
                 throw new KeyNotFoundException($"key: {path} was not found");
             }
 
@@ -135,13 +138,14 @@ namespace R2API {
             var split = fullPath.Split(':');
             if (split.Length < 2 || !fullPath.StartsWith("@")) {
                 throw new ArgumentException($"Full path was not a valid path. Must be of format: @{ModPrefix}:[key]", nameof(fullPath));
-            } else if (split.Length > 2) {
+            }
+            else if (split.Length > 2) {
                 throw new ArgumentException("Cannot have multiple ':'s", nameof(fullPath));
-            } else {
+            }
+            else {
                 return split[1];
             }
         }
-
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "For use in unit tests")]
         private void Clear() {

@@ -1,7 +1,9 @@
 ﻿using RoR2;
 
 namespace R2API.Utils {
+
     public static class ChatMessage {
+
         /// <summary>
         /// Send a message to the chat
         /// </summary>
@@ -39,6 +41,7 @@ namespace R2API.Utils {
         public static void SendColored(string? message, System.Drawing.Color color) {
             SendColored(message, ColorToHexString(color));
         }
+
         public static void SendColored(string? message, UnityEngine.Color color) {
             SendColored(message, ColorToHexString(color));
         }
@@ -65,9 +68,9 @@ namespace R2API.Utils {
         private static string ColorToHexString(System.Drawing.Color c) {
             return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         }
+
         private static string ColorToHexString(UnityEngine.Color c) {
             return "#" + UnityEngine.ColorUtility.ToHtmlStringRGB(c);
         }
     }
-
 }

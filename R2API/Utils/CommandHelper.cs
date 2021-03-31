@@ -1,12 +1,13 @@
-﻿using System;
+﻿using RoR2;
+using RoR2.ConVar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using RoR2;
-using RoR2.ConVar;
 
 namespace R2API.Utils {
+
     /// <summary>
     /// A submodule for scanning static methods of a given assembly
     /// so that they are registered as console commands for the in-game console.
@@ -23,6 +24,7 @@ namespace R2API.Utils {
             get => _loaded;
             internal set => _loaded = value;
         }
+
         private static bool _loaded;
 
         /// <summary>
@@ -31,22 +33,6 @@ namespace R2API.Utils {
         /// </summary>
         /// <exception cref="InvalidOperationException"></exception>
         public static void AddToConsoleWhenReady() {
-            if(!Loaded) {
-                throw new InvalidOperationException($"{nameof(CommandHelper)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(CommandHelper)})]");
-            }
-
-            var assembly = Assembly.GetCallingAssembly();
-            Assemblies.Enqueue(assembly);
-            HandleCommandsConvars();
-        }
-
-        /// <summary>
-        /// Use AddToConsoleWhenReady instead.
-        /// </summary>
-        /// <param name="_"></param>
-        /// <exception cref="InvalidOperationException"></exception>
-        [Obsolete("Use 'AddToConsoleWhenReady()' instead.")]
-        public static void RegisterCommands(RoR2.Console? _) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(CommandHelper)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(CommandHelper)})]");
             }
@@ -106,13 +92,13 @@ namespace R2API.Utils {
                                               "ConCommands must be static methods.");
                         continue;
                     }
-                    
+
                     var attributes = methodInfo.GetCustomAttributes<ConCommandAttribute>();
                     foreach (var attribute in attributes) {
                         var conCommand = new RoR2.Console.ConCommand {
                             flags = attribute.flags,
                             helpText = attribute.helpText,
-                            action = (RoR2.Console.ConCommandDelegate) Delegate.CreateDelegate(
+                            action = (RoR2.Console.ConCommandDelegate)Delegate.CreateDelegate(
                                 typeof(RoR2.Console.ConCommandDelegate), methodInfo)
                         };
 

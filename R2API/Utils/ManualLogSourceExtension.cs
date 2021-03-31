@@ -1,9 +1,11 @@
+using BepInEx.Logging;
 using System.Collections.Generic;
 using System.Linq;
-using BepInEx.Logging;
 
 namespace R2API.Utils {
+
     public static class ManualLogSourceExtension {
+
         public static void LogBlockError(this ManualLogSource? logger, IEnumerable<string?>? lines, int width = 70) =>
             logger.LogBlock(LogLevel.Error, "ERROR", lines, width);
 
@@ -27,6 +29,7 @@ namespace R2API.Utils {
         // ReSharper disable FormatStringProblem
         public static string CenterText(string? text = "", int width = 70) =>
             string.Format("*{0," + (width / 2 + text.Length / 2) + "}{1," + (width / 2 - text.Length / 2) + "}*", text, " ");
+
         // ReSharper restore FormatStringProblem
     }
 }

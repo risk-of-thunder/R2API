@@ -1,20 +1,23 @@
-using R2API.Utils;
 using EntityStates;
 using MonoMod.RuntimeDetour;
-using System;
+using R2API.Utils;
 using RoR2;
 using RoR2.Skills;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Reflection;
 using Unity.Collections;
 using Unity.Jobs;
-using System.Reflection;
+using UnityEngine;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace R2API {
+
     [R2APISubmodule]
     public static class LoadoutAPI {
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -27,6 +30,7 @@ namespace R2API {
         private static bool _loaded;
 
         #region Submodule Hooks
+
         private static readonly HashSet<SkillDef> AddedSkills = new HashSet<SkillDef>();
         private static readonly HashSet<SkillFamily> AddedSkillFamilies = new HashSet<SkillFamily>();
         private static readonly HashSet<SkinDef> AddedSkins = new HashSet<SkinDef>();
@@ -54,9 +58,11 @@ namespace R2API {
             _detourSet_stateType?.Undo();
             _detourSet_typeName?.Undo();
         }
-        #endregion
+
+        #endregion Submodule Hooks
 
         #region EntityState fixes
+
         // ReSharper disable InconsistentNaming
         private static Hook _detourSet_stateType;
 
@@ -69,6 +75,7 @@ namespace R2API {
                 return _ror2Assembly;
             }
         }
+
         private static Assembly _ror2Assembly;
 
         internal static void Set_stateType_Hook(ref SerializableEntityStateType self, Type value) =>
@@ -104,9 +111,11 @@ namespace R2API {
         private static bool IsValidEntityStateType(Type type) {
             return type != null && type.IsSubclassOf(typeof(EntityState)) && !type.IsAbstract;
         }
-        #endregion
+
+        #endregion EntityState fixes
 
         #region Adding Skills
+
         /// <summary>
         /// Adds a type for a skill EntityState to the SkillsCatalog.
         /// State must derive from EntityStates.EntityState.
@@ -115,7 +124,7 @@ namespace R2API {
         /// <param name="t">The type to add</param>
         /// <returns>True if succesfully added</returns>
         public static bool AddSkill(Type? t) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             if (t == null || !t.IsSubclassOf(typeof(EntityState)) || t.IsAbstract) {
@@ -146,7 +155,7 @@ namespace R2API {
         /// <returns>The created SerializableEntityStateType</returns>
         public static SerializableEntityStateType StateTypeOf<T>()
             where T : EntityState, new() {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             LoadoutAPI.AddSkill(typeof(T));
@@ -160,7 +169,7 @@ namespace R2API {
         /// <param name="s">The SkillDef to add</param>
         /// <returns>True if the event was registered</returns>
         public static bool AddSkillDef(SkillDef? s) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             if (!s) {
@@ -181,7 +190,7 @@ namespace R2API {
         /// <param name="sf">The skillfamily to add</param>
         /// <returns>True if the event was registered</returns>
         public static bool AddSkillFamily(SkillFamily? sf) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             if (!sf) {
@@ -195,9 +204,10 @@ namespace R2API {
             return true;
         }
 
-        #endregion
+        #endregion Adding Skills
 
         #region Adding Skins
+
         /// <summary>
         /// Creates a skin icon sprite styled after the ones already in the game.
         /// </summary>
@@ -207,11 +217,12 @@ namespace R2API {
         /// <param name="left">The color of the left portion</param>
         /// <returns>The icon sprite</returns>
         public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             return CreateSkinIcon(top, right, bottom, left, new Color(0.6f, 0.6f, 0.6f));
         }
+
         /// <summary>
         /// Creates a skin icon sprite styled after the ones already in the game.
         /// </summary>
@@ -222,7 +233,7 @@ namespace R2API {
         /// <param name="line">The color of the dividing lines</param>
         /// <returns></returns>
         public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left, Color line) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             var tex = new Texture2D(128, 128, TextureFormat.RGBA32, false);
@@ -238,18 +249,26 @@ namespace R2API {
             tex.Apply();
             return Sprite.Create(tex, new Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
         }
+
         private struct IconTexJob : IJobParallelFor {
+
             [ReadOnly]
             public Color32 Top;
+
             [ReadOnly]
             public Color32 Right;
+
             [ReadOnly]
             public Color32 Bottom;
+
             [ReadOnly]
             public Color32 Left;
+
             [ReadOnly]
             public Color32 Line;
+
             public NativeArray<Color32> TexOutput;
+
             public void Execute(int index) {
                 int x = index % 128 - 64;
                 int y = index / 128 - 64;
@@ -302,7 +321,7 @@ namespace R2API {
         /// <param name="skin"></param>
         /// <returns></returns>
         public static SkinDef CreateNewSkinDef(SkinDefInfo skin) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             On.RoR2.SkinDef.Awake += DoNothing;
@@ -336,7 +355,7 @@ namespace R2API {
         /// <param name="skin">The SkinDefInfo for the skin to add</param>
         /// <returns>True if successful</returns>
         public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDefInfo skin) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             var skinDef = CreateNewSkinDef(skin);
@@ -352,7 +371,7 @@ namespace R2API {
         /// <param name="skin">The SkinDef to add</param>
         /// <returns>True if successful</returns>
         public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDef? skin) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             if (bodyPrefab == null) {
@@ -410,7 +429,7 @@ namespace R2API {
                     BaseSkins = Array.Empty<SkinDef>(),
                     GameObjectActivations = Array.Empty<SkinDef.GameObjectActivation>(),
                     Icon = CreateDefaultSkinIcon(),
-                    Name = "skin"+bodyPrefab.name+"Default",
+                    Name = "skin" + bodyPrefab.name + "Default",
                     NameToken = bodyPrefab.name.ToUpper() + "_DEFAULT_SKIN_NAME",
                     RootObject = model.gameObject,
                     UnlockableName = "",
@@ -448,6 +467,7 @@ namespace R2API {
         private static void DoNothing(On.RoR2.SkinDef.orig_Awake orig, SkinDef self) {
             //Intentionally do nothing
         }
-        #endregion
+
+        #endregion Adding Skins
     }
 }

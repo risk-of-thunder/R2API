@@ -3,6 +3,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace R2API {
+
     public interface IResourceProvider {
         string? ModPrefix { get; }
 

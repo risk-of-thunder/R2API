@@ -3,7 +3,6 @@ using RoR2;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace R2API {
 
@@ -12,7 +11,6 @@ namespace R2API {
     /// </summary>
     [R2APISubmodule]
     public class DifficultyAPI {
-
         private static bool difficultyAlreadyAdded = false;
 
         /// <summary>
@@ -22,14 +20,8 @@ namespace R2API {
             get => _loaded;
             internal set => _loaded = value;
         }
-        private static bool _loaded;
 
-        /// <summary>
-        /// <see cref="DifficultyCatalogReady"/>
-        /// </summary>
-        [Obsolete("Use DifficultyCatalogReady instead!")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Deprecated for this reason")]
-        public static event EventHandler? difficultyCatalogReady;
+        private static bool _loaded;
 
         /// <summary>
         /// Fired right before the hooks for the difficultyAPI are set. This is the last chance to add difficulties to the API.
@@ -41,7 +33,7 @@ namespace R2API {
         /// <summary>
         /// A dictionairy with ALL difficulty definitions. Post start, this includes both the vanilla ones and the ones added by R2API. Not all indexes are promised to be populated. Iterate over the keyset instead.
         /// </summary>
-        public static ConcurrentDictionary<DifficultyIndex,DifficultyDef?>? difficultyDefinitions = new ConcurrentDictionary<DifficultyIndex,DifficultyDef?>();
+        public static ConcurrentDictionary<DifficultyIndex, DifficultyDef?>? difficultyDefinitions = new ConcurrentDictionary<DifficultyIndex, DifficultyDef?>();
 
         /// <summary>
         /// Add a DifficultyDef to the list of available difficulties.
@@ -65,7 +57,7 @@ namespace R2API {
         /// <param name="preferPositive">If you prefer to be appended to the array. In game version 1.0.0.X this means you will get all Eclipse modifiers as well when your difficulty is selected. </param>
         /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
         public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty, bool preferPositive = false) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(DifficultyAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DifficultyAPI)})]");
             }
 
@@ -77,21 +69,17 @@ namespace R2API {
             DifficultyIndex pendingIndex;
             if (preferPositive) {
                 pendingIndex = DifficultyIndex.Count + difficultyDefinitions.Count;
-            } else {
-                pendingIndex  = MinimumIndex - 1 - difficultyDefinitions.Count;
+            }
+            else {
+                pendingIndex = MinimumIndex - 1 - difficultyDefinitions.Count;
             }
             difficultyDefinitions[pendingIndex] = difficulty;
             return pendingIndex;
         }
 
-
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            // TODO: Whenever this code is removed, remove this nullable disable
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-            difficultyCatalogReady?.Invoke(null, null);//TODO: Remove this in future versions. 
             DifficultyCatalogReady?.Invoke(null, null);
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
             On.RoR2.DifficultyCatalog.GetDifficultyDef += GetExtendedDifficultyDef;
             On.RoR2.RuleDef.FromDifficulty += InitialiseRuleBookAndFinalizeList;
         }
@@ -117,14 +105,14 @@ namespace R2API {
             if (difficultyAlreadyAdded == false) {//Technically this function we are hooking is only called once, but in the weird case it's called multiple times, we don't want to add the definitions again.
                 difficultyAlreadyAdded = true;
                 for (int i = 0; i < vanillaDefs.Length; i++) {
-                    difficultyDefinitions[(DifficultyIndex) i] = vanillaDefs[i];
+                    difficultyDefinitions[(DifficultyIndex)i] = vanillaDefs[i];
                 }
             }
 
             //This basically replicates what the orig does, but that uses the hardcoded enum.Count to end it's loop, instead of the actual array length.
             difficultyDefinitions.ForEachTry((KeyValuePair<DifficultyIndex, DifficultyDef> kv) => {
                 //Skip vanilla rules.
-                if(kv.Key >= DifficultyIndex.Invalid && kv.Key <= DifficultyIndex.Count) { return; }
+                if (kv.Key >= DifficultyIndex.Invalid && kv.Key <= DifficultyIndex.Count) { return; }
 
                 DifficultyDef difficultyDef = kv.Value;
                 RuleChoiceDef choice = ruleChoices.AddChoice(Language.GetString(difficultyDef.nameToken), null, false);

@@ -1,11 +1,14 @@
 ﻿using UnityEngine.Networking;
 
 namespace R2API.Networking.Interfaces {
+
     public interface INetCommand {
+
         void OnReceived();
     }
 
     public static class NetCommandExtensions {
+
         public static void Send(this INetCommand? command, NetworkDestination destination) {
             if (destination.ShouldRun()) {
                 command.OnReceived();
@@ -30,7 +33,8 @@ namespace R2API.Networking.Interfaces {
                             writer.Write(header);
                         }
                     }
-                } else if (NetworkClient.active) {
+                }
+                else if (NetworkClient.active) {
                     using (var netWriter = NetworkingAPI.GetWriter(NetworkingAPI.CommandIndex, ClientScene.readyConnection, QosType.Reliable)) {
                         NetworkWriter writer = netWriter;
                         writer.Write(header);

@@ -7,11 +7,12 @@
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning disable CS8601 // Possible null reference assignment.
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+
+using MonoMod.Cil;
+using R2API.Utils;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using MonoMod.Cil;
-using R2API.Utils;
 
 namespace R2API {
 
@@ -20,6 +21,7 @@ namespace R2API {
     /// </summary>
     [R2APISubmodule]
     public static class AssetAPI {
+
         /// <summary>
         /// This event is invoked as soon as the AssetAPI is loaded. This is the perfect time to add assets to the Master and Object Catalogs in the API.
         /// </summary>
@@ -43,8 +45,8 @@ namespace R2API {
             get => _loaded;
             internal set => _loaded = value;
         }
-        private static bool _loaded;
 
+        private static bool _loaded;
 
         #region BodyCatalog
 
@@ -63,7 +65,6 @@ namespace R2API {
         /// </summary>
         public static event EventHandler<List<GameObject>> OnBodyCatalogReady;
 
-
         /// <summary>
         /// Add a BodyPrefab to RoR2.BodyCatalog, even after init.
         /// If you try to add a BodyPrefab whose name already exists in nameToIndexMap, this method will throw.
@@ -73,7 +74,6 @@ namespace R2API {
         /// <returns>The index of your BodyPrefab.</returns>
 
         public static int AddToBodyCatalog(GameObject bodyPrefab, Texture2D portraitIcon = null) {
-
             BodyCatalog.Add(bodyPrefab);
 
             if (!_bodyCatalogReady)
@@ -102,14 +102,13 @@ namespace R2API {
             if (portraitIcon != null)
                 bodyPrefabBodyComponents[index].portraitIcon = portraitIcon;
 
-
             typeof(RoR2.BodyCatalog).SetFieldValue("bodyPrefabs", bodyPrefabs);
             typeof(RoR2.BodyCatalog).SetFieldValue("bodyPrefabBodyComponents", bodyPrefabBodyComponents);
 
             return index;
         }
 
-        #endregion
+        #endregion BodyCatalog
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void InitHooks() {
@@ -159,6 +158,7 @@ namespace R2API {
         }
     }
 }
+
 #pragma warning restore CS8605 // Unboxing a possibly null value.
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 #pragma warning restore CS8603 // Possible null reference return.

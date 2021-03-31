@@ -1,14 +1,16 @@
-﻿using System;
+﻿using MonoMod.RuntimeDetour;
+using R2API.Utils;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using MonoMod.RuntimeDetour;
-using R2API.Utils;
 using UnityEngine;
 using Object = UnityEngine.Object;
+
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
 
 namespace R2API {
+
     /// <summary>
     /// Allow to register AssetBundles for Mod Makers.
     /// </summary>
@@ -22,20 +24,27 @@ namespace R2API {
             get => _loaded;
             internal set => _loaded = value;
         }
+
         private static bool _loaded;
 
         private static readonly Dictionary<string, IResourceProvider> Providers = new Dictionary<string, IResourceProvider>();
 
         private static NativeDetour ResourcesLoadDetour;
+
         private delegate Object d_ResourcesLoad(string path, Type type);
+
         private static d_ResourcesLoad _origLoad;
 
         private static NativeDetour ResourcesLoadAsyncDetour;
+
         private delegate ResourceRequest d_ResourcesAsyncLoad(string path, Type type);
+
         private static d_ResourcesAsyncLoad _origResourcesLoadAsync;
 
         private static NativeDetour ResourcesLoadAllDetour;
+
         private delegate Object[] d_ResourcesLoadAll(string path, Type type);
+
         private static d_ResourcesLoadAll _origLoadAll;
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
@@ -76,7 +85,7 @@ namespace R2API {
         /// </summary>
         /// <param name="provider">assetbundle provider to give, usually made with an AssetBundleResourcesProvider(prefix, assetbundle)</param>
         public static void AddProvider(IResourceProvider? provider) {
-            if(!Loaded) {
+            if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ResourcesAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ResourcesAPI)})]");
             }
 

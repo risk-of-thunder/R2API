@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Logging;
 using Mono.Cecil.Cil;
@@ -12,13 +6,22 @@ using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.Utils;
 using RoR2;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace R2API {
+
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     // ReSharper disable once InconsistentNaming
     public class R2API : BaseUnityPlugin {
+
         // ReSharper disable once InconsistentNaming
         public const string PluginGUID = "com.bepis.r2api";
+
         public const string PluginName = "R2API";
         public const string PluginVersion = "0.0.1";
 
@@ -121,7 +124,6 @@ namespace R2API {
         public void Start() {
             R2APIStart?.Invoke(this, null);
         }
-
 
         /// <summary>
         /// Return true if the specified submodule is loaded.

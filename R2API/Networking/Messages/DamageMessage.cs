@@ -3,7 +3,9 @@ using RoR2;
 using UnityEngine.Networking;
 
 namespace R2API.Networking.Messages {
+
     internal struct DamageMessage : INetMessage {
+
         public void Serialize(NetworkWriter writer) {
             writer.Write(_damage);
             writer.Write(HurtBoxReference.FromHurtBox(_target));

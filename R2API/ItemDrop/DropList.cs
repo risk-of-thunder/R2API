@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using R2API.ItemDrop;
+﻿using R2API.ItemDrop;
 using RoR2;
-using UnityEngine;
-
+using System.Collections.Generic;
+using System.Linq;
 
 namespace R2API {
+
     namespace ItemDropAPITools {
+
         public class DropList {
             public static bool OriginalListsSaved;
             public static List<PickupIndex> Tier1DropListOriginal = new List<PickupIndex>();
@@ -20,12 +20,10 @@ namespace R2API {
             public static List<PickupIndex> SpecialItemsOriginal = new List<PickupIndex>();
             public static List<PickupIndex> SpecialEquipmentOriginal = new List<PickupIndex>();
 
-
             private static List<PickupIndex> Tier1DropListBackup = new List<PickupIndex>();
             private static List<PickupIndex> Tier2DropListBackup = new List<PickupIndex>();
             private static List<PickupIndex> Tier3DropListBackup = new List<PickupIndex>();
             private static List<PickupIndex> EquipmentDropListBackup = new List<PickupIndex>();
-
 
             public List<PickupIndex> AvailableTier1DropList = new List<PickupIndex>();
             public List<PickupIndex> AvailableTier2DropList = new List<PickupIndex>();
@@ -40,18 +38,23 @@ namespace R2API {
 
             public const string NullIconTextureName = "texNullIcon";
 
-            public List<PickupIndex> GetDropList( ItemTier itemTier) {
+            public List<PickupIndex> GetDropList(ItemTier itemTier) {
                 if (itemTier == ItemTier.Tier1) {
                     return AvailableTier1DropList;
-                } else if (itemTier == ItemTier.Tier2) {
+                }
+                else if (itemTier == ItemTier.Tier2) {
                     return AvailableTier2DropList;
-                } else if(itemTier == ItemTier.Tier3) {
+                }
+                else if (itemTier == ItemTier.Tier3) {
                     return AvailableTier3DropList;
-                } else if (itemTier == ItemTier.Boss) {
+                }
+                else if (itemTier == ItemTier.Boss) {
                     return AvailableBossDropList;
-                } else if (itemTier == ItemTier.Lunar) {
+                }
+                else if (itemTier == ItemTier.Lunar) {
                     return AvailableLunarDropList;
-                } else {
+                }
+                else {
                     return AvailableNormalEquipmentDropList;
                 }
             }
@@ -160,7 +163,6 @@ namespace R2API {
                 Dictionary<ItemTier, List<ItemIndex>> itemsToRemove,
                 Dictionary<EquipmentDropType, List<EquipmentIndex>> equipmentsToAdd,
                 Dictionary<EquipmentDropType, List<EquipmentIndex>> equipmentsToRemove) {
-
                 AvailableTier1DropList = BackupDropList(CreateDropList(Tier1DropListOriginal, itemsToAdd[ItemTier.Tier1], itemsToRemove[ItemTier.Tier1]));
                 AvailableTier2DropList = BackupDropList(CreateDropList(Tier2DropListOriginal, itemsToAdd[ItemTier.Tier2], itemsToRemove[ItemTier.Tier2]));
                 AvailableTier3DropList = BackupDropList(CreateDropList(Tier3DropListOriginal, itemsToAdd[ItemTier.Tier3], itemsToRemove[ItemTier.Tier3]));
@@ -187,7 +189,6 @@ namespace R2API {
                 IEnumerable<EquipmentIndex> equipmentsToAdd,
                 IEnumerable<ItemIndex> itemsToRemove,
                 IEnumerable<EquipmentIndex> equipmentsToRemove) {
-
                 var finalDropList = new List<PickupIndex>();
                 foreach (var pickupIndex in vanillaDropList) {
                     if (!finalDropList.Contains(pickupIndex)) {
@@ -230,7 +231,6 @@ namespace R2API {
                 IEnumerable<PickupIndex> vanillaDropList,
                 IEnumerable<ItemIndex> itemsToAdd,
                 IEnumerable<ItemIndex> itemsToRemove) {
-
                 var finalDropList = new List<PickupIndex>();
                 foreach (var pickupIndex in vanillaDropList) {
                     if (!finalDropList.Contains(pickupIndex)) {
@@ -259,7 +259,6 @@ namespace R2API {
                 IEnumerable<PickupIndex> vanillaDropList,
                 IEnumerable<EquipmentIndex> equipmentsToAdd,
                 IEnumerable<EquipmentIndex> equipmentsToRemove) {
-
                 var finalDropList = new List<PickupIndex>();
                 foreach (var pickupIndex in vanillaDropList) {
                     if (!finalDropList.Contains(pickupIndex)) {
