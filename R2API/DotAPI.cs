@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
@@ -81,7 +80,7 @@ namespace R2API {
             Array.Resize(ref _customDotVisuals, _customDotVisuals.Length + 1);
             _customDotVisuals[customArrayIndex] = customDotVisual;
 
-            R2API.Logger.LogInfo($"Custom Dot that uses Buff Index: {(int)dotDef.associatedBuff} added");
+            R2API.Logger.LogInfo($"Custom Dot that uses Buff Index: {(int)dotDef.associatedBuff.buffIndex} added");
             return (DotController.DotIndex)dotDefIndex;
         }
         /// <summary>
@@ -96,7 +95,7 @@ namespace R2API {
         /// <param name="customDotVisual"></param>
         /// <returns></returns>
         public static DotController.DotIndex RegisterDotDef(float interval, float damageCoefficient,
-            DamageColorIndex colorIndex, BuffIndex associatedBuff, CustomDotBehaviour customDotBehaviour = null,
+            DamageColorIndex colorIndex, BuffDef associatedBuff, CustomDotBehaviour customDotBehaviour = null,
             CustomDotVisual customDotVisual = null) {
             var dotDef = new DotController.DotDef {
                             associatedBuff = associatedBuff,
@@ -197,7 +196,7 @@ namespace R2API {
             int dotStackLoc = 0;
 
             // ReSharper disable once InconsistentNaming
-            void ILFailMessage(int index) {
+            static void ILFailMessage(int index) {
                 R2API.Logger.LogError(
                     $"Failed finding IL Instructions. Aborting OnAddDot IL Hook {index}");
             }
