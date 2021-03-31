@@ -217,7 +217,7 @@ namespace R2API {
         /// Used to specify if this achievement is limited to a certain character
         /// </summary>
         /// <returns>The index of the character that is needed to unlock this achievement</returns>
-        public override Int32 LookUpRequiredBodyIndex() => base.LookUpRequiredBodyIndex();
+        public override BodyIndex LookUpRequiredBodyIndex() => base.LookUpRequiredBodyIndex();
         /// <summary>
         /// Called when the body changes to a body that does not meet the requirements for this achievement
         /// </summary>
