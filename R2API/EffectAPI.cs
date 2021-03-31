@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HG;
 using R2API.Utils;
 using RoR2;
 using UnityEngine;
@@ -29,22 +30,21 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            On.RoR2.EffectCatalog.GetDefaultEffectDefs += EffectCatalog_GetDefaultEffectDefs;
+            On.RoR2.EffectCatalog.SetEntries += AddAdditionalEntries;
+        }
+
+        private static void AddAdditionalEntries(On.RoR2.EffectCatalog.orig_SetEntries orig, EffectDef[] newEntries) {
+            orig(newEntries);
+
+            var effectList = EffectCatalog.entries.ToList();
+            GetAdditionalEntries?.Invoke(effectList);
+            ArrayUtils.CloneTo<EffectDef>(effectList.ToArray(), ref EffectCatalog.entries);
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            On.RoR2.EffectCatalog.GetDefaultEffectDefs -= EffectCatalog_GetDefaultEffectDefs;
+
         }
-
-        private static EffectDef[] EffectCatalog_GetDefaultEffectDefs(On.RoR2.EffectCatalog.orig_GetDefaultEffectDefs orig) {
-            EffectDef[] effects = orig();
-
-            var effectList = effects.ToList();
-            GetAdditionalEntries?.Invoke(effectList);
-            return effectList.ToArray();
-        }
-
 
         /// <summary>
         /// Creates an EffectDef from a prefab and adds it to the EffectCatalog.
