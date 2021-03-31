@@ -70,4 +70,3 @@ namespace R2API.Patcher {
         }
     }
 }
-// Fix for the RoR2 Class SearchableAttribute
