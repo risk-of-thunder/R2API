@@ -63,6 +63,8 @@ namespace R2API.Patcher {
                     var popInstruction = Instruction.Create(OpCodes.Pop);
                     il.InsertAfter(callvirtInstruction, popInstruction);
                 }
+
+                module.Types.Add(new TypeDefinition("R2API", "SearchableAttributeScanFix", TypeAttributes.AutoClass));
             }
             catch (Exception ex) {
                 Log.LogError($"Failed to patch {SearchableAttributeTypeFullName}\n{ex}");
