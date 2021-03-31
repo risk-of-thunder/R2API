@@ -38,17 +38,17 @@ namespace R2API {
             On.RoR2.EffectCatalog.SetEntries += AddAdditionalEntries;
         }
 
+        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
+        internal static void UnsetHooks() {
+            On.RoR2.EffectCatalog.SetEntries -= AddAdditionalEntries;
+        }
+
         private static void AddAdditionalEntries(On.RoR2.EffectCatalog.orig_SetEntries orig, EffectDef[] newEntries) {
             orig(newEntries);
 
             var effectList = EffectCatalog.entries.ToList();
             GetAdditionalEntries?.Invoke(effectList);
             ArrayUtils.CloneTo<EffectDef>(effectList.ToArray(), ref EffectCatalog.entries);
-        }
-
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
-
         }
 
         /// <summary>
