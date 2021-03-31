@@ -62,7 +62,7 @@ namespace R2API.ItemDrop {
         }
 
         public static bool IsElite(this EquipmentDef equipmentDef) {
-            return EliteCatalog.GetEquipmentEliteIndex(equipmentDef.equipmentIndex) != EliteIndex.None;
+            return EliteCatalog.eliteDefs.Any(eliteDef => eliteDef.eliteEquipmentDef == equipmentDef);
         }
     }
 }
