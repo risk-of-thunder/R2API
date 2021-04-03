@@ -11,7 +11,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace R2API {
 
@@ -34,6 +36,8 @@ namespace R2API {
         internal static event EventHandler R2APIStart;
 
         internal static HashSet<string> LoadedSubmodules;
+
+        private static RoR2Content RoR2Content;
 
         public void Awake() {
             Logger = base.Logger;
@@ -59,6 +63,13 @@ namespace R2API {
             SteamworksClientManager.onLoaded += CheckIfUsedOnRightGameVersion;
 
             VanillaFixes();
+
+            // Load RoR2Content early so that modders
+            // can take prefabs refs from the fields directly.
+            RoR2Content = new RoR2Content();
+
+            // We dont want the game code to remake the RoR2Content instance again
+            IL.RoR2.RoR2Application.OnLoad += TakeOurInstanceInstead;
 
             R2APIContentPackProvider.Init();
         }
@@ -121,6 +132,20 @@ namespace R2API {
                     ILFailMessage(1);
                 }
             };
+        }
+
+        private static void TakeOurInstanceInstead(ILContext il) {
+            var c = new ILCursor(il);
+
+            if (c.TryGotoNext(i => i.MatchNewobj<RoR2Content>())) {
+                c.Remove();
+
+                static RoR2Content ReturnOurInstance() {
+                    return RoR2Content;
+                }
+
+                c.EmitDelegate<Func<RoR2Content>>(ReturnOurInstance);
+            }
         }
 
         public void Start() {
