@@ -39,43 +39,41 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            On.RoR2.RoR2Application.LoadGameContent += AddItemsToGame;
+            R2APIContentPackProvider.WhenContentPackReady += AddItemsToGame;
 
             IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
             R2API.R2APIStart += AddingItemDisplayRulesToCharacterModels;
         }
 
-        private static System.Collections.IEnumerator AddItemsToGame(On.RoR2.RoR2Application.orig_LoadGameContent orig, RoR2Application self) {
-            _itemCatalogInitialized = true;
-            _equipmentCatalogInitialized = true;
-
-            R2APIContentPackProvider.ContentPack.itemDefs.Add(ItemDefinitions.Select(d => d.ItemDef).ToArray());
-            R2APIContentPackProvider.ContentPack.equipmentDefs.Add(EquipmentDefinitions.Select(d => d.EquipmentDef).ToArray());
-
-            yield return orig(self);
-        }
-
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            On.RoR2.RoR2Application.LoadGameContent -= AddItemsToGame;
+            R2APIContentPackProvider.WhenContentPackReady -= AddItemsToGame;
 
             IL.RoR2.CharacterModel.UpdateMaterials -= MaterialFixForItemDisplayOnCharacter;
             R2API.R2APIStart -= AddingItemDisplayRulesToCharacterModels;
         }
 
-        private static void AddItemAction() {
-            LoadRelatedAPIs();
+        private static void AddItemsToGame(ContentPack r2apiContentPack) {
+            var itemDefs = new List<ItemDef>();
+            foreach (var customItem in ItemDefinitions) {
+                itemDefs.Add(customItem.ItemDef);
 
-            R2APIContentPackProvider.ContentPack.itemDefs.Add(ItemDefinitions.Select(c => c.ItemDef).ToArray());
+                R2API.Logger.LogInfo($"Custom Item: {customItem.ItemDef.name} added");
+            }
 
+            r2apiContentPack.itemDefs = itemDefs.ToArray();
             _itemCatalogInitialized = true;
-        }
 
-        private static void AddEquipmentAction() {
+            var equipmentDefs = new List<EquipmentDef>();
+            foreach (var customEquipment in EquipmentDefinitions) {
+                equipmentDefs.Add(customEquipment.EquipmentDef);
+
+                R2API.Logger.LogInfo($"Custom Equipment: {customEquipment.EquipmentDef.name} added");
+            }
+
             LoadRelatedAPIs();
 
-            R2APIContentPackProvider.ContentPack.equipmentDefs.Add(EquipmentDefinitions.Select(c => c.EquipmentDef).ToArray());
-
+            r2apiContentPack.equipmentDefs = equipmentDefs.ToArray();
             _equipmentCatalogInitialized = true;
         }
 
@@ -110,28 +108,26 @@ namespace R2API {
         /// <summary>
         /// Add a custom item to the list of available items.
         /// Value for ItemDef.ItemIndex can be ignored.
+        /// We can't give you the ItemIndex anymore in the method return param. Instead use ItemCatalog.FindItemIndex after catalog are init
         /// If this is called after the ItemCatalog inits then this will return false and ignore the custom item.
         /// </summary>
         /// <param name="item">The item to add.</param>
-        /// <returns>the ItemIndex of your item if added. -1 otherwise</returns>
-        public static ItemIndex Add(CustomItem? item) {
+        /// <returns>true if added, false otherwise</returns>
+        public static bool Add(CustomItem? item) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
             if (_itemCatalogInitialized) {
                 R2API.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the item list was created");
-                return ItemIndex.None;
             }
 
             if (item.ItemDef == null) {
                 R2API.Logger.LogError("Your ItemDef is null ! Can't add your item.");
-                return ItemIndex.None;
             }
 
             if (string.IsNullOrEmpty(item.ItemDef.name)) {
                 R2API.Logger.LogError("Your ItemDef.name is null or empty ! Can't add your item.");
-                return ItemIndex.None;
             }
 
             bool xmlSafe = false;
@@ -144,36 +140,35 @@ namespace R2API {
             }
             if (xmlSafe) {
                 ItemDefinitions.Add(item);
+                return true;
             }
 
-            return ItemIndex.None;
+            return false;
         }
 
         /// <summary>
         /// Add a custom equipment item to the list of available items.
-        /// Value for EquipmentDef.ItemIndex can be ignored.
+        /// Value for EquipmentDef.equipmentIndex can be ignored.
+        /// We can't give you the EquipmentIndex anymore in the method return param. Instead use EquipmentCatalog.FindEquipmentIndex after catalog are init
         /// If this is called after the EquipmentCatalog inits then this will return false and ignore the custom equipment item.
         /// </summary>
         /// <param name="item">The equipment item to add.</param>
-        /// <returns>the EquipmentIndex of your item if added. -1 otherwise</returns>
-        public static EquipmentIndex Add(CustomEquipment? item) {
+        /// <returns>true if added, false otherwise</returns>
+        public static bool Add(CustomEquipment? item) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
             if (_equipmentCatalogInitialized) {
                 R2API.Logger.LogError($"Too late ! Tried to add equipment item: {item.EquipmentDef.nameToken} after the equipment list was created");
-                return EquipmentIndex.None;
             }
 
             if (item.EquipmentDef == null) {
                 R2API.Logger.LogError("Your EquipmentDef is null ! Can't add your Equipment.");
-                return EquipmentIndex.None;
             }
 
             if (string.IsNullOrEmpty(item.EquipmentDef.name)) {
                 R2API.Logger.LogError("Your EquipmentDef.name is null or empty ! Can't add your Equipment.");
-                return EquipmentIndex.None;
             }
 
             bool xmlSafe = false;
@@ -186,9 +181,10 @@ namespace R2API {
             }
             if (xmlSafe) {
                 EquipmentDefinitions.Add(item);
+                return true;
             }
 
-            return EquipmentIndex.None;
+            return false;
         }
 
         #endregion Add Methods
@@ -231,18 +227,18 @@ namespace R2API {
         // todo : allow override of existing item display rules
         // This method only allow the addition of custom rules.
         //
-        private static void AddingItemDisplayRulesToCharacterModels(object _, EventArgs __) {
+		private static void AddingItemDisplayRulesToCharacterModels(object _, EventArgs __) {
             foreach (var bodyPrefab in BodyCatalog.allBodyPrefabs) {
                 var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
                 if (characterModel != null && characterModel.itemDisplayRuleSet != null) {
-                    string name = characterModel.name;
                     foreach (var customItem in ItemDefinitions) {
                         var customRules = customItem.ItemDisplayRules;
                         if (customRules != null) {
                             //if a specific rule for this model exists, or the model has no rules for this item
-                            if (customRules.TryGetRules(name, out ItemDisplayRule[] rules) ||
+                            if (customRules.TryGetRules(characterModel.name, out var rules) ||
+                                customRules.TryGetRules(bodyPrefab.name, out rules) || 
                                 characterModel.itemDisplayRuleSet.GetItemDisplayRuleGroup(customItem.ItemDef.itemIndex).rules == null) {
-                                //characterModel.itemDisplayRuleSet.SetItemDisplayRuleGroup(customItem.ItemDef.name, new DisplayRuleGroup { rules = rules });
+                                characterModel.itemDisplayRuleSet.SetDisplayRuleGroup(customItem.ItemDef, new DisplayRuleGroup { rules = rules });
                             }
                         }
                     }
@@ -251,9 +247,10 @@ namespace R2API {
                         var customRules = customEquipment.ItemDisplayRules;
                         if (customRules != null) {
                             //if a specific rule for this model exists, or the model has no rules for this equipment
-                            if (customRules.TryGetRules(name, out ItemDisplayRule[] rules) ||
+                            if (customRules.TryGetRules(characterModel.name, out var rules) ||
+                                customRules.TryGetRules(bodyPrefab.name, out rules) ||
                                 characterModel.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null) {
-                                //characterModel.itemDisplayRuleSet.SetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.name, new DisplayRuleGroup { rules = rules });
+                                characterModel.itemDisplayRuleSet.SetDisplayRuleGroup(customEquipment.EquipmentDef, new DisplayRuleGroup { rules = rules });
                             }
                         }
                     }
@@ -301,27 +298,27 @@ namespace R2API {
         /// <summary>
         /// Get the applicable rule for this charactermodel. Returns the default rules if no specific rule is found.
         /// </summary>
-        /// <param name="CharacterModelName">The model to look for. Null and empty strings are also accepted.</param>
+        /// <param name="bodyPrefabName">The model to look for. Null and empty strings are also accepted.</param>
         /// <returns>The item display rules for this model, or the default rules if no specifics are found.</returns>
-        public ItemDisplayRule[]? this[string? CharacterModelName] {
+        public ItemDisplayRule[]? this[string? bodyPrefabName] {
             get {
-                if (string.IsNullOrEmpty(CharacterModelName) || !Dictionary.ContainsKey(CharacterModelName))
+                if (string.IsNullOrEmpty(bodyPrefabName) || !Dictionary.ContainsKey(bodyPrefabName))
                     return DefaultRules;
                 else
-                    return Dictionary[CharacterModelName];
+                    return Dictionary[bodyPrefabName];
             }
             set {
-                if (string.IsNullOrEmpty(CharacterModelName)) {
+                if (string.IsNullOrEmpty(bodyPrefabName)) {
                     R2API.Logger.LogWarning("DefaultRules overwritten with Indexer! Please set them with the constructor instead!");
                     DefaultRules = value;
                     return;
                 }
 
-                if (Dictionary.ContainsKey(CharacterModelName)) {
-                    Dictionary[CharacterModelName] = value;
+                if (Dictionary.ContainsKey(bodyPrefabName)) {
+                    Dictionary[bodyPrefabName] = value;
                 }
                 else {
-                    Dictionary.Add(CharacterModelName, value);
+                    Dictionary.Add(bodyPrefabName, value);
                 }
             }
         }
@@ -330,21 +327,21 @@ namespace R2API {
         /// <summary>
         /// Equivalent to using the set property of the indexer, but added bonus is the ability to ignore the array wrapper normally needed.
         /// </summary>
-        /// <param name="CharacterModelName"></param>
+        /// <param name="bodyPrefabName"></param>
         /// <param name="itemDisplayRules"></param>
-        public void Add(string? CharacterModelName, params ItemDisplayRule[]? itemDisplayRules) {
-            this[CharacterModelName] = itemDisplayRules;
+        public void Add(string? bodyPrefabName, params ItemDisplayRule[]? itemDisplayRules) {
+            this[bodyPrefabName] = itemDisplayRules;
         }
 
         /// <summary>
         /// Safe way of getting a characters rules, with the promise that the out is always filled.
         /// </summary>
-        /// <param name="CharacterModelName"></param>
+        /// <param name="bodyPrefabName"></param>
         /// <param name="itemDisplayRules">The specific rules for this model, or if false is returned, the default rules.</param>
         /// <returns>True if there's a specific rule for this model. False otherwise.</returns>
-        public bool TryGetRules(string? CharacterModelName, out ItemDisplayRule[] itemDisplayRules) {
-            itemDisplayRules = this[CharacterModelName];
-            return CharacterModelName != null && Dictionary.ContainsKey(CharacterModelName);
+        public bool TryGetRules(string? bodyPrefabName, out ItemDisplayRule[] itemDisplayRules) {
+            itemDisplayRules = this[bodyPrefabName];
+            return bodyPrefabName != null && Dictionary.ContainsKey(bodyPrefabName);
         }
 
         /// <summary>
