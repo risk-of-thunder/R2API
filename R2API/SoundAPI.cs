@@ -38,17 +38,17 @@ namespace R2API {
             }
 
             //for bank loading
-            On.RoR2.RoR2Application.OnLoad += RoR2Application_OnLoad;
+            On.RoR2.RoR2Application.OnLoad += AddBanksToGame;
+        }
+
+        private static void AddBanksToGame(On.RoR2.RoR2Application.orig_OnLoad orig, RoR2Application self) {
+            LoadBanks();
+            orig(self);
         }
 
         [R2APISubmoduleInit(Stage = InitStage.LoadCheck)]
         private static void ShouldLoad(out bool shouldload) {
             shouldload = Directory.GetFiles(Paths.PluginPath, "*.sound", SearchOption.AllDirectories).Length > 0;
-        }
-
-        private static void RoR2Application_OnLoad(On.RoR2.RoR2Application.orig_OnLoad orig, RoR2Application self) {
-            orig(self);
-            LoadBanks();
         }
 
         /// <summary>

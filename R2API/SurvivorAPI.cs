@@ -1,11 +1,12 @@
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using R2API.Utils;
-using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using R2API.Utils;
+using RoR2;
+using UnityEngine;
 
 namespace R2API {
 
@@ -23,11 +24,9 @@ namespace R2API {
 
         private static bool _loaded;
 
-        private static readonly int VanillaSurvivorCount = SurvivorCatalog.idealSurvivorOrder.Length;
-        private static readonly int VanillaSurvivorMaxCount = SurvivorCatalog.survivorMaxCount;
-
         private static bool _survivorsAlreadyAdded;
 
+        public static ObservableCollection<GameObject?>? SurvivorBodyPrefabs = new ObservableCollection<GameObject?>();
         public static ObservableCollection<SurvivorDef?>? SurvivorDefinitions = new ObservableCollection<SurvivorDef?>();
 
         /// <summary>
@@ -55,6 +54,7 @@ namespace R2API {
                 return false;
             }
 
+            SurvivorBodyPrefabs.Add(survivor.bodyPrefab);
             SurvivorDefinitions.Add(survivor);
 
             return true;
@@ -62,53 +62,27 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            SurvivorCatalog.getAdditionalSurvivorDefs += AddSurvivorAction;
-            On.RoR2.SurvivorCatalog.Init += FixCharacterSelectIcons;
+            R2APIContentPackProvider.WhenContentPackReady += AddSurvivorsToGame;
             IL.RoR2.CharacterSelectBarController.Build += DescriptionTokenSafetyCheck;
-        }
-
-        private static void FixCharacterSelectIcons(On.RoR2.SurvivorCatalog.orig_Init orig) {
-            orig();
-
-            var survivorDefs = typeof(SurvivorCatalog).GetFieldValue<SurvivorDef[]>("survivorDefs");
-
-            // The size of the vanilla array doesnt match the number of registered vanilla survivors
-            var allSurvivorCount = survivorDefs.Count(s => s != null);
-            var customSurvivorCount = allSurvivorCount - VanillaSurvivorCount;
-
-            // Increase the size of the order array to accomodate the added survivors
-            Array.Resize(ref SurvivorCatalog.idealSurvivorOrder, allSurvivorCount);
-
-            // Add the new survivors to the order array so the game knows where to put them in character select
-            for (int i = VanillaSurvivorCount, j = 0; i < allSurvivorCount; i++, j++) {
-                var customSurvivorDef = survivorDefs[(int)SurvivorIndex.Count + j];
-                SurvivorCatalog.idealSurvivorOrder[i] = customSurvivorDef.survivorIndex;
-                R2API.Logger.LogInfo($"Survivor: {customSurvivorDef.displayNameToken} added");
-            }
-
-            // Increase the max survivor count variable to keep the vanilla WIP icon for future vanilla survivors.
-            SurvivorCatalog.survivorMaxCount = VanillaSurvivorMaxCount + customSurvivorCount;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            SurvivorCatalog.getAdditionalSurvivorDefs -= AddSurvivorAction;
-            On.RoR2.SurvivorCatalog.Init -= FixCharacterSelectIcons;
+            R2APIContentPackProvider.WhenContentPackReady -= AddSurvivorsToGame;
             IL.RoR2.CharacterSelectBarController.Build -= DescriptionTokenSafetyCheck;
         }
 
-        private static void AddSurvivorAction(List<SurvivorDef> survivorDefinitions) {
-            // Set this to true so no more survivors can be added to the list while this is happening, or afterwards
-            _survivorsAlreadyAdded = true;
+        private static void AddSurvivorsToGame(ContentPack r2apiContentPack) {
+            var survivorsDefs = new List<SurvivorDef>();
 
-            foreach (var survivor in SurvivorDefinitions) {
-                //Check if the current survivor has been registered in bodycatalog. Log if it has not, but still add the survivor
-                if (BodyCatalog.FindBodyIndex(survivor.bodyPrefab) == -1 || BodyCatalog.GetBodyPrefab(BodyCatalog.FindBodyIndex(survivor.bodyPrefab)) != survivor.bodyPrefab) {
-                    R2API.Logger.LogWarning($"Survivor: {survivor.displayNameToken} is not properly registered in {nameof(BodyCatalog)}");
-                }
+            foreach (var customSurvivor in SurvivorDefinitions) {
+                survivorsDefs.Add(customSurvivor);
 
-                survivorDefinitions.Add(survivor);
+                R2API.Logger.LogInfo($"Custom Survivor: {customSurvivor.cachedName} added");
             }
+
+            r2apiContentPack.bodyPrefabs = SurvivorBodyPrefabs.ToArray();
+            _survivorsAlreadyAdded = true;
         }
 
         // Add a safety check for SurvivorDef that are lacking
@@ -120,9 +94,9 @@ namespace R2API {
             int locDescriptionToken = 0;
 
             // ReSharper disable once InconsistentNaming
-            void ILFailMessage() {
+            static void ILFailMessage(int index) {
                 R2API.Logger.LogError(
-                    $"{nameof(SurvivorAPI)}: Safety Check: Could not find IL Instructions. " +
+                    $"{nameof(SurvivorAPI)}: Safety Check: Could not find IL Instructions ({index}). " +
                     "Aborting. Instabilities related to custom Survivors may, or may not happens.");
             }
 
@@ -136,13 +110,7 @@ namespace R2API {
             if (!c.TryGotoNext(MoveType.After,
                 findLocSurvivorDef
             )) {
-                ILFailMessage();
-                return;
-            }
-            if (!c.TryGotoNext(MoveType.After,
-                findLocSurvivorDef
-            )) {
-                ILFailMessage();
+                ILFailMessage(1);
                 return;
             }
 
@@ -171,7 +139,7 @@ namespace R2API {
                 });
             }
             else {
-                ILFailMessage();
+                ILFailMessage(3);
             }
         }
     }

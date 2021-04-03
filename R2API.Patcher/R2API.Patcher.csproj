@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>R2API.Patcher</AssemblyName>
+        <RootNamespace>RoR2</RootNamespace>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Mono.Cecil" Version="0.11.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="BepInEx">
+        <HintPath>..\R2API\libs\BepInEx.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

@@ -5,6 +5,7 @@ using RoR2;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Unity.Collections;
 using Unity.Jobs;
@@ -51,12 +52,21 @@ namespace R2API {
                 );
             }
             _detourSet_typeName.Apply();
+
+            R2APIContentPackProvider.WhenContentPackReady += AddSkillsToGame;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             _detourSet_stateType?.Undo();
             _detourSet_typeName?.Undo();
+
+            R2APIContentPackProvider.WhenContentPackReady -= AddSkillsToGame;
+        }
+
+        private static void AddSkillsToGame(ContentPack r2apiContentPack) {
+            r2apiContentPack.skillDefs = AddedSkills.ToArray();
+            r2apiContentPack.skillFamilies = AddedSkillFamilies.ToArray();
         }
 
         #endregion Submodule Hooks
@@ -177,9 +187,6 @@ namespace R2API {
                 return false;
             }
             AddedSkills.Add(s);
-            SkillCatalog.getAdditionalSkillDefs += (list) => {
-                list.Add(s);
-            };
             return true;
         }
 
@@ -198,9 +205,6 @@ namespace R2API {
                 return false;
             }
             AddedSkillFamilies.Add(sf);
-            SkillCatalog.getAdditionalSkillFamilies += (list) => {
-                list.Add(sf);
-            };
             return true;
         }
 
@@ -303,7 +307,7 @@ namespace R2API {
             public SkinDef?[]? BaseSkins;
             public Sprite? Icon;
             public string? NameToken;
-            public string? UnlockableName;
+            public UnlockableDef? UnlockableDef;
             public GameObject? RootObject;
             public CharacterModel.RendererInfo[]? RendererInfos;
             public SkinDef.MeshReplacement[]? MeshReplacements;
@@ -330,7 +334,7 @@ namespace R2API {
 
             newSkin.baseSkins = skin.BaseSkins ?? Array.Empty<SkinDef>();
             newSkin.icon = skin.Icon;
-            newSkin.unlockableName = skin.UnlockableName;
+            newSkin.unlockableDef = skin.UnlockableDef;
             newSkin.rootObject = skin.RootObject;
             newSkin.rendererInfos = skin.RendererInfos ?? Array.Empty<CharacterModel.RendererInfo>();
             newSkin.gameObjectActivations = skin.GameObjectActivations ?? Array.Empty<SkinDef.GameObjectActivation>();
@@ -432,7 +436,7 @@ namespace R2API {
                     Name = "skin" + bodyPrefab.name + "Default",
                     NameToken = bodyPrefab.name.ToUpper() + "_DEFAULT_SKIN_NAME",
                     RootObject = model.gameObject,
-                    UnlockableName = "",
+                    //UnlockableName = "", // todo
                     MeshReplacements = new[]
                     {
                         new SkinDef.MeshReplacement {

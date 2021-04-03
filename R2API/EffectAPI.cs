@@ -3,6 +3,7 @@ using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HG;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -32,20 +33,20 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            On.RoR2.EffectCatalog.GetDefaultEffectDefs += EffectCatalog_GetDefaultEffectDefs;
+            On.RoR2.EffectCatalog.SetEntries += AddAdditionalEntries;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            On.RoR2.EffectCatalog.GetDefaultEffectDefs -= EffectCatalog_GetDefaultEffectDefs;
+            On.RoR2.EffectCatalog.SetEntries -= AddAdditionalEntries;
         }
 
-        private static EffectDef[] EffectCatalog_GetDefaultEffectDefs(On.RoR2.EffectCatalog.orig_GetDefaultEffectDefs orig) {
-            EffectDef[] effects = orig();
+        private static void AddAdditionalEntries(On.RoR2.EffectCatalog.orig_SetEntries orig, EffectDef[] newEntries) {
+            orig(newEntries);
 
-            var effectList = effects.ToList();
+            var effectList = EffectCatalog.entries.ToList();
             GetAdditionalEntries?.Invoke(effectList);
-            return effectList.ToArray();
+            ArrayUtils.CloneTo<EffectDef>(effectList.ToArray(), ref EffectCatalog.entries);
         }
 
         /// <summary>

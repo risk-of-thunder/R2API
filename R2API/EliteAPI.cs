@@ -1,5 +1,4 @@
-﻿using MonoMod.Cil;
-using R2API.Utils;
+﻿using R2API.Utils;
 using RoR2;
 using System;
 using System.Collections.Generic;
@@ -18,9 +17,6 @@ namespace R2API {
 
         private static bool _eliteCatalogInitialized;
 
-        public static int OriginalEliteCount;
-        public static int CustomEliteCount;
-
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -35,48 +31,38 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            IL.RoR2.EliteCatalog.Init += GetOriginalEliteCountHook;
-
-            EliteCatalog.modHelper.getAdditionalEntries += AddEliteAction;
+            R2APIContentPackProvider.WhenContentPackReady += AddElitesToGame;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            IL.RoR2.EliteCatalog.Init -= GetOriginalEliteCountHook;
-
-            EliteCatalog.modHelper.getAdditionalEntries -= AddEliteAction;
+            R2APIContentPackProvider.WhenContentPackReady -= AddElitesToGame;
         }
 
-        private static void GetOriginalEliteCountHook(ILContext il) {
-            var cursor = new ILCursor(il);
+        private static void AddElitesToGame(ContentPack r2apiContentPack) {
+            var eliteDefs = new List<EliteDef>();
 
-            cursor.GotoNext(
-                i => i.MatchLdcI4(out OriginalEliteCount),
-                i => i.MatchNewarr<EliteDef>()
-            );
-        }
-
-        private static void AddEliteAction(List<EliteDef> eliteDefinitions) {
             foreach (var customElite in EliteDefinitions) {
-                eliteDefinitions.Add(customElite.EliteDef);
+                eliteDefs.Add(customElite.EliteDef);
                 var currentEliteTiers = GetCombatDirectorEliteTiers();
                 if (customElite.EliteTier == 1) {
                     var index = currentEliteTiers[1].eliteTypes.Length;
                     Array.Resize(ref currentEliteTiers[1].eliteTypes, index + 1);
-                    currentEliteTiers[1].eliteTypes[index] = customElite.EliteDef.eliteIndex;
+                    currentEliteTiers[1].eliteTypes[index] = customElite.EliteDef;
                     currentEliteTiers[2].eliteTypes = currentEliteTiers[1].eliteTypes;
                 }
                 else {
                     var eliteTierIndex = customElite.EliteTier + 1;
                     var eliteTypeIndex = currentEliteTiers[eliteTierIndex].eliteTypes.Length;
                     Array.Resize(ref currentEliteTiers[eliteTierIndex].eliteTypes, eliteTypeIndex + 1);
-                    currentEliteTiers[eliteTierIndex].eliteTypes[eliteTypeIndex] = customElite.EliteDef.eliteIndex;
+                    currentEliteTiers[eliteTierIndex].eliteTypes[eliteTypeIndex] = customElite.EliteDef;
                 }
                 OverrideCombatDirectorEliteTiers(currentEliteTiers);
 
                 R2API.Logger.LogInfo($"Custom Elite: {customElite.EliteDef.modifierToken} (elite tier: {customElite.EliteTier}) added");
             }
 
+            r2apiContentPack.eliteDefs = eliteDefs.ToArray();
             _eliteCatalogInitialized = true;
         }
 
@@ -87,18 +73,19 @@ namespace R2API {
         /// <summary>
         /// Add a custom elite to the list of available elites.
         /// Value for EliteDef.eliteIndex can be ignored.
-        /// If this is called after the ItemCatalog inits then this will return false and ignore the custom elite.
+        /// We can't give you the EliteIndex anymore in the method return param.
+        /// If this is called after the ItemCatalog inits then this will ignore the custom elite.
         /// </summary>
         /// <param name="elite">The elite to add.</param>
-        /// <returns>the EliteIndex of your item if added. -1 otherwise</returns>
-        public static EliteIndex Add(CustomElite? elite) {
+        /// <returns>true if added, false otherwise</returns>
+        public static bool Add(CustomElite? elite) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
             }
 
             if (_eliteCatalogInitialized) {
                 R2API.Logger.LogError($"Too late ! Tried to add elite: {elite.EliteDef.modifierToken} after the elite list was created");
-                return EliteIndex.None;
+                return false;
             }
 
             var numberOfEliteTiersDefined = GetCombatDirectorEliteTiers().Length - 2;
@@ -106,12 +93,11 @@ namespace R2API {
                 R2API.Logger.LogError(
                     "Incorrect Elite Tier, must be valid: greater than 0 and "
                     + $"within the current elite tier defs range, current number of elite tiers defined : {numberOfEliteTiersDefined}.");
-                return EliteIndex.None;
+                return false;
             }
 
-            elite.EliteDef.eliteIndex = (EliteIndex)OriginalEliteCount + CustomEliteCount++;
             EliteDefinitions.Add(elite);
-            return elite.EliteDef.eliteIndex;
+            return true;
         }
 
         #endregion Add Methods
@@ -179,18 +165,16 @@ namespace R2API {
 
         /// <summary>
         /// You can omit the index references for the EliteDef, as those will be filled in automatically by the API.
-        /// If you are doing an equipment for a custom elite, don't forget to register your CustomEquipment before too to fill the equipmentIndex field !
+        /// You can retrieve a vanilla EquipmentDef through RoR2Content.Equipments class
         /// Also, don't forget to give it a valid eliteTier so that your custom elite correctly get spawned.
         /// You can also make a totally new tier, by using OverrideCombatDirectorEliteTiers for example.
         /// </summary>
-        public CustomElite(string? name, EquipmentIndex equipmentIndex, Color32 color, string? modifierToken, int eliteTier) {
-            EliteDef = new EliteDef {
-                name = name,
-                eliteEquipmentIndex = equipmentIndex,
-                color = color,
-                modifierToken = modifierToken
-            };
-
+        public CustomElite(string? name, EquipmentDef equipmentDef, Color32 color, string? modifierToken, int eliteTier) {
+            EliteDef = ScriptableObject.CreateInstance<EliteDef>();
+            EliteDef.name = name;
+            EliteDef.eliteEquipmentDef = equipmentDef;
+            EliteDef.color = color;
+            EliteDef.modifierToken = modifierToken;
             EliteTier = eliteTier;
         }
 

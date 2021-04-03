@@ -1,9 +1,9 @@
-﻿using Mono.Cecil.Cil;
+﻿using System;
+using System.Collections.Generic;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -84,7 +84,7 @@ namespace R2API {
             Array.Resize(ref _customDotVisuals, _customDotVisuals.Length + 1);
             _customDotVisuals[customArrayIndex] = customDotVisual;
 
-            R2API.Logger.LogInfo($"Custom Dot that uses Buff Index: {(int)dotDef.associatedBuff} added");
+            R2API.Logger.LogInfo($"Custom Dot that uses Buff Index: {(int)dotDef.associatedBuff.buffIndex} added");
             return (DotController.DotIndex)dotDefIndex;
         }
 
@@ -100,7 +100,7 @@ namespace R2API {
         /// <param name="customDotVisual"></param>
         /// <returns></returns>
         public static DotController.DotIndex RegisterDotDef(float interval, float damageCoefficient,
-            DamageColorIndex colorIndex, BuffIndex associatedBuff, CustomDotBehaviour customDotBehaviour = null,
+            DamageColorIndex colorIndex, BuffDef associatedBuff, CustomDotBehaviour customDotBehaviour = null,
             CustomDotVisual customDotVisual = null) {
             var dotDef = new DotController.DotDef {
                 associatedBuff = associatedBuff,
@@ -201,37 +201,30 @@ namespace R2API {
             int dotStackLoc = 0;
 
             // ReSharper disable once InconsistentNaming
-            void ILFailMessage() {
+            static void ILFailMessage(int index) {
                 R2API.Logger.LogError(
-                    "Failed finding IL Instructions. Aborting OnAddDot IL Hook");
+                    $"Failed finding IL Instructions. Aborting OnAddDot IL Hook {index}");
             }
 
-            if (c.TryGotoNext(
-                i => i.MatchBlt(out _),
-                i => i.MatchRet())) {
-                c.Index++;
-                c.Next.OpCode = OpCodes.Nop;
+            if (c.TryGotoNext(MoveType.After,
+                i => i.MatchLdsfld<DotController>("dotStackPool"),
+                i => i.MatchCallOrCallvirt(out _),
+                i => i.MatchStloc(out dotStackLoc))) {
+                if (c.TryGotoNext(
+                    i => i.MatchLdarg(out _),
+                    i => i.MatchSwitch(out _))) {
+                    c.Emit(OpCodes.Ldarg_0);
+                    c.Emit(OpCodes.Ldloc, dotStackLoc);
+                    c.EmitDelegate<Action<DotController, DotController.DotStack>>((self, dotStack) => {
+                        if ((int)dotStack.dotIndex >= VanillaDotCount) {
+                            var customDotIndex = (int)dotStack.dotIndex - VanillaDotCount;
+                            _customDotBehaviours[customDotIndex]?.Invoke(self, dotStack);
+                        }
+                    });
+                }
             }
             else {
-                ILFailMessage();
-            }
-
-            if (c.TryGotoNext(
-                i => i.MatchStloc(out dotStackLoc),
-                i => i.MatchLdarg(out _),
-                i => i.MatchSwitch(out _))) {
-                c.Index++;
-                c.Emit(OpCodes.Ldarg_0);
-                c.Emit(OpCodes.Ldloc, dotStackLoc);
-                c.EmitDelegate<Action<DotController, DotController.DotStack>>((self, dotStack) => {
-                    if ((int)dotStack.dotIndex >= VanillaDotCount) {
-                        var customDotIndex = (int)dotStack.dotIndex - VanillaDotCount;
-                        _customDotBehaviours[customDotIndex]?.Invoke(self, dotStack);
-                    }
-                });
-            }
-            else {
-                ILFailMessage();
+                ILFailMessage(1);
             }
         }
 
