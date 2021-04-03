@@ -41,9 +41,9 @@ namespace R2API {
             On.RoR2.RoR2Application.OnLoad += AddBanksToGame;
         }
 
-        private static System.Collections.IEnumerator AddBanksToGame(On.RoR2.RoR2Application.orig_OnLoad orig, RoR2Application self) {
+        private static void AddBanksToGame(On.RoR2.RoR2Application.orig_OnLoad orig, RoR2Application self) {
             LoadBanks();
-            yield return orig(self);
+            orig(self);
         }
 
         [R2APISubmoduleInit(Stage = InitStage.LoadCheck)]
