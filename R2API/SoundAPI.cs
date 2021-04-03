@@ -61,9 +61,13 @@ namespace R2API {
         /// </summary>
         private static void LoadBanks() {
             var failedBanks = new List<SoundBanks.Bank>();
+            var loadedABank = false;
             foreach (var bank in SoundBanks.soundBanks) {
                 if (!bank.Load()) {
                     failedBanks.Add(bank);
+                }
+                else {
+                    loadedABank = true;
                 }
             }
 
@@ -72,7 +76,10 @@ namespace R2API {
             }
 
             SoundBanks.Loaded = true;
-            R2API.Logger.LogInfo("Custom sound banks loaded.");
+
+            if (loadedABank) {
+                R2API.Logger.LogInfo("Custom sound banks loaded.");
+            }
         }
 
         /// <summary>
