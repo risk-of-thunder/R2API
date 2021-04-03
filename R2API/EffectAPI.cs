@@ -13,7 +13,6 @@ namespace R2API {
 
     [R2APISubmodule]
     public static class EffectAPI {
-
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -26,27 +25,24 @@ namespace R2API {
 
         private static bool _loaded;
 
-        /// <summary>
-        /// Mimics events found in CatalogModHelpers, can be used to add or sort effects.
-        /// </summary>
-        public static event Action<List<EffectDef>>? GetAdditionalEntries;
+        private static readonly List<EffectDef> AddedEffects = new List<EffectDef>();
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            On.RoR2.EffectCatalog.SetEntries += AddAdditionalEntries;
+            R2APIContentPackProvider.WhenContentPackReady += AddAdditionalEntries;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            On.RoR2.EffectCatalog.SetEntries -= AddAdditionalEntries;
+            R2APIContentPackProvider.WhenContentPackReady -= AddAdditionalEntries;
         }
 
-        private static void AddAdditionalEntries(On.RoR2.EffectCatalog.orig_SetEntries orig, EffectDef[] newEntries) {
-            orig(newEntries);
+        private static void AddAdditionalEntries(ContentPack r2apiContentPack) {
+            foreach (var customEffect in AddedEffects) {
+                R2API.Logger.LogInfo($"Custom Effect: {customEffect.prefabName} added");
+            }
 
-            var effectList = EffectCatalog.entries.ToList();
-            GetAdditionalEntries?.Invoke(effectList);
-            ArrayUtils.CloneTo<EffectDef>(effectList.ToArray(), ref EffectCatalog.entries);
+            r2apiContentPack.effectDefs = AddedEffects.ToArray();
         }
 
         /// <summary>
@@ -103,7 +99,7 @@ namespace R2API {
                 return false;
             }
 
-            GetAdditionalEntries += list => list.Add(effect);
+            AddedEffects.Add(effect);
             return true;
         }
     }

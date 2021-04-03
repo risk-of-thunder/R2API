@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using MonoMod.RuntimeDetour;
 using R2API.Utils;
 using RoR2;
 using System;
@@ -37,13 +38,17 @@ namespace R2API {
                 SoundBanks.Add(file);
             }
 
-            //for bank loading
-            On.RoR2.RoR2Application.OnLoad += AddBanksToGame;
+            _ = new Hook(
+                typeof(AkWwiseInitializationSettings).GetMethodCached(nameof(AkWwiseInitializationSettings.InitializeSoundEngine)),
+                typeof(SoundAPI).GetMethodCached(nameof(AddBanksAfterEngineInit)));
         }
 
-        private static void AddBanksToGame(On.RoR2.RoR2Application.orig_OnLoad orig, RoR2Application self) {
+        private static bool AddBanksAfterEngineInit(Func<bool> orig) {
+            var res = orig();
+
             LoadBanks();
-            orig(self);
+
+            return res;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.LoadCheck)]
@@ -52,14 +57,18 @@ namespace R2API {
         }
 
         /// <summary>
-        /// Loads all the banks, can only be called once and after RoR2.RoR2Application.OnLoad because of the initialization of the init bank
+        /// Loads all the banks, called after wwise engine init
         /// </summary>
         private static void LoadBanks() {
             var failedBanks = new List<SoundBanks.Bank>();
+            var loadedABank = false;
             foreach (var bank in SoundBanks.soundBanks) {
                 if (!bank.Load()) {
                     failedBanks.Add(bank);
-                };
+                }
+                else {
+                    loadedABank = true;
+                }
             }
 
             foreach (var bank in failedBanks) {
@@ -67,6 +76,10 @@ namespace R2API {
             }
 
             SoundBanks.Loaded = true;
+
+            if (loadedABank) {
+                R2API.Logger.LogInfo("Custom sound banks loaded.");
+            }
         }
 
         /// <summary>
