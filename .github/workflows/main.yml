@@ -11,17 +11,15 @@ jobs:
       run: |
           git fetch --tags
           git branch --create-reflog master origin/master
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.9
+    - name: GitVersion
+      id: gitversion
+      uses: nmcc/actions/gitversion@v1
       with:
-          versionSpec: '5.1.x'
-    - name: Use GitVersion
-      id: gitversion # step id used as reference for output values
-      uses: gittools/actions/gitversion/execute@v0.9.9
-    - run: |
-        echo "Major: ${{ steps.gitversion.outputs.major }}"
-        echo "Minor: ${{ steps.gitversion.outputs.minor }}"
-        echo "Patch: ${{ steps.gitversion.outputs.patch }}"
+        path-to-gitversion: packages/GitVersion.CommandLine/tools/GitVersion.exe
+    - name: Create Release
+      uses: actions/create-release@v1
+      with:
+          tag_name: ${{ steps.gitversion.outputs.SemVer }}
     - name: Run Tests
       run: |
         dotnet test
