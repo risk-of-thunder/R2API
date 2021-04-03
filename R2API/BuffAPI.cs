@@ -1,5 +1,4 @@
-﻿using MonoMod.Cil;
-using R2API.Utils;
+﻿using R2API.Utils;
 using RoR2;
 using System;
 using System.Collections.Generic;
@@ -22,16 +21,6 @@ namespace R2API {
         private static bool _buffCatalogInitialized;
 
         /// <summary>
-        /// The original buff count of the game.
-        /// </summary>
-        public static int OriginalBuffCount;
-
-        /// <summary>
-        /// Amount of custom Buffs added by R2API
-        /// </summary>
-        public static int CustomBuffCount;
-
-        /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
         public static bool Loaded {
@@ -45,34 +34,23 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            IL.RoR2.BuffCatalog.Init += GetOriginalBuffCountHook;
-
-            BuffCatalog.modHelper.getAdditionalEntries += AddBuffAction;
+            R2APIContentPackProvider.WhenContentPackReady += AddBuffsToGame;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            IL.RoR2.BuffCatalog.Init -= GetOriginalBuffCountHook;
-
-            BuffCatalog.modHelper.getAdditionalEntries -= AddBuffAction;
+            R2APIContentPackProvider.WhenContentPackReady -= AddBuffsToGame;
         }
 
-        private static void GetOriginalBuffCountHook(ILContext il) {
-            var cursor = new ILCursor(il);
-
-            cursor.GotoNext(
-                i => i.MatchLdcI4(out OriginalBuffCount),
-                i => i.MatchNewarr<BuffDef>()
-            );
-        }
-
-        private static void AddBuffAction(List<BuffDef> buffDefinitions) {
+        private static void AddBuffsToGame(ContentPack r2apiContentPack) {
+            var buffDefs = new List<BuffDef>();
             foreach (var customBuff in BuffDefinitions) {
-                buffDefinitions.Add(customBuff.BuffDef);
+                buffDefs.Add(customBuff.BuffDef);
 
                 R2API.Logger.LogInfo($"Custom Buff: {customBuff.BuffDef.name} added");
             }
 
+            r2apiContentPack.buffDefs = buffDefs.ToArray();
             _buffCatalogInitialized = true;
         }
 
@@ -83,11 +61,12 @@ namespace R2API {
         /// <summary>
         /// Add a custom buff to the list of available buffs.
         /// Value for BuffDef.buffIndex can be ignored.
+        /// We can't give you the buffIndex anymore in the method return param. Instead use BuffCatalog.FindBuffIndex (after catalog are init)
         /// If this is called after the BuffCatalog inits then this will return false and ignore the custom buff.
         /// </summary>
         /// <param name="buff">The buff to add.</param>
-        /// <returns>the BuffIndex of your item if added. -1 otherwise</returns>
-        public static BuffIndex Add(CustomBuff? buff) {
+        /// <returns>true if added, false otherwise</returns>
+        public static bool Add(CustomBuff? buff) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(BuffAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(BuffAPI)})]");
             }
@@ -95,12 +74,11 @@ namespace R2API {
             if (_buffCatalogInitialized) {
                 R2API.Logger.LogError(
                     $"Too late ! Tried to add buff: {buff.BuffDef.name} after the buff list was created");
-                return BuffIndex.None;
+                return false;
             }
 
-            buff.BuffDef.buffIndex = (BuffIndex)OriginalBuffCount + CustomBuffCount++;
             BuffDefinitions.Add(buff);
-            return buff.BuffDef.buffIndex;
+            return true;
         }
 
         #endregion Add Methods
