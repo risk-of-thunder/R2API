@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Mono.Cecil.Cil;
@@ -61,23 +62,27 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            On.RoR2.RoR2Application.LoadGameContent += AddSurvivorsToGame;
+            R2APIContentPackProvider.WhenContentPackReady += AddSurvivorsToGame;
             IL.RoR2.CharacterSelectBarController.Build += DescriptionTokenSafetyCheck;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            On.RoR2.RoR2Application.LoadGameContent -= AddSurvivorsToGame;
+            R2APIContentPackProvider.WhenContentPackReady -= AddSurvivorsToGame;
             IL.RoR2.CharacterSelectBarController.Build -= DescriptionTokenSafetyCheck;
         }
 
-        private static System.Collections.IEnumerator AddSurvivorsToGame(On.RoR2.RoR2Application.orig_LoadGameContent orig, RoR2Application self) {
+        private static void AddSurvivorsToGame(ContentPack r2apiContentPack) {
+            var survivorsDefs = new List<SurvivorDef>();
+
+            foreach (var customSurvivor in SurvivorDefinitions) {
+                survivorsDefs.Add(customSurvivor);
+
+                R2API.Logger.LogInfo($"Custom Survivor: {customSurvivor.cachedName} added");
+            }
+
+            r2apiContentPack.bodyPrefabs = SurvivorBodyPrefabs.ToArray();
             _survivorsAlreadyAdded = true;
-
-            R2APIContentPackProvider.ContentPack.bodyPrefabs.Add(SurvivorBodyPrefabs.ToArray());
-            R2APIContentPackProvider.ContentPack.survivorDefs.Add(SurvivorDefinitions.ToArray());
-
-            yield return orig(self);
         }
 
         // Add a safety check for SurvivorDef that are lacking
@@ -89,9 +94,9 @@ namespace R2API {
             int locDescriptionToken = 0;
 
             // ReSharper disable once InconsistentNaming
-            static void ILFailMessage() {
+            static void ILFailMessage(int index) {
                 R2API.Logger.LogError(
-                    $"{nameof(SurvivorAPI)}: Safety Check: Could not find IL Instructions. " +
+                    $"{nameof(SurvivorAPI)}: Safety Check: Could not find IL Instructions ({index}). " +
                     "Aborting. Instabilities related to custom Survivors may, or may not happens.");
             }
 
@@ -105,13 +110,7 @@ namespace R2API {
             if (!c.TryGotoNext(MoveType.After,
                 findLocSurvivorDef
             )) {
-                ILFailMessage();
-                return;
-            }
-            if (!c.TryGotoNext(MoveType.After,
-                findLocSurvivorDef
-            )) {
-                ILFailMessage();
+                ILFailMessage(1);
                 return;
             }
 
@@ -140,7 +139,7 @@ namespace R2API {
                 });
             }
             else {
-                ILFailMessage();
+                ILFailMessage(3);
             }
         }
     }
