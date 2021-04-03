@@ -33,17 +33,17 @@ jobs:
       run: |
         mkdir plugins
         mkdir plugins/R2API
-        mkdir monomod
+        mkdir patchers
         cp R2API/bin/Debug/netstandard2.0/*.dll plugins/R2API/
         cp R2API/bin/Debug/netstandard2.0/*.xml plugins/R2API/
-        cp R2API.MonoMod/bin/Debug/netstandard2.0/*.mm.dll monomod/
+        cp R2API.Patcher/bin/Debug/netstandard2.0/*.Patcher.dll patchers/
     - name: Upload R2API Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: R2API
         path: |
           plugins/*
-          monomod/*
+          patchers/*
           manifest.json
           icon.png
           README.md
