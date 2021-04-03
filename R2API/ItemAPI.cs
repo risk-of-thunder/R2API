@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -230,7 +231,11 @@ namespace R2API {
 		private static void AddingItemDisplayRulesToCharacterModels(object _, EventArgs __) {
             foreach (var bodyPrefab in BodyCatalog.allBodyPrefabs) {
                 var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
-                if (characterModel != null && characterModel.itemDisplayRuleSet != null) {
+                if (characterModel != null) {
+                    if (!characterModel.itemDisplayRuleSet) {
+                        characterModel.itemDisplayRuleSet = ScriptableObject.CreateInstance<ItemDisplayRuleSet>();
+                    }
+
                     foreach (var customItem in ItemDefinitions) {
                         var customRules = customItem.ItemDisplayRules;
                         if (customRules != null) {
