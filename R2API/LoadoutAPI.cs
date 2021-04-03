@@ -32,6 +32,8 @@ namespace R2API {
 
         #region Submodule Hooks
 
+        private static readonly HashSet<Type> AddedStateTypes = new HashSet<Type>();
+
         private static readonly HashSet<SkillDef> AddedSkills = new HashSet<SkillDef>();
         private static readonly HashSet<SkillFamily> AddedSkillFamilies = new HashSet<SkillFamily>();
         private static readonly HashSet<SkinDef> AddedSkins = new HashSet<SkinDef>();
@@ -65,6 +67,8 @@ namespace R2API {
         }
 
         private static void AddSkillsToGame(ContentPack r2apiContentPack) {
+            r2apiContentPack.entityStateTypes = AddedStateTypes.ToArray();
+
             r2apiContentPack.skillDefs = AddedSkills.ToArray();
             r2apiContentPack.skillFamilies = AddedSkillFamilies.ToArray();
         }
@@ -89,10 +93,7 @@ namespace R2API {
         private static Assembly _ror2Assembly;
 
         internal static void Set_stateType_Hook(ref SerializableEntityStateType self, Type value) =>
-            self.SetStructFieldValue("_typeName",
-            IsValidEntityStateType(value)
-            ? value.AssemblyQualifiedName
-            : "");
+            self._typeName = IsValidEntityStateType(value) ? value.AssemblyQualifiedName : "";
 
         internal static void Set_typeName_Hook(ref SerializableEntityStateType self, string value) =>
             Set_stateType_Hook(ref self, Type.GetType(value) ?? GetTypeAllAssemblies(value));
@@ -141,19 +142,8 @@ namespace R2API {
                 R2API.Logger.LogError("Invalid skill type.");
                 return false;
             }
-            var stateTab = typeof(EntityState).Assembly.GetType("EntityStates.StateIndexTable");
-            var id2State = stateTab.GetFieldValue<Type[]>("stateIndexToType");
-            var name2Id = stateTab.GetFieldValue<string[]>("stateIndexToTypeName");
-            var state2Id = stateTab.GetFieldValue<Dictionary<Type, short>>("stateTypeToIndex");
-            int ogNum = id2State.Length;
-            Array.Resize(ref id2State, ogNum + 1);
-            Array.Resize(ref name2Id, ogNum + 1);
-            id2State[ogNum] = t;
-            name2Id[ogNum] = t.AssemblyQualifiedName;
-            state2Id[t] = (short)ogNum;
-            stateTab.SetFieldValue("stateIndexToType", id2State);
-            stateTab.SetFieldValue("stateIndexToTypeName", name2Id);
-            stateTab.SetFieldValue("stateTypeToIndex", state2Id);
+
+            AddedStateTypes.Add(t);
             return true;
         }
 
