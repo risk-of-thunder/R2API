@@ -11,17 +11,19 @@ jobs:
       run: |
           git fetch --tags
           git branch --create-reflog master origin/master
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
+    - name: Git Version
+      # You may pin to the exact commit or the version.
+      # uses: codacy/git-version@fa06788276d7492a2af01662649696d249ecf4cb
+      uses: codacy/git-version@2.4.0
       with:
-          versionSpec: '5.1.x'
-    - name: Use GitVersion
-      id: gitversion # step id used as reference for output values
-      uses: gittools/actions/gitversion/execute@v0.9.7
-    - run: |
-        echo "Major: ${{ steps.gitversion.outputs.major }}"
-        echo "Minor: ${{ steps.gitversion.outputs.minor }}"
-        echo "Patch: ${{ steps.gitversion.outputs.patch }}"
+        # The name of the release branch
+        release-branch: # default is master
+        # The name of the dev branch
+        dev-branch: # default is dev
+        # The prefix to use in the version
+        prefix: # optional
+        # The paths to be used to calculate changes (comma-separated)
+        log-paths: # optional, default is ./
     - name: Run Tests
       run: |
         dotnet test

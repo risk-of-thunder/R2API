@@ -55,8 +55,15 @@ namespace R2API {
         /// Loads all the banks, can only be called once and after RoR2.RoR2Application.OnLoad because of the initialization of the init bank
         /// </summary>
         private static void LoadBanks() {
+            var failedBanks = new List<SoundBanks.Bank>();
             foreach (var bank in SoundBanks.soundBanks) {
-                bank.Load();
+                if (!bank.Load()) {
+                    failedBanks.Add(bank);
+                };
+            }
+
+            foreach (var bank in failedBanks) {
+                SoundBanks.soundBanks.Remove(bank);
             }
 
             SoundBanks.Loaded = true;
@@ -78,9 +85,12 @@ namespace R2API {
             /// <param name="bank">byte array of the entire .bnk file</param>
             public static uint Add(byte[]? bank) {
                 var bankToAdd = new Bank(bank);
-                soundBanks.Add(bankToAdd);
                 if (Loaded) {
-                    bankToAdd.Load();
+                    if (bankToAdd.Load()) {
+                        soundBanks.Add(bankToAdd);
+                    }
+                } else {
+                    soundBanks.Add(bankToAdd);
                 }
                 return bankToAdd.PublicID;
             }
@@ -143,7 +153,8 @@ namespace R2API {
                 /// <summary>
                 /// Loads the bank into the wwise engine
                 /// </summary>
-                internal void Load() {
+                /// <returns>True if the bank successfully loaded, false otherwise</returns>
+                internal bool Load() {
                     //Creates IntPtr of sufficient size.
                     Memory = Marshal.AllocHGlobal(BankData.Length);
 
@@ -154,11 +165,12 @@ namespace R2API {
                     var result = AkSoundEngine.LoadBank(Memory, (uint)BankData.Length, out BankID);
                     if (result != AKRESULT.AK_Success) {
                         Debug.LogError("WwiseUnity: AkMemBankLoader: bank loading failed with result " + result);
-                        soundBanks.Remove(this);
+                        return false;
                     }
 
                     //BankData is now copied to Memory so is unnecassary
                     BankData = null;
+                    return true;
                 }
 
                 /// <summary>
