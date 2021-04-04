@@ -35,6 +35,7 @@ jobs:
         mkdir plugins/R2API
         mkdir patchers
         cp Patchers/**/*.dll patchers
+        cp Patchers/**/*.exe patchers
         cp R2API/bin/Debug/netstandard2.0/*.dll plugins/R2API/
         cp R2API/bin/Debug/netstandard2.0/*.xml plugins/R2API/
         cp R2API.Patcher/bin/Debug/netstandard2.0/*.Patcher.dll patchers/
