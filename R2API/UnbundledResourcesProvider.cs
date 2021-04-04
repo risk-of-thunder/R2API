@@ -10,6 +10,7 @@ namespace R2API {
     /// <summary>
     /// This class allows loading of resources not stored in an assetbundle with Resources.Load. Primary use would be for generating an item icon in code.
     /// </summary>
+    [Obsolete("Made unnecessary by the Anniversary Update, please move to loading directly from your asset bundle")]
     public sealed class UnbundledResourcesProvider : IResourceProvider {
         private readonly Dictionary<Type, Dictionary<string, UnityObject>> typedResources = new Dictionary<Type, Dictionary<string, UnityObject>>();
 

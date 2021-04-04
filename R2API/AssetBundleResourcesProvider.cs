@@ -8,6 +8,7 @@ namespace R2API {
     /// <summary>
     /// This class provides a wrapper around an AssetBundle for integrating it into the regular Unity Resources library
     /// </summary>
+    [Obsolete("Made unnecessary by the Anniversary Update, please move to loading directly from your asset bundle")]
     public sealed class AssetBundleResourcesProvider : IResourceProvider {
         private readonly AssetBundle _bundle;
 
@@ -30,6 +31,7 @@ namespace R2API {
         /// <param name="path">The path to the asset</param>
         /// <param name="type">The type of the asset to find</param>
         /// <returns>object of type <paramref name="type"/></returns>
+        [Obsolete]
         public Object Load(string? path, Type? type) {
             return _bundle.LoadAsset(ToBundlePath(path), type);
         }
@@ -40,6 +42,7 @@ namespace R2API {
         /// <param name="path">the path to the asset</param>
         /// <param name="type">the type of the asset to find</param>
         /// <returns>object of type <paramref name="type"/></returns>
+        [Obsolete]
         public ResourceRequest LoadAsync(string? path, Type? type) {
             var req = new ResourceRequest();
             var bundleReq = _bundle.LoadAssetAsync(ToBundlePath(path), type);
@@ -54,15 +57,17 @@ namespace R2API {
             return req;
         }
 
-        /// <summary>
+        /// <summary>9
         /// Load all assets in this assetbundle that are assignable from the specified type.
         /// </summary>
         /// <param name="type">The type to match</param>
         /// <returns>Array of the type</returns>
+        [Obsolete]
         public Object[] LoadAll(Type? type) {
             return _bundle.LoadAllAssets(type);
         }
 
+        [Obsolete]
         private string ToBundlePath(string path) {
             var split = path.Split(':');
             if (split.Length != 2)
