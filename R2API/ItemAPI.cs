@@ -5,7 +5,6 @@ using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Xml.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -281,6 +280,58 @@ namespace R2API {
             ItemDef = itemDef;
             ItemDisplayRules = itemDisplayRules;
         }
+
+        public CustomItem(string name, string nameToken,
+            string descriptionToken, string loreToken,
+            string pickupToken,
+            Sprite pickupIconSprite, GameObject pickupModelPrefab,
+            ItemTag[] tags, ItemTier tier,
+            bool hidden,
+            bool canRemove,
+            UnlockableDef unlockableDef,
+            ItemDisplayRule[]? itemDisplayRules) {
+            ItemDef = ScriptableObject.CreateInstance<ItemDef>();
+            ItemDef.canRemove = canRemove;
+            ItemDef.descriptionToken = descriptionToken;
+            ItemDef.hidden = hidden;
+            ItemDef.loreToken = loreToken;
+            ItemDef.name = name;
+            ItemDef.nameToken = nameToken;
+            ItemDef.pickupIconSprite = pickupIconSprite;
+            ItemDef.pickupModelPrefab = pickupModelPrefab;
+            ItemDef.pickupToken = pickupToken;
+            ItemDef.tags = tags;
+            ItemDef.tier = tier;
+            ItemDef.unlockableDef = unlockableDef;
+
+            ItemDisplayRules = new ItemDisplayRuleDict(itemDisplayRules);
+        }
+
+        public CustomItem(string name, string nameToken,
+            string descriptionToken, string loreToken,
+            string pickupToken,
+            Sprite pickupIconSprite, GameObject pickupModelPrefab,
+            ItemTier tier, ItemTag[] tags,
+            bool canRemove,
+            bool hidden,
+            UnlockableDef unlockableDef = null,
+            ItemDisplayRuleDict? itemDisplayRules = null) {
+            ItemDef = ScriptableObject.CreateInstance<ItemDef>();
+            ItemDef.canRemove = canRemove;
+            ItemDef.descriptionToken = descriptionToken;
+            ItemDef.hidden = hidden;
+            ItemDef.loreToken = loreToken;
+            ItemDef.name = name;
+            ItemDef.nameToken = nameToken;
+            ItemDef.pickupIconSprite = pickupIconSprite;
+            ItemDef.pickupModelPrefab = pickupModelPrefab;
+            ItemDef.pickupToken = pickupToken;
+            ItemDef.tags = tags;
+            ItemDef.tier = tier;
+            ItemDef.unlockableDef = unlockableDef;
+
+            ItemDisplayRules = itemDisplayRules;
+        }
     }
 
     public class CustomEquipment {
@@ -294,6 +345,76 @@ namespace R2API {
 
         public CustomEquipment(EquipmentDef? equipmentDef, ItemDisplayRuleDict? itemDisplayRules) {
             EquipmentDef = equipmentDef;
+            ItemDisplayRules = itemDisplayRules;
+        }
+
+        public CustomEquipment(string name, string nameToken,
+            string descriptionToken, string loreToken,
+            string pickupToken,
+            Sprite pickupIconSprite, GameObject pickupModelPrefab,
+            float cooldown,
+            bool canDrop,
+            bool enigmaCompatible,
+            bool isBoss, bool isLunar,
+            BuffDef passiveBuffDef,
+            UnlockableDef unlockableDef,
+            ColorCatalog.ColorIndex colorIndex = ColorCatalog.ColorIndex.Equipment,
+            bool appearsInMultiPlayer = true, bool appearsInSinglePlayer = true,
+            ItemDisplayRule[]? itemDisplayRules = null) {
+            EquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
+            EquipmentDef.appearsInMultiPlayer = appearsInMultiPlayer;
+            EquipmentDef.appearsInSinglePlayer = appearsInSinglePlayer;
+            EquipmentDef.canDrop = canDrop;
+            EquipmentDef.colorIndex = colorIndex;
+            EquipmentDef.cooldown = cooldown;
+            EquipmentDef.descriptionToken = descriptionToken;
+            EquipmentDef.enigmaCompatible = enigmaCompatible;
+            EquipmentDef.isBoss = isBoss;
+            EquipmentDef.isLunar = isLunar;
+            EquipmentDef.loreToken = loreToken;
+            EquipmentDef.name = name;
+            EquipmentDef.nameToken = nameToken;
+            EquipmentDef.passiveBuffDef = passiveBuffDef;
+            EquipmentDef.pickupIconSprite = pickupIconSprite;
+            EquipmentDef.pickupModelPrefab = pickupModelPrefab;
+            EquipmentDef.pickupToken = pickupToken;
+            EquipmentDef.unlockableDef = unlockableDef;
+
+            ItemDisplayRules = new ItemDisplayRuleDict(itemDisplayRules);
+        }
+
+        public CustomEquipment(string name, string nameToken,
+            string descriptionToken, string loreToken,
+            string pickupToken,
+            Sprite pickupIconSprite, GameObject pickupModelPrefab,
+            float cooldown,
+            bool canDrop,
+            bool enigmaCompatible,
+            bool isBoss, bool isLunar,
+            BuffDef passiveBuffDef,
+            UnlockableDef unlockableDef,
+            ColorCatalog.ColorIndex colorIndex = ColorCatalog.ColorIndex.Equipment,
+            bool appearsInMultiPlayer = true, bool appearsInSinglePlayer = true,
+            ItemDisplayRuleDict? itemDisplayRules = null) {
+            EquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
+            EquipmentDef.appearsInMultiPlayer = appearsInMultiPlayer;
+            EquipmentDef.appearsInSinglePlayer = appearsInSinglePlayer;
+            EquipmentDef.canDrop = canDrop;
+            EquipmentDef.colorIndex = colorIndex;
+            EquipmentDef.cooldown = cooldown;
+            EquipmentDef.descriptionToken = descriptionToken;
+            EquipmentDef.enigmaCompatible = enigmaCompatible;
+            EquipmentDef.isBoss = isBoss;
+            EquipmentDef.isLunar = isLunar;
+            EquipmentDef.loreToken = loreToken;
+            EquipmentDef.name = name;
+            EquipmentDef.nameToken = nameToken;
+            EquipmentDef.passiveBuffDef = passiveBuffDef;
+            EquipmentDef.pickupIconSprite = pickupIconSprite;
+            EquipmentDef.pickupModelPrefab = pickupModelPrefab;
+            EquipmentDef.pickupToken = pickupToken;
+            EquipmentDef.unlockableDef = unlockableDef;
+
             ItemDisplayRules = itemDisplayRules;
         }
     }
