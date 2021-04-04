@@ -14,6 +14,7 @@
     <ItemGroup>
       <Reference Include="BepInEx">
         <HintPath>..\R2API\libs\BepInEx.dll</HintPath>
+        <Private>false</Private>
       </Reference>
     </ItemGroup>
 
