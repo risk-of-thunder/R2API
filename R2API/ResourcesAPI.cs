@@ -93,12 +93,15 @@ namespace R2API {
                 throw new InvalidOperationException($"Given {nameof(IResourceProvider)} is null.");
             }
 
-            if (provider.ModPrefix != null) {
-                Providers.Add(provider.ModPrefix, provider);
-            }
-            else {
+            if (provider.ModPrefix == null) {
                 throw new InvalidOperationException($"Given {nameof(IResourceProvider)}.{nameof(provider.ModPrefix)} is null.");
             }
+
+            if (!provider.ModPrefix.StartsWith("@")) {
+                throw new InvalidOperationException($"{nameof(IResourceProvider)}.{nameof(provider.ModPrefix)} value should start with '@' e.g. \"@ModPrefix\"");
+            }
+
+            Providers.Add(provider.ModPrefix, provider);
         }
 
         private static Object OnResourcesLoad(string? path, Type type) {
@@ -112,7 +115,8 @@ namespace R2API {
         private static Object ModResourcesLoad(string path, Type type) {
             var split = path.Split(':');
             if (!Providers.TryGetValue(split[0], out var provider)) {
-                R2API.Logger.LogError($"Modded resource paths must be of the form '@ModName:Path/To/Asset.ext'; provided path was '{path}'");
+                R2API.Logger.LogError($"Provider `{split[0]}` was not found");
+                return null;
             }
 
             return provider.Load(path, type);
@@ -129,7 +133,8 @@ namespace R2API {
         private static ResourceRequest ModResourcesLoadAsync(string path, Type type) {
             var split = path.Split(':');
             if (!Providers.TryGetValue(split[0], out var provider)) {
-                R2API.Logger.LogError($"Modded resource paths must be of the form '@ModName:Path/To/Asset.ext'; provided path was '{path}'");
+                R2API.Logger.LogError($"Provider `{split[0]}` was not found");
+                return null;
             }
 
             return provider.LoadAsync(path, type);
@@ -146,7 +151,8 @@ namespace R2API {
         private static Object[] ModResourcesLoadAll(string path, Type type) {
             var split = path.Split(':');
             if (!Providers.TryGetValue(split[0], out var provider)) {
-                R2API.Logger.LogError($"Modded resource paths must be of the form '@ModName:Path/To/Asset.ext'; provided path was '{path}'");
+                R2API.Logger.LogError($"Provider `{split[0]}` was not found");
+                return Array.Empty<Object>();
             }
 
             return provider.LoadAll(type);
