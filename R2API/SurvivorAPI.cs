@@ -73,16 +73,12 @@ namespace R2API {
         }
 
         private static void AddSurvivorsToGame(ContentPack r2apiContentPack) {
-            var survivorsDefs = new List<SurvivorDef>();
-
             foreach (var customSurvivor in SurvivorDefinitions) {
-                survivorsDefs.Add(customSurvivor);
-
                 R2API.Logger.LogInfo($"Custom Survivor: {customSurvivor.cachedName} added");
             }
 
             r2apiContentPack.bodyPrefabs = SurvivorBodyPrefabs.ToArray();
-            r2apiContentPack.survivorDefs = survivorsDefs.ToArray();
+            r2apiContentPack.survivorDefs = SurvivorDefinitions.ToArray();
             _survivorsAlreadyAdded = true;
         }
 
