@@ -26,8 +26,8 @@ namespace R2API {
 
         private static bool _survivorsAlreadyAdded;
 
-        public static ObservableCollection<GameObject?>? SurvivorBodyPrefabs = new ObservableCollection<GameObject?>();
-        public static ObservableCollection<SurvivorDef?>? SurvivorDefinitions = new ObservableCollection<SurvivorDef?>();
+        private static List<GameObject> SurvivorBodyPrefabs = new List<GameObject>();
+        public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
 
         /// <summary>
         /// Add a SurvivorDef to the list of available survivors.
@@ -82,6 +82,7 @@ namespace R2API {
             }
 
             r2apiContentPack.bodyPrefabs = SurvivorBodyPrefabs.ToArray();
+            r2apiContentPack.survivorDefs = survivorsDefs.ToArray();
             _survivorsAlreadyAdded = true;
         }
 
