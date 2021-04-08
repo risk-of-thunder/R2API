@@ -11,9 +11,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using UnityEngine;
 
 namespace R2API {
 
@@ -30,6 +29,7 @@ namespace R2API {
         private const int GameBuild = 6427269;
 
         internal new static ManualLogSource Logger { get; set; }
+        public static bool DebugMode { get; private set; } = false;
 
         internal static DetourModManager ModManager;
 
@@ -47,6 +47,10 @@ namespace R2API {
             CheckR2APIPatch();
 
             Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
+
+            if (Environment.GetEnvironmentVariable("R2API_DEBUG") == "true") {
+                EnableDebug();
+            }
 
             On.RoR2.UnitySystemConsoleRedirector.Redirect += orig => { };
 
@@ -72,6 +76,25 @@ namespace R2API {
             IL.RoR2.RoR2Application.OnLoad += TakeOurInstanceInstead;
 
             R2APIContentPackProvider.Init();
+        }
+
+        private static void EnableDebug() {
+            DebugMode = true;
+
+            Logger.LogBlockWarning(new[] { "R2API IS IN DEBUG MODE. ONLY USE IF YOU KNOW WHAT YOU ARE DOING" });
+        }
+
+        private static void DebugUpdate() {
+
+        }
+
+        /// <summary>
+        /// Logs caller information along side debug message
+        /// </summary>
+        /// <param name="debugText"></param>
+        /// <param name="caller"></param>
+        public static void LogDebug(object debugText, [CallerMemberName] string caller = "") {
+            Logger.LogDebug(caller + " : " + debugText.ToString());
         }
 
         private static void CheckIfUsedOnRightGameVersion() {
@@ -150,6 +173,12 @@ namespace R2API {
 
         public void Start() {
             R2APIStart?.Invoke(this, null);
+        }
+
+        public void Update() {
+            if (DebugMode) {
+                DebugUpdate();
+            }
         }
 
         /// <summary>

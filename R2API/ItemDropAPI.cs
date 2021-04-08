@@ -267,7 +267,8 @@ namespace R2API {
 
         private static void CreatePickupDroplet(On.RoR2.PickupDropletController.orig_CreatePickupDroplet orig, PickupIndex pickupIndex, Vector3 position, Vector3 velocity) {
             if (commandArtifact) {
-                pickupIndex = AdjustCommandPickupIndex(currentPickupList, pickupIndex);
+                var itemTier = ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupIndex).itemIndex).tier;
+                pickupIndex = AdjustCommandPickupIndex(itemTier);
             }
             orig(pickupIndex, position, velocity);
         }
@@ -288,11 +289,9 @@ namespace R2API {
             cursor.Index += 1;
             cursor.RemoveRange(3);
             cursor.EmitDelegate<Func<PickupPickerController.Option[], PickupIndex>>((options) => {
-                List<PickupIndex> pickupList = new List<PickupIndex>();
-                foreach (PickupPickerController.Option option in options) {
-                    pickupList.Add(option.pickupIndex);
-                }
-                return AdjustCommandPickupIndex(pickupList, pickupList[0]);
+                var pickupList = options.Select(op => op.pickupIndex).ToList();
+                var itemTier = ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupList[0]).itemIndex).tier;
+                return AdjustCommandPickupIndex(itemTier);
             });
         }
 
@@ -309,43 +308,31 @@ namespace R2API {
             };
         }
 
-        private static PickupIndex AdjustCommandPickupIndex(List<PickupIndex> pickupList, PickupIndex givenPickupIndex) {
-            if (PickupListsEqual(Run.instance.availableTier1DropList, pickupList)) {
-                return safePickups[ItemTier.Tier1];
+        private static PickupIndex AdjustCommandPickupIndex(ItemTier tier) {
+            switch (tier) {
+                case ItemTier.NoTier:
+                    currentPickupList = PlayerDropList.AvailableEquipmentDropList;
+                    break;
+                case ItemTier.Tier1:
+                    currentPickupList = PlayerDropList.AvailableTier1DropList;
+                    break;
+                case ItemTier.Tier2:
+                    currentPickupList = PlayerDropList.AvailableTier2DropList;
+                    break;
+                case ItemTier.Tier3:
+                    currentPickupList = PlayerDropList.AvailableTier3DropList;
+                    break;
+                case ItemTier.Boss:
+                    currentPickupList = PlayerDropList.AvailableTier2DropList;
+                    break;
+                case ItemTier.Lunar:
+                    currentPickupList = PlayerDropList.AvailableLunarDropList;
+                    break;
             }
-            else if (PickupListsEqual(Run.instance.availableTier2DropList, pickupList)) {
-                return safePickups[ItemTier.Tier2];
-            }
-            else if (PickupListsEqual(Run.instance.availableTier3DropList, pickupList)) {
-                return safePickups[ItemTier.Tier3];
-            }
-            else if (PickupListsEqual(Run.instance.availableBossDropList, pickupList)) {
-                return safePickups[ItemTier.Boss];
-            }
-            else if (PickupListsEqual(Run.instance.availableLunarDropList, pickupList)) {
-                return safePickups[ItemTier.Lunar];
-            }
-            else if (PickupListsEqual(Run.instance.availableEquipmentDropList, pickupList)) {
-                return safePickups[ItemTier.NoTier];
-            }
-            return givenPickupIndex;
+
+            return safePickups[tier];
         }
 
-        private static bool PickupListsEqual(List<PickupIndex> listA, List<PickupIndex> listB) {
-            if (listA.Count == listB.Count) {
-                bool listsEqual = true;
-                for (int listIndex = 0; listIndex < listA.Count; listIndex++) {
-                    if (listA[listIndex] != listB[listIndex]) {
-                        listsEqual = false;
-                        break;
-                    }
-                }
-                if (listsEqual) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         // WILL BACKUP UP THE DROP LIST SELECTED BY CHESTS FOR USE WITH THE COMMAND ARTIFACT
 
@@ -402,18 +389,6 @@ namespace R2API {
             });
         }
 
-        private static void FilterList(WeightedSelection<List<PickupIndex>> selector, List<PickupIndex> dropList, float dropChance, ChestBehavior chestBehavior) {
-            if ((double)dropChance <= 0) {
-                return;
-            }
-            List<PickupIndex> filteredDropList = new List<PickupIndex>();
-            foreach (PickupIndex pickupIndex in dropList) {
-                if (chestBehavior.requiredItemTag == ItemTag.Any || (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupIndex).itemIndex).ContainsTag(chestBehavior.requiredItemTag))) {
-                    filteredDropList.Add(pickupIndex);
-                }
-            }
-            selector.AddChoice(filteredDropList, dropChance);
-        }
 
         private static void RollEquipment(On.RoR2.ChestBehavior.orig_RollEquipment orig, ChestBehavior chestBehavior) {
             chestCommandArtifactLists.Add(chestBehavior, Run.instance.availableEquipmentDropList);
@@ -658,7 +633,7 @@ namespace R2API {
             cursor.Remove();
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.EmitDelegate<Func<List<PickupIndex>, ShopTerminalBehavior, PickupIndex>>((dropList, shopTerminalBehavior) => {
-                return Run.instance.treasureRng.NextElementUniform<PickupIndex>(dropList);
+                return Run.instance.treasureRng.NextElementUniform(dropList);
             });
         }
 

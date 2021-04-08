@@ -132,7 +132,7 @@ namespace R2API {
 
             bool xmlSafe = false;
             try {
-                XElement element = new XElement(item.ItemDef.name);
+                XElement element = new(item.ItemDef.name);
                 xmlSafe = true;
             }
             catch {
@@ -173,7 +173,7 @@ namespace R2API {
 
             bool xmlSafe = false;
             try {
-                XElement element = new XElement(item.EquipmentDef.name);
+                XElement element = new(item.EquipmentDef.name);
                 xmlSafe = true;
             }
             catch {
