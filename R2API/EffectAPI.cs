@@ -1,9 +1,8 @@
 using R2API.Utils;
 using RoR2;
+using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using HG;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -42,7 +41,7 @@ namespace R2API {
                 R2API.Logger.LogInfo($"Custom Effect: {customEffect.prefabName} added");
             }
 
-            r2apiContentPack.effectDefs = AddedEffects.ToArray();
+            r2apiContentPack.effectDefs.Add(AddedEffects.ToArray());
         }
 
         /// <summary>

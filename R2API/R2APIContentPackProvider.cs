@@ -1,8 +1,9 @@
-﻿using RoR2;
+﻿using RoR2.ContentManagement;
 using System;
+using System.Collections;
 
 namespace R2API {
-    public class R2APIContentPackProvider {
+    public class R2APIContentPackProvider : IContentPackProvider {
         public string identifier => "R2API";
 
         internal static ContentPack ContentPack = new ContentPack();
@@ -10,10 +11,10 @@ namespace R2API {
         internal static Action<ContentPack> WhenContentPackReady;
 
         internal static void Init() {
-            On.RoR2.ContentManager.SetContentPacks += AddCustomContent;
+            ContentManager.collectContentPackProviders += AddCustomContent;
         }
 
-        private static void AddCustomContent(On.RoR2.ContentManager.orig_SetContentPacks orig, System.Collections.Generic.List<ContentPack> newContentPacks) {
+        private static void AddCustomContent(ContentManager.AddContentPackProviderDelegate addContentPackProvider) {
             if (WhenContentPackReady != null) {
                 foreach (Action<ContentPack> @event in WhenContentPackReady.GetInvocationList()) {
                     try {
@@ -25,8 +26,24 @@ namespace R2API {
                 }
             }
 
-            newContentPacks.Add(ContentPack);
-            orig(newContentPacks);
+            addContentPackProvider(new R2APIContentPackProvider());
+        }
+
+        public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args) {
+            args.ReportProgress(1);
+            yield break;
+        }
+
+        public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args) {
+            ContentPack.Copy(ContentPack, args.output);
+
+            args.ReportProgress(1);
+            yield break;
+        }
+
+        public IEnumerator FinalizeAsync(FinalizeAsyncArgs args) {
+            args.ReportProgress(1);
+            yield break;
         }
     }
 }

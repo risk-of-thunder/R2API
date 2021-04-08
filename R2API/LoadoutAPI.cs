@@ -2,6 +2,7 @@ using EntityStates;
 using MonoMod.RuntimeDetour;
 using R2API.Utils;
 using RoR2;
+using RoR2.ContentManagement;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
@@ -67,10 +68,10 @@ namespace R2API {
         }
 
         private static void AddSkillsToGame(ContentPack r2apiContentPack) {
-            r2apiContentPack.entityStateTypes = AddedStateTypes.ToArray();
+            r2apiContentPack.entityStateTypes.Add(AddedStateTypes.ToArray());
 
-            r2apiContentPack.skillDefs = AddedSkills.ToArray();
-            r2apiContentPack.skillFamilies = AddedSkillFamilies.ToArray();
+            r2apiContentPack.skillDefs.Add(AddedSkills.ToArray());
+            r2apiContentPack.skillFamilies.Add(AddedSkillFamilies.ToArray());
         }
 
         #endregion Submodule Hooks
