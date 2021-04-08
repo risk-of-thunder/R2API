@@ -127,6 +127,10 @@ namespace R2API.Utils {
             if (attr == null)
                 return false;
 
+            if (R2API.DebugMode) {
+                return true;
+            }
+
             // Comment this out if you want to try every submodules working (or not) state
             if (!_moduleSet.Contains(type.Name)) {
                 var shouldload = new object[1];
