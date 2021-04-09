@@ -23,7 +23,7 @@ namespace R2API {
             EarlyLoad();
         }
 
-        public static void EarlyLoad() {
+        internal static void EarlyLoad() {
             RoR2Content = new RoR2Content();
 
             RoR2Content.contentPack.identifier = RoR2Content.identifier;
