@@ -116,7 +116,7 @@ namespace R2API {
                 if (IsValidEntityStateType(type)) return type;
             }
 
-            R2API.Logger.LogError(String.Format("No matching entity state type found for name:\n{0}", name));
+            R2API.Logger.LogError(string.Format("No matching entity state type found for name:\n{0}", name));
             return null;
         }
 

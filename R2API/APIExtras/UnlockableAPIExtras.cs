@@ -106,7 +106,7 @@ namespace R2API {
         /// The sprite is loaded and cached immediately upon creation
         /// </summary>
         /// <param name="path">A path suitable for Resources.Load that will return the desired sprite</param>
-        public VanillaSpriteProvider(String path) {
+        public VanillaSpriteProvider(string path) {
             this.PathString = path;
             this.Sprite = UnityEngine.Resources.Load<Sprite>(path);
         }
@@ -243,7 +243,7 @@ namespace R2API {
         /// TODO
         /// </summary>
         /// <returns>TODO</returns>
-        public override Single ProgressForAchievement() => base.ProgressForAchievement();
+        public override float ProgressForAchievement() => base.ProgressForAchievement();
 
         /// <summary>
         /// Used to specify if this achievement is limited to a certain character
@@ -263,7 +263,7 @@ namespace R2API {
         /// <summary>
         /// This actually does nothing in vanilla, it is here in case that changes in future updates.
         /// </summary>
-        public override Boolean wantsBodyCallbacks { get => base.wantsBodyCallbacks; }
+        public override bool wantsBodyCallbacks { get => base.wantsBodyCallbacks; }
 
         // This cannot be capitalized because it needs to match the base class defined in ror2.
 
