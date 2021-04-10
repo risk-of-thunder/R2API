@@ -3,7 +3,6 @@ using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
 using RoR2.Achievements;
-using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -112,7 +111,7 @@ namespace R2API {
                 R2API.Logger.LogInfo($"Custom Unlockable: {unlockable.cachedName} added");
             }
 
-            r2apiContentPack.unlockableDefs.Add(Unlockables.ToArray());
+            r2apiContentPack.unlockableDefs = Unlockables.ToArray();
             _unlockableCatalogInitialized = true;
         }
 
