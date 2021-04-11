@@ -101,7 +101,7 @@ namespace R2API {
             RuleDef ruleChoices = orig();
 
             //Populate vanilla fields.
-            var vanillaDefs = typeof(DifficultyCatalog).GetFieldValue<DifficultyDef[]>("difficultyDefs");
+            var vanillaDefs = DifficultyCatalog.difficultyDefs;
             if (difficultyAlreadyAdded == false) {//Technically this function we are hooking is only called once, but in the weird case it's called multiple times, we don't want to add the definitions again.
                 difficultyAlreadyAdded = true;
                 for (int i = 0; i < vanillaDefs.Length; i++) {
