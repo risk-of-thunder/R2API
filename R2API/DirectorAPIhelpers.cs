@@ -114,6 +114,18 @@ namespace R2API {
             }
 
             /// <summary>
+            /// Try applying changes for the current stage (hot swap) for monster and family changes,
+            /// </summary>
+            public static void TryApplyChangesNow() {
+                if (!Loaded) {
+                    throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+                }
+
+                ClassicStageInfo.instance.ApplyChanges();
+                ClassicStageInfo.instance.RebuildCards();
+            }
+
+            /// <summary>
             /// Enables or disables elite spawns for a specific monster.
             /// </summary>
             /// <param name="monsterName">The name of the monster to edit</param>
