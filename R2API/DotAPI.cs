@@ -169,18 +169,13 @@ namespace R2API {
             if (NetworkServer.active) {
                 for (var i = VanillaDotCount; i < DotDefs.Length; i++) {
                     var dotDef = DotDefs[i];
-                    var dotTimers = self.GetFieldValue<float[]>("dotTimers");
+                    var dotTimers = self.dotTimers;
 
                     float dotProcTimer = dotTimers[i] - Time.fixedDeltaTime;
                     if (dotProcTimer <= 0f) {
                         dotProcTimer += dotDef.interval;
 
-                        var parameters = new object[] {
-                            (DotController.DotIndex)i, dotDef.interval, -1
-                        };
-                        var mi = typeof(DotController).GetMethodCached("EvaluateDotStacksForType");
-                        mi.Invoke(self, parameters);
-                        var remainingActive = (int)parameters[2];
+                        self.EvaluateDotStacksForType((DotController.DotIndex)i, dotDef.interval, out var remainingActive);
 
                         ActiveCustomDots[self][i - VanillaDotCount] = remainingActive != 0;
                     }
