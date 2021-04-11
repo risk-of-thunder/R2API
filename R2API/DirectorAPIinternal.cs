@@ -12,21 +12,25 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            On.RoR2.ClassicStageInfo.Awake += ClassicStageInfo_Awake;
+            On.RoR2.ClassicStageInfo.Awake += OnStageInfoAwake;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            On.RoR2.ClassicStageInfo.Awake -= ClassicStageInfo_Awake;
+            On.RoR2.ClassicStageInfo.Awake -= OnStageInfoAwake;
         }
 
-        private static void ClassicStageInfo_Awake(On.RoR2.ClassicStageInfo.orig_Awake orig, ClassicStageInfo self) {
+        private static void OnStageInfoAwake(On.RoR2.ClassicStageInfo.orig_Awake orig, ClassicStageInfo self) {
+            self.ApplyChanges();
+            orig(self);
+        }
+
+        internal static void ApplyChanges(this ClassicStageInfo self) {
             var stageInfo = GetStageInfo(self);
             ApplySettingsChanges(self, stageInfo);
             ApplyMonsterChanges(self, stageInfo);
             ApplyInteractableChanges(self, stageInfo);
             ApplyFamilyChanges(self, stageInfo);
-            orig(self);
         }
 
         private static StageInfo GetStageInfo(ClassicStageInfo stage) {
@@ -106,7 +110,7 @@ namespace R2API {
         }
 
         private static void ApplyMonsterChanges(ClassicStageInfo self, StageInfo stage) {
-            var monsters = self.GetFieldValue<DirectorCardCategorySelection>("monsterCategories");
+            var monsters = self.monsterCategories;
             var monsterCards = new List<DirectorCardHolder>();
             foreach (var cat in monsters.categories) {
                 MonsterCategory monstCat = GetMonsterCategory(cat.name);
@@ -158,7 +162,7 @@ namespace R2API {
         }
 
         private static void ApplyInteractableChanges(ClassicStageInfo self, StageInfo stage) {
-            var interactables = self.GetFieldValue<DirectorCardCategorySelection>("interactableCategories");
+            var interactables = self.interactableCategories;
             var interactableCards = new List<DirectorCardHolder>();
             foreach (var cat in interactables.categories) {
                 MonsterCategory monstCat = GetMonsterCategory(cat.name);
@@ -268,13 +272,13 @@ namespace R2API {
                 set.BonusCreditObjects[bonusObj.objectThatGrantsPointsIfEnabled] = bonusObj.points;
             }
             set.InteractableCategoryWeights = new Dictionary<InteractableCategory, float>();
-            var interCats = self.GetFieldValue<DirectorCardCategorySelection>("interactableCategories");
-            foreach (var cat in interCats.categories) {
+            var interactableCategories = self.interactableCategories;
+            foreach (var cat in interactableCategories.categories) {
                 set.InteractableCategoryWeights[GetInteractableCategory(cat.name)] = cat.selectionWeight;
             }
             set.MonsterCategoryWeights = new Dictionary<MonsterCategory, float>();
-            var monstCats = self.GetFieldValue<DirectorCardCategorySelection>("monsterCategories");
-            foreach (var cat in monstCats.categories) {
+            var monsterCategories = self.monsterCategories;
+            foreach (var cat in monsterCategories.categories) {
                 set.MonsterCategoryWeights[GetMonsterCategory(cat.name)] = cat.selectionWeight;
             }
             return set;
@@ -292,19 +296,19 @@ namespace R2API {
                 };
             }
             self.bonusInteractibleCreditObjects = bonuses;
-            var interCats = self.GetFieldValue<DirectorCardCategorySelection>("interactableCategories");
-            for (int i = 0; i < interCats.categories.Length; i++) {
-                var cat = interCats.categories[i];
+            var interactableCategories = self.interactableCategories;
+            for (int i = 0; i < interactableCategories.categories.Length; i++) {
+                var cat = interactableCategories.categories[i];
                 InteractableCategory intCat = GetInteractableCategory(cat.name);
                 cat.selectionWeight = set.InteractableCategoryWeights[intCat];
-                interCats.categories[i] = cat;
+                interactableCategories.categories[i] = cat;
             }
-            var monstCats = self.GetFieldValue<DirectorCardCategorySelection>("monsterCategories");
-            for (int i = 0; i < monstCats.categories.Length; i++) {
-                var cat = monstCats.categories[i];
+            var monsterCategories = self.monsterCategories;
+            for (int i = 0; i < monsterCategories.categories.Length; i++) {
+                var cat = monsterCategories.categories[i];
                 MonsterCategory monCat = GetMonsterCategory(cat.name);
                 cat.selectionWeight = set.MonsterCategoryWeights[monCat];
-                monstCats.categories[i] = cat;
+                monsterCategories.categories[i] = cat;
             }
         }
 

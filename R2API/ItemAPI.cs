@@ -88,17 +88,6 @@ namespace R2API {
                     ItemDropAPI.UnsetHooks();
                 }
             }
-
-            if (!MonsterItemsAPI.Loaded) {
-                try {
-                    MonsterItemsAPI.SetHooks();
-                    MonsterItemsAPI.Loaded = true;
-                }
-                catch (Exception e) {
-                    R2API.Logger.LogError($"MonsterItemsAPI hooks failed to initialize. Disabling the submodule. {e}");
-                    MonsterItemsAPI.UnsetHooks();
-                }
-            }
         }
 
         #endregion ModHelper Events and Hooks
