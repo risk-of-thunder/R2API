@@ -1,6 +1,7 @@
 ﻿using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
+using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -36,15 +37,11 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             R2APIContentPackProvider.WhenContentPackReady += AddBuffsToGame;
-
-            IL.RoR2.BuffCatalog.Init += FixWrongListRetrieved;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             R2APIContentPackProvider.WhenContentPackReady -= AddBuffsToGame;
-
-            IL.RoR2.BuffCatalog.Init -= FixWrongListRetrieved;
         }
 
         private static void AddBuffsToGame(ContentPack r2apiContentPack) {
@@ -55,16 +52,8 @@ namespace R2API {
                 R2API.Logger.LogInfo($"Custom Buff: {customBuff.BuffDef.name} added");
             }
 
-            r2apiContentPack.buffDefs = buffDefs.ToArray();
+            r2apiContentPack.buffDefs.Add(buffDefs.ToArray());
             _buffCatalogInitialized = true;
-        }
-
-        private static void FixWrongListRetrieved(ILContext il) {
-            var c = new ILCursor(il);
-
-            if (c.TryGotoNext(i => i.MatchLdsfld(typeof(RoR2Content.Buffs), nameof(RoR2Content.Buffs.buffDefs)))) {
-                c.Next.Operand = il.Import(typeof(ContentManager).GetField(nameof(ContentManager.buffDefs)));
-            }
         }
 
         #endregion ModHelper Events and Hooks

@@ -2,6 +2,7 @@
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
+using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -42,7 +43,7 @@ namespace R2API {
             R2APIContentPackProvider.WhenContentPackReady += AddItemsToGame;
 
             IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
-            R2API.R2APIStart += AddingItemDisplayRulesToCharacterModels;
+            On.RoR2.ItemDisplayRuleSet.Init += AddingItemDisplayRulesToCharacterModels;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
@@ -50,7 +51,7 @@ namespace R2API {
             R2APIContentPackProvider.WhenContentPackReady -= AddItemsToGame;
 
             IL.RoR2.CharacterModel.UpdateMaterials -= MaterialFixForItemDisplayOnCharacter;
-            R2API.R2APIStart -= AddingItemDisplayRulesToCharacterModels;
+            On.RoR2.ItemDisplayRuleSet.Init -= AddingItemDisplayRulesToCharacterModels;
         }
 
         private static void AddItemsToGame(ContentPack r2apiContentPack) {
@@ -61,7 +62,7 @@ namespace R2API {
                 R2API.Logger.LogInfo($"Custom Item: {customItem.ItemDef.name} added");
             }
 
-            r2apiContentPack.itemDefs = itemDefs.ToArray();
+            r2apiContentPack.itemDefs.Add(itemDefs.ToArray());
             _itemCatalogInitialized = true;
 
             var equipmentDefs = new List<EquipmentDef>();
@@ -73,7 +74,7 @@ namespace R2API {
 
             LoadRelatedAPIs();
 
-            r2apiContentPack.equipmentDefs = equipmentDefs.ToArray();
+            r2apiContentPack.equipmentDefs.Add(equipmentDefs.ToArray());
             _equipmentCatalogInitialized = true;
         }
 
@@ -216,10 +217,12 @@ namespace R2API {
         // todo : allow override of existing item display rules
         // This method only allow the addition of custom rules.
         //
-		private static void AddingItemDisplayRulesToCharacterModels(object _, EventArgs __) {
+        private static void AddingItemDisplayRulesToCharacterModels(On.RoR2.ItemDisplayRuleSet.orig_Init orig) {
+            orig();
+
             foreach (var bodyPrefab in BodyCatalog.allBodyPrefabs) {
                 var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
-                if (characterModel != null) {
+                if (characterModel) {
                     if (!characterModel.itemDisplayRuleSet) {
                         characterModel.itemDisplayRuleSet = ScriptableObject.CreateInstance<ItemDisplayRuleSet>();
                     }

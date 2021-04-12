@@ -1,5 +1,6 @@
 ﻿using R2API.Utils;
 using RoR2;
+using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,7 +44,7 @@ namespace R2API {
                 R2API.Logger.LogInfo($"Custom Artifact: {artifact.cachedName} added");
             }
 
-            r2apiContentPack.artifactDefs = Artifacts.ToArray();
+            r2apiContentPack.artifactDefs.Add(Artifacts.ToArray());
             _artifactCatalogInitialized = true;
         }
 
