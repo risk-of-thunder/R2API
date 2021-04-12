@@ -6,6 +6,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
+using RoR2.ContentManagement;
 using UnityEngine;
 
 namespace R2API {
@@ -77,8 +78,8 @@ namespace R2API {
                 R2API.Logger.LogInfo($"Custom Survivor: {customSurvivor.cachedName} added");
             }
 
-            r2apiContentPack.bodyPrefabs = SurvivorBodyPrefabs.ToArray();
-            r2apiContentPack.survivorDefs = SurvivorDefinitions.ToArray();
+            r2apiContentPack.bodyPrefabs.Add(SurvivorBodyPrefabs.ToArray());
+            r2apiContentPack.survivorDefs.Add(SurvivorDefinitions.ToArray());
             _survivorsAlreadyAdded = true;
         }
 

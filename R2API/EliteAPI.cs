@@ -1,5 +1,6 @@
 ﻿using R2API.Utils;
 using RoR2;
+using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -62,7 +63,7 @@ namespace R2API {
                 R2API.Logger.LogInfo($"Custom Elite: {customElite.EliteDef.modifierToken} (elite tier: {customElite.EliteTier}) added");
             }
 
-            r2apiContentPack.eliteDefs = eliteDefs.ToArray();
+            r2apiContentPack.eliteDefs.Add(eliteDefs.ToArray());
             _eliteCatalogInitialized = true;
         }
 

@@ -1,5 +1,5 @@
 ﻿using R2API.Utils;
-using RoR2;
+using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,7 +43,7 @@ namespace R2API {
                 R2API.Logger.LogInfo($"Custom Projectile: {projectile.name} added");
             }
 
-            r2apiContentPack.projectilePrefabs = Projectiles.ToArray();
+            r2apiContentPack.projectilePrefabs.Add(Projectiles.ToArray());
             _projectileCatalogInitialized = true;
         }
 

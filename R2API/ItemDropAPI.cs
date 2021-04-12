@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using BepInEx.Logging;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.MiscHelpers;
@@ -14,8 +13,6 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class ItemDropAPI {
-        private static ManualLogSource Logger => R2API.Logger;
-
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>

@@ -26,8 +26,8 @@ namespace R2API {
         private static bool _loaded;
 
         private static DotController.DotDef[] DotDefs {
-            get => typeof(DotController).GetFieldValue<DotController.DotDef[]>("dotDefs");
-            set => typeof(DotController).SetFieldValue("dotDefs", value);
+            get => DotController.dotDefs;
+            set => DotController.dotDefs = value;
         }
 
         private static void ResizeDotDefs(int newSize) {
@@ -36,7 +36,7 @@ namespace R2API {
             DotDefs = dotDefs;
         }
 
-        private static readonly int VanillaDotCount = DotDefs.Length;
+        private static int VanillaDotCount;
         private static int CustomDotCount => DotDefs.Length - VanillaDotCount;
 
         private static readonly Dictionary<DotController, bool[]> ActiveCustomDots = new Dictionary<DotController, bool[]>();
@@ -113,6 +113,7 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
+            IL.RoR2.DotController.InitDotCatalog += RetrieveVanillaCount;
             IL.RoR2.DotController.Awake += ResizeTimerArray;
             On.RoR2.DotController.Awake += TrackActiveCustomDots;
             On.RoR2.DotController.OnDestroy += TrackActiveCustomDots2;
@@ -122,8 +123,20 @@ namespace R2API {
             On.RoR2.DotController.HasDotActive += OnHasDotActive;
         }
 
+        private static void RetrieveVanillaCount(ILContext il) {
+            var c = new ILCursor(il);
+            if (c.TryGotoNext(
+                i => i.MatchLdcI4(out VanillaDotCount),
+                i => i.MatchNewarr<DotController.DotDef>())) {
+            }
+            else {
+                R2API.Logger.LogError("Failed finding IL Instructions. Aborting RetrieveVanillaCount IL Hook");
+            }
+        }
+
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
+            IL.RoR2.DotController.InitDotCatalog -= RetrieveVanillaCount;
             IL.RoR2.DotController.Awake -= ResizeTimerArray;
             On.RoR2.DotController.Awake -= TrackActiveCustomDots;
             On.RoR2.DotController.OnDestroy -= TrackActiveCustomDots2;
