@@ -4,7 +4,7 @@
 	"website_url": "https://github.com/risk-of-thunder/R2API",
 	"description": "A modding API for Risk of Rain 2",
 	"dependencies": [
-		"bbepis-BepInExPack-3.0.0",
-		"RiskofThunder-HookGenPatcher-1.2.0"
+		"bbepis-BepInExPack-5.4.9",
+		"RiskofThunder-HookGenPatcher-1.2.1"
 	]
 }
