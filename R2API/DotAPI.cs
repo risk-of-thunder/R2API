@@ -248,7 +248,6 @@ namespace R2API {
                 i => i.MatchBlt(out _)
                 )) {
                 c.Next.OpCode = OpCodes.Nop;
-                R2API.Logger.LogWarning(il);
             }
             else {
                 ILFailMessage(1);
