@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
@@ -36,8 +37,11 @@ namespace R2API {
             DotDefs = dotDefs;
         }
 
+        private static readonly List<DotController.DotDef> CustomDots = new List<DotController.DotDef>();
+
         private static int VanillaDotCount;
-        private static int CustomDotCount => DotDefs.Length - VanillaDotCount;
+        private static int CustomDotCount => CustomDots.Count;
+
 
         private static readonly Dictionary<DotController, bool[]> ActiveCustomDots = new Dictionary<DotController, bool[]>();
 
@@ -73,9 +77,15 @@ namespace R2API {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(DotAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DotAPI)})]");
             }
-            var dotDefIndex = DotDefs.Length;
-            ResizeDotDefs(dotDefIndex + 1);
-            DotDefs[dotDefIndex] = dotDef;
+
+            var dotDefIndex = VanillaDotCount + CustomDotCount;
+
+            if (DotDefs != null) {
+                ResizeDotDefs(dotDefIndex + 1);
+                DotDefs[dotDefIndex] = dotDef;
+            }
+
+            CustomDots.Add(dotDef);
 
             var customArrayIndex = _customDotBehaviours.Length;
             Array.Resize(ref _customDotBehaviours, _customDotBehaviours.Length + 1);
@@ -84,7 +94,7 @@ namespace R2API {
             Array.Resize(ref _customDotVisuals, _customDotVisuals.Length + 1);
             _customDotVisuals[customArrayIndex] = customDotVisual;
 
-            R2API.Logger.LogInfo($"Custom Dot that uses Buff Index: {(int)dotDef.associatedBuff.buffIndex} added");
+            R2API.Logger.LogInfo($"Custom Dot (Index : {dotDefIndex}) that uses Buff : {dotDef.associatedBuff.name} added");
             return (DotController.DotIndex)dotDefIndex;
         }
 
@@ -115,12 +125,31 @@ namespace R2API {
         internal static void SetHooks() {
             IL.RoR2.DotController.InitDotCatalog += RetrieveVanillaCount;
             IL.RoR2.DotController.Awake += ResizeTimerArray;
+            On.RoR2.DotController.InitDotCatalog += AddCustomDots;
             On.RoR2.DotController.Awake += TrackActiveCustomDots;
             On.RoR2.DotController.OnDestroy += TrackActiveCustomDots2;
             On.RoR2.DotController.GetDotDef += GetDotDef;
             On.RoR2.DotController.FixedUpdate += FixedUpdate;
-            IL.RoR2.DotController.AddDot += OnAddDot;
+            IL.RoR2.DotController.InflictDot_refInflictDotInfo += FixInflictDotReturnCheck;
+            IL.RoR2.DotController.AddDot += CallCustomDotBehaviours;
             On.RoR2.DotController.HasDotActive += OnHasDotActive;
+
+            IL.RoR2.GlobalEventManager.OnHitEnemy += FixDeathMark;
+        }
+
+        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
+        internal static void UnsetHooks() {
+            IL.RoR2.DotController.InitDotCatalog -= RetrieveVanillaCount;
+            IL.RoR2.DotController.Awake -= ResizeTimerArray;
+            On.RoR2.DotController.Awake -= TrackActiveCustomDots;
+            On.RoR2.DotController.OnDestroy -= TrackActiveCustomDots2;
+            On.RoR2.DotController.GetDotDef -= GetDotDef;
+            On.RoR2.DotController.FixedUpdate -= FixedUpdate;
+            IL.RoR2.DotController.InflictDot_refInflictDotInfo -= FixInflictDotReturnCheck;
+            IL.RoR2.DotController.AddDot -= CallCustomDotBehaviours;
+            On.RoR2.DotController.HasDotActive -= OnHasDotActive;
+
+            IL.RoR2.GlobalEventManager.OnHitEnemy -= FixDeathMark;
         }
 
         private static void RetrieveVanillaCount(ILContext il) {
@@ -134,18 +163,6 @@ namespace R2API {
             }
         }
 
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
-            IL.RoR2.DotController.InitDotCatalog -= RetrieveVanillaCount;
-            IL.RoR2.DotController.Awake -= ResizeTimerArray;
-            On.RoR2.DotController.Awake -= TrackActiveCustomDots;
-            On.RoR2.DotController.OnDestroy -= TrackActiveCustomDots2;
-            On.RoR2.DotController.GetDotDef -= GetDotDef;
-            On.RoR2.DotController.FixedUpdate -= FixedUpdate;
-            IL.RoR2.DotController.AddDot -= OnAddDot;
-            On.RoR2.DotController.HasDotActive -= OnHasDotActive;
-        }
-
         private static void ResizeTimerArray(ILContext il) {
             var c = new ILCursor(il);
             if (c.TryGotoNext(
@@ -157,6 +174,12 @@ namespace R2API {
             else {
                 R2API.Logger.LogError("Failed finding IL Instructions. Aborting ResizeTimerArray IL Hook");
             }
+        }
+
+        private static void AddCustomDots(On.RoR2.DotController.orig_InitDotCatalog orig) {
+            orig();
+
+            DotController.dotDefs = DotController.dotDefs.Concat(CustomDots).ToArray();
         }
 
         private static void TrackActiveCustomDots(On.RoR2.DotController.orig_Awake orig, DotController self) {
@@ -204,7 +227,35 @@ namespace R2API {
             }
         }
 
-        private static void OnAddDot(ILContext il) {
+        private static void FixInflictDotReturnCheck(ILContext il) {
+            var c = new ILCursor(il);
+
+            // ReSharper disable once InconsistentNaming
+            static void ILFailMessage(int index) {
+                R2API.Logger.LogError(
+                    $"Failed finding IL Instructions. Aborting FixInflictDotReturnCheck IL Hook {index}");
+            }
+
+            if (c.TryGotoNext(MoveType.After,
+                i => i.MatchLdarg(0),
+                i => i.MatchLdfld(out _),
+                i => i.MatchLdcI4(out _),
+                i => i.MatchBlt(out _),
+
+                i => i.MatchLdarg(0),
+                i => i.MatchLdfld(out _),
+                i => i.MatchLdcI4(out _),
+                i => i.MatchBlt(out _)
+                )) {
+                c.Next.OpCode = OpCodes.Nop;
+                R2API.Logger.LogWarning(il);
+            }
+            else {
+                ILFailMessage(1);
+            }
+        }
+
+        private static void CallCustomDotBehaviours(ILContext il) {
             var c = new ILCursor(il);
             int dotStackLoc = 0;
 
@@ -247,6 +298,57 @@ namespace R2API {
             }
 
             return orig(self, dotIndex);
+        }
+
+        private static void FixDeathMark(ILContext il) {
+            var c = new ILCursor(il);
+            int dotControllerLoc = 0;
+            int numberOfDebuffAndDotLoc = 0;
+
+            // ReSharper disable once InconsistentNaming
+            static void ILFailMessage(int index) {
+                R2API.Logger.LogError(
+                    $"Failed finding IL Instructions. Aborting FixDeathMark IL Hook {index}");
+            }
+
+            if (c.TryGotoNext(i => i.MatchCallOrCallvirt(typeof(DotController), nameof(DotController.HasDotActive)))) {
+                if (c.TryGotoNext(i => i.MatchLdloc(out numberOfDebuffAndDotLoc))) {
+
+                }
+                else {
+                    ILFailMessage(2);
+                }
+            }
+            else {
+                ILFailMessage(1);
+            }
+
+            if (c.TryGotoPrev(MoveType.After,
+                i => i.MatchCallOrCallvirt(typeof(DotController), nameof(DotController.FindDotController)),
+                i => i.MatchStloc(out dotControllerLoc))) {
+
+                static int CountCustomDots(DotController dotController, int numberOfDebuffAndDotLoc) {
+
+                    if (dotController) {
+                        for (var i = VanillaDotCount; i < VanillaDotCount + CustomDotCount; i++) {
+                            var dotIndex = (DotController.DotIndex)i;
+                            if (dotController.HasDotActive(dotIndex)) {
+                                numberOfDebuffAndDotLoc++;
+                            }
+                        }
+                    }
+
+                    return numberOfDebuffAndDotLoc;
+                }
+
+                c.Emit(OpCodes.Ldloc, dotControllerLoc);
+                c.Emit(OpCodes.Ldloc, numberOfDebuffAndDotLoc);
+                c.EmitDelegate<Func<DotController, int, int>>(CountCustomDots);
+                c.Emit(OpCodes.Stloc, numberOfDebuffAndDotLoc);
+            }
+            else {
+                ILFailMessage(3);
+            }
         }
     }
 }
