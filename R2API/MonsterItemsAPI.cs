@@ -11,6 +11,15 @@ namespace R2API {
 
     [R2APISubmodule]
     public class MonsterItemsAPI {
+        /*
+            This class has two purposes.
+            The first is to contain all the hooks required for the game to utilize these modified drop lists without causing errors.
+            The second is the front end that allows mods to register which items should be added and removed from the original drop lists for monsters.
+
+            Monsters are granted items based on the drop lists in Run.
+            This module assumes that the drop lists in Run are correct for items that should be dropped for players, but not necessarily right for the items granted to monsters.
+            To avoid a lot of illegible IL, because monsters are granted items much more inrefrequently than players, the drop lists in Run are overwritten when monsters are granted an item and then reverted.
+        */
 
         public static bool Loaded {
             get => _loaded;
@@ -25,6 +34,11 @@ namespace R2API {
         public static Dictionary<EquipmentDropType, List<EquipmentIndex>> AdditionalEquipmentsReadOnly =>
             EquipmentsToAdd.Except(EquipmentsToRemove).ToDictionary(p => p.Key, p => p.Value);
 
+        /*
+            These are the modifications that are going to be performed to the original drop lists.
+            These lists are cleared after they are used to generate the drop lists so subsequent runs can be varied.
+            An explanation for how/why they are used is at the start of DropList.
+        */
         private static Dictionary<ItemTier, List<ItemIndex>> ItemsToAdd { get; } = new Dictionary<ItemTier, List<ItemIndex>> {
             { ItemTier.Tier1, new List<ItemIndex>() },
             { ItemTier.Tier2, new List<ItemIndex>() },
@@ -95,6 +109,18 @@ namespace R2API {
             ItemDropAPI.ClearEquipmentOperations(EquipmentsToRemove);
         }
 
+        /*
+            This is called once at the start of a run.
+            This will determine whether each subset of each tier of item is valid for the different ways that items can be granted to monsters.
+            MonsterTeamGainsItemsArtifactManager generates and stores those subset lists at the start of the run to be referenced throughout the run.
+            Empty subset lists will cause errors in the game.
+            Modified drop lists that generate empty subsets will instead be substituted with the orignal drop lists to avoid this error.
+            Tiers that generate empty subsets are removed from the monster team item tier pattern.
+
+            Side Note:
+            Part of this function potentially belongs in InteractableCalculator, as its purpose is almost identicle.
+
+        */
         private static void GenerateAvailableItemsSet(On.RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.orig_GenerateAvailableItemsSet orig) {
             var forbiddenTags = new List<ItemTag>();
             foreach (var itemTag in MonsterTeamGainsItemsArtifactManager.forbiddenTags) {
@@ -131,10 +157,8 @@ namespace R2API {
             DropList.RevertDropLists();
 
             var patternAdjustedList = new List<ItemTier>();
-            var patternIndex = 0;
             foreach (var itemTier in MonsterTeamGainsItemsArtifactManager.pattern) {
                 patternAdjustedList.Add(itemTier);
-                patternIndex += 1;
             }
             if (!TierValidMonsterTeam[ItemTier.Tier1]) {
                 while (patternAdjustedList.Contains(ItemTier.Tier1)) {
@@ -152,19 +176,25 @@ namespace R2API {
                 }
             }
             _patternAdjusted = new ItemTier[patternAdjustedList.Count];
-            patternIndex = 0;
+            var patternIndex = 0;
             foreach (var itemTier in patternAdjustedList) {
                 _patternAdjusted[patternIndex] = itemTier;
                 patternIndex += 1;
             }
         }
 
+        //  This is to prevent an error that occurs when the pattern is empty
         private static void EnsureMonsterTeamItemCount(On.RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.orig_EnsureMonsterTeamItemCount orig, int integer) {
             if (_patternAdjusted.Length > 0) {
                 orig(integer);
             }
         }
 
+        /*
+            I don't know the right words to say this.
+            The monster team item tier pattern is unmodifiable because of something to do with JIT.
+            This IL is a workaround to force it to use the adjusted pattern.
+        */
         private static void GrantMonsterTeamItem(ILContext ilContext) {
             var type = typeof(MonsterTeamGainsItemsArtifactManager);
             var patternFieldInfo = type.GetField("pattern", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
@@ -195,6 +225,11 @@ namespace R2API {
             });
         }
 
+        /*
+            This ensure the scav will have a populated subset list for each tier of item when it chooses an item to avoid an error.
+            It will also update the chance for each tier of item being selected.
+            The chance for each tier is reverted after the item selection is processed because they are static fields and could potentially need to return to normal on a subsequent run.
+        */
         private static void OnEnter(On.EntityStates.ScavMonster.FindItem.orig_OnEnter orig, EntityStates.ScavMonster.FindItem findItem) {
             var valid = false;
             foreach (var tierValid in TierValidScav.Values) {
@@ -247,6 +282,10 @@ namespace R2API {
             }
         }
 
+        /*
+            This will update how many of each tier of item will be granted to the scav when it spawns.
+            The chance for each tier is reverted after the item selection is processed because they are static fields and could potentially need to return to normal on a subsequent run.
+        */
         private static void ScavengerItemGranterStart(On.RoR2.ScavengerItemGranter.orig_Start orig, ScavengerItemGranter scavengerItemGranter) {
             var scavTierTypesBackup = new List<int> {
                 scavengerItemGranter.tier1Types, scavengerItemGranter.tier2Types, scavengerItemGranter.tier3Types
@@ -270,12 +309,18 @@ namespace R2API {
             scavengerItemGranter.tier3Types = scavTierTypesBackup[2];
         }
 
+        /*
+            This function is to prevent an error if the equipment drop list for monsters is empty.
+            This function is only called to give a scav a piece of equipment when they are first spawned.
+            It occurs during the above function and therefore the drop lists have already been set.
+        */
         private static void GiveRandomEquipment(On.RoR2.Inventory.orig_GiveRandomEquipment orig, Inventory inventory) {
             if (MonsterDropList.AvailableEquipmentDropList.Count > 0) {
                 orig(inventory);
             }
         }
 
+        // This is will determine whether there are any items in a given list that do not contain any of the given forbidden tags.
         public static bool ListContainsValidItems(List<ItemTag> forbiddenTags, List<PickupIndex> givenList) {
             if (DropList.IsValidList(givenList)) {
                 foreach (var pickupIndex in givenList) {
@@ -294,6 +339,12 @@ namespace R2API {
             }
             return false;
         }
+
+        //  ----------------------------------------------------------------------------------------------------
+        //  ----------------------------------------------------------------------------------------------------
+        //
+        //  This point onwards is my attempt at the api's front end. It is not great and Reins is probably better.
+
 
         /// <summary>
         /// Add the given items to the given drop table.

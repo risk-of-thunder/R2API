@@ -17,6 +17,12 @@ namespace R2API {
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
     public static class ItemDropAPI {
+        /*
+            This class has three purposes.
+            The first is to contain all the hooks required for the game to allow items of multiple tiers in any of the standard tiered drop lists without causing errors.
+            The second is to contain all the hooks required for the game to utilize these modified drop lists without causing errors.
+            The third is the front end that allows mods to register which items should be added and removed from the original drop lists for players.
+        */
 
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -50,6 +56,11 @@ namespace R2API {
         public static Dictionary<EquipmentDropType, List<EquipmentIndex>> AdditionalEquipmentsReadOnly =>
             EquipmentsToAdd.Except(EquipmentsToRemove).ToDictionary(p => p.Key, p => p.Value);
 
+        /*
+            These are the modifications that are going to be performed to the original drop lists.
+            These lists are cleared after they are used to generate the drop lists so subsequent runs can be varied.
+            An explanation for how/why they are used is at the start of DropList.
+        */
         private static Dictionary<ItemTier, List<ItemIndex>> ItemsToAdd { get; } = new Dictionary<ItemTier, List<ItemIndex>> {
             { ItemTier.Tier1, new List<ItemIndex>() },
             { ItemTier.Tier2, new List<ItemIndex>() },
@@ -157,6 +168,7 @@ namespace R2API {
             orig(run);
         }
 
+        //  Triggers all the functions required to adjust the drop lists
         private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
             commandArtifact = run.GetComponent<RunArtifactManager>().IsArtifactEnabled(RoR2Content.Artifacts.commandArtifactDef);
 
@@ -175,18 +187,28 @@ namespace R2API {
             ClearEquipmentOperations(EquipmentsToRemove);
         }
 
+        //  Clears add and remove lists for items
         public static void ClearItemOperations(Dictionary<ItemTier, List<ItemIndex>> givenDict) {
             foreach (ItemTier itemTier in givenDict.Keys) {
                 givenDict[itemTier].Clear();
             }
         }
 
+        //  Clears add and remove lists for equipment
         public static void ClearEquipmentOperations(Dictionary<EquipmentDropType, List<EquipmentIndex>> givenDict) {
             foreach (EquipmentDropType equipmentDropType in givenDict.Keys) {
                 givenDict[equipmentDropType].Clear();
             }
         }
 
+        /*
+            This will prevent interactables without droppable items from being spawned.
+            This will trigger the functions in DropOdds to update the subset selection odds for interactables.
+
+            Side Note:
+            It seems that the spawn cards for all interactables iterated through, with some being modified, on every stage.
+            I'm not sure why that is not inside the classic stage info loop. I'll do some testing before a do a PR with that change.
+        */
         private static void PopulateScene(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector sceneDirector) {
             pickupDropletCommandArtifactLists.Clear();
             rouletteCommandArtifactLists.Clear();
@@ -213,11 +235,10 @@ namespace R2API {
                     var directorCards = new List<DirectorCard>();
                     foreach (var directorCard in ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].cards) {
                         var interactableName = InteractableCalculator.GetSpawnCardName(directorCard.spawnCard);
-                        if (new List<string>().Contains(interactableName)) {
-                        }
+                        //if (new List<string>().Contains(interactableName)) {
+                        //}
                         if (PlayerInteractables.InvalidInteractables.Contains(interactableName)) {
-                        }
-                        else {
+                        } else {
                             DropOdds.UpdateChestTierOdds(directorCard.spawnCard, interactableName);
                             DropOdds.UpdateShrineTierOdds(directorCard, interactableName);
                             directorCards.Add(directorCard);
@@ -235,14 +256,37 @@ namespace R2API {
             }
             orig(sceneDirector);
         }
+        /*
+            ----------------------------------------------------------------------------------------------------
+            ----------------------------------------------------------------------------------------------------
+            This secion will contain all the hooks required for the game to allow items of multiple tiers in any of the standard tiered drop lists without causing errors.
+            The main issue was getting this functionality to work with the artifact of command well.
 
-        // RETREIVES THE BACKED UP DROP LISTS TO SET THE COMMAND ARTIFACT MENU OPTIONS
+            The options listed in the command interface are determined by the tier of the pickup not the tier of drop list it was selected from.
+            The colour of the pickup droplet is determined the same way.
+            I felt that if a tier 3 item was added to the tier 1 drop list, the tier 1 list was selected as the subset but the tier 3 item just so happened to be selected from that subset,
+                that the droplet out to be the tier 1 colour and the command options ought to be the tier 1 list, not the tier 3 list.
+            Otherwise I thought that the balance would be ruined too much.
+
+            Interactables that first choose a subset of drop list before choosing an item offer no way of determining which drop list that item was selected from.
+            If items could only be in a single list this would be no problem, but by allow items of multiple tiers in any tier of drop list, the answer is not clear.
+            Determining which drop list the item was selected from is important for determining which options should be available in the command interface.
+            Lots of IL was required to retrieve the correct drop list.
+
+            The alternative would be to not allow items outside of their respective tiered drop lists, which I would also be ok with.
+        */
 
         private static List<PickupIndex> currentPickupList = new List<PickupIndex>();
         private static bool uniquePickup = false;
         private static readonly Dictionary<PickupDropletController, List<PickupIndex>> pickupDropletCommandArtifactLists = new Dictionary<PickupDropletController, List<PickupIndex>>();
         private static readonly Dictionary<PickupDropletController, bool> pickupDropletCommandArtifactUniquePickup = new Dictionary<PickupDropletController, bool>();
 
+        /*
+            This is just to create a connection between the pickup droplet and the current pickup list / unique pickup.
+            The pickup list this droplet was chosen from and if it is a unique pickup is only required when the droplet hits the ground.
+            Another item may be dropped before this happens and therefore these values sould be stored.
+            The current pickup list and unique pickup will have been set just prior to this function being called.
+        */
         private static void CreatePickupDroplet(ILContext ilContext) {
             var spawnMethodInfo = typeof(UnityEngine.Networking.NetworkServer).GetMethod("Spawn", new[] { typeof(GameObject) });
 
@@ -257,6 +301,10 @@ namespace R2API {
             });
         }
 
+        /*
+            This will retreive the pickup list / unique pickup to be used by CommandArtifactManager.
+            The function in CommandArtifactManager won't have any reference to the pickup droplet, so it needs to be retreived now.
+        */
         private static void OnCollisionEnter(On.RoR2.PickupDropletController.orig_OnCollisionEnter orig, PickupDropletController pickupDropletController, Collision collision) {
             if (pickupDropletCommandArtifactLists.ContainsKey(pickupDropletController)) {
                 currentPickupList = pickupDropletCommandArtifactLists[pickupDropletController];
@@ -265,6 +313,7 @@ namespace R2API {
             orig(pickupDropletController, collision);
         }
 
+        //  This will swap the chosen pickup with one that matches the tier of the drop list that was chosen as the subset, so the colour of the droplet is correct.
         private static void CreatePickupDroplet(On.RoR2.PickupDropletController.orig_CreatePickupDroplet orig, PickupIndex pickupIndex, Vector3 position, Vector3 velocity) {
             if (commandArtifact) {
                 pickupIndex = AdjustCommandPickupIndex(currentPickupList, pickupIndex);
@@ -272,6 +321,10 @@ namespace R2API {
             orig(pickupIndex, position, velocity);
         }
 
+        /*
+            This command interface normally colours the panel based on the tier of the first option.
+            This will replace the code that gets the first option with a delegate that returns an item that is the tier of the drop list being displayed.
+        */
         private static void SetPickupOptions(ILContext ilContext) {
             var pickupIndexFieldInfo = typeof(PickupPickerController.Option).GetField("pickupIndex", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
             var getPickupDefMethodInfo = typeof(PickupCatalog).GetMethod("GetPickupDef", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
@@ -298,6 +351,7 @@ namespace R2API {
 
         private static Dictionary<ItemTier, PickupIndex> safePickups;
 
+        // This will create a dictionary of pickups that will have the appropriate colour for each tier.
         private static void PopulateSafePickups() {
             safePickups = new Dictionary<ItemTier, PickupIndex>() {
                 { ItemTier.Tier1, PickupCatalog.FindPickupIndex(ItemCatalog.FindItemIndex("ScrapWhite")) },
@@ -309,6 +363,7 @@ namespace R2API {
             };
         }
 
+        //  This will retrieve a pickup that matches the colour of a tier of drop list.
         private static PickupIndex AdjustCommandPickupIndex(List<PickupIndex> pickupList, PickupIndex givenPickupIndex) {
             if (PickupListsEqual(Run.instance.availableTier1DropList, pickupList)) {
                 return safePickups[ItemTier.Tier1];
@@ -331,6 +386,7 @@ namespace R2API {
             return givenPickupIndex;
         }
 
+        //  This will determine if two lists are equal.
         private static bool PickupListsEqual(List<PickupIndex> listA, List<PickupIndex> listB) {
             if (listA.Count == listB.Count) {
                 bool listsEqual = true;
@@ -347,10 +403,13 @@ namespace R2API {
             return false;
         }
 
-        // WILL BACKUP UP THE DROP LIST SELECTED BY CHESTS FOR USE WITH THE COMMAND ARTIFACT
-
         private static readonly Dictionary<ChestBehavior, List<PickupIndex>> chestCommandArtifactLists = new Dictionary<ChestBehavior, List<PickupIndex>>();
 
+        /*
+            This will store which item drop list was selected by a ChestBehavior.
+            The drop list and item is selected when the chest is spawned.
+            The drop list is only need when the chest is opened, so it is stored.
+        */
         private static void RollItem(ILContext ilContext) {
             var findPickupIndexMethodInfo = typeof(PickupCatalog).GetMethod("FindPickupIndex", new[] { typeof(string) });
             var addMethodInfo = typeof(List<PickupIndex>).GetMethod("Add", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
@@ -402,6 +461,7 @@ namespace R2API {
             });
         }
 
+        //  This is to be used in the above IL to replace the vanilla drop list filtering, so it can support items of multiple tiers in any tier of drop list.
         private static void FilterList(WeightedSelection<List<PickupIndex>> selector, List<PickupIndex> dropList, float dropChance, ChestBehavior chestBehavior) {
             if ((double)dropChance <= 0) {
                 return;
@@ -415,11 +475,13 @@ namespace R2API {
             selector.AddChoice(filteredDropList, dropChance);
         }
 
+        //  This will store the drop list selected by a ChestBehavior for equipment.
         private static void RollEquipment(On.RoR2.ChestBehavior.orig_RollEquipment orig, ChestBehavior chestBehavior) {
             chestCommandArtifactLists.Add(chestBehavior, Run.instance.availableEquipmentDropList);
             orig(chestBehavior);
         }
 
+        //  This will set the drop list / unique pickup ready for a pickup droplet to be created.
         private static void ItemDrop(On.RoR2.ChestBehavior.orig_ItemDrop orig, ChestBehavior chestBehavior) {
             if (chestCommandArtifactLists.ContainsKey(chestBehavior)) {
                 currentPickupList = chestCommandArtifactLists[chestBehavior];
@@ -429,11 +491,16 @@ namespace R2API {
             orig(chestBehavior);
         }
 
-        //Backs up the drop list selected by shrines of chance for use with the command Artifact.
-
         private static readonly List<List<PickupIndex>> shrineChanceDropLists = new List<List<PickupIndex>>();
         private static WeightedSelection<List<PickupIndex>> shrineChanceWeightedSelection;
 
+        /*
+            This will store which item drop list was selected by a ShrineChanceBehavior.
+            Normally a ShrineChanceBehavior will select one item from each tier of drop list, then select one of those items.
+            This makes it unclear which drop list to show in the command interface.
+            This IL will instead cause it to select a drop list before it selects an item, so the drop list is known.
+            This is done each time the shrine is interacted with by a player.
+        */
         private static void AddShrineStack(ILContext ilContext) {
             var rngFieldInfo = typeof(ShrineChanceBehavior).GetField("rng", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var instanceMethodInfo = typeof(Run).GetProperty("instance", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).GetMethod;
@@ -497,13 +564,15 @@ namespace R2API {
             });
         }
 
-        //WILL BACKUP UP THE DROP LIST SELECTED BY ROULETTE CHESTS FOR USE WITH THE COMMAND ARTIFACT
-        //WILL REMOVE DROP LIST FILTERING FOR CHESTS
-
         private static bool rouletteChestEntriesAdding = false;
         private static RouletteChestController currentRouletteChestController;
         private static readonly Dictionary<RouletteChestController, List<List<PickupIndex>>> rouletteCommandArtifactLists = new Dictionary<RouletteChestController, List<List<PickupIndex>>>();
 
+        /*
+            A RouletteChestController will generate the entire list of items it will cycle through when it is first interacted with by a player.
+            It does this by using a BasicPickupDropTable many times in a row.
+            This will allow any uses of a BasicPickupDropTable by a RouletteChestController to be identified.
+        */
         private static void GenerateEntriesServer(On.RoR2.RouletteChestController.orig_GenerateEntriesServer orig, RouletteChestController rouletteChestController, Run.FixedTimeStamp fixedTimeStamp) {
             if (commandArtifact) {
                 rouletteChestEntriesAdding = true;
@@ -513,6 +582,7 @@ namespace R2API {
             rouletteChestEntriesAdding = false;
         }
 
+        //  This will store which drop list each item in a roullete chest item list came from.
         private static void GenerateDrop(ILContext ilContext) {
             var selectorFieldInfo = typeof(BasicPickupDropTable).GetField("selector", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var nextNormalizedMethodInfo = typeof(Xoroshiro128Plus).GetProperty("nextNormalizedFloat", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
@@ -539,6 +609,7 @@ namespace R2API {
             });
         }
 
+        //  This will set the drop list / unique pickup ready for a pickup droplet to be created.
         private static void EjectPickupServer(On.RoR2.RouletteChestController.orig_EjectPickupServer orig, RouletteChestController rouletteChestController, PickupIndex pickupIndex) {
             if (commandArtifact) {
                 object entryIndexForTimeObject = rouletteGetEntryIndexForTime.Invoke(rouletteChestController, new object[] { Run.FixedTimeStamp.now });
@@ -548,8 +619,7 @@ namespace R2API {
             orig(rouletteChestController, pickupIndex);
         }
 
-        //WILL BACKUP UP THE DROP LIST SELECTED BY BOSSES FOR USE WITH THE COMMAND ARTIFACT
-
+        //  This will store which item drop list was selected by a boss when it dies.
         private static void DropRewards(ILContext ilContext) {
             var bossDropsFieldInfo = typeof(BossGroup).GetField("bossDrops", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var countMethodInfo = typeof(List<PickupIndex>).GetProperty("Count", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
@@ -597,9 +667,12 @@ namespace R2API {
             });
         }
 
-        //WILL BACKUP UP THE DROP LIST SELECTED BY ELITE MONSTERS FOR USE WITH THE COMMAND ARTIFACT
-
+        /*
+            This will store which item drop list was selected by an elite.
+            This also lets me guarantee elite drops for testing.
+        */
         private static void OnCharacterDeath(ILContext ilContext) {
+            //  This allows the drop rate of elite items to be changed, for testing.
             var checkRollMethodInfo = typeof(RoR2.Util).GetMethod("CheckRoll", new[] { typeof(float), typeof(RoR2.CharacterMaster) });
             var implicitMethodInfo = typeof(UnityEngine.Object).GetMethod("op_Implicit", new[] { typeof(UnityEngine.Object) });
             var isEliteMethodInfo = typeof(RoR2.CharacterBody).GetProperty("isElite", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethod;
@@ -621,6 +694,7 @@ namespace R2API {
             );
             //cursor.Next.Operand = 100f;
 
+            //  This stores the drop list / unique pickup for elites.
             cursor.Index += 10;
             var onCharacterDeathLocalVariables = typeof(RoR2.GlobalEventManager).GetMethod("OnCharacterDeath", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetMethodBody().LocalVariables;
             var equipmentIndexIndex = 0;
@@ -637,8 +711,7 @@ namespace R2API {
             });
         }
 
-        //WILL REMOVE DROP LIST FILTERING FOR SHOP TERMINALS
-
+        //  This is to replace the vanilla drop list filtering for ShopTerminalBehavior, so it can support items of multiple tiers in any tier of drop list.
         private static void GenerateNewPickupServer(ILContext ilContext) {
             var dropTableFieldInfo = typeof(ShopTerminalBehavior).GetField("dropTable", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
             var instanceMethodInfo = typeof(Run).GetProperty("instance", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).GetMethod;
@@ -662,6 +735,10 @@ namespace R2API {
             });
         }
 
+        /*
+            Normally a ShopTerminalBehavior has no reference for what tier of drop list it is supposed to hold.
+            This will store the relevant tier.
+        */
         private static void CreateTerminals(On.RoR2.MultiShopController.orig_CreateTerminals orig, MultiShopController multiShopController) {
             orig(multiShopController);
             ItemTier itemTier = multiShopController.itemTier;
@@ -673,6 +750,7 @@ namespace R2API {
             }
         }
 
+        //  This will allow the ShopTerminalBehavior tier to be sent to clients.
         private static void ShopTerminalOnSerialize(ILContext ilContext) {
             var hasBeenPurchasedInfo = typeof(ShopTerminalBehavior).GetField("hasBeenPurchased", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var writeInfo = typeof(UnityEngine.Networking.NetworkWriter).GetMethod("Write", new Type[] { typeof(bool) });
@@ -692,6 +770,7 @@ namespace R2API {
             });
         }
 
+        //  This will allow the ShopTerminalBehavior tier to be received on clients.
         private static void ShopTerminalOnDeserialize(ILContext ilContext) {
             var readBooleanInfo = typeof(UnityEngine.Networking.NetworkReader).GetMethod("ReadBoolean", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
             var hasBeenPurchasedInfo = typeof(ShopTerminalBehavior).GetField("hasBeenPurchased", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -711,6 +790,12 @@ namespace R2API {
             });
         }
 
+        /*
+            Mystery items in shops (?) have the item they will give selected when the terminal is spawned.
+            The colour of the highlight of the ? is determined by tier of item it represents.
+            With items of multiple tiers allowed in any tier of drop list, this could allow players to see that the mystery item is extra valuable.
+            This will instead force the mystery item to be the colour of the tier of drop list of the terminal.
+        */
         private static void RebuildModel(On.RoR2.PickupDisplay.orig_RebuildModel orig, PickupDisplay pickupDisplay) {
             System.Reflection.FieldInfo hiddenInfo = typeof(RoR2.PickupDisplay).GetField("hidden", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             System.Reflection.FieldInfo pickupIndexInfo = typeof(RoR2.PickupDisplay).GetField("pickupIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -733,6 +818,17 @@ namespace R2API {
             }
         }
 
+
+        //  ----------------------------------------------------------------------------------------------------
+        //  ----------------------------------------------------------------------------------------------------
+        //
+        //  This sections will contain all the hooks required for the game to utilize these modified drop lists without causing errors.
+
+
+        /*
+            This will prevent shop terminals from displaying items, charging for items or giving items if the relevant drop list is unpopulated.
+            This mainly effects the bazaar.
+        */
         private static void GenerateNewPickupServer(On.RoR2.ShopTerminalBehavior.orig_GenerateNewPickupServer orig, ShopTerminalBehavior shopTerminalBehavior) {
             var dropType = InteractableCalculator.DropType.none;
             if (shopTerminalBehavior.itemTier == ItemTier.Tier1) {
@@ -763,6 +859,7 @@ namespace R2API {
             }
         }
 
+        //  This will prevent the scav backpack from being spawned if all of its drop lists are unpopulated.
         private static GameObject CheckForInvalidInteractables(On.RoR2.DirectorCore.orig_TrySpawnObject orig, DirectorCore directorCore, DirectorSpawnRequest directorSpawnRequest) {
             if (directorSpawnRequest.spawnCard.name == ScavengerBackpackSpawnCardName) {
                 if (PlayerInteractables.InvalidInteractables.Contains(ScavengerBackpackInteractableName)) {
@@ -772,6 +869,11 @@ namespace R2API {
             return orig(directorCore, directorSpawnRequest);
         }
 
+        /*
+            The ShrineChanceBehavior will select one item from each tier of drop list and then select on item out of those when it is interacted with by a player.
+            This causes errors if one of those drop lists is empty.
+            This will temporarily set any empty tiered drop list as a known good list.
+        */
         private static void FixShrineBehaviour(On.RoR2.ShrineChanceBehavior.orig_AddShrineStack orig, ShrineChanceBehavior shrineChangeBehavior, Interactor interactor) {
             var tier1Adjusted = PlayerDropList.AvailableTier1DropList;
             if (!PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier1]) {
@@ -795,6 +897,7 @@ namespace R2API {
             DropList.RevertDropLists();
         }
 
+        //  This is to prevent bosses from dropping items that are not part of the drop lists.
         private static void DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup bossGroup) {
             var bossDrops = new List<PickupIndex>();
             var bossDropsAdjusted = new List<PickupIndex>();
@@ -821,8 +924,7 @@ namespace R2API {
                 if (!normalListValid) {
                     DropList.SetDropLists(new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>());
                     bossGroup.bossDropChance = 1;
-                }
-                else if (bossDropsAdjusted.Count == 0) {
+                } else if (bossDropsAdjusted.Count == 0) {
                     bossGroup.bossDropChance = 0;
                 }
 
@@ -837,6 +939,10 @@ namespace R2API {
             }
         }
 
+        /*
+            This will prevent the scrapper from displaying items when the scrap item of the same tier is now available.
+            This will also override the command interface options to show the items in the drop list of the tier of item that was selected.
+        */
         private static void SetOptionsServer(On.RoR2.PickupPickerController.orig_SetOptionsServer orig, PickupPickerController pickupPickerController, PickupPickerController.Option[] options) {
             var optionsAdjusted = new List<PickupPickerController.Option>();
             if (pickupPickerController.contextString.Contains(ScrapperContextString)) {
@@ -845,8 +951,7 @@ namespace R2API {
                         optionsAdjusted.Add(option);
                     }
                 }
-            }
-            else if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
+            } else if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
                 foreach (var pickupIndex in currentPickupList) {
                     _ = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
                     var newOption = new PickupPickerController.Option {
@@ -911,6 +1016,10 @@ namespace R2API {
             orig(pickupPickerController, options);
         }
 
+        /*
+            This will prevent arena's from dropping items from tiers of drop lists that are unpopulated.
+            This mainly effects the void fields.
+        */
         private static void EndRound(On.RoR2.ArenaMissionController.orig_EndRound orig, ArenaMissionController arenaMissionController) {
             var dropType = InteractableCalculator.DropType.tier1;
             if (arenaMissionController.currentRound > 4) {
@@ -930,6 +1039,7 @@ namespace R2API {
             }
         }
 
+        //  This prevents elites from dropping items that are not part of the drop list.
         private static void OnCharacterDeath(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager globalEventManager, DamageReport damageReport) {
             var teamIndex = TeamIndex.None;
             if (damageReport.victimBody.teamComponent != null) {
@@ -951,6 +1061,10 @@ namespace R2API {
                 damageReport.victimBody.isElite = true;
             }
         }
+
+        //  ----------------------------------------------------------------------------------------------------
+        //  ----------------------------------------------------------------------------------------------------
+        //  This point onwards is my attempt at the api's front end. It is not great and Reins is probably better.
 
         /// <summary>
         /// Add the given items to the given drop table.

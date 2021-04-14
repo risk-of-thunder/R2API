@@ -6,7 +6,25 @@ using UnityEngine;
 namespace R2API.ItemDrop {
 
     public class DropOdds : MonoBehaviour {
+        /*
+            There are many sources of dropped items.
+            These sources will often first choose a particular subset of items
+                and only then choose the final item, from within that subset.
+            Typically the items within a subset have equal odds of dropping.
+            But the subsets themselves have differing odds of being picked.
 
+            This class has functions to deal with the different sources of item drops that choose between multiple subsets.
+            These functions are called for each interactable as it is spawned into the scene.
+            These functions will nullify the odds of subsets being selected if that susbset is unpopulated.
+
+            SIDE NOTE:
+            I wrote this class a long time ago.
+            At the beginning of each function the original odds for each subset for each interactable is backed up.
+            Then the odds for each subset for each interactable are restored.
+            Then the odds for the relevant subsets are nullified.
+        */
+
+        //  These are the sources of item drops that utilize the ChestBehavior class and have pick between subsets.
         private static readonly List<string> ChestInteractables = new List<string> {
             "Chest1",
             "Chest2",
@@ -20,6 +38,9 @@ namespace R2API.ItemDrop {
 
         private static readonly Dictionary<string, List<float>> ChestTierOdds = new Dictionary<string, List<float>>();
 
+        /*
+            This will update the subset odds for the interactables that utilize ChestBehavior.
+        */
         public static void UpdateChestTierOdds(SpawnCard spawnCard, string interactableName) {
             if (ChestInteractables.Contains(interactableName)) {
                 ChestBehavior chestBehavior = spawnCard.prefab.GetComponent<ChestBehavior>();
@@ -35,7 +56,9 @@ namespace R2API.ItemDrop {
                     chestBehavior.tier2Chance = ChestTierOdds[interactableName][1];
                     chestBehavior.tier3Chance = ChestTierOdds[interactableName][2];
                 }
+                
                 if (ItemDropAPI.PlayerInteractables.SubsetTiersPresent.ContainsKey(interactableName)) {
+                    //  This is for damage, healing and utility chests
                     if (!ItemDropAPI.PlayerInteractables.SubsetTiersPresent[interactableName][InteractableCalculator.DropType.tier1]) {
                         chestBehavior.tier1Chance = 0;
                     }
@@ -47,6 +70,7 @@ namespace R2API.ItemDrop {
                     }
                 }
                 else {
+                    //  This is for everything else
                     if (!ItemDropAPI.PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier1]) {
                         chestBehavior.tier1Chance = 0;
                     }
@@ -60,12 +84,17 @@ namespace R2API.ItemDrop {
             }
         }
 
+        //  These are the sources of item drops that utilize the ShrineChanceBehavior class and have pick between subsets.
         private static readonly List<string> ShrineInteractables = new List<string> {
             "ShrineChance"
         };
 
         private static readonly Dictionary<string, List<float>> ShrineTierOdds = new Dictionary<string, List<float>>();
 
+
+        /*
+            This will update the subset odds for the interactables that utilize ShrineChanceBehavior.
+        */
         public static void UpdateShrineTierOdds(DirectorCard directorCard, string interactableName) {
             if (ShrineInteractables.Contains(interactableName)) {
                 ShrineChanceBehavior shrineBehavior = directorCard.spawnCard.prefab.GetComponent<ShrineChanceBehavior>();
@@ -99,12 +128,16 @@ namespace R2API.ItemDrop {
             }
         }
 
+        //  These are the sources of item drops that utilize the RouletteChestController class and have pick between subsets.
         private static readonly List<string> DropTableInteractables = new List<string> {
             "CasinoChest"
         };
 
         private static readonly Dictionary<string, List<float>> DropTableTierOdds = new Dictionary<string, List<float>>();
 
+        /*
+            This will update the subset odds for the interactables that utilize RouletteChestController.
+        */
         public static void UpdateDropTableTierOdds(SpawnCard spawnCard, string interactableName) {
             if (DropTableInteractables.Contains(interactableName)) {
                 BasicPickupDropTable dropTable = spawnCard.prefab.GetComponent<RouletteChestController>().dropTable as BasicPickupDropTable;
@@ -138,12 +171,16 @@ namespace R2API.ItemDrop {
             }
         }
 
+        //  These are the sources of item drops that utilize the ExplicitPickupDropTable class and have pick between specific boss items.
         private static readonly List<string> DropTableItemInteractables = new List<string> {
             "ShrineCleanse"
         };
 
         private static readonly Dictionary<string, List<float>> DropTableItemOdds = new Dictionary<string, List<float>>();
 
+        /*
+            This will update the items odds for the interactables that utilize ExplicitPickupDropTable for specific boss items.
+        */
         public static void UpdateDropTableItemOdds(DropList dropList, ExplicitPickupDropTable dropTable, string interactableName) {
             if (DropTableItemInteractables.Contains(interactableName)) {
                 if (!DropTableItemOdds.ContainsKey(interactableName)) {

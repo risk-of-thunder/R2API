@@ -6,11 +6,15 @@ namespace R2API {
     namespace ItemDropAPITools {
 
         public static class Catalog {
+            /*
+                This class creates and stores lists for specific types of items that are not saved in their own lists in the vanilla game.
+                These are purely for reference so they can be iterated through elsewhere.
+            */
+
             public static bool Loaded;
             public static readonly List<ItemIndex> SpecialItems = new List<ItemIndex>();
             public static readonly Dictionary<ItemTier, ItemIndex> ScrapItems = new Dictionary<ItemTier, ItemIndex>();
             public static readonly List<EquipmentIndex> EliteEquipment = new List<EquipmentIndex>();
-
             public static readonly List<ItemIndex> Pearls = new List<ItemIndex>();
 
             public static void PopulateItemCatalog() {
@@ -41,6 +45,9 @@ namespace R2API {
                         }
                     }
 
+                    /*
+                    //  This was something I was experimenting with but have abandoned for now.
+
                     foreach (var itemIndex in ItemCatalog.lunarItemList) {
                         var itemDef = ItemCatalog.GetItemDef(itemIndex);
                         var cleansable = false;
@@ -57,11 +64,13 @@ namespace R2API {
                             }
                         }
                     }
+                    */
 
                     Loaded = true;
                 }
             }
 
+            // Will retrieve the item index of a scrap type item of the matching tier.
             public static ItemIndex GetScrapIndex(ItemTier itemTier) {
                 if (ScrapItems.ContainsKey(itemTier)) {
                     return ScrapItems[itemTier];

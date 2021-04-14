@@ -6,13 +6,24 @@ using System.Linq;
 namespace R2API.ItemDrop {
 
     public class InteractableCalculator {
+        /*
+            There are many interactables that can drop items.
+            Each of these interactables will have their selection of items sorted into a few different subset lists.
+            This class determines which of those subset lists are present in the current run
+                and therefore which interactables should be prevented from spawning.
+        */
+
         public const int PrefixLength = 3;
 
         public readonly List<string> InvalidInteractables = new List<string>();
 
-        // tier1 REPRESENTS A VALID ITEM IN THE TIER1 DROP LIST
-        // tier1Tier REPRESENTS A VALID TIER1 ITEM THAT CAN DROP FROM ANY DROP LIST
 
+        /*
+            This enum represents all the different subsets of items that interactables currently use.
+
+            tier1 REPRESENTS A VALID ITEM IN THE TIER1 DROP LIST
+            tier1Tier REPRESENTS A VALID TIER1 ITEM THAT CAN DROP FROM ANY DROP LIST
+        */
         public enum DropType {
             tier1,
             tier2,
@@ -53,6 +64,12 @@ namespace R2API.ItemDrop {
             "CategoryChestUtility"
         };
 
+
+        /*
+            This dictionary contains every interactable that drops items
+                and the subset lists utilized to select an item to drop.
+            If any of the subset lists are populated the interactable is allowed to spawn.
+        */
         public readonly Dictionary<string, Dictionary<DropType, bool>> InteractablesTiers = new Dictionary<string, Dictionary<DropType, bool>> {
             { "Chest1", new Dictionary<DropType, bool> {
                 { DropType.tier1, false }
@@ -146,14 +163,26 @@ namespace R2API.ItemDrop {
             }}
         };
 
+        /*
+            This is a list of interactables that require all subset lists to be populated to be allowed to spawn.
+        */
         public static readonly List<string> AllTiersMustBePresent = new List<string> {
             "ShrineCleanse"
         };
 
+
+        /*
+            This function will remove isc from the interactable spawn card name, to save me typing it again everywhere.
+            ie. iscShrineCleanse to ShrineCleanse
+        */
         public static string GetSpawnCardName(SpawnCard givenSpawnCard) {
             return givenSpawnCard.name.Substring(PrefixLength, givenSpawnCard.name.Length - PrefixLength);
         }
 
+
+        /*
+            Will add every item in list B to list A.
+        */
         public static void AddItemsToList(List<PickupIndex> dst, IEnumerable<PickupIndex> src) {
             foreach (var pickupIndex in src) {
                 if (PickupCatalog.GetPickupDef(pickupIndex)?.itemIndex != ItemIndex.None) {
@@ -165,6 +194,9 @@ namespace R2API.ItemDrop {
         }
 
         public void CalculateInvalidInteractables(DropList dropList) {
+            /*
+                These sections of code will determine if each of the subset lists are populated.
+            */
             TiersPresent.Clear();
             foreach (DropType dropType in System.Enum.GetValues(typeof(DropType))) {
                 TiersPresent.Add(dropType, false);
@@ -328,6 +360,10 @@ namespace R2API.ItemDrop {
             if (DropList.IsValidList(dropList.AvailableLunarEquipmentDropList)) {
                 TiersPresent[DropType.lunar] = true;
             }
+
+            /*
+                Updates the interactable types with which subset lists are populated.
+            */
             var interactableTypeKeys = InteractablesTiers.Keys.ToList();
             foreach (var interactableType in interactableTypeKeys) {
                 var interactableTypeTierKeys = InteractablesTiers[interactableType].Keys.ToList();
@@ -355,6 +391,9 @@ namespace R2API.ItemDrop {
                 }
             }
 
+            /*
+                Determines which interactables should be prevented from spawning based on which subset lists are populated.
+            */
             InvalidInteractables.Clear();
             foreach (var interactableType in InteractablesTiers.Keys) {
                 var interactableValid = false;

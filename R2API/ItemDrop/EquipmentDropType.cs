@@ -4,7 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace R2API.ItemDrop {
-
+    /*
+        Items drop lists are conveniently broken up by item tiers, for the most part.
+        Equipment doesn't have a similar flag, so this enum was created for that purpose.
+        This is used by mods to designate which equipment drop list is to be added to or removed from.
+    */
     [Flags]
     public enum EquipmentDropType {
         DefaultValue = 0,
@@ -15,6 +19,7 @@ namespace R2API.ItemDrop {
         NoDrop = 16
     }
 
+    //  I did not create this class. It seems to be used to implement the current ItemDropAPI and MonsterItemsAPI front end.
     public static class EquipmentDropTypeUtil {
 
         public static IEnumerable<EquipmentDropType> GetEquipmentTypesFromIndex(EquipmentIndex equipmentIndex) {
