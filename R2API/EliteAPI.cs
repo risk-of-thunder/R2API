@@ -1,9 +1,11 @@
-﻿using R2API.Utils;
+﻿using MonoMod.Cil;
+using R2API.Utils;
 using RoR2;
 using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -32,16 +34,35 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
+            IL.RoR2.CombatDirector.Init += RetrieveVanillaEliteTierCount;
+            On.RoR2.CombatDirector.Init += AddCustomEliteTiers;
+
             R2APIContentPackProvider.WhenContentPackReady += AddElitesToGame;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
+            IL.RoR2.CombatDirector.Init -= RetrieveVanillaEliteTierCount;
+            On.RoR2.CombatDirector.Init -= AddCustomEliteTiers;
+
             R2APIContentPackProvider.WhenContentPackReady -= AddElitesToGame;
+        }
+
+        private static void AddCustomEliteTiers(On.RoR2.CombatDirector.orig_Init orig) {
+            if (!_eliteTierCatalogInitialized) {
+                orig();
+                CombatDirector.eliteTiers = CombatDirector.eliteTiers.Concat(CustomEliteTierDefs).ToArray();
+            }
+        }
+
+        private static void LazyInitVanillaEliteTiers() {
+            CombatDirector.Init();
         }
 
         private static void AddElitesToGame(ContentPack r2apiContentPack) {
             var eliteDefs = new List<EliteDef>();
+
+            LazyInitVanillaEliteTiers();
 
             foreach (var customElite in EliteDefinitions) {
                 eliteDefs.Add(customElite.EliteDef);
@@ -67,6 +88,17 @@ namespace R2API {
             _eliteCatalogInitialized = true;
         }
 
+        private static void RetrieveVanillaEliteTierCount(ILContext il) {
+            var c = new ILCursor(il);
+            if (c.TryGotoNext(
+                i => i.MatchLdcI4(out VanillaEliteTierCount),
+                i => i.MatchNewarr<CombatDirector.EliteTierDef>())) {
+            }
+            else {
+                R2API.Logger.LogError("Failed finding IL Instructions. Aborting RetrieveVanillaEliteTierCount IL Hook");
+            }
+        }
+
         #endregion ModHelper Events and Hooks
 
         #region Add Methods
@@ -89,7 +121,7 @@ namespace R2API {
                 return false;
             }
 
-            var numberOfEliteTiersDefined = GetCombatDirectorEliteTiers().Length - 2;
+            var numberOfEliteTiersDefined = VanillaEliteTierCount + CustomEliteTierCount - 2;
             if (elite.EliteTier <= 0 && elite.EliteTier > numberOfEliteTiersDefined) {
                 R2API.Logger.LogError(
                     "Incorrect Elite Tier, must be valid: greater than 0 and "
@@ -108,9 +140,13 @@ namespace R2API {
         /// <summary>
         /// Returns the current elite tier definitions used by the Combat Director for doing its elite spawning while doing a run.
         /// </summary>
-        public static CombatDirector.EliteTierDef?[]? GetCombatDirectorEliteTiers() {
-            return typeof(CombatDirector).GetFieldValue<CombatDirector.EliteTierDef[]>("eliteTiers");
-        }
+        public static CombatDirector.EliteTierDef?[]? GetCombatDirectorEliteTiers() => CombatDirector.eliteTiers;
+        private static bool _eliteTierCatalogInitialized => CombatDirector.eliteTiers != null && CombatDirector.eliteTiers.Length > 0;
+
+        public static int VanillaEliteTierCount;
+
+        private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = new List<CombatDirector.EliteTierDef>();
+        public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
 
         /// <summary>
         /// The EliteTierDef array is used by the Combat Director for doing its elite spawning while doing a run.
@@ -118,7 +154,7 @@ namespace R2API {
         /// </summary>
         /// <param name="newEliteTiers">The new elite tiers that will be used by the combat director.</param>
         public static void OverrideCombatDirectorEliteTiers(CombatDirector.EliteTierDef?[]? newEliteTiers) {
-            typeof(CombatDirector).SetFieldValue("eliteTiers", newEliteTiers);
+            CombatDirector.eliteTiers = newEliteTiers;
         }
 
         /// <summary>
@@ -133,11 +169,19 @@ namespace R2API {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
             }
+
+            var index = VanillaEliteTierCount + CustomEliteTierCount;
+
             var currentEliteTiers = GetCombatDirectorEliteTiers();
-            var index = currentEliteTiers.Length;
-            Array.Resize(ref currentEliteTiers, index + 1);
-            currentEliteTiers[index] = eliteTierDef;
-            OverrideCombatDirectorEliteTiers(currentEliteTiers);
+            if (currentEliteTiers != null) {
+                Array.Resize(ref currentEliteTiers, index + 1);
+                currentEliteTiers[index] = eliteTierDef;
+                OverrideCombatDirectorEliteTiers(currentEliteTiers);
+            }
+
+            CustomEliteTierDefs.Add(eliteTierDef);
+
+            R2API.Logger.LogInfo($"Custom Elite Tier : (Index : {index}) added");
 
             return index - 1;
         }
