@@ -57,14 +57,6 @@ namespace R2API.Utils {
         }
     }
 
-    /// <summary>
-    /// Forward declare this attribute in your plugin assembly
-    /// and use this one instead if you are already registering your plugin yourself
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Assembly)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public class ManualNetworkRegistrationAttribute : Attribute { }
-
     internal class NetworkCompatibilityHandler {
         internal const char ModGuidAndModVersionSeparator = ';';
         internal readonly HashSet<string> ModList = new HashSet<string>();
@@ -76,7 +68,6 @@ namespace R2API.Utils {
         private void ScanPluginsForNetworkCompat(object? _, EventArgs __) {
             foreach (var (_, pluginInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos) {
                 try {
-                    var pluginAssembly = pluginInfo.Instance.GetType().Assembly;
                     var modGuid = pluginInfo.Metadata.GUID;
                     var modVer = pluginInfo.Metadata.Version;
 
@@ -84,7 +75,7 @@ namespace R2API.Utils {
                         continue;
                     }
 
-                    if (AssemblyHasManualRegistration(pluginAssembly)) {
+                    if (pluginInfo.Dependencies.All(dependency => dependency.DependencyGUID != R2API.PluginGUID)) {
                         continue;
                     }
 
@@ -106,16 +97,6 @@ namespace R2API.Utils {
 
             AddToNetworkModList();
             R2API.R2APIStart -= ScanPluginsForNetworkCompat;
-        }
-
-        private static bool AssemblyHasManualRegistration(Assembly assembly) {
-            foreach (var assemblyAttribute in assembly.CustomAttributes) {
-                if (assemblyAttribute.AttributeType.FullName == typeof(ManualNetworkRegistrationAttribute).FullName) {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         // TODO: Should remove disable of nullable context, but changes here require extra testing.
