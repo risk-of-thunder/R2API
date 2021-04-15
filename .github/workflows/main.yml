@@ -12,18 +12,12 @@ jobs:
           git fetch --tags
           git branch --create-reflog master origin/master
     - name: Git Version
-      # You may pin to the exact commit or the version.
-      # uses: codacy/git-version@fa06788276d7492a2af01662649696d249ecf4cb
-      uses: codacy/git-version@2.4.0
-      with:
-        # The name of the release branch
-        release-branch: # default is master
-        # The name of the dev branch
-        dev-branch: # default is dev
-        # The prefix to use in the version
-        prefix: # optional
-        # The paths to be used to calculate changes (comma-separated)
-        log-paths: # optional, default is ./
+      uses: roryprimrose/rungitversion@v1.0.0
+    - name: Output version values 
+      run: |  
+        echo "Major: ${{ steps.gitversion.outputs.Major }}"
+        echo "Minor: ${{ steps.gitversion.outputs.Minor }}"
+        echo "Patch: ${{ steps.gitversion.outputs.Patch }}"
     - name: Run Tests
       run: |
         dotnet test
@@ -33,17 +27,14 @@ jobs:
       run: |
         mkdir plugins
         mkdir plugins/R2API
-        mkdir patchers
         cp R2API/bin/Debug/**/*.dll plugins/R2API/
         cp R2API/bin/Debug/**/*.xml plugins/R2API/
-        cp R2API.Patcher/bin/Debug/**/*.dll patchers/
     - name: Upload R2API Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: R2API
         path: |
           plugins/*
-          patchers/*
           manifest.json
           icon.png
           README.md
