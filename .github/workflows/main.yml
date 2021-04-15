@@ -11,8 +11,7 @@ jobs:
       run: |
           git fetch --tags
           git branch --create-reflog master origin/master
-    - name: Git Version
-      uses: roryprimrose/rungitversion@v1.0.0
+    - run: GitVersion
     - name: Output version values 
       run: |  
         echo "Major: ${{ steps.gitversion.outputs.Major }}"
