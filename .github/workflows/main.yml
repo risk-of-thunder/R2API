@@ -23,6 +23,11 @@ jobs:
         echo "Major: ${{ steps.gitversion.outputs.Major }}"
         echo "Minor: ${{ steps.gitversion.outputs.Minor }}"
         echo "Patch: ${{ steps.gitversion.outputs.Patch }}"
+        
+    - name: Update versions
+      run: |
+        sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"${{ steps.gitversion.outputs.SemVer }}\"/" R2API/R2API.cs
+        sed -i -E "s/(\"version_number\":\s*)\"0.0.1\"/\1\"${{ steps.gitversion.outputs.SemVer }}\"/" manifest.json
     - name: Run Tests
       run: |
         dotnet test
