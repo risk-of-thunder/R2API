@@ -64,7 +64,7 @@ All changelogs before 3.0.0 version
 **2.4.10**
 
 * [Fix for the descriptionToken of custom survivors](https://github.com/risk-of-thunder/R2API/pull/130)
-* Update for latest game update:[A]](https://github.com/risk-of-thunder/R2API/pull/128) [B](https://github.com/risk-of-thunder/R2API/pull/131) [C](https://github.com/risk-of-thunder/R2API/pull/132)
+* Update for latest game update: [A](https://github.com/risk-of-thunder/R2API/pull/128) [B](https://github.com/risk-of-thunder/R2API/pull/131) [C](https://github.com/risk-of-thunder/R2API/pull/132)
 * [Add UnbundledResourceProvider (allows to add generated assets easily)](https://github.com/risk-of-thunder/R2API/pull/125)
 
 **2.4.2**
