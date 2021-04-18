@@ -20,9 +20,6 @@ namespace R2API.ItemDrop {
 
         /*
             This enum represents all the different subsets of items that interactables currently use.
-
-            tier1 REPRESENTS A VALID ITEM IN THE TIER1 DROP LIST
-            tier1Tier REPRESENTS A VALID TIER1 ITEM THAT CAN DROP FROM ANY DROP LIST
         */
         public enum DropType {
             tier1,
@@ -30,14 +27,8 @@ namespace R2API.ItemDrop {
             tier3,
             boss,
             lunar,
-            tier1Tier,
-            tier2Tier,
-            tier3Tier,
-            bossTier,
-            lunarTier,
             equipment,
             lunarEquipment,
-            equipmentTier,
             damage,
             healing,
             utility,
@@ -47,15 +38,14 @@ namespace R2API.ItemDrop {
         }
 
         public static readonly Dictionary<DropType, ItemTier> TierConversion = new Dictionary<DropType, ItemTier> {
-            { DropType.tier1Tier, ItemTier.Tier1 },
-            { DropType.tier2Tier, ItemTier.Tier2 },
-            { DropType.tier3Tier, ItemTier.Tier3 },
-            { DropType.bossTier, ItemTier.Boss },
-            { DropType.lunarTier, ItemTier.Lunar }
+            { DropType.tier1, ItemTier.Tier1 },
+            { DropType.tier2, ItemTier.Tier2 },
+            { DropType.tier3, ItemTier.Tier3 },
+            { DropType.boss, ItemTier.Boss },
+            { DropType.lunar, ItemTier.Lunar }
         };
 
         public readonly Dictionary<DropType, bool> TiersPresent = new Dictionary<DropType, bool>();
-
         public readonly Dictionary<string, Dictionary<DropType, bool>> SubsetTiersPresent = new Dictionary<string, Dictionary<DropType, bool>>();
 
         private readonly List<string> _subsetChests = new List<string> {
@@ -108,21 +98,21 @@ namespace R2API.ItemDrop {
                 { DropType.equipment, false}
             }},
             { "ShrineCleanse", new Dictionary<DropType, bool> {
-                { DropType.lunarTier, false },
+                { DropType.lunar, false },
                 { DropType.pearl, false}
             }},
             { "ShrineRestack", new Dictionary<DropType, bool> {
-                { DropType.tier1Tier, false },
-                { DropType.tier2Tier, false },
-                { DropType.tier3Tier, false },
-                { DropType.bossTier, false },
-                { DropType.lunarTier, false }
+                { DropType.tier1, false },
+                { DropType.tier2, false },
+                { DropType.tier3, false },
+                { DropType.boss, false },
+                { DropType.lunar, false }
             }},
             { "TripleShopEquipment", new Dictionary<DropType, bool> {
                 { DropType.equipment, false }
             }},
             { "BrokenEquipmentDrone", new Dictionary<DropType, bool> {
-                { DropType.equipmentTier, false }
+                { DropType.equipment, false }
             }},
             { "Chest1Stealthed", new Dictionary<DropType, bool> {
                 { DropType.tier1, false },
@@ -133,10 +123,10 @@ namespace R2API.ItemDrop {
                 { DropType.tier3, false }
             }},
             { "Scrapper", new Dictionary<DropType, bool> {
-                { DropType.tier1Tier, false },
-                { DropType.tier2Tier, false },
-                { DropType.tier3Tier, false },
-                { DropType.bossTier, false }
+                { DropType.tier1, false },
+                { DropType.tier2, false },
+                { DropType.tier3, false },
+                { DropType.boss, false }
             }},
             { "Duplicator", new Dictionary<DropType, bool> {
                 { DropType.tier1, false }
@@ -176,7 +166,11 @@ namespace R2API.ItemDrop {
             ie. iscShrineCleanse to ShrineCleanse
         */
         public static string GetSpawnCardName(SpawnCard givenSpawnCard) {
-            return givenSpawnCard.name.Substring(PrefixLength, givenSpawnCard.name.Length - PrefixLength);
+            return GetSpawnCardName(givenSpawnCard.name);
+        }
+
+        public static string GetSpawnCardName(string givenName) {
+            return givenName.Substring(PrefixLength, givenName.Length - PrefixLength);
         }
 
 
@@ -201,7 +195,6 @@ namespace R2API.ItemDrop {
             foreach (DropType dropType in System.Enum.GetValues(typeof(DropType))) {
                 TiersPresent.Add(dropType, false);
             }
-
             SubsetTiersPresent.Clear();
             foreach (var subsetChest in _subsetChests) {
                 SubsetTiersPresent.Add(subsetChest, new Dictionary<DropType, bool>());
@@ -211,61 +204,31 @@ namespace R2API.ItemDrop {
             }
 
             if (DropList.IsValidList(dropList.AvailableTier1DropList)) {
-                foreach (var pickupIndex in dropList.AvailableTier1DropList) {
-                    var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
-                    if (pickupDef != null) {
-                        TiersPresent[DropType.tier1] = true;
-                        break;
-                    }
-                }
+                TiersPresent[DropType.tier1] = true;
             }
-
             if (DropList.IsValidList(dropList.AvailableTier2DropList)) {
-                foreach (var pickupIndex in dropList.AvailableTier2DropList) {
-                    var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
-                    if (pickupDef != null) {
-                        TiersPresent[DropType.tier2] = true;
-                        break;
-                    }
-                }
+                TiersPresent[DropType.tier2] = true;
             }
-
             if (DropList.IsValidList(dropList.AvailableTier3DropList)) {
-                foreach (var pickupIndex in dropList.AvailableTier3DropList) {
-                    var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
-                    if (pickupDef != null) {
-                        TiersPresent[DropType.tier3] = true;
-                        break;
-                    }
-                }
+                TiersPresent[DropType.tier3] = true;
             }
-
+            if (DropList.IsValidList(dropList.AvailableBossDropList)) {
+                TiersPresent[DropType.boss] = true;
+            }
+            if (DropList.IsValidList(dropList.AvailableLunarDropList)) {
+                TiersPresent[DropType.lunar] = true;
+            }
+            if (DropList.IsValidList(dropList.AvailableNormalEquipmentDropList)) {
+                TiersPresent[DropType.equipment] = true;
+            }
+            if (DropList.IsValidList(dropList.AvailableLunarEquipmentDropList)) {
+                TiersPresent[DropType.lunar] = true;
+            }
             foreach (var pickupIndex in dropList.AvailableSpecialItems) {
                 var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
                 if (pickupDef != null) {
-                    if (pickupDef.itemIndex != ItemIndex.None &&
-                        Catalog.Pearls.Contains(pickupDef.itemIndex)) {
+                    if (Catalog.Pearls.Contains(pickupDef.itemIndex)) {
                         TiersPresent[DropType.pearl] = true;
-                        break;
-                    }
-                }
-            }
-
-            if (DropList.IsValidList(dropList.AvailableBossDropList)) {
-                foreach (var pickupIndex in dropList.AvailableBossDropList) {
-                    var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
-                    if (pickupDef != null) {
-                        TiersPresent[DropType.boss] = true;
-                        break;
-                    }
-                }
-            }
-
-            if (DropList.IsValidList(dropList.AvailableLunarDropList)) {
-                foreach (var pickupIndex in dropList.AvailableLunarDropList) {
-                    var pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
-                    if (pickupDef != null) {
-                        TiersPresent[DropType.lunar] = true;
                         break;
                     }
                 }
@@ -309,57 +272,7 @@ namespace R2API.ItemDrop {
                     }
                 }
             }
-            List<List<PickupIndex>> allDropLists = new List<List<PickupIndex>>() {
-                dropList.AvailableTier1DropList,
-                dropList.AvailableTier2DropList,
-                dropList.AvailableTier3DropList,
-                dropList.AvailableBossDropList,
-                dropList.AvailableLunarDropList,
-                dropList.AvailableSpecialItems,
-                dropList.AvailableEquipmentDropList,
-                dropList.AvailableNormalEquipmentDropList,
-                dropList.AvailableLunarEquipmentDropList,
-                dropList.AvailableSpecialEquipment,
-            };
-            foreach (List<PickupIndex> availableDropList in allDropLists) {
-                foreach (PickupIndex pickupIndex in availableDropList) {
-                    PickupDef pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
-                    if (pickupDef != null) {
-                        ItemIndex itemIndex = pickupDef.itemIndex;
-                        if (itemIndex != ItemIndex.None) {
-                            if (!ItemCatalog.GetItemDef(itemIndex).ContainsTag(ItemTag.Scrap)) {
-                                ItemTier itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
-                                if (itemTier == ItemTier.Tier1) {
-                                    TiersPresent[DropType.tier1Tier] = true;
-                                }
-                                else if (itemTier == ItemTier.Tier2) {
-                                    TiersPresent[DropType.tier2Tier] = true;
-                                }
-                                else if (itemTier == ItemTier.Tier3) {
-                                    TiersPresent[DropType.tier3Tier] = true;
-                                }
-                                else if (itemTier == ItemTier.Boss) {
-                                    TiersPresent[DropType.bossTier] = true;
-                                }
-                                else if (itemTier == ItemTier.Lunar) {
-                                    TiersPresent[DropType.lunarTier] = true;
-                                }
-                            }
-                        }
-                        EquipmentIndex equipmentIndex = pickupDef.equipmentIndex;
-                        if (equipmentIndex != EquipmentIndex.None) {
-                            TiersPresent[DropType.equipmentTier] = true;
-                        }
-                    }
-                }
-            }
-
-            if (DropList.IsValidList(dropList.AvailableNormalEquipmentDropList)) {
-                TiersPresent[DropType.equipment] = true;
-            }
-            if (DropList.IsValidList(dropList.AvailableLunarEquipmentDropList)) {
-                TiersPresent[DropType.lunar] = true;
-            }
+            
 
             /*
                 Updates the interactable types with which subset lists are populated.

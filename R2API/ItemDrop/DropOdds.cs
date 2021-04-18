@@ -178,31 +178,36 @@ namespace R2API.ItemDrop {
 
         private static readonly Dictionary<string, List<float>> DropTableItemOdds = new Dictionary<string, List<float>>();
 
+        public static void UpdateDropTableItemOdds(DropList dropList, SpawnCard spawnCard, string interactableName) {
+            if (DropTableItemInteractables.Contains(interactableName)) {
+                var dropTable = spawnCard.prefab.GetComponent<ShopTerminalBehavior>().dropTable as ExplicitPickupDropTable;
+                DropOdds.UpdateDropTableItemOdds(dropList, dropTable, interactableName);
+            }
+        }
+
         /*
             This will update the items odds for the interactables that utilize ExplicitPickupDropTable for specific boss items.
         */
-        public static void UpdateDropTableItemOdds(DropList dropList, ExplicitPickupDropTable dropTable, string interactableName) {
-            if (DropTableItemInteractables.Contains(interactableName)) {
-                if (!DropTableItemOdds.ContainsKey(interactableName)) {
-                    DropTableItemOdds.Add(interactableName, new List<float>());
-                    foreach (ExplicitPickupDropTable.Entry entry in dropTable.entries) {
-                        DropTableItemOdds[interactableName].Add(entry.pickupWeight);
-                    }
+        private static void UpdateDropTableItemOdds(DropList dropList, ExplicitPickupDropTable dropTable, string interactableName) {
+            if (!DropTableItemOdds.ContainsKey(interactableName)) {
+                DropTableItemOdds.Add(interactableName, new List<float>());
+                foreach (ExplicitPickupDropTable.Entry entry in dropTable.entries) {
+                    DropTableItemOdds[interactableName].Add(entry.pickupWeight);
                 }
-
-                if (DropTableItemOdds.ContainsKey(interactableName)) {
-                    for (int entryIndex = 0; entryIndex < dropTable.entries.Length; entryIndex++) {
-                        dropTable.entries[entryIndex].pickupWeight = DropTableItemOdds[interactableName][entryIndex];
-                    }
-                }
-                for (int entryIndex = 0; entryIndex < dropTable.entries.Length; entryIndex++) {
-                    if (!dropList.AvailableBossDropList.Contains(PickupCatalog.FindPickupIndex(dropTable.entries[entryIndex].pickupName))) {
-                        dropTable.entries[entryIndex].pickupWeight = 0;
-                    }
-                }
-
-                //dropTable.GenerateWeightedSelection();
             }
+
+            if (DropTableItemOdds.ContainsKey(interactableName)) {
+                for (int entryIndex = 0; entryIndex < dropTable.entries.Length; entryIndex++) {
+                    dropTable.entries[entryIndex].pickupWeight = DropTableItemOdds[interactableName][entryIndex];
+                }
+            }
+            for (int entryIndex = 0; entryIndex < dropTable.entries.Length; entryIndex++) {
+                if (!dropList.AvailableBossDropList.Contains(PickupCatalog.FindPickupIndex(dropTable.entries[entryIndex].pickupName))) {
+                    dropTable.entries[entryIndex].pickupWeight = 0;
+                }
+            }
+
+            //dropTable.GenerateWeightedSelection();
         }
     }
 }

@@ -62,78 +62,35 @@ namespace R2API {
             public List<PickupIndex> AvailableLunarEquipmentDropList = new List<PickupIndex>();
             public List<PickupIndex> AvailableSpecialItems = new List<PickupIndex>();
             public List<PickupIndex> AvailableSpecialEquipment = new List<PickupIndex>();
-
-            public const string NullIconTextureName = "texNullIcon";
+            
 
             public List<PickupIndex> GetDropList(ItemTier itemTier) {
                 if (itemTier == ItemTier.Tier1) {
                     return AvailableTier1DropList;
-                }
-                else if (itemTier == ItemTier.Tier2) {
+                } else if (itemTier == ItemTier.Tier2) {
                     return AvailableTier2DropList;
-                }
-                else if (itemTier == ItemTier.Tier3) {
+                } else if (itemTier == ItemTier.Tier3) {
                     return AvailableTier3DropList;
-                }
-                else if (itemTier == ItemTier.Boss) {
+                } else if (itemTier == ItemTier.Boss) {
                     return AvailableBossDropList;
-                }
-                else if (itemTier == ItemTier.Lunar) {
+                } else if (itemTier == ItemTier.Lunar) {
                     return AvailableLunarDropList;
-                }
-                else {
+                } else {
                     return AvailableNormalEquipmentDropList;
                 }
+            }
+
+            public static void OnRunStart(On.RoR2.Run.orig_Start orig, Run run) {
+                OriginalListsSaved = false;
             }
 
             /*
                 Creates a new list containing all the items in another list.
                 Returns a list containing none when given an empty list to fix a bug caused by having a list with a length of zero.
             */
-            private static List<PickupIndex> BackupDropList(IEnumerable<PickupIndex> list) {
+            public static List<PickupIndex> BackupDropList(IEnumerable<PickupIndex> list) {
                 var pickupIndices = list.ToList();
                 return pickupIndices.Any() ? pickupIndices.ToList() : new List<PickupIndex> { PickupIndex.none };
-            }
-
-            /*
-                This will backup the four main drop lists in Run and then overwrite them.
-                The intention is this function is used when changing the drop lists only temporarily.
-            */
-            public static void SetDropLists(IEnumerable<PickupIndex> givenTier1, IEnumerable<PickupIndex> givenTier2,
-                IEnumerable<PickupIndex> givenTier3, IEnumerable<PickupIndex> givenEquipment) {
-                var availableItems = new List<List<PickupIndex>> {
-                    BackupDropList(givenTier1),
-                    BackupDropList(givenTier2),
-                    BackupDropList(givenTier3),
-                    BackupDropList(givenEquipment)
-                };
-
-                var run = Run.instance;
-                Tier1DropListBackup = BackupDropList(run.availableTier1DropList);
-                Tier2DropListBackup = BackupDropList(run.availableTier2DropList);
-                Tier3DropListBackup = BackupDropList(run.availableTier3DropList);
-                EquipmentDropListBackup = BackupDropList(run.availableEquipmentDropList);
-
-                run.availableTier1DropList = availableItems[0];
-                run.availableTier2DropList = availableItems[1];
-                run.availableTier3DropList = availableItems[2];
-                run.availableEquipmentDropList = availableItems[3];
-            }
-
-            //  This function will revert the four main drop lists in Run to how they were before they were changed temporarily.
-            public static void RevertDropLists() {
-                var oldItems = new List<List<PickupIndex>> {
-                    BackupDropList(Tier1DropListBackup),
-                    BackupDropList(Tier2DropListBackup),
-                    BackupDropList(Tier3DropListBackup),
-                    BackupDropList(EquipmentDropListBackup)
-                };
-
-                var run = Run.instance;
-                run.availableTier1DropList = oldItems[0];
-                run.availableTier2DropList = oldItems[1];
-                run.availableTier3DropList = oldItems[2];
-                run.availableEquipmentDropList = oldItems[3];
             }
 
             //  Clears all the drop lists in the Run class.
@@ -160,7 +117,6 @@ namespace R2API {
                     EquipmentDropListOriginal = BackupDropList(run.availableEquipmentDropList);
                     NormalEquipmentDropListOriginal = BackupDropList(run.availableNormalEquipmentDropList);
                     LunarEquipmentDropListOriginal = BackupDropList(run.availableLunarEquipmentDropList);
-
                     BossDropListOriginal = BackupDropList(run.availableBossDropList);
 
                     /*
@@ -186,10 +142,7 @@ namespace R2API {
                     
                     SpecialEquipmentOriginal.Clear();
                     foreach (var equipmentIndex in Catalog.EliteEquipment) {
-                        var sprite = EquipmentCatalog.GetEquipmentDef(equipmentIndex).pickupIconSprite;
-                        if (sprite != null && !sprite.name.Contains(NullIconTextureName)) {
-                            SpecialEquipmentOriginal.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
-                        }
+                        SpecialEquipmentOriginal.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
                     }
 
                     OriginalListsSaved = true;
@@ -198,135 +151,80 @@ namespace R2API {
 
             //  Saves the adjusted drop lists, which are the master lists.
             internal void GenerateDropLists(
-                Dictionary<ItemTier, List<ItemIndex>> itemsToAdd,
-                Dictionary<ItemTier, List<ItemIndex>> itemsToRemove,
-                Dictionary<EquipmentDropType, List<EquipmentIndex>> equipmentsToAdd,
-                Dictionary<EquipmentDropType, List<EquipmentIndex>> equipmentsToRemove) {
+                List<PickupIndex> pickupsToAdd,
+                List<PickupIndex> pickupsToRemove,
+                List<PickupIndex> pickupsSpecialToAdd,
+                List<PickupIndex> pickupsSpecialToRemove) {
 
-                AvailableTier1DropList = BackupDropList(CreateDropList(Tier1DropListOriginal, itemsToAdd[ItemTier.Tier1], itemsToRemove[ItemTier.Tier1]));
-                AvailableTier2DropList = BackupDropList(CreateDropList(Tier2DropListOriginal, itemsToAdd[ItemTier.Tier2], itemsToRemove[ItemTier.Tier2]));
-                AvailableTier3DropList = BackupDropList(CreateDropList(Tier3DropListOriginal, itemsToAdd[ItemTier.Tier3], itemsToRemove[ItemTier.Tier3]));
-                AvailableLunarDropList = BackupDropList(CreateDropList(LunarDropListOriginal, itemsToAdd[ItemTier.Lunar], itemsToRemove[ItemTier.Lunar]));
-                AvailableSpecialItems = BackupDropList(CreateDropList(SpecialItemsOriginal, itemsToAdd[ItemTier.NoTier], itemsToRemove[ItemTier.NoTier]));
+                AvailableTier1DropList = BackupDropList(Tier1DropListOriginal);
+                AvailableTier2DropList = BackupDropList(Tier2DropListOriginal);
+                AvailableTier3DropList = BackupDropList(Tier3DropListOriginal);
+                AvailableBossDropList = BackupDropList(BossDropListOriginal);
+                AvailableLunarDropList = BackupDropList(LunarDropListOriginal);
+                AvailableSpecialItems = BackupDropList(SpecialItemsOriginal);
+                AvailableEquipmentDropList = BackupDropList(NormalEquipmentDropListOriginal);
+                AvailableLunarEquipmentDropList.Clear();
+                AvailableSpecialEquipment = BackupDropList(SpecialEquipmentOriginal);
 
-                AvailableEquipmentDropList = BackupDropList(CreateDropList(NormalEquipmentDropListOriginal,
-                    equipmentsToAdd[EquipmentDropType.Normal], equipmentsToRemove[EquipmentDropType.Normal]));
-                AvailableNormalEquipmentDropList = AvailableEquipmentDropList;
+                List<List<PickupIndex>> alterations = new List<List<PickupIndex>>() { pickupsToAdd, pickupsToRemove, pickupsSpecialToAdd, pickupsSpecialToRemove };
+                for (int listIndex = 0; listIndex < alterations.Count; listIndex++) {
+                    List<PickupIndex> currentList = alterations[listIndex];
+                    bool special = listIndex > 1;
+                    foreach (PickupIndex pickupIndex in currentList) {
+                        List<PickupIndex> dropList = new List<PickupIndex>();
+                        ItemIndex itemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
+                        EquipmentIndex equipmentIndex = PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex;
+                        if (itemIndex != ItemIndex.None) {
+                            ItemDef itemDef = ItemCatalog.GetItemDef(itemIndex);
+                            if (special || (Catalog.SpecialItems.Contains(itemDef.itemIndex) == false && Catalog.ScrapItems.Values.Contains(itemDef.itemIndex) == false) ) {
+                                if (itemDef.tier == ItemTier.Tier1) {
+                                    dropList = AvailableTier1DropList;
+                                } else if (itemDef.tier == ItemTier.Tier2) {
+                                    dropList = AvailableTier2DropList;
+                                } else if (itemDef.tier == ItemTier.Tier3) {
+                                    dropList = AvailableTier3DropList;
+                                } else if (itemDef.tier == ItemTier.Boss) {
+                                    dropList = AvailableBossDropList;
+                                } else if (itemDef.tier == ItemTier.Lunar) {
+                                    dropList = AvailableLunarDropList;
+                                }
+                            } else {
+                                dropList = AvailableSpecialItems;
+                            }
+                        } else if (equipmentIndex != EquipmentIndex.None) {
+                            EquipmentDef equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
+                            if (special || Catalog.EliteEquipment.Contains(equipmentDef.equipmentIndex) == false) {
+                                if (equipmentDef.isLunar) {
+                                    dropList = AvailableLunarDropList;
+                                } else if (equipmentDef.isBoss) {
+                                    dropList = AvailableBossDropList;
+                                } else {
+                                    dropList = AvailableEquipmentDropList;
+                                }
+                            } else {
+                                dropList = AvailableSpecialEquipment;
+                            }
+                        }
 
-                AvailableLunarEquipmentDropList = BackupDropList(CreateDropList(LunarEquipmentDropListOriginal,
-                    equipmentsToAdd[EquipmentDropType.Lunar], equipmentsToRemove[EquipmentDropType.Lunar]));
-
-                AvailableSpecialEquipment = BackupDropList(CreateDropList(SpecialEquipmentOriginal,
-                    equipmentsToAdd[EquipmentDropType.Elite], equipmentsToRemove[EquipmentDropType.Elite]));
-
-                AvailableBossDropList = BackupDropList(CreateDropList(BossDropListOriginal,
-                    itemsToAdd[ItemTier.Boss], equipmentsToAdd[EquipmentDropType.Boss],
-                    itemsToRemove[ItemTier.Boss], equipmentsToRemove[EquipmentDropType.Boss]));
+                        if (listIndex % 2 == 0) {
+                            if (dropList.Contains(pickupIndex) == false) {
+                                dropList.Add(pickupIndex);
+                            }
+                        } else {
+                            if (dropList.Contains(pickupIndex)) {
+                                dropList.Remove(pickupIndex);
+                            }
+                        }
+                    }
+                }
+                AvailableNormalEquipmentDropList = BackupDropList(AvailableEquipmentDropList);
+                foreach (PickupIndex pickupIndex in AvailableLunarDropList) {
+                    if (PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex != EquipmentIndex.None) {
+                        AvailableLunarEquipmentDropList.Add(pickupIndex);
+                    }
+                }
             }
-
-            //  This will apply all the add and remove alterations to an original drop list.
-            private static List<PickupIndex> CreateDropList(IEnumerable<PickupIndex> vanillaDropList,
-                IEnumerable<ItemIndex> itemsToAdd,
-                IEnumerable<EquipmentIndex> equipmentsToAdd,
-                IEnumerable<ItemIndex> itemsToRemove,
-                IEnumerable<EquipmentIndex> equipmentsToRemove) {
-
-                var finalDropList = new List<PickupIndex>();
-                foreach (var pickupIndex in vanillaDropList) {
-                    if (!finalDropList.Contains(pickupIndex)) {
-                        finalDropList.Add(pickupIndex);
-                    }
-                }
-
-                foreach (var itemIndex in itemsToAdd) {
-                    var pickupIndex = PickupCatalog.FindPickupIndex(itemIndex);
-                    if (!finalDropList.Contains(pickupIndex)) {
-                        finalDropList.Add(pickupIndex);
-                    }
-                }
-
-                foreach (var itemIndex in itemsToRemove) {
-                    var pickupIndex = PickupCatalog.FindPickupIndex(itemIndex);
-                    if (finalDropList.Contains(pickupIndex)) {
-                        finalDropList.Remove(pickupIndex);
-                    }
-                }
-
-                foreach (var equipmentIndex in equipmentsToAdd) {
-                    var pickupIndex = PickupCatalog.FindPickupIndex(equipmentIndex);
-                    if (!finalDropList.Contains(pickupIndex)) {
-                        finalDropList.Add(pickupIndex);
-                    }
-                }
-
-                foreach (var equipmentIndex in equipmentsToRemove) {
-                    var pickupIndex = PickupCatalog.FindPickupIndex(equipmentIndex);
-                    if (finalDropList.Contains(pickupIndex)) {
-                        finalDropList.Remove(pickupIndex);
-                    }
-                }
-
-                return finalDropList;
-            }
-
-            //  This will apply all the add and remove alterations to an original item drop list.
-            private static List<PickupIndex> CreateDropList(
-                IEnumerable<PickupIndex> vanillaDropList,
-                IEnumerable<ItemIndex> itemsToAdd,
-                IEnumerable<ItemIndex> itemsToRemove) {
-                var finalDropList = new List<PickupIndex>();
-                foreach (var pickupIndex in vanillaDropList) {
-                    if (!finalDropList.Contains(pickupIndex)) {
-                        finalDropList.Add(pickupIndex);
-                    }
-                }
-
-                foreach (var itemIndex in itemsToAdd) {
-                    var pickupIndex = PickupCatalog.FindPickupIndex(itemIndex);
-                    if (!finalDropList.Contains(pickupIndex)) {
-                        finalDropList.Add(pickupIndex);
-                    }
-                }
-
-                foreach (var itemIndex in itemsToRemove) {
-                    var pickupIndex = PickupCatalog.FindPickupIndex(itemIndex);
-                    if (finalDropList.Contains(pickupIndex)) {
-                        finalDropList.Remove(pickupIndex);
-                    }
-                }
-
-                return finalDropList;
-            }
-
-            //  This will apply all the add and remove alterations to an original equipment drop list.
-            private static List<PickupIndex> CreateDropList(
-                IEnumerable<PickupIndex> vanillaDropList,
-                IEnumerable<EquipmentIndex> equipmentsToAdd,
-                IEnumerable<EquipmentIndex> equipmentsToRemove) {
-                var finalDropList = new List<PickupIndex>();
-                foreach (var pickupIndex in vanillaDropList) {
-                    if (!finalDropList.Contains(pickupIndex)) {
-                        finalDropList.Add(pickupIndex);
-                    }
-                }
-
-                foreach (var equipmentIndex in equipmentsToAdd) {
-                    var pickupIndex = PickupCatalog.FindPickupIndex(equipmentIndex);
-                    if (!finalDropList.Contains(pickupIndex)) {
-                        finalDropList.Add(pickupIndex);
-                    }
-                }
-
-                foreach (var equipmentIndex in equipmentsToRemove) {
-                    var pickupIndex = PickupCatalog.FindPickupIndex(equipmentIndex);
-                    if (finalDropList.Contains(pickupIndex)) {
-                        finalDropList.Remove(pickupIndex);
-                    }
-                }
-
-                return finalDropList;
-            }
-
+            
             //  Sets the drop lists in Run using the adjusted, master lists.
             public void SetItems(Run run) {
                 if (IsValidList(AvailableTier1DropList)) {
@@ -353,14 +251,26 @@ namespace R2API {
                 if (IsValidList(AvailableBossDropList)) {
                     foreach (var pickupIndex in AvailableBossDropList) {
                         run.availableBossDropList.Add(pickupIndex);
-                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                        ItemIndex itemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
+                        EquipmentIndex equipmentIndex = PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex;
+                        if (itemIndex != ItemIndex.None) {
+                            run.availableItems.Add(itemIndex);
+                        } else if (equipmentIndex != EquipmentIndex.None) {
+                            run.availableEquipment.Add(equipmentIndex);
+                        }
                     }
                 }
 
                 if (IsValidList(AvailableLunarDropList)) {
                     foreach (var pickupIndex in AvailableLunarDropList) {
                         run.availableLunarDropList.Add(pickupIndex);
-                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                        ItemIndex itemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
+                        EquipmentIndex equipmentIndex = PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex;
+                        if (itemIndex != ItemIndex.None) {
+                            run.availableItems.Add(itemIndex);
+                        } else if (equipmentIndex != EquipmentIndex.None) {
+                            run.availableEquipment.Add(equipmentIndex);
+                        }
                     }
                 }
 
@@ -373,11 +283,10 @@ namespace R2API {
                 if (IsValidList(AvailableEquipmentDropList)) {
                     foreach (var pickupIndex in AvailableEquipmentDropList) {
                         run.availableEquipmentDropList.Add(pickupIndex);
+                        run.availableNormalEquipmentDropList.Add(pickupIndex);
                         run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
                     }
                 }
-                // high probability of code smell from ror2 code
-                run.availableNormalEquipmentDropList = run.availableEquipmentDropList;
 
                 if (IsValidList(AvailableLunarEquipmentDropList)) {
                     foreach (var pickupIndex in AvailableLunarEquipmentDropList) {
@@ -407,6 +316,34 @@ namespace R2API {
                     return false;
                 }
                 return true;
+            }
+
+            /*
+                This will backup the four main drop lists in Run and then overwrite them.
+                The intention is this function is used when changing the drop lists only temporarily.
+            */
+            public static void SetDropLists(IEnumerable<PickupIndex> givenTier1, IEnumerable<PickupIndex> givenTier2,
+                IEnumerable<PickupIndex> givenTier3, IEnumerable<PickupIndex> givenEquipment) {
+
+                var run = Run.instance;
+                Tier1DropListBackup = BackupDropList(run.availableTier1DropList);
+                Tier2DropListBackup = BackupDropList(run.availableTier2DropList);
+                Tier3DropListBackup = BackupDropList(run.availableTier3DropList);
+                EquipmentDropListBackup = BackupDropList(run.availableEquipmentDropList);
+
+                run.availableTier1DropList = BackupDropList(givenTier1);
+                run.availableTier2DropList = BackupDropList(givenTier2);
+                run.availableTier3DropList = BackupDropList(givenTier3);
+                run.availableEquipmentDropList = BackupDropList(givenEquipment);
+            }
+
+            //  This function will revert the four main drop lists in Run to how they were before they were changed temporarily.
+            public static void RevertDropLists() {
+                var run = Run.instance;
+                run.availableTier1DropList = BackupDropList(Tier1DropListBackup);
+                run.availableTier2DropList = BackupDropList(Tier2DropListBackup);
+                run.availableTier3DropList = BackupDropList(Tier3DropListBackup);
+                run.availableEquipmentDropList = BackupDropList(EquipmentDropListBackup);
             }
         }
     }
