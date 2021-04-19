@@ -203,25 +203,25 @@ namespace R2API.ItemDrop {
                 }
             }
 
-            if (DropList.IsValidList(dropList.AvailableTier1DropList)) {
+            if (dropList.AvailableTier1DropList.Count > 0) {
                 TiersPresent[DropType.tier1] = true;
             }
-            if (DropList.IsValidList(dropList.AvailableTier2DropList)) {
+            if (dropList.AvailableTier2DropList.Count > 0) {
                 TiersPresent[DropType.tier2] = true;
             }
-            if (DropList.IsValidList(dropList.AvailableTier3DropList)) {
+            if (dropList.AvailableTier3DropList.Count > 0) {
                 TiersPresent[DropType.tier3] = true;
             }
-            if (DropList.IsValidList(dropList.AvailableBossDropList)) {
+            if (dropList.AvailableBossDropList.Count > 0) {
                 TiersPresent[DropType.boss] = true;
             }
-            if (DropList.IsValidList(dropList.AvailableLunarDropList)) {
+            if (dropList.AvailableLunarDropList.Count > 0) {
                 TiersPresent[DropType.lunar] = true;
             }
-            if (DropList.IsValidList(dropList.AvailableNormalEquipmentDropList)) {
+            if (dropList.AvailableNormalEquipmentDropList.Count > 0) {
                 TiersPresent[DropType.equipment] = true;
             }
-            if (DropList.IsValidList(dropList.AvailableLunarEquipmentDropList)) {
+            if (dropList.AvailableLunarEquipmentDropList.Count > 0) {
                 TiersPresent[DropType.lunar] = true;
             }
             foreach (var pickupIndex in dropList.AvailableSpecialItems) {

@@ -20,19 +20,10 @@ namespace R2API {
                     would not change the master drop list.
                 If it was not originally part of the drop list, adding it to the remove drop list would not change the master drop list.
                 But you would have to know what it was going to do oringally to restore its original behavior.
-                Being able to remove the item from either list I thought would be the easier way to restore original behavior, but I was told having a function for this was confusing.
+                Being able to remove the item from both lists I thought would be the easier way to restore original behavior, but I was told having a function for this was confusing.
 
-                Side Note:
-                The original lists are saved because they are known good lists that will work in every possible scenario.
-                Many interactables that drop items will filter the drop list to create their subsets of items.
-                They will then select one item from each subset.
-                Before finally determining which item to drop.
-                Because of this, even if a subset has zero odds being selected, it still must be a list from which a valid item can be selected.
-                The odds for selecteting which subset is picked will have already been updated, but these known good lists are substituted in so an item may be selected without raising errors.
-                Xoroshiro128Plus.NextElementUniform chooses the item from each subset. If there was some way to prevent it from throwing errors when it is given an empty list then this wouldn't be necessary.
-                I was told that because this method is a generic method it would be difficult to change with IL. I couldn't figure it out, so this is my solution.
-
-                Some of the classes where this was the case may have ben updated so this may longer be required everywhere it occurs in this project.
+                The original lists are saved because both the player drops api and monster drop api will want apply alterations to the original lists.
+                Rather than whichever api is executed second using the first api's altered lists as a base.
             */
 
             public static bool OriginalListsSaved;
@@ -89,8 +80,7 @@ namespace R2API {
                 Returns a list containing none when given an empty list to fix a bug caused by having a list with a length of zero.
             */
             public static List<PickupIndex> BackupDropList(IEnumerable<PickupIndex> list) {
-                var pickupIndices = list.ToList();
-                return pickupIndices.Any() ? pickupIndices.ToList() : new List<PickupIndex> { PickupIndex.none };
+                return list.ToList().ToList();
             }
 
             //  Clears all the drop lists in the Run class.
@@ -227,78 +217,52 @@ namespace R2API {
             
             //  Sets the drop lists in Run using the adjusted, master lists.
             public void SetItems(Run run) {
-                if (IsValidList(AvailableTier1DropList)) {
-                    foreach (var pickupIndex in AvailableTier1DropList) {
-                        run.availableTier1DropList.Add(pickupIndex);
-                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                foreach (var pickupIndex in AvailableTier1DropList) {
+                    run.availableTier1DropList.Add(pickupIndex);
+                    run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                }
+                foreach (var pickupIndex in AvailableTier2DropList) {
+                    run.availableTier2DropList.Add(pickupIndex);
+                    run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                }
+                foreach (var pickupIndex in AvailableTier3DropList) {
+                    run.availableTier3DropList.Add(pickupIndex);
+                    run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                }
+                foreach (var pickupIndex in AvailableBossDropList) {
+                    run.availableBossDropList.Add(pickupIndex);
+                    ItemIndex itemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
+                    EquipmentIndex equipmentIndex = PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex;
+                    if (itemIndex != ItemIndex.None) {
+                        run.availableItems.Add(itemIndex);
+                    } else if (equipmentIndex != EquipmentIndex.None) {
+                        run.availableEquipment.Add(equipmentIndex);
                     }
                 }
-
-                if (IsValidList(AvailableTier2DropList)) {
-                    foreach (var pickupIndex in AvailableTier2DropList) {
-                        run.availableTier2DropList.Add(pickupIndex);
-                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                foreach (var pickupIndex in AvailableLunarDropList) {
+                    run.availableLunarDropList.Add(pickupIndex);
+                    ItemIndex itemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
+                    EquipmentIndex equipmentIndex = PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex;
+                    if (itemIndex != ItemIndex.None) {
+                        run.availableItems.Add(itemIndex);
+                    } else if (equipmentIndex != EquipmentIndex.None) {
+                        run.availableEquipment.Add(equipmentIndex);
                     }
                 }
-
-                if (IsValidList(AvailableTier3DropList)) {
-                    foreach (var pickupIndex in AvailableTier3DropList) {
-                        run.availableTier3DropList.Add(pickupIndex);
-                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
-                    }
+                foreach (var pickupIndex in AvailableSpecialItems) {
+                    run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
                 }
-
-                if (IsValidList(AvailableBossDropList)) {
-                    foreach (var pickupIndex in AvailableBossDropList) {
-                        run.availableBossDropList.Add(pickupIndex);
-                        ItemIndex itemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
-                        EquipmentIndex equipmentIndex = PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex;
-                        if (itemIndex != ItemIndex.None) {
-                            run.availableItems.Add(itemIndex);
-                        } else if (equipmentIndex != EquipmentIndex.None) {
-                            run.availableEquipment.Add(equipmentIndex);
-                        }
-                    }
+                foreach (var pickupIndex in AvailableEquipmentDropList) {
+                    run.availableEquipmentDropList.Add(pickupIndex);
+                    run.availableNormalEquipmentDropList.Add(pickupIndex);
+                    run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
                 }
-
-                if (IsValidList(AvailableLunarDropList)) {
-                    foreach (var pickupIndex in AvailableLunarDropList) {
-                        run.availableLunarDropList.Add(pickupIndex);
-                        ItemIndex itemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
-                        EquipmentIndex equipmentIndex = PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex;
-                        if (itemIndex != ItemIndex.None) {
-                            run.availableItems.Add(itemIndex);
-                        } else if (equipmentIndex != EquipmentIndex.None) {
-                            run.availableEquipment.Add(equipmentIndex);
-                        }
-                    }
+                foreach (var pickupIndex in AvailableLunarEquipmentDropList) {
+                    run.availableLunarEquipmentDropList.Add(pickupIndex);
+                    run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
                 }
-
-                if (IsValidList(AvailableSpecialItems)) {
-                    foreach (var pickupIndex in AvailableSpecialItems) {
-                        run.availableItems.Add(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
-                    }
-                }
-
-                if (IsValidList(AvailableEquipmentDropList)) {
-                    foreach (var pickupIndex in AvailableEquipmentDropList) {
-                        run.availableEquipmentDropList.Add(pickupIndex);
-                        run.availableNormalEquipmentDropList.Add(pickupIndex);
-                        run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
-                    }
-                }
-
-                if (IsValidList(AvailableLunarEquipmentDropList)) {
-                    foreach (var pickupIndex in AvailableLunarEquipmentDropList) {
-                        run.availableLunarEquipmentDropList.Add(pickupIndex);
-                        run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
-                    }
-                }
-
-                if (IsValidList(AvailableSpecialEquipment)) {
-                    foreach (var pickupIndex in AvailableSpecialEquipment) {
-                        run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
-                    }
+                foreach (var pickupIndex in AvailableSpecialEquipment) {
+                    run.availableEquipment.Add(PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex);
                 }
             }
 
@@ -308,14 +272,6 @@ namespace R2API {
 
             public static List<PickupIndex> ToPickupIndices(IEnumerable<EquipmentIndex> indices) {
                 return indices.Select(PickupCatalog.FindPickupIndex).ToList();
-            }
-
-            //  Checks if a subset list has a valid population.
-            public static bool IsValidList(IEnumerable<PickupIndex> dropList) {
-                if (dropList.Count() == 0 || (dropList.Count() == 1 && dropList.Contains(PickupIndex.none))) {
-                    return false;
-                }
-                return true;
             }
 
             /*

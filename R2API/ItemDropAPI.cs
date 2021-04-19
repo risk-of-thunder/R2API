@@ -1,4 +1,5 @@
 ﻿using BepInEx.Logging;
+using MonoMod.RuntimeDetour;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.ItemDrop;
@@ -9,6 +10,7 @@ using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -39,6 +41,11 @@ namespace R2API {
         private const string AllInteractablesResourcesPath = "SpawnCards/InteractableSpawnCard";
 
         private const string ScavengerBackpackSpawnCardName = "iscScavBackpack";
+
+        public static int nextElementUniformHookCount = 0;
+        public static Hook nextElementUniformHook;
+        public static MethodInfo nextElementUniformOrigInfo = Reflection.GetGenericMethod(typeof(Xoroshiro128Plus), "NextElementUniform", new Type[] { typeof(System.Collections.Generic.List<int>) }).MakeGenericMethod(typeof(PickupIndex));
+        public static MethodInfo nextElementUniformNewInfo = typeof(ItemDropAPI).GetMethod("NextElementUniform", BindingFlags.Public | BindingFlags.Static);
 
         private static readonly DropList PlayerDropList = new DropList();
         internal static readonly InteractableCalculator PlayerInteractables = new InteractableCalculator();
@@ -125,11 +132,11 @@ namespace R2API {
             On.RoR2.SceneDirector.PopulateScene += PopulateScene;
             On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer += GenerateNewPickupServer;
             On.RoR2.DirectorCore.TrySpawnObject += CheckForInvalidInteractables;
-            On.RoR2.ShrineChanceBehavior.AddShrineStack += FixShrineBehaviour;
             On.RoR2.BossGroup.DropRewards += DropRewards;
             On.RoR2.PickupPickerController.SetOptionsServer += SetOptionsServer;
             On.RoR2.ArenaMissionController.EndRound += EndRound;
             On.RoR2.GlobalEventManager.OnCharacterDeath += OnCharacterDeath;
+            HookNextElementUniform();
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
@@ -140,14 +147,26 @@ namespace R2API {
             On.RoR2.SceneDirector.PopulateScene -= PopulateScene;
             On.RoR2.ShopTerminalBehavior.GenerateNewPickupServer -= GenerateNewPickupServer;
             On.RoR2.DirectorCore.TrySpawnObject -= CheckForInvalidInteractables;
-            On.RoR2.ShrineChanceBehavior.AddShrineStack -= FixShrineBehaviour;
             On.RoR2.BossGroup.DropRewards -= DropRewards;
             On.RoR2.PickupPickerController.SetOptionsServer -= SetOptionsServer;
             On.RoR2.ArenaMissionController.EndRound -= EndRound;
             On.RoR2.GlobalEventManager.OnCharacterDeath -= OnCharacterDeath;
+            UnhookNextElementUniform();
         }
 
+        public static void HookNextElementUniform() {
+            if (nextElementUniformHookCount == 0) {
+                nextElementUniformHook = new Hook(nextElementUniformOrigInfo, nextElementUniformNewInfo);
+            }
+            nextElementUniformHookCount += 1;
+        }
 
+        public static void UnhookNextElementUniform() {
+            nextElementUniformHookCount -= 1;
+            if (nextElementUniformHookCount == 0) {
+                nextElementUniformHook.Dispose();
+            }
+        }
 
         //  Triggers all the functions required to adjust the drop lists
         private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
@@ -182,7 +201,7 @@ namespace R2API {
                     foreach (var directorCard in ClassicStageInfo.instance.interactableCategories.categories[categoryIndex].cards) {
                         var interactableName = InteractableCalculator.GetSpawnCardName(directorCard.spawnCard);
                         //if (new List<string>().Contains(interactableName)) {
-                        //}
+                        //} else 
                         if (PlayerInteractables.InvalidInteractables.Contains(interactableName)) {
                         } else {
                             DropOdds.UpdateChestTierOdds(directorCard.spawnCard, interactableName);
@@ -203,6 +222,14 @@ namespace R2API {
                 }
             }
             orig(sceneDirector);
+        }
+
+        //  This prevents errors from occuring when a drop list has no valid entries.
+        static public PickupIndex NextElementUniform(Func<Xoroshiro128Plus, List<PickupIndex>, PickupIndex> orig, Xoroshiro128Plus xoroshiro128Plus, List<PickupIndex> list) {
+            if (list.Count > 0) {
+                return orig(xoroshiro128Plus, list);
+            }
+            return PickupIndex.none;
         }
 
         /*
@@ -237,47 +264,18 @@ namespace R2API {
             return orig(directorCore, directorSpawnRequest);
         }
 
-        /*
-            The ShrineChanceBehavior will select one item from each tier of drop list and then select on item out of those when it is interacted with by a player.
-            This causes errors if one of those drop lists is empty.
-            This will temporarily set any empty tiered drop list as a known good list.
-        */
-        private static void FixShrineBehaviour(On.RoR2.ShrineChanceBehavior.orig_AddShrineStack orig, ShrineChanceBehavior shrineChangeBehavior, Interactor interactor) {
-            var tier1Adjusted = PlayerDropList.AvailableTier1DropList;
-            if (!PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier1]) {
-                tier1Adjusted = DropList.Tier1DropListOriginal;
-            }
-            var tier2Adjusted = PlayerDropList.AvailableTier2DropList;
-            if (!PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier2]) {
-                tier2Adjusted = DropList.Tier2DropListOriginal;
-            }
-            var tier3Adjusted = PlayerDropList.AvailableTier3DropList;
-            if (!PlayerInteractables.TiersPresent[InteractableCalculator.DropType.tier3]) {
-                tier3Adjusted = DropList.Tier3DropListOriginal;
-            }
-            var equipmentAdjusted = PlayerDropList.AvailableEquipmentDropList;
-            if (!PlayerInteractables.TiersPresent[InteractableCalculator.DropType.equipment]) {
-                equipmentAdjusted = DropList.EquipmentDropListOriginal;
-            }
-
-            DropList.SetDropLists(tier1Adjusted, tier2Adjusted, tier3Adjusted, equipmentAdjusted);
-            orig(shrineChangeBehavior, interactor);
-            DropList.RevertDropLists();
-        }
-
         //  This is to prevent bosses from dropping items that are not part of the drop lists.
         private static void DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup bossGroup) {
             var bossDrops = new List<PickupIndex>();
             var bossDropsAdjusted = new List<PickupIndex>();
             foreach (var bossDrop in bossGroup.bossDrops) {
-                var pickupIndex = bossDrop;
-                bossDrops.Add(pickupIndex);
+                bossDrops.Add(bossDrop);
                 bool worldUnique = false;
-                if (PickupCatalog.GetPickupDef(pickupIndex).itemIndex != ItemIndex.None && ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupIndex).itemIndex).ContainsTag(ItemTag.WorldUnique)) {
+                if (PickupCatalog.GetPickupDef(bossDrop).itemIndex != ItemIndex.None && ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(bossDrop).itemIndex).ContainsTag(ItemTag.WorldUnique)) {
                     worldUnique = true;
                 }
-                if ((PlayerDropList.AvailableBossDropList.Contains(pickupIndex) && !worldUnique) || (PlayerDropList.AvailableSpecialItems.Contains(pickupIndex) && worldUnique)) {
-                    bossDropsAdjusted.Add(pickupIndex);
+                if ((PlayerDropList.AvailableBossDropList.Contains(bossDrop) && !worldUnique) || (PlayerDropList.AvailableSpecialItems.Contains(bossDrop) && worldUnique)) {
+                    bossDropsAdjusted.Add(bossDrop);
                 }
             }
 
@@ -290,7 +288,6 @@ namespace R2API {
             if (normalListValid || bossDropsAdjusted.Count != 0) {
                 var bossDropChanceOld = bossGroup.bossDropChance;
                 if (!normalListValid) {
-                    DropList.SetDropLists(new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>(), new List<PickupIndex>());
                     bossGroup.bossDropChance = 1;
                 } else if (bossDropsAdjusted.Count == 0) {
                     bossGroup.bossDropChance = 0;
@@ -301,9 +298,6 @@ namespace R2API {
 
                 bossGroup.bossDrops = bossDrops;
                 bossGroup.bossDropChance = bossDropChanceOld;
-                if (!normalListValid) {
-                    DropList.RevertDropLists();
-                }
             }
         }
 
@@ -388,13 +382,12 @@ namespace R2API {
             if (arenaMissionController.currentRound == arenaMissionController.totalRoundsMax) {
                 dropType = InteractableCalculator.DropType.tier3;
             }
-            if (PlayerInteractables.TiersPresent[dropType]) {
+            if (!PlayerInteractables.TiersPresent[dropType]) {
                 var rewardSpawnPositionOld = arenaMissionController.rewardSpawnPosition;
                 arenaMissionController.rewardSpawnPosition = null;
                 orig(arenaMissionController);
                 arenaMissionController.rewardSpawnPosition = rewardSpawnPositionOld;
-            }
-            else {
+            } else {
                 orig(arenaMissionController);
             }
         }

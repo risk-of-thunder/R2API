@@ -1,4 +1,5 @@
 ﻿using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
 using R2API.ItemDrop;
 using R2API.ItemDropAPITools;
 using R2API.Utils;
@@ -110,6 +111,7 @@ namespace R2API {
             On.EntityStates.ScavMonster.FindItem.PickupIsNonBlacklistedItem += PickupIsNonBlacklistedItem;
             On.RoR2.ScavengerItemGranter.Start += ScavengerItemGranterStart;
             On.RoR2.Inventory.GiveRandomEquipment += GiveRandomEquipment;
+            ItemDropAPI.HookNextElementUniform();
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
@@ -124,6 +126,7 @@ namespace R2API {
             On.EntityStates.ScavMonster.FindItem.PickupIsNonBlacklistedItem -= PickupIsNonBlacklistedItem;
             On.RoR2.ScavengerItemGranter.Start -= ScavengerItemGranterStart;
             On.RoR2.Inventory.GiveRandomEquipment -= GiveRandomEquipment;
+            ItemDropAPI.UnhookNextElementUniform();
         }
 
         private static void RunOnBuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run run) {
@@ -154,6 +157,10 @@ namespace R2API {
         private static void GenerateAvailableItemsSet(On.RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.orig_GenerateAvailableItemsSet orig) {
             orig();
 
+            /*
+                Generate monster team drop lists.
+                This effects the artifact of evolution and the void fields.
+            */
             var forbiddenTags = new List<ItemTag>();
             foreach (var itemTag in MonsterTeamGainsItemsArtifactManager.forbiddenTags) {
                 forbiddenTags.Add(itemTag);
@@ -173,7 +180,7 @@ namespace R2API {
             MonsterTeamGainsItemsArtifactManager.availableTier3Items = itemIndexLists[2];
             List<ItemTier> tierList = new List<ItemTier>() { ItemTier.Tier1, ItemTier.Tier2, ItemTier.Tier3 };
 
-
+            //  This adjusts the pattern used by the artifact of evolution and the void fields.
             var patternAdjustedList = new List<ItemTier>();
             foreach (var itemTier in MonsterTeamGainsItemsArtifactManager.pattern) {
                 patternAdjustedList.Add(itemTier);
@@ -190,17 +197,11 @@ namespace R2API {
                 _patternAdjusted[patternIndex] = patternAdjustedList[patternIndex];
             }
 
+
             tierValidScav.Clear();
             scavDropList = GetFilteredDropLists(new List<ItemTag>() { ItemTag.AIBlacklist });
-            List<List<PickupIndex>> originalLists = new List<List<PickupIndex>>() {
-                DropList.Tier1DropListOriginal,
-                DropList.Tier2DropListOriginal,
-                DropList.Tier3DropListOriginal,
-                DropList.NormalEquipmentDropListOriginal,
-            };
             for (int listIndex = 0; listIndex < adjustedLists.Count; listIndex++) {
                 if (scavDropList[listIndex].Count == 0) {
-                    scavDropList[listIndex] = originalLists[listIndex];
                     tierValidScav.Add(false);
                 } else {
                     tierValidScav.Add(true);
@@ -223,19 +224,17 @@ namespace R2API {
             };
             for (int dropListIndex = 0; dropListIndex < 3; dropListIndex++) {
                 adjustedDropLists.Add(new List<PickupIndex>());
-                if (DropList.IsValidList(originalDropLists[dropListIndex])) {
-                    foreach (PickupIndex pickupIndex in originalDropLists[dropListIndex]) {
-                        ItemDef itemDef = ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
-                        bool valid = true;
-                        foreach (ItemTag itemTag in forbiddenTags) {
-                            if (itemDef.ContainsTag(itemTag)) {
-                                valid = false;
-                                break;
-                            }
+                foreach (PickupIndex pickupIndex in originalDropLists[dropListIndex]) {
+                    ItemDef itemDef = ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(pickupIndex).itemIndex);
+                    bool valid = true;
+                    foreach (ItemTag itemTag in forbiddenTags) {
+                        if (itemDef.ContainsTag(itemTag)) {
+                            valid = false;
+                            break;
                         }
-                        if (valid) {
-                            adjustedDropLists[dropListIndex].Add(pickupIndex);
-                        }
+                    }
+                    if (valid) {
+                        adjustedDropLists[dropListIndex].Add(pickupIndex);
                     }
                 }
             }
@@ -343,27 +342,29 @@ namespace R2API {
             The chance for each tier is reverted after the item selection is processed because they are static fields and could potentially need to return to normal on a subsequent run.
         */
         private static void ScavengerItemGranterStart(On.RoR2.ScavengerItemGranter.orig_Start orig, ScavengerItemGranter scavengerItemGranter) {
-            var scavTierTypesBackup = new List<int> {
-                scavengerItemGranter.tier1Types, scavengerItemGranter.tier2Types, scavengerItemGranter.tier3Types
-            };
+            if (tierValidScav.Contains(true)) {
+                var scavTierTypesBackup = new List<int> {
+                    scavengerItemGranter.tier1Types, scavengerItemGranter.tier2Types, scavengerItemGranter.tier3Types
+                };
 
-            if (!tierValidScav[0]) {
-                scavengerItemGranter.tier1Types = 0;
-            }
-            if (!tierValidScav[1]) {
-                scavengerItemGranter.tier2Types = 0;
-            }
-            if (!tierValidScav[2]) {
-                scavengerItemGranter.tier3Types = 0;
-            }
+                if (!tierValidScav[0]) {
+                    scavengerItemGranter.tier1Types = 0;
+                }
+                if (!tierValidScav[1]) {
+                    scavengerItemGranter.tier2Types = 0;
+                }
+                if (!tierValidScav[2]) {
+                    scavengerItemGranter.tier3Types = 0;
+                }
 
-            DropList.SetDropLists(scavDropList[0], scavDropList[1], scavDropList[2], scavDropList[3]);
-            orig(scavengerItemGranter);
-            DropList.RevertDropLists();
+                DropList.SetDropLists(scavDropList[0], scavDropList[1], scavDropList[2], scavDropList[3]);
+                orig(scavengerItemGranter);
+                DropList.RevertDropLists();
 
-            scavengerItemGranter.tier1Types = scavTierTypesBackup[0];
-            scavengerItemGranter.tier2Types = scavTierTypesBackup[1];
-            scavengerItemGranter.tier3Types = scavTierTypesBackup[2];
+                scavengerItemGranter.tier1Types = scavTierTypesBackup[0];
+                scavengerItemGranter.tier2Types = scavTierTypesBackup[1];
+                scavengerItemGranter.tier3Types = scavTierTypesBackup[2];
+            }
         }
 
         /*
