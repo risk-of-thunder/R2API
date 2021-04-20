@@ -48,6 +48,11 @@ namespace R2API {
             R2APIContentPackProvider.WhenContentPackReady -= AddElitesToGame;
         }
 
+        [R2APISubmoduleInit(Stage = InitStage.Load)]
+        private static void Load() {
+            LazyInitVanillaEliteTiers();
+        }
+
         private static void AddCustomEliteTiers(On.RoR2.CombatDirector.orig_Init orig) {
             if (!_eliteTierCatalogInitialized) {
                 orig();
@@ -66,22 +71,30 @@ namespace R2API {
 
             foreach (var customElite in EliteDefinitions) {
                 eliteDefs.Add(customElite.EliteDef);
+
                 var currentEliteTiers = GetCombatDirectorEliteTiers();
-                if (customElite.EliteTier == 1) {
-                    var index = currentEliteTiers[1].eliteTypes.Length;
-                    Array.Resize(ref currentEliteTiers[1].eliteTypes, index + 1);
-                    currentEliteTiers[1].eliteTypes[index] = customElite.EliteDef;
-                    currentEliteTiers[2].eliteTypes = currentEliteTiers[1].eliteTypes;
+
+                foreach (var eliteTierDef in customElite.EliteTierDefs) {
+                    if (eliteTierDef == VanillaFirstTierDef) {
+                        var eliteTypeIndex = VanillaFirstTierDef.eliteTypes.Length;
+                        Array.Resize(ref VanillaFirstTierDef.eliteTypes, eliteTypeIndex + 1);
+                        VanillaFirstTierDef.eliteTypes[eliteTypeIndex] = customElite.EliteDef;
+
+                        // Copy the elite types to VanillaEliteOnlyFirstTierDef.
+                        // VanillaEliteOnlyFirstTierDef stores the same elites as VanillaFirstTierDef
+                        // elite-only artifact equivalent
+                        VanillaEliteOnlyFirstTierDef.eliteTypes = VanillaFirstTierDef.eliteTypes;
+                    }
+                    else {
+                        var eliteTypeIndex = eliteTierDef.eliteTypes.Length;
+                        Array.Resize(ref eliteTierDef.eliteTypes, eliteTypeIndex + 1);
+                        eliteTierDef.eliteTypes[eliteTypeIndex] = customElite.EliteDef;
+                    }
                 }
-                else {
-                    var eliteTierIndex = customElite.EliteTier + 1;
-                    var eliteTypeIndex = currentEliteTiers[eliteTierIndex].eliteTypes.Length;
-                    Array.Resize(ref currentEliteTiers[eliteTierIndex].eliteTypes, eliteTypeIndex + 1);
-                    currentEliteTiers[eliteTierIndex].eliteTypes[eliteTypeIndex] = customElite.EliteDef;
-                }
+
                 OverrideCombatDirectorEliteTiers(currentEliteTiers);
 
-                R2API.Logger.LogInfo($"Custom Elite: {customElite.EliteDef.modifierToken} (elite tier: {customElite.EliteTier}) added");
+                R2API.Logger.LogInfo($"Custom Elite: {customElite.EliteDef.modifierToken} added");
             }
 
             r2apiContentPack.eliteDefs.Add(eliteDefs.ToArray());
@@ -121,12 +134,9 @@ namespace R2API {
                 return false;
             }
 
-            var numberOfEliteTiersDefined = VanillaEliteTierCount + CustomEliteTierCount - 2;
-            if (elite.EliteTier <= 0 && elite.EliteTier > numberOfEliteTiersDefined) {
-                R2API.Logger.LogError(
-                    "Incorrect Elite Tier, must be valid: greater than 0 and "
-                    + $"within the current elite tier defs range, current number of elite tiers defined : {numberOfEliteTiersDefined}.");
-                return false;
+            if (elite.EliteTierDefs == null || elite.EliteTierDefs.Count() <= 0) {
+                throw new ArgumentNullException("CustomElite.EliteTierDefs");
+
             }
 
             EliteDefinitions.Add(elite);
@@ -136,6 +146,21 @@ namespace R2API {
         #endregion Add Methods
 
         #region Combat Director Modifications
+
+        private static CombatDirector.EliteTierDef RetrieveFirstVanillaTierDef() {
+            LazyInitVanillaEliteTiers();
+
+            return CombatDirector.eliteTiers[1];
+        }
+
+        private static CombatDirector.EliteTierDef RetrieveVanillaEliteOnlyFirstTierDef() {
+            LazyInitVanillaEliteTiers();
+
+            return CombatDirector.eliteTiers[2];
+        }
+
+        public static CombatDirector.EliteTierDef VanillaFirstTierDef { get; private set; } = RetrieveFirstVanillaTierDef();
+        public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef { get; private set; } = RetrieveVanillaEliteOnlyFirstTierDef();
 
         /// <summary>
         /// Returns the current elite tier definitions used by the Combat Director for doing its elite spawning while doing a run.
@@ -158,32 +183,57 @@ namespace R2API {
         }
 
         /// <summary>
-        /// Allows for easily adding a new elite tier def to the combat director.
+        /// Allows for adding a new elite tier def to the combat director.
         /// When adding a new elite tier,
-        /// do not fill the eliteTypes field if your goal is to add your custom elite in it right after.
-        /// Because when doing EliteAPI.Add, the API will add your elite to the specified tier automaticly.
-        /// Returns the elite tier (normally starts at 3, 2 vanilla tiers atm)
+        /// do not fill the eliteTypes field with your custom elites defs if your goal is to add your custom elite in it right after.
+        /// Because when doing EliteAPI.Add, the API will add your elite to the specified tiers <see cref="CustomElite.EliteTierDefs"/>.
+        /// Note that if your eliteTierDef has a cheaper cost than let's say the highest vanilla tier,
+        /// you'll have to use the indexToInsertAt parameter to put it before the tier in array
         /// </summary>
         /// <param name="eliteTierDef">The new elite tier to add.</param>
         public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef) {
+            return AddCustomEliteTier(eliteTierDef, -1);
+        }
+
+        // todo : maybe sort the CombatDirector.eliteTiers array based on cost ? the game code isnt the cleanest about this
+        /// <summary>
+        /// Allows for adding a new elite tier def to the combat director.
+        /// When adding a new elite tier,
+        /// do not fill the eliteTypes field with your custom elites defs if your goal is to add your custom elite in it right after.
+        /// Because when doing EliteAPI.Add, the API will add your elite to the specified tiers <see cref="CustomElite.EliteTierDefs"/>.
+        /// Note that if your eliteTierDef has a cheaper cost than let's say the highest vanilla tier,
+        /// you'll have to use the indexToInsertAt parameter to put it before the tier in the final array
+        /// </summary>
+        /// <param name="eliteTierDef">The new elite tier to add.</param>
+        /// <param name="indexToInsertAt">Optional index to specify if you want to insert a cheaper elite tier</param>
+        public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef, int indexToInsertAt = -1) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
             }
 
-            var index = VanillaEliteTierCount + CustomEliteTierCount;
+            var eliteTiersSize = VanillaEliteTierCount + CustomEliteTierCount;
 
             var currentEliteTiers = GetCombatDirectorEliteTiers();
             if (currentEliteTiers != null) {
-                Array.Resize(ref currentEliteTiers, index + 1);
-                currentEliteTiers[index] = eliteTierDef;
+                Array.Resize(ref currentEliteTiers, eliteTiersSize + 1);
+
+                if (indexToInsertAt == -1) {
+                    indexToInsertAt = eliteTiersSize;
+                }
+                else {
+                    // Shift right starting from indexToInsertAt
+                    Array.Copy(currentEliteTiers, indexToInsertAt, currentEliteTiers, indexToInsertAt + 1, currentEliteTiers.Length - indexToInsertAt - 1);
+                }
+                currentEliteTiers[indexToInsertAt] = eliteTierDef;
+                
                 OverrideCombatDirectorEliteTiers(currentEliteTiers);
             }
 
             CustomEliteTierDefs.Add(eliteTierDef);
 
-            R2API.Logger.LogInfo($"Custom Elite Tier : (Index : {index}) added");
+            R2API.Logger.LogInfo($"Custom Elite Tier : (Index : {indexToInsertAt}) added");
 
-            return index - 1;
+            return indexToInsertAt;
         }
 
         #endregion Combat Director Modifications
@@ -203,10 +253,9 @@ namespace R2API {
         public EliteDef? EliteDef;
 
         /// <summary>
-        /// Elite tier, vanilla game currently have two different tiers :
-        /// 1 for fire, lightning, and ice, and tier 2, for poison and haunted.
+        /// Elite tier(s) that the eliteDef will be on.
         /// </summary>
-        public int EliteTier;
+        public IEnumerable<CombatDirector.EliteTierDef> EliteTierDefs;
 
         /// <summary>
         /// You can omit the index references for the EliteDef, as those will be filled in automatically by the API.
@@ -214,13 +263,13 @@ namespace R2API {
         /// Also, don't forget to give it a valid eliteTier so that your custom elite correctly get spawned.
         /// You can also make a totally new tier, by using OverrideCombatDirectorEliteTiers for example.
         /// </summary>
-        public CustomElite(string? name, EquipmentDef equipmentDef, Color32 color, string? modifierToken, int eliteTier) {
+        public CustomElite(string? name, EquipmentDef equipmentDef, Color32 color, string? modifierToken, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs) {
             EliteDef = ScriptableObject.CreateInstance<EliteDef>();
             EliteDef.name = name;
             EliteDef.eliteEquipmentDef = equipmentDef;
             EliteDef.color = color;
             EliteDef.modifierToken = modifierToken;
-            EliteTier = eliteTier;
+            EliteTierDefs = eliteTierDefs;
         }
 
         /// <summary>
@@ -228,9 +277,9 @@ namespace R2API {
         /// But don't forget to give it a valid eliteTier so that your custom elite correctly get spawned.
         /// You can also make a totally new tier, by using OverrideCombatDirectorEliteTiers for example.
         /// </summary>
-        public CustomElite(EliteDef? eliteDef, int eliteTier) {
+        public CustomElite(EliteDef? eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs) {
             EliteDef = eliteDef;
-            EliteTier = eliteTier;
+            EliteTierDefs = eliteTierDefs;
         }
     }
 }

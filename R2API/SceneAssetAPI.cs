@@ -1,6 +1,7 @@
 ﻿using R2API.MiscHelpers;
 using R2API.Utils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -26,33 +27,44 @@ namespace R2API {
         private static readonly Dictionary<string, List<Action<GameObject[]>>> SceneNameToAssetRequests =
             new Dictionary<string, List<Action<GameObject[]>>>();
 
-        [R2APISubmoduleInit(Stage = InitStage.Load)]
-        internal static void Load() {
-            R2API.R2APIStart += ExecuteRequests;
+        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
+        internal static void SetHooks() {
+            On.RoR2.SplashScreenController.Finish += PrepareRequests;
         }
 
-        private static void ExecuteRequests(object _, EventArgs __) {
+        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
+        internal static void UnsetHooks() {
+            On.RoR2.SplashScreenController.Finish -= PrepareRequests;
+        }
+
+        private static void PrepareRequests(On.RoR2.SplashScreenController.orig_Finish orig, RoR2.SplashScreenController self) {
+            orig(self);
+
             foreach (var (sceneName, actionList) in SceneNameToAssetRequests) {
                 try {
-                    var asyncStageLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-                    asyncStageLoad.allowSceneActivation = false;
-                    asyncStageLoad.completed += ___ => {
-                        var scene = SceneManager.GetSceneByName(sceneName);
-
-                        var rootObjects = scene.GetRootGameObjects();
-                        foreach (var action in actionList) {
-                            action(rootObjects);
-                        }
-
-                        SceneManager.UnloadSceneAsync(sceneName);
-                    };
+                    SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+                    R2API.Instance.StartCoroutine(ExecuteRequest(sceneName, actionList));
                 }
                 catch (Exception e) {
                     R2API.Logger.LogError($"Exception in ExecuteRequests : {e}");
                 }
             }
+        }
 
-            R2API.R2APIStart -= ExecuteRequests;
+        private static IEnumerator ExecuteRequest(string sceneName, List<Action<GameObject[]>> actionList) {
+            // Wait for next frame so that the scene is loaded
+            yield return 0;
+
+            var scene = SceneManager.GetSceneByName(sceneName);
+
+            var rootObjects = scene.GetRootGameObjects();
+            foreach (var action in actionList) {
+                action(rootObjects);
+            }
+
+            SceneManager.UnloadSceneAsync(sceneName);
+
+            yield return null;
         }
 
         /// <summary>

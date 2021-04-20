@@ -37,7 +37,11 @@ namespace R2API {
 
         internal static HashSet<string> LoadedSubmodules;
 
+        internal static R2API Instance { get; private set; }
+
         public void Awake() {
+            Instance = this;
+
             Logger = base.Logger;
             ModManager = new DetourModManager();
             AddHookLogging();
@@ -50,6 +54,8 @@ namespace R2API {
             }
 
             On.RoR2.UnitySystemConsoleRedirector.Redirect += orig => { };
+
+            LoadRoR2ContentEarly.Init();
 
             var pluginScanner = new PluginScanner();
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
@@ -64,8 +70,6 @@ namespace R2API {
             SteamworksClientManager.onLoaded += CheckIfUsedOnRightGameVersion;
 
             VanillaFixes();
-
-            LoadRoR2ContentEarly.Init();
 
             R2APIContentPackProvider.Init();
         }
