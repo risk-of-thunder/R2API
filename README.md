@@ -45,6 +45,10 @@ The most recent changelog can always be found on the [Github]https://github.com/
 
 **Current**
 
+* Fixes for current patch
+
+**3.0.25**
+
 * **IMPORTANT FOR MOD DEVS:** [R2API will no longer register mods to network if they don't depend on it](https://github.com/risk-of-thunder/R2API/pull/269)
 * [DotAPI fixes](https://github.com/risk-of-thunder/R2API/pull/270)
 * [EliteAPI fixes](https://github.com/risk-of-thunder/R2API/pull/271)
