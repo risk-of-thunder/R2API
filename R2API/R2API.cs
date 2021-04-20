@@ -55,6 +55,8 @@ namespace R2API {
 
             On.RoR2.UnitySystemConsoleRedirector.Redirect += orig => { };
 
+            LoadRoR2ContentEarly.Init();
+
             var pluginScanner = new PluginScanner();
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
             LoadedSubmodules = submoduleHandler.LoadRequested(pluginScanner);
@@ -68,8 +70,6 @@ namespace R2API {
             SteamworksClientManager.onLoaded += CheckIfUsedOnRightGameVersion;
 
             VanillaFixes();
-
-            LoadRoR2ContentEarly.Init();
 
             R2APIContentPackProvider.Init();
         }
