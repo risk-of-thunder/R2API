@@ -1,4 +1,5 @@
 ﻿using EntityStates;
+using Mono.Cecil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using R2API.Utils;
@@ -8,6 +9,7 @@ using RoR2.Skills;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace R2API {
@@ -16,11 +18,46 @@ namespace R2API {
         private static RoR2Content RoR2Content;
 
         internal static void Init() {
-            _ = new ILHook(typeof(RoR2Application).GetNestedTypeCached("<>c").GetMethodCached("<LoadGameContent>b__57_1"), new ILContext.Manipulator(TakeOurInstanceInstead));
+
+            var methodBase = RetrieveMethodThatInstantiateRoR2Content();
+
+            if (methodBase == null) {
+                R2API.Logger.LogError("LoadRoR2ContentEarly failed. Stuff will not work properly");
+                return;
+            }
+
+            _ = new ILHook(RetrieveMethodThatInstantiateRoR2Content(), new ILContext.Manipulator(TakeOurInstanceInstead));
 
             On.RoR2.RoR2Content.LoadStaticContentAsync += LoadOnlyOnce;
 
             EarlyLoad();
+        }
+
+        private static MethodBase RetrieveMethodThatInstantiateRoR2Content() {
+            var assemblyDefinition = AssemblyDefinition.ReadAssembly(System.IO.Path.Combine(BepInEx.Paths.ManagedPath, "Assembly-CSharp.dll"));
+            var type = assemblyDefinition.MainModule.Types.First(t => t.Name == nameof(RoR2Application));
+            var nestedType = type.NestedTypes.First(t => t.Name == "<>c");
+            foreach (var method in nestedType.Methods) {
+                var ilContext = new ILContext(method);
+
+                foreach (var instruction in method.Body.Instructions) {
+                    if (instruction.OpCode == Mono.Cecil.Cil.OpCodes.Newobj) {
+                        var methodDefinition = instruction.Operand as MethodDefinition;
+                        if (methodDefinition != null && methodDefinition.FullName.Contains(nameof(RoR2Content))) {
+
+                            var methodName = method.FullName;
+                            int start = methodName.IndexOf("::") + "::".Length;
+                            int end = methodName.IndexOf("(");
+
+                            var subString = methodName.Substring(start, end - start);
+
+                            return typeof(RoR2Application).GetNestedTypeCached("<>c").GetMethods((BindingFlags)(-1)).First(m => m.Name.Contains(subString));
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         internal static void EarlyLoad() {
