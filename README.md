@@ -41,7 +41,7 @@ Note that such builds may be **unstable**.
 
 ## Changelog
 
-The most recent changelog can always be found on the [Github]https://github.com/risk-of-thunder/R2API/blob/master/Archived%20changelogs.md). In this readme, only the most recent *minor* version will have a changelog.
+The most recent changelog can always be found on the [GitHub](https://github.com/risk-of-thunder/R2API/blob/master/Archived%20changelogs.md). In this readme, only the most recent *minor* version will have a changelog.
 
 **Current**
 
