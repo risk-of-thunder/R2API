@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="HGUnityUtils">
       <HintPath>libs\HGUnityUtils.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
       <HintPath>libs\MMHOOK_Assembly-CSharp.dll</HintPath>
