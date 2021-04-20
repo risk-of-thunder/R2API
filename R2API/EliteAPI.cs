@@ -136,6 +136,7 @@ namespace R2API {
 
             if (elite.EliteTierDefs == null || elite.EliteTierDefs.Count() <= 0) {
                 throw new ArgumentNullException("CustomElite.EliteTierDefs");
+
             }
 
             EliteDefinitions.Add(elite);
@@ -224,7 +225,7 @@ namespace R2API {
                     Array.Copy(currentEliteTiers, indexToInsertAt, currentEliteTiers, indexToInsertAt + 1, currentEliteTiers.Length - indexToInsertAt - 1);
                 }
                 currentEliteTiers[indexToInsertAt] = eliteTierDef;
-
+                
                 OverrideCombatDirectorEliteTiers(currentEliteTiers);
             }
 
