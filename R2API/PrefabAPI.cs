@@ -134,7 +134,7 @@ namespace R2API {
             var h = new HashStruct {
                 Prefab = prefab,
                 GoName = prefab.name,
-                TypeName = method.DeclaringType.FullName,
+                TypeName = method.DeclaringType.AssemblyQualifiedName,
                 MethodName = method.Name,
                 Offset = frame.GetNativeOffset().ToString()
             };
