@@ -143,7 +143,9 @@ namespace R2API {
             VoidCell = 4096,
             MomentWhole = 8192,
             SkyMeadow = 16384,
-            ArtifactReliquary = 32768
+            ArtifactReliquary = 32768,
+            Commencement = 65536,
+            SunderedGrove = 131072
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 
