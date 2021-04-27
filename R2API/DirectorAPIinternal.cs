@@ -95,6 +95,14 @@ namespace R2API {
                     stageInfo.stage = Stage.ArtifactReliquary;
                     break;
 
+                case "moon2":
+                    stageInfo.stage = Stage.Commencement;
+                    break;
+
+                case "rootjungle":
+                    stageInfo.stage = Stage.SunderedGrove;
+                    break;
+
                 default:
                     stageInfo.stage = Stage.Custom;
                     stageInfo.CustomStageName = scene.baseSceneName;
