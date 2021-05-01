@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 using UnityEngine.Networking;
 
 namespace R2API {
@@ -18,6 +17,7 @@ namespace R2API {
         private const byte valuesPerBlock = 8;
         private const byte blocksPerSection = 18;
         private const byte valuesPerSection = valuesPerBlock * blocksPerSection;
+        private const byte sectionsCount = 8;
 
         private static readonly ConditionalWeakTable<DamageInfo, Section> sectionPerInstance = new();
 
@@ -91,6 +91,12 @@ namespace R2API {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
             }
+
+            if (ModdedDamageTypeCount >= sectionsCount * valuesPerSection) {
+                //I doubt this ever gonna happen, but just in case.
+                throw new IndexOutOfRangeException($"Reached the limit of {sectionsCount * valuesPerSection} ModdedDamageTypes. Please contact R2API developers to increase the limit");
+            }
+
             return (ModdedDamageType)ModdedDamageTypeCount++;
         }
 
@@ -138,7 +144,8 @@ namespace R2API {
         }
         #endregion
 
-        private class Section {
+        #region Private classes
+        internal class Section {
             public readonly Dictionary<byte, Block> blocks = new();
 
             public static Section FromNetworkReader(NetworkReader reader) {
@@ -148,9 +155,9 @@ namespace R2API {
                 }
                 var section = new Section();
 
-                for (var i = 7; i >= 0; i--) {
+                for (var i = 0; i < 8; i++) {
                     if ((sectionByte & 1 << i) != 0) {
-                        section.blocks[(byte)(7 - i)] = Block.FromNetworkReader(reader); 
+                        section.blocks[(byte)i] = Block.FromNetworkReader(reader); 
                     } 
                 }
 
@@ -164,8 +171,10 @@ namespace R2API {
                 }
                 writer.Write((byte)section);
 
-                foreach (var row in blocks) {
-                    row.Value.Write(writer);
+                for (var i = 0; i < sectionsCount; i++) {
+                    if (blocks.TryGetValue((byte)i, out var block)) {
+                        block.Write(writer);
+                    }
                 }
             }
 
@@ -186,17 +195,58 @@ namespace R2API {
             }
         }
 
-        private class Block {
+        internal class Block {
             public readonly Dictionary<byte, byte> values = new();
 
             private const uint blockValuesMask = 0b_00111111_00011111_00001111_00000111;
-            private const uint blockHeader = 0b_00000000_01000000_01100000_01110000;
-            private const uint highestBit = 0b_10000000_00000000_00000000_00000000;
-            private const int endBlockMask = 0b_10000000;
+            private const uint fullBlockHeader = 0b_00000000_01000000_01100000_01110000;
+
+            private const uint block1HeaderMask = 0b_01000000;
+            private const uint block2HeaderMask = 0b_01100000;
+            private const uint block3HeaderMask = 0b_01110000;
+            private const uint block4HeaderMask = 0b_01111000;
+
+            private const uint block1HeaderXor = 0b_00000000;
+            private const uint block2HeaderXor = 0b_01000000;
+            private const uint block3HeaderXor = 0b_01100000;
+            private const uint block4HeaderXor = 0b_01110000;
+
+            private const uint highestBitInInt = 0b_10000000_00000000_00000000_00000000;
+            private const uint highestBitInByte = 0b_10000000;
 
             public static Block FromNetworkReader(NetworkReader reader) {
                 var block = new Block();
-                throw new NotImplementedException();
+                var fullBlockMask = new FullBlockMask();
+
+                var maskIndex = 0;
+                while (true) {
+                    var blockBytes = reader.ReadByte();
+                    uint mask, xor;
+                    do {
+                        (mask, xor) = GetMask(maskIndex++);
+                    }
+                    while ((blockBytes & mask ^ xor) != 0);
+
+                    fullBlockMask[maskIndex - 1] = blockBytes;
+
+                    if ((blockBytes & highestBitInByte) != 0) {
+                        break;
+                    }
+                }
+
+                var bitesSkipped = 0;
+                for (var i = 0; i < 32; i++) {
+                    if ((blockValuesMask & highestBitInInt >> i) == 0) {
+                        bitesSkipped++;
+                        continue;
+                    }
+                    if ((fullBlockMask.integer & highestBitInInt >> i) != 0) {
+                        block.values[(byte)(i - bitesSkipped)] = reader.ReadByte();
+                    } else {
+                    }
+                }
+
+                return block;
             }
 
             public void Write(NetworkWriter writer) {
@@ -204,28 +254,29 @@ namespace R2API {
                 var fullBlockMask = new FullBlockMask();
                 var orderedValues = new List<byte>();
                 for (var i = 0; i < 32; i++) {
-                    if ((blockValuesMask & highestBit >> i) == 0) {
+                    fullBlockMask.integer <<= 1;
+                    if ((blockValuesMask & highestBitInInt >> i) == 0) {
                         bitesSkipped++;
-                        fullBlockMask.integer >>= 1;
                         continue;
                     }
-                    if (values.TryGetValue((byte)(bitesSkipped + i), out var value)) {
-                        fullBlockMask.integer |= highestBit;
+                    if (values.TryGetValue((byte)(i - bitesSkipped), out var value)) {
+                        fullBlockMask.integer |= 1;
                         orderedValues.Add(value);
                     }
                 }
-                fullBlockMask.integer |= blockHeader;
                 var lastIndex = 0;
-                for (var i = 3; i >= 0; i--) {
-                    if (fullBlockMask[i] != 0) {
-                        lastIndex = i;
-                        break;
-                    }
-                }
-                fullBlockMask[lastIndex] = (byte)(fullBlockMask[lastIndex] | endBlockMask);
-
                 for (var i = 0; i < 4; i++) {
                     if (fullBlockMask[i] != 0) {
+                        lastIndex = i;
+                    }
+                }
+
+                fullBlockMask.integer |= fullBlockHeader;
+                fullBlockMask[lastIndex] = (byte)(fullBlockMask[lastIndex] | highestBitInByte);
+
+                for (var i = 0; i <= lastIndex; i++) {
+                    var (headerMask, _) = GetMask(i);
+                    if ((fullBlockMask[i] & (~headerMask)) != 0) {
                         writer.Write(fullBlockMask[i]);
                     }
                 }
@@ -239,7 +290,7 @@ namespace R2API {
                 if (!values.TryGetValue(valueIndex, out var value)) {
                     return false;
                 }
-                return (value & (1 << insideBlockIndex % valuesPerBlock)) != 0;
+                return (value & (highestBitInByte >> insideBlockIndex % valuesPerBlock)) != 0;
             }
 
             public void Add(byte insideBlockIndex) {
@@ -247,19 +298,29 @@ namespace R2API {
                 if (!values.TryGetValue(valueIndex, out var value)) {
                     value = 0;
                 }
-                values[valueIndex] = (byte)(value | 1 << insideBlockIndex % valuesPerBlock);
+                values[valueIndex] = (byte)(value | highestBitInByte >> insideBlockIndex % valuesPerBlock);
+            }
+
+            public static (uint mask, uint xor) GetMask(int i) {
+                return i switch {
+                    0 => (block1HeaderMask, block1HeaderXor),
+                    1 => (block2HeaderMask, block2HeaderXor),
+                    2 => (block3HeaderMask, block3HeaderXor),
+                    3 => (block4HeaderMask, block4HeaderXor),
+                    _ => throw new IndexOutOfRangeException()
+                };
             }
         }
 
         [StructLayout(LayoutKind.Explicit)]
         private struct FullBlockMask {
-            [FieldOffset(0)]
-            public byte byte0;
-            [FieldOffset(1)]
-            public byte byte1;
-            [FieldOffset(2)]
-            public byte byte2;
             [FieldOffset(3)]
+            public byte byte0;
+            [FieldOffset(2)]
+            public byte byte1;
+            [FieldOffset(1)]
+            public byte byte2;
+            [FieldOffset(0)]
             public byte byte3;
 
             [FieldOffset(0)]
@@ -295,5 +356,6 @@ namespace R2API {
                 }
             }
         }
+        #endregion
     }
 }
