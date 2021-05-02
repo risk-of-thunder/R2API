@@ -14,12 +14,13 @@ namespace R2API {
     public static class DamageAPI {
         public enum ModdedDamageType { };
 
-        private const byte valuesPerBlock = 8;
-        private const byte blocksPerSection = 18;
-        private const byte valuesPerSection = valuesPerBlock * blocksPerSection;
+        private const byte flagsPerValue = 8;
+        private const byte valuesPerBlock = 18;
+        private const byte valuesPerSection = flagsPerValue * valuesPerBlock;
         private const byte sectionsCount = 8;
+        private const byte blockPartsCount = 4;
 
-        private static readonly ConditionalWeakTable<DamageInfo, Section> sectionPerInstance = new();
+        private static readonly ConditionalWeakTable<DamageInfo, DamageTypeHolder> damageTypeHolders = new();
 
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -56,9 +57,9 @@ namespace R2API {
                 return damageInfo;
             }
 
-            var section = Section.FromNetworkReader(reader);
-            if (section != null) {
-                sectionPerInstance.Add(damageInfo, section);
+            var holder = DamageTypeHolder.FromNetworkReader(reader);
+            if (holder != null) {
+                damageTypeHolders.Add(damageInfo, holder);
             }
 
             return damageInfo;
@@ -71,12 +72,12 @@ namespace R2API {
                 return;
             }
 
-            if (!sectionPerInstance.TryGetValue(damageInfo, out var section)) {
+            if (!damageTypeHolders.TryGetValue(damageInfo, out var holder)) {
                 writer.Write((byte)0);
                 return;
             }
 
-            section.Write(writer);
+            holder.Write(writer);
         }
         #endregion
 
@@ -114,11 +115,11 @@ namespace R2API {
                 throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types ({ModdedDamageTypeCount})");
             }
 
-            if (!sectionPerInstance.TryGetValue(damageInfo, out var section)) {
-                sectionPerInstance.Add(damageInfo, section = new Section());
+            if (!damageTypeHolders.TryGetValue(damageInfo, out var holder)) {
+                damageTypeHolders.Add(damageInfo, holder = new DamageTypeHolder());
             }
 
-            section.Add(moddedDamageType);
+            holder.Add(moddedDamageType);
         }
 
         /// <summary>
@@ -136,68 +137,16 @@ namespace R2API {
                 throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types ({ModdedDamageTypeCount})");
             }
 
-            if (!sectionPerInstance.TryGetValue(damageInfo, out var section)) {
+            if (!damageTypeHolders.TryGetValue(damageInfo, out var holder)) {
                 return false;
             }
 
-            return section.Has(moddedDamageType);
+            return holder.Has(moddedDamageType);
         }
         #endregion
 
         #region Private classes
-        internal class Section {
-            public readonly Dictionary<byte, Block> blocks = new();
-
-            public static Section FromNetworkReader(NetworkReader reader) {
-                var sectionByte = reader.ReadByte();
-                if (sectionByte == 0) {
-                    return null;
-                }
-                var section = new Section();
-
-                for (var i = 0; i < 8; i++) {
-                    if ((sectionByte & 1 << i) != 0) {
-                        section.blocks[(byte)i] = Block.FromNetworkReader(reader); 
-                    } 
-                }
-
-                return section;
-            }
-
-            public void Write(NetworkWriter writer) {
-                int section = 0;
-                foreach (var row in blocks) {
-                    section |= 1 << row.Key;
-                }
-                writer.Write((byte)section);
-
-                for (var i = 0; i < sectionsCount; i++) {
-                    if (blocks.TryGetValue((byte)i, out var block)) {
-                        block.Write(writer);
-                    }
-                }
-            }
-
-            public void Add(ModdedDamageType moddedDamageType) {
-                var blockIndex = (byte)((int)moddedDamageType / valuesPerSection);
-                if (!blocks.TryGetValue(blockIndex, out var block)) {
-                    blocks[blockIndex] = block = new Block();
-                }
-                block.Add((byte)((int)moddedDamageType % valuesPerSection));
-            }
-
-            public bool Has(ModdedDamageType moddedDamageType) {
-                var blockIndex = (int)moddedDamageType / valuesPerSection;
-                if (!blocks.TryGetValue((byte)blockIndex, out var block)) {
-                    return false;
-                }
-                return block.Has((byte)((int)moddedDamageType % valuesPerSection));
-            }
-        }
-
-        internal class Block {
-            public readonly Dictionary<byte, byte> values = new();
-
+        private class DamageTypeHolder {
             private const uint blockValuesMask = 0b_00111111_00011111_00001111_00000111;
             private const uint fullBlockHeader = 0b_00000000_01000000_01100000_01110000;
 
@@ -214,8 +163,45 @@ namespace R2API {
             private const uint highestBitInInt = 0b_10000000_00000000_00000000_00000000;
             private const uint highestBitInByte = 0b_10000000;
 
-            public static Block FromNetworkReader(NetworkReader reader) {
-                var block = new Block();
+            private byte[] values;
+
+            public void Add(ModdedDamageType moddedDamageType) {
+                var valueIndex = (int)moddedDamageType / flagsPerValue;
+                var flagIndex = (int)moddedDamageType % flagsPerValue;
+
+                ResizeIfNeeded(valueIndex);
+
+                values[valueIndex] = (byte)(values[valueIndex] | highestBitInByte >> flagIndex);
+            }
+
+            public bool Has(ModdedDamageType moddedDamageType) {
+                var valueIndex = (int)moddedDamageType / flagsPerValue;
+                var flagIndex = (int)moddedDamageType % flagsPerValue;
+
+                if (values == null || valueIndex >= values.Length) {
+                    return false;
+                }
+
+                return (values[valueIndex] & (highestBitInByte >> flagIndex)) != 0;
+            }
+
+            public static DamageTypeHolder FromNetworkReader(NetworkReader reader) {
+                var sectionByte = reader.ReadByte();
+                if (sectionByte == 0) {
+                    return null;
+                }
+                var holder = new DamageTypeHolder();
+
+                for (var i = 0; i < 8; i++) {
+                    if ((sectionByte & 1 << i) != 0) {
+                        holder.ReadBlock(reader, i);
+                    }
+                }
+
+                return holder;
+            }
+
+            private void ReadBlock(NetworkReader reader, int blockIndex) {
                 var fullBlockMask = new FullBlockMask();
 
                 var maskIndex = 0;
@@ -241,15 +227,40 @@ namespace R2API {
                         continue;
                     }
                     if ((fullBlockMask.integer & highestBitInInt >> i) != 0) {
-                        block.values[(byte)(i - bitesSkipped)] = reader.ReadByte();
-                    } else {
+                        var valueIndex = (blockIndex * valuesPerBlock) + i - bitesSkipped;
+                        ResizeIfNeeded(valueIndex);
+                        values[valueIndex] = reader.ReadByte();
                     }
                 }
-
-                return block;
             }
 
+            private void ResizeIfNeeded(int valueIndex) {
+                if (values == null) {
+                    values = new byte[valueIndex + 1];
+                }
+                if (valueIndex >= values.Length) {
+                    Array.Resize(ref values, valueIndex + 1);
+                }
+            }
+
+
             public void Write(NetworkWriter writer) {
+                int section = 0;
+                for (var i = 0; i < sectionsCount; i++) {
+                    if (!IsBlockEmpty(i)) {
+                        section |= 1 << i;
+                    }
+                }
+                writer.Write((byte)section);
+
+                for (var i = 0; i < sectionsCount; i++) {
+                    if (!IsBlockEmpty(i)) {
+                        WriteBlock(writer, i);
+                    }
+                }
+            }
+
+            private void WriteBlock(NetworkWriter writer, int blockIndex) {
                 var bitesSkipped = 0;
                 var fullBlockMask = new FullBlockMask();
                 var orderedValues = new List<byte>();
@@ -259,9 +270,13 @@ namespace R2API {
                         bitesSkipped++;
                         continue;
                     }
-                    if (values.TryGetValue((byte)(i - bitesSkipped), out var value)) {
+                    var valueIndex = blockIndex * valuesPerBlock + (i - bitesSkipped);
+                    if (valueIndex >= values.Length) {
+                        continue;
+                    }
+                    if (values[valueIndex] != 0) {
                         fullBlockMask.integer |= 1;
-                        orderedValues.Add(value);
+                        orderedValues.Add(values[valueIndex]);
                     }
                 }
                 var lastIndex = 0;
@@ -285,23 +300,21 @@ namespace R2API {
                 }
             }
 
-            public bool Has(byte insideBlockIndex) {
-                var valueIndex = (byte)(insideBlockIndex / valuesPerBlock);
-                if (!values.TryGetValue(valueIndex, out var value)) {
-                    return false;
+            private bool IsBlockEmpty(int blockIndex) {
+                if (values == null || values.Length == 0 || values.Length / valuesPerBlock < blockIndex) {
+                    return true;
                 }
-                return (value & (highestBitInByte >> insideBlockIndex % valuesPerBlock)) != 0;
+
+                for (var i = blockIndex * valuesPerBlock; i < Math.Min((blockIndex + 1) * valuesPerBlock, values.Length); i++) {
+                    if (values[i] != 0) {
+                        return false;
+                    }
+                }
+
+                return true;
             }
 
-            public void Add(byte insideBlockIndex) {
-                var valueIndex = (byte)(insideBlockIndex / valuesPerBlock);
-                if (!values.TryGetValue(valueIndex, out var value)) {
-                    value = 0;
-                }
-                values[valueIndex] = (byte)(value | highestBitInByte >> insideBlockIndex % valuesPerBlock);
-            }
-
-            public static (uint mask, uint xor) GetMask(int i) {
+            private static (uint mask, uint xor) GetMask(int i) {
                 return i switch {
                     0 => (block1HeaderMask, block1HeaderXor),
                     1 => (block2HeaderMask, block2HeaderXor),
