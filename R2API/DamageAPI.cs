@@ -27,6 +27,16 @@ namespace R2API {
 
         private static readonly ConditionalWeakTable<object, ModdedDamageTypeHolder> damageTypeHolders = new();
 
+        private static ModdedDamageTypeHolder _oneTimeHolderField;
+        private static ModdedDamageTypeHolder OneTimeHolderField {
+            get {
+                var value = _oneTimeHolderField;
+                _oneTimeHolderField = null;
+                return value;
+            }
+            set => _oneTimeHolderField = value;
+        }
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -55,6 +65,9 @@ namespace R2API {
             IL.RoR2.Projectile.DeathProjectile.FixedUpdate += DeathProjectileFixedUpdateIL;
             IL.RoR2.Projectile.ProjectileGrantOnKillOnDestroy.OnDestroy += ProjectileGrantOnKillOnDestroyOnDestroyIL;
             IL.RoR2.Projectile.ProjectileSingleTargetImpact.OnProjectileImpact += ProjectileSingleTargetImpactOnProjectileImpactIL;
+
+            IL.RoR2.DotController.EvaluateDotStacksForType += DotControllerEvaluateDotStacksForTypeIL;
+            IL.RoR2.DotController.AddPendingDamageEntry += DotControllerAddPendingDamageEntryIL;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
@@ -69,6 +82,50 @@ namespace R2API {
             IL.RoR2.Projectile.DeathProjectile.FixedUpdate -= DeathProjectileFixedUpdateIL;
             IL.RoR2.Projectile.ProjectileGrantOnKillOnDestroy.OnDestroy -= ProjectileGrantOnKillOnDestroyOnDestroyIL;
             IL.RoR2.Projectile.ProjectileSingleTargetImpact.OnProjectileImpact -= ProjectileSingleTargetImpactOnProjectileImpactIL;
+
+            IL.RoR2.DotController.EvaluateDotStacksForType -= DotControllerEvaluateDotStacksForTypeIL;
+            IL.RoR2.DotController.AddPendingDamageEntry -= DotControllerAddPendingDamageEntryIL;
+        }
+
+        private static void DotControllerAddPendingDamageEntryIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            var pendingDamageIndex = -1;
+            c.GotoNext(
+                x => x.MatchLdloc(out pendingDamageIndex),
+                x => x.MatchLdarg(3),
+                x => x.MatchStfld(out _));
+
+            c.Emit(OpCodes.Ldloc, pendingDamageIndex);
+            c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(OneTimeHolderField)).GetGetMethod(true));
+            EmitCopyCall(c);
+        }
+
+        private static void DotControllerEvaluateDotStacksForTypeIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            var dotStackIndex = -1;
+            c.GotoNext(
+                MoveType.After,
+                x => x.MatchLdloc(out dotStackIndex),
+                x => x.MatchLdfld<DotController.DotStack>(nameof(DotController.DotStack.dotIndex)),
+                x => x.MatchLdarg(1),
+                x => x.MatchBneUn(out _));
+
+            c.Emit(OpCodes.Ldloc, dotStackIndex);
+            c.Emit(OpCodes.Call, typeof(ModdedDamageTypeHolder).GetMethodCached(nameof(ModdedDamageTypeHolder.MakeCopy)));
+            c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(OneTimeHolderField)).GetSetMethod(true));
+
+            var damageInfoIndex = -1;
+            c.GotoNext(
+                x => x.MatchNewobj<DamageInfo>(),
+                x => x.MatchStloc(out damageInfoIndex));
+
+            c.GotoNext(x => x.MatchLdfld<DotController.PendingDamage>(nameof(DotController.PendingDamage.damageType)));
+
+            c.Emit(OpCodes.Dup);
+            c.Emit(OpCodes.Ldloc, damageInfoIndex);
+            EmitCopyCall(c);
         }
 
         private static void LightningOrbOnArrivalIL(ILContext il) {
@@ -173,6 +230,9 @@ namespace R2API {
 
         private static void CopyModdedDamageTypeInversed(object to, object from) => CopyModdedDamageType(from, to);
         private static void CopyModdedDamageType(object from, object to) {
+            if (from == null || to == null) {
+                return;
+            }
             if (damageTypeHolders.TryGetValue(from, out var holder)) {
                 damageTypeHolders.Remove(to);
                 damageTypeHolders.Add(to, holder.MakeCopy());
