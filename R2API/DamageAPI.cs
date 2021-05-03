@@ -28,15 +28,7 @@ namespace R2API {
 
         private static readonly ConditionalWeakTable<object, ModdedDamageTypeHolder> damageTypeHolders = new();
 
-        private static ModdedDamageTypeHolder _oneTimeHolderField;
-        private static ModdedDamageTypeHolder OneTimeHolderField {
-            get {
-                var value = _oneTimeHolderField;
-                _oneTimeHolderField = null;
-                return value;
-            }
-            set => _oneTimeHolderField = value;
-        }
+        private static ModdedDamageTypeHolder TempHolder { get; set; }
 
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -79,6 +71,11 @@ namespace R2API {
             HookEndpointManager.Add(
                 typeof(RoR2.BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Read)),
                 (BlastAttackDamageInfoReadDelegate)BlastAttackDamageInfoRead);
+
+            IL.RoR2.OverlapAttack.ProcessHits += OverlapAttackProcessHitsIL;
+            IL.RoR2.OverlapAttack.PerformDamage += OverlapAttackPerformDamageIL;
+            On.RoR2.OverlapAttack.OverlapAttackMessage.Serialize += OverlapAttackMessageSerialize;
+            On.RoR2.OverlapAttack.OverlapAttackMessage.Deserialize += OverlapAttackMessageDeserialize;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
@@ -106,6 +103,52 @@ namespace R2API {
             HookEndpointManager.Remove(
                 typeof(RoR2.BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Read)),
                 (BlastAttackDamageInfoReadDelegate)BlastAttackDamageInfoRead);
+
+            IL.RoR2.OverlapAttack.ProcessHits -= OverlapAttackProcessHitsIL;
+            IL.RoR2.OverlapAttack.PerformDamage -= OverlapAttackPerformDamageIL;
+            On.RoR2.OverlapAttack.OverlapAttackMessage.Serialize -= OverlapAttackMessageSerialize;
+            On.RoR2.OverlapAttack.OverlapAttackMessage.Deserialize -= OverlapAttackMessageDeserialize;
+        }
+
+        private static void OverlapAttackMessageDeserialize(On.RoR2.OverlapAttack.OverlapAttackMessage.orig_Deserialize orig, MessageBase self, NetworkReader reader) {
+            orig(self, reader);
+
+            var holder = ModdedDamageTypeHolder.FromNetworkReader(reader);
+            if (holder != null) {
+                TempHolder = holder;
+            }
+        }
+
+        private static void OverlapAttackMessageSerialize(On.RoR2.OverlapAttack.OverlapAttackMessage.orig_Serialize orig, MessageBase self, NetworkWriter writer) {
+            orig(self, writer);
+
+
+            var holder = TempHolder;
+            if (holder == null) {
+                writer.Write((byte)0);
+                return;
+            }
+
+            holder.Write(writer);
+        }
+
+        private static void OverlapAttackPerformDamageIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            var damageInfoIndex = GotoDamageInfo(c);
+
+            c.Emit(OpCodes.Ldloc, damageInfoIndex);
+            EmitGetTempHolder(c);
+            EmitCopyCall(c);
+        }
+
+        private static void OverlapAttackProcessHitsIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            c.GotoNext(x => x.MatchCall<NetworkServer>("get_active"));
+
+            c.Emit(OpCodes.Ldarg_0);
+            EmitSetTempHolder(c);
         }
 
         private static void BlastAttackDamageInfoRead(BlastAttackDamageInfoReadOrig orig, ref BlastAttack.BlastAttackDamageInfo self, NetworkReader networkReader) {
@@ -113,14 +156,14 @@ namespace R2API {
 
             var holder = ModdedDamageTypeHolder.FromNetworkReader(networkReader);
             if (holder != null) {
-                OneTimeHolderField = holder;
+                TempHolder = holder;
             }
         }
 
         private static void BlastAttackDamageInfoWrite(BlastAttackDamageInfoWriteOrig orig, ref BlastAttack.BlastAttackDamageInfo self, NetworkWriter networkWriter) {
             orig(ref self, networkWriter);
 
-            var holder = OneTimeHolderField;
+            var holder = TempHolder;
             if (holder == null) {
                 networkWriter.Write((byte)0);
                 return;
@@ -135,7 +178,7 @@ namespace R2API {
             var damageInfoIndex = GotoDamageInfo(c);
 
             c.Emit(OpCodes.Ldloc, damageInfoIndex);
-            EmitGetOneTimeHolder(c);
+            EmitGetTempHolder(c);
             EmitCopyCall(c);
         }
 
@@ -145,7 +188,7 @@ namespace R2API {
             c.GotoNext(x => x.MatchCall<NetworkServer>("get_active"));
 
             c.Emit(OpCodes.Ldarg_0);
-            EmitSetOneTimeHolder(c);
+            EmitSetTempHolder(c);
         }
 
         private static void DotControllerAddPendingDamageEntryIL(ILContext il) {
@@ -158,7 +201,7 @@ namespace R2API {
                 x => x.MatchStfld(out _));
 
             c.Emit(OpCodes.Ldloc, pendingDamageIndex);
-            EmitGetOneTimeHolder(c);
+            EmitGetTempHolder(c);
             EmitCopyCall(c);
         }
 
@@ -174,7 +217,7 @@ namespace R2API {
                 x => x.MatchBneUn(out _));
 
             c.Emit(OpCodes.Ldloc, dotStackIndex);
-            EmitSetOneTimeHolder(c);
+            EmitSetTempHolder(c);
 
             var damageInfoIndex = -1;
             c.GotoNext(
@@ -188,11 +231,11 @@ namespace R2API {
             EmitCopyCall(c);
         }
 
-        private static void EmitGetOneTimeHolder(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(OneTimeHolderField)).GetGetMethod(true));
+        private static void EmitGetTempHolder(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(TempHolder)).GetGetMethod(true));
 
-        private static void EmitSetOneTimeHolder(ILCursor c) {
+        private static void EmitSetTempHolder(ILCursor c) {
             c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(MakeCopyOfModdedDamageTypeFromObject)));
-            c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(OneTimeHolderField)).GetSetMethod(true));
+            c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(TempHolder)).GetSetMethod(true));
         }
 
         private static void LightningOrbOnArrivalIL(ILContext il) {
@@ -411,6 +454,13 @@ namespace R2API {
         /// <param name="moddedDamageType"></param>
         public static void AddModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(blastAttack, moddedDamageType);
 
+        /// <summary>
+        /// Adding ModdedDamageType to OverlapAttack instance. You can add more than one damage type to one OverlapAttack
+        /// </summary>
+        /// <param name="overlapAttack"></param>
+        /// <param name="moddedDamageType"></param>
+        public static void AddModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(overlapAttack, moddedDamageType);
+
         private static void AddModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
@@ -484,6 +534,14 @@ namespace R2API {
         /// <param name="moddedDamageType"></param>
         /// <returns></returns>
         public static bool HasModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(blastAttack, moddedDamageType);
+
+        /// <summary>
+        /// Checks if OverlapAttack instance has ModdedDamageType assigned. One OverlapAttack can have more than one damage type.
+        /// </summary>
+        /// <param name="overlapAttack"></param>
+        /// <param name="moddedDamageType"></param>
+        /// <returns></returns>
+        public static bool HasModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(overlapAttack, moddedDamageType);
 
         private static bool HasModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType) {
             if (!Loaded) {
@@ -596,6 +654,12 @@ namespace R2API {
             /// </summary>
             /// <param name="blastAttack"></param>
             public void CopyTo(BlastAttack blastAttack) => CopyToInternal(blastAttack);
+
+            /// <summary>
+            /// Copies enabled ModdedDamageTypes to the OverlapAttack instance (completely replacing already set values)
+            /// </summary>
+            /// <param name="overlapAttack"></param>
+            public void CopyTo(OverlapAttack overlapAttack) => CopyToInternal(overlapAttack);
 
             private void CopyToInternal(object obj) {
                 damageTypeHolders.Remove(obj);
