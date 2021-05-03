@@ -1,5 +1,6 @@
 ﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using MonoMod.RuntimeDetour.HookGen;
 using R2API.Utils;
 using RoR2;
 using RoR2.Orbs;
@@ -68,6 +69,16 @@ namespace R2API {
 
             IL.RoR2.DotController.EvaluateDotStacksForType += DotControllerEvaluateDotStacksForTypeIL;
             IL.RoR2.DotController.AddPendingDamageEntry += DotControllerAddPendingDamageEntryIL;
+
+            IL.RoR2.BlastAttack.HandleHits += BlastAttackHandleHitsIL;
+            IL.RoR2.BlastAttack.PerformDamageServer += BlastAttackPerformDamageServerIL;
+            //MMHook can't handle private structs in parameters of On hooks
+            HookEndpointManager.Add(
+                typeof(RoR2.BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Write)),
+                (BlastAttackDamageInfoWriteDelegate)BlastAttackDamageInfoWrite);
+            HookEndpointManager.Add(
+                typeof(RoR2.BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Read)),
+                (BlastAttackDamageInfoReadDelegate)BlastAttackDamageInfoRead);
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
@@ -85,6 +96,56 @@ namespace R2API {
 
             IL.RoR2.DotController.EvaluateDotStacksForType -= DotControllerEvaluateDotStacksForTypeIL;
             IL.RoR2.DotController.AddPendingDamageEntry -= DotControllerAddPendingDamageEntryIL;
+
+            IL.RoR2.BlastAttack.HandleHits -= BlastAttackHandleHitsIL;
+            IL.RoR2.BlastAttack.PerformDamageServer -= BlastAttackPerformDamageServerIL;
+            //MMHook can't handle private structs in parameters of On hooks
+            HookEndpointManager.Remove(
+                typeof(RoR2.BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Write)),
+                (BlastAttackDamageInfoWriteDelegate)BlastAttackDamageInfoWrite);
+            HookEndpointManager.Remove(
+                typeof(RoR2.BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Read)),
+                (BlastAttackDamageInfoReadDelegate)BlastAttackDamageInfoRead);
+        }
+
+        private static void BlastAttackDamageInfoRead(BlastAttackDamageInfoReadOrig orig, ref BlastAttack.BlastAttackDamageInfo self, NetworkReader networkReader) {
+            orig(ref self, networkReader);
+
+            var holder = ModdedDamageTypeHolder.FromNetworkReader(networkReader);
+            if (holder != null) {
+                OneTimeHolderField = holder;
+            }
+        }
+
+        private static void BlastAttackDamageInfoWrite(BlastAttackDamageInfoWriteOrig orig, ref BlastAttack.BlastAttackDamageInfo self, NetworkWriter networkWriter) {
+            orig(ref self, networkWriter);
+
+            var holder = OneTimeHolderField;
+            if (holder == null) {
+                networkWriter.Write((byte)0);
+                return;
+            }
+
+            holder.Write(networkWriter);
+        }
+
+        private static void BlastAttackPerformDamageServerIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            var damageInfoIndex = GotoDamageInfo(c);
+
+            c.Emit(OpCodes.Ldloc, damageInfoIndex);
+            EmitGetOneTimeHolder(c);
+            EmitCopyCall(c);
+        }
+
+        private static void BlastAttackHandleHitsIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            c.GotoNext(x => x.MatchCall<NetworkServer>("get_active"));
+
+            c.Emit(OpCodes.Ldarg_0);
+            EmitSetOneTimeHolder(c);
         }
 
         private static void DotControllerAddPendingDamageEntryIL(ILContext il) {
@@ -97,7 +158,7 @@ namespace R2API {
                 x => x.MatchStfld(out _));
 
             c.Emit(OpCodes.Ldloc, pendingDamageIndex);
-            c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(OneTimeHolderField)).GetGetMethod(true));
+            EmitGetOneTimeHolder(c);
             EmitCopyCall(c);
         }
 
@@ -113,8 +174,7 @@ namespace R2API {
                 x => x.MatchBneUn(out _));
 
             c.Emit(OpCodes.Ldloc, dotStackIndex);
-            c.Emit(OpCodes.Call, typeof(ModdedDamageTypeHolder).GetMethodCached(nameof(ModdedDamageTypeHolder.MakeCopy)));
-            c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(OneTimeHolderField)).GetSetMethod(true));
+            EmitSetOneTimeHolder(c);
 
             var damageInfoIndex = -1;
             c.GotoNext(
@@ -126,6 +186,13 @@ namespace R2API {
             c.Emit(OpCodes.Dup);
             c.Emit(OpCodes.Ldloc, damageInfoIndex);
             EmitCopyCall(c);
+        }
+
+        private static void EmitGetOneTimeHolder(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(OneTimeHolderField)).GetGetMethod(true));
+
+        private static void EmitSetOneTimeHolder(ILCursor c) {
+            c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(MakeCopyOfModdedDamageTypeFromObject)));
+            c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(OneTimeHolderField)).GetSetMethod(true));
         }
 
         private static void LightningOrbOnArrivalIL(ILContext il) {
@@ -239,12 +306,20 @@ namespace R2API {
             }
         }
 
+        private static ModdedDamageTypeHolder MakeCopyOfModdedDamageTypeFromObject(object from) {
+            if (from == null) {
+                return null;
+            }
+
+            if (damageTypeHolders.TryGetValue(from, out var holder)) {
+                return holder.MakeCopy();
+            }
+
+            return null;
+        }
+
         private static RoR2.DamageInfo ReadDamageInfo(On.RoR2.NetworkExtensions.orig_ReadDamageInfo orig, UnityEngine.Networking.NetworkReader reader) {
             var damageInfo = orig(reader);
-
-            if (ModdedDamageTypeCount == 0) {
-                return damageInfo;
-            }
 
             var holder = ModdedDamageTypeHolder.FromNetworkReader(reader);
             if (holder != null) {
@@ -256,10 +331,6 @@ namespace R2API {
 
         private static void WriteDamageInfo(On.RoR2.NetworkExtensions.orig_Write_NetworkWriter_DamageInfo orig, UnityEngine.Networking.NetworkWriter writer, RoR2.DamageInfo damageInfo) {
             orig(writer, damageInfo);
-
-            if (ModdedDamageTypeCount == 0) {
-                return;
-            }
 
             if (!damageTypeHolders.TryGetValue(damageInfo, out var holder)) {
                 writer.Write((byte)0);
@@ -333,6 +404,13 @@ namespace R2API {
         /// <param name="moddedDamageType"></param>
         public static void AddModdedDamageType(this ProjectileDamage projectileDamage, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(projectileDamage, moddedDamageType);
 
+        /// <summary>
+        /// Adding ModdedDamageType to BlastAttack instance. You can add more than one damage type to one BlastAttack
+        /// </summary>
+        /// <param name="blastAttack"></param>
+        /// <param name="moddedDamageType"></param>
+        public static void AddModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(blastAttack, moddedDamageType);
+
         private static void AddModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
@@ -398,6 +476,14 @@ namespace R2API {
         /// <param name="moddedDamageType"></param>
         /// <returns></returns>
         public static bool HasModdedDamageType(this ProjectileDamage projectileDamage, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(projectileDamage, moddedDamageType);
+
+        /// <summary>
+        /// Checks if BlastAttack instance has ModdedDamageType assigned. One BlastAttack can have more than one damage type.
+        /// </summary>
+        /// <param name="blastAttack"></param>
+        /// <param name="moddedDamageType"></param>
+        /// <returns></returns>
+        public static bool HasModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(blastAttack, moddedDamageType);
 
         private static bool HasModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType) {
             if (!Loaded) {
@@ -504,6 +590,12 @@ namespace R2API {
             /// </summary>
             /// <param name="projectileDamage"></param>
             public void CopyTo(ProjectileDamage projectileDamage) => CopyToInternal(projectileDamage);
+
+            /// <summary>
+            /// Copies enabled ModdedDamageTypes to the BlastAttack instance (completely replacing already set values)
+            /// </summary>
+            /// <param name="blastAttack"></param>
+            public void CopyTo(BlastAttack blastAttack) => CopyToInternal(blastAttack);
 
             private void CopyToInternal(object obj) {
                 damageTypeHolders.Remove(obj);
@@ -714,5 +806,11 @@ namespace R2API {
                 }
             }
         }
+
+        private delegate void BlastAttackDamageInfoWriteDelegate(BlastAttackDamageInfoWriteOrig orig, ref BlastAttack.BlastAttackDamageInfo self, NetworkWriter networkWriter);
+        private delegate void BlastAttackDamageInfoWriteOrig(ref BlastAttack.BlastAttackDamageInfo self, NetworkWriter networkWriter);
+
+        private delegate void BlastAttackDamageInfoReadDelegate(BlastAttackDamageInfoReadOrig orig, ref BlastAttack.BlastAttackDamageInfo self, NetworkReader networkReader);
+        private delegate void BlastAttackDamageInfoReadOrig(ref BlastAttack.BlastAttackDamageInfo self, NetworkReader networkReader);
     }
 }
