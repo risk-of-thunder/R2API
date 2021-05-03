@@ -1,7 +1,12 @@
-﻿using R2API.Utils;
+﻿using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using R2API.Utils;
 using RoR2;
+using RoR2.Orbs;
+using RoR2.Projectile;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using UnityEngine.Networking;
@@ -20,7 +25,7 @@ namespace R2API {
         private const byte sectionsCount = 8;
         private const byte blockPartsCount = 4;
 
-        private static readonly ConditionalWeakTable<DamageInfo, DamageTypeHolder> damageTypeHolders = new();
+        private static readonly ConditionalWeakTable<object, ModdedDamageTypeHolder> damageTypeHolders = new();
 
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -42,12 +47,136 @@ namespace R2API {
         internal static void SetHooks() {
             On.RoR2.NetworkExtensions.Write_NetworkWriter_DamageInfo += WriteDamageInfo;
             On.RoR2.NetworkExtensions.ReadDamageInfo += ReadDamageInfo;
+
+            IL.RoR2.BulletAttack.DefaultHitCallback += BulletAttackDefaultHitCallbackIL;
+            IL.RoR2.Orbs.DamageOrb.OnArrival += DamageOrbOnArrivalIL;
+            IL.RoR2.Orbs.GenericDamageOrb.OnArrival += GenericDamageOrbOnArrivalIL;
+            IL.RoR2.Orbs.LightningOrb.OnArrival += LightningOrbOnArrivalIL;
+            IL.RoR2.Projectile.DeathProjectile.FixedUpdate += DeathProjectileFixedUpdateIL;
+            IL.RoR2.Projectile.ProjectileGrantOnKillOnDestroy.OnDestroy += ProjectileGrantOnKillOnDestroyOnDestroyIL;
+            IL.RoR2.Projectile.ProjectileSingleTargetImpact.OnProjectileImpact += ProjectileSingleTargetImpactOnProjectileImpactIL;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             On.RoR2.NetworkExtensions.Write_NetworkWriter_DamageInfo -= WriteDamageInfo;
             On.RoR2.NetworkExtensions.ReadDamageInfo -= ReadDamageInfo;
+
+            IL.RoR2.BulletAttack.DefaultHitCallback -= BulletAttackDefaultHitCallbackIL;
+            IL.RoR2.Orbs.DamageOrb.OnArrival -= DamageOrbOnArrivalIL;
+            IL.RoR2.Orbs.GenericDamageOrb.OnArrival -= GenericDamageOrbOnArrivalIL;
+            IL.RoR2.Orbs.LightningOrb.OnArrival -= LightningOrbOnArrivalIL;
+            IL.RoR2.Projectile.DeathProjectile.FixedUpdate -= DeathProjectileFixedUpdateIL;
+            IL.RoR2.Projectile.ProjectileGrantOnKillOnDestroy.OnDestroy -= ProjectileGrantOnKillOnDestroyOnDestroyIL;
+            IL.RoR2.Projectile.ProjectileSingleTargetImpact.OnProjectileImpact -= ProjectileSingleTargetImpactOnProjectileImpactIL;
+        }
+
+        private static void LightningOrbOnArrivalIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            var damageInfoIndex = GotoDamageInfo(c);
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Ldloc, damageInfoIndex);
+
+            EmitCopyCall(c);
+        }
+
+        private static void GenericDamageOrbOnArrivalIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            var damageInfoIndex = GotoDamageInfo(c);
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Ldloc, damageInfoIndex);
+
+            EmitCopyCall(c);
+        }
+
+        private static void ProjectileSingleTargetImpactOnProjectileImpactIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            var damageInfoIndex = GotoDamageInfo(c);
+
+            c.GotoNext(
+                x => x.MatchLdloc(damageInfoIndex),
+                x => x.MatchLdarg(0));
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit<RoR2.Projectile.ProjectileSingleTargetImpact>(OpCodes.Ldfld, nameof(RoR2.Projectile.ProjectileSingleTargetImpact.projectileDamage));
+            c.Emit(OpCodes.Ldloc, damageInfoIndex);
+            
+            EmitCopyCall(c);
+        }
+
+        private static void ProjectileGrantOnKillOnDestroyOnDestroyIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            c.GotoNext(
+                MoveType.After,
+                x => x.MatchNewobj<DamageInfo>());
+            
+            c.Emit(OpCodes.Dup);
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit<RoR2.Projectile.ProjectileGrantOnKillOnDestroy>(OpCodes.Ldfld, nameof(RoR2.Projectile.ProjectileGrantOnKillOnDestroy.projectileDamage));
+            
+            EmitCopyInversedCall(c);
+        }
+
+        private static void DeathProjectileFixedUpdateIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            c.GotoNext(
+                MoveType.After,
+                x => x.MatchNewobj<DamageInfo>());
+
+            c.Emit(OpCodes.Dup);
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit<RoR2.Projectile.DeathProjectile>(OpCodes.Ldfld, nameof(RoR2.Projectile.DeathProjectile.projectileDamage));
+            
+            EmitCopyInversedCall(c);
+        }
+
+        private static void DamageOrbOnArrivalIL(ILContext il) {
+            var c = new ILCursor(il);
+            var damageInfoIndex = GotoDamageInfo(c);
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Ldloc, damageInfoIndex);
+
+            EmitCopyCall(c);
+        }
+
+        private static void BulletAttackDefaultHitCallbackIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            var damageInfoIndex = GotoDamageInfo(c);
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Ldloc, damageInfoIndex);
+
+            EmitCopyCall(c);
+        }
+
+        private static int GotoDamageInfo(ILCursor c) {
+            int damageInfoIndex = -1;
+            c.GotoNext(
+                MoveType.After,
+                x => x.MatchNewobj<DamageInfo>(),
+                x => x.MatchStloc(out damageInfoIndex));
+
+            return damageInfoIndex;
+        }
+
+        private static void EmitCopyCall(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(CopyModdedDamageType)));
+        private static void EmitCopyInversedCall(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(CopyModdedDamageTypeInversed)));
+
+        private static void CopyModdedDamageTypeInversed(object to, object from) => CopyModdedDamageType(from, to);
+        private static void CopyModdedDamageType(object from, object to) {
+            if (damageTypeHolders.TryGetValue(from, out var holder)) {
+                damageTypeHolders.Remove(to);
+                damageTypeHolders.Add(to, holder.MakeCopy());
+            }
         }
 
         private static RoR2.DamageInfo ReadDamageInfo(On.RoR2.NetworkExtensions.orig_ReadDamageInfo orig, UnityEngine.Networking.NetworkReader reader) {
@@ -57,7 +186,7 @@ namespace R2API {
                 return damageInfo;
             }
 
-            var holder = DamageTypeHolder.FromNetworkReader(reader);
+            var holder = ModdedDamageTypeHolder.FromNetworkReader(reader);
             if (holder != null) {
                 damageTypeHolders.Add(damageInfo, holder);
             }
@@ -101,52 +230,137 @@ namespace R2API {
             return (ModdedDamageType)ModdedDamageTypeCount++;
         }
 
+        #region AddModdedDamageType
         /// <summary>
-        /// Adding ModdedDamageType to DamageInfo. You can add more than one damage type to one DamageInfo
+        /// Adding ModdedDamageType to DamageInfo instance. You can add more than one damage type to one DamageInfo
         /// </summary>
         /// <param name="damageInfo"></param>
         /// <param name="moddedDamageType"></param>
-        public static void AddModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) {
+        public static void AddModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(damageInfo, moddedDamageType);
+
+        /// <summary>
+        /// Adding ModdedDamageType to BulletAttack instance. You can add more than one damage type to one BulletAttack
+        /// </summary>
+        /// <param name="bulletAttack"></param>
+        /// <param name="moddedDamageType"></param>
+        public static void AddModdedDamageType(this BulletAttack bulletAttack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(bulletAttack, moddedDamageType);
+
+        /// <summary>
+        /// Adding ModdedDamageType to DamageOrb instance. You can add more than one damage type to one DamageOrb
+        /// </summary>
+        /// <param name="damageOrb"></param>
+        /// <param name="moddedDamageType"></param>
+        public static void AddModdedDamageType(this DamageOrb damageOrb, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(damageOrb, moddedDamageType);
+
+        /// <summary>
+        /// Adding ModdedDamageType to GenericDamageOrb instance. You can add more than one damage type to one GenericDamageOrb
+        /// </summary>
+        /// <param name="genericDamageOrb"></param>
+        /// <param name="moddedDamageType"></param>
+        public static void AddModdedDamageType(this GenericDamageOrb genericDamageOrb, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(genericDamageOrb, moddedDamageType);
+
+        /// <summary>
+        /// Adding ModdedDamageType to LightningOrb instance. You can add more than one damage type to one LightningOrb
+        /// </summary>
+        /// <param name="lightningOrb"></param>
+        /// <param name="moddedDamageType"></param>
+        public static void AddModdedDamageType(this LightningOrb lightningOrb, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(lightningOrb, moddedDamageType);
+
+        /// <summary>
+        /// Adding ModdedDamageType to ProjectileDamage instance. You can add more than one damage type to one ProjectileDamage
+        /// </summary>
+        /// <param name="projectileDamage"></param>
+        /// <param name="moddedDamageType"></param>
+        public static void AddModdedDamageType(this ProjectileDamage projectileDamage, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(projectileDamage, moddedDamageType);
+
+        private static void AddModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
             }
 
-            if ((int)moddedDamageType >= ModdedDamageTypeCount) {
-                throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types ({ModdedDamageTypeCount})");
+            if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0) {
+                throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
             }
 
-            if (!damageTypeHolders.TryGetValue(damageInfo, out var holder)) {
-                damageTypeHolders.Add(damageInfo, holder = new DamageTypeHolder());
+            if (!damageTypeHolders.TryGetValue(obj, out var holder)) {
+                damageTypeHolders.Add(obj, holder = new ModdedDamageTypeHolder());
             }
 
             holder.Add(moddedDamageType);
         }
+        #endregion
 
+        #region HasModdedDamageType
         /// <summary>
-        /// Check if DamageInfo has ModdedDamageType. One DamageInfo can have more than one damage type.
+        /// Checks if DamageInfo instance has ModdedDamageType assigned. One DamageInfo can have more than one damage type.
         /// </summary>
         /// <param name="damageInfo"></param>
         /// <param name="moddedDamageType"></param>
         /// <returns></returns>
-        public static bool HasModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) {
+        public static bool HasModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(damageInfo, moddedDamageType);
+
+        /// <summary>
+        /// Checks if BulletAttack instance has ModdedDamageType assigned. One BulletAttack can have more than one damage type.
+        /// </summary>
+        /// <param name="bulletAttack"></param>
+        /// <param name="moddedDamageType"></param>
+        /// <returns></returns>
+        public static bool HasModdedDamageType(this BulletAttack bulletAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(bulletAttack, moddedDamageType);
+
+        /// <summary>
+        /// Checks if DamageOrb instance has ModdedDamageType assigned. One DamageOrb can have more than one damage type.
+        /// </summary>
+        /// <param name="damageOrb"></param>
+        /// <param name="moddedDamageType"></param>
+        /// <returns></returns>
+        public static bool HasModdedDamageType(this DamageOrb damageOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(damageOrb, moddedDamageType);
+
+        /// <summary>
+        /// Checks if GenericDamageOrb instance has ModdedDamageType assigned. One GenericDamageOrb can have more than one damage type.
+        /// </summary>
+        /// <param name="genericDamageOrb"></param>
+        /// <param name="moddedDamageType"></param>
+        /// <returns></returns>
+        public static bool HasModdedDamageType(this GenericDamageOrb genericDamageOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(genericDamageOrb, moddedDamageType);
+
+        /// <summary>
+        /// Checks if LightningOrb instance has ModdedDamageType assigned. One LightningOrb can have more than one damage type.
+        /// </summary>
+        /// <param name="lightningOrb"></param>
+        /// <param name="moddedDamageType"></param>
+        /// <returns></returns>
+        public static bool HasModdedDamageType(this LightningOrb lightningOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(lightningOrb, moddedDamageType);
+
+        /// <summary>
+        /// Checks if ProjectileDamage instance has ModdedDamageType assigned. One ProjectileDamage can have more than one damage type.
+        /// </summary>
+        /// <param name="projectileDamage"></param>
+        /// <param name="moddedDamageType"></param>
+        /// <returns></returns>
+        public static bool HasModdedDamageType(this ProjectileDamage projectileDamage, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(projectileDamage, moddedDamageType);
+
+        private static bool HasModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
             }
 
-            if ((int)moddedDamageType >= ModdedDamageTypeCount) {
-                throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types ({ModdedDamageTypeCount})");
+            if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0) {
+                throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
             }
 
-            if (!damageTypeHolders.TryGetValue(damageInfo, out var holder)) {
+            if (!damageTypeHolders.TryGetValue(obj, out var holder)) {
                 return false;
             }
 
             return holder.Has(moddedDamageType);
         }
         #endregion
+        #endregion
 
-        #region Private classes
-        private class DamageTypeHolder {
+        /// <summary>
+        /// Holds flag values of ModdedDamageType.
+        /// </summary>
+        public class ModdedDamageTypeHolder {
             private const uint blockValuesMask = 0b_00111111_00011111_00001111_00000111;
             private const uint fullBlockHeader = 0b_00000000_01000000_01100000_01110000;
 
@@ -165,6 +379,10 @@ namespace R2API {
 
             private byte[] values;
 
+            /// <summary>
+            /// Enable ModdedDamageType for this instance
+            /// </summary>
+            /// <param name="moddedDamageType"></param>
             public void Add(ModdedDamageType moddedDamageType) {
                 var valueIndex = (int)moddedDamageType / flagsPerValue;
                 var flagIndex = (int)moddedDamageType % flagsPerValue;
@@ -174,6 +392,11 @@ namespace R2API {
                 values[valueIndex] = (byte)(values[valueIndex] | highestBitInByte >> flagIndex);
             }
 
+            /// <summary>
+            /// Checks if ModdedDamageType is enabled
+            /// </summary>
+            /// <param name="moddedDamageType"></param>
+            /// <returns></returns>
             public bool Has(ModdedDamageType moddedDamageType) {
                 var valueIndex = (int)moddedDamageType / flagsPerValue;
                 var flagIndex = (int)moddedDamageType % flagsPerValue;
@@ -185,12 +408,71 @@ namespace R2API {
                 return (values[valueIndex] & (highestBitInByte >> flagIndex)) != 0;
             }
 
-            public static DamageTypeHolder FromNetworkReader(NetworkReader reader) {
+            #region CopyTo
+            /// <summary>
+            /// Copies enabled ModdedDamageTypes to the DamageInfo instance (completely replacing already set values)
+            /// </summary>
+            /// <param name="damageInfo"></param>
+            public void CopyTo(DamageInfo damageInfo) => CopyToInternal(damageInfo);
+
+            /// <summary>
+            /// Copies enabled ModdedDamageTypes to the BulletAttack instance (completely replacing already set values)
+            /// </summary>
+            /// <param name="bulletAttack"></param>
+            public void CopyTo(BulletAttack bulletAttack) => CopyToInternal(bulletAttack);
+
+            /// <summary>
+            /// Copies enabled ModdedDamageTypes to the DamageOrb instance (completely replacing already set values)
+            /// </summary>
+            /// <param name="damageOrb"></param>
+            public void CopyTo(DamageOrb damageOrb) => CopyToInternal(damageOrb);
+
+            /// <summary>
+            /// Copies enabled ModdedDamageTypes to the GenericDamageOrb instance (completely replacing already set values)
+            /// </summary>
+            /// <param name="genericDamageOrb"></param>
+            public void CopyTo(GenericDamageOrb genericDamageOrb) => CopyToInternal(genericDamageOrb);
+
+            /// <summary>
+            /// Copies enabled ModdedDamageTypes to the LightningOrb instance (completely replacing already set values)
+            /// </summary>
+            /// <param name="lightningOrb"></param>
+            public void CopyTo(LightningOrb lightningOrb) => CopyToInternal(lightningOrb);
+
+            /// <summary>
+            /// Copies enabled ModdedDamageTypes to the ProjectileDamage instance (completely replacing already set values)
+            /// </summary>
+            /// <param name="projectileDamage"></param>
+            public void CopyTo(ProjectileDamage projectileDamage) => CopyToInternal(projectileDamage);
+
+            private void CopyToInternal(object obj) {
+                damageTypeHolders.Remove(obj);
+                damageTypeHolders.Add(obj, MakeCopy());
+            }
+            #endregion
+
+            /// <summary>
+            /// Makes a copy of this instance 
+            /// </summary>
+            /// <returns></returns>
+            public ModdedDamageTypeHolder MakeCopy() {
+                var holder = new ModdedDamageTypeHolder {
+                    values = values?.ToArray()
+                };
+                return holder;
+            }
+
+            /// <summary>
+            /// Reads compressed value from the NerworkReader. More info about that can be found in the PR: https://github.com/risk-of-thunder/R2API/pull/284
+            /// </summary>
+            /// <param name="reader"></param>
+            /// <returns></returns>
+            public static ModdedDamageTypeHolder FromNetworkReader(NetworkReader reader) {
                 var sectionByte = reader.ReadByte();
                 if (sectionByte == 0) {
                     return null;
                 }
-                var holder = new DamageTypeHolder();
+                var holder = new ModdedDamageTypeHolder();
 
                 for (var i = 0; i < 8; i++) {
                     if ((sectionByte & 1 << i) != 0) {
@@ -243,7 +525,10 @@ namespace R2API {
                 }
             }
 
-
+            /// <summary>
+            /// Writes compressed value to the NerworkWriter. More info about that can be found in the PR: https://github.com/risk-of-thunder/R2API/pull/284
+            /// </summary>
+            /// <param name="writer"></param>
             public void Write(NetworkWriter writer) {
                 int section = 0;
                 for (var i = 0; i < sectionsCount; i++) {
@@ -369,6 +654,5 @@ namespace R2API {
                 }
             }
         }
-        #endregion
     }
 }
