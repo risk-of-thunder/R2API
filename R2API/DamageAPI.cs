@@ -58,10 +58,10 @@ namespace R2API {
             IL.RoR2.Projectile.DeathProjectile.FixedUpdate += DeathProjectileFixedUpdateIL;
             IL.RoR2.Projectile.ProjectileGrantOnKillOnDestroy.OnDestroy += ProjectileGrantOnKillOnDestroyOnDestroyIL;
             IL.RoR2.Projectile.ProjectileSingleTargetImpact.OnProjectileImpact += ProjectileSingleTargetImpactOnProjectileImpactIL;
-
+            
             IL.RoR2.DotController.EvaluateDotStacksForType += DotControllerEvaluateDotStacksForTypeIL;
             IL.RoR2.DotController.AddPendingDamageEntry += DotControllerAddPendingDamageEntryIL;
-
+            
             IL.RoR2.BlastAttack.HandleHits += BlastAttackHandleHitsIL;
             IL.RoR2.BlastAttack.PerformDamageServer += BlastAttackPerformDamageServerIL;
             //MMHook can't handle private structs in parameters of On hooks
@@ -71,11 +71,17 @@ namespace R2API {
             HookEndpointManager.Add(
                 typeof(RoR2.BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Read)),
                 (BlastAttackDamageInfoReadDelegate)BlastAttackDamageInfoRead);
-
+            
             IL.RoR2.OverlapAttack.ProcessHits += OverlapAttackProcessHitsIL;
             IL.RoR2.OverlapAttack.PerformDamage += OverlapAttackPerformDamageIL;
             On.RoR2.OverlapAttack.OverlapAttackMessage.Serialize += OverlapAttackMessageSerialize;
             On.RoR2.OverlapAttack.OverlapAttackMessage.Deserialize += OverlapAttackMessageDeserialize;
+            
+            IL.RoR2.GlobalEventManager.OnHitAll += GlobalEventManagerOnHitAllIL;
+
+            IL.RoR2.HealthComponent.SendDamageDealt += HealthComponentSendDamageDealtIL;
+            On.RoR2.DamageDealtMessage.Serialize += DamageDealtMessageSerialize;
+            On.RoR2.DamageDealtMessage.Deserialize += DamageDealtMessageDeserialize;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
@@ -108,6 +114,70 @@ namespace R2API {
             IL.RoR2.OverlapAttack.PerformDamage -= OverlapAttackPerformDamageIL;
             On.RoR2.OverlapAttack.OverlapAttackMessage.Serialize -= OverlapAttackMessageSerialize;
             On.RoR2.OverlapAttack.OverlapAttackMessage.Deserialize -= OverlapAttackMessageDeserialize;
+
+            IL.RoR2.GlobalEventManager.OnHitAll -= GlobalEventManagerOnHitAllIL;
+
+            IL.RoR2.HealthComponent.SendDamageDealt -= HealthComponentSendDamageDealtIL;
+            On.RoR2.DamageDealtMessage.Serialize -= DamageDealtMessageSerialize;
+            On.RoR2.DamageDealtMessage.Deserialize -= DamageDealtMessageDeserialize;
+        }
+
+        private static void DamageDealtMessageDeserialize(On.RoR2.DamageDealtMessage.orig_Deserialize orig, DamageDealtMessage self, NetworkReader reader) {
+            orig(self, reader);
+
+            var holder = ModdedDamageTypeHolder.FromNetworkReader(reader);
+            if (holder != null) {
+                damageTypeHolders.Add(self, holder);
+            }
+        }
+
+        private static void DamageDealtMessageSerialize(On.RoR2.DamageDealtMessage.orig_Serialize orig, DamageDealtMessage self, NetworkWriter writer) {
+            orig(self, writer);
+
+            if (!damageTypeHolders.TryGetValue(self, out var holder)) {
+                writer.Write((byte)0);
+                return;
+            }
+
+            holder.Write(writer);
+        }
+
+        private static void HealthComponentSendDamageDealtIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            var damageDealtMessageIndex = -1;
+            c.GotoNext(
+                MoveType.After,
+                x => x.MatchNewobj<DamageDealtMessage>(),
+                x => x.MatchStloc(out damageDealtMessageIndex));
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit<DamageReport>(OpCodes.Ldfld, nameof(DamageReport.damageInfo));
+            c.Emit(OpCodes.Ldloc, damageDealtMessageIndex);
+            EmitCopyCall(c);
+        }
+
+        private static ModdedDamageTypeHolder GetHolderForObject(object obj) {
+            if (damageTypeHolders.TryGetValue(obj, out var value)) {
+                return value;
+            }
+
+            return null;
+        }
+
+        private static void GlobalEventManagerOnHitAllIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            c.GotoNext(x => x.MatchLdsfld(typeof(RoR2Content.Items), nameof(RoR2Content.Items.Behemoth)));
+
+            c.GotoNext(
+                MoveType.After,
+                x => x.MatchNewobj<BlastAttack>());
+
+            c.Emit(OpCodes.Dup);
+            c.Emit(OpCodes.Ldarg_1);
+
+            EmitCopyInversedCall(c);
         }
 
         private static void OverlapAttackMessageDeserialize(On.RoR2.OverlapAttack.OverlapAttackMessage.orig_Deserialize orig, MessageBase self, NetworkReader reader) {
@@ -137,9 +207,9 @@ namespace R2API {
 
             var damageInfoIndex = GotoDamageInfo(c);
 
-            c.Emit(OpCodes.Ldloc, damageInfoIndex);
             EmitGetTempHolder(c);
-            EmitCopyCall(c);
+            c.Emit(OpCodes.Ldloc, damageInfoIndex);
+            EmitAssignHolderCall(c);
         }
 
         private static void OverlapAttackProcessHitsIL(ILContext il) {
@@ -177,9 +247,9 @@ namespace R2API {
 
             var damageInfoIndex = GotoDamageInfo(c);
 
-            c.Emit(OpCodes.Ldloc, damageInfoIndex);
             EmitGetTempHolder(c);
-            EmitCopyCall(c);
+            c.Emit(OpCodes.Ldloc, damageInfoIndex);
+            EmitAssignHolderCall(c);
         }
 
         private static void BlastAttackHandleHitsIL(ILContext il) {
@@ -200,9 +270,9 @@ namespace R2API {
                 x => x.MatchLdarg(3),
                 x => x.MatchStfld(out _));
 
-            c.Emit(OpCodes.Ldloc, pendingDamageIndex);
             EmitGetTempHolder(c);
-            EmitCopyCall(c);
+            c.Emit(OpCodes.Ldloc, pendingDamageIndex);
+            EmitAssignHolderCall(c);
         }
 
         private static void DotControllerEvaluateDotStacksForTypeIL(ILContext il) {
@@ -215,17 +285,17 @@ namespace R2API {
                 x => x.MatchLdfld<DotController.DotStack>(nameof(DotController.DotStack.dotIndex)),
                 x => x.MatchLdarg(1),
                 x => x.MatchBneUn(out _));
-
+            
             c.Emit(OpCodes.Ldloc, dotStackIndex);
             EmitSetTempHolder(c);
-
+            
             var damageInfoIndex = -1;
             c.GotoNext(
                 x => x.MatchNewobj<DamageInfo>(),
                 x => x.MatchStloc(out damageInfoIndex));
-
+            
             c.GotoNext(x => x.MatchLdfld<DotController.PendingDamage>(nameof(DotController.PendingDamage.damageType)));
-
+            
             c.Emit(OpCodes.Dup);
             c.Emit(OpCodes.Ldloc, damageInfoIndex);
             EmitCopyCall(c);
@@ -347,6 +417,16 @@ namespace R2API {
                 damageTypeHolders.Remove(to);
                 damageTypeHolders.Add(to, holder.MakeCopy());
             }
+        }
+
+        private static void EmitAssignHolderCall(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(AssignHolderToObject)));
+        private static void AssignHolderToObject(ModdedDamageTypeHolder holder, object obj) {
+            if (holder == null || obj == null) {
+                return;
+            }
+
+            damageTypeHolders.Remove(obj);
+            damageTypeHolders.Add(obj, holder.MakeCopy());
         }
 
         private static ModdedDamageTypeHolder MakeCopyOfModdedDamageTypeFromObject(object from) {

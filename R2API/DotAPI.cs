@@ -133,6 +133,7 @@ namespace R2API {
             IL.RoR2.DotController.InflictDot_refInflictDotInfo += FixInflictDotReturnCheck;
             IL.RoR2.DotController.AddDot += CallCustomDotBehaviours;
             On.RoR2.DotController.HasDotActive += OnHasDotActive;
+            IL.RoR2.DotController.EvaluateDotStacksForType += EvaluateDotStacksForType;
 
             IL.RoR2.GlobalEventManager.OnHitEnemy += FixDeathMark;
         }
@@ -148,8 +149,21 @@ namespace R2API {
             IL.RoR2.DotController.InflictDot_refInflictDotInfo -= FixInflictDotReturnCheck;
             IL.RoR2.DotController.AddDot -= CallCustomDotBehaviours;
             On.RoR2.DotController.HasDotActive -= OnHasDotActive;
+            IL.RoR2.DotController.EvaluateDotStacksForType -= EvaluateDotStacksForType;
 
             IL.RoR2.GlobalEventManager.OnHitEnemy -= FixDeathMark;
+        }
+
+        private static void EvaluateDotStacksForType(ILContext il) {
+            //Empty IL hook that doesn't add nor delete anything.
+            //The purpose of it is to fix weird issue with DamageAPI.
+            //For some reason if an IL hook for `DotController.EvaluateDotStacksForType` is added in `DamageAPI`
+            //calling `self.EvaluateDotStacksForType` in `DotAPI.FixedUpdate` throws NRE in it because
+            //instead of calling `DotController.GetDotDef` hook for some reason original method is called which returns null for modded DOT.
+            //Seems like it's important that this hook is applied after `DotController.GetDotDef` otherwise the issue persits.
+            //idk what is the reason for that behaviour, probably something to do with optimizations because
+            //if you replace `mono-2.0-bdwgc.dll` in the game files with the one that allows you to debug code with dnSpy
+            //the issue dissapear even without this hook.
         }
 
         private static void RetrieveVanillaCount(ILContext il) {
