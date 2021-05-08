@@ -22,7 +22,7 @@ namespace R2API {
 
         private const byte flagsPerValue = 8;
         private const byte valuesPerBlock = 18;
-        private const byte valuesPerSection = flagsPerValue * valuesPerBlock;
+        private const byte flagsPerSection = flagsPerValue * valuesPerBlock;
         private const byte sectionsCount = 8;
         private const byte blockPartsCount = 4;
 
@@ -476,9 +476,9 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
             }
 
-            if (ModdedDamageTypeCount >= sectionsCount * valuesPerSection) {
+            if (ModdedDamageTypeCount >= sectionsCount * flagsPerSection) {
                 //I doubt this ever gonna happen, but just in case.
-                throw new IndexOutOfRangeException($"Reached the limit of {sectionsCount * valuesPerSection} ModdedDamageTypes. Please contact R2API developers to increase the limit");
+                throw new IndexOutOfRangeException($"Reached the limit of {sectionsCount * flagsPerSection} ModdedDamageTypes. Please contact R2API developers to increase the limit");
             }
 
             return (ModdedDamageType)ModdedDamageTypeCount++;
@@ -540,6 +540,13 @@ namespace R2API {
         /// <param name="overlapAttack"></param>
         /// <param name="moddedDamageType"></param>
         public static void AddModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(overlapAttack, moddedDamageType);
+
+        /// <summary>
+        /// Adding ModdedDamageType to DotController.DotStack instance. You can add more than one damage type to one DotController.DotStack
+        /// </summary>
+        /// <param name="dotStack"></param>
+        /// <param name="moddedDamageType"></param>
+        public static void AddModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(dotStack, moddedDamageType);
 
         private static void AddModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType) {
             if (!Loaded) {
@@ -622,6 +629,14 @@ namespace R2API {
         /// <param name="moddedDamageType"></param>
         /// <returns></returns>
         public static bool HasModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(overlapAttack, moddedDamageType);
+
+        /// <summary>
+        /// Checks if DotController.DotStack instance has ModdedDamageType assigned. One DotController.DotStack can have more than one damage type.
+        /// </summary>
+        /// <param name="dotStack"></param>
+        /// <param name="moddedDamageType"></param>
+        /// <returns></returns>
+        public static bool HasModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(dotStack, moddedDamageType);
 
         private static bool HasModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType) {
             if (!Loaded) {
@@ -740,6 +755,12 @@ namespace R2API {
             /// </summary>
             /// <param name="overlapAttack"></param>
             public void CopyTo(OverlapAttack overlapAttack) => CopyToInternal(overlapAttack);
+
+            /// <summary>
+            /// Copies enabled ModdedDamageTypes to the DotController.DotStack instance (completely replacing already set values)
+            /// </summary>
+            /// <param name="dotStack"></param>
+            public void CopyTo(DotController.DotStack dotStack) => CopyToInternal(dotStack);
 
             private void CopyToInternal(object obj) {
                 damageTypeHolders.Remove(obj);
