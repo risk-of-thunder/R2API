@@ -84,8 +84,9 @@ namespace R2API {
             On.RoR2.DamageDealtMessage.Serialize += DamageDealtMessageSerialize;
             On.RoR2.DamageDealtMessage.Deserialize += DamageDealtMessageDeserialize;
 
-            //ContactDamage????
-            //DelayBlast???
+            IL.RoR2.ContactDamage.FireOverlaps += ContactDamageFireOverlapsIL;
+
+            IL.RoR2.DelayBlast.Detonate += DelayBlastDetonateIL;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
@@ -132,6 +133,10 @@ namespace R2API {
             IL.RoR2.HealthComponent.SendDamageDealt -= HealthComponentSendDamageDealtIL;
             On.RoR2.DamageDealtMessage.Serialize -= DamageDealtMessageSerialize;
             On.RoR2.DamageDealtMessage.Deserialize -= DamageDealtMessageDeserialize;
+
+            IL.RoR2.ContactDamage.FireOverlaps -= ContactDamageFireOverlapsIL;
+
+            IL.RoR2.DelayBlast.Detonate -= DelayBlastDetonateIL;
         }
 
         #region DamageInfo
@@ -505,6 +510,35 @@ namespace R2API {
             c.Emit<DamageReport>(OpCodes.Ldfld, nameof(DamageReport.damageInfo));
             c.Emit(OpCodes.Ldloc, damageDealtMessageIndex);
             EmitCopyCall(c);
+        }
+        #endregion
+
+        #region DelayBlast
+        private static void DelayBlastDetonateIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            c.GotoNext(
+                MoveType.After,
+                x => x.MatchNewobj<BlastAttack>());
+
+            c.Emit(OpCodes.Dup);
+            c.Emit(OpCodes.Ldarg_0);
+            EmitCopyFromComponentInversedCall(c);
+        }
+        #endregion
+
+        #region ContactDamage
+        private static void ContactDamageFireOverlapsIL(ILContext il) {
+            var c = new ILCursor(il);
+
+            c.GotoNext(
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld<ContactDamage>(nameof(ContactDamage.damageType)));
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit<ContactDamage>(OpCodes.Ldfld, nameof(ContactDamage.overlapAttack));
+            EmitCopyFromComponentCall(c);
         }
         #endregion
 
@@ -952,7 +986,7 @@ namespace R2API {
         }
 
         /// <summary>
-        /// Holds flag values of ModdedDamageType. The main usage is for projectiles.
+        /// Holds flag values of ModdedDamageType. The main usage is for projectiles. Add this component to your prefab.
         /// </summary>
         public sealed class ModdedDamageTypeHolderComponent : MonoBehaviour {
             [HideInInspector]

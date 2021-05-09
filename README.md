@@ -46,6 +46,7 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 **Current**
 
 * [Added DeployableAPI](https://github.com/risk-of-thunder/R2API/pull/279)
+* [Added DamageAPI](https://github.com/risk-of-thunder/R2API/pull/284)
 
 **3.0.30**
 
