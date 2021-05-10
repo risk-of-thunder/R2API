@@ -1,5 +1,4 @@
 using EntityStates;
-using MonoMod.RuntimeDetour;
 using R2API.Utils;
 using RoR2;
 using RoR2.ContentManagement;
@@ -7,7 +6,6 @@ using RoR2.Skills;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -41,29 +39,11 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            if (_detourSet_stateType == null) {
-                _detourSet_stateType = new Hook(
-                    typeof(SerializableEntityStateType).GetMethodCached("set_stateType"),
-                    typeof(LoadoutAPI).GetMethodCached(nameof(Set_stateType_Hook))
-                );
-            }
-            _detourSet_stateType.Apply();
-            if (_detourSet_typeName == null) {
-                _detourSet_typeName = new Hook(
-                    typeof(SerializableEntityStateType).GetMethodCached("set_typeName"),
-                    typeof(LoadoutAPI).GetMethodCached(nameof(Set_typeName_Hook))
-                );
-            }
-            _detourSet_typeName.Apply();
-
             R2APIContentPackProvider.WhenContentPackReady += AddSkillsToGame;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            _detourSet_stateType?.Undo();
-            _detourSet_typeName?.Undo();
-
             R2APIContentPackProvider.WhenContentPackReady -= AddSkillsToGame;
         }
 
@@ -75,56 +55,6 @@ namespace R2API {
         }
 
         #endregion Submodule Hooks
-
-        #region EntityState fixes
-
-        // ReSharper disable InconsistentNaming
-        private static Hook _detourSet_stateType;
-
-        private static Hook _detourSet_typeName;
-        // ReSharper restore InconsistentNaming
-
-        private static Assembly Ror2Assembly {
-            get {
-                if (_ror2Assembly == null) _ror2Assembly = typeof(EntityState).Assembly;
-                return _ror2Assembly;
-            }
-        }
-
-        private static Assembly _ror2Assembly;
-
-        internal static void Set_stateType_Hook(ref SerializableEntityStateType self, Type value) =>
-            self._typeName = IsValidEntityStateType(value) ? value.AssemblyQualifiedName : "";
-
-        internal static void Set_typeName_Hook(ref SerializableEntityStateType self, string value) =>
-            Set_stateType_Hook(ref self, Type.GetType(value) ?? GetTypeAllAssemblies(value));
-
-        private static Type GetTypeAllAssemblies(string name) {
-            Type type = Ror2Assembly.GetType(name);
-            if (IsValidEntityStateType(type)) return type;
-
-            type = Type.GetType(name);
-            if (IsValidEntityStateType(type)) return type;
-
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-            for (int i = 0; i < assemblies.Length; ++i) {
-                var asm = assemblies[i];
-                if (asm == Ror2Assembly) continue;
-
-                type = asm.GetType(name);
-                if (IsValidEntityStateType(type)) return type;
-            }
-
-            R2API.Logger.LogError(string.Format("No matching entity state type found for name:\n{0}", name));
-            return null;
-        }
-
-        private static bool IsValidEntityStateType(Type type) {
-            return type != null && type.IsSubclassOf(typeof(EntityState)) && !type.IsAbstract;
-        }
-
-        #endregion EntityState fixes
 
         #region Adding Skills
 
@@ -427,7 +357,7 @@ namespace R2API {
                     Name = "skin" + bodyPrefab.name + "Default",
                     NameToken = bodyPrefab.name.ToUpper() + "_DEFAULT_SKIN_NAME",
                     RootObject = model.gameObject,
-                    //UnlockableName = "", // todo
+                    UnlockableDef = null,
                     MeshReplacements = new[]
                     {
                         new SkinDef.MeshReplacement {
