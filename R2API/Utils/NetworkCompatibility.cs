@@ -75,7 +75,7 @@ namespace R2API.Utils {
                         continue;
                     }
 
-                    if (pluginInfo.Dependencies.All(dependency => dependency.DependencyGUID != R2API.PluginGUID)) {
+                    if (pluginInfo.Dependencies.All(dependency => dependency.DependencyGUID != R2API.PluginGUID || dependency.Flags == BepInEx.BepInDependency.DependencyFlags.SoftDependency)) {
                         continue;
                     }
 
