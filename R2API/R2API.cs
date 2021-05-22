@@ -107,7 +107,15 @@ namespace R2API {
             // Temporary fix until the Eclipse Button in the main menu is correctly set by the game devs.
             // It gets disabled when modded even though this option is currently singleplayer only.
             On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
-                if (self.name != "GenericMenuButton (Eclipse)") orig(self);
+                if (self.name == "GenericMenuButton (Eclipse)") {
+                    var button = self.GetComponent<RoR2.UI.MPButton>();
+                    if (button) {
+                        button.defaultFallbackButton = true;
+                    }
+                }
+                else {
+                    orig(self);
+                }
             };
 
             // Temporary fix until the KVP Foreach properly check for null Value before calling Equals on them
