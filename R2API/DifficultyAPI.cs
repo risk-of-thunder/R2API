@@ -57,7 +57,7 @@ namespace R2API {
         /// <param name="difficulty">The difficulty definition to add.</param>
         /// <param name="difficultyIcon">Sprite to use as the difficulty's icon.</param>
         /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
-        public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty, Sprite difficultyIcon) {
+        public static DifficultyIndex AddDifficulty(DifficultyDef difficulty, Sprite difficultyIcon) {
             difficulty.foundIconSprite = true;
             difficulty.iconSprite = difficultyIcon;
             return AddDifficulty(difficulty, false);
