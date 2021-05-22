@@ -93,8 +93,6 @@ namespace R2API {
             return pendingIndex;
         }
 
-        
-
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             DifficultyCatalogReady?.Invoke(null, null);
