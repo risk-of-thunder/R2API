@@ -322,6 +322,12 @@ namespace R2API.Utils {
                 .GetPropertyGetDelegateRef<TInstance, TValue>()
                 (ref instance);
 
+        public static MethodInfo GetPropertyGetter(this Type type, string nameOfProperty) =>
+            type.GetProperty(nameOfProperty, AllFlags).GetGetMethod(true);
+
+        public static MethodInfo GetPropertySetter(this Type type, string nameOfProperty) =>
+            type.GetProperty(nameOfProperty, AllFlags).GetSetMethod(true);
+
         private static GetDelegate<TReturn> GetPropertyGetDelegate<TReturn>(this PropertyInfo property) =>
             PropertyGetDelegateCache.GetOrAdd(property, prop => prop.CreateGetDelegate<TReturn>())
                 .CastDelegate<GetDelegate<TReturn>>();
