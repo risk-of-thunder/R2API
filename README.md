@@ -51,7 +51,7 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 * [Added RecalcStatsAPI, migrated from TILER2](https://github.com/risk-of-thunder/R2API/pull/287)
 * [Updated DifficultyAPI, now has sprite ref overload](https://github.com/risk-of-thunder/R2API/pull/288)
 * [RecalcStatsAPI fixes](https://github.com/risk-of-thunder/R2API/pull/290)
-* [Missing MMHOOK/Publicized Assembly methods fixes](https://github.com/risk-of-thunder/R2API/pull/289/files)
+* [Missing MMHOOK/Publicized Assembly methods fixes](https://github.com/risk-of-thunder/R2API/pull/289)
 
 **3.0.30**
 
