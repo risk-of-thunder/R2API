@@ -259,7 +259,7 @@ namespace R2API {
                 }
                 MonsterActions += (monsters, currentStage) => {
                     if (currentStage.stage == stage) {
-                        if ((stage != Stage.Custom) ^ (currentStage.CustomStageName == customStageName)) {
+                        if (currentStage.CheckStage(stage, customStageName)) {
                             monsters.RemoveAll((card) => (card.Card.spawnCard.name.ToLower() == monsterName.ToLower()));
                         }
                     }
