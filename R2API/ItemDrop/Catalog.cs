@@ -37,15 +37,11 @@ namespace R2API {
                         }
                     }
                 }
-                    
-                foreach (var equipmentIndex in EquipmentCatalog.allEquipment) {
-                    var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
-                    if (!EquipmentCatalog.equipmentList.Contains(equipmentIndex)) {
-                        if (equipmentDef.pickupIconSprite != null &&
-                            equipmentDef.pickupIconSprite.name != NullIconTextureName) {
 
-                            EliteEquipment.Add(equipmentIndex);
-                        }
+                foreach (var eliteDef in EliteCatalog.eliteDefs) {
+                    var equipmentIndex = eliteDef.eliteEquipmentDef.equipmentIndex;
+                    if (equipmentIndex != EquipmentIndex.None && !EliteEquipment.Contains(equipmentIndex)) {
+                        EliteEquipment.Add(equipmentIndex);
                     }
                 }
 

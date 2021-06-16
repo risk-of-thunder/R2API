@@ -185,9 +185,7 @@ namespace R2API.ItemDrop {
             }
         }
 
-        /*
-            This will update the items odds for the interactables that utilize ExplicitPickupDropTable for specific boss items.
-        */
+        //  This will update the items odds for the interactables that utilize ExplicitPickupDropTable for specific boss items.
         private static void UpdateDropTableItemOdds(DropList dropList, ExplicitPickupDropTable dropTable, string interactableName) {
             if (!DropTableItemOdds.ContainsKey(interactableName)) {
                 DropTableItemOdds.Add(interactableName, new List<float>());
