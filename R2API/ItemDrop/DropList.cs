@@ -2,6 +2,7 @@
 using RoR2;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace R2API {
 
@@ -53,7 +54,9 @@ namespace R2API {
             public List<PickupIndex> AvailableLunarEquipmentDropList = new List<PickupIndex>();
             public List<PickupIndex> AvailableSpecialItems = new List<PickupIndex>();
             public List<PickupIndex> AvailableSpecialEquipment = new List<PickupIndex>();
-            
+
+            public UnityEngine.Events.UnityEvent ListsGenerated = new UnityEngine.Events.UnityEvent();
+
 
             public List<PickupIndex> GetDropList(ItemTier itemTier) {
                 if (itemTier == ItemTier.Tier1) {
@@ -213,6 +216,7 @@ namespace R2API {
                         AvailableLunarEquipmentDropList.Add(pickupIndex);
                     }
                 }
+                ListsGenerated.Invoke();
             }
             
             //  Sets the drop lists in Run using the adjusted, master lists.
