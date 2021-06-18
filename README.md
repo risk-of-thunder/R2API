@@ -45,6 +45,10 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 
 **Current**
 
+* [Fixed PrefabAPI network registration](https://github.com/risk-of-thunder/R2API/pull/294)
+
+**3.0.43**
+
 * **IMPORTANT FOR MOD DEVS:** [R2API will no longer register mods to network if they don't depend on it with HardDependecy](https://github.com/risk-of-thunder/R2API/pull/286)
 * [Added DeployableAPI](https://github.com/risk-of-thunder/R2API/pull/279)
 * [Added DamageAPI](https://github.com/risk-of-thunder/R2API/pull/284)

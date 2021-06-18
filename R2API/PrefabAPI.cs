@@ -38,6 +38,18 @@ namespace R2API {
 
         /// <summary>
         /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
+        /// Also registers the clone to network.
+        /// </summary>
+        /// <param name="g">The GameObject to clone</param>
+        /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
+        /// <returns>The GameObject of the clone</returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static GameObject InstantiateClone(this GameObject g, string nameToSet) {
+            return InstantiateCloneInternal(g, nameToSet, true);
+        }
+
+        /// <summary>
+        /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
         /// Also registers the clone to network if registerNetwork is not set to false.
         /// </summary>
         /// <param name="g">The GameObject to clone</param>
@@ -45,7 +57,7 @@ namespace R2API {
         /// <param name="registerNetwork">Should the object be registered to network</param>
         /// <returns>The GameObject of the clone</returns>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static GameObject InstantiateClone(this GameObject g, string nameToSet, bool registerNetwork = true) {
+        public static GameObject InstantiateClone(this GameObject g, string nameToSet, bool registerNetwork) {
             return InstantiateCloneInternal(g, nameToSet, registerNetwork);
         }
 
@@ -125,7 +137,6 @@ namespace R2API {
             public string GoName;
             public string TypeName;
             public string MethodName;
-            public string Offset;
         }
 
         private static void RegisterPrefabInternal(GameObject prefab, StackFrame frame) {
@@ -136,7 +147,6 @@ namespace R2API {
                 GoName = prefab.name,
                 TypeName = method.DeclaringType.AssemblyQualifiedName,
                 MethodName = method.Name,
-                Offset = frame.GetNativeOffset().ToString()
             };
             ThingsToHash.Add(h);
             SetupRegistrationEvent();
@@ -171,7 +181,7 @@ namespace R2API {
         private static void RegisterClientPrefabsNStuff() {
             foreach (var h in ThingsToHash) {
                 if (h.Prefab.GetComponent<NetworkIdentity>() != null) h.Prefab.GetComponent<NetworkIdentity>().SetFieldValue("m_AssetId", NullHash);
-                ClientScene.RegisterPrefab(h.Prefab, NetworkHash128.Parse(MakeHash(h.GoName + h.TypeName + h.MethodName + h.Offset)));
+                ClientScene.RegisterPrefab(h.Prefab, NetworkHash128.Parse(MakeHash(h.GoName + h.TypeName + h.MethodName)));
             }
         }
 
