@@ -1,5 +1,6 @@
 ﻿using RoR2;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace R2API {
 
@@ -16,6 +17,9 @@ namespace R2API {
             public static readonly List<EquipmentIndex> EliteEquipment = new List<EquipmentIndex>();
             public static readonly List<ItemIndex> Pearls = new List<ItemIndex>();
             public const string NullIconTextureName = "texNullIcon";
+
+            public static UnityEngine.Events.UnityEvent CatalogGenerated = new UnityEngine.Events.UnityEvent();
+
 
             public static void PopulateCatalog() {
                 SpecialItems.Clear();
@@ -65,6 +69,7 @@ namespace R2API {
                     }
                 }
                 */
+                CatalogGenerated.Invoke();
             }
 
             // Will retrieve the item index of a scrap type item of the matching tier.

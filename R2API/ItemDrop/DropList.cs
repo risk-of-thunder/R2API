@@ -135,7 +135,10 @@ namespace R2API {
                     
                     SpecialEquipmentOriginal.Clear();
                     foreach (var equipmentIndex in Catalog.EliteEquipment) {
-                        SpecialEquipmentOriginal.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
+                        var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
+                        if (equipmentDef.unlockableDef == null || PreGameController.AnyUserHasUnlockable(equipmentDef.unlockableDef)) {
+                            SpecialEquipmentOriginal.Add(PickupCatalog.FindPickupIndex(equipmentIndex));
+                        }
                     }
 
                     OriginalListsSaved = true;
@@ -169,7 +172,7 @@ namespace R2API {
                         EquipmentIndex equipmentIndex = PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex;
                         if (itemIndex != ItemIndex.None) {
                             ItemDef itemDef = ItemCatalog.GetItemDef(itemIndex);
-                            if (special || (Catalog.SpecialItems.Contains(itemDef.itemIndex) == false && Catalog.ScrapItems.Values.Contains(itemDef.itemIndex) == false) ) {
+                            if (!special) {
                                 if (itemDef.tier == ItemTier.Tier1) {
                                     dropList = AvailableTier1DropList;
                                 } else if (itemDef.tier == ItemTier.Tier2) {
@@ -186,7 +189,7 @@ namespace R2API {
                             }
                         } else if (equipmentIndex != EquipmentIndex.None) {
                             EquipmentDef equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
-                            if (special || Catalog.EliteEquipment.Contains(equipmentDef.equipmentIndex) == false) {
+                            if (!special) {
                                 if (equipmentDef.isLunar) {
                                     dropList = AvailableLunarDropList;
                                 } else if (equipmentDef.isBoss) {
