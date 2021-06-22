@@ -27,6 +27,11 @@ namespace R2API {
                 Rather than whichever api is executed second using the first api's altered lists as a base.
             */
 
+            private static System.Reflection.FieldInfo availableTier1DropListInfo = typeof(Run).GetField("availableTier1DropList", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            private static System.Reflection.FieldInfo availableTier2DropListInfo = typeof(Run).GetField("availableTier2DropList", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            private static System.Reflection.FieldInfo availableTier3DropListInfo = typeof(Run).GetField("availableTier3DropList", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            private static System.Reflection.FieldInfo availableEquipmentDropListInfo = typeof(Run).GetField("availableEquipmentDropList", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
             public static bool OriginalListsSaved;
             public static List<PickupIndex> Tier1DropListOriginal = new List<PickupIndex>();
             public static List<PickupIndex> Tier2DropListOriginal = new List<PickupIndex>();
@@ -76,6 +81,7 @@ namespace R2API {
 
             public static void OnRunStart(On.RoR2.Run.orig_Start orig, Run run) {
                 OriginalListsSaved = false;
+                orig(run);
             }
 
             /*
@@ -294,19 +300,19 @@ namespace R2API {
                 Tier3DropListBackup = BackupDropList(run.availableTier3DropList);
                 EquipmentDropListBackup = BackupDropList(run.availableEquipmentDropList);
 
-                run.availableTier1DropList = BackupDropList(givenTier1);
-                run.availableTier2DropList = BackupDropList(givenTier2);
-                run.availableTier3DropList = BackupDropList(givenTier3);
-                run.availableEquipmentDropList = BackupDropList(givenEquipment);
+                availableTier1DropListInfo.SetValue(run, BackupDropList(givenTier1));
+                availableTier2DropListInfo.SetValue(run, BackupDropList(givenTier2));
+                availableTier3DropListInfo.SetValue(run, BackupDropList(givenTier3));
+                availableEquipmentDropListInfo.SetValue(run, BackupDropList(givenEquipment));
             }
 
             //  This function will revert the four main drop lists in Run to how they were before they were changed temporarily.
             public static void RevertDropLists() {
                 var run = Run.instance;
-                run.availableTier1DropList = BackupDropList(Tier1DropListBackup);
-                run.availableTier2DropList = BackupDropList(Tier2DropListBackup);
-                run.availableTier3DropList = BackupDropList(Tier3DropListBackup);
-                run.availableEquipmentDropList = BackupDropList(EquipmentDropListBackup);
+                availableTier1DropListInfo.SetValue(run, BackupDropList(Tier1DropListBackup));
+                availableTier2DropListInfo.SetValue(run, BackupDropList(Tier2DropListBackup));
+                availableTier3DropListInfo.SetValue(run, BackupDropList(Tier3DropListBackup));
+                availableEquipmentDropListInfo.SetValue(run, BackupDropList(EquipmentDropListBackup));
             }
         }
     }

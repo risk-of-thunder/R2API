@@ -43,9 +43,11 @@ namespace R2API {
                 }
 
                 foreach (var eliteDef in EliteCatalog.eliteDefs) {
-                    var equipmentIndex = eliteDef.eliteEquipmentDef.equipmentIndex;
-                    if (equipmentIndex != EquipmentIndex.None && !EliteEquipment.Contains(equipmentIndex)) {
-                        EliteEquipment.Add(equipmentIndex);
+                    if (eliteDef.eliteEquipmentDef != null) {
+                        var equipmentIndex = eliteDef.eliteEquipmentDef.equipmentIndex;
+                        if (equipmentIndex != EquipmentIndex.None && !EliteEquipment.Contains(equipmentIndex)) {
+                            EliteEquipment.Add(equipmentIndex);
+                        }
                     }
                 }
 

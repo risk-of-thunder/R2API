@@ -60,11 +60,13 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
+            On.RoR2.Run.Awake += RunAwake;
             On.RoR2.SceneDirector.PopulateScene += OnPopulateScene;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
+            On.RoR2.Run.Awake -= RunAwake;
             On.RoR2.SceneDirector.PopulateScene -= OnPopulateScene;
         }
 
@@ -80,6 +82,17 @@ namespace R2API {
                 }
                 R2API.Logger.LogInfo("----");
             }
+        }
+
+        private static void RunAwake(On.RoR2.Run.orig_Awake orig, Run run) {
+            CategoriesToAdd.Clear();
+            InteractablesToAdd.Clear();
+            InteractablesToAddWeight.Clear();
+            CategoriesToRemove.Clear();
+            InteractablesToRemove.Clear();
+            CategoryWeight.Clear();
+            InteractableWeight.Clear();
+            orig(run);
         }
 
         private static void OnPopulateScene(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector sceneDirector) {

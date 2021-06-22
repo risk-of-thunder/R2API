@@ -197,7 +197,6 @@ namespace R2API {
                 _patternAdjusted[patternIndex] = patternAdjustedList[patternIndex];
             }
 
-
             tierValidScav.Clear();
             scavDropList = GetFilteredDropLists(new List<ItemTag>() { ItemTag.AIBlacklist });
             for (int listIndex = 0; listIndex < adjustedLists.Count; listIndex++) {
@@ -238,6 +237,7 @@ namespace R2API {
                     }
                 }
             }
+            adjustedDropLists.Add(originalDropLists[3]);
             foreach (PickupIndex pickupIndex in PickupsSpecialToAdd) {
                 ItemIndex itemIndex = PickupCatalog.GetPickupDef(pickupIndex).itemIndex;
                 EquipmentIndex equipmentIndex = PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex;
