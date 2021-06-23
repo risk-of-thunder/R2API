@@ -52,11 +52,14 @@ namespace R2API {
             /// <summary>Added to base health regen. HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd) * (REGEN_MULT + regenMultAdd).</summary>
             public float baseRegenAdd = 0f;
 
-            /// <summary>Added to base move speed. MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd)</summary>
+            /// <summary>Added to base move speed. MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd / MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</summary>
             public float baseMoveSpeedAdd = 0f;
 
-            /// <summary>Added to the direct multiplier to move speed. MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd)</summary>
+            /// <summary>Added to the direct multiplier to move speed. MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd / MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</summary>
             public float moveSpeedMultAdd = 0f;
+
+            /// <summary>Added reduction multiplier to move speed. MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd / MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</summary>
+            public float moveSpeedReductionMultAdd = 0f;
 
             /// <summary>Added to the direct multiplier to jump power. JUMP_POWER ~ BASE_JUMP_POWER * (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
             public float jumpPowerMultAdd = 0f;
@@ -97,7 +100,6 @@ namespace R2API {
         private static void HookRecalculateStats(ILContext il) {
             ILCursor c = new ILCursor(il);
 
-            StatHookEventArgs statMods = null;
             c.Emit(OpCodes.Ldarg_0);
             c.EmitDelegate<Action<CharacterBody>>((cb) => {
                 StatMods = new StatHookEventArgs();
@@ -339,6 +341,10 @@ namespace R2API {
                 c.GotoNext(x => x.MatchStloc(locSpeedMultIndex));
                 c.EmitDelegate<Func<float, float>>((origMoveSpeedMult) => {
                     return origMoveSpeedMult + StatMods.moveSpeedMultAdd;
+                });
+                c.GotoNext(x => x.MatchStloc(locSpeedDivIndex));
+                c.EmitDelegate<Func<float, float>>((origMoveSpeedReductionMult) => {
+                    return origMoveSpeedReductionMult + StatMods.moveSpeedReductionMultAdd;
                 });
             }
         }
