@@ -3,6 +3,7 @@ using RoR2;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace R2API {
 
@@ -44,6 +45,21 @@ namespace R2API {
         /// <param name="difficulty">The difficulty definition to add.</param>
         /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
         public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty) {
+            return AddDifficulty(difficulty, false);
+        }
+
+        /// <summary>
+        /// Add a DifficultyDef to the list of available difficulties.
+        /// This must be called before the DifficultyCatalog inits, so before plugin.Start()
+        /// You'll get your new index returned that you can work with for comparing to Run.Instance.selectedDifficulty.
+        /// If this is called after the DifficultyCatalog inits then this will return -1/DifficultyIndex.Invalid and ignore the difficulty
+        /// </summary>
+        /// <param name="difficulty">The difficulty definition to add.</param>
+        /// <param name="difficultyIcon">Sprite to use as the difficulty's icon.</param>
+        /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
+        public static DifficultyIndex AddDifficulty(DifficultyDef difficulty, Sprite difficultyIcon) {
+            difficulty.foundIconSprite = true;
+            difficulty.iconSprite = difficultyIcon;
             return AddDifficulty(difficulty, false);
         }
 
@@ -116,7 +132,14 @@ namespace R2API {
 
                 DifficultyDef difficultyDef = kv.Value;
                 RuleChoiceDef choice = ruleChoices.AddChoice(Language.GetString(difficultyDef.nameToken), null, false);
-                choice.spritePath = difficultyDef.iconPath;
+
+                // If resource sprite has already been loaded, no need to reload it. Allows developers to load their own sprites.
+                if (difficultyDef.foundIconSprite) {
+                    choice.sprite = difficultyDef.iconSprite;
+                }
+                else {
+                    choice.spritePath = difficultyDef.iconPath;
+                }
                 choice.tooltipNameToken = difficultyDef.nameToken;
                 choice.tooltipNameColor = difficultyDef.color;
                 choice.tooltipBodyToken = difficultyDef.descriptionToken;

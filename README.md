@@ -45,9 +45,17 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 
 **Current**
 
+* [Fixed PrefabAPI network registration](https://github.com/risk-of-thunder/R2API/pull/294)
+
+**3.0.43**
+
 * **IMPORTANT FOR MOD DEVS:** [R2API will no longer register mods to network if they don't depend on it with HardDependecy](https://github.com/risk-of-thunder/R2API/pull/286)
 * [Added DeployableAPI](https://github.com/risk-of-thunder/R2API/pull/279)
 * [Added DamageAPI](https://github.com/risk-of-thunder/R2API/pull/284)
+* [Added RecalcStatsAPI, migrated from TILER2](https://github.com/risk-of-thunder/R2API/pull/287)
+* [Updated DifficultyAPI, now has sprite ref overload](https://github.com/risk-of-thunder/R2API/pull/288)
+* [RecalcStatsAPI fixes](https://github.com/risk-of-thunder/R2API/pull/290)
+* [Missing MMHOOK/Publicized Assembly methods fixes](https://github.com/risk-of-thunder/R2API/pull/289)
 
 **3.0.30**
 
