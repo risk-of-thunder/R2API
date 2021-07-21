@@ -165,7 +165,11 @@ namespace R2API.ItemDrop {
             ie. iscShrineCleanse to ShrineCleanse
         */
         public static string GetSpawnCardName(SpawnCard givenSpawnCard) {
-            return IscRegex.Replace(givenSpawnCard.name, "");
+            return GetSpawnCardName(givenSpawnCard.name);
+        }
+
+        public static string GetSpawnCardName(string spawnCardName) {
+            return IscRegex.Replace(spawnCardName, "");
         }
 
 
