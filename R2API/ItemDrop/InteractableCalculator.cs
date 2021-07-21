@@ -2,6 +2,7 @@
 using RoR2;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace R2API.ItemDrop {
 
@@ -12,8 +13,6 @@ namespace R2API.ItemDrop {
             This class determines which of those subset lists are present in the current run
                 and therefore which interactables should be prevented from spawning.
         */
-
-        public const int PrefixLength = 3;
 
         public readonly List<string> InvalidInteractables = new List<string>();
 
@@ -160,17 +159,13 @@ namespace R2API.ItemDrop {
             "ShrineCleanse"
         };
 
-
+        private static Regex IscRegex = new Regex("^isc");
         /*
             This function will remove isc from the interactable spawn card name, to save me typing it again everywhere.
             ie. iscShrineCleanse to ShrineCleanse
         */
         public static string GetSpawnCardName(SpawnCard givenSpawnCard) {
-            return GetSpawnCardName(givenSpawnCard.name);
-        }
-
-        public static string GetSpawnCardName(string givenName) {
-            return givenName.Substring(PrefixLength, givenName.Length - PrefixLength);
+            return IscRegex.Replace(givenSpawnCard.name, "");
         }
 
 
