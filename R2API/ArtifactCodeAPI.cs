@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using R2API.Utils;
@@ -28,29 +29,11 @@ namespace R2API {
         private static bool _loaded;
 
         #region Hooks
-        //[R2APISubmoduleInit(Stage = InitStage.SetHooks)]
+        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             On.RoR2.PortalDialerController.Awake += AddCodes;
             On.RoR2.PortalDialerController.PerformActionServer += PrintSha256HashCode;
-            RoR2.ContentManagement.ContentManager.onContentPacksAssigned += CheckForInvalidEntries;
         }
-
-        private static void CheckForInvalidEntries(HG.ReadOnlyArray<RoR2.ContentManagement.ReadOnlyContentPack> obj) {
-            foreach ((ArtifactDef, Sha256HashAsset) entry in ArtifactsCodes) {
-                ArtifactDef artifactDef = entry.Item1;
-                if((bool)!ArtifactCatalog.GetArtifactDef(artifactDef.artifactIndex)) {
-                    R2API.Logger.LogMessage($"Removing {artifactDef.cachedName} from ArtifactCodes since it's not in the Artifact catalog.");
-                    ArtifactsCodes.Remove(entry);
-                }
-            }
-        }
-
-        //[R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        /*internal static void UnsetHooks() {
-            On.RoR2.PortalDialerController.Awake -= AddCodes;
-            On.RoR2.PortalDialerController.PerformActionServer -= PrintSha256HashCode;
-        }*/
-
         /// <summary>
         /// Prints the Artifact Code that the player inputs in the dialer. Useful for mod creators.
         /// </summary>
@@ -78,14 +61,19 @@ namespace R2API {
                 var artifactDef = entry.Item1;
                 var artifactCode = entry.Item2;
 
+                if(!ArtifactCatalog.GetArtifactDef(artifactDef.artifactIndex)) {
+                    R2API.Logger.LogWarning($"ArtifactDef of name {artifactDef.cachedName} is not in the ArtifactCatalog. ignoring entry.");
+                    continue;
+                }
+
                 PortalDialerController.DialedAction dialedAction = new PortalDialerController.DialedAction();
                 dialedAction.hashAsset = artifactCode;
                 dialedAction.action = new UnityEvent();
                 dialedAction.action.AddListener(Wrapper);
 
                 void Wrapper() => self.OpenArtifactPortalServer(artifactDef);
-                R2API.Logger.LogInfo("Added code for " + artifactDef.cachedName);
                 HG.ArrayUtils.ArrayAppend(ref self.actions, dialedAction);
+                R2API.Logger.LogInfo("Added code for " + artifactDef.cachedName);
             }
             orig(self);
         }
@@ -97,7 +85,7 @@ namespace R2API {
         /// Add a custom Artifact code to the SkyMeadow Artifact portal dialer.
         /// The artifactDef must exist within the initialized ArtifactCatalog for it to properly added to the portal dialer.
         /// </summary>
-        /// <param name="artifactDef">The artifactDef tied to the artifact code,</param>
+        /// <param name="artifactDef">The artifactDef tied to the artifact code.</param>
         /// <param name="sha256HashAsset">The artifact code.</param>
         public static void Add(ArtifactDef? artifactDef, Sha256HashAsset? sha256HashAsset) {
             if(!Loaded) {
@@ -110,12 +98,13 @@ namespace R2API {
         /// Add a custom Artifact code to the SkyMeadow Artifact portal dialer.
         /// The artifactDef must exist within the initialized ArtifactCatalog for it to properly added to the portal dialer.
         /// </summary>
-        /// <param name="artifactDef"></param>
-        /// <param name="artifactCode"></param>
+        /// <param name="artifactDef">The artifactDef tied to the artifact code.</param>
+        /// <param name="artifactCode">The artifactCode written in the ArtifactCodeScriptableObject.</param>
         public static void Add(ArtifactDef? artifactDef, ArtifactCodeScriptableObject? artifactCode) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
             }
+            artifactCode.Start();
             ArtifactsCodes.Add((artifactDef, artifactCode.hashAsset));
         }
 
@@ -123,11 +112,11 @@ namespace R2API {
         /// Add a custom Artifact code to the SkyMeadow Artifact portal dialer.
         /// The artifactDef must exist within the initialized Artifactcatalog for it to be properly added to the portal dialer.
         /// </summary>
-        /// <param name="artifactDef">The artifactDef tied to the artifact code,</param>
-        /// <param name="code_00_07"></param>
-        /// <param name="code_08_15"></param>
-        /// <param name="code_16_23"></param>
-        /// <param name="code_24_31"></param>
+        /// <param name="artifactDef">The artifactDef tied to the artifact code.</param>
+        /// <param name="code_00_07">The values printed by R2API when a code is inputted.</param>
+        /// <param name="code_08_15">The values printed by R2API when a code is inputted.</param>
+        /// <param name="code_16_23">The values printed by R2API when a code is inputted.</param>
+        /// <param name="code_24_31">The values printed by R2API when a code is inputted.</param>
         public static void Add(ArtifactDef? artifactDef, ulong code_00_07, ulong code_08_15, ulong code_16_23, ulong code_24_31) {
 
             if(!Loaded) {
@@ -141,34 +130,63 @@ namespace R2API {
 
             ArtifactsCodes.Add((artifactDef, hashAsset));
         }
+        /// <summary>
+        /// Add a custom Artifact code to the SkyMeadow Artifact portal dialer.
+        /// The artifactdef must exist within the initialized ArtifactCatalog for it to be properly added to the portal dialer.
+        /// </summary>
+        /// <param name="artifactDef">The artifactdef tied to the artifact code.</param>
+        /// <param name="CompoundValues">An array of size 9 filled with compound values.</param>
+        public static void Add(ArtifactDef? artifactDef, int[] CompoundValues) {
+            if (!Loaded) {
+                throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
+            }
+            ArtifactCodeScriptableObject artifactCode = ScriptableObject.CreateInstance<ArtifactCodeScriptableObject>();
+            artifactCode.ArtifactCompounds = CompoundValues.ToList();
+            Add(artifactDef, artifactCode);
+        }
+
+        /// <summary>
+        /// Add a custom Artifact code to the SkyMeadow Artifact portal dialer.
+        /// The artifactDef must exist within the initialized ArtifactCatalog for it to be properly added to the portal dialer.
+        /// </summary>
+        /// <param name="artifactDef">The artifactDef tied to the artifact code.</param>
+        /// <param name="CompoundValues">A list of size 9 filled with compound values.</param>
+        public static void Add(ArtifactDef? artifactDef, List<int> CompoundValues) {
+            if (!Loaded) {
+                throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
+            }
+            ArtifactCodeScriptableObject artifactCode = ScriptableObject.CreateInstance<ArtifactCodeScriptableObject>();
+            artifactCode.ArtifactCompounds = CompoundValues;
+            Add(artifactDef, artifactCode);
+        }
         #endregion Methods
 
-        #region CompoundEnum
+        #region Vanilla Compound Values
         /// <summary>
-        /// RoR2's Artifact compounds used for ArtifactCodeAPI's ArtifactCode scriptable object.
+        /// Contains the values of Vanilla risk of rain 2 Artifact Compounds.
         /// </summary>
-        public enum ArtifactCompound {
+        public static class CompoundValues {
             /// <summary>
-            /// Value: 11
+            /// Value of the Empty compound.
             /// </summary>
-            None,
+            public const int Empty = 11;
             /// <summary>
-            /// Value: 7
+            /// Value of the Square compound.
             /// </summary>
-            Square,
+            public const int Square = 7;
             /// <summary>
-            /// Value: 1
+            /// Value of the Circle compound.
             /// </summary>
-            Circle,
+            public const int Circle = 1;
             /// <summary>
-            /// Value: 3
+            /// Value for the Triangle compound.
             /// </summary>
-            Triangle,
+            public const int Triangle = 3;
             /// <summary>
-            /// Value: 5
+            /// Value for the Diamond compound.
             /// </summary>
-            Diamond
+            public const int Diamond = 5;
         }
-        #endregion CompoundEnum
+        #endregion Vanilla Compound Values
     }
 }

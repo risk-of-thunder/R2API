@@ -14,7 +14,7 @@ namespace R2API {
         /// List that contains your Artifact code. for information on how to fill this list, check this wiki page:
         /// <para>https://github.com/risk-of-thunder/R2Wiki/wiki/Creating-Custom-Artifacts</para>
         /// </summary>
-        public List<ArtifactCompound> ArtifactCompounds = new List<ArtifactCompound>();
+        public List<int> ArtifactCompounds = new List<int>();
 
         private int[] artifactSequence;
 
@@ -26,30 +26,20 @@ namespace R2API {
         [HideInInspector]
         public Sha256HashAsset hashAsset;
 
-        private void Awake() {
+        public void Start() {
             hasher = SHA256.Create();
 
             List<int> sequence = new List<int>();
 
-            foreach (ArtifactCompound compound in ArtifactCompounds) {
-                switch (compound) {
-                    case ArtifactCompound.None:
-                        sequence.Add(11);
-                        break;
-                    case ArtifactCompound.Square:
-                        sequence.Add(7);
-                        break;
-                    case ArtifactCompound.Circle:
-                        sequence.Add(1);
-                        break;
-                    case ArtifactCompound.Triangle:
-                        sequence.Add(3);
-                        break;
-                    case ArtifactCompound.Diamond:
-                        sequence.Add(5);
-                        break;
-                }
-            }
+            sequence.Add(ArtifactCompounds[2]);
+            sequence.Add(ArtifactCompounds[5]);
+            sequence.Add(ArtifactCompounds[8]);
+            sequence.Add(ArtifactCompounds[1]);
+            sequence.Add(ArtifactCompounds[7]);
+            sequence.Add(ArtifactCompounds[4]);
+            sequence.Add(ArtifactCompounds[0]);
+            sequence.Add(ArtifactCompounds[3]);
+            sequence.Add(ArtifactCompounds[6]);
 
             artifactSequence = sequence.ToArray();
 
