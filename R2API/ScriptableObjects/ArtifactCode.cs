@@ -6,9 +6,9 @@ using System.Text;
 using UnityEngine;
 using static R2API.ArtifactCodeAPI;
 
-namespace R2API {
+namespace R2API.ScriptableObjects {
     [CreateAssetMenu(fileName = "New Artifact Code", menuName = "R2API/ArtifactCodeAPI/ArtifactCode", order = 0)]
-    public class ArtifactCodeScriptableObject : ScriptableObject {
+    public class ArtifactCode : ScriptableObject {
 
         /// <summary>
         /// List that contains your Artifact code. for information on how to fill this list, check this wiki page:

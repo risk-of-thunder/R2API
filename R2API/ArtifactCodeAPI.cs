@@ -7,6 +7,7 @@ using R2API.Utils;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Events;
+using R2API.ScriptableObjects;
 
 namespace R2API {
 
@@ -43,11 +44,7 @@ namespace R2API {
         /// <returns></returns>
         private static bool PrintSha256HashCode(On.RoR2.PortalDialerController.orig_PerformActionServer orig, PortalDialerController self, byte[] sequence) {
             var result = self.GetResult(sequence);
-            R2API.Logger.LogInfo("Inputted Artifact Code:");
-            R2API.Logger.LogInfo("_00_07: " + result._00_07);
-            R2API.Logger.LogInfo("_08_15: " + result._08_15);
-            R2API.Logger.LogInfo("_16_23: " + result._16_23);
-            R2API.Logger.LogInfo("_24_31: " + result._24_31);
+            R2API.Logger.LogInfo("Inputted Artifact Code:\n_00_07: " + result._00_07 + "\n_08_15: " + result._08_15 + "\n_16_23: " + result._16_23 + "\n_24_31: " + result._24_31);
             return orig(self, sequence);
         }
 
@@ -57,27 +54,35 @@ namespace R2API {
         /// <param name="orig"></param>
         /// <param name="self"></param>
         private static void AddCodes(On.RoR2.PortalDialerController.orig_Awake orig, PortalDialerController self) {
-            foreach ((ArtifactDef, Sha256HashAsset) entry in ArtifactsCodes) {
-                var artifactDef = entry.Item1;
-                var artifactCode = entry.Item2;
+            foreach ((ArtifactDef artifactDef, Sha256HashAsset artifactCode) in ArtifactsCodes) {
 
                 if(!ArtifactCatalog.GetArtifactDef(artifactDef.artifactIndex)) {
                     R2API.Logger.LogWarning($"ArtifactDef of name {artifactDef.cachedName} is not in the ArtifactCatalog. ignoring entry.");
                     continue;
                 }
-
+                if(CheckIfCodeIsUsed(artifactCode, self.actions)) {
+                    R2API.Logger.LogWarning($"A code with the values of {artifactCode.name} has already been added to the portal dialer controller. ignoring entry.");
+                    continue;
+                }
+                void Wrapper() => self.OpenArtifactPortalServer(artifactDef);
+                
                 PortalDialerController.DialedAction dialedAction = new PortalDialerController.DialedAction();
                 dialedAction.hashAsset = artifactCode;
                 dialedAction.action = new UnityEvent();
                 dialedAction.action.AddListener(Wrapper);
 
-                void Wrapper() => self.OpenArtifactPortalServer(artifactDef);
                 HG.ArrayUtils.ArrayAppend(ref self.actions, dialedAction);
                 R2API.Logger.LogInfo("Added code for " + artifactDef.cachedName);
             }
             orig(self);
         }
+
+        private static bool CheckIfCodeIsUsed(Sha256HashAsset hashAsset, PortalDialerController.DialedAction[] dialedActions) {
+            Sha256Hash hash = hashAsset.value;
+            return dialedActions.Any(dialedAction => dialedAction.hashAsset.value.Equals(hash));
+        }
         #endregion Hooks
+
 
         #region Methods
 
@@ -100,7 +105,7 @@ namespace R2API {
         /// </summary>
         /// <param name="artifactDef">The artifactDef tied to the artifact code.</param>
         /// <param name="artifactCode">The artifactCode written in the ArtifactCodeScriptableObject.</param>
-        public static void Add(ArtifactDef? artifactDef, ArtifactCodeScriptableObject? artifactCode) {
+        public static void Add(ArtifactDef? artifactDef, ArtifactCode? artifactCode) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
             }
@@ -132,31 +137,16 @@ namespace R2API {
         }
         /// <summary>
         /// Add a custom Artifact code to the SkyMeadow Artifact portal dialer.
-        /// The artifactdef must exist within the initialized ArtifactCatalog for it to be properly added to the portal dialer.
-        /// </summary>
-        /// <param name="artifactDef">The artifactdef tied to the artifact code.</param>
-        /// <param name="CompoundValues">An array of size 9 filled with compound values.</param>
-        public static void Add(ArtifactDef? artifactDef, int[] CompoundValues) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
-            }
-            ArtifactCodeScriptableObject artifactCode = ScriptableObject.CreateInstance<ArtifactCodeScriptableObject>();
-            artifactCode.ArtifactCompounds = CompoundValues.ToList();
-            Add(artifactDef, artifactCode);
-        }
-
-        /// <summary>
-        /// Add a custom Artifact code to the SkyMeadow Artifact portal dialer.
         /// The artifactDef must exist within the initialized ArtifactCatalog for it to be properly added to the portal dialer.
         /// </summary>
         /// <param name="artifactDef">The artifactDef tied to the artifact code.</param>
-        /// <param name="CompoundValues">A list of size 9 filled with compound values.</param>
-        public static void Add(ArtifactDef? artifactDef, List<int> CompoundValues) {
+        /// <param name="CompoundValues">An IEnumerable of type "int" with a size of 9 filled with compound values.  A list of size 9 filled with compound values.</param>
+        public static void Add(ArtifactDef? artifactDef, IEnumerable<int> CompoundValues) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
             }
-            ArtifactCodeScriptableObject artifactCode = ScriptableObject.CreateInstance<ArtifactCodeScriptableObject>();
-            artifactCode.ArtifactCompounds = CompoundValues;
+            ArtifactCode artifactCode = ScriptableObject.CreateInstance<ArtifactCode>();
+            artifactCode.ArtifactCompounds = (List<int>)CompoundValues;
             Add(artifactDef, artifactCode);
         }
         #endregion Methods
