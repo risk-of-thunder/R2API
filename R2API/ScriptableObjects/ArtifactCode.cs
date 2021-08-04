@@ -1,12 +1,10 @@
 ﻿using RoR2;
-using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
-using System.Text;
 using UnityEngine;
-using static R2API.ArtifactCodeAPI;
 
 namespace R2API.ScriptableObjects {
+
     [CreateAssetMenu(fileName = "New Artifact Code", menuName = "R2API/ArtifactCodeAPI/ArtifactCode", order = 0)]
     public class ArtifactCode : ScriptableObject {
 
@@ -53,6 +51,7 @@ namespace R2API.ScriptableObjects {
             }
             return Sha256Hash.FromBytes(hasher.ComputeHash(array));
         }
+
         internal Sha256HashAsset CreateHashAsset(Sha256Hash hash) {
             var asset = ScriptableObject.CreateInstance<Sha256HashAsset>();
             asset.value._00_07 = hash._00_07;
