@@ -23,7 +23,7 @@ namespace R2API {
         /// <summary>
         /// The Sha256HashAsset stored in this Scriptable Object.
         /// </summary>
-        [HideInInspector()]
+        [HideInInspector]
         public Sha256HashAsset hashAsset;
 
         /// <summary>

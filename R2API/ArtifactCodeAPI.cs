@@ -38,7 +38,7 @@ namespace R2API {
         private static void AddCompounds(On.RoR2.PortalDialerButtonController.orig_OnStartClient orig, PortalDialerButtonController self) {
             foreach (ArtifactCompoundDef compoundDef in ArtifactCompounds) {
                 if (CheckForDuplicateCompoundValue(compoundDef, self.digitDefs)) {
-                    R2API.Logger.LogWarning($"A compound with the value of {compoundDef.value} has already been added to the portal dialer button controller. ignoring entry.");
+                    R2API.Logger.LogWarning($"A compound with the value of {compoundDef.value} has already been added to the portal dialer button controller. Ignoring entry.");
                     continue;
                 }
                 HG.ArrayUtils.ArrayAppend(ref self.digitDefs, compoundDef);
@@ -93,7 +93,7 @@ namespace R2API {
 
         #endregion Hooks
 
-        #region Add Code Methods
+        #region ArtifactCode Adding Methods
 
         /// <summary>
         /// Add a custom Artifact code to the SkyMeadow Artifact portal dialer.
@@ -159,9 +159,9 @@ namespace R2API {
             AddCode(artifactDef, artifactCode);
         }
 
-        #endregion Add Code Methods
+        #endregion ArtifactCode Adding Methods
 
-        #region Add Compound Methods
+        #region Compound Adding Methods
 
         /// <summary>
         /// Add a custom Artifact Compound to the SkyMeadow's Artifact Buttons.
@@ -195,7 +195,7 @@ namespace R2API {
             return AddCompound(compoundDef);
         }
 
-        #endregion Add Compound Methods
+        #endregion Compound Adding Methods
 
         #region Vanilla Compound Values
 
