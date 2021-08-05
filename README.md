@@ -42,8 +42,10 @@ Note that such builds may be **unstable**.
 ## Changelog
 
 The most recent changelog can always be found on the [GitHub](https://github.com/risk-of-thunder/R2API/blob/master/Archived%20changelogs.md). In this readme, only the most recent *minor* version will have a changelog.
-
 **Current**
+* [Added ArtifactCodeAPI](https://github.com/risk-of-thunder/R2API/pull/299)
+
+**3.0.48**
 
 * [Documentation for ItemDropAPI](https://github.com/risk-of-thunder/R2API/blob/master/ItemDropAPI%20Instructions%20For%20Use.txt)
 * [ItemDropAPI Overhall](https://github.com/risk-of-thunder/R2API/pull/295)
