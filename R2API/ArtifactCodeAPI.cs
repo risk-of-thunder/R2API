@@ -1,5 +1,4 @@
-﻿using R2API;
-using R2API.Utils;
+﻿using R2API.Utils;
 using RoR2;
 using System;
 using System.Collections.Generic;
@@ -37,7 +36,7 @@ namespace R2API {
         }
 
         private static void AddCompounds(On.RoR2.PortalDialerButtonController.orig_OnStartClient orig, PortalDialerButtonController self) {
-            foreach(ArtifactCompoundDef compoundDef in ArtifactCompounds) {
+            foreach (ArtifactCompoundDef compoundDef in ArtifactCompounds) {
                 if (CheckForDuplicateCompoundValue(compoundDef, self.digitDefs)) {
                     R2API.Logger.LogWarning($"A compound with the value of {compoundDef.value} has already been added to the portal dialer button controller. ignoring entry.");
                     continue;
@@ -87,6 +86,7 @@ namespace R2API {
             Sha256Hash hash = hashAsset.value;
             return dialedActions.Any(dialedAction => dialedAction.hashAsset.value.Equals(hash));
         }
+
         private static bool CheckForDuplicateCompoundValue(ArtifactCompoundDef compoundDef, ArtifactCompoundDef[] compoundDefs) {
             return compoundDefs.Any(compound => compound.value == compoundDef.value);
         }
