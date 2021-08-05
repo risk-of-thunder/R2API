@@ -44,6 +44,7 @@ Note that such builds may be **unstable**.
 The most recent changelog can always be found on the [GitHub](https://github.com/risk-of-thunder/R2API/blob/master/Archived%20changelogs.md). In this readme, only the most recent *minor* version will have a changelog.
 **Current**
 * [Added ArtifactCodeAPI](https://github.com/risk-of-thunder/R2API/pull/299)
+* [Added support for new Artifact Code compounds](https://github.com/risk-of-thunder/R2API/pull/300)
 
 **3.0.48**
 
