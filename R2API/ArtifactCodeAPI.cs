@@ -44,6 +44,7 @@ namespace R2API {
                 }
                 HG.ArrayUtils.ArrayAppend(ref self.digitDefs, compoundDef);
                 R2API.Logger.LogInfo($"Added compound to portal dialer button with value of {compoundDef.value}");
+                orig(self);
             }
         }
 
