@@ -1,5 +1,4 @@
-﻿using R2API.ScriptableObjects;
-using R2API.Utils;
+﻿using R2API.Utils;
 using RoR2;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,7 @@ namespace R2API {
     [R2APISubmodule]
     public static class ArtifactCodeAPI {
         private static readonly List<(ArtifactDef, Sha256HashAsset)> ArtifactsCodes = new List<(ArtifactDef, Sha256HashAsset)>();
+        private static readonly List<ArtifactCompoundDef> ArtifactCompounds = new List<ArtifactCompoundDef>();
 
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -30,17 +30,26 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
+            On.RoR2.PortalDialerButtonController.OnStartClient += AddCompounds;
             On.RoR2.PortalDialerController.Awake += AddCodes;
             On.RoR2.PortalDialerController.PerformActionServer += PrintSha256HashCode;
+        }
+
+        private static void AddCompounds(On.RoR2.PortalDialerButtonController.orig_OnStartClient orig, PortalDialerButtonController self) {
+            foreach (ArtifactCompoundDef compoundDef in ArtifactCompounds) {
+                if (CheckForDuplicateCompoundValue(compoundDef, self.digitDefs)) {
+                    R2API.Logger.LogWarning($"A compound with the value of {compoundDef.value} has already been added to the portal dialer button controller. Ignoring entry.");
+                    continue;
+                }
+                HG.ArrayUtils.ArrayAppend(ref self.digitDefs, compoundDef);
+                R2API.Logger.LogInfo($"Added compound to portal dialer button with value of {compoundDef.value}");
+                orig(self);
+            }
         }
 
         /// <summary>
         /// Prints the Artifact Code that the player inputs in the dialer. Useful for mod creators.
         /// </summary>
-        /// <param name="orig"></param>
-        /// <param name="self"></param>
-        /// <param name="sequence"></param>
-        /// <returns></returns>
         private static bool PrintSha256HashCode(On.RoR2.PortalDialerController.orig_PerformActionServer orig, PortalDialerController self, byte[] sequence) {
             var result = self.GetResult(sequence);
             R2API.Logger.LogInfo("Inputted Artifact Code:\n_00_07: " + result._00_07 + "\n_08_15: " + result._08_15 + "\n_16_23: " + result._16_23 + "\n_24_31: " + result._24_31);
@@ -50,8 +59,6 @@ namespace R2API {
         /// <summary>
         /// Adds custom ArtifactCodes to the portal dialer controller instance found in sky meadow.
         /// </summary>
-        /// <param name="orig"></param>
-        /// <param name="self"></param>
         private static void AddCodes(On.RoR2.PortalDialerController.orig_Awake orig, PortalDialerController self) {
             foreach ((ArtifactDef artifactDef, Sha256HashAsset artifactCode) in ArtifactsCodes) {
                 if (!ArtifactCatalog.GetArtifactDef(artifactDef.artifactIndex)) {
@@ -70,7 +77,7 @@ namespace R2API {
                 dialedAction.action.AddListener(Wrapper);
 
                 HG.ArrayUtils.ArrayAppend(ref self.actions, dialedAction);
-                R2API.Logger.LogInfo("Added code for " + artifactDef.cachedName);
+                R2API.Logger.LogInfo($"Added code for {artifactDef.cachedName}");
             }
             orig(self);
         }
@@ -80,9 +87,13 @@ namespace R2API {
             return dialedActions.Any(dialedAction => dialedAction.hashAsset.value.Equals(hash));
         }
 
+        private static bool CheckForDuplicateCompoundValue(ArtifactCompoundDef compoundDef, ArtifactCompoundDef[] compoundDefs) {
+            return compoundDefs.Any(compound => compound.value == compoundDef.value);
+        }
+
         #endregion Hooks
 
-        #region Methods
+        #region ArtifactCode Adding Methods
 
         /// <summary>
         /// Add a custom Artifact code to the SkyMeadow Artifact portal dialer.
@@ -90,7 +101,7 @@ namespace R2API {
         /// </summary>
         /// <param name="artifactDef">The artifactDef tied to the artifact code.</param>
         /// <param name="sha256HashAsset">The artifact code.</param>
-        public static void Add(ArtifactDef? artifactDef, Sha256HashAsset? sha256HashAsset) {
+        public static void AddCode(ArtifactDef? artifactDef, Sha256HashAsset? sha256HashAsset) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
             }
@@ -103,7 +114,7 @@ namespace R2API {
         /// </summary>
         /// <param name="artifactDef">The artifactDef tied to the artifact code.</param>
         /// <param name="artifactCode">The artifactCode written in the ArtifactCodeScriptableObject.</param>
-        public static void Add(ArtifactDef? artifactDef, ArtifactCode? artifactCode) {
+        public static void AddCode(ArtifactDef? artifactDef, ArtifactCode? artifactCode) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
             }
@@ -120,7 +131,7 @@ namespace R2API {
         /// <param name="code_08_15">The values printed by R2API when a code is inputted.</param>
         /// <param name="code_16_23">The values printed by R2API when a code is inputted.</param>
         /// <param name="code_24_31">The values printed by R2API when a code is inputted.</param>
-        public static void Add(ArtifactDef? artifactDef, ulong code_00_07, ulong code_08_15, ulong code_16_23, ulong code_24_31) {
+        public static void AddCode(ArtifactDef? artifactDef, ulong code_00_07, ulong code_08_15, ulong code_16_23, ulong code_24_31) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
             }
@@ -138,17 +149,53 @@ namespace R2API {
         /// The artifactDef must exist within the initialized ArtifactCatalog for it to be properly added to the portal dialer.
         /// </summary>
         /// <param name="artifactDef">The artifactDef tied to the artifact code.</param>
-        /// <param name="CompoundValues">An IEnumerable of type "int" with a size of 9 filled with compound values.  A list of size 9 filled with compound values.</param>
-        public static void Add(ArtifactDef? artifactDef, IEnumerable<int> CompoundValues) {
+        /// <param name="CompoundValues">An IEnumerable of type "int" with a size of 9 filled with compound values.</param>
+        public static void AddCode(ArtifactDef? artifactDef, IEnumerable<int> CompoundValues) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
             }
             ArtifactCode artifactCode = ScriptableObject.CreateInstance<ArtifactCode>();
             artifactCode.ArtifactCompounds = (List<int>)CompoundValues;
-            Add(artifactDef, artifactCode);
+            AddCode(artifactDef, artifactCode);
         }
 
-        #endregion Methods
+        #endregion ArtifactCode Adding Methods
+
+        #region Compound Adding Methods
+
+        /// <summary>
+        /// Add a custom Artifact Compound to the SkyMeadow's Artifact Buttons.
+        /// </summary>
+        /// <param name="artifactCompoundDef">The Artifact Compound to add. The value in the def must be unique, otherwise if a duplicate is found, it doesnt add the compound.</param>
+        /// <returns>True if added to the button prefab, false otherwise.</returns>
+        public static bool AddCompound(ArtifactCompoundDef artifactCompoundDef) {
+            if (!Loaded) {
+                throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
+            }
+            ArtifactCompounds.Add(artifactCompoundDef);
+            return true;
+        }
+
+        /// <summary>
+        /// Add a custom Artifact Compound to the SkyMeadow's Artifact Buttons
+        /// </summary>
+        /// <param name="compoundValue">The Value of the Compound.</param>
+        /// <param name="compoundDecalMaterial">The Decal Material of the Compound.</param>
+        /// <param name="compoundModelPrefab">The Model Prefab of the Compound.</param>
+        /// <returns></returns>
+        public static bool AddCompound(int compoundValue, Material compoundDecalMaterial, GameObject compoundModelPrefab) {
+            if (!Loaded) {
+                throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
+            }
+            ArtifactCompoundDef compoundDef = ScriptableObject.CreateInstance<ArtifactCompoundDef>();
+            compoundDef.value = compoundValue;
+            compoundDef.decalMaterial = compoundDecalMaterial;
+            compoundDef.modelPrefab = compoundModelPrefab;
+
+            return AddCompound(compoundDef);
+        }
+
+        #endregion Compound Adding Methods
 
         #region Vanilla Compound Values
 
