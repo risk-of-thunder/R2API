@@ -222,12 +222,12 @@ namespace R2API {
         #region NetworkSoundEventCatalog Setup
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void SetHooks() {
+        internal static void NetworkSetHooks() {
             R2APIContentPackProvider.WhenContentPackReady += AddNetworkSoundEventDefsToGame;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
+        internal static void NetworkUnsetHooks() {
             R2APIContentPackProvider.WhenContentPackReady -= AddNetworkSoundEventDefsToGame;
         }
 
