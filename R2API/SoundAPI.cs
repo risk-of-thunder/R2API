@@ -1,4 +1,4 @@
-﻿using BepInEx;
+using BepInEx;
 using MonoMod.RuntimeDetour;
 using R2API.Utils;
 using RoR2;
@@ -17,7 +17,6 @@ namespace R2API {
     /// </summary>
     [R2APISubmodule]
     public static class SoundAPI {
-
         private static readonly List<NetworkSoundEventDef> NetworkSoundEventDefs = new List<NetworkSoundEventDef>();
 
         private static bool _NetworkSoundEventCatalogInitialized;
@@ -296,6 +295,5 @@ namespace R2API {
         }
 
         #endregion NetworkSoundEventCatalog Setup
-
     }
 }
