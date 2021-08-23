@@ -210,14 +210,21 @@ namespace R2API {
             return newUnlockableDef;
         }
 
+        [Obsolete("The bool parameter serverTracked is redundant. Instead, pass in a Type that inherits from BaseServerAchievement if it is server tracked, or nothing if it's not")]
+        public static UnlockableDef AddUnlockable<TUnlockable>(bool serverTracked) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
+        {
+            return AddUnlockable<TUnlockable>(null);
+        }
+
         /// <summary>
         /// Add an unlockable tied to an achievement.
-        /// For an example usage check <see href="https://github.com/ArcPh1r3/HenryTutorial/blob/master/HenryMod/Modules/Achievements/HenryMasteryAchievement.cs">Rob repository</see>
+        /// For an example usage check <see href="https://github.com/ArcPh1r3/HenryTutorial/blob/master/HenryMod/Modules/Achievements/HenryMasteryAchievement.cs">rob repository</see>
         /// </summary>
-        /// <typeparam name="TUnlockable">Class that herit from BaseAchievement and implement IModdedUnlockableDataProvider</typeparam>
-        /// <param name="serverTracked">whether or not the achievement should be tracked by the server.</param>
+        /// <typeparam name="TUnlockable">Class that inherits from BaseAchievement and implements IModdedUnlockableDataProvider</typeparam>
+        /// <param name="serverTrackerType">Type that inherits from BaseServerAchievement for achievements that the server needs to track</param>
         /// <returns></returns>
-        public static UnlockableDef AddUnlockable<TUnlockable>(bool serverTracked) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
+        public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType = null) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
+        {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(UnlockableAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockableAPI)})]");
             }
@@ -249,7 +256,7 @@ namespace R2API {
                 descriptionToken = instance.AchievementDescToken,
                 achievedIcon = instance.Sprite,
                 type = instance.GetType(),
-                serverTrackerType = serverTracked ? instance.GetType() : null,
+                serverTrackerType = serverTrackerType,
             };
 
             Unlockables.Add(unlockableDef);
