@@ -213,7 +213,15 @@ namespace R2API {
         [Obsolete("The bool parameter serverTracked is redundant. Instead, pass in a Type that inherits from BaseServerAchievement if it is server tracked, or nothing if it's not")]
         public static UnlockableDef AddUnlockable<TUnlockable>(bool serverTracked) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
         {
-            return AddUnlockable<TUnlockable>(null);
+            return AddUnlockable<TUnlockable>(null, null);
+        }
+        public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
+        {
+            return AddUnlockable<TUnlockable>(serverTrackerType, null);
+        }
+        public static UnlockableDef AddUnlockable<TUnlockable>(UnlockableDef unlockableDef) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
+        {
+            return AddUnlockable<TUnlockable>(null, unlockableDef);
         }
 
         /// <summary>
@@ -222,8 +230,9 @@ namespace R2API {
         /// </summary>
         /// <typeparam name="TUnlockable">Class that inherits from BaseAchievement and implements IModdedUnlockableDataProvider</typeparam>
         /// <param name="serverTrackerType">Type that inherits from BaseServerAchievement for achievements that the server needs to track</param>
+        /// <param name="unlockableDef">For UnlockableDefs created in advance. Leaving null will generate an UnlockableDef instead.</param>
         /// <returns></returns>
-        public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType = null) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
+        public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType = null, UnlockableDef unlockableDef = null) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
         {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(UnlockableAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockableAPI)})]");
@@ -241,12 +250,14 @@ namespace R2API {
                 throw new InvalidOperationException($"The unlockable identifier '{unlockableIdentifier}' is already used by another mod.");
             }
 
-            var unlockableDef = CreateNewUnlockable(new UnlockableInfo {
-                Name = instance.UnlockableIdentifier,
-                HowToUnlockString = instance.GetHowToUnlock,
-                UnlockedString = instance.GetUnlocked,
-                SortScore = 200
-            });
+            if (unlockableDef == null) {
+                unlockableDef = CreateNewUnlockable(new UnlockableInfo {
+                    Name = instance.UnlockableIdentifier,
+                    HowToUnlockString = instance.GetHowToUnlock,
+                    UnlockedString = instance.GetUnlocked,
+                    SortScore = 200
+                });
+            }
 
             var achievementDef = new AchievementDef {
                 identifier = instance.AchievementIdentifier,
