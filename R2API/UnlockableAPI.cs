@@ -200,14 +200,18 @@ namespace R2API {
 
         internal static UnlockableDef CreateNewUnlockable(UnlockableInfo unlockableInfo) {
             var newUnlockableDef = ScriptableObject.CreateInstance<UnlockableDef>();
+            return SetupUnlockable(unlockableInfo, newUnlockableDef);
+        }
 
-            newUnlockableDef.cachedName = unlockableInfo.Name;
-            newUnlockableDef.nameToken = unlockableInfo.Name;
-            newUnlockableDef.getHowToUnlockString = unlockableInfo.HowToUnlockString;
-            newUnlockableDef.getUnlockedString = unlockableInfo.UnlockedString;
-            newUnlockableDef.sortScore = unlockableInfo.SortScore;
+        internal static UnlockableDef SetupUnlockable(UnlockableInfo unlockableInfo, UnlockableDef unlockableDef) {
 
-            return newUnlockableDef;
+            unlockableDef.cachedName = unlockableInfo.Name;
+            unlockableDef.nameToken = unlockableInfo.Name;
+            unlockableDef.getHowToUnlockString = unlockableInfo.HowToUnlockString;
+            unlockableDef.getUnlockedString = unlockableInfo.UnlockedString;
+            unlockableDef.sortScore = unlockableInfo.SortScore;
+
+            return unlockableDef;
         }
 
         [Obsolete("The bool parameter serverTracked is redundant. Instead, pass in a Type that inherits from BaseServerAchievement if it is server tracked, or nothing if it's not")]
@@ -251,13 +255,17 @@ namespace R2API {
             }
 
             if (unlockableDef == null) {
-                unlockableDef = CreateNewUnlockable(new UnlockableInfo {
-                    Name = instance.UnlockableIdentifier,
-                    HowToUnlockString = instance.GetHowToUnlock,
-                    UnlockedString = instance.GetUnlocked,
-                    SortScore = 200
-                });
+                unlockableDef = ScriptableObject.CreateInstance<UnlockableDef>();
             }
+
+            UnlockableInfo unlockableInfo = new UnlockableInfo {
+                Name = instance.UnlockableIdentifier,
+                HowToUnlockString = instance.GetHowToUnlock,
+                UnlockedString = instance.GetUnlocked,
+                SortScore = 200
+            };
+
+            unlockableDef = SetupUnlockable(unlockableInfo, unlockableDef);
 
             var achievementDef = new AchievementDef {
                 identifier = instance.AchievementIdentifier,
