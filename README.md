@@ -45,6 +45,10 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 
 **Current**
 
+* [Added support for using existing UnlockableDefs in UnlockableAPI](https://github.com/risk-of-thunder/R2API/pull/304)
+
+**3.0.52**
+
 * [Add NetworkSoundEventDef registration to SoundAPI](https://github.com/risk-of-thunder/R2API/pull/301)
 
 **3.0.50**
