@@ -369,6 +369,7 @@ namespace R2API {
                 public Dictionary<SceneDef, IEnumerable<MainAndBossTracks>> SceneDefToTracks;
 
                 internal uint _loadedInitBankId;
+
                 /// <summary>
                 /// Will be filled after using <see cref="Add(CustomMusicData)"></see> and after the Wwise sound engine get initialized.
                 /// </summary>
@@ -378,6 +379,7 @@ namespace R2API {
                 }
 
                 internal uint _loadedSoundBankId;
+
                 /// <inheritdoc cref="LoadedInitBankId"/>
                 public uint LoadedSoundBankId {
                     get => _loadedSoundBankId;
@@ -423,6 +425,7 @@ namespace R2API {
                 /// through <see cref="AkSoundEngine.SetState(uint, uint)"/>
                 /// </summary>
                 public struct CustomState {
+
                     /// <summary>
                     /// First arg of <see cref="AkSoundEngine.SetState(uint, uint)"/>
                     /// </summary>
@@ -594,7 +597,6 @@ namespace R2API {
 
             private static void ReplaceSceneMusicWithCustomTracks(SceneDef sceneDef) {
                 if (SceneDefToTracks.TryGetValue(sceneDef, out var customTracks)) {
-
                     if (!SceneDefToOriginalTracks.ContainsKey(sceneDef)) {
                         var originalTracks = new MainAndBossTracks(sceneDef.mainTrack, sceneDef.bossTrack);
                         SceneDefToOriginalTracks.Add(sceneDef, originalTracks);
@@ -604,7 +606,6 @@ namespace R2API {
                         var selectedTracks = customTracks[RoR2Application.rng.RangeInt(0, customTracks.Count)];
 
                         if (selectedTracks.MainTrack) {
-
                             if (IsVanillaMusicTrack(sceneDef.mainTrack) ||
                                 LastSceneDef && IsVanillaMusicTrack(LastSceneDef.mainTrack)) {
                                 GameMusicBankInUse = false;
@@ -669,7 +670,6 @@ namespace R2API {
             /// </summary>
             /// <returns>True if the preliminary checks succeed</returns>
             public static bool Add(CustomMusicData data) {
-
                 if (data.BepInPlugin == null) {
                     throw new ArgumentNullException(nameof(CustomMusicData) + "." + nameof(CustomMusicData.BepInPlugin));
                 }
@@ -725,7 +725,6 @@ namespace R2API {
             /// <param name="data"></param>
             /// <returns></returns>
             public static bool Remove(CustomMusicData data) {
-
                 var akResult = AkSoundEngine.UnloadBank(data.LoadedSoundBankId, IntPtr.Zero);
                 if (akResult != AKRESULT.AK_Success) {
                     R2API.Logger.LogError(
