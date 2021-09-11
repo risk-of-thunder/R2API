@@ -741,6 +741,9 @@ namespace R2API {
                     return false;
                 }
 
+                PlayMusicSystemEventNames.Remove(data.PlayMusicSystemEventName);
+                EventNameToBepinPlugin.Remove(data.PlayMusicSystemEventName);
+
                 RemoveTracksFromThatBankFromTheScenes(data);
 
                 return CustomMusicDatas.Remove(data);
