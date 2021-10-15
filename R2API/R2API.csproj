@@ -43,13 +43,6 @@
       <HintPath>libs\SimpleJSON.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>libs\UnityEngine.Networking.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>libs\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="Zio">
       <HintPath>libs\Zio.dll</HintPath>
       <Private>false</Private>
