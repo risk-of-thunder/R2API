@@ -26,3 +26,7 @@ dotnet_diagnostic.CS8604.severity = suggestion
 
 # CS8602: Dereference of a possibly null reference.
 dotnet_diagnostic.CS8602.severity = suggestion
+
+# Accessing a member that was not originally public as suggestion
+# We are bound to modify / call private members because of this project nature
+dotnet_diagnostic.Publicizer001.severity=suggestion
