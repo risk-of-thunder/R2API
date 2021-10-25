@@ -147,6 +147,12 @@ namespace R2API {
 
         #region Combat Director Modifications
 
+        private static CombatDirector.EliteTierDef[] RetrieveVanillaEliteTiers() {
+            LazyInitVanillaEliteTiers();
+
+            return CombatDirector.eliteTiers;
+        }
+
         private static CombatDirector.EliteTierDef RetrieveFirstVanillaTierDef() {
             LazyInitVanillaEliteTiers();
 
@@ -159,6 +165,7 @@ namespace R2API {
             return CombatDirector.eliteTiers[2];
         }
 
+        public static CombatDirector.EliteTierDef[] VanillaEliteTiers { get; private set; } = RetrieveVanillaEliteTiers();
         public static CombatDirector.EliteTierDef VanillaFirstTierDef { get; private set; } = RetrieveFirstVanillaTierDef();
         public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef { get; private set; } = RetrieveVanillaEliteOnlyFirstTierDef();
 
@@ -187,22 +194,34 @@ namespace R2API {
         /// When adding a new elite tier,
         /// do not fill the eliteTypes field with your custom elites defs if your goal is to add your custom elite in it right after.
         /// Because when doing EliteAPI.Add, the API will add your elite to the specified tiers <see cref="CustomElite.EliteTierDefs"/>.
-        /// Note that if your eliteTierDef has a cheaper cost than let's say the highest vanilla tier,
-        /// you'll have to use the indexToInsertAt parameter to put it before the tier in array
+        /// </summary>
+        /// <param name="eliteTierDef">The new elite tier to add.</param>
+        public static int AppendCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef) {
+            return AddCustomEliteTier(eliteTierDef, -1);
+        }
+
+        /// <summary>
+        /// Allows for adding a new elite tier def to the combat director.
+        /// Automatically insert the eliteTierDef at the correct position in the array based on its <see cref="CombatDirector.EliteTierDef.costMultiplier"/>
+        /// When adding a new elite tier, do not fill the eliteTypes field with your custom elites defs if your goal is to add your custom elite in it right after.
+        /// Because when doing EliteAPI.Add, the API will add your elite to the specified tiers <see cref="CustomElite.EliteTierDefs"/>.
         /// </summary>
         /// <param name="eliteTierDef">The new elite tier to add.</param>
         public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef) {
-            return AddCustomEliteTier(eliteTierDef, -1);
+            var indexToInsertAt = Array.FindIndex(CombatDirector.eliteTiers, x => x.costMultiplier >= eliteTierDef.costMultiplier);
+            if (indexToInsertAt >= 0) {
+                return AddCustomEliteTier(eliteTierDef, indexToInsertAt);
+            }
+            else {
+                return AppendCustomEliteTier(eliteTierDef);
+            }
         }
 
         // todo : maybe sort the CombatDirector.eliteTiers array based on cost ? the game code isnt the cleanest about this
         /// <summary>
         /// Allows for adding a new elite tier def to the combat director.
-        /// When adding a new elite tier,
-        /// do not fill the eliteTypes field with your custom elites defs if your goal is to add your custom elite in it right after.
+        /// When adding a new elite tier, do not fill the eliteTypes field with your custom elites defs if your goal is to add your custom elite in it right after.
         /// Because when doing EliteAPI.Add, the API will add your elite to the specified tiers <see cref="CustomElite.EliteTierDefs"/>.
-        /// Note that if your eliteTierDef has a cheaper cost than let's say the highest vanilla tier,
-        /// you'll have to use the indexToInsertAt parameter to put it before the tier in the final array
         /// </summary>
         /// <param name="eliteTierDef">The new elite tier to add.</param>
         /// <param name="indexToInsertAt">Optional index to specify if you want to insert a cheaper elite tier</param>
