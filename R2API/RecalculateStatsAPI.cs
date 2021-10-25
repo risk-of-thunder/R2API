@@ -90,10 +90,25 @@ namespace R2API {
         /// <param name="args">An instance of StatHookEventArgs, passed to each subscriber to this event in turn for modification.</param>
         public delegate void StatHookEventHandler(CharacterBody sender, StatHookEventArgs args);
 
+        private static event StatHookEventHandler _getStatCoefficients;
         /// <summary>
         /// Subscribe to this event to modify one of the stat hooks which StatHookEventArgs covers. Fired during CharacterBody.RecalculateStats.
         /// </summary>
-        public static event StatHookEventHandler GetStatCoefficients;
+        public static event StatHookEventHandler GetStatCoefficients {
+            add {
+                if (!Loaded) {
+                    throw new InvalidOperationException($"{nameof(RecalculateStatsAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(RecalculateStatsAPI)})]");
+                }
+                _getStatCoefficients += value;
+            }
+
+            remove {
+                if (!Loaded) {
+                    throw new InvalidOperationException($"{nameof(RecalculateStatsAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(RecalculateStatsAPI)})]");
+                }
+                _getStatCoefficients -= value;
+            }
+        }
 
         private static StatHookEventArgs StatMods;
 
@@ -101,10 +116,7 @@ namespace R2API {
             ILCursor c = new ILCursor(il);
 
             c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Action<CharacterBody>>((cb) => {
-                StatMods = new StatHookEventArgs();
-                GetStatCoefficients?.Invoke(cb, StatMods);
-            });
+            c.EmitDelegate<Action<CharacterBody>>(GetStatMods);
 
             ModifyHealthStat(c);
             ModifyShieldStat(c);
@@ -115,6 +127,21 @@ namespace R2API {
             ModifyAttackSpeedStat(c);
             ModifyCritStat(c);
             ModifyArmorStat(c);
+        }
+
+        private static void GetStatMods(CharacterBody characterBody) {
+            StatMods = new StatHookEventArgs();
+
+            if (_getStatCoefficients != null) {
+                foreach (StatHookEventHandler @event in _getStatCoefficients.GetInvocationList()) {
+                    try {
+                        @event(characterBody, StatMods);
+                    }
+                    catch (Exception e) {
+                        R2API.Logger.LogError($"Exception thrown by : {@event.Method.DeclaringType.Name}.{@event.Method.Name}:\n{e}");
+                    }
+                }
+            }
         }
 
         private static void ModifyArmorStat(ILCursor c) {
@@ -132,6 +159,9 @@ namespace R2API {
                 c.EmitDelegate<Func<float, float>>((oldArmor) => {
                     return oldArmor + StatMods.armorAdd;
                 });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyArmorStat)} failed.");
             }
         }
 
@@ -164,6 +194,9 @@ namespace R2API {
                     return origSpeedMult + StatMods.attackSpeedMultAdd;
                 });
             }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyAttackSpeedStat)} failed.");
+            }
         }
 
         private static void ModifyCritStat(ILCursor c) {
@@ -181,6 +214,9 @@ namespace R2API {
                     return origCrit + StatMods.critAdd;
                 });
                 c.Emit(OpCodes.Stloc, locOrigCrit);
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyCritStat)} failed.");
             }
         }
 
@@ -213,6 +249,9 @@ namespace R2API {
                     return origDamageMult + StatMods.damageMultAdd;
                 });
             }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyDamageStat)} failed.");
+            }
         }
 
         private static void ModifyJumpStat(ILCursor c) {
@@ -230,6 +269,9 @@ namespace R2API {
                 c.EmitDelegate<Func<float, float>>((origJumpPower) => {
                     return origJumpPower * (1 + StatMods.jumpPowerMultAdd);
                 });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyJumpStat)} failed.");
             }
         }
 
@@ -262,6 +304,9 @@ namespace R2API {
                     return origHealthMult + StatMods.healthMultAdd;
                 });
             }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyHealthStat)} failed.");
+            }
         }
 
         private static void ModifyShieldStat(ILCursor c) {
@@ -280,6 +325,9 @@ namespace R2API {
                 c.EmitDelegate<Func<float, float>>((origBaseShield) => {
                     return origBaseShield + StatMods.baseShieldAdd;
                 });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyShieldStat)} failed.");
             }
         }
 
@@ -308,6 +356,9 @@ namespace R2API {
                 c.EmitDelegate<Func<float, float>>((origRegenMult) => {
                     return origRegenMult + StatMods.regenMultAdd;
                 });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyHealthRegenStat)} failed.");
             }
         }
 
@@ -346,6 +397,9 @@ namespace R2API {
                 c.EmitDelegate<Func<float, float>>((origMoveSpeedReductionMult) => {
                     return origMoveSpeedReductionMult + StatMods.moveSpeedReductionMultAdd;
                 });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyMovementSpeedStat)} failed.");
             }
         }
     }
