@@ -20,9 +20,15 @@ namespace R2API {
     [R2APISubmodule]
     public static class SoundAPI {
 
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
         public static bool Loaded {
-            get; private set;
+            get => _loaded;
+            internal set => _loaded = value;
         }
+
+        private static bool _loaded;
 
         private static Hook AddBanksAfterEngineInitHook;
 
