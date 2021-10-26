@@ -31,6 +31,7 @@ namespace R2API {
         public Vector3Int bottomRow = new Vector3Int();
 
         [Obsolete("The artifact compounds list is obsolete, please use the topRow, middleRow and bottomRow Vector3Int.")]
+        [HideInInspector]
         public List<int> ArtifactCompounds = new List<int>();
 
         private int[] artifactSequence;
