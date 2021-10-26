@@ -47,18 +47,12 @@ namespace R2API {
             }
         }
 
-        /// <summary>
-        /// Prints the Artifact Code that the player inputs in the dialer. Useful for mod creators.
-        /// </summary>
         private static bool PrintSha256HashCode(On.RoR2.PortalDialerController.orig_PerformActionServer orig, PortalDialerController self, byte[] sequence) {
             var result = self.GetResult(sequence);
             R2API.Logger.LogInfo("Inputted Artifact Code:\n_00_07: " + result._00_07 + "\n_08_15: " + result._08_15 + "\n_16_23: " + result._16_23 + "\n_24_31: " + result._24_31);
             return orig(self, sequence);
         }
 
-        /// <summary>
-        /// Adds custom ArtifactCodes to the portal dialer controller instance found in sky meadow.
-        /// </summary>
         private static void AddCodes(On.RoR2.PortalDialerController.orig_Awake orig, PortalDialerController self) {
             foreach ((ArtifactDef artifactDef, Sha256HashAsset artifactCode) in ArtifactsCodes) {
                 if (!ArtifactCatalog.GetArtifactDef(artifactDef.artifactIndex)) {
