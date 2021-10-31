@@ -53,6 +53,7 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 
 * [Extended SoundAPI for adding custom music](https://github.com/risk-of-thunder/R2API/pull/305) 
 * [Added support for using existing UnlockableDefs in UnlockableAPI](https://github.com/risk-of-thunder/R2API/pull/304)
+* [fixing server unlockables](https://github.com/risk-of-thunder/R2API/pull/302)
 
 **3.0.52**
 
