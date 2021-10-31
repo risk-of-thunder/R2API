@@ -114,22 +114,22 @@ namespace R2API {
             }
 
             if (!item.ItemDef) {
-                R2API.Logger.LogError("Your ItemDef is null ! Can't add your item.");
+                R2API.Logger.LogError("ItemDef is null ! Can't add the custom item.");
             }
 
             if (string.IsNullOrEmpty(item.ItemDef.name)) {
-                R2API.Logger.LogError("Your ItemDef.name is null or empty ! Can't add your item.");
+                R2API.Logger.LogError("ItemDef.name is null or empty ! Can't add the custom item.");
             }
 
             if (!item.ItemDef.pickupModelPrefab) {
-                R2API.Logger.LogWarning($"No ItemDef.pickupModelPrefab, the game will show nothing when the item is on the ground.");
+                R2API.Logger.LogWarning($"No ItemDef.pickupModelPrefab ({item.ItemDef.name}), the game will show nothing when the item is on the ground.");
             }
             else if (item.ItemDisplayRules != null &&
                 item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
                 !item.ItemDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
-                R2API.Logger.LogWarning($"Your ItemDef.pickupModelPrefab ({item.ItemDef.name}) does not have an ItemDisplay component attached to it " +
-                    $"(you have ItemDisplayRuleType.ParentedPrefab rules), " +
-                    $"the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
+                R2API.Logger.LogWarning($"ItemDef.pickupModelPrefab ({item.ItemDef.name}) does not have an ItemDisplay component attached to it " +
+                    "(there are ItemDisplayRuleType.ParentedPrefab rules), " +
+                    "the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
             }
 
             bool xmlSafe = false;
@@ -166,22 +166,22 @@ namespace R2API {
             }
 
             if (item.EquipmentDef == null) {
-                R2API.Logger.LogError("Your EquipmentDef is null ! Can't add your Equipment.");
+                R2API.Logger.LogError("EquipmentDef is null ! Can't add the custom Equipment.");
             }
 
             if (string.IsNullOrEmpty(item.EquipmentDef.name)) {
-                R2API.Logger.LogError("Your EquipmentDef.name is null or empty ! Can't add your Equipment.");
+                R2API.Logger.LogError("EquipmentDef.name is null or empty ! Can't add the custom Equipment.");
             }
 
             if (!item.EquipmentDef.pickupModelPrefab) {
-                R2API.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab, the game will show nothing when the item is on the ground.");
+                R2API.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab ({item.EquipmentDef.name}), the game will show nothing when the item is on the ground.");
             }
             else if (item.ItemDisplayRules != null &&
                 item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
                 !item.EquipmentDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
-                R2API.Logger.LogWarning($"Your EquipmentDef.pickupModelPrefab ({item.EquipmentDef.name}) does not have an ItemDisplay component attached to it " +
-                    $"(you have ItemDisplayRuleType.ParentedPrefab rules), " +
-                    $"the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
+                R2API.Logger.LogWarning($"EquipmentDef.pickupModelPrefab ({item.EquipmentDef.name}) does not have an ItemDisplay component attached to it " +
+                    "(there are ItemDisplayRuleType.ParentedPrefab rules), " +
+                    "the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
             }
 
             bool xmlSafe = false;
