@@ -1,0 +1,26 @@
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "xiaoxiao921"
+name = "R2API"
+versionNumber = "0.0.1"
+description = "A modding API for Risk of Rain 2"
+websiteUrl = "https://github.com/risk-of-thunder/R2API"
+containsNsfwContent = false
+
+[package.dependencies]
+
+[build]
+icon = "./icon.png"
+readme = "./README.md"
+outdir = "./build"
+
+[[build.copy]]
+source = "./ReleaseOutput"
+target = "./plugins/R2API"
+
+[publish]
+repository = "https://thunderstore.io"
+communities = []
+categories = []

@@ -1,0 +1,33 @@
+name: Thunderstore Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  
+    steps:
+          
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Get the version from the release github tag
+      id: get-version
+      run: echo ::set-output name=ver::${GITHUB_REF#refs/tags/}
+    - name: Update version
+      run: |
+        sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"${{steps.get-version.outputs.ver}}\"/" R2API/R2API.cs
+    - name: Run Tests
+      run: |
+        dotnet test
+    - uses: actions/setup-dotnet@v1.7.2
+    - run: dotnet build . --configuration Release --output ./ReleaseOutput
+    - name: Cleanup Release Output
+      run: |
+        find ./ReleaseOutput ! -name *.dll ! -name *.xml -type f -delete
+    - name: Publish to thunderstore.io
+      uses: xiaoxiao921/thunderstore-cli@0.1.2-alpha.1
+      with:
+        package-version: ${{steps.get-version.outputs.ver}}
