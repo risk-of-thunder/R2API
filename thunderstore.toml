@@ -22,5 +22,5 @@ target = "./plugins/R2API"
 
 [publish]
 repository = "https://thunderstore.dev"
-communities = []
+communities = ["riskofrain2"]
 categories = []
