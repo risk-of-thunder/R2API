@@ -21,6 +21,6 @@ source = "./ReleaseOutput"
 target = "./plugins/R2API"
 
 [publish]
-repository = "https://thunderstore.io"
+repository = "https://thunderstore.dev"
 communities = []
 categories = []
