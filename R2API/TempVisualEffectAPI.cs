@@ -42,7 +42,7 @@ namespace R2API {
 
         internal static List<TemporaryVisualEffectStruct> tves = new List<TemporaryVisualEffectStruct>();
         internal static Dictionary<string, TemporaryVisualEffectStruct> tveDict = new Dictionary<string, TemporaryVisualEffectStruct>();
-        internal static readonly string moddedString = "R2APIModded:";
+        internal const string moddedString = "R2APIModded:";
 
         /// <summary>
         /// Adds a custom TemporaryVisualEffect (TVEs) to the static tves List and Dict.
@@ -58,28 +58,23 @@ namespace R2API {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(TempVisualEffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(TempVisualEffectAPI)})]");
             }
+            if (effectPrefab == null) {
+                R2API.Logger.LogError($"Failed to add TVE: GameObject is null"); throw new ArgumentNullException($"{nameof(effectPrefab)} can't be null");
+            }
             if (_TVEsAdded) {
-                R2API.Logger.LogError($"Tried to add TVE: {effectPrefab} after TVE list was created");
-                return false;
+                R2API.Logger.LogError($"Failed to add TVE: {effectPrefab.name} after TVE list was created"); return false;
+            }
+            if (condition == null) {
+                R2API.Logger.LogError($"Failed to add TVE: {effectPrefab.name} no condition attached"); return false;
+            }
+            if (tves.Any(name => name.effectName == effectPrefab.name)) {
+                R2API.Logger.LogError($"Failed to add TVE: {effectPrefab.name} name already exists in list"); return false;
+            }
+            if (!effectPrefab.GetComponent<TemporaryVisualEffect>()) {
+                R2API.Logger.LogError($"Failed to add TVE: {effectPrefab.name} GameObject has no TemporaryVisualEffect component"); return false;
             }
 
             var newTVE = new TemporaryVisualEffectStruct();
-
-            if (effectPrefab == null) {
-                R2API.Logger.LogError($"Tried to add TVE: {effectPrefab.name} GameObject is null"); return false;
-            }
-            if (condition == null) {
-                R2API.Logger.LogError($"Tried to add TVE: {effectPrefab.name} no condition attached"); return false;
-            }
-            if (tves.Any(effect => effect.effectPrefab == effectPrefab)) {
-                R2API.Logger.LogError($"Tried to add TVE: {effectPrefab.name} gameObject already exists in list"); return false;
-            }
-            if (tves.Any(name => name.effectName == effectPrefab.name)) {
-                R2API.Logger.LogError($"Tried to add TVE: {effectPrefab.name} name already exists in list"); return false;
-            }
-            if (!effectPrefab.GetComponent<TemporaryVisualEffect>()) {
-                R2API.Logger.LogError($"Tried to add TVE: {effectPrefab.name} GameObject has no TemporaryVisualEffect component"); return false;
-            }
 
             newTVE.effectPrefab = effectPrefab;
             newTVE.useBestFitRadius = useBestFitRadius;
@@ -88,7 +83,7 @@ namespace R2API {
             newTVE.effectName = effectPrefab.name;
 
             tves.Add(newTVE);
-            tveDict.Add(moddedString + effectPrefab.name, newTVE);
+            tveDict.Add(moddedString + newTVE.effectName, newTVE);
             R2API.Logger.LogMessage($"Added new TVE: {newTVE}");
             return true;
         }
@@ -125,7 +120,7 @@ namespace R2API {
             if (controller) {
                 for (int i = 0; i < controller.localTVEs.Count; i++) {
                     TempVisualEffectAPI.TemporaryVisualEffectStruct temp = controller.localTVEs[i];
-                    self.UpdateSingleTemporaryVisualEffect(ref temp.effect, moddedString + temp.effectPrefab.name, temp.useBestFitRadius ? self.radius : self.bestFitRadius, temp.condition.Invoke(self), temp.childLocatorOverride);
+                    self.UpdateSingleTemporaryVisualEffect(ref temp.effect, moddedString + temp.effectName, temp.useBestFitRadius ? self.radius : self.bestFitRadius, temp.condition.Invoke(self), temp.childLocatorOverride);
                     controller.localTVEs[i] = temp;
                 }
             }
@@ -134,10 +129,10 @@ namespace R2API {
         private static void UpdateSingleHook(ILContext il) {
             var cursor = new ILCursor(il);
 
-            GameObject GetCustomTVE(GameObject vanillaLoaded, string ResourceString)
+            GameObject GetCustomTVE(GameObject vanillaLoaded, string resourceString)
                 {
                 if (!vanillaLoaded) {
-                    if (tveDict.TryGetValue(ResourceString, out var customTVEPrefab)) {
+                    if (tveDict.TryGetValue(resourceString, out var customTVEPrefab)) {
                         return customTVEPrefab.effectPrefab;
                     }
                 }
