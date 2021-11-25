@@ -48,6 +48,7 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 * [EliteAPI now exposes the default elite tiers array (through VanillaEliteTiers) before any changes are made to it for modder that want to change the vanilla elite tiers. Also, adding to the custom elite tier array now by default insert based on the cost multiplier of the elite tier.](https://github.com/risk-of-thunder/R2API/pull/308)
 * [RecalculateStatsAPI now warns modders that the submodule could be not loaded](https://github.com/risk-of-thunder/R2API/pull/307)
 * [Fix SoundAPI throwing on dedicated server](https://github.com/risk-of-thunder/R2API/pull/306)
+* [Added VisualTempAPI](https://github.com/risk-of-thunder/R2API/pull/313)
 
 **3.0.59**
 

@@ -110,7 +110,6 @@ namespace R2API {
         }
 
         private static void BodyStart(CharacterBody body) {
-
             if (!body.gameObject.GetComponent<R2APITVEController>()) {
                 body.gameObject.AddComponent<R2APITVEController>();
             }
