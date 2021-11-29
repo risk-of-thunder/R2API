@@ -54,7 +54,7 @@ namespace R2API {
         /// <param name="useBestFitRadius"></param>
         /// /// <param name="condition"></param>
         /// <param name="childLocatorOverride"></param>
-        public static bool AddTemporaryVisualEffect(GameObject effectPrefab, bool useBestFitRadius, EffectCondition condition, string childLocatorOverride = "") {
+        public static bool AddTemporaryVisualEffect(GameObject effectPrefab, EffectCondition condition, bool useBestFitRadius = false, string childLocatorOverride = "") {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(TempVisualEffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(TempVisualEffectAPI)})]");
             }
