@@ -227,6 +227,12 @@ namespace R2API {
         {
             return AddUnlockable<TUnlockable>(null, unlockableDef);
         }
+        public static UnlockableDef AddUnlockable(Type unlockableType, Type serverTrackerType) {
+            return AddUnlockable(unlockableType, serverTrackerType, null);
+        }
+        public static UnlockableDef AddUnlockable(Type unlockableType, UnlockableDef unlockableDef) {
+            return AddUnlockable(unlockableType, null, unlockableDef);
+        }
 
         /// <summary>
         /// Add an unlockable tied to an achievement.
@@ -236,13 +242,24 @@ namespace R2API {
         /// <param name="serverTrackerType">Type that inherits from BaseServerAchievement for achievements that the server needs to track</param>
         /// <param name="unlockableDef">For UnlockableDefs created in advance. Leaving null will generate an UnlockableDef instead.</param>
         /// <returns></returns>
-        public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType = null, UnlockableDef unlockableDef = null) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
-        {
+        public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType = null, UnlockableDef unlockableDef = null) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
+            return AddUnlockable(typeof(TUnlockable), serverTrackerType, unlockableDef);
+        }
+
+        /// <summary>
+        /// Add an unlockable tied to an achievement.
+        /// For an example usage check <see href="https://github.com/ArcPh1r3/HenryTutorial/blob/master/HenryMod/Modules/Achievements/HenryMasteryAchievement.cs">rob repository</see>
+        /// </summary>
+        /// <param name="unlockableType">Class that inherits from BaseAchievement and implements IModdedUnlockableDataProvider</typeparam>
+        /// <param name="serverTrackerType">Type that inherits from BaseServerAchievement for achievements that the server needs to track</param>
+        /// <param name="unlockableDef">For UnlockableDefs created in advance. Leaving null will generate an UnlockableDef instead.</param>
+        /// <returns></returns>
+        public static UnlockableDef AddUnlockable(Type unlockableType, Type serverTrackerType = null, UnlockableDef unlockableDef = null) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(UnlockableAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockableAPI)})]");
             }
 
-            var instance = new TUnlockable();
+            var instance = Activator.CreateInstance(unlockableType) as IModdedUnlockableDataProvider;
 
             if (_unlockableCatalogInitialized) {
                 throw new InvalidOperationException($"Too late ! Tried to add unlockable: {instance.UnlockableIdentifier} after the unlockable list was created");
