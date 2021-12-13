@@ -13,7 +13,7 @@ namespace R2API {
     public class ArtifactCode : ScriptableObject {
 
         private const string constant = "For a list of accepted vanilla compound values, check ArtifactCodeAPI.CompoundValues";
-
+        [Header(constant)]
         /// <summary>
         /// Compound values that represent the top 3 compounds. For a list of accepted vanilla compound values, check ArtifactCodeAPI.CompoundValues
         /// </summary>
