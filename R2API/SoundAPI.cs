@@ -182,9 +182,9 @@ namespace R2API {
                 internal uint PublicID;
 
                 /// <summary>
-                /// Pointer for the wwise engine
+                /// Handle for BankData array
                 /// </summary>
-                internal IntPtr Memory;
+                internal GCHandle Memory;
 
                 /// <summary>
                 /// Identifier for the engine
@@ -196,20 +196,17 @@ namespace R2API {
                 /// </summary>
                 /// <returns>True if the bank successfully loaded, false otherwise</returns>
                 internal bool Load() {
-                    //Creates IntPtr of sufficient size.
-                    Memory = Marshal.AllocHGlobal(BankData.Length);
+                    // Pins BankData array in memory
+                    Memory = GCHandle.Alloc(BankData, GCHandleType.Pinned);
 
-                    //copies the byte array to the IntPtr
-                    Marshal.Copy(BankData, 0, Memory, BankData.Length);
-
-                    //Loads the entire IntPtr as a bank
-                    var result = AkSoundEngine.LoadBank(Memory, (uint)BankData.Length, out BankID);
+                    //Loads the entire array as a bank
+                    var result = AkSoundEngine.LoadBank(Memory.AddrOfPinnedObject(), (uint)BankData.Length, out BankID);
                     if (result != AKRESULT.AK_Success) {
                         Debug.LogError("WwiseUnity: AkMemBankLoader: bank loading failed with result " + result);
                         return false;
                     }
 
-                    //BankData is now copied to Memory so is unnecassary
+                    //BankData is held by the GCHandle, no reason to keep it as a managed array
                     BankData = null;
                     return true;
                 }
@@ -219,12 +216,12 @@ namespace R2API {
                 /// </summary>
                 /// <returns>The AKRESULT of unloading itself</returns>
                 internal AKRESULT UnLoad() {
-                    var result = AkSoundEngine.UnloadBank(BankID, Memory);
+                    var result = AkSoundEngine.UnloadBank(BankID, Memory.AddrOfPinnedObject());
                     if (result != AKRESULT.AK_Success) {
                         Debug.LogError("Failed to unload bank " + PublicID.ToString() + ": " + result.ToString());
                         return result;
                     }
-                    Marshal.FreeHGlobal(Memory);
+                    Memory.Free();
                     soundBanks.Remove(this);
                     return result;
                 }
