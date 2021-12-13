@@ -59,15 +59,11 @@ namespace R2API {
             AddBanksAfterEngineInitHook = new Hook(
                 typeof(AkWwiseInitializationSettings).GetMethodCached(nameof(AkWwiseInitializationSettings.InitializeSoundEngine)),
                 typeof(SoundAPI).GetMethodCached(nameof(AddBanksAfterEngineInit)));
-
-            Music.SetHooks();
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             AddBanksAfterEngineInitHook.Dispose();
-
-            Music.UnsetHooks();
         }
 
         private static bool AddBanksAfterEngineInit(Func<bool> orig) {
@@ -330,10 +326,176 @@ namespace R2API {
         #endregion NetworkSoundEventCatalog Setup
 
         /// <summary>
+        /// Class for adding Music to the game using MusicTrackOverrides.
+        /// </summary>
+        public static class Music {
+
+            /// <summary>
+            /// A Wrapper class for handling a music track override.
+            /// </summary>
+            public class MusicOverride {
+                /// <summary>
+                /// The Instance of the MusicTrackOverride.
+                /// </summary>
+                public GameObject musicOverrideInstance;
+                /// <summary>
+                /// The prefab containing a Music Track Override.
+                /// </summary>
+                public GameObject MusicOverridePrefab { get; private set; }
+
+                /// <summary>
+                /// The music track def that plays when the Music Override is instantiated
+                /// </summary>
+                public MusicTrackDef MusicTrackDef { get => MusicOverridePrefab.GetComponent<MusicTrackOverride>().track; }
+
+                /// <summary>
+                /// The Prefab's music track priority.
+                /// <para>The music track override with the highest priority will be the one that'll play music.</para>
+                /// </summary>
+                public int PrefabPriority { get => MusicOverridePrefab.GetComponent<MusicTrackOverride>().priority; set => MusicOverridePrefab.GetComponent<MusicTrackOverride>().priority = value; }
+
+                /// <summary>
+                /// Constructor for creating a MusicOverride
+                /// </summary>
+                /// <param name="musicTrackDef">The MusicTrackDef that's associated to this MusicOverride</param>
+                /// <param name="priority">The Music's Priority</param>
+                public MusicOverride(MusicTrackDef musicTrackDef, int priority) {
+                    if (!Loaded) {
+                        throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
+                    }
+                    MusicOverridePrefab = new GameObject();
+                    var musicTrackOverride = MusicOverridePrefab.AddComponent<MusicTrackOverride>();
+                    musicTrackOverride.track = musicTrackDef;
+                    musicTrackOverride.priority = priority;
+                }
+
+                /// <summary>
+                /// Stops the music from playing if an instance exists.
+                /// </summary>
+                public void Stop() {
+                    if (!Loaded) {
+                        throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
+                    }
+                    if (!musicOverrideInstance) {
+                        R2API.Logger.LogWarning($"No override instance with track {MusicTrackDef} found.");
+                    }
+                    else {
+                        GameObject.Destroy(musicOverrideInstance);
+                    }
+                }
+
+                /// <summary>
+                /// Instantiates a new instance of the MusicOverride
+                /// </summary>
+                public void Play() {
+                    if (!Loaded) {
+                        throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
+                    }
+                    if (musicOverrideInstance) {
+                        R2API.Logger.LogWarning($"Cannot instantiate more than 1 music overrides with track {MusicTrackDef}");
+                    }
+                    else {
+                        musicOverrideInstance = UnityEngine.Object.Instantiate(MusicOverridePrefab);
+                    }
+                }
+
+                public void Play(float time) {
+                    if (!Loaded) {
+                        throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
+                    }
+                    if (musicOverrideInstance) {
+                        R2API.Logger.LogInfo($"Cannot instantiate more than 1 music overrides with track {MusicTrackDef}, setting Destroy On Timer regardless.");
+                        musicOverrideInstance.AddComponent<DestroyOnTimer>().duration = time;
+                    }
+                    else {
+                        musicOverrideInstance = UnityEngine.Object.Instantiate(MusicOverridePrefab);
+                        musicOverrideInstance.AddComponent<DestroyOnTimer>().duration = time;
+                    }
+                }
+
+                public void Pause() {
+                    if (!Loaded) {
+                        throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
+                    }
+                    if (!musicOverrideInstance) {
+                        R2API.Logger.LogInfo($"Cannot pause music override with track {MusicTrackDef} because no instance exists");
+                    }
+                    else {
+                        musicOverrideInstance.SetActive(false);
+                    }
+                }
+
+                public void Resume() {
+                    if (!Loaded) {
+                        throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
+                    }
+                    if (!musicOverrideInstance) {
+                        R2API.Logger.LogInfo($"Cannot resume music override with track {MusicTrackDef} because no instance exists");
+                    }
+                    else {
+                        musicOverrideInstance.SetActive(true);
+                    }
+                }
+
+                public void ChangePriority(int newPriority) {
+                    if (!Loaded) {
+                        throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
+                    }
+                    if (!musicOverrideInstance) {
+                        R2API.Logger.LogInfo($"Cannot change priority of music override with track {MusicTrackDef} because no instance exists");
+                    }
+                    else {
+                        musicOverrideInstance.GetComponent<MusicTrackOverride>().priority = newPriority;
+                    }
+                }
+            }
+
+            private static Dictionary<MusicTrackDef, MusicOverride> MusicTrackToMusicOverride = new Dictionary<MusicTrackDef, MusicOverride>();
+
+            public static bool AddMusicTrack(MusicTrackDef musicTrackDef, int priority) {
+                if (!Loaded) {
+                    throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
+                }
+                try {
+                    MusicOverride musicOverride = new MusicOverride(musicTrackDef, priority);
+
+                    if(MusicTrackToMusicOverride.ContainsKey(musicTrackDef)) {
+                        MusicTrackToMusicOverride.Add(musicTrackDef, musicOverride);
+                        return true;
+                    }
+                    else {
+                        throw new InvalidOperationException($"A Dictionary key with value {musicTrackDef} has already been addded.");
+                    }
+                }
+                catch (Exception e) {
+                    R2API.Logger.LogError($"Failed to add music track {musicTrackDef}: {e}");
+                    return false;
+                }
+            }
+
+            public static MusicOverride GetMusicOverride(MusicTrackDef musicTrackDef) {
+                if (!Loaded) {
+                    throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
+                }
+                try {
+                    if(MusicTrackToMusicOverride.TryGetValue(musicTrackDef, out MusicOverride musicOverride)) {
+                        return musicOverride;
+                    }
+                    else {
+                        throw new NullReferenceException($"Could not find a value for {musicTrackDef}");
+                    }
+                }
+                catch(Exception e) {
+                    R2API.Logger.LogError($"Failed to Get Music Override: {e}");
+                    return null;
+                }
+            }
+        }
+        /// <summary>
         /// Class for adding music to the game music system.
         /// <see href="https://github.com/risk-of-thunder/R2Wiki/wiki/Custom-Music---WWise">Tutorial available here</see>
         /// </summary>
-        public static class Music {
+        /*public static class Music {
 
             /// <summary>
             /// Class that contains all the needed information
@@ -782,6 +944,6 @@ namespace R2API {
                     }
                 }
             }
-        }
+        }*/
     }
 }
