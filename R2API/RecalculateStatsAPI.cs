@@ -111,6 +111,9 @@ namespace R2API {
 
             /// <summary>Added to the direct multiplier to level scaling. EFFECTIVE LEVEL ~ (BASE LEVEL * (BASE_LEVEL_SCALING + levelMultAdd)</summary>
             public float levelMultAdd = 0f;
+
+            /// <summary>Amount of Root effects currently applied. MOVE_SPEED ~ (moveSpeedRootCount > 0) ? 0 : MOVE_SPEED </summary>
+            public int moveSpeedRootCount = 0;
         }
 
         /// <summary>
@@ -502,9 +505,19 @@ namespace R2API {
                 x => x.MatchDiv(),
                 x => x.MatchMul(),
                 x => x.MatchStloc(locBaseSpeedIndex)
-            );
+            ) && c.TryGotoNext(MoveType.After,
+		x => x.MatchLdloc(out _),
+		x => x.MatchLdloc(out _),
+		x => x.MatchOr(),
+		x => x.MatchLdloc(out _),
+		x => x.MatchOr()
+	    );
 
             if (ILFound) {
+                c.EmitDelegate<Func<bool>>(() => {
+                    return (StatMods.moveSpeedRootCount > 0);
+                });
+                c.Emit(OpCodes.Or);
                 c.GotoPrev(x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.levelMoveSpeed)));
                 c.GotoNext(x => x.MatchStloc(locBaseSpeedIndex));
                 c.EmitDelegate<Func<float, float>>((origBaseMoveSpeed) => {
