@@ -6,6 +6,7 @@ using RoR2.Achievements;
 using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 using BF = System.Reflection.BindingFlags;
@@ -178,8 +179,7 @@ namespace R2API {
             );
 
             void AddOurDefs(List<AchievementDef> achievementDefs, Dictionary<string, AchievementDef> stringToAchievementDef, List<string> identifiers) {
-                for (var i = 0; i < Unlockables.Count; i++) {
-                    var unlockable = Unlockables[i];
+                for (var i = 0; i < Achievements.Count; i++) {
                     var achievement = Achievements[i];
 
                     if (achievement is null) {
@@ -232,6 +232,31 @@ namespace R2API {
         }
         public static UnlockableDef AddUnlockable(Type unlockableType, UnlockableDef unlockableDef) {
             return AddUnlockable(unlockableType, null, unlockableDef);
+        }
+
+        /// <summary>
+        /// Adds an AchievementDef to the list of achievements to add to the game
+        /// </summary>
+        /// <param name="achievementDef">The achievementDef to add</param>
+        /// <returns>True if succesful, false otherwise</returns>
+        public static bool AddAchievement(AchievementDef achievementDef) {
+            if (!Loaded) {
+                throw new InvalidOperationException($"{nameof(UnlockableAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockableAPI)})]");
+            }
+            var identifiers = Achievements.Select(achievementDef => achievementDef.identifier);
+            try {
+                if(identifiers.Contains(achievementDef.identifier)) {
+                    throw new InvalidOperationException($"The achievement identifier '{achievementDef.identifier}' is already used by another mod.");
+                }
+                else {
+                    Achievements.Add(achievementDef);
+                    return true;
+                }
+            }
+            catch (Exception e){
+                R2API.Logger.LogError($"An error has occured while trying to add a new AchievementDef: {e}");
+                return false;
+            }
         }
 
         /// <summary>
