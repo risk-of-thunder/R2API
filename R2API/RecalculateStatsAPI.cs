@@ -108,6 +108,9 @@ namespace R2API {
 
             /// <summary>Added to base jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd)* (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
             public float baseJumpPowerAdd = 0f;
+
+            /// <summary>Added to the direct multiplier to level scaling. EFFECTIVE LEVEL ~ (BASE LEVEL * (BASE_LEVEL_SCALING + levelMultAdd)</summary>
+            public float levelMultAdd = 0f;
         }
 
         /// <summary>
@@ -156,6 +159,7 @@ namespace R2API {
             ModifyArmorStat(c);
             ModifyCurseStat(c);
             ModifyCooldownStat(c);
+            ModifyLevelingStat(c);
         }
 
         private static void GetStatMods(CharacterBody characterBody) {
@@ -232,6 +236,26 @@ namespace R2API {
                 R2API.Logger.LogError($"{nameof(ModifyCooldownStat)} failed.");
             }
         }
+
+
+        private static void ModifyLevelingStat(ILCursor c) {
+            c.Index = 0;
+            bool ILFound = c.TryGotoNext(MoveType.After,
+                x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertyGetter(nameof(CharacterBody.level))),
+        x => x.MatchLdcR4(1),
+        x => x.MatchSub()
+            );
+
+            if (ILFound) {
+                c.EmitDelegate<Func<float, float>>((oldScaling) => {
+                    return oldScaling * (1 + StatMods.levelMultAdd);
+                });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyLevelingStat)} failed.");
+            }
+        }
+
         private static void ModifyArmorStat(ILCursor c) {
             c.Index = 0;
 
