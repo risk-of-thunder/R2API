@@ -37,7 +37,7 @@ namespace R2API {
         /// </summary>
         public class StatHookEventArgs : EventArgs {
 
-            /// <summary>Added to the direct multiplier to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd).</summary>
+            /// <summary>Added to the direct multiplier to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd) / (BASE_CURSE_PENALTY + baseCurseAdd).</summary>
             public float healthMultAdd = 0f;
 
             /// <summary>Added to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd).</summary>
@@ -81,6 +81,9 @@ namespace R2API {
 
             /// <summary>Added to armor. ARMOR ~ BASE_ARMOR + armorAdd.</summary>
             public float armorAdd = 0f;
+
+            /// <summary> Added to Curse Penalty.MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd) / (BASE_CURSE_PENALTY + baseCurseAdd)</summary>
+            public float baseCurseAdd = 0f;
         }
 
         /// <summary>
@@ -127,6 +130,7 @@ namespace R2API {
             ModifyAttackSpeedStat(c);
             ModifyCritStat(c);
             ModifyArmorStat(c);
+            ModifyCurseStat(c);
         }
 
         private static void GetStatMods(CharacterBody characterBody) {
@@ -141,6 +145,28 @@ namespace R2API {
                         R2API.Logger.LogError($"Exception thrown by : {@event.Method.DeclaringType.Name}.{@event.Method.Name}:\n{e}");
                     }
                 }
+            }
+        }
+
+
+        private static void ModifyCurseStat(ILCursor c) {
+            c.Index = 0;
+
+            bool ILFound = c.TryGotoNext(
+        x => x.MatchLdarg(0),
+                x => x.MatchLdcR4(1),
+                x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.cursePenalty))
+        ));
+
+            if (ILFound) {
+                c.MoveAfterLabels();
+                c.Emit(OpCodes.Ldarg_0);
+                c.EmitDelegate<Action<CharacterBody>>((body) => {
+                    body.cursePenalty += StatMods.baseCurseAdd;
+                });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyCurseStat)} failed.");
             }
         }
 
