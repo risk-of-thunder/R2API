@@ -61,7 +61,7 @@ namespace R2API {
             /// <summary>Added reduction multiplier to move speed. MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd / MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</summary>
             public float moveSpeedReductionMultAdd = 0f;
 
-            /// <summary>Added to the direct multiplier to jump power. JUMP_POWER ~ BASE_JUMP_POWER * (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
+            /// <summary>Added to the direct multiplier to jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd) * (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
             public float jumpPowerMultAdd = 0f;
 
             /// <summary>Added to the direct multiplier to base damage. DAMAGE ~ (BASE_DAMAGE + baseDamageAdd) * (DAMAGE_MULT + damageMultAdd).</summary>
@@ -105,6 +105,9 @@ namespace R2API {
 
             /// <summary>Added to the direct multiplier to base shield</summary>
             public float shieldMultAdd = 0f;
+
+            /// <summary>Added to base jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd)* (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
+            public float baseJumpPowerAdd = 0f;
         }
 
         /// <summary>
@@ -352,7 +355,7 @@ namespace R2API {
 
             if (ILFound) {
                 c.EmitDelegate<Func<float, float>>((origJumpPower) => {
-                    return origJumpPower * (1 + StatMods.jumpPowerMultAdd);
+                    return (origJumpPower + StatMods.baseJumpPowerAdd) * (1 + StatMods.jumpPowerMultAdd);
                 });
             }
             else {
