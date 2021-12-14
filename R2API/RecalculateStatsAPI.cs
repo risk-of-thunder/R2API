@@ -102,6 +102,9 @@ namespace R2API {
 
             /// <summary> (Special) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + specialCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
             public float specialCooldownMultAdd = 0f;
+
+            /// <summary>Added to the direct multiplier to base shield</summary>
+            public float shieldMultAdd = 0f;
         }
 
         /// <summary>
@@ -401,9 +404,18 @@ namespace R2API {
                 x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.levelMaxShield))
             ) && c.TryGotoNext(
                 x => x.MatchStloc(out locBaseShieldIndex)
-            );
+            ) && c.TryGotoNext(
+		x => x.MatchLdloc(locBaseShieldIndex),
+		x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.maxShield)))
+	    );
 
             if (ILFound) {
+                c.Index++;
+                c.EmitDelegate<Func<float, float>>((origMaxShield) => {
+                    return origMaxShield * (1 + StatMods.shieldMultAdd);
+                });
+                c.GotoPrev(x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.levelMaxShield)));
+                c.GotoNext(x => x.MatchStloc(out locBaseShieldIndex));
                 c.EmitDelegate<Func<float, float>>((origBaseShield) => {
                     return origBaseShield + StatMods.baseShieldAdd;
                 });
