@@ -84,6 +84,24 @@ namespace R2API {
 
             /// <summary> Added to Curse Penalty.MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd) / (BASE_CURSE_PENALTY + baseCurseAdd)</summary>
             public float baseCurseAdd = 0f;
+            
+	    /// <summary>Added to flat cooldown reduction. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd) </summary>
+            public float cooldownReductionAdd = 0f;
+
+            /// <summary>Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
+            public float cooldownMultAdd = 0f;
+
+            /// <summary> (Primary) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + primaryCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
+            public float primaryCooldownMultAdd = 0f;
+
+            /// <summary> (Secondary) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd+ secondaryCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
+            public float secondaryCooldownMultAdd = 0f;
+
+            /// <summary> (Utility) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + utilityCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
+            public float utilityCooldownMultAdd = 0f;
+
+            /// <summary> (Special) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + specialCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
+            public float specialCooldownMultAdd = 0f;
         }
 
         /// <summary>
@@ -131,6 +149,7 @@ namespace R2API {
             ModifyCritStat(c);
             ModifyArmorStat(c);
             ModifyCurseStat(c);
+            ModifyCooldownStat(c);
         }
 
         private static void GetStatMods(CharacterBody characterBody) {
@@ -170,6 +189,43 @@ namespace R2API {
             }
         }
 
+
+        private static void ModifyCooldownStat(ILCursor c) {
+            c.Index = 0;
+            int ILFound = 0;
+            while (c.TryGotoNext(
+            x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale)))
+                ) && c.TryGotoNext(
+            x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction)))
+                )) { ILFound++; }
+
+            if (ILFound >= 4) {
+                c.Index = 0;
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.primaryCooldownMultAdd); });
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.secondaryCooldownMultAdd); });
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.utilityCooldownMultAdd); });
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+
+
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.specialCooldownMultAdd); });
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyCooldownStat)} failed.");
+            }
+        }
         private static void ModifyArmorStat(ILCursor c) {
             c.Index = 0;
 
