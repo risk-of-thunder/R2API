@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil.Cil;
@@ -94,8 +94,13 @@ namespace R2API {
             Array.Resize(ref _customDotVisuals, _customDotVisuals.Length + 1);
             _customDotVisuals[customArrayIndex] = customDotVisual;
 
-            string addedDot = dotDef.associatedBuff != null ? $"Custom Dot (Index: {dotDefIndex}) that uses Buff : {dotDef.associatedBuff.name} added" : $"Custom Dot (Index: {dotDefIndex}) with no associated Buff added";
-            R2API.Logger.LogInfo(addedDot);
+            if (dotDef.associatedBuff != null) {
+                R2API.Logger.LogInfo($"Custom Dot (Index: {dotDefIndex}) that uses Buff : {dotDef.associatedBuff.name} added");
+            } else {
+                R2API.Logger.LogInfo($"Custom Dot (Index: {dotDefIndex}) with no associated Buff added");
+            }
+            
+            
             return (DotController.DotIndex)dotDefIndex;
         }
 
