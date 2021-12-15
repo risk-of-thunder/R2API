@@ -184,7 +184,7 @@ namespace R2API {
         private static void ModifyCurseStat(ILCursor c) {
             c.Index = 0;
 
-            bool ILFound = c.TryGotoNext(
+            bool ILFound = c.TryGotoNext( MoveType.After,
         x => x.MatchLdarg(0),
                 x => x.MatchLdcR4(1),
                 x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.cursePenalty))
