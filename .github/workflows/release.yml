@@ -31,5 +31,5 @@ jobs:
     - name: Publish to thunderstore.io
       uses: xiaoxiao921/thunderstore-cli@0.1.2-alpha.1
       with:
-        package-version: $GitVersion_SemVer
+        package-version: ${{ env.GitVersion_SemVer }}
         token: ${{ secrets.TCLI_AUTH_TOKEN }}
