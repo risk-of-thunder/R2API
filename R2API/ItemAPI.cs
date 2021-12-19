@@ -205,10 +205,18 @@ namespace R2API {
         #endregion Add Methods
 
         #region Other Modded Content Support
+        /// <summary>
+        /// Prevents bodies and charactermodels matching this name from having nonspecific item display rules applied to them
+        /// </summary>
+        /// <param name="bodyPrefabOrCharacterModelName">The string to match</param>
         public static void DoNotAutoIDRSFor(string bodyPrefabOrCharacterModelName) {
             noDefaultIDRSCharacterList.Add(bodyPrefabOrCharacterModelName);
         }
 
+        /// <summary>
+        /// Prevent prefabs with this name having nonspecific item display rules applied to them
+        /// </summary>
+        /// <param name="bodyPrefab">The body prefab to match</param>
         public static void DoNotAutoIDRSFor(GameObject bodyPrefab) {
             var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
             if (characterModel) {
