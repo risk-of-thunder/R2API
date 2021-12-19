@@ -1,4 +1,4 @@
-﻿using Mono.Cecil.Cil;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
@@ -24,6 +24,8 @@ namespace R2API {
 
         private static bool _itemCatalogInitialized;
         private static bool _equipmentCatalogInitialized;
+
+        private static ICollection<string> noDefaultIDRSCharacterList = new List<string>();
 
         public static int CustomItemCount, CustomEquipmentCount;
 
@@ -202,6 +204,24 @@ namespace R2API {
 
         #endregion Add Methods
 
+        #region otherModdedContentSupport
+        public static void DoNotAutoIDRSFor(string bodyPrefabOrCharacterModelName) {
+            noDefaultIDRSCharacterList.Add(bodyPrefabOrCharacterModelName);
+        }
+
+        public static void DoNotAutoIDRSFor(GameObject bodyPrefab) {
+            var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
+            if (characterModel) {
+                DoNotAutoIDRSFor(bodyPrefab.name);
+                DoNotAutoIDRSFor(characterModel);
+            }
+        }
+
+        public static void DoNotAutoIDRSFor(CharacterModel characterModel) {
+            DoNotAutoIDRSFor(characterModel.name);
+        }
+        #endregion
+
         #region ItemDisplay Hooks
 
         // With how unfriendly it is to makes your 3D Prefab work with shaders from the game,
@@ -256,14 +276,23 @@ namespace R2API {
                     if (!characterModel.itemDisplayRuleSet) {
                         characterModel.itemDisplayRuleSet = ScriptableObject.CreateInstance<ItemDisplayRuleSet>();
                     }
+                    var modelName = characterModel.name;
+                    var bodyName = bodyPrefab.name;
+                    bool allowDefault = true;
+                    if (noDefaultIDRSCharacterList.Contains(modelName) || noDefaultIDRSCharacterList.Contains(bodyName)) {
+                        allowDefault = false;
+                    }
 
                     foreach (var customItem in ItemDefinitions) {
                         var customRules = customItem.ItemDisplayRules;
                         if (customRules != null) {
                             //if a specific rule for this model exists, or the model has no rules for this item
-                            if (customRules.TryGetRules(characterModel.name, out var rules) ||
-                                customRules.TryGetRules(bodyPrefab.name, out rules) || 
-                                characterModel.itemDisplayRuleSet.GetItemDisplayRuleGroup(customItem.ItemDef.itemIndex).rules == null) {
+                            if (customRules.TryGetRules(modelName, out ItemDisplayRule[]? rules) ||
+                                customRules.TryGetRules(bodyName, out rules) ||
+                                (
+                                    allowDefault &&
+                                    characterModel.itemDisplayRuleSet.GetItemDisplayRuleGroup(customItem.ItemDef.itemIndex).rules == null
+                                )) {
                                 characterModel.itemDisplayRuleSet.SetDisplayRuleGroup(customItem.ItemDef, new DisplayRuleGroup { rules = rules });
                             }
                         }
@@ -273,9 +302,12 @@ namespace R2API {
                         var customRules = customEquipment.ItemDisplayRules;
                         if (customRules != null) {
                             //if a specific rule for this model exists, or the model has no rules for this equipment
-                            if (customRules.TryGetRules(characterModel.name, out var rules) ||
-                                customRules.TryGetRules(bodyPrefab.name, out rules) ||
-                                characterModel.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null) {
+                            if (customRules.TryGetRules(modelName, out ItemDisplayRule[]? rules) ||
+                                customRules.TryGetRules(bodyName, out rules) ||
+                                (
+                                    allowDefault &&
+                                    characterModel.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null
+                                )) {
                                 characterModel.itemDisplayRuleSet.SetDisplayRuleGroup(customEquipment.EquipmentDef, new DisplayRuleGroup { rules = rules });
                             }
                         }
