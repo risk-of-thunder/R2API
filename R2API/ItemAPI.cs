@@ -213,12 +213,7 @@ namespace R2API {
             var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
             if (characterModel) {
                 DoNotAutoIDRSFor(bodyPrefab.name);
-                DoNotAutoIDRSFor(characterModel);
             }
-        }
-
-        public static void DoNotAutoIDRSFor(CharacterModel characterModel) {
-            DoNotAutoIDRSFor(characterModel.name);
         }
         #endregion
 
