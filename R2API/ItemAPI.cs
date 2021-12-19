@@ -204,7 +204,7 @@ namespace R2API {
 
         #endregion Add Methods
 
-        #region otherModdedContentSupport
+        #region Other Modded Content Support
         public static void DoNotAutoIDRSFor(string bodyPrefabOrCharacterModelName) {
             noDefaultIDRSCharacterList.Add(bodyPrefabOrCharacterModelName);
         }
