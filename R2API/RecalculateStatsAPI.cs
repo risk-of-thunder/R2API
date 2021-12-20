@@ -37,7 +37,7 @@ namespace R2API {
         /// </summary>
         public class StatHookEventArgs : EventArgs {
 
-            /// <summary>Added to the direct multiplier to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd).</summary>
+            /// <summary>Added to the direct multiplier to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd) / (BASE_CURSE_PENALTY + baseCurseAdd).</summary>
             public float healthMultAdd = 0f;
 
             /// <summary>Added to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd).</summary>
@@ -61,7 +61,7 @@ namespace R2API {
             /// <summary>Added reduction multiplier to move speed. MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd / MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</summary>
             public float moveSpeedReductionMultAdd = 0f;
 
-            /// <summary>Added to the direct multiplier to jump power. JUMP_POWER ~ BASE_JUMP_POWER * (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
+            /// <summary>Added to the direct multiplier to jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd) * (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
             public float jumpPowerMultAdd = 0f;
 
             /// <summary>Added to the direct multiplier to base damage. DAMAGE ~ (BASE_DAMAGE + baseDamageAdd) * (DAMAGE_MULT + damageMultAdd).</summary>
@@ -81,6 +81,39 @@ namespace R2API {
 
             /// <summary>Added to armor. ARMOR ~ BASE_ARMOR + armorAdd.</summary>
             public float armorAdd = 0f;
+
+            /// <summary> Added to Curse Penalty.MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd) / (BASE_CURSE_PENALTY + baseCurseAdd)</summary>
+            public float baseCurseAdd = 0f;
+            
+	    /// <summary>Added to flat cooldown reduction. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd) </summary>
+            public float cooldownReductionAdd = 0f;
+
+            /// <summary>Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
+            public float cooldownMultAdd = 0f;
+
+            /// <summary> (Primary) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + primaryCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
+            public float primaryCooldownMultAdd = 0f;
+
+            /// <summary> (Secondary) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd+ secondaryCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
+            public float secondaryCooldownMultAdd = 0f;
+
+            /// <summary> (Utility) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + utilityCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
+            public float utilityCooldownMultAdd = 0f;
+
+            /// <summary> (Special) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + specialCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
+            public float specialCooldownMultAdd = 0f;
+
+            /// <summary>Added to the direct multiplier to base shield</summary>
+            public float shieldMultAdd = 0f;
+
+            /// <summary>Added to base jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd)* (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
+            public float baseJumpPowerAdd = 0f;
+
+            /// <summary>Added to the direct multiplier to level scaling. EFFECTIVE LEVEL ~ (BASE LEVEL * (BASE_LEVEL_SCALING + levelMultAdd)</summary>
+            public float levelMultAdd = 0f;
+
+            /// <summary>Amount of Root effects currently applied. MOVE_SPEED ~ (moveSpeedRootCount > 0) ? 0 : MOVE_SPEED </summary>
+            public int moveSpeedRootCount = 0;
         }
 
         /// <summary>
@@ -90,10 +123,25 @@ namespace R2API {
         /// <param name="args">An instance of StatHookEventArgs, passed to each subscriber to this event in turn for modification.</param>
         public delegate void StatHookEventHandler(CharacterBody sender, StatHookEventArgs args);
 
+        private static event StatHookEventHandler _getStatCoefficients;
         /// <summary>
         /// Subscribe to this event to modify one of the stat hooks which StatHookEventArgs covers. Fired during CharacterBody.RecalculateStats.
         /// </summary>
-        public static event StatHookEventHandler GetStatCoefficients;
+        public static event StatHookEventHandler GetStatCoefficients {
+            add {
+                if (!Loaded) {
+                    throw new InvalidOperationException($"{nameof(RecalculateStatsAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(RecalculateStatsAPI)})]");
+                }
+                _getStatCoefficients += value;
+            }
+
+            remove {
+                if (!Loaded) {
+                    throw new InvalidOperationException($"{nameof(RecalculateStatsAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(RecalculateStatsAPI)})]");
+                }
+                _getStatCoefficients -= value;
+            }
+        }
 
         private static StatHookEventArgs StatMods;
 
@@ -101,10 +149,7 @@ namespace R2API {
             ILCursor c = new ILCursor(il);
 
             c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Action<CharacterBody>>((cb) => {
-                StatMods = new StatHookEventArgs();
-                GetStatCoefficients?.Invoke(cb, StatMods);
-            });
+            c.EmitDelegate<Action<CharacterBody>>(GetStatMods);
 
             ModifyHealthStat(c);
             ModifyShieldStat(c);
@@ -115,6 +160,103 @@ namespace R2API {
             ModifyAttackSpeedStat(c);
             ModifyCritStat(c);
             ModifyArmorStat(c);
+            ModifyCurseStat(c);
+            ModifyCooldownStat(c);
+            ModifyLevelingStat(c);
+        }
+
+        private static void GetStatMods(CharacterBody characterBody) {
+            StatMods = new StatHookEventArgs();
+
+            if (_getStatCoefficients != null) {
+                foreach (StatHookEventHandler @event in _getStatCoefficients.GetInvocationList()) {
+                    try {
+                        @event(characterBody, StatMods);
+                    }
+                    catch (Exception e) {
+                        R2API.Logger.LogError($"Exception thrown by : {@event.Method.DeclaringType.Name}.{@event.Method.Name}:\n{e}");
+                    }
+                }
+            }
+        }
+
+
+        private static void ModifyCurseStat(ILCursor c) {
+            c.Index = 0;
+
+            bool ILFound = c.TryGotoNext( MoveType.After,
+        x => x.MatchLdarg(0),
+                x => x.MatchLdcR4(1),
+                x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.cursePenalty))
+        ));
+
+            if (ILFound) {
+                c.MoveAfterLabels();
+                c.Emit(OpCodes.Ldarg_0);
+                c.EmitDelegate<Action<CharacterBody>>((body) => {
+                    body.cursePenalty += StatMods.baseCurseAdd;
+                });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyCurseStat)} failed.");
+            }
+        }
+
+
+        private static void ModifyCooldownStat(ILCursor c) {
+            c.Index = 0;
+            int ILFound = 0;
+            while (c.TryGotoNext(
+            x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale)))
+                ) && c.TryGotoNext(
+            x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction)))
+                )) { ILFound++; }
+
+            if (ILFound >= 4) {
+                c.Index = 0;
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.primaryCooldownMultAdd); });
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.secondaryCooldownMultAdd); });
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.utilityCooldownMultAdd); });
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+
+
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.specialCooldownMultAdd); });
+                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyCooldownStat)} failed.");
+            }
+        }
+
+
+        private static void ModifyLevelingStat(ILCursor c) {
+            c.Index = 0;
+            bool ILFound = c.TryGotoNext(MoveType.After,
+                x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertyGetter(nameof(CharacterBody.level))),
+        x => x.MatchLdcR4(1),
+        x => x.MatchSub()
+            );
+
+            if (ILFound) {
+                c.EmitDelegate<Func<float, float>>((oldScaling) => {
+                    return oldScaling * (1 + StatMods.levelMultAdd);
+                });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyLevelingStat)} failed.");
+            }
         }
 
         private static void ModifyArmorStat(ILCursor c) {
@@ -132,6 +274,9 @@ namespace R2API {
                 c.EmitDelegate<Func<float, float>>((oldArmor) => {
                     return oldArmor + StatMods.armorAdd;
                 });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyArmorStat)} failed.");
             }
         }
 
@@ -164,6 +309,9 @@ namespace R2API {
                     return origSpeedMult + StatMods.attackSpeedMultAdd;
                 });
             }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyAttackSpeedStat)} failed.");
+            }
         }
 
         private static void ModifyCritStat(ILCursor c) {
@@ -181,6 +329,9 @@ namespace R2API {
                     return origCrit + StatMods.critAdd;
                 });
                 c.Emit(OpCodes.Stloc, locOrigCrit);
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyCritStat)} failed.");
             }
         }
 
@@ -213,6 +364,9 @@ namespace R2API {
                     return origDamageMult + StatMods.damageMultAdd;
                 });
             }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyDamageStat)} failed.");
+            }
         }
 
         private static void ModifyJumpStat(ILCursor c) {
@@ -228,8 +382,11 @@ namespace R2API {
 
             if (ILFound) {
                 c.EmitDelegate<Func<float, float>>((origJumpPower) => {
-                    return origJumpPower * (1 + StatMods.jumpPowerMultAdd);
+                    return (origJumpPower + StatMods.baseJumpPowerAdd) * (1 + StatMods.jumpPowerMultAdd);
                 });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyJumpStat)} failed.");
             }
         }
 
@@ -262,6 +419,9 @@ namespace R2API {
                     return origHealthMult + StatMods.healthMultAdd;
                 });
             }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyHealthStat)} failed.");
+            }
         }
 
         private static void ModifyShieldStat(ILCursor c) {
@@ -274,12 +434,24 @@ namespace R2API {
                 x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.levelMaxShield))
             ) && c.TryGotoNext(
                 x => x.MatchStloc(out locBaseShieldIndex)
-            );
+            ) && c.TryGotoNext(
+		x => x.MatchLdloc(locBaseShieldIndex),
+		x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.maxShield)))
+	    );
 
             if (ILFound) {
+                c.Index++;
+                c.EmitDelegate<Func<float, float>>((origMaxShield) => {
+                    return origMaxShield * (1 + StatMods.shieldMultAdd);
+                });
+                c.GotoPrev(x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.levelMaxShield)));
+                c.GotoNext(x => x.MatchStloc(out locBaseShieldIndex));
                 c.EmitDelegate<Func<float, float>>((origBaseShield) => {
                     return origBaseShield + StatMods.baseShieldAdd;
                 });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyShieldStat)} failed.");
             }
         }
 
@@ -309,6 +481,9 @@ namespace R2API {
                     return origRegenMult + StatMods.regenMultAdd;
                 });
             }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyHealthRegenStat)} failed.");
+            }
         }
 
         private static void ModifyMovementSpeedStat(ILCursor c) {
@@ -330,9 +505,19 @@ namespace R2API {
                 x => x.MatchDiv(),
                 x => x.MatchMul(),
                 x => x.MatchStloc(locBaseSpeedIndex)
-            );
+            ) && c.TryGotoNext(MoveType.After,
+		x => x.MatchLdloc(out _),
+		x => x.MatchLdloc(out _),
+		x => x.MatchOr(),
+		x => x.MatchLdloc(out _),
+		x => x.MatchOr()
+	    );
 
             if (ILFound) {
+                c.EmitDelegate<Func<bool>>(() => {
+                    return (StatMods.moveSpeedRootCount > 0);
+                });
+                c.Emit(OpCodes.Or);
                 c.GotoPrev(x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.levelMoveSpeed)));
                 c.GotoNext(x => x.MatchStloc(locBaseSpeedIndex));
                 c.EmitDelegate<Func<float, float>>((origBaseMoveSpeed) => {
@@ -346,6 +531,9 @@ namespace R2API {
                 c.EmitDelegate<Func<float, float>>((origMoveSpeedReductionMult) => {
                     return origMoveSpeedReductionMult + StatMods.moveSpeedReductionMultAdd;
                 });
+            }
+            else {
+                R2API.Logger.LogError($"{nameof(ModifyMovementSpeedStat)} failed.");
             }
         }
     }

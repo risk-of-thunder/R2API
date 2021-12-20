@@ -1,0 +1,35 @@
+name: Thunderstore Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  
+    steps:
+          
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.7
+      with:
+        versionSpec: '5.x'
+    - name: Determine Version
+      uses: gittools/actions/gitversion/execute@v0.9.7
+    - name: Update versions
+      run: |
+        sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"$GitVersion_SemVer\"/" R2API/R2API.cs
+    - uses: actions/setup-dotnet@v1.7.2
+    - run: dotnet build . --configuration Release --output ./ReleaseOutput
+    - name: Cleanup Release Output
+      run: |
+        find ./ReleaseOutput ! -name R2API.dll ! -name R2API.xml -type f -delete
+    - name: Publish to thunderstore.io
+      uses: xiaoxiao921/thunderstore-cli@0.1.2-alpha.1
+      with:
+        package-version: ${{ env.GitVersion_SemVer }}
+        token: ${{ secrets.TCLI_AUTH_TOKEN }}
