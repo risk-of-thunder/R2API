@@ -44,6 +44,11 @@ Note that such builds may be **unstable**.
 The most recent changelog can always be found on the [GitHub](https://github.com/risk-of-thunder/R2API/blob/master/Archived%20changelogs.md). In this readme, only the most recent *minor* version will have a changelog.
 
 **Current**
+
+* [NetworkingAPI now has Send overloads for sending to specific network connections. Also have some documentation now](https://github.com/risk-of-thunder/R2API/pull/333)
+
+**3.0.71**
+
 * [ItemAPI now warns that ItemDef/EquipmentDef.pickupModelPrefab should have an ItemDisplay attached to them when they have ParentedPrefab display rules linked to them](https://github.com/risk-of-thunder/R2API/pull/311)
 * [EliteAPI now exposes the default elite tiers array (through VanillaEliteTiers) before any changes are made to it for modder that want to change the vanilla elite tiers. Also, adding to the custom elite tier array now by default insert based on the cost multiplier of the elite tier.](https://github.com/risk-of-thunder/R2API/pull/308)
 * [RecalculateStatsAPI now warns modders that the submodule could be not loaded](https://github.com/risk-of-thunder/R2API/pull/307)
