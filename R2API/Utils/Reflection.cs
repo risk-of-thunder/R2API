@@ -188,19 +188,6 @@ namespace R2API.Utils {
             return null;
         }
 
-        private static T GetMemberFull<T>(this Type type, string name) where T : MemberInfo {
-            while (type != null) {
-                var fieldInfo = type.GetMember(name, AllFlags);
-                if (fieldInfo != null) {
-                    return (T)fieldInfo.First();
-                }
-
-                type = type.BaseType;
-            }
-
-            return null;
-        }
-
         private static GetDelegate<TReturn> GetFieldGetDelegate<TReturn>(this FieldInfo field) =>
             FieldGetDelegateCache.GetOrAdd(field, x => x.CreateGetDelegate<TReturn>())
                 .CastDelegate<GetDelegate<TReturn>>();
