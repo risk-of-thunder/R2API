@@ -5,8 +5,8 @@ namespace R2API.Networking {
 
     [Flags]
     public enum NetworkDestination : byte {
-        Clients = 1,
-        Server = 2
+        Clients = 1 << 0,
+        Server = 1 << 1,
     }
 
     internal static class NetworkDestinationExtensions {
