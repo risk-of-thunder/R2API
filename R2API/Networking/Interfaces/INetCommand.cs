@@ -3,8 +3,13 @@ using UnityEngine.Networking;
 
 namespace R2API.Networking.Interfaces {
 
+    /// <summary>
+    /// Interface for network messages which will execute <see cref="OnReceived"/> when received by the targeted machine(s).
+    /// </summary>
     public interface INetCommand {
-
+        /// <summary>
+        /// Executed when received by the targeted machine(s).
+        /// </summary>
         void OnReceived();
     }
 
@@ -17,6 +22,11 @@ namespace R2API.Networking.Interfaces {
             }
         }
 
+        /// <summary>
+        /// Send the passed command over the network
+        /// </summary>
+        /// <param name="command">Registered command</param>
+        /// <param name="destination">Destination of the command</param>
         public static void Send(this INetCommand? command, NetworkDestination destination) {
             if (destination.ShouldRun()) {
                 command.OnReceived();
@@ -45,6 +55,16 @@ namespace R2API.Networking.Interfaces {
             }
         }
 
+        /// <summary>
+        /// <inheritdoc cref="Send(INetCommand?, NetworkDestination)"/>
+        /// to a specific NetworkConnection, only callable from server.
+        /// You can retrieve a <see cref="NetworkConnection"/> from <see cref="NetworkServer.connections"/> or
+        /// from a <see cref="NetworkBehaviour.connectionToClient"/> field.
+        /// </summary>
+        /// <param name="command">Registered command</param>
+        /// <param name="target">NetworkConnection the command will be sent to.</param>
+        /// <exception cref="ArgumentNullException">Thrown when target is null</exception>
+        /// <exception cref="InvalidOperationException">Thrown if not called from server</exception>
         public static void Send(this INetCommand? command, NetworkConnection target) {
             if (target == null) {
                 throw new ArgumentNullException(nameof(target));

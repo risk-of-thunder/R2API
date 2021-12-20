@@ -3,8 +3,12 @@ using UnityEngine.Networking;
 
 namespace R2API.Networking.Interfaces {
 
+    /// <summary>
+    /// <inheritdoc cref="INetCommand"/>
+    /// <inheritdoc cref="ISerializableObject"/>
+    /// </summary>
     public interface INetMessage : ISerializableObject {
-
+        /// <inheritdoc cref="INetCommand.OnReceived"/>
         void OnReceived();
     }
 
@@ -18,6 +22,11 @@ namespace R2API.Networking.Interfaces {
             }
         }
 
+        /// <summary>
+        /// Send the passed message over the network
+        /// </summary>
+        /// <param name="message">Registered message</param>
+        /// <param name="destination">Destination of the message</param>
         public static void Send(this INetMessage? message, NetworkDestination destination) {
             if (destination.ShouldRun()) {
                 message.OnReceived();
@@ -46,6 +55,16 @@ namespace R2API.Networking.Interfaces {
             }
         }
 
+        /// <summary>
+        /// <inheritdoc cref="Send(INetMessage?, NetworkDestination)"/>
+        /// to a specific NetworkConnection, only callable from server.
+        /// You can retrieve a <see cref="NetworkConnection"/> from <see cref="NetworkServer.connections"/> or
+        /// from a <see cref="NetworkBehaviour.connectionToClient"/> field.
+        /// </summary>
+        /// <param name="message">Registered message</param>
+        /// <param name="target">NetworkConnection the message will be sent to.</param>
+        /// <exception cref="ArgumentNullException">Thrown when target is null</exception>
+        /// <exception cref="InvalidOperationException">Thrown if not called from server</exception>
         public static void Send(this INetMessage? message, NetworkConnection target) {
             if (target == null) {
                 throw new ArgumentNullException(nameof(target));
