@@ -180,8 +180,8 @@ namespace R2API.Networking {
 
         internal static Writer GetWriter(short messageIndex, NetworkConnection target, QosType qos) => new Writer(UniversalWriter, messageIndex, target, qos);
 
-        private static void HandleCommandServer(NetworkMessage mag) {
-            NetworkReader reader = mag.reader;
+        private static void HandleCommandServer(NetworkMessage msg) {
+            NetworkReader reader = msg.reader;
             var header = reader.Read<Header>();
 
             if (header.Destination.ShouldRun()) {
@@ -196,7 +196,7 @@ namespace R2API.Networking {
             }
 
             if (header.Destination.ShouldSend()) {
-                int receivedFromId = mag.conn.connectionId;
+                int receivedFromId = msg.conn.connectionId;
                 for (int i = 0; i < NetworkServer.connections.Count; ++i) {
                     if (i == receivedFromId) {
                         continue;
