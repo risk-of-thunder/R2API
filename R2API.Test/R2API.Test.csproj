@@ -5,9 +5,13 @@
 		<LangVersion>preview</LangVersion>
 		<Nullable>annotations</Nullable>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\R2API\R2API.csproj" />
+
 		<PackageReference Include="BepInEx.Analyzers" Version="1.0.*">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,16 +21,12 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		
+
 		<PackageReference Include="xunit" Version="2.4.1" />
 		
 		<PackageReference Include="xunit.extensibility.execution" Version="2.4.1" />
 		
 		<PackageReference Include="xunit.runner.utility" Version="2.4.1" />
-	</ItemGroup>
-
-	<ItemGroup>
-	<ProjectReference Include="..\R2API\R2API.csproj" />
 	</ItemGroup>
 
 </Project>
