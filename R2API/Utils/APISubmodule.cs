@@ -74,8 +74,12 @@ namespace R2API.Utils {
 
             void AddModuleToSet(IEnumerable<CustomAttributeArgument> arguments) {
                 foreach (var arg in arguments) {
-                    foreach (var stringElement in (CustomAttributeArgument[])arg.Value) {
-                        _moduleSet.Add((string)stringElement.Value);
+                    if (arg.Value != null) {
+                        foreach (var stringElement in (CustomAttributeArgument[])arg.Value) {
+                            if (stringElement.Value != null) {
+                                _moduleSet.Add((string)stringElement.Value);
+                            }
+                        }
                     }
                 }
             }

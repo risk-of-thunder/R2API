@@ -46,6 +46,7 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 **Current**
 
 * [NetworkingAPI now has Send overloads for sending to specific network connections. Also have some documentation now](https://github.com/risk-of-thunder/R2API/pull/333)
+* [Allow character mods to opt out from default item display rules](https://github.com/risk-of-thunder/R2API/pull/330)
 
 **3.0.71**
 
