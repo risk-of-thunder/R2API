@@ -9,6 +9,11 @@ using UnityEngine.Networking;
 namespace R2API.Networking {
 
     // ReSharper disable once InconsistentNaming
+    /// <summary>
+    /// Allow easy sending of custom networked messages, check 
+    /// <see href="https://github.com/risk-of-thunder/R2Wiki/wiki/Networking-with-R2API.NetworkingAPI-(INetMessage)">
+    /// the tutorial for example usage.</see>
+    /// </summary>
     [R2APISubmodule]
     public static class NetworkingAPI {
 
@@ -31,6 +36,12 @@ namespace R2API.Networking {
         private static readonly Dictionary<int, INetCommand> NetCommands = new Dictionary<int, INetCommand>();
         private static readonly Dictionary<int, RequestPerformerBase> NetRequests = new Dictionary<int, RequestPerformerBase>();
 
+        /// <summary>
+        /// <inheritdoc cref="NetworkingAPI"/>
+        /// </summary>
+        /// <typeparam name="TMessage"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static bool RegisterMessageType<TMessage>() where TMessage : INetMessage, new() {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(NetworkingAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(NetworkingAPI)})]");
@@ -55,6 +66,12 @@ namespace R2API.Networking {
             }
         }
 
+        /// <summary>
+        /// <inheritdoc cref="NetworkingAPI"/>
+        /// </summary>
+        /// <typeparam name="TCommand"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static bool RegisterCommandType<TCommand>() where TCommand : INetCommand, new() {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(NetworkingAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(NetworkingAPI)})]");
@@ -79,6 +96,14 @@ namespace R2API.Networking {
             }
         }
 
+        /// <summary>
+        /// Check <see cref="ExamplePing"/> and <see cref="ExamplePingReply"/> for example.
+        /// <inheritdoc cref="NetworkingAPI"/>
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TReply"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static bool RegisterRequestTypes<TRequest, TReply>()
             where TRequest : INetRequest<TRequest, TReply>, new()
             where TReply : INetRequestReply<TRequest, TReply>, new() {
@@ -89,6 +114,13 @@ namespace R2API.Networking {
             return RegisterRequestTypesInternal<TRequest, TReply>();
         }
 
+        /// <summary>
+        /// Check <see cref="ExamplePing"/> and <see cref="ExamplePingReply"/> for example.
+        /// <inheritdoc cref="NetworkingAPI"/>
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TReply"></typeparam>
+        /// <returns></returns>
         internal static bool RegisterRequestTypesInternal<TRequest, TReply>()
             where TRequest : INetRequest<TRequest, TReply>, new()
             where TReply : INetRequestReply<TRequest, TReply>, new() {
@@ -180,8 +212,8 @@ namespace R2API.Networking {
 
         internal static Writer GetWriter(short messageIndex, NetworkConnection target, QosType qos) => new Writer(UniversalWriter, messageIndex, target, qos);
 
-        private static void HandleCommandServer(NetworkMessage mag) {
-            NetworkReader reader = mag.reader;
+        private static void HandleCommandServer(NetworkMessage msg) {
+            NetworkReader reader = msg.reader;
             var header = reader.Read<Header>();
 
             if (header.Destination.ShouldRun()) {
@@ -196,7 +228,7 @@ namespace R2API.Networking {
             }
 
             if (header.Destination.ShouldSend()) {
-                int receivedFromId = mag.conn.connectionId;
+                int receivedFromId = msg.conn.connectionId;
                 for (int i = 0; i < NetworkServer.connections.Count; ++i) {
                     if (i == receivedFromId) {
                         continue;
