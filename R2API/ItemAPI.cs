@@ -6,6 +6,7 @@ using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -112,12 +113,23 @@ namespace R2API {
                 R2API.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the item list was created");
             }
 
-            if (item.ItemDef == null) {
-                R2API.Logger.LogError("Your ItemDef is null ! Can't add your item.");
+            if (!item.ItemDef) {
+                R2API.Logger.LogError("ItemDef is null ! Can't add the custom item.");
             }
 
             if (string.IsNullOrEmpty(item.ItemDef.name)) {
-                R2API.Logger.LogError("Your ItemDef.name is null or empty ! Can't add your item.");
+                R2API.Logger.LogError("ItemDef.name is null or empty ! Can't add the custom item.");
+            }
+
+            if (!item.ItemDef.pickupModelPrefab) {
+                R2API.Logger.LogWarning($"No ItemDef.pickupModelPrefab ({item.ItemDef.name}), the game will show nothing when the item is on the ground.");
+            }
+            else if (item.ItemDisplayRules != null &&
+                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
+                !item.ItemDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
+                R2API.Logger.LogWarning($"ItemDef.pickupModelPrefab ({item.ItemDef.name}) does not have an ItemDisplay component attached to it " +
+                    "(there are ItemDisplayRuleType.ParentedPrefab rules), " +
+                    "the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
             }
 
             bool xmlSafe = false;
@@ -154,11 +166,22 @@ namespace R2API {
             }
 
             if (item.EquipmentDef == null) {
-                R2API.Logger.LogError("Your EquipmentDef is null ! Can't add your Equipment.");
+                R2API.Logger.LogError("EquipmentDef is null ! Can't add the custom Equipment.");
             }
 
             if (string.IsNullOrEmpty(item.EquipmentDef.name)) {
-                R2API.Logger.LogError("Your EquipmentDef.name is null or empty ! Can't add your Equipment.");
+                R2API.Logger.LogError("EquipmentDef.name is null or empty ! Can't add the custom Equipment.");
+            }
+
+            if (!item.EquipmentDef.pickupModelPrefab) {
+                R2API.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab ({item.EquipmentDef.name}), the game will show nothing when the item is on the ground.");
+            }
+            else if (item.ItemDisplayRules != null &&
+                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
+                !item.EquipmentDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
+                R2API.Logger.LogWarning($"EquipmentDef.pickupModelPrefab ({item.EquipmentDef.name}) does not have an ItemDisplay component attached to it " +
+                    "(there are ItemDisplayRuleType.ParentedPrefab rules), " +
+                    "the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
             }
 
             bool xmlSafe = false;
@@ -183,35 +206,42 @@ namespace R2API {
 
         // With how unfriendly it is to makes your 3D Prefab work with shaders from the game,
         // makes it so that if the custom prefab doesnt have rendering support for when the player is cloaked, or burning, still display the item on the player.
+        // iDeath : This hook was made back when I didn't know that pickupModelPrefab
+        // just needed an ItemDisplay component attached to it for the game method to not complain
         private static void MaterialFixForItemDisplayOnCharacter(ILContext il) {
             var cursor = new ILCursor(il);
             var forCounterLoc = 0;
             var itemDisplayLoc = 0;
 
-            cursor.GotoNext(
-                i => i.MatchLdarg(0),
-                i => i.MatchLdfld("RoR2.CharacterModel", "parentedPrefabDisplays"),
-                i => i.MatchLdloc(out forCounterLoc)
-            );
+            try {
+                cursor.GotoNext(
+                    i => i.MatchLdarg(0),
+                    i => i.MatchLdfld("RoR2.CharacterModel", "parentedPrefabDisplays"),
+                    i => i.MatchLdloc(out forCounterLoc)
+                );
 
-            cursor.GotoNext(
-                i => i.MatchCallOrCallvirt("RoR2.CharacterModel/ParentedPrefabDisplay", "get_itemDisplay"),
-                i => i.MatchStloc(out itemDisplayLoc)
-            );
-            cursor.Index += 2;
+                cursor.GotoNext(
+                    i => i.MatchCallOrCallvirt("RoR2.CharacterModel/ParentedPrefabDisplay", "get_itemDisplay"),
+                    i => i.MatchStloc(out itemDisplayLoc)
+                );
+                cursor.Index += 2;
 
-            cursor.Emit(OpCodes.Ldloc, itemDisplayLoc);
-            cursor.Emit(OpCodes.Call, typeof(Object).GetMethodCached("op_Implicit"));
-            cursor.Emit(OpCodes.Brfalse, cursor.MarkLabel());
-            var brFalsePos = cursor.Index - 1;
+                cursor.Emit(OpCodes.Ldloc, itemDisplayLoc);
+                cursor.Emit(OpCodes.Call, typeof(Object).GetMethodCached("op_Implicit"));
+                cursor.Emit(OpCodes.Brfalse, cursor.MarkLabel());
+                var brFalsePos = cursor.Index - 1;
 
-            cursor.GotoNext(
-                i => i.MatchLdloc(forCounterLoc)
-            );
-            var label = cursor.MarkLabel();
+                cursor.GotoNext(
+                    i => i.MatchLdloc(forCounterLoc)
+                );
+                var label = cursor.MarkLabel();
 
-            cursor.Index = brFalsePos;
-            cursor.Next.Operand = label;
+                cursor.Index = brFalsePos;
+                cursor.Next.Operand = label;
+            }
+            catch (Exception e) {
+                R2API.Logger.LogError($"Exception in {nameof(MaterialFixForItemDisplayOnCharacter)} : Item mods without the {nameof(ItemDisplay)} component may not work correctly.\n{e}");
+            }
         }
 
         // todo : allow override of existing item display rules
@@ -467,7 +497,7 @@ namespace R2API {
         /// </summary>
         public ItemDisplayRule[]? DefaultRules { get; private set; }
 
-        private readonly Dictionary<string, ItemDisplayRule[]?> Dictionary;
+        internal Dictionary<string, ItemDisplayRule[]?> Dictionary { get; private set; }
 
         public ItemDisplayRuleDict(params ItemDisplayRule[]? defaultRules) {
             DefaultRules = defaultRules;

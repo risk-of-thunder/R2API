@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil.Cil;
@@ -94,7 +94,13 @@ namespace R2API {
             Array.Resize(ref _customDotVisuals, _customDotVisuals.Length + 1);
             _customDotVisuals[customArrayIndex] = customDotVisual;
 
-            R2API.Logger.LogInfo($"Custom Dot (Index : {dotDefIndex}) that uses Buff : {dotDef.associatedBuff.name} added");
+            if (dotDef.associatedBuff != null) {
+                R2API.Logger.LogInfo($"Custom Dot (Index: {dotDefIndex}) that uses Buff : {dotDef.associatedBuff.name} added");
+            } else {
+                R2API.Logger.LogInfo($"Custom Dot (Index: {dotDefIndex}) with no associated Buff added");
+            }
+            
+            
             return (DotController.DotIndex)dotDefIndex;
         }
 
@@ -105,12 +111,12 @@ namespace R2API {
         /// <param name="interval"></param>
         /// <param name="damageCoefficient"></param>
         /// <param name="colorIndex"></param>
-        /// <param name="associatedBuff"></param>
+        /// <param name="associatedBuff">The buff associated with the DOT, can be null</param>
         /// <param name="customDotBehaviour"></param>
         /// <param name="customDotVisual"></param>
         /// <returns></returns>
         public static DotController.DotIndex RegisterDotDef(float interval, float damageCoefficient,
-            DamageColorIndex colorIndex, BuffDef associatedBuff, CustomDotBehaviour customDotBehaviour = null,
+            DamageColorIndex colorIndex, BuffDef associatedBuff = null, CustomDotBehaviour customDotBehaviour = null,
             CustomDotVisual customDotVisual = null) {
             var dotDef = new DotController.DotDef {
                 associatedBuff = associatedBuff,
