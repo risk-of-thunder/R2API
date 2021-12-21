@@ -21,9 +21,7 @@ jobs:
       run: |
         sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"$GitVersion_SemVer\"/" R2API/R2API.cs
         sed -i -E "s/(\"version_number\":\s*)\"0.0.1\"/\1\"$GitVersion_SemVer\"/" manifest.json
-    - name: Run Tests
-      run: |
-        dotnet test
+    - name: Setup dotnet
     - uses: actions/setup-dotnet@v1.7.2
     - run: dotnet build .
     - name: Prepare Artifact
