@@ -31,7 +31,7 @@ jobs:
         mkdir plugins/R2API
         mkdir plugins/R2API/Tests
         cp R2API/bin/Debug/**/*.dll plugins/R2API/
-        cp R2API/bin/Debug/**/*.dll.pdb plugins/R2API/
+        cp R2API/bin/Debug/**/*.pdb plugins/R2API/
         cp R2API/bin/Debug/**/*.xml plugins/R2API/
         cp R2API/R2API.Test/bin/Debug/**/R2API.Test.* plugins/R2API/Tests/
         cp R2API/R2API.Test/bin/Debug/**/xunit* plugins/R2API/Tests/
