@@ -44,10 +44,23 @@ Note that such builds may be **unstable**.
 The most recent changelog can always be found on the [GitHub](https://github.com/risk-of-thunder/R2API/blob/master/Archived%20changelogs.md). In this readme, only the most recent *minor* version will have a changelog.
 
 **Current**
+
+* [NetworkingAPI now has Send overloads for sending to specific network connections. Also have some documentation now](https://github.com/risk-of-thunder/R2API/pull/333)
+* [Allow character mods to opt out from default item display rules](https://github.com/risk-of-thunder/R2API/pull/330)
+
+**3.0.71**
+
 * [ItemAPI now warns that ItemDef/EquipmentDef.pickupModelPrefab should have an ItemDisplay attached to them when they have ParentedPrefab display rules linked to them](https://github.com/risk-of-thunder/R2API/pull/311)
 * [EliteAPI now exposes the default elite tiers array (through VanillaEliteTiers) before any changes are made to it for modder that want to change the vanilla elite tiers. Also, adding to the custom elite tier array now by default insert based on the cost multiplier of the elite tier.](https://github.com/risk-of-thunder/R2API/pull/308)
 * [RecalculateStatsAPI now warns modders that the submodule could be not loaded](https://github.com/risk-of-thunder/R2API/pull/307)
+* [Added Curse, Shield Multiplier, All Cooldown Reductions, Jump Power, Level Scaling, and Root to RecalculateStatsAPI](https://github.com/risk-of-thunder/R2API/pull/322)
 * [Fix SoundAPI throwing on dedicated server](https://github.com/risk-of-thunder/R2API/pull/306)
+* [Fix SoundAPI's music implementation stopping all music when an instance of a MusicTrackOverride gets destroyed](https://github.com/risk-of-thunder/R2API/pull/319)
+* [Added TempVisualEffectAPI](https://github.com/risk-of-thunder/R2API/pull/313)
+* [ArtifactCodeAPI's ArtifactCode Scriptable object now uses 3 Vector3Int for inputting the code, instead of a List of Ints](https://github.com/risk-of-thunder/R2API/pull/310)
+* [Added aditional overloads for AddUnlockable that accept a type parameter instead of using generics](https://github.com/risk-of-thunder/R2API/pull/317)
+* [UnlockableAPI can now add AchievementDefs directly](https://github.com/risk-of-thunder/R2API/pull/321)
+* [DotAPI no longer throws an error when no BuffDef is provided for the asociated BuffDef parameter](https://github.com/risk-of-thunder/R2API/pull/325)
 
 **3.0.59**
 

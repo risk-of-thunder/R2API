@@ -186,6 +186,20 @@ namespace R2API {
             c.Emit(OpCodes.Ldloc, damageInfoIndex);
 
             EmitCopyCall(c);
+
+            var bouncingLightningOrbIndex = -1;
+            c.GotoNext(
+                x => x.MatchNewobj<LightningOrb>(),
+                x => x.MatchStloc(out bouncingLightningOrbIndex));
+
+            c.GotoNext(
+                MoveType.After,
+                x => x.MatchLdfld<LightningOrb>(nameof(LightningOrb.damageType)),
+                x => x.MatchStfld(out _));
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Ldloc, bouncingLightningOrbIndex);
+            EmitCopyCall(c);
         }
 
         private static void GenericDamageOrbOnArrivalIL(ILContext il) {
