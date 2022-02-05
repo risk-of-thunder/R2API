@@ -4,15 +4,10 @@ using System.Collections.Generic;
 using R2API.Utils;
 using RoR2;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace R2API.Test {
     public class ReflectionTests {
-        private readonly ITestOutputHelper _helper;
-
-        public ReflectionTests(ITestOutputHelper helper) {
-            Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "cecil");
-            this._helper = helper;
+        public ReflectionTests() {
         }
 
         [Fact]
@@ -176,7 +171,6 @@ namespace R2API.Test {
             Assert.Equal(5, dictionary["thing"]);
 
             mock.SetPropertyValue("livingPlayerCount", 10);
-            //mock.SetPropertyValue("livingPlayerCount", 0);
             mock.SetPropertyValue("participatingPlayerCount", 5);
             Assert.Equal(10, mock.GetPropertyValue<int>("livingPlayerCount"));
             Assert.Equal(5, mock.GetPropertyValue<int>("participatingPlayerCount"));

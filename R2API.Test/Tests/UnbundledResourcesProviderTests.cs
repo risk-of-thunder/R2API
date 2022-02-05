@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using R2API.Utils;
 using UnityEngine;
 using Xunit;

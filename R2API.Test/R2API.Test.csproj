@@ -1,98 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-	  <OutputType>Library</OutputType>
-		<LangVersion>7.2</LangVersion>
-		<IsPackable>false</IsPackable>
-	  <TestProjectType>UnitTest</TestProjectType>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>preview</LangVersion>
+		<Nullable>annotations</Nullable>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-    <PackageReference Include="xunit" Version="2.4.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\R2API\libs\Assembly-CSharp.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="HGCSharpUtils">
-      <HintPath>..\R2API\libs\HGCSharpUtils.dll</HintPath>
-    </Reference>
+	<ItemGroup>
+		<ProjectReference Include="..\R2API\R2API.csproj" />
 
-    <Reference Include="MonoMod.Utils">
-	    <HintPath>..\R2API\libs\MonoMod.Utils.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="UnityEngine">
-	    <HintPath>..\R2API\libs\UnityEngine.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-	    <HintPath>..\R2API\libs\UnityEngine.CoreModule.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="BepInEx">
-	    <HintPath>..\R2API\libs\BepInEx.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="MMHOOK_Assembly-CSharp">
-	    <HintPath>..\R2API\libs\MMHOOK_Assembly-CSharp.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-	    <HintPath>..\R2API\libs\Mono.Cecil.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="MonoMod.RuntimeDetour">
-	    <HintPath>..\R2API\libs\MonoMod.RuntimeDetour.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="MonoMod.Utils">
-	    <HintPath>..\R2API\libs\MonoMod.Utils.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="UnityEngine">
-	    <HintPath>..\R2API\libs\UnityEngine.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-	    <HintPath>..\R2API\libs\UnityEngine.CoreModule.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="UnityEngine.Networking">
-	    <HintPath>..\R2API\libs\UnityEngine.Networking.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-	    <HintPath>..\R2API\libs\UnityEngine.UI.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-	    <HintPath>..\R2API\libs\UnityEngine.UIModule.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <Reference Include="Zio">
-	    <HintPath>..\R2API\libs\Zio.dll</HintPath>
-	    <Private>true</Private>
-    </Reference>
-    <!--<Reference Include="UnityEngine.Networking">
-	    <HintPath>..\R2API\libs\UnityEngine.Networking.dll</HintPath>
-	    <Private>false</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-	    <HintPath>..\R2API\libs\UnityEngine.UI.dll</HintPath>
-	    <Private>false</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-	    <HintPath>..\R2API\libs\UnityEngine.UIModule.dll</HintPath>
-	    <Private>false</Private>
-    </Reference>-->
-  </ItemGroup>
+		<PackageReference Include="BepInEx.Analyzers" Version="1.0.*">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		
+		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.10.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 
-  <ItemGroup>
-    <ProjectReference Include="..\R2API\R2API.csproj" />
-  </ItemGroup>
+		<PackageReference Include="xunit" Version="2.4.1" />
+		
+		<PackageReference Include="xunit.extensibility.execution" Version="2.4.1" />
+		
+		<PackageReference Include="xunit.runner.utility" Version="2.4.1" />
+	</ItemGroup>
 
 </Project>
