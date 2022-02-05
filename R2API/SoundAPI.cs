@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -147,6 +148,29 @@ namespace R2API {
             }
 
             /// <summary>
+            /// Adds an external soundbank to load, loaded from an embedded resource in the assembly
+            /// </summary>
+            /// <param name="resourceName"></param>
+            /// <param name="owningAssembly"></param>
+            /// <returns></returns>
+            public static uint Add(string resourceName, Assembly owningAssembly) {
+                var (ptr, size) = EmbeddedResources.GetEmbeddedResource(resourceName, owningAssembly);
+                if (ptr == 0 || size == 0) throw new ArgumentException($"{resourceName} did not return a valid resource", nameof(resourceName));
+
+                var bankToAdd = new Bank(ptr, (uint)size);
+                if (Loaded) {
+                    if (bankToAdd.Load()) {
+                        soundBanks.Add(bankToAdd);
+                    }
+                }
+                else {
+                    soundBanks.Add(bankToAdd);
+                }
+
+                return bankToAdd.PublicID;
+            }
+
+            /// <summary>
             /// Unloads an bank using the ID (ID is returned at the Add() of the bank)
             /// </summary>
             /// <param name="ID">BankID</param>
@@ -163,6 +187,12 @@ namespace R2API {
 
                 internal Bank(byte[] bankData) {
                     BankData = bankData;
+                    Size = (uint)bankData.Length;
+                    PublicID = _bankIteration++;
+                }
+                internal Bank(nint bankPtr, uint size) {
+                    BankDataPtr = bankPtr;
+                    Size = size;
                     PublicID = _bankIteration++;
                 }
 
@@ -172,19 +202,29 @@ namespace R2API {
                 private static uint _bankIteration = 0;
 
                 /// <summary>
+                /// Pointer to bank data
+                /// </summary>
+                internal nint? BankDataPtr;
+
+                /// <summary>
                 /// BankData supplied by the user
                 /// </summary>
                 internal byte[] BankData;
 
                 /// <summary>
+                /// Handle for BankData array
+                /// </summary>
+                internal GCHandle? Memory;
+
+                /// <summary>
+                /// Size of the bank in bytes
+                /// </summary>
+                internal uint Size;
+
+                /// <summary>
                 /// Identifier for the User
                 /// </summary>
                 internal uint PublicID;
-
-                /// <summary>
-                /// Handle for BankData array
-                /// </summary>
-                internal GCHandle Memory;
 
                 /// <summary>
                 /// Identifier for the engine
@@ -197,16 +237,17 @@ namespace R2API {
                 /// <returns>True if the bank successfully loaded, false otherwise</returns>
                 internal bool Load() {
                     // Pins BankData array in memory
-                    Memory = GCHandle.Alloc(BankData, GCHandleType.Pinned);
+                    BankDataPtr ??= (Memory = GCHandle.Alloc(BankData, GCHandleType.Pinned)).Value.AddrOfPinnedObject();
 
-                    //Loads the entire array as a bank
-                    var result = AkSoundEngine.LoadBank(Memory.AddrOfPinnedObject(), (uint)BankData.Length, out BankID);
+                    // Loads the entire array as a bank
+                    var result = AkSoundEngine.LoadBank(BankDataPtr!.Value, Size, out BankID);
+
                     if (result != AKRESULT.AK_Success) {
                         Debug.LogError("WwiseUnity: AkMemBankLoader: bank loading failed with result " + result);
                         return false;
                     }
 
-                    //BankData is held by the GCHandle, no reason to keep it as a managed array
+                    // BankData is held by the GCHandle or was created from a raw pointer, no need for the array
                     BankData = null;
                     return true;
                 }
@@ -216,12 +257,16 @@ namespace R2API {
                 /// </summary>
                 /// <returns>The AKRESULT of unloading itself</returns>
                 internal AKRESULT UnLoad() {
-                    var result = AkSoundEngine.UnloadBank(BankID, Memory.AddrOfPinnedObject());
+                    var result = AkSoundEngine.UnloadBank(BankID, BankDataPtr!.Value);
+
                     if (result != AKRESULT.AK_Success) {
                         Debug.LogError("Failed to unload bank " + PublicID.ToString() + ": " + result.ToString());
                         return result;
                     }
-                    Memory.Free();
+
+                    Memory?.Free();
+                    Memory = null;
+
                     soundBanks.Remove(this);
                     return result;
                 }
