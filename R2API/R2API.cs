@@ -47,8 +47,6 @@ namespace R2API {
             AddHookLogging();
             CheckForIncompatibleAssemblies();
 
-            Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "Cecil");
-
             if (Environment.GetEnvironmentVariable("R2API_DEBUG") == "true") {
                 EnableDebug();
             }
