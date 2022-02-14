@@ -59,10 +59,10 @@ namespace R2API {
             IL.RoR2.Projectile.ProjectileOverlapAttack.ResetOverlapAttack += ProjectileOverlapAttackResetOverlapAttackIL;
             IL.RoR2.Projectile.ProjectileProximityBeamController.UpdateServer += ProjectileProximityBeamControllerUpdateServerIL;
             IL.RoR2.Projectile.ProjectileSingleTargetImpact.OnProjectileImpact += ProjectileSingleTargetImpactOnProjectileImpactIL;
-            
+
             IL.RoR2.DotController.EvaluateDotStacksForType += DotControllerEvaluateDotStacksForTypeIL;
             IL.RoR2.DotController.AddPendingDamageEntry += DotControllerAddPendingDamageEntryIL;
-            
+
             IL.RoR2.BlastAttack.HandleHits += BlastAttackHandleHitsIL;
             IL.RoR2.BlastAttack.PerformDamageServer += BlastAttackPerformDamageServerIL;
             //MMHook can't handle private structs in parameters of On hooks
@@ -72,12 +72,12 @@ namespace R2API {
             HookEndpointManager.Add(
                 typeof(BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Read)),
                 (BlastAttackDamageInfoReadDelegate)BlastAttackDamageInfoRead);
-            
+
             IL.RoR2.OverlapAttack.ProcessHits += OverlapAttackProcessHitsIL;
             IL.RoR2.OverlapAttack.PerformDamage += OverlapAttackPerformDamageIL;
             On.RoR2.OverlapAttack.OverlapAttackMessage.Serialize += OverlapAttackMessageSerialize;
             On.RoR2.OverlapAttack.OverlapAttackMessage.Deserialize += OverlapAttackMessageDeserialize;
-            
+
             IL.RoR2.GlobalEventManager.OnHitAll += GlobalEventManagerOnHitAllIL;
 
             IL.RoR2.HealthComponent.SendDamageDealt += HealthComponentSendDamageDealtIL;

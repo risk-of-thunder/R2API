@@ -1,18 +1,17 @@
-﻿using RoR2.ContentManagement;
+﻿using BepInEx;
+using EntityStates;
+using RoR2;
+using RoR2.ContentManagement;
+using RoR2.Projectile;
+using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using System.Linq;
-using BepInEx;
-using RoR2;
-using UnityEngine;
-using Object = UnityEngine.Object;
-using RoR2.Skills;
-using UnityEngine.Networking;
-using RoR2.Projectile;
 using System.Collections.ObjectModel;
-using EntityStates;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
+using UnityEngine.Networking;
+using Object = UnityEngine.Object;
 
 namespace R2API {
     /// <summary>
@@ -25,7 +24,7 @@ namespace R2API {
         /// </summary>
         public static ReadOnlyCollection<ContentPack> ManagedContentPacks {
             get {
-                if(!contentPacksCreated) {
+                if (!contentPacksCreated) {
                     R2API.Logger.LogError($"Cannot return ContentPacks when they havent been created!");
                     return null;
                 }
@@ -245,10 +244,10 @@ namespace R2API {
             }
             TypeToAllCurrentlyRegisteredNames.Add(typeof(EntityStateConfiguration), EntityStateConfigurations);
         }
-        internal static void HandleContentAddition(Assembly assembly, Object content){
+        internal static void HandleContentAddition(Assembly assembly, Object content) {
             SerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);
             content = EnsureSafeContentName(content, scp.name);
-            if(scp) {
+            if (scp) {
                 switch (content) {
                     case GameObject go: HandleGameObject(go, scp); break;
                     case SkillDef skd: AddSafe(ref scp.skillDefs, skd, scp.name); break;
@@ -272,7 +271,7 @@ namespace R2API {
 
         internal static void HandleEntityState(Assembly assembly, Type type) {
             SerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);
-            if(scp) {
+            if (scp) {
                 AddSafeType(ref scp.entityStateTypes, new SerializableEntityStateType(type), scp.name);
             }
         }
@@ -291,16 +290,16 @@ namespace R2API {
                 AddSafe(ref scp.projectilePrefabs, go, scp.name);
                 alreadyNetworked = true;
             }
-            if(go.GetComponent<Run>()) {
+            if (go.GetComponent<Run>()) {
                 AddSafe(ref scp.gameModePrefabs, go, scp.name);
                 alreadyNetworked = true;
             }
             //ror2 automatically networks prefabs that are in the arrays above this one. (since all of them already have network identities)
-            if(!alreadyNetworked && !PrefabAPI.IsPrefabHashed(go) && go.GetComponent<NetworkIdentity>()) {
+            if (!alreadyNetworked && !PrefabAPI.IsPrefabHashed(go) && go.GetComponent<NetworkIdentity>()) {
                 AddSafe(ref scp.networkedObjectPrefabs, go, scp.name);
             }
             //Modify this once dlc 1 comes out, as EffectDefs will be a game object array instead of an EffectDef array.
-            if(go.GetComponent<EffectComponent>()) {
+            if (go.GetComponent<EffectComponent>()) {
                 AddSafeType(ref scp.effectDefs, new EffectDef(go), scp.name);
             }
         }
@@ -309,7 +308,7 @@ namespace R2API {
             if (!contentPacksCreated) {
                 R2API.Logger.LogInfo($"Generating a total of {BepInModNameToSerialziableContentPack.Values.Count} ContentPacks...");
                 List<ContentPack> contentPacks = new List<ContentPack>();
-                foreach(KeyValuePair<string, SerializableContentPack> kvp in BepInModNameToSerialziableContentPack) {
+                foreach (KeyValuePair<string, SerializableContentPack> kvp in BepInModNameToSerialziableContentPack) {
                     ContentPack cp = kvp.Value.CreateContentPack();
                     cp.identifier = kvp.Key;
                     contentPacks.Add(cp);
@@ -362,7 +361,7 @@ namespace R2API {
         }
 
         private static void AddSafe<T>(ref T[] assetArray, T asset, string identifier) where T : Object {
-            if(!assetArray.Contains(asset)) {
+            if (!assetArray.Contains(asset)) {
                 HG.ArrayUtils.ArrayAppend(ref assetArray, asset);
             }
             else {
@@ -372,7 +371,7 @@ namespace R2API {
 
         private static void AddSafeType<T>(ref T[] assetArray, T asset, string identifier) {
             if (!assetArray.Contains(asset)) {
-                if(asset is EffectDef ed) {
+                if (asset is EffectDef ed) {
                     HG.ArrayUtils.ArrayAppend(ref assetArray, asset);
                 }
                 else {
@@ -456,8 +455,8 @@ namespace R2API {
             return go;
         }
 
-        private static ScriptableObject EnsureSafeScriptableObjectName<T>(ScriptableObject obj, string identifier) where T : ScriptableObject{
-            if(TypeToAllCurrentlyRegisteredNames.TryGetValue(typeof(T), out var func)) {
+        private static ScriptableObject EnsureSafeScriptableObjectName<T>(ScriptableObject obj, string identifier) where T : ScriptableObject {
+            if (TypeToAllCurrentlyRegisteredNames.TryGetValue(typeof(T), out var func)) {
                 string[] allScriptablesOfTypeT = func();
                 if (allScriptablesOfTypeT.Contains(obj.name)) {
                     R2API.Logger.LogInfo($"An object with name {obj.name} already exists in the registered {typeof(T).Name}! creating new Name!");

@@ -1,7 +1,6 @@
 ﻿using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
-using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -239,7 +238,7 @@ namespace R2API {
                     Array.Copy(currentEliteTiers, indexToInsertAt, currentEliteTiers, indexToInsertAt + 1, currentEliteTiers.Length - indexToInsertAt - 1);
                 }
                 currentEliteTiers[indexToInsertAt] = eliteTierDef;
-                
+
                 OverrideCombatDirectorEliteTiers(currentEliteTiers);
             }
 

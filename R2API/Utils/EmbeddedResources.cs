@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using UnityEngine;
 
 namespace R2API.Utils {
     public static unsafe class EmbeddedResources {

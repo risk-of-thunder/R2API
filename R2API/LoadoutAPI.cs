@@ -1,11 +1,9 @@
 using EntityStates;
 using R2API.Utils;
 using RoR2;
-using RoR2.ContentManagement;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Unity.Collections;
 using Unity.Jobs;
@@ -30,32 +28,7 @@ namespace R2API {
 
         private static bool _loaded;
 
-        #region Submodule Hooks
-
-        private static readonly HashSet<Type> AddedStateTypes = new HashSet<Type>();
-
-        private static readonly HashSet<SkillDef> AddedSkills = new HashSet<SkillDef>();
-        private static readonly HashSet<SkillFamily> AddedSkillFamilies = new HashSet<SkillFamily>();
         private static readonly HashSet<SkinDef> AddedSkins = new HashSet<SkinDef>();
-
-        /*[R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddSkillsToGame;
-        }
-
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddSkillsToGame;
-        }
-
-        private static void AddSkillsToGame(ContentPack r2apiContentPack) {
-            r2apiContentPack.entityStateTypes.Add(AddedStateTypes.ToArray());
-
-            r2apiContentPack.skillDefs.Add(AddedSkills.ToArray());
-            r2apiContentPack.skillFamilies.Add(AddedSkillFamilies.ToArray());
-        }*/
-
-        #endregion Submodule Hooks
 
         #region Adding Skills
 
@@ -76,7 +49,6 @@ namespace R2API {
             }
 
             R2APIContentManager.HandleEntityState(Assembly.GetCallingAssembly(), t);
-            AddedStateTypes.Add(t);
             return true;
         }
 
@@ -92,7 +64,6 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
             R2APIContentManager.HandleEntityState(Assembly.GetCallingAssembly(), typeof(T));
-            //LoadoutAPI.AddSkill(typeof(T));
             return new SerializableEntityStateType(typeof(T));
         }
 
@@ -111,7 +82,6 @@ namespace R2API {
                 return false;
             }
             R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), s);
-            //AddedSkills.Add(s);
             return true;
         }
 
@@ -130,7 +100,6 @@ namespace R2API {
                 return false;
             }
             R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), sf);
-            //AddedSkillFamilies.Add(sf);
             return true;
         }
 

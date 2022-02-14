@@ -2,7 +2,6 @@
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
-using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -129,8 +128,7 @@ namespace R2API {
         private static void UpdateSingleHook(ILContext il) {
             var cursor = new ILCursor(il);
 
-            GameObject GetCustomTVE(GameObject vanillaLoaded, string resourceString)
-                {
+            GameObject GetCustomTVE(GameObject vanillaLoaded, string resourceString) {
                 if (!vanillaLoaded) {
                     if (tveDict.TryGetValue(resourceString, out var customTVEPrefab)) {
                         return customTVEPrefab.effectPrefab;

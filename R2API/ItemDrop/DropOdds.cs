@@ -56,7 +56,7 @@ namespace R2API.ItemDrop {
                     chestBehavior.tier2Chance = ChestTierOdds[interactableName][1];
                     chestBehavior.tier3Chance = ChestTierOdds[interactableName][2];
                 }
-                
+
                 if (ItemDropAPI.PlayerInteractables.SubsetTiersPresent.ContainsKey(interactableName)) {
                     //  This is for damage, healing and utility chests
                     if (!ItemDropAPI.PlayerInteractables.SubsetTiersPresent[interactableName][InteractableCalculator.DropType.tier1]) {

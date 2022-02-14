@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reflection;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
-using RoR2.ContentManagement;
-using UnityEngine;
+using System;
+using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace R2API {
 

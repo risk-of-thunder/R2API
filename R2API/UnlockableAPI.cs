@@ -3,7 +3,6 @@ using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
 using RoR2.Achievements;
-using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -210,16 +209,13 @@ namespace R2API {
         }
 
         [Obsolete("The bool parameter serverTracked is redundant. Instead, pass in a Type that inherits from BaseServerAchievement if it is server tracked, or nothing if it's not")]
-        public static UnlockableDef AddUnlockable<TUnlockable>(bool serverTracked) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
-        {
+        public static UnlockableDef AddUnlockable<TUnlockable>(bool serverTracked) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
             return AddUnlockableInternal(typeof(TUnlockable), Assembly.GetCallingAssembly(), null, null);
         }
-        public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
-        {
+        public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
             return AddUnlockableInternal(typeof(TUnlockable), Assembly.GetCallingAssembly(), serverTrackerType, null);
         }
-        public static UnlockableDef AddUnlockable<TUnlockable>(UnlockableDef unlockableDef) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
-        {
+        public static UnlockableDef AddUnlockable<TUnlockable>(UnlockableDef unlockableDef) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
             return AddUnlockableInternal(typeof(TUnlockable), Assembly.GetCallingAssembly(), null, unlockableDef);
         }
         public static UnlockableDef AddUnlockable(Type unlockableType, Type serverTrackerType) {
@@ -240,7 +236,7 @@ namespace R2API {
             }
             var identifiers = Achievements.Select(achievementDef => achievementDef.identifier);
             try {
-                if(identifiers.Contains(achievementDef.identifier)) {
+                if (identifiers.Contains(achievementDef.identifier)) {
                     throw new InvalidOperationException($"The achievement identifier '{achievementDef.identifier}' is already used by another mod.");
                 }
                 else {
@@ -248,7 +244,7 @@ namespace R2API {
                     return true;
                 }
             }
-            catch (Exception e){
+            catch (Exception e) {
                 R2API.Logger.LogError($"An error has occured while trying to add a new AchievementDef: {e}");
                 return false;
             }

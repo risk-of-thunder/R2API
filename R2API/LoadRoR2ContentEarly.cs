@@ -19,7 +19,7 @@ namespace R2API {
         /// <summary>
         /// A ReadOnly version of RoR2's ContentPack.
         /// </summary>
-        public static ReadOnlyContentPack ReadOnlyRoR2ContentPack { get; private set; } 
+        public static ReadOnlyContentPack ReadOnlyRoR2ContentPack { get; private set; }
 
         internal static void Init() {
 

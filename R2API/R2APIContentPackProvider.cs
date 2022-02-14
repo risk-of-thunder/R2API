@@ -58,7 +58,7 @@ namespace R2API {
             R2API.Logger.LogDebug(string.Join("\n", log));
         }
     }
-    internal class R2APIContentPackProvider{
+    internal class R2APIContentPackProvider {
         internal static Action WhenAddingContentPacks;
 
         internal static void Init() {
@@ -77,7 +77,7 @@ namespace R2API {
                 }
             }
             R2APIContentManager.CreateContentPacks();
-            foreach(R2APIGenericContentPack gcp in R2APIContentManager.genericContentPacks) {
+            foreach (R2APIGenericContentPack gcp in R2APIContentManager.genericContentPacks) {
                 addContentPackProvider(gcp);
             }
         }

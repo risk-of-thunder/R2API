@@ -4,7 +4,6 @@ using MonoMod.RuntimeDetour;
 using R2API.MiscHelpers;
 using R2API.Utils;
 using RoR2;
-using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.IO;

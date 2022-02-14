@@ -271,7 +271,7 @@ namespace R2API.ItemDrop {
                     }
                 }
             }
-            
+
 
             /*
                 Updates the interactable types with which subset lists are populated.

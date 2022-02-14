@@ -84,8 +84,8 @@ namespace R2API {
 
             /// <summary> Added to Curse Penalty.MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd) / (BASE_CURSE_PENALTY + baseCurseAdd)</summary>
             public float baseCurseAdd = 0f;
-            
-	    /// <summary>Added to flat cooldown reduction. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd) </summary>
+
+            /// <summary>Added to flat cooldown reduction. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd) </summary>
             public float cooldownReductionAdd = 0f;
 
             /// <summary>Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
@@ -184,7 +184,7 @@ namespace R2API {
         private static void ModifyCurseStat(ILCursor c) {
             c.Index = 0;
 
-            bool ILFound = c.TryGotoNext( MoveType.After,
+            bool ILFound = c.TryGotoNext(MoveType.After,
         x => x.MatchLdarg(0),
                 x => x.MatchLdcR4(1),
                 x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.cursePenalty))
@@ -435,9 +435,9 @@ namespace R2API {
             ) && c.TryGotoNext(
                 x => x.MatchStloc(out locBaseShieldIndex)
             ) && c.TryGotoNext(
-		x => x.MatchLdloc(locBaseShieldIndex),
-		x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.maxShield)))
-	    );
+        x => x.MatchLdloc(locBaseShieldIndex),
+        x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.maxShield)))
+        );
 
             if (ILFound) {
                 c.Index++;
@@ -506,12 +506,12 @@ namespace R2API {
                 x => x.MatchMul(),
                 x => x.MatchStloc(locBaseSpeedIndex)
             ) && c.TryGotoNext(MoveType.After,
-		x => x.MatchLdloc(out _),
-		x => x.MatchLdloc(out _),
-		x => x.MatchOr(),
-		x => x.MatchLdloc(out _),
-		x => x.MatchOr()
-	    );
+        x => x.MatchLdloc(out _),
+        x => x.MatchLdloc(out _),
+        x => x.MatchOr(),
+        x => x.MatchLdloc(out _),
+        x => x.MatchOr()
+        );
 
             if (ILFound) {
                 c.EmitDelegate<Func<bool>>(() => {
