@@ -25,26 +25,6 @@ namespace R2API {
 
         private static bool _loaded;
 
-        //private static readonly List<EffectDef> AddedEffects = new List<EffectDef>();
-
-        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void SetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady += AddAdditionalEntries;
-        }
-
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady -= AddAdditionalEntries;
-        }
-
-        /*private static void AddAdditionalEntries(ContentPack r2apiContentPack) {
-            foreach (var customEffect in AddedEffects) {
-                R2API.Logger.LogInfo($"Custom Effect: {customEffect.prefabName} added");
-            }
-
-            r2apiContentPack.effectDefs.Add(AddedEffects.ToArray());
-        }*/
-
         /// <summary>
         /// Creates an EffectDef from a prefab and adds it to the EffectCatalog.
         /// The prefab must have an the following components: EffectComponent, VFXAttributes
@@ -102,7 +82,6 @@ namespace R2API {
             }
 
             R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), effect.prefab);
-            //AddedEffects.Add(effect);
             return true;
         }
     }

@@ -28,7 +28,6 @@ namespace R2API {
 
         private static bool _survivorsAlreadyAdded;
 
-        //private static List<GameObject> SurvivorBodyPrefabs = new List<GameObject>();
         public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
 
         /// <summary>
@@ -56,7 +55,6 @@ namespace R2API {
                 return false;
             }
 
-            //SurvivorBodyPrefabs.Add(survivor.bodyPrefab);
             SurvivorDefinitions.Add(survivor);
 
             R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), survivor.bodyPrefab);
@@ -67,25 +65,17 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady += AddSurvivorsToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks += AddSurvivorsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntries;
             IL.RoR2.CharacterSelectBarController.Build += DescriptionTokenSafetyCheck;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady -= AddSurvivorsToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks -= AddSurvivorsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntries;
             IL.RoR2.CharacterSelectBarController.Build -= DescriptionTokenSafetyCheck;
         }
 
-        private static void AddSurvivorsToGame(/*ContentPack r2apiContentPack*/) {
-            /*foreach (var customSurvivor in SurvivorDefinitions) {
-                R2API.Logger.LogInfo($"Custom Survivor: {customSurvivor.cachedName} added");
-            }*/
-
-            //r2apiContentPack.bodyPrefabs.Add(SurvivorBodyPrefabs.ToArray());
-            //r2apiContentPack.survivorDefs.Add(SurvivorDefinitions.ToArray());
+        private static void AvoidNewEntries() {
             _survivorsAlreadyAdded = true;
         }
 

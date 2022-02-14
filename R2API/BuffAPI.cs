@@ -37,25 +37,15 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady += AddBuffsToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks += AddBuffsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntires;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady -= AddBuffsToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks -= AddBuffsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntires;
         }
 
-        private static void AddBuffsToGame(/*ContentPack r2apiContentPack*/) {
-            /*var buffDefs = new List<BuffDef>();
-            foreach (var customBuff in BuffDefinitions) {
-                buffDefs.Add(customBuff.BuffDef);
-
-                R2API.Logger.LogInfo($"Custom Buff: {customBuff.BuffDef.name} added");
-            }
-
-            r2apiContentPack.buffDefs.Add(buffDefs.ToArray());*/
+        private static void AvoidNewEntires() {
             _buffCatalogInitialized = true;
         }
 
@@ -83,7 +73,6 @@ namespace R2API {
             }
 
             R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), buff.BuffDef);
-            //BuffDefinitions.Add(buff);
             return true;
         }
 

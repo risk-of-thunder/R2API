@@ -15,6 +15,9 @@ using System.Collections.ObjectModel;
 using EntityStates;
 
 namespace R2API {
+    /// <summary>
+    /// A class that's used for managing ContentPacks created by R2API
+    /// </summary>
     public static class R2APIContentManager {
 
         /// <summary>
@@ -23,6 +26,7 @@ namespace R2API {
         public static ReadOnlyCollection<ContentPack> ManagedContentPacks {
             get {
                 if(!contentPacksCreated) {
+                    R2API.Logger.LogError($"Cannot return ContentPacks when they havent been created!");
                     return null;
                 }
                 return _managedContentPacks;
@@ -242,7 +246,6 @@ namespace R2API {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(EntityStateConfiguration), EntityStateConfigurations);
         }
         internal static void HandleContentAddition(Assembly assembly, Object content){
-
             SerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);
             content = EnsureSafeContentName(content, scp.name);
             if(scp) {
@@ -304,12 +307,14 @@ namespace R2API {
 
         internal static void CreateContentPacks() {
             if (!contentPacksCreated) {
+                R2API.Logger.LogInfo($"Generating a total of {BepInModNameToSerialziableContentPack.Values.Count} ContentPacks...");
                 List<ContentPack> contentPacks = new List<ContentPack>();
                 foreach(KeyValuePair<string, SerializableContentPack> kvp in BepInModNameToSerialziableContentPack) {
                     ContentPack cp = kvp.Value.CreateContentPack();
                     cp.identifier = kvp.Key;
                     contentPacks.Add(cp);
                     genericContentPacks.Add(new R2APIGenericContentPack(cp));
+                    R2API.Logger.LogDebug($"Content pack for {kvp.Key} created.");
                 }
                 _managedContentPacks = new ReadOnlyCollection<ContentPack>(contentPacks);
                 contentPacksCreated = true;
@@ -322,37 +327,46 @@ namespace R2API {
 
         #region Util
         private static SerializableContentPack GetOrCreateSerializableContentPack(Assembly assembly) {
-            //If the assembly that's adding the item has not been cached, find the GUID of the assembly and cache it.
-            if (!AssemblyToBepInModName.ContainsKey(assembly)) {
-                Type mainClass = assembly.GetTypes()
-                 .Where(t => t.GetCustomAttribute<BepInPlugin>() != null)
-                 .FirstOrDefault();
+            try {
+                //If the assembly that's adding the item has not been cached, find the GUID of the assembly and cache it.
+                if (!AssemblyToBepInModName.ContainsKey(assembly)) {
+                    Type mainClass = assembly.GetTypes()
+                     .Where(t => t.GetCustomAttribute<BepInPlugin>() != null)
+                     .FirstOrDefault();
 
-                if (mainClass != null) {
-                    BepInPlugin attribute = mainClass.GetCustomAttribute<BepInPlugin>();
-                    if (attribute != null) {
-                        AssemblyToBepInModName.Add(assembly, attribute.Name);
+                    if (mainClass != null) {
+                        BepInPlugin attribute = mainClass.GetCustomAttribute<BepInPlugin>();
+                        if (attribute != null) {
+                            AssemblyToBepInModName.Add(assembly, attribute.Name);
+                        }
                     }
                 }
-            }
 
-            if(AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
-                SerializableContentPack serializableContentPack;
-                //If this assembly does not have a content pack assigned to it, create a new one and add it to the dictionary
-                if (!BepInModNameToSerialziableContentPack.ContainsKey(modName)) {
-                    serializableContentPack = ScriptableObject.CreateInstance<SerializableContentPack>();
-                    serializableContentPack.name = modName;
-                    BepInModNameToSerialziableContentPack.Add(modName, serializableContentPack);
+                if (AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
+                    SerializableContentPack serializableContentPack;
+                    //If this assembly does not have a content pack assigned to it, create a new one and add it to the dictionary
+                    if (!BepInModNameToSerialziableContentPack.ContainsKey(modName)) {
+                        serializableContentPack = ScriptableObject.CreateInstance<SerializableContentPack>();
+                        serializableContentPack.name = modName;
+                        BepInModNameToSerialziableContentPack.Add(modName, serializableContentPack);
+                        R2API.Logger.LogInfo($"Created a SerializableContentPack for mod {modName}");
+                    }
+                    return BepInModNameToSerialziableContentPack[modName];
                 }
-                return BepInModNameToSerialziableContentPack[modName];
+                throw new NullReferenceException($"The assembly {assembly} does not have a class that has a BepInPlugin attribute! Cannot create ContentPack for {modName}!");
             }
-            return null;
+            catch (Exception e) {
+                R2API.Logger.LogError(e);
+                return null;
+            }
         }
 
         private static void AddSafe<T>(ref T[] assetArray, T asset, string identifier) where T : Object {
-            
             if(!assetArray.Contains(asset)) {
                 HG.ArrayUtils.ArrayAppend(ref assetArray, asset);
+            }
+            else {
+                R2API.Logger.LogWarning($"Cannot add {asset} to content pack {identifier} because the asset has already been added to it's correspoinding array!");
             }
         }
 
@@ -361,9 +375,12 @@ namespace R2API {
                 if(asset is EffectDef ed) {
                     HG.ArrayUtils.ArrayAppend(ref assetArray, asset);
                 }
+                else {
+                    HG.ArrayUtils.ArrayAppend(ref assetArray, asset);
+                }
             }
             else {
-                HG.ArrayUtils.ArrayAppend(ref assetArray, asset);
+                R2API.Logger.LogWarning($"Cannot add {asset} to content pack {identifier} because the asset has already been added to it's correspoinding array!");
             }
         }
         #endregion
@@ -458,6 +475,7 @@ namespace R2API {
                 newName = $"{identifier}{obj.GetType().Name}{i}";
                 i++;
             }
+            R2API.Logger.LogDebug($"The new name for {obj} is {newName}");
             return newName;
         }
         #endregion

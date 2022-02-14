@@ -92,7 +92,6 @@ namespace R2API {
         internal static void SetHooks() {
             On.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects += UpdateAllHook;
             IL.RoR2.CharacterBody.UpdateSingleTemporaryVisualEffect += UpdateSingleHook;
-            //R2APIContentPackProvider.WhenContentPackReady += DontAllowNewEntries;
             R2APIContentPackProvider.WhenAddingContentPacks += DontAllowNewEntries;
             CharacterBody.onBodyStartGlobal += BodyStart;
         }
@@ -101,7 +100,6 @@ namespace R2API {
         internal static void UnsetHooks() {
             On.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects -= UpdateAllHook;
             IL.RoR2.CharacterBody.UpdateSingleTemporaryVisualEffect += UpdateSingleHook;
-            //R2APIContentPackProvider.WhenContentPackReady -= DontAllowNewEntries;
             R2APIContentPackProvider.WhenAddingContentPacks -= DontAllowNewEntries;
             CharacterBody.onBodyStartGlobal -= BodyStart;
         }
@@ -112,7 +110,7 @@ namespace R2API {
             }
         }
 
-        private static void DontAllowNewEntries(/*ContentPack r2apiContentPack*/) {
+        private static void DontAllowNewEntries() {
             _TVEsAdded = true;
         }
 

@@ -38,7 +38,6 @@ namespace R2API {
             IL.RoR2.CombatDirector.Init += RetrieveVanillaEliteTierCount;
             On.RoR2.CombatDirector.Init += AddCustomEliteTiers;
 
-            //R2APIContentPackProvider.WhenContentPackReady += AddElitesToGame;
             R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
         }
 
@@ -47,7 +46,6 @@ namespace R2API {
             IL.RoR2.CombatDirector.Init -= RetrieveVanillaEliteTierCount;
             On.RoR2.CombatDirector.Init -= AddCustomEliteTiers;
 
-            //R2APIContentPackProvider.WhenContentPackReady -= AddElitesToGame;
             R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
         }
 
@@ -67,13 +65,10 @@ namespace R2API {
             CombatDirector.Init();
         }
 
-        private static void AddElitesToGame(/*ContentPack r2apiContentPack*/) {
-            //var eliteDefs = new List<EliteDef>();
-
+        private static void AddElitesToGame() {
             LazyInitVanillaEliteTiers();
 
             foreach (var customElite in EliteDefinitions) {
-                //eliteDefs.Add(customElite.EliteDef);
 
                 var currentEliteTiers = GetCombatDirectorEliteTiers();
 
@@ -96,9 +91,7 @@ namespace R2API {
                 }
 
                 OverrideCombatDirectorEliteTiers(currentEliteTiers);
-                //R2API.Logger.LogInfo($"Custom Elite: {customElite.EliteDef.modifierToken} added");
             }
-            //r2apiContentPack.eliteDefs.Add(eliteDefs.ToArray());
             _eliteCatalogInitialized = true;
         }
 

@@ -44,41 +44,23 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady += AddItemsToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks += AddItemsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntiresAndLoadRelatedAPIs;
             IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
             On.RoR2.ItemDisplayRuleSet.Init += AddingItemDisplayRulesToCharacterModels;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady -= AddItemsToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks += AddItemsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntiresAndLoadRelatedAPIs;
             IL.RoR2.CharacterModel.UpdateMaterials -= MaterialFixForItemDisplayOnCharacter;
             On.RoR2.ItemDisplayRuleSet.Init -= AddingItemDisplayRulesToCharacterModels;
         }
 
-        private static void AddItemsToGame(/*ContentPack r2apiContentPack*/) {
-            /*var itemDefs = new List<ItemDef>();
-            foreach (var customItem in ItemDefinitions) {
-                itemDefs.Add(customItem.ItemDef);
-
-                R2API.Logger.LogInfo($"Custom Item: {customItem.ItemDef.name} added");
-            }*
-
-            r2apiContentPack.itemDefs.Add(itemDefs.ToArray());*/
+        private static void AvoidNewEntiresAndLoadRelatedAPIs() {
             _itemCatalogInitialized = true;
-
-            /*var equipmentDefs = new List<EquipmentDef>();
-            foreach (var customEquipment in EquipmentDefinitions) {
-                equipmentDefs.Add(customEquipment.EquipmentDef);
-
-                R2API.Logger.LogInfo($"Custom Equipment: {customEquipment.EquipmentDef.name} added");
-            }*/
 
             LoadRelatedAPIs();
 
-            //r2apiContentPack.equipmentDefs.Add(equipmentDefs.ToArray());
             _equipmentCatalogInitialized = true;
         }
 
@@ -145,7 +127,6 @@ namespace R2API {
             }
             if (xmlSafe) {
                 R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), item.ItemDef);
-                //ItemDefinitions.Add(item);
                 return true;
             }
 
@@ -198,7 +179,6 @@ namespace R2API {
             }
             if (xmlSafe) {
                 R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), item.EquipmentDef);
-                //EquipmentDefinitions.Add(item);
                 return true;
             }
 

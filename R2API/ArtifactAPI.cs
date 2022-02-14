@@ -14,8 +14,6 @@ namespace R2API {
     [R2APISubmodule]
     public static class ArtifactAPI {
 
-        //private static readonly List<ArtifactDef> Artifacts = new List<ArtifactDef>();
-
         private static bool _artifactCatalogInitialized;
 
         /// <summary>
@@ -32,22 +30,15 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady += AddArtifactsToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks += AddArtifactsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntries;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady -= AddArtifactsToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks -= AddArtifactsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntries;
         }
 
-        private static void AddArtifactsToGame(/*ContentPack r2apiContentPack*/) {
-            /*foreach (var artifact in Artifacts) {
-                R2API.Logger.LogInfo($"Custom Artifact: {artifact.cachedName} added");
-            }
-
-            r2apiContentPack.artifactDefs.Add(Artifacts.ToArray());*/
+        private static void AvoidNewEntries() {
             _artifactCatalogInitialized = true;
         }
 
@@ -73,7 +64,6 @@ namespace R2API {
             }
 
             R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), artifactDef);
-            //Artifacts.Add(artifactDef);
             return true;
         }
 
@@ -108,7 +98,6 @@ namespace R2API {
             artifactDef.unlockableDef = unlockableDef;
 
             R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), artifactDef);
-            //Artifacts.Add(artifactDef);
             return true;
         }
 

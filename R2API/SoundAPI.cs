@@ -284,22 +284,15 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void NetworkSetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady += AddNetworkSoundEventDefsToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks += AddNetworkSoundEventDefsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntires;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void NetworkUnsetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady -= AddNetworkSoundEventDefsToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks -= AddNetworkSoundEventDefsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntires;
         }
 
-        private static void AddNetworkSoundEventDefsToGame(/*ContentPack r2apiContentPack*/) {
-            /*foreach (var networkSoundEventDef in NetworkSoundEventDefs) {
-                R2API.Logger.LogInfo($"Custom Network Sound Event: {networkSoundEventDef.eventName} added");
-            }
-
-            r2apiContentPack.networkSoundEventDefs.Add(NetworkSoundEventDefs.ToArray());*/
+        private static void AvoidNewEntires() {
             _NetworkSoundEventCatalogInitialized = true;
         }
 

@@ -33,28 +33,28 @@ namespace R2API {
         private void LogContentsFromContentPack() {
             List<string> log = new List<string>();
             log.Add($"Content added from {contentPack.identifier}:");
-            log.AddRange(contentPack.bodyPrefabs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.masterPrefabs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.projectilePrefabs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.gameModePrefabs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.networkedObjectPrefabs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.skillDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.skillFamilies.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.sceneDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.itemDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.equipmentDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.buffDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.eliteDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.unlockableDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.survivorDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.artifactDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.effectDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.surfaceDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.networkSoundEventDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.musicTrackDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.gameEndingDefs.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.entityStateConfigurations.assetInfos.Select(ai => ai.asset.ToString()));
-            log.AddRange(contentPack.entityStateTypes.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.bodyPrefabs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.masterPrefabs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.projectilePrefabs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.gameModePrefabs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.networkedObjectPrefabs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.skillDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.skillFamilies.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.sceneDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.itemDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.equipmentDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.buffDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.eliteDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.unlockableDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.survivorDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.artifactDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.effectDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.surfaceDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.networkSoundEventDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.musicTrackDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.gameEndingDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.entityStateConfigurations.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.entityStateTypes.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
             R2API.Logger.LogDebug(string.Join("\n", log));
         }
     }
@@ -76,7 +76,6 @@ namespace R2API {
                     }
                 }
             }
-            R2API.Logger.LogInfo($"Generating ContentPacks...");
             R2APIContentManager.CreateContentPacks();
             foreach(R2APIGenericContentPack gcp in R2APIContentManager.genericContentPacks) {
                 addContentPackProvider(gcp);

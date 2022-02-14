@@ -13,8 +13,6 @@ namespace R2API {
     [R2APISubmodule]
     public static class ProjectileAPI {
 
-        //private static readonly List<GameObject> Projectiles = new List<GameObject>();
-
         private static bool _projectileCatalogInitialized;
 
         /// <summary>
@@ -31,22 +29,15 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady += AddProjectilesToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks += AddProjectilesToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntires;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            //R2APIContentPackProvider.WhenContentPackReady -= AddProjectilesToGame;
-            R2APIContentPackProvider.WhenAddingContentPacks -= AddProjectilesToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntires;
         }
 
-        private static void AddProjectilesToGame(/*ContentPack r2apiContentPack*/) {
-            /*foreach (var projectile in Projectiles) {
-                R2API.Logger.LogInfo($"Custom Projectile: {projectile.name} added");
-            }
-
-            r2apiContentPack.projectilePrefabs.Add(Projectiles.ToArray());*/
+        private static void AvoidNewEntires() {
             _projectileCatalogInitialized = true;
         }
 
@@ -72,7 +63,6 @@ namespace R2API {
             }
 
             R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), projectile);
-            //Projectiles.Add(projectile);
             return true;
         }
 

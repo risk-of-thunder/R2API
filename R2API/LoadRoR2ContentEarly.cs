@@ -16,6 +16,9 @@ namespace R2API {
     internal static class LoadRoR2ContentEarly {
         private static bool _ror2ContentLoaded;
         private static RoR2Content RoR2Content;
+        /// <summary>
+        /// A ReadOnly version of RoR2's ContentPack.
+        /// </summary>
         public static ReadOnlyContentPack ReadOnlyRoR2ContentPack { get; private set; } 
 
         internal static void Init() {
