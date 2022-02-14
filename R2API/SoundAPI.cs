@@ -283,15 +283,15 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void NetworkSetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntires;
+            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntries;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void NetworkUnsetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntires;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntries;
         }
 
-        private static void AvoidNewEntires() {
+        private static void AvoidNewEntries() {
             _NetworkSoundEventCatalogInitialized = true;
         }
 

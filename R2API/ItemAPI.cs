@@ -43,19 +43,19 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntiresAndLoadRelatedAPIs;
+            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntriesAndLoadRelatedAPIs;
             IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
             On.RoR2.ItemDisplayRuleSet.Init += AddingItemDisplayRulesToCharacterModels;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntiresAndLoadRelatedAPIs;
+            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntriesAndLoadRelatedAPIs;
             IL.RoR2.CharacterModel.UpdateMaterials -= MaterialFixForItemDisplayOnCharacter;
             On.RoR2.ItemDisplayRuleSet.Init -= AddingItemDisplayRulesToCharacterModels;
         }
 
-        private static void AvoidNewEntiresAndLoadRelatedAPIs() {
+        private static void AvoidNewEntriesAndLoadRelatedAPIs() {
             _itemCatalogInitialized = true;
 
             LoadRelatedAPIs();

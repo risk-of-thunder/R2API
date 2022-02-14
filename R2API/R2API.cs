@@ -24,7 +24,7 @@ namespace R2API {
         public const string PluginGUID = "com.bepis.r2api";
 
         public const string PluginName = "R2API";
-        public const string PluginVersion = "4.0.0";
+        public const string PluginVersion = "0.0.1";
 
         private const int GameBuild = 6537444;
 
