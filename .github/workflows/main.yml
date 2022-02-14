@@ -21,17 +21,20 @@ jobs:
       run: |
         sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"$GitVersion_SemVer\"/" R2API/R2API.cs
         sed -i -E "s/(\"version_number\":\s*)\"0.0.1\"/\1\"$GitVersion_SemVer\"/" manifest.json
-    - name: Run Tests
-      run: |
-        dotnet test
-    - uses: actions/setup-dotnet@v1.7.2
+        sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"$GitVersion_SemVer\"/" R2API.Test/R2APITest.cs
+    - name: Build project
+      uses: actions/setup-dotnet@v1.7.2
     - run: dotnet build .
     - name: Prepare Artifact
       run: |
         mkdir plugins
         mkdir plugins/R2API
+        mkdir plugins/R2API/Tests
         cp R2API/bin/Debug/**/*.dll plugins/R2API/
+        cp R2API/bin/Debug/**/*.pdb plugins/R2API/
         cp R2API/bin/Debug/**/*.xml plugins/R2API/
+        cp R2API.Test/bin/Debug/**/R2API.Test.* plugins/R2API/Tests/
+        cp R2API.Test/bin/Debug/**/xunit* plugins/R2API/Tests/
     - name: Upload R2API Build Artifact
       uses: actions/upload-artifact@v2
       with:

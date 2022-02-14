@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -147,6 +148,29 @@ namespace R2API {
             }
 
             /// <summary>
+            /// Adds an external soundbank to load, loaded from an embedded resource in the assembly
+            /// </summary>
+            /// <param name="resourceName"></param>
+            /// <param name="owningAssembly"></param>
+            /// <returns></returns>
+            public static uint Add(string resourceName, Assembly owningAssembly) {
+                var (ptr, size) = EmbeddedResources.GetEmbeddedResource(resourceName, owningAssembly);
+                if (ptr == 0 || size == 0) throw new ArgumentException($"{resourceName} did not return a valid resource", nameof(resourceName));
+
+                var bankToAdd = new Bank(ptr, (uint)size);
+                if (Loaded) {
+                    if (bankToAdd.Load()) {
+                        soundBanks.Add(bankToAdd);
+                    }
+                }
+                else {
+                    soundBanks.Add(bankToAdd);
+                }
+
+                return bankToAdd.PublicID;
+            }
+
+            /// <summary>
             /// Unloads an bank using the ID (ID is returned at the Add() of the bank)
             /// </summary>
             /// <param name="ID">BankID</param>
@@ -163,6 +187,12 @@ namespace R2API {
 
                 internal Bank(byte[] bankData) {
                     BankData = bankData;
+                    Size = (uint)bankData.Length;
+                    PublicID = _bankIteration++;
+                }
+                internal Bank(nint bankPtr, uint size) {
+                    BankDataPtr = bankPtr;
+                    Size = size;
                     PublicID = _bankIteration++;
                 }
 
@@ -172,19 +202,29 @@ namespace R2API {
                 private static uint _bankIteration = 0;
 
                 /// <summary>
+                /// Pointer to bank data
+                /// </summary>
+                internal nint? BankDataPtr;
+
+                /// <summary>
                 /// BankData supplied by the user
                 /// </summary>
                 internal byte[] BankData;
 
                 /// <summary>
+                /// Handle for BankData array
+                /// </summary>
+                internal GCHandle? Memory;
+
+                /// <summary>
+                /// Size of the bank in bytes
+                /// </summary>
+                internal uint Size;
+
+                /// <summary>
                 /// Identifier for the User
                 /// </summary>
                 internal uint PublicID;
-
-                /// <summary>
-                /// Pointer for the wwise engine
-                /// </summary>
-                internal IntPtr Memory;
 
                 /// <summary>
                 /// Identifier for the engine
@@ -196,20 +236,18 @@ namespace R2API {
                 /// </summary>
                 /// <returns>True if the bank successfully loaded, false otherwise</returns>
                 internal bool Load() {
-                    //Creates IntPtr of sufficient size.
-                    Memory = Marshal.AllocHGlobal(BankData.Length);
+                    // Pins BankData array in memory
+                    BankDataPtr ??= (Memory = GCHandle.Alloc(BankData, GCHandleType.Pinned)).Value.AddrOfPinnedObject();
 
-                    //copies the byte array to the IntPtr
-                    Marshal.Copy(BankData, 0, Memory, BankData.Length);
+                    // Loads the entire array as a bank
+                    var result = AkSoundEngine.LoadBank(BankDataPtr!.Value, Size, out BankID);
 
-                    //Loads the entire IntPtr as a bank
-                    var result = AkSoundEngine.LoadBank(Memory, (uint)BankData.Length, out BankID);
                     if (result != AKRESULT.AK_Success) {
                         Debug.LogError("WwiseUnity: AkMemBankLoader: bank loading failed with result " + result);
                         return false;
                     }
 
-                    //BankData is now copied to Memory so is unnecassary
+                    // BankData is held by the GCHandle or was created from a raw pointer, no need for the array
                     BankData = null;
                     return true;
                 }
@@ -219,12 +257,16 @@ namespace R2API {
                 /// </summary>
                 /// <returns>The AKRESULT of unloading itself</returns>
                 internal AKRESULT UnLoad() {
-                    var result = AkSoundEngine.UnloadBank(BankID, Memory);
+                    var result = AkSoundEngine.UnloadBank(BankID, BankDataPtr!.Value);
+
                     if (result != AKRESULT.AK_Success) {
                         Debug.LogError("Failed to unload bank " + PublicID.ToString() + ": " + result.ToString());
                         return result;
                     }
-                    Marshal.FreeHGlobal(Memory);
+
+                    Memory?.Free();
+                    Memory = null;
+
                     soundBanks.Remove(this);
                     return result;
                 }
@@ -497,9 +539,6 @@ namespace R2API {
 
             private static bool GameMusicBankInUse;
 
-            private static SceneDef LastSceneDef;
-            private static MusicController MusicControllerInstance;
-
             private static bool IsVanillaMusicTrack(MusicTrackDef self) =>
                 self && self.soundBank != null && self.soundBank.Name == GameMusicBankName;
 
@@ -513,9 +552,16 @@ namespace R2API {
                 On.RoR2.MusicController.Start += EnableCustomMusicSystems;
                 SceneCatalog.onMostRecentSceneDefChanged += OnSceneChangeReplaceMusic;
 
-                IL.RoR2.MusicController.LateUpdate += PauseMusicIfGameMusicBankNotInUse;
+                On.RoR2.MusicController.UpdateState += IsGameMusicBankInUse;
 
-                IL.RoR2.MusicTrackOverride.PickMusicTrack += CheckIfTrackOverrideIsVanilla;
+                IL.RoR2.MusicController.LateUpdate += PauseMusicIfGameMusicBankNotInUse;
+            }
+
+            private static void IsGameMusicBankInUse(On.RoR2.MusicController.orig_UpdateState orig, MusicController self) {
+                orig(self);
+
+                if (self && self.currentTrack)
+                    GameMusicBankInUse = IsVanillaMusicTrack(self.currentTrack);
             }
 
             internal static void UnsetHooks() {
@@ -524,9 +570,9 @@ namespace R2API {
                 On.RoR2.MusicController.Start -= EnableCustomMusicSystems;
                 SceneCatalog.onMostRecentSceneDefChanged -= OnSceneChangeReplaceMusic;
 
-                IL.RoR2.MusicController.LateUpdate -= PauseMusicIfGameMusicBankNotInUse;
+                On.RoR2.MusicController.UpdateState -= IsGameMusicBankInUse;
 
-                IL.RoR2.MusicTrackOverride.PickMusicTrack -= CheckIfTrackOverrideIsVanilla;
+                IL.RoR2.MusicController.LateUpdate -= PauseMusicIfGameMusicBankNotInUse;
             }
 
             private static bool AddCustomMusicDatas(Func<bool> orig) {
@@ -584,9 +630,6 @@ namespace R2API {
                 foreach (var playMusicSystemEventName in PlayMusicSystemEventNames) {
                     AkSoundEngine.PostEvent(playMusicSystemEventName, self.gameObject);
                 }
-
-                MusicControllerInstance = self;
-                GameMusicBankInUse = true;
             }
 
             private static void OnSceneChangeReplaceMusic(SceneDef sceneDef) {
@@ -595,10 +638,6 @@ namespace R2API {
                 }
 
                 ReplaceSceneMusicWithCustomTracks(sceneDef);
-
-                UpdateIsGameMusicBankInUse(sceneDef);
-
-                LastSceneDef = sceneDef;
             }
 
             private static void ReplaceSceneMusicWithCustomTracks(SceneDef sceneDef) {
@@ -612,11 +651,6 @@ namespace R2API {
                         var selectedTracks = customTracks[RoR2Application.rng.RangeInt(0, customTracks.Count)];
 
                         if (selectedTracks.MainTrack) {
-                            if (IsVanillaMusicTrack(sceneDef.mainTrack) ||
-                                LastSceneDef && IsVanillaMusicTrack(LastSceneDef.mainTrack)) {
-                                GameMusicBankInUse = false;
-                            }
-
                             sceneDef.mainTrack = selectedTracks.MainTrack;
                         }
                         if (selectedTracks.BossTrack) {
@@ -626,48 +660,21 @@ namespace R2API {
                 }
             }
 
-            private static void UpdateIsGameMusicBankInUse(SceneDef sceneDef) {
-                if (IsVanillaMusicTrack(sceneDef.mainTrack) ||
-                    IsVanillaMusicTrack(sceneDef.bossTrack)) {
-                    GameMusicBankInUse = true;
-                }
-            }
-
+            /// <summary>
+            /// Needed otherwise the vanilla music system plays the default track of the bank on top of the custom music
+            /// </summary>
             private static void PauseMusicIfGameMusicBankNotInUse(ILContext il) {
                 var cursor = new ILCursor(il);
 
-                static bool PauseMusicIfGameMusicBankNotInUse(bool b) {
-                    if (b)
-                        return true;
+                static bool PauseMusicIfGameMusicBankNotInUse(bool shouldPauseMusic) {
+                    if (shouldPauseMusic)
+                        return shouldPauseMusic;
 
                     return !GameMusicBankInUse;
                 }
 
                 cursor.GotoNext(i => i.MatchStloc(out _));
                 cursor.EmitDelegate<Func<bool, bool>>(PauseMusicIfGameMusicBankNotInUse);
-            }
-
-            private static void CheckIfTrackOverrideIsVanilla(ILContext il) {
-                var cursor = new ILCursor(il);
-
-                static MusicTrackDef CheckIfTrackOverrideIsVanilla(MusicTrackDef overrideTrack) {
-                    if (overrideTrack) {
-                        GameMusicBankInUse = IsVanillaMusicTrack(overrideTrack);
-                    }
-
-                    return overrideTrack;
-                }
-
-                if (cursor.TryGotoNext(
-                    i => i.MatchLdfld<MusicTrackOverride>(nameof(MusicTrackOverride.track)),
-                    i => i.MatchStindRef())) {
-                    cursor.Index++;
-                    cursor.EmitDelegate<Func<MusicTrackDef, MusicTrackDef>>(CheckIfTrackOverrideIsVanilla);
-                }
-                else {
-                    R2API.Logger.LogError("Failed finding IL Instructions. " +
-                        $"Aborting {nameof(MusicTrackOverride.PickMusicTrack)} IL Hook");
-                }
             }
 
             /// <summary>
@@ -772,13 +779,9 @@ namespace R2API {
                 foreach (var scene in SceneCatalog.allSceneDefs) {
                     if (scene.mainTrack == customTracks.MainTrack) {
                         scene.mainTrack = SceneDefToOriginalTracks[scene].MainTrack;
-
-                        GameMusicBankInUse = true;
                     }
                     if (scene.bossTrack == customTracks.BossTrack) {
                         scene.bossTrack = SceneDefToOriginalTracks[scene].BossTrack;
-
-                        GameMusicBankInUse = true;
                     }
                 }
             }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28606.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API", "R2API\R2API.csproj", "{2F8A40CC-6D15-486D-B689-0A7A472DB89E}"
 EndProject
@@ -11,7 +11,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		manifest.json = manifest.json
+		nuget.config = nuget.config
 		README.md = README.md
+		thunderstore.toml = thunderstore.toml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{68B36E72-17D9-4D17-8C52-DB612CF24001}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{CFD6888C-DCB1-4D72-9234-02527497750D}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\main.yml = .github\workflows\main.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
 Global
@@ -31,6 +41,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{68B36E72-17D9-4D17-8C52-DB612CF24001} = {3A26DDA8-2697-4D64-962B-DB9E2DC00EF6}
+		{CFD6888C-DCB1-4D72-9234-02527497750D} = {68B36E72-17D9-4D17-8C52-DB612CF24001}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {25394121-1456-4FD9-A853-060A4DBBB74C}

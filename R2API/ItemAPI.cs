@@ -1,4 +1,4 @@
-﻿using Mono.Cecil.Cil;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
@@ -6,6 +6,7 @@ using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -23,6 +24,8 @@ namespace R2API {
 
         private static bool _itemCatalogInitialized;
         private static bool _equipmentCatalogInitialized;
+
+        private static ICollection<string> noDefaultIDRSCharacterList = new List<string>();
 
         public static int CustomItemCount, CustomEquipmentCount;
 
@@ -112,12 +115,23 @@ namespace R2API {
                 R2API.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the item list was created");
             }
 
-            if (item.ItemDef == null) {
-                R2API.Logger.LogError("Your ItemDef is null ! Can't add your item.");
+            if (!item.ItemDef) {
+                R2API.Logger.LogError("ItemDef is null ! Can't add the custom item.");
             }
 
             if (string.IsNullOrEmpty(item.ItemDef.name)) {
-                R2API.Logger.LogError("Your ItemDef.name is null or empty ! Can't add your item.");
+                R2API.Logger.LogError("ItemDef.name is null or empty ! Can't add the custom item.");
+            }
+
+            if (!item.ItemDef.pickupModelPrefab) {
+                R2API.Logger.LogWarning($"No ItemDef.pickupModelPrefab ({item.ItemDef.name}), the game will show nothing when the item is on the ground.");
+            }
+            else if (item.ItemDisplayRules != null &&
+                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
+                !item.ItemDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
+                R2API.Logger.LogWarning($"ItemDef.pickupModelPrefab ({item.ItemDef.name}) does not have an ItemDisplay component attached to it " +
+                    "(there are ItemDisplayRuleType.ParentedPrefab rules), " +
+                    "the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
             }
 
             bool xmlSafe = false;
@@ -154,11 +168,22 @@ namespace R2API {
             }
 
             if (item.EquipmentDef == null) {
-                R2API.Logger.LogError("Your EquipmentDef is null ! Can't add your Equipment.");
+                R2API.Logger.LogError("EquipmentDef is null ! Can't add the custom Equipment.");
             }
 
             if (string.IsNullOrEmpty(item.EquipmentDef.name)) {
-                R2API.Logger.LogError("Your EquipmentDef.name is null or empty ! Can't add your Equipment.");
+                R2API.Logger.LogError("EquipmentDef.name is null or empty ! Can't add the custom Equipment.");
+            }
+
+            if (!item.EquipmentDef.pickupModelPrefab) {
+                R2API.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab ({item.EquipmentDef.name}), the game will show nothing when the item is on the ground.");
+            }
+            else if (item.ItemDisplayRules != null &&
+                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
+                !item.EquipmentDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
+                R2API.Logger.LogWarning($"EquipmentDef.pickupModelPrefab ({item.EquipmentDef.name}) does not have an ItemDisplay component attached to it " +
+                    "(there are ItemDisplayRuleType.ParentedPrefab rules), " +
+                    "the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
             }
 
             bool xmlSafe = false;
@@ -179,39 +204,67 @@ namespace R2API {
 
         #endregion Add Methods
 
+        #region Other Modded Content Support
+        /// <summary>
+        /// Prevents bodies and charactermodels matching this name from having nonspecific item display rules applied to them
+        /// </summary>
+        /// <param name="bodyPrefabOrCharacterModelName">The string to match</param>
+        public static void DoNotAutoIDRSFor(string bodyPrefabOrCharacterModelName) {
+            noDefaultIDRSCharacterList.Add(bodyPrefabOrCharacterModelName);
+        }
+
+        /// <summary>
+        /// Prevent prefabs with this name having nonspecific item display rules applied to them
+        /// </summary>
+        /// <param name="bodyPrefab">The body prefab to match</param>
+        public static void DoNotAutoIDRSFor(GameObject bodyPrefab) {
+            var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
+            if (characterModel) {
+                DoNotAutoIDRSFor(bodyPrefab.name);
+            }
+        }
+        #endregion
+
         #region ItemDisplay Hooks
 
         // With how unfriendly it is to makes your 3D Prefab work with shaders from the game,
         // makes it so that if the custom prefab doesnt have rendering support for when the player is cloaked, or burning, still display the item on the player.
+        // iDeath : This hook was made back when I didn't know that pickupModelPrefab
+        // just needed an ItemDisplay component attached to it for the game method to not complain
         private static void MaterialFixForItemDisplayOnCharacter(ILContext il) {
             var cursor = new ILCursor(il);
             var forCounterLoc = 0;
             var itemDisplayLoc = 0;
 
-            cursor.GotoNext(
-                i => i.MatchLdarg(0),
-                i => i.MatchLdfld("RoR2.CharacterModel", "parentedPrefabDisplays"),
-                i => i.MatchLdloc(out forCounterLoc)
-            );
+            try {
+                cursor.GotoNext(
+                    i => i.MatchLdarg(0),
+                    i => i.MatchLdfld("RoR2.CharacterModel", "parentedPrefabDisplays"),
+                    i => i.MatchLdloc(out forCounterLoc)
+                );
 
-            cursor.GotoNext(
-                i => i.MatchCallOrCallvirt("RoR2.CharacterModel/ParentedPrefabDisplay", "get_itemDisplay"),
-                i => i.MatchStloc(out itemDisplayLoc)
-            );
-            cursor.Index += 2;
+                cursor.GotoNext(
+                    i => i.MatchCallOrCallvirt("RoR2.CharacterModel/ParentedPrefabDisplay", "get_itemDisplay"),
+                    i => i.MatchStloc(out itemDisplayLoc)
+                );
+                cursor.Index += 2;
 
-            cursor.Emit(OpCodes.Ldloc, itemDisplayLoc);
-            cursor.Emit(OpCodes.Call, typeof(Object).GetMethodCached("op_Implicit"));
-            cursor.Emit(OpCodes.Brfalse, cursor.MarkLabel());
-            var brFalsePos = cursor.Index - 1;
+                cursor.Emit(OpCodes.Ldloc, itemDisplayLoc);
+                cursor.Emit(OpCodes.Call, typeof(Object).GetMethodCached("op_Implicit"));
+                cursor.Emit(OpCodes.Brfalse, cursor.MarkLabel());
+                var brFalsePos = cursor.Index - 1;
 
-            cursor.GotoNext(
-                i => i.MatchLdloc(forCounterLoc)
-            );
-            var label = cursor.MarkLabel();
+                cursor.GotoNext(
+                    i => i.MatchLdloc(forCounterLoc)
+                );
+                var label = cursor.MarkLabel();
 
-            cursor.Index = brFalsePos;
-            cursor.Next.Operand = label;
+                cursor.Index = brFalsePos;
+                cursor.Next.Operand = label;
+            }
+            catch (Exception e) {
+                R2API.Logger.LogError($"Exception in {nameof(MaterialFixForItemDisplayOnCharacter)} : Item mods without the {nameof(ItemDisplay)} component may not work correctly.\n{e}");
+            }
         }
 
         // todo : allow override of existing item display rules
@@ -226,14 +279,23 @@ namespace R2API {
                     if (!characterModel.itemDisplayRuleSet) {
                         characterModel.itemDisplayRuleSet = ScriptableObject.CreateInstance<ItemDisplayRuleSet>();
                     }
+                    var modelName = characterModel.name;
+                    var bodyName = bodyPrefab.name;
+                    bool allowDefault = true;
+                    if (noDefaultIDRSCharacterList.Contains(modelName) || noDefaultIDRSCharacterList.Contains(bodyName)) {
+                        allowDefault = false;
+                    }
 
                     foreach (var customItem in ItemDefinitions) {
                         var customRules = customItem.ItemDisplayRules;
                         if (customRules != null) {
                             //if a specific rule for this model exists, or the model has no rules for this item
-                            if (customRules.TryGetRules(characterModel.name, out var rules) ||
-                                customRules.TryGetRules(bodyPrefab.name, out rules) || 
-                                characterModel.itemDisplayRuleSet.GetItemDisplayRuleGroup(customItem.ItemDef.itemIndex).rules == null) {
+                            if (customRules.TryGetRules(modelName, out ItemDisplayRule[]? rules) ||
+                                customRules.TryGetRules(bodyName, out rules) ||
+                                (
+                                    allowDefault &&
+                                    characterModel.itemDisplayRuleSet.GetItemDisplayRuleGroup(customItem.ItemDef.itemIndex).rules == null
+                                )) {
                                 characterModel.itemDisplayRuleSet.SetDisplayRuleGroup(customItem.ItemDef, new DisplayRuleGroup { rules = rules });
                             }
                         }
@@ -243,9 +305,12 @@ namespace R2API {
                         var customRules = customEquipment.ItemDisplayRules;
                         if (customRules != null) {
                             //if a specific rule for this model exists, or the model has no rules for this equipment
-                            if (customRules.TryGetRules(characterModel.name, out var rules) ||
-                                customRules.TryGetRules(bodyPrefab.name, out rules) ||
-                                characterModel.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null) {
+                            if (customRules.TryGetRules(modelName, out ItemDisplayRule[]? rules) ||
+                                customRules.TryGetRules(bodyName, out rules) ||
+                                (
+                                    allowDefault &&
+                                    characterModel.itemDisplayRuleSet.GetEquipmentDisplayRuleGroup(customEquipment.EquipmentDef.equipmentIndex).rules == null
+                                )) {
                                 characterModel.itemDisplayRuleSet.SetDisplayRuleGroup(customEquipment.EquipmentDef, new DisplayRuleGroup { rules = rules });
                             }
                         }
@@ -467,7 +532,7 @@ namespace R2API {
         /// </summary>
         public ItemDisplayRule[]? DefaultRules { get; private set; }
 
-        private readonly Dictionary<string, ItemDisplayRule[]?> Dictionary;
+        internal Dictionary<string, ItemDisplayRule[]?> Dictionary { get; private set; }
 
         public ItemDisplayRuleDict(params ItemDisplayRule[]? defaultRules) {
             DefaultRules = defaultRules;

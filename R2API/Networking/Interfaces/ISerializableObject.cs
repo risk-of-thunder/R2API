@@ -2,10 +2,22 @@
 
 namespace R2API.Networking.Interfaces {
 
+    /// <summary>
+    /// Must implement Serialize for how to serialize the class / struct through a NetworkWriter
+    /// and how to deserialize them through a NetworkReader
+    /// </summary>
     public interface ISerializableObject {
 
+        /// <summary>
+        /// How the class / struct should be serialized over the network
+        /// </summary>
+        /// <param name="writer"></param>
         void Serialize(NetworkWriter writer);
 
+        /// <summary>
+        /// How the class / struct should be deserialized over the network
+        /// </summary>
+        /// <param name="reader"></param>
         void Deserialize(NetworkReader reader);
     }
 

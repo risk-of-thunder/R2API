@@ -108,6 +108,7 @@ namespace R2API.Utils {
         public static TReturn GetFieldValue<TReturn>(this object? instance, string? fieldName) =>
             instance.GetType()
                 .GetFieldCached(fieldName)
+                .ThrowIfFieldTypeCannotBeAssignedTo<TReturn>()
                 .GetFieldGetDelegate<TReturn>()
                 (instance);
 
@@ -121,8 +122,8 @@ namespace R2API.Utils {
         public static TReturn GetFieldValue<TReturn>(this Type? staticType, string? fieldName) =>
             staticType
                 .GetFieldCached(fieldName)
-                .GetFieldGetDelegate<TReturn>()
-                (null);
+                .ThrowIfFieldTypeCannotBeAssignedTo<TReturn>()
+                .GetFieldGetDelegate<TReturn>()(null);
 
         /// <summary>
         /// Sets the value of the specified field on the specified object; if the object is a struct use
@@ -136,6 +137,7 @@ namespace R2API.Utils {
         public static void SetFieldValue<TValue>(this object? instance, string? fieldName, TValue value) =>
             instance.GetType()
                 .GetFieldCached(fieldName)
+                .ThrowIfTCannotBeAssignedToField<TValue>()
                 .GetFieldSetDelegate<TValue>()
                 (instance, value);
 
@@ -150,6 +152,7 @@ namespace R2API.Utils {
         public static void SetFieldValue<TValue>(this Type? staticType, string? fieldName, TValue value) =>
             staticType
                 .GetFieldCached(fieldName)
+                .ThrowIfTCannotBeAssignedToField<TValue>()
                 .GetFieldSetDelegate<TValue>()
                 (null, value);
 
@@ -166,6 +169,7 @@ namespace R2API.Utils {
             where TInstance : struct =>
             typeof(TInstance)
                 .GetFieldCached(fieldName)
+                .ThrowIfTCannotBeAssignedToField<TValue>()
                 .GetFieldSetDelegateRef<TInstance, TValue>()
                 (ref instance, value);
 
@@ -183,19 +187,6 @@ namespace R2API.Utils {
                 }
 
                 T = T.BaseType;
-            }
-
-            return null;
-        }
-
-        private static T GetMemberFull<T>(this Type type, string name) where T : MemberInfo {
-            while (type != null) {
-                var fieldInfo = type.GetMember(name, AllFlags);
-                if (fieldInfo != null) {
-                    return (T)fieldInfo.First();
-                }
-
-                type = type.BaseType;
             }
 
             return null;
@@ -246,6 +237,7 @@ namespace R2API.Utils {
         public static TReturn GetPropertyValue<TReturn>(this object? instance, string? propName) =>
             instance.GetType()
                 .GetPropertyCached(propName)
+                .ThrowIfPropertyTypeCannotBeAssignedTo<TReturn>()
                 .GetPropertyGetDelegate<TReturn>()
                 (instance);
 
@@ -259,6 +251,7 @@ namespace R2API.Utils {
         public static TReturn GetPropertyValue<TReturn>(this Type? staticType, string? propName) =>
             staticType
                 .GetPropertyCached(propName)
+                .ThrowIfPropertyTypeCannotBeAssignedTo<TReturn>()
                 .GetPropertyGetDelegate<TReturn>()
                 (null);
 
@@ -274,6 +267,7 @@ namespace R2API.Utils {
         public static void SetPropertyValue<TValue>(this object? instance, string? propName, TValue value) =>
             instance.GetType()
                 .GetPropertyCached(propName)?
+                .ThrowIfTCannotBeAssignedToProperty<TValue>()
                 .GetPropertySetDelegate<TValue>()
                 (instance, value);
 
@@ -287,6 +281,7 @@ namespace R2API.Utils {
         /// <returns></returns>
         public static void SetPropertyValue<TValue>(this Type? staticType, string? propName, TValue value) =>
             staticType.GetPropertyCached(propName)?
+                .ThrowIfTCannotBeAssignedToProperty<TValue>()
                 .GetPropertySetDelegate<TValue>()
                 (null, value);
 
@@ -304,6 +299,7 @@ namespace R2API.Utils {
             where TInstance : struct =>
             typeof(TInstance)
                 .GetPropertyCached(propName)
+                .ThrowIfTCannotBeAssignedToProperty<TValue>()
                 .GetPropertySetDelegateRef<TInstance, TValue>()
                 (ref instance, value);
 
@@ -319,6 +315,7 @@ namespace R2API.Utils {
             where TInstance : struct =>
             typeof(TInstance)
                 .GetPropertyCached(propName)
+                .ThrowIfPropertyTypeCannotBeAssignedTo<TValue>()
                 .GetPropertyGetDelegateRef<TInstance, TValue>()
                 (ref instance);
 
@@ -611,14 +608,60 @@ namespace R2API.Utils {
 
         #region Fast Reflection
 
+        private static FieldInfo ThrowIfFieldTypeCannotBeAssignedTo<T>(this FieldInfo fieldInfo) {
+            if (!typeof(T).IsAssignableFrom(fieldInfo.FieldType)) {
+                throw new InvalidCastException($"{fieldInfo.Name} is of type {fieldInfo.FieldType}, it cannot be assigned to the type {typeof(T)}.");
+            }
+
+            return fieldInfo;
+        }
+
+        private static PropertyInfo ThrowIfPropertyTypeCannotBeAssignedTo<T>(this PropertyInfo propertyInfo) {
+            if (!typeof(T).IsAssignableFrom(propertyInfo.PropertyType)) {
+                throw new InvalidCastException($"{propertyInfo.Name} is of type {propertyInfo.PropertyType}, it cannot be assigned to the type {typeof(T)}.");
+            }
+
+            return propertyInfo;
+        }
+
+        private static FieldInfo ThrowIfTCannotBeAssignedToField<T>(this FieldInfo fieldInfo) {
+            if (!fieldInfo.FieldType.IsAssignableFrom(typeof(T))) {
+                throw new InvalidCastException($"{fieldInfo.Name} is of type {fieldInfo.FieldType}. An instance of {typeof(T)} cannot be assigned to it.");
+            }
+
+            return fieldInfo;
+        }
+
+        private static PropertyInfo ThrowIfTCannotBeAssignedToProperty<T>(this PropertyInfo propertyInfo) {
+            if (!propertyInfo.PropertyType.IsAssignableFrom(typeof(T))) {
+                throw new InvalidCastException($"{propertyInfo.Name} is of type {propertyInfo.PropertyType}. An instance of {typeof(T)} cannot be assigned to it.");
+            }
+
+            return propertyInfo;
+        }
+
+        private static FieldInfo ThrowIfTNotEqualToFieldType<T>(this FieldInfo fieldInfo) {
+            if (fieldInfo.FieldType != typeof(T)) {
+                throw new InvalidCastException($"{fieldInfo.Name} is of type {fieldInfo.FieldType}. {typeof(T)} is a different type.");
+            }
+
+            return fieldInfo;
+        }
+
+        private static PropertyInfo ThrowIfTNotEqualToPropertyType<T>(this PropertyInfo propertyInfo) {
+            if (propertyInfo.PropertyType != typeof(T)) {
+                throw new InvalidCastException($"{propertyInfo.Name} is of type {propertyInfo.PropertyType}. {typeof(T)} is a different type.");
+            }
+
+            return propertyInfo;
+        }
+
         private static GetDelegate<TReturn> CreateGetDelegate<TReturn>(this FieldInfo field) {
             if (field == null) {
                 throw new ArgumentException("Field cannot be null.", nameof(field));
             }
 
-            if (!typeof(TReturn).IsAssignableFrom(field.FieldType)) {
-                throw new Exception($"Field type {field.FieldType} does not match the requested type {typeof(TReturn)}.");
-            }
+            field.ThrowIfFieldTypeCannotBeAssignedTo<TReturn>();
 
             using (var method = new DynamicMethodDefinition($"{field} Getter", typeof(TReturn), new[] { typeof(object) })) {
                 var il = method.GetILProcessor();
@@ -642,9 +685,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Field cannot be null.", nameof(field));
             }
 
-            if (!field.FieldType.IsAssignableFrom(typeof(TValue))) {
-                throw new Exception($"Value type type {typeof(TValue)} does not match the requested type {field.FieldType}.");
-            }
+            field.ThrowIfTCannotBeAssignedToField<TValue>();
 
             using (var method = new DynamicMethodDefinition($"{field} Setter", typeof(void),
                 new[] { typeof(object), typeof(TValue) })) {
@@ -668,9 +709,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Field cannot be null.", nameof(field));
             }
 
-            if (field.FieldType != typeof(TValue)) {
-                throw new Exception($"Value type type {typeof(TValue)} does not match the requested type {field.FieldType}.");
-            }
+            field.ThrowIfTNotEqualToFieldType<TValue>();
 
             using (var method = new DynamicMethodDefinition($"{field} SetterByRef", typeof(void),
                 new[] { typeof(TInstance).MakeByRefType(), typeof(TValue) })) {
@@ -693,9 +732,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Property cannot be null.", nameof(property));
             }
 
-            if (!typeof(TReturn).IsAssignableFrom(property.PropertyType)) {
-                throw new Exception($"Field type {property.PropertyType} does not match the requested type {typeof(TReturn)}.");
-            }
+            property.ThrowIfPropertyTypeCannotBeAssignedTo<TReturn>();
 
             using (var method = new DynamicMethodDefinition($"{property} Getter", typeof(TReturn), new[] { typeof(object) })) {
                 var il = method.GetILProcessor();
@@ -718,9 +755,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Property cannot be null.", nameof(property));
             }
 
-            if (!typeof(TReturn).IsAssignableFrom(property.PropertyType)) {
-                throw new Exception($"Field type {property.PropertyType} does not match the requested type {typeof(TReturn)}.");
-            }
+            property.ThrowIfPropertyTypeCannotBeAssignedTo<TReturn>();
 
             using (var method = new DynamicMethodDefinition($"{property} Getter", typeof(TReturn), new[] { typeof(TInstance).MakeByRefType() })) {
                 var il = method.GetILProcessor();
@@ -744,9 +779,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Property cannot be null.", nameof(property));
             }
 
-            if (!property.PropertyType.IsAssignableFrom(typeof(TValue))) {
-                throw new Exception($"Value type type {typeof(TValue)} does not match the requested type {property.PropertyType}.");
-            }
+            property.ThrowIfTCannotBeAssignedToProperty<TValue>();
 
             using (var method = new DynamicMethodDefinition($"{property} Setter", typeof(void),
                 new[] { typeof(object), typeof(TValue) })) {
@@ -771,9 +804,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Property cannot be null.", nameof(property));
             }
 
-            if (!property.PropertyType.IsAssignableFrom(typeof(TValue))) {
-                throw new Exception($"Value type type {typeof(TValue)} does not match the requested type {property.PropertyType}.");
-            }
+            property.ThrowIfTCannotBeAssignedToProperty<TValue>();
 
             using (var method = new DynamicMethodDefinition($"{property} SetterByRef", typeof(void),
                 new[] { typeof(TInstance).MakeByRefType(), typeof(TValue) })) {
