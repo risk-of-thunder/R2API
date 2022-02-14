@@ -3,6 +3,7 @@ using RoR2;
 using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -24,25 +25,25 @@ namespace R2API {
 
         private static bool _loaded;
 
-        private static readonly List<EffectDef> AddedEffects = new List<EffectDef>();
+        //private static readonly List<EffectDef> AddedEffects = new List<EffectDef>();
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddAdditionalEntries;
+            //R2APIContentPackProvider.WhenContentPackReady += AddAdditionalEntries;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddAdditionalEntries;
+            //R2APIContentPackProvider.WhenContentPackReady -= AddAdditionalEntries;
         }
 
-        private static void AddAdditionalEntries(ContentPack r2apiContentPack) {
+        /*private static void AddAdditionalEntries(ContentPack r2apiContentPack) {
             foreach (var customEffect in AddedEffects) {
                 R2API.Logger.LogInfo($"Custom Effect: {customEffect.prefabName} added");
             }
 
             r2apiContentPack.effectDefs.Add(AddedEffects.ToArray());
-        }
+        }*/
 
         /// <summary>
         /// Creates an EffectDef from a prefab and adds it to the EffectCatalog.
@@ -81,7 +82,8 @@ namespace R2API {
                 spawnSoundEventName = effectComp.soundName
             };
 
-            return AddEffect(def);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), effect);
+            return true;
         }
 
         /// <summary>
@@ -89,6 +91,7 @@ namespace R2API {
         /// </summary>
         /// <param name="effect">The EffectDef to addZ</param>
         /// <returns>False if the EffectDef was null</returns>
+        [Obsolete($"This method is obsolete, please Add the EffectDef using the method AddEffect(GameObject? effect)")]
         public static bool AddEffect(EffectDef? effect) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");
@@ -98,7 +101,8 @@ namespace R2API {
                 return false;
             }
 
-            AddedEffects.Add(effect);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), effect.prefab);
+            //AddedEffects.Add(effect);
             return true;
         }
     }

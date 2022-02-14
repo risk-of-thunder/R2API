@@ -24,7 +24,7 @@ namespace R2API {
         public const string PluginGUID = "com.bepis.r2api";
 
         public const string PluginName = "R2API";
-        public const string PluginVersion = "0.0.1";
+        public const string PluginVersion = "4.0.0";
 
         private const int GameBuild = 6537444;
 
@@ -54,6 +54,7 @@ namespace R2API {
             On.RoR2.UnitySystemConsoleRedirector.Redirect += orig => { };
 
             LoadRoR2ContentEarly.Init();
+            R2APIContentManager.Init();
 
             var pluginScanner = new PluginScanner();
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);

@@ -284,20 +284,22 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void NetworkSetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddNetworkSoundEventDefsToGame;
+            //R2APIContentPackProvider.WhenContentPackReady += AddNetworkSoundEventDefsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AddNetworkSoundEventDefsToGame;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void NetworkUnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddNetworkSoundEventDefsToGame;
+            //R2APIContentPackProvider.WhenContentPackReady -= AddNetworkSoundEventDefsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AddNetworkSoundEventDefsToGame;
         }
 
-        private static void AddNetworkSoundEventDefsToGame(ContentPack r2apiContentPack) {
-            foreach (var networkSoundEventDef in NetworkSoundEventDefs) {
+        private static void AddNetworkSoundEventDefsToGame(/*ContentPack r2apiContentPack*/) {
+            /*foreach (var networkSoundEventDef in NetworkSoundEventDefs) {
                 R2API.Logger.LogInfo($"Custom Network Sound Event: {networkSoundEventDef.eventName} added");
             }
 
-            r2apiContentPack.networkSoundEventDefs.Add(NetworkSoundEventDefs.ToArray());
+            r2apiContentPack.networkSoundEventDefs.Add(NetworkSoundEventDefs.ToArray());*/
             _NetworkSoundEventCatalogInitialized = true;
         }
 
@@ -333,6 +335,7 @@ namespace R2API {
             }
 
             NetworkSoundEventDefs.Add(networkSoundEventDef);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), networkSoundEventDef);
             return true;
         }
 
@@ -366,6 +369,7 @@ namespace R2API {
             }
 
             NetworkSoundEventDefs.Add(networkSoundEventDef);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), networkSoundEventDef);
             return true;
         }
 

@@ -5,6 +5,7 @@ using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using UnityEngine;
 
 namespace R2API {
@@ -36,23 +37,25 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddBuffsToGame;
+            //R2APIContentPackProvider.WhenContentPackReady += AddBuffsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AddBuffsToGame;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddBuffsToGame;
+            //R2APIContentPackProvider.WhenContentPackReady -= AddBuffsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AddBuffsToGame;
         }
 
-        private static void AddBuffsToGame(ContentPack r2apiContentPack) {
-            var buffDefs = new List<BuffDef>();
+        private static void AddBuffsToGame(/*ContentPack r2apiContentPack*/) {
+            /*var buffDefs = new List<BuffDef>();
             foreach (var customBuff in BuffDefinitions) {
                 buffDefs.Add(customBuff.BuffDef);
 
                 R2API.Logger.LogInfo($"Custom Buff: {customBuff.BuffDef.name} added");
             }
 
-            r2apiContentPack.buffDefs.Add(buffDefs.ToArray());
+            r2apiContentPack.buffDefs.Add(buffDefs.ToArray());*/
             _buffCatalogInitialized = true;
         }
 
@@ -79,7 +82,8 @@ namespace R2API {
                 return false;
             }
 
-            BuffDefinitions.Add(buff);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), buff.BuffDef);
+            //BuffDefinitions.Add(buff);
             return true;
         }
 

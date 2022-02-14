@@ -7,6 +7,7 @@ using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 using BF = System.Reflection.BindingFlags;
@@ -130,7 +131,7 @@ namespace R2API {
     public static class UnlockableAPI {
 
         private static readonly HashSet<string> UnlockableIdentifiers = new HashSet<string>();
-        private static readonly List<UnlockableDef> Unlockables = new List<UnlockableDef>();
+        //private static readonly List<UnlockableDef> Unlockables = new List<UnlockableDef>();
         private static readonly List<AchievementDef> Achievements = new List<AchievementDef>();
 
         private static bool _unlockableCatalogInitialized;
@@ -147,22 +148,24 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddUnlockablesToGame;
+            //R2APIContentPackProvider.WhenContentPackReady += AddUnlockablesToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AddUnlockablesToGame;
             IL.RoR2.AchievementManager.CollectAchievementDefs += AddCustomAchievements;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddUnlockablesToGame;
+            //R2APIContentPackProvider.WhenContentPackReady -= AddUnlockablesToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AddUnlockablesToGame;
             IL.RoR2.AchievementManager.CollectAchievementDefs -= AddCustomAchievements;
         }
 
-        private static void AddUnlockablesToGame(ContentPack r2apiContentPack) {
-            foreach (var unlockable in Unlockables) {
+        private static void AddUnlockablesToGame(/*ContentPack r2apiContentPack*/) {
+            /*foreach (var unlockable in Unlockables) {
                 R2API.Logger.LogInfo($"Custom Unlockable: {unlockable.cachedName} added");
             }
 
-            r2apiContentPack.unlockableDefs.Add(Unlockables.ToArray());
+            r2apiContentPack.unlockableDefs.Add(Unlockables.ToArray());*/
             _unlockableCatalogInitialized = true;
         }
 
@@ -320,7 +323,8 @@ namespace R2API {
                 serverTrackerType = serverTrackerType,
             };
 
-            Unlockables.Add(unlockableDef);
+            //Unlockables.Add(unlockableDef);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), unlockableDef);
             Achievements.Add(achievementDef);
 
             return unlockableDef;

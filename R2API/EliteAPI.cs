@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -37,7 +38,8 @@ namespace R2API {
             IL.RoR2.CombatDirector.Init += RetrieveVanillaEliteTierCount;
             On.RoR2.CombatDirector.Init += AddCustomEliteTiers;
 
-            R2APIContentPackProvider.WhenContentPackReady += AddElitesToGame;
+            //R2APIContentPackProvider.WhenContentPackReady += AddElitesToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
@@ -45,7 +47,8 @@ namespace R2API {
             IL.RoR2.CombatDirector.Init -= RetrieveVanillaEliteTierCount;
             On.RoR2.CombatDirector.Init -= AddCustomEliteTiers;
 
-            R2APIContentPackProvider.WhenContentPackReady -= AddElitesToGame;
+            //R2APIContentPackProvider.WhenContentPackReady -= AddElitesToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.Load)]
@@ -64,13 +67,13 @@ namespace R2API {
             CombatDirector.Init();
         }
 
-        private static void AddElitesToGame(ContentPack r2apiContentPack) {
-            var eliteDefs = new List<EliteDef>();
+        private static void AddElitesToGame(/*ContentPack r2apiContentPack*/) {
+            //var eliteDefs = new List<EliteDef>();
 
             LazyInitVanillaEliteTiers();
 
             foreach (var customElite in EliteDefinitions) {
-                eliteDefs.Add(customElite.EliteDef);
+                //eliteDefs.Add(customElite.EliteDef);
 
                 var currentEliteTiers = GetCombatDirectorEliteTiers();
 
@@ -93,11 +96,9 @@ namespace R2API {
                 }
 
                 OverrideCombatDirectorEliteTiers(currentEliteTiers);
-
-                R2API.Logger.LogInfo($"Custom Elite: {customElite.EliteDef.modifierToken} added");
+                //R2API.Logger.LogInfo($"Custom Elite: {customElite.EliteDef.modifierToken} added");
             }
-
-            r2apiContentPack.eliteDefs.Add(eliteDefs.ToArray());
+            //r2apiContentPack.eliteDefs.Add(eliteDefs.ToArray());
             _eliteCatalogInitialized = true;
         }
 
@@ -139,6 +140,7 @@ namespace R2API {
 
             }
 
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), elite.EliteDef);
             EliteDefinitions.Add(elite);
             return true;
         }

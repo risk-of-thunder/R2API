@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
@@ -27,7 +28,7 @@ namespace R2API {
 
         private static bool _survivorsAlreadyAdded;
 
-        private static List<GameObject> SurvivorBodyPrefabs = new List<GameObject>();
+        //private static List<GameObject> SurvivorBodyPrefabs = new List<GameObject>();
         public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
 
         /// <summary>
@@ -55,31 +56,36 @@ namespace R2API {
                 return false;
             }
 
-            SurvivorBodyPrefabs.Add(survivor.bodyPrefab);
+            //SurvivorBodyPrefabs.Add(survivor.bodyPrefab);
             SurvivorDefinitions.Add(survivor);
+
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), survivor.bodyPrefab);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), survivor);
 
             return true;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddSurvivorsToGame;
+            //R2APIContentPackProvider.WhenContentPackReady += AddSurvivorsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AddSurvivorsToGame;
             IL.RoR2.CharacterSelectBarController.Build += DescriptionTokenSafetyCheck;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddSurvivorsToGame;
+            //R2APIContentPackProvider.WhenContentPackReady -= AddSurvivorsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AddSurvivorsToGame;
             IL.RoR2.CharacterSelectBarController.Build -= DescriptionTokenSafetyCheck;
         }
 
-        private static void AddSurvivorsToGame(ContentPack r2apiContentPack) {
-            foreach (var customSurvivor in SurvivorDefinitions) {
+        private static void AddSurvivorsToGame(/*ContentPack r2apiContentPack*/) {
+            /*foreach (var customSurvivor in SurvivorDefinitions) {
                 R2API.Logger.LogInfo($"Custom Survivor: {customSurvivor.cachedName} added");
-            }
+            }*/
 
-            r2apiContentPack.bodyPrefabs.Add(SurvivorBodyPrefabs.ToArray());
-            r2apiContentPack.survivorDefs.Add(SurvivorDefinitions.ToArray());
+            //r2apiContentPack.bodyPrefabs.Add(SurvivorBodyPrefabs.ToArray());
+            //r2apiContentPack.survivorDefs.Add(SurvivorDefinitions.ToArray());
             _survivorsAlreadyAdded = true;
         }
 

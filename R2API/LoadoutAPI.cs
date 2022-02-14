@@ -6,6 +6,7 @@ using RoR2.Skills;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -37,7 +38,7 @@ namespace R2API {
         private static readonly HashSet<SkillFamily> AddedSkillFamilies = new HashSet<SkillFamily>();
         private static readonly HashSet<SkinDef> AddedSkins = new HashSet<SkinDef>();
 
-        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
+        /*[R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             R2APIContentPackProvider.WhenContentPackReady += AddSkillsToGame;
         }
@@ -52,7 +53,7 @@ namespace R2API {
 
             r2apiContentPack.skillDefs.Add(AddedSkills.ToArray());
             r2apiContentPack.skillFamilies.Add(AddedSkillFamilies.ToArray());
-        }
+        }*/
 
         #endregion Submodule Hooks
 
@@ -74,6 +75,7 @@ namespace R2API {
                 return false;
             }
 
+            R2APIContentManager.HandleEntityState(Assembly.GetCallingAssembly(), t);
             AddedStateTypes.Add(t);
             return true;
         }
@@ -89,7 +91,8 @@ namespace R2API {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
-            LoadoutAPI.AddSkill(typeof(T));
+            R2APIContentManager.HandleEntityState(Assembly.GetCallingAssembly(), typeof(T));
+            //LoadoutAPI.AddSkill(typeof(T));
             return new SerializableEntityStateType(typeof(T));
         }
 
@@ -107,7 +110,8 @@ namespace R2API {
                 R2API.Logger.LogError("Invalid SkillDef");
                 return false;
             }
-            AddedSkills.Add(s);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), s);
+            //AddedSkills.Add(s);
             return true;
         }
 
@@ -125,7 +129,8 @@ namespace R2API {
                 R2API.Logger.LogError("Invalid SkillFamily");
                 return false;
             }
-            AddedSkillFamilies.Add(sf);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), sf);
+            //AddedSkillFamilies.Add(sf);
             return true;
         }
 

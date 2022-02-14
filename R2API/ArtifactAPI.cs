@@ -3,6 +3,7 @@ using RoR2;
 using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace R2API {
@@ -13,7 +14,7 @@ namespace R2API {
     [R2APISubmodule]
     public static class ArtifactAPI {
 
-        private static readonly List<ArtifactDef> Artifacts = new List<ArtifactDef>();
+        //private static readonly List<ArtifactDef> Artifacts = new List<ArtifactDef>();
 
         private static bool _artifactCatalogInitialized;
 
@@ -31,20 +32,22 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddArtifactsToGame;
+            //R2APIContentPackProvider.WhenContentPackReady += AddArtifactsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks += AddArtifactsToGame;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddArtifactsToGame;
+            //R2APIContentPackProvider.WhenContentPackReady -= AddArtifactsToGame;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AddArtifactsToGame;
         }
 
-        private static void AddArtifactsToGame(ContentPack r2apiContentPack) {
-            foreach (var artifact in Artifacts) {
+        private static void AddArtifactsToGame(/*ContentPack r2apiContentPack*/) {
+            /*foreach (var artifact in Artifacts) {
                 R2API.Logger.LogInfo($"Custom Artifact: {artifact.cachedName} added");
             }
 
-            r2apiContentPack.artifactDefs.Add(Artifacts.ToArray());
+            r2apiContentPack.artifactDefs.Add(Artifacts.ToArray());*/
             _artifactCatalogInitialized = true;
         }
 
@@ -69,7 +72,8 @@ namespace R2API {
                 return false;
             }
 
-            Artifacts.Add(artifactDef);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), artifactDef);
+            //Artifacts.Add(artifactDef);
             return true;
         }
 
@@ -103,7 +107,8 @@ namespace R2API {
             artifactDef.smallIconSelectedSprite = smallIconSelectedSprite;
             artifactDef.unlockableDef = unlockableDef;
 
-            Artifacts.Add(artifactDef);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), artifactDef);
+            //Artifacts.Add(artifactDef);
             return true;
         }
 

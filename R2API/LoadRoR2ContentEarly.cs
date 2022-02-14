@@ -16,6 +16,7 @@ namespace R2API {
     internal static class LoadRoR2ContentEarly {
         private static bool _ror2ContentLoaded;
         private static RoR2Content RoR2Content;
+        public static ReadOnlyContentPack ReadOnlyRoR2ContentPack { get; private set; } 
 
         internal static void Init() {
 
@@ -104,6 +105,7 @@ namespace R2API {
             ContentLoadHelper.PopulateTypeFields<SurvivorDef>(typeof(RoR2Content.Survivors), RoR2Content.contentPack.survivorDefs);
 
             RoR2Content.contentPack.effectDefs.Find("CoinEmitter").cullMethod = (EffectData effectData) => SettingsConVars.cvExpAndMoneyEffects.value;
+            ReadOnlyRoR2ContentPack = new ReadOnlyContentPack(RoR2Content.contentPack);
 
             _ror2ContentLoaded = true;
         }

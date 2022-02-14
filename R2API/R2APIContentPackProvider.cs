@@ -1,49 +1,86 @@
 ﻿using RoR2.ContentManagement;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace R2API {
-    public class R2APIContentPackProvider : IContentPackProvider {
-        public string identifier => "R2API";
+    internal class R2APIGenericContentPack : IContentPackProvider {
 
-        internal static ContentPack ContentPack = new ContentPack();
+        internal R2APIGenericContentPack(ContentPack finalizedContentPack) {
+            contentPack = finalizedContentPack;
+        }
+        public string identifier => contentPack.identifier;
 
-        internal static Action<ContentPack> WhenContentPackReady;
+        private ContentPack contentPack;
+
+        public IEnumerator FinalizeAsync(FinalizeAsyncArgs args) {
+            args.ReportProgress(1f);
+            yield break;
+        }
+
+        public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args) {
+            ContentPack.Copy(contentPack, args.output);
+            LogContentsFromContentPack();
+            args.ReportProgress(1f);
+            yield break;
+        }
+
+        public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args) {
+            args.ReportProgress(1f);
+            yield break;
+        }
+        private void LogContentsFromContentPack() {
+            List<string> log = new List<string>();
+            log.Add($"Content added from {contentPack.identifier}:");
+            log.AddRange(contentPack.bodyPrefabs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.masterPrefabs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.projectilePrefabs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.gameModePrefabs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.networkedObjectPrefabs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.skillDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.skillFamilies.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.sceneDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.itemDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.equipmentDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.buffDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.eliteDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.unlockableDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.survivorDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.artifactDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.effectDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.surfaceDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.networkSoundEventDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.musicTrackDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.gameEndingDefs.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.entityStateConfigurations.assetInfos.Select(ai => ai.asset.ToString()));
+            log.AddRange(contentPack.entityStateTypes.assetInfos.Select(ai => ai.asset.ToString()));
+            R2API.Logger.LogDebug(string.Join("\n", log));
+        }
+    }
+    internal class R2APIContentPackProvider{
+        internal static Action WhenAddingContentPacks;
 
         internal static void Init() {
             ContentManager.collectContentPackProviders += AddCustomContent;
         }
 
         private static void AddCustomContent(ContentManager.AddContentPackProviderDelegate addContentPackProvider) {
-            if (WhenContentPackReady != null) {
-                foreach (Action<ContentPack> @event in WhenContentPackReady.GetInvocationList()) {
+            if (WhenAddingContentPacks != null) {
+                foreach (Action @event in WhenAddingContentPacks.GetInvocationList()) {
                     try {
-                        @event(ContentPack);
+                        @event();
                     }
                     catch (Exception e) {
                         R2API.Logger.LogError(e);
                     }
                 }
             }
-
-            addContentPackProvider(new R2APIContentPackProvider());
-        }
-
-        public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args) {
-            args.ReportProgress(1);
-            yield break;
-        }
-
-        public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args) {
-            ContentPack.Copy(ContentPack, args.output);
-
-            args.ReportProgress(1);
-            yield break;
-        }
-
-        public IEnumerator FinalizeAsync(FinalizeAsyncArgs args) {
-            args.ReportProgress(1);
-            yield break;
+            R2API.Logger.LogInfo($"Generating ContentPacks...");
+            R2APIContentManager.CreateContentPacks();
+            foreach(R2APIGenericContentPack gcp in R2APIContentManager.genericContentPacks) {
+                addContentPackProvider(gcp);
+            }
         }
     }
 }
