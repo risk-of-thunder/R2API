@@ -410,28 +410,28 @@ namespace R2API {
         private static Object EnsureSafeGameObjectName(GameObject go, string identifier) {
             if (go.GetComponent<CharacterBody>()) {
                 string[] allBodies = TypeToAllCurrentlyRegisteredNames[typeof(CharacterBody)]();
-                if (allBodies.Contains(go.name)) {
+                if ((string.IsNullOrWhiteSpace(go.name) || string.IsNullOrEmpty(go.name)) && allBodies.Contains(go.name)) {
                     R2API.Logger.LogInfo($"An object with name {go.name} already exists in the registered bodies! creating new name!");
                     go.name = GetNewName(go, identifier, allBodies);
                 }
             }
             if (go.GetComponent<CharacterMaster>()) {
                 string[] allMasters = TypeToAllCurrentlyRegisteredNames[typeof(CharacterMaster)]();
-                if (allMasters.Contains(go.name)) {
+                if ((string.IsNullOrWhiteSpace(go.name) || string.IsNullOrEmpty(go.name)) && allMasters.Contains(go.name)) {
                     R2API.Logger.LogInfo($"An object with name {go.name} already exists in the registered masters! creating new name!");
                     go.name = GetNewName(go, identifier, allMasters);
                 }
             }
             if (go.GetComponent<ProjectileController>()) {
                 string[] allProjectiles = TypeToAllCurrentlyRegisteredNames[typeof(ProjectileController)]();
-                if (allProjectiles.Contains(go.name)) {
+                if ((string.IsNullOrWhiteSpace(go.name) || string.IsNullOrEmpty(go.name)) && allProjectiles.Contains(go.name)) {
                     R2API.Logger.LogInfo($"An object with name {go.name} already exists in the registered projectiles! creating new name!");
                     go.name = GetNewName(go, identifier, allProjectiles);
                 }
             }
             if (go.GetComponent<Run>()) {
                 string[] allRuns = TypeToAllCurrentlyRegisteredNames[typeof(Run)]();
-                if (allRuns.Contains(go.name)) {
+                if ((string.IsNullOrWhiteSpace(go.name) || string.IsNullOrEmpty(go.name)) && allRuns.Contains(go.name)) {
                     R2API.Logger.LogInfo($"An object with name {go.name} already exists in the registered Runs! creating new name!");
                     go.name = GetNewName(go, identifier, allRuns);
                 }
@@ -439,7 +439,7 @@ namespace R2API {
             //ror2 automatically networks prefabs that are in the arrays above this one. (since all of them already have network identities)
             if (!PrefabAPI.IsPrefabHashed(go) && go.GetComponent<NetworkIdentity>()) {
                 string[] allNetworkedPrefabs = TypeToAllCurrentlyRegisteredNames[typeof(NetworkIdentity)]();
-                if (allNetworkedPrefabs.Contains(go.name)) {
+                if ((string.IsNullOrWhiteSpace(go.name) || string.IsNullOrEmpty(go.name)) && allNetworkedPrefabs.Contains(go.name)) {
                     R2API.Logger.LogInfo($"An object with name {go.name} already exists in the registered networked prefabs! creating new name!");
                     go.name = GetNewName(go, identifier, allNetworkedPrefabs);
                 }
@@ -447,7 +447,7 @@ namespace R2API {
             //Modify this once dlc 1 comes out, as EffectDefs will be a game object array instead of an EffectDef array.
             if (go.GetComponent<EffectComponent>()) {
                 string[] allEffects = TypeToAllCurrentlyRegisteredNames[typeof(EffectDef)]();
-                if (allEffects.Contains(go.name)) {
+                if ((string.IsNullOrWhiteSpace(go.name) || string.IsNullOrEmpty(go.name)) && allEffects.Contains(go.name)) {
                     R2API.Logger.LogInfo($"An object with name {go.name} already exists in the registered Effects! creating new name!");
                     go.name = GetNewName(go, identifier, allEffects);
                 }
@@ -458,7 +458,7 @@ namespace R2API {
         private static ScriptableObject EnsureSafeScriptableObjectName<T>(ScriptableObject obj, string identifier) where T : ScriptableObject {
             if (TypeToAllCurrentlyRegisteredNames.TryGetValue(typeof(T), out var func)) {
                 string[] allScriptablesOfTypeT = func();
-                if (allScriptablesOfTypeT.Contains(obj.name)) {
+                if ((string.IsNullOrWhiteSpace(obj.name) || string.IsNullOrEmpty(obj.name)) && allScriptablesOfTypeT.Contains(obj.name)) {
                     R2API.Logger.LogInfo($"An object with name {obj.name} already exists in the registered {typeof(T).Name}! creating new Name!");
                     obj.name = GetNewName(obj, identifier, allScriptablesOfTypeT);
                 }
