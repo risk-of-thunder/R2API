@@ -51,11 +51,28 @@ namespace R2API {
         private static Dictionary<Type, Func<string[]>> TypeToAllCurrentlyRegisteredNames = new Dictionary<Type, Func<string[]>>();
 
         #region Public Methods
+        /// <summary>
+        /// Adds a Content asset to your mod's pre-defined SerialziableContentPack.
+        /// Can be used to add any valid Asset that's valid for a ContentPack. 
+        /// </summary>
+        /// <param name="content">The type of content to add. This content should be supported by the ContentManager. </param>
         public static void AddContent(Object content) => HandleContentAddition(Assembly.GetCallingAssembly(), content);
+        /// <summary>
+        /// Adds an EntityState to your mod's pre-defined SerialziableContentPack's EntityStateTypes Array.
+        /// <para>Also Creates a SerializableEntityStateType with a very simple syntax.</para>
+        /// Effectively the same as 'new SerializableEntityStateType()'
+        /// </summary>
+        /// <typeparam name="T">The state type</typeparam>
+        /// <returns>The created SerializableEntityStateType</returns>
         public static SerializableEntityStateType AddEntityState<T>() where T : EntityState {
             HandleEntityState(Assembly.GetCallingAssembly(), typeof(T));
             return new SerializableEntityStateType(typeof(T));
         }
+        /// <summary>
+        /// Adds a Pre-Existing SerializableContentPack as your mod's content pack.
+        /// <para>Example usage would be a Thunderkit mod adding their items via ItemAPI to get the advantage of using ItemAPI's IDRS Systems</para>
+        /// </summary>
+        /// <param name="serializableContentPack">The serializable content pack that will be tied to your mod.</param>
         public static void AddPreExistingSerializableContentPack(SerializableContentPack serializableContentPack) {
             try {
                 Assembly assembly = Assembly.GetCallingAssembly();
@@ -86,6 +103,11 @@ namespace R2API {
                 R2API.Logger.LogError(e);
             }
         }
+        /// <summary>
+        /// Reserves a SerializableContentPack for your mod and returns it
+        /// <para>If the SerializableContentPack already exists, it returns it.</para>
+        /// </summary>
+        /// <returns>The reserved SerializableContentPack</returns>
         public static SerializableContentPack ReserveSerializableContentPack() => GetOrCreateSerializableContentPack(Assembly.GetCallingAssembly());
         #endregion
 
@@ -288,24 +310,29 @@ namespace R2API {
             SerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);
             content = EnsureSafeContentName(content, scp.name);
             if (scp) {
-                switch (content) {
-                    case GameObject go: HandleGameObject(go, scp); break;
-                    case SkillDef skd: AddSafe(ref scp.skillDefs, skd, scp.name); break;
-                    case SkillFamily sf: AddSafe(ref scp.skillFamilies, sf, scp.name); break;
-                    case SceneDef scd: AddSafe(ref scp.sceneDefs, scd, scp.name); break;
-                    case ItemDef id: AddSafe(ref scp.itemDefs, id, scp.name); break;
-                    case EquipmentDef eqd: AddSafe(ref scp.equipmentDefs, eqd, scp.name); break;
-                    case BuffDef bd: AddSafe(ref scp.buffDefs, bd, scp.name); break;
-                    case EliteDef ed: AddSafe(ref scp.eliteDefs, ed, scp.name); break;
-                    case UnlockableDef ud: AddSafe(ref scp.unlockableDefs, ud, scp.name); break;
-                    case SurvivorDef sd: AddSafe(ref scp.survivorDefs, sd, scp.name); break;
-                    case ArtifactDef ad: AddSafe(ref scp.artifactDefs, ad, scp.name); break;
-                    case SurfaceDef surd: AddSafe(ref scp.surfaceDefs, surd, scp.name); break;
-                    case NetworkSoundEventDef nsed: AddSafe(ref scp.networkSoundEventDefs, nsed, scp.name); break;
-                    case MusicTrackDef mtd: AddSafe(ref scp.musicTrackDefs, mtd, scp.name); break;
-                    case GameEndingDef ged: AddSafe(ref scp.gameEndingDefs, ged, scp.name); break;
-                    case EntityStateConfiguration esc: AddSafe(ref scp.entityStateConfigurations, esc, scp.name); break;
+                try {
+                    switch (content) {
+                        case GameObject go: HandleGameObject(go, scp); break;
+                        case SkillDef skd: AddSafe(ref scp.skillDefs, skd, scp.name); break;
+                        case SkillFamily sf: AddSafe(ref scp.skillFamilies, sf, scp.name); break;
+                        case SceneDef scd: AddSafe(ref scp.sceneDefs, scd, scp.name); break;
+                        case ItemDef id: AddSafe(ref scp.itemDefs, id, scp.name); break;
+                        case EquipmentDef eqd: AddSafe(ref scp.equipmentDefs, eqd, scp.name); break;
+                        case BuffDef bd: AddSafe(ref scp.buffDefs, bd, scp.name); break;
+                        case EliteDef ed: AddSafe(ref scp.eliteDefs, ed, scp.name); break;
+                        case UnlockableDef ud: AddSafe(ref scp.unlockableDefs, ud, scp.name); break;
+                        case SurvivorDef sd: AddSafe(ref scp.survivorDefs, sd, scp.name); break;
+                        case ArtifactDef ad: AddSafe(ref scp.artifactDefs, ad, scp.name); break;
+                        case SurfaceDef surd: AddSafe(ref scp.surfaceDefs, surd, scp.name); break;
+                        case NetworkSoundEventDef nsed: AddSafe(ref scp.networkSoundEventDefs, nsed, scp.name); break;
+                        case MusicTrackDef mtd: AddSafe(ref scp.musicTrackDefs, mtd, scp.name); break;
+                        case GameEndingDef ged: AddSafe(ref scp.gameEndingDefs, ged, scp.name); break;
+                        case EntityStateConfiguration esc: AddSafe(ref scp.entityStateConfigurations, esc, scp.name); break;
+                    }
+                    throw new ArgumentException($"The content {content.name} ({content.GetType()}) is not supported by the ContentManager! \n" +
+                        $"If you think this is an Error and it should be supported, please file a bug report.");
                 }
+                catch (Exception e) { R2API.Logger.LogError(e); }
             }
         }
 
@@ -317,31 +344,45 @@ namespace R2API {
         }
 
         private static void HandleGameObject(GameObject go, SerializableContentPack scp) {
-            bool alreadyNetworked = false;
-            if (go.GetComponent<CharacterBody>()) {
-                AddSafe(ref scp.bodyPrefabs, go, scp.name);
-                alreadyNetworked = true;
+            try {
+                bool alreadyNetworked = false;
+                bool addedToAnyCatalogs = false;
+                if (go.GetComponent<CharacterBody>()) {
+                    AddSafe(ref scp.bodyPrefabs, go, scp.name);
+                    alreadyNetworked = true;
+                    addedToAnyCatalogs = true;
+                }
+                if (go.GetComponent<CharacterMaster>()) {
+                    AddSafe(ref scp.masterPrefabs, go, scp.name);
+                    alreadyNetworked = true;
+                    addedToAnyCatalogs = true;
+                }
+                if (go.GetComponent<ProjectileController>()) {
+                    AddSafe(ref scp.projectilePrefabs, go, scp.name);
+                    alreadyNetworked = true;
+                    addedToAnyCatalogs = true;
+                }
+                if (go.GetComponent<Run>()) {
+                    AddSafe(ref scp.gameModePrefabs, go, scp.name);
+                    alreadyNetworked = true;
+                    addedToAnyCatalogs = true;
+                }
+                //ror2 automatically networks prefabs that are in the arrays above this one. (since all of them already have network identities)
+                if (!alreadyNetworked && !PrefabAPI.IsPrefabHashed(go) && go.GetComponent<NetworkIdentity>()) {
+                    AddSafe(ref scp.networkedObjectPrefabs, go, scp.name);
+                    addedToAnyCatalogs = true;
+                }
+                //Modify this once dlc 1 comes out, as EffectDefs will be a game object array instead of an EffectDef array.
+                if (go.GetComponent<EffectComponent>()) {
+                    AddSafeType(ref scp.effectDefs, new EffectDef(go), scp.name);
+                    addedToAnyCatalogs = true;
+                }
+                if (!addedToAnyCatalogs) {
+                    throw new ArgumentException($"The GameObject {go.name} ({go.GetType()}) does not have any components that are supported by the ContentManager! \n" +
+                        $"If you think this is an Error and it should be supported, please file a bug report.");
+                }
             }
-            if (go.GetComponent<CharacterMaster>()) {
-                AddSafe(ref scp.masterPrefabs, go, scp.name);
-                alreadyNetworked = true;
-            }
-            if (go.GetComponent<ProjectileController>()) {
-                AddSafe(ref scp.projectilePrefabs, go, scp.name);
-                alreadyNetworked = true;
-            }
-            if (go.GetComponent<Run>()) {
-                AddSafe(ref scp.gameModePrefabs, go, scp.name);
-                alreadyNetworked = true;
-            }
-            //ror2 automatically networks prefabs that are in the arrays above this one. (since all of them already have network identities)
-            if (!alreadyNetworked && !PrefabAPI.IsPrefabHashed(go) && go.GetComponent<NetworkIdentity>()) {
-                AddSafe(ref scp.networkedObjectPrefabs, go, scp.name);
-            }
-            //Modify this once dlc 1 comes out, as EffectDefs will be a game object array instead of an EffectDef array.
-            if (go.GetComponent<EffectComponent>()) {
-                AddSafeType(ref scp.effectDefs, new EffectDef(go), scp.name);
-            }
+            catch(Exception e) { R2API.Logger.LogError(e); }
         }
 
         internal static void CreateContentPacks() {
