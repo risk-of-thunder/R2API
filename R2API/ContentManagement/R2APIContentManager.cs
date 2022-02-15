@@ -14,7 +14,7 @@ using UnityEngine.Networking;
 using Object = UnityEngine.Object;
 using R2API.MiscHelpers;
 
-namespace R2API.ContentManagment {
+namespace R2API.ContentManagement {
 
     /// <summary>
     /// A struct that represents a ContentPack managed by R2API in some way shape or form

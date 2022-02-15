@@ -4,7 +4,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
-using R2API.ContentManagment;
+using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
 using System;

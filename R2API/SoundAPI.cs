@@ -1,7 +1,7 @@
 using BepInEx;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
-using R2API.ContentManagment;
+using R2API.ContentManagement;
 using R2API.MiscHelpers;
 using R2API.Utils;
 using RoR2;
