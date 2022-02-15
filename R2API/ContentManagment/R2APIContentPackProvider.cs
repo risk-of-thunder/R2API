@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace R2API {
+namespace R2API.ContentManagment {
     internal class R2APIGenericContentPack : IContentPackProvider {
 
         internal R2APIGenericContentPack(ContentPack finalizedContentPack) {

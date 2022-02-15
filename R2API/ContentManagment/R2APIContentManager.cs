@@ -12,8 +12,9 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 using Object = UnityEngine.Object;
+using R2API.MiscHelpers;
 
-namespace R2API {
+namespace R2API.ContentManagment {
 
     /// <summary>
     /// A struct that represents a ContentPack managed by R2API in some way shape or form
@@ -53,7 +54,7 @@ namespace R2API {
         private static bool contentPacksCreated = false;
 
         //This is an easy way of storing the new content packs that are being created. not to mention that the ContentPack's identifier will be the plugin's GUID
-        private static Dictionary<string, R2APIManagedContentPack> BepInModNameToSerialziableContentPack = new Dictionary<string, R2APIManagedContentPack>();
+        private static Dictionary<string, R2APIManagedContentPack> BepInModNameToSerializableContentPack = new Dictionary<string, R2APIManagedContentPack>();
         //Cache-ing the Assembly's main plugin in a dictionary for ease of access.
         private static Dictionary<Assembly, string> AssemblyToBepInModName = new Dictionary<Assembly, string>();
         //Due to the fact that all contents should have unique names to avoid issues with the catalogs, we need to make sure there are no duplicate names whatsoever.
@@ -105,8 +106,8 @@ namespace R2API {
                 }
                 if (AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
                     serializableContentPack.name = modName;
-                    if (!BepInModNameToSerialziableContentPack.ContainsKey(modName)) {
-                        BepInModNameToSerialziableContentPack.Add(modName, new R2APIManagedContentPack(serializableContentPack, shouldManageLoadingContentPack));
+                    if (!BepInModNameToSerializableContentPack.ContainsKey(modName)) {
+                        BepInModNameToSerializableContentPack.Add(modName, new R2APIManagedContentPack(serializableContentPack, shouldManageLoadingContentPack));
                         R2API.Logger.LogInfo($"Added Pre-Existing SerializableContentPack from mod {modName}");
                         return;
                     }
@@ -131,7 +132,7 @@ namespace R2API {
         internal static void Init() {
             string[] BodyPrefabs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.bodyPrefabs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.bodyPrefabs))
                     .Select(go => go.name)
                     .ToArray();
@@ -140,7 +141,7 @@ namespace R2API {
 
             string[] MasterPrefabs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.masterPrefabs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.masterPrefabs))
                     .Select(go => go.name)
                     .ToArray();
@@ -149,7 +150,7 @@ namespace R2API {
 
             string[] ProjectilePrefabs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.projectilePrefabs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.projectilePrefabs))
                     .Select(go => go.name)
                     .ToArray();
@@ -158,7 +159,7 @@ namespace R2API {
 
             string[] RunPrefabs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.gameModePrefabs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.gameModePrefabs))
                     .Select(go => go.name)
                     .ToArray();
@@ -167,7 +168,7 @@ namespace R2API {
 
             string[] NetworkedPrefabs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.networkedObjectPrefabs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.networkedObjectPrefabs))
                     .Select(go => go.name)
                     .ToArray();
@@ -177,7 +178,7 @@ namespace R2API {
             string[] EffectPrefabs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.effectDefs
                     .Select(ed => ed.prefab)
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.effectDefs
                             .Select(ed => ed.prefab)))
                     .Select(go => go.name)
@@ -187,7 +188,7 @@ namespace R2API {
 
             string[] SkillDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.skillDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.skillDefs))
                     .Select(sd => sd as ScriptableObject)
                     .Select(so => so.name)
@@ -197,7 +198,7 @@ namespace R2API {
 
             string[] SkillFamilies() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.skillFamilies
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.skillFamilies))
                     .Select(sf => sf as ScriptableObject)
                     .Select(so => so.name)
@@ -207,7 +208,7 @@ namespace R2API {
 
             string[] SceneDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.sceneDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.sceneDefs))
                     .Select(sd => sd.cachedName)
                     .ToArray();
@@ -216,7 +217,7 @@ namespace R2API {
 
             string[] ItemDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.itemDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.itemDefs))
                     .Select(id => id.name)
                     .ToArray();
@@ -225,7 +226,7 @@ namespace R2API {
 
             string[] EquipmentDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.equipmentDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.equipmentDefs))
                     .Select(ed => ed.name)
                     .ToArray();
@@ -234,7 +235,7 @@ namespace R2API {
 
             string[] BuffDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.buffDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.buffDefs))
                     .Select(bd => bd.name)
                     .ToArray();
@@ -243,7 +244,7 @@ namespace R2API {
 
             string[] EliteDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.eliteDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.eliteDefs))
                     .Select(ed => ed.name)
                     .ToArray();
@@ -252,7 +253,7 @@ namespace R2API {
 
             string[] UnlockableDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.unlockableDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.unlockableDefs))
                     .Select(ud => ud.cachedName)
                     .ToArray();
@@ -261,7 +262,7 @@ namespace R2API {
 
             string[] SurvivorDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.survivorDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.survivorDefs))
                     .Select(sd => sd.cachedName)
                     .ToArray();
@@ -270,7 +271,7 @@ namespace R2API {
 
             string[] ArtifactDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.artifactDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.artifactDefs))
                     .Select(ad => ad.cachedName)
                     .ToArray();
@@ -279,7 +280,7 @@ namespace R2API {
 
             string[] SurfaceDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.surfaceDefs
-                        .Union(BepInModNameToSerialziableContentPack.Values
+                        .Union(BepInModNameToSerializableContentPack.Values
                             .SelectMany(scp => scp.serializableContentPack.surfaceDefs))
                         .Select(sd => sd.name)
                         .ToArray();
@@ -288,7 +289,7 @@ namespace R2API {
 
             string[] NetworkSoundEventDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.networkSoundEventDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.networkSoundEventDefs))
                     .Select(nsed => nsed.name)
                     .ToArray();
@@ -297,7 +298,7 @@ namespace R2API {
 
             string[] MusicTrackDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.musicTrackDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.musicTrackDefs))
                     .Select(mtd => mtd.cachedName)
                     .ToArray();
@@ -306,7 +307,7 @@ namespace R2API {
 
             string[] GameEndingDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.gameEndingDefs
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.gameEndingDefs))
                     .Select(ged => ged.cachedName)
                     .ToArray();
@@ -315,7 +316,7 @@ namespace R2API {
 
             string[] EntityStateConfigurations() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.entityStateConfigurations
-                    .Union(BepInModNameToSerialziableContentPack.Values
+                    .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.entityStateConfigurations))
                     .Select(esc => esc.name)
                     .ToArray();
@@ -407,18 +408,18 @@ namespace R2API {
 
         internal static void CreateContentPacks() {
             if (!contentPacksCreated) {
-                R2API.Logger.LogInfo($"Generating a total of {BepInModNameToSerialziableContentPack.Values.Count} ContentPacks...");
+                R2API.Logger.LogInfo($"Generating a total of {BepInModNameToSerializableContentPack.Values.Count} ContentPacks...");
                 List<ContentPack> contentPacks = new List<ContentPack>();
-                foreach (KeyValuePair<string, R2APIManagedContentPack> kvp in BepInModNameToSerialziableContentPack) {
-                    if (ShouldContentPackBeLoadedByR2API(kvp.Value, out SerializableContentPack scp)) {
+                foreach (var (bepInModName, r2apiContentPack) in BepInModNameToSerializableContentPack) {
+                    if (ShouldContentPackBeLoadedByR2API(r2apiContentPack, out SerializableContentPack scp)) {
                         ContentPack cp = scp.CreateContentPack();
-                        cp.identifier = kvp.Key;
+                        cp.identifier = bepInModName;
                         contentPacks.Add(cp);
                         genericContentPacks.Add(new R2APIGenericContentPack(cp));
-                        R2API.Logger.LogDebug($"Content pack for {kvp.Key} created.");
+                        R2API.Logger.LogDebug($"Content pack for {bepInModName} created.");
                     }
                     else {
-                        R2API.Logger.LogDebug($"Not creating ContentPack for {kvp.Key}, since it has declared r2api should not manage loading the content pack.");
+                        R2API.Logger.LogDebug($"Not creating ContentPack for {bepInModName}, since it has declared r2api should not manage loading the content pack.");
                     }
                 }
                 _managedContentPacks = new ReadOnlyCollection<ContentPack>(contentPacks);
@@ -451,13 +452,13 @@ namespace R2API {
                 if (AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
                     SerializableContentPack serializableContentPack;
                     //If this assembly does not have a content pack assigned to it, create a new one and add it to the dictionary
-                    if (!BepInModNameToSerialziableContentPack.ContainsKey(modName)) {
+                    if (!BepInModNameToSerializableContentPack.ContainsKey(modName)) {
                         serializableContentPack = ScriptableObject.CreateInstance<SerializableContentPack>();
                         serializableContentPack.name = modName;
-                        BepInModNameToSerialziableContentPack.Add(modName, new R2APIManagedContentPack(serializableContentPack));
+                        BepInModNameToSerializableContentPack.Add(modName, new R2APIManagedContentPack(serializableContentPack));
                         R2API.Logger.LogInfo($"Created a SerializableContentPack for mod {modName}");
                     }
-                    return BepInModNameToSerialziableContentPack[modName].serializableContentPack;
+                    return BepInModNameToSerializableContentPack[modName].serializableContentPack;
                 }
                 throw new NullReferenceException($"The assembly {assembly} does not have a class that has a BepInPlugin attribute! Cannot create ContentPack for {modName}!");
             }
@@ -472,7 +473,7 @@ namespace R2API {
                 HG.ArrayUtils.ArrayAppend(ref assetArray, asset);
             }
             else {
-                R2API.Logger.LogWarning($"Cannot add {asset} to content pack {identifier} because the asset has already been added to it's correspoinding array!");
+                R2API.Logger.LogWarning($"Cannot add {asset} to content pack {identifier} because the asset has already been added to it's corresponding array!");
             }
         }
 
@@ -486,7 +487,7 @@ namespace R2API {
                 }
             }
             else {
-                R2API.Logger.LogWarning($"Cannot add {asset} to content pack {identifier} because the asset has already been added to it's correspoinding array!");
+                R2API.Logger.LogWarning($"Cannot add {asset} to content pack {identifier} because the asset has already been added to it's corresponding array!");
             }
         }
 

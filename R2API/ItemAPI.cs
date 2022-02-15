@@ -1,5 +1,6 @@
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.ContentManagment;
 using R2API.Utils;
 using RoR2;
 using System;

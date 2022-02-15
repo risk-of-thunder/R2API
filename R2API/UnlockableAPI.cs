@@ -1,5 +1,6 @@
 ﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.ContentManagment;
 using R2API.Utils;
 using RoR2;
 using RoR2.Achievements;
@@ -156,7 +157,7 @@ namespace R2API {
             IL.RoR2.AchievementManager.CollectAchievementDefs -= AddCustomAchievements;
         }
 
-        private static void AvoidNewEntries(/*ContentPack r2apiContentPack*/) {
+        private static void AvoidNewEntries() {
             _unlockableCatalogInitialized = true;
         }
 
