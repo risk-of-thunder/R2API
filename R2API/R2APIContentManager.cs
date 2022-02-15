@@ -103,9 +103,9 @@ namespace R2API {
                         }
                     }
                 }
-                if(AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
+                if (AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
                     serializableContentPack.name = modName;
-                    if(!BepInModNameToSerialziableContentPack.ContainsKey(modName)) {
+                    if (!BepInModNameToSerialziableContentPack.ContainsKey(modName)) {
                         BepInModNameToSerialziableContentPack.Add(modName, new R2APIManagedContentPack(serializableContentPack, shouldManageLoadingContentPack));
                         R2API.Logger.LogInfo($"Added Pre-Existing SerializableContentPack from mod {modName}");
                         return;
@@ -347,7 +347,7 @@ namespace R2API {
                         case GameEndingDef ged: AddSafe(ref scp.gameEndingDefs, ged, scp.name); added = true; break;
                         case EntityStateConfiguration esc: AddSafe(ref scp.entityStateConfigurations, esc, scp.name); added = true; break;
                     }
-                    if(!added) {
+                    if (!added) {
                         throw new ArgumentException($"The content {content.name} ({content.GetType()}) is not supported by the ContentManager! \n" +
                             $"If you think this is an Error and it should be supported, please file a bug report.");
                     }
@@ -402,7 +402,7 @@ namespace R2API {
                         $"If you think this is an Error and it should be supported, please file a bug report.");
                 }
             }
-            catch(Exception e) { R2API.Logger.LogError(e); }
+            catch (Exception e) { R2API.Logger.LogError(e); }
         }
 
         internal static void CreateContentPacks() {
@@ -410,7 +410,7 @@ namespace R2API {
                 R2API.Logger.LogInfo($"Generating a total of {BepInModNameToSerialziableContentPack.Values.Count} ContentPacks...");
                 List<ContentPack> contentPacks = new List<ContentPack>();
                 foreach (KeyValuePair<string, R2APIManagedContentPack> kvp in BepInModNameToSerialziableContentPack) {
-                    if(ShouldContentPackBeLoadedByR2API(kvp.Value, out SerializableContentPack scp)) {
+                    if (ShouldContentPackBeLoadedByR2API(kvp.Value, out SerializableContentPack scp)) {
                         ContentPack cp = scp.CreateContentPack();
                         cp.identifier = kvp.Key;
                         contentPacks.Add(cp);
@@ -490,8 +490,8 @@ namespace R2API {
             }
         }
 
-        private static bool ShouldContentPackBeLoadedByR2API (R2APIManagedContentPack managedContentPack, out SerializableContentPack contentPack) {
-            if(managedContentPack.shouldManageLoading) {
+        private static bool ShouldContentPackBeLoadedByR2API(R2APIManagedContentPack managedContentPack, out SerializableContentPack contentPack) {
+            if (managedContentPack.shouldManageLoading) {
                 contentPack = managedContentPack.serializableContentPack;
                 return true;
             }
