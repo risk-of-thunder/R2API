@@ -13,7 +13,7 @@ using System.Reflection;
 using UnityEngine;
 
 namespace R2API {
-    internal static class LoadRoR2ContentEarly {
+    public static class LoadRoR2ContentEarly {
         private static bool _ror2ContentLoaded;
         private static RoR2Content RoR2Content;
         /// <summary>

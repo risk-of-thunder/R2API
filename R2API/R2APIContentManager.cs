@@ -50,6 +50,45 @@ namespace R2API {
         //there might be a better way of doing this by ILHooking each catalog's init and adding a check to handle duplicate names, but i'm not smart enough to do this.
         private static Dictionary<Type, Func<string[]>> TypeToAllCurrentlyRegisteredNames = new Dictionary<Type, Func<string[]>>();
 
+        #region Public Methods
+        public static void AddContent(Object content) => HandleContentAddition(Assembly.GetCallingAssembly(), content);
+        public static SerializableEntityStateType AddEntityState<T>() where T : EntityState {
+            HandleEntityState(Assembly.GetCallingAssembly(), typeof(T));
+            return new SerializableEntityStateType(typeof(T));
+        }
+        public static void AddPreExistingSerializableContentPack(SerializableContentPack serializableContentPack) {
+            try {
+                Assembly assembly = Assembly.GetCallingAssembly();
+                if (!AssemblyToBepInModName.ContainsKey(assembly)) {
+                    Type mainClass = assembly.GetTypes()
+                        .Where(t => t.GetCustomAttribute<BepInPlugin>() != null)
+                        .FirstOrDefault();
+
+                    if (mainClass != null) {
+                        BepInPlugin attribute = mainClass.GetCustomAttribute<BepInPlugin>();
+                        if (attribute != null) {
+                            AssemblyToBepInModName.Add(assembly, attribute.Name);
+                        }
+                    }
+                }
+                if(AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
+                    serializableContentPack.name = modName;
+                    if(!BepInModNameToSerialziableContentPack.ContainsKey(modName)) {
+                        BepInModNameToSerialziableContentPack.Add(modName, serializableContentPack);
+                        R2API.Logger.LogInfo($"Added Pre-Existing SerializableContentPack from mod {modName}");
+                        return;
+                    }
+                    throw new InvalidOperationException($"The Mod {modName} already has a Serializable Content Pack assigned to it!");
+                }
+                throw new NullReferenceException($"The assembly {assembly} does not have a class that has a BepInPlugin attribute! Cannot assign Serializable Content Pack for {modName}!");
+            }
+            catch (Exception e) {
+                R2API.Logger.LogError(e);
+            }
+        }
+        public static SerializableContentPack ReserveSerializableContentPack() => GetOrCreateSerializableContentPack(Assembly.GetCallingAssembly());
+        #endregion
+
         internal static void Init() {
             string[] BodyPrefabs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.bodyPrefabs
@@ -244,6 +283,7 @@ namespace R2API {
             }
             TypeToAllCurrentlyRegisteredNames.Add(typeof(EntityStateConfiguration), EntityStateConfigurations);
         }
+
         internal static void HandleContentAddition(Assembly assembly, Object content) {
             SerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);
             content = EnsureSafeContentName(content, scp.name);
