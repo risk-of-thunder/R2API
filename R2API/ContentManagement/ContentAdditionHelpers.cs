@@ -11,6 +11,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace R2API.ContentManagement {
+    /// <summary>
+    /// Class for adding Content Assets to your Mod's ContentPack.
+    /// </summary>
     public static class ContentAdditionHelpers {
         #region Add Prefab Methods
         /// <summary>
