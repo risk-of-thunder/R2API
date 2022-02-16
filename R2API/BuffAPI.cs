@@ -36,15 +36,15 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntires;
+            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntries;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntires;
+            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntries;
         }
 
-        private static void AvoidNewEntires() {
+        private static void AvoidNewEntries() {
             _buffCatalogInitialized = true;
         }
 
