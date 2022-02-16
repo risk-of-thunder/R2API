@@ -38,6 +38,12 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");
             }
 
+            if (!CatalogBlockers.GetAvailability<EffectComponent>()) {
+                R2API.Logger.LogError(
+                    $"Too late ! Tried to add effect: {effect.name} after the EffectCatalog has initialized!");
+                return false;
+            }
+
             if (effect == null) {
                 Debug.LogError("Effect prefab was null");
                 return false;
@@ -76,6 +82,11 @@ namespace R2API {
         public static bool AddEffect(EffectDef? effect) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");
+            }
+            if (!CatalogBlockers.GetAvailability<EffectComponent>()) {
+                R2API.Logger.LogError(
+                    $"Too late ! Tried to add effect: {effect.prefab} after the EffectCatalog has initialized!");
+                return false;
             }
             if (effect == null) {
                 R2API.Logger.LogError("EffectDef was null.");

@@ -18,9 +18,8 @@ namespace R2API {
         /// <summary>
         /// All custom buffs added by the API.
         /// </summary>
+        [Obsolete($"This observable collection is obsolete, if you want to look at the buffDefs added by R2API, look at R2API.ContentManagement.R2APIContentManager.ManagedContentPacks and do a SelectMany on the buffDefs.")]
         public static ObservableCollection<CustomBuff?>? BuffDefinitions = new ObservableCollection<CustomBuff>();
-
-        private static bool _buffCatalogInitialized;
 
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -31,24 +30,6 @@ namespace R2API {
         }
 
         private static bool _loaded;
-
-        #region ModHelper Events and Hooks
-
-        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void SetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntries;
-        }
-
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntries;
-        }
-
-        private static void AvoidNewEntries() {
-            _buffCatalogInitialized = true;
-        }
-
-        #endregion ModHelper Events and Hooks
 
         #region Add Methods
 
@@ -66,9 +47,9 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(BuffAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(BuffAPI)})]");
             }
 
-            if (_buffCatalogInitialized) {
+            if (!CatalogBlockers.GetAvailability<BuffDef>()) {
                 R2API.Logger.LogError(
-                    $"Too late ! Tried to add buff: {buff.BuffDef.name} after the buff list was created");
+                    $"Too late ! Tried to add buff: {buff.BuffDef.name} after the BuffCatalog has initialized!");
                 return false;
             }
 

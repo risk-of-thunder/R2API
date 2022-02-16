@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using EntityStates;
+using R2API.MiscHelpers;
 using RoR2;
 using RoR2.ContentManagement;
 using RoR2.Projectile;
@@ -12,7 +13,6 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 using Object = UnityEngine.Object;
-using R2API.MiscHelpers;
 
 namespace R2API.ContentManagement {
 

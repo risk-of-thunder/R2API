@@ -133,8 +133,6 @@ namespace R2API {
         private static readonly HashSet<string> UnlockableIdentifiers = new HashSet<string>();
         private static readonly List<AchievementDef> Achievements = new List<AchievementDef>();
 
-        private static bool _unlockableCatalogInitialized;
-
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -147,18 +145,12 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntries;
             IL.RoR2.AchievementManager.CollectAchievementDefs += AddCustomAchievements;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntries;
             IL.RoR2.AchievementManager.CollectAchievementDefs -= AddCustomAchievements;
-        }
-
-        private static void AvoidNewEntries() {
-            _unlockableCatalogInitialized = true;
         }
 
         private static void AddCustomAchievements(ILContext il) {
@@ -282,8 +274,8 @@ namespace R2API {
 
             var instance = Activator.CreateInstance(unlockableType) as IModdedUnlockableDataProvider;
 
-            if (_unlockableCatalogInitialized) {
-                throw new InvalidOperationException($"Too late ! Tried to add unlockable: {instance.UnlockableIdentifier} after the unlockable list was created");
+            if (!CatalogBlockers.GetAvailability<UnlockableDef>()) {
+                throw new InvalidOperationException($"Too late ! Tried to add unlockable: {instance.UnlockableIdentifier} after the UnlockableCatalog");
             }
 
             string unlockableIdentifier = instance.UnlockableIdentifier;

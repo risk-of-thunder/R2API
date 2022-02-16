@@ -24,8 +24,6 @@ namespace R2API {
 
         private static bool _loaded;
 
-        private static bool _survivorsAlreadyAdded;
-
         public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
 
         /// <summary>
@@ -44,8 +42,8 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(SurvivorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SurvivorAPI)})]");
             }
 
-            if (_survivorsAlreadyAdded) {
-                R2API.Logger.LogError($"Tried to add survivor: {survivor.displayNameToken} after survivor list was created");
+            if (!CatalogBlockers.GetAvailability<SurvivorDef>()) {
+                R2API.Logger.LogError($"Tried to add survivor: {survivor.displayNameToken} After the SurvivorCatalog has initialized!");
                 return false;
             }
 
@@ -64,18 +62,12 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntries;
             IL.RoR2.CharacterSelectBarController.Build += DescriptionTokenSafetyCheck;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntries;
             IL.RoR2.CharacterSelectBarController.Build -= DescriptionTokenSafetyCheck;
-        }
-
-        private static void AvoidNewEntries() {
-            _survivorsAlreadyAdded = true;
         }
 
         // Add a safety check for SurvivorDef that are lacking

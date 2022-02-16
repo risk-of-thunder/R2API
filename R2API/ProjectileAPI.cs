@@ -1,5 +1,6 @@
 ﻿using R2API.ContentManagement;
 using R2API.Utils;
+using RoR2.Projectile;
 using System;
 using System.Reflection;
 using UnityEngine;
@@ -12,9 +13,6 @@ namespace R2API {
     [R2APISubmodule]
     [Obsolete($"The {nameof(ProjectileAPI)} is obsolete, please add your Projectiles via R2API.ContentManagment.R2APIContentManager.AddContent()")]
     public static class ProjectileAPI {
-
-        private static bool _projectileCatalogInitialized;
-
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -24,24 +22,6 @@ namespace R2API {
         }
 
         private static bool _loaded;
-
-        #region ModHelper Events and Hooks
-
-        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void SetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntries;
-        }
-
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntries;
-        }
-
-        private static void AvoidNewEntries() {
-            _projectileCatalogInitialized = true;
-        }
-
-        #endregion ModHelper Events and Hooks
 
         #region Add Methods
 
@@ -57,7 +37,7 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(ProjectileAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ProjectileAPI)})]");
             }
 
-            if (_projectileCatalogInitialized) {
+            if (!CatalogBlockers.GetAvailability<ProjectileController>()) {
                 R2API.Logger.LogError(
                     $"Too late ! Tried to add projectile: {projectile.name} after the projectile list was created");
                 return false;

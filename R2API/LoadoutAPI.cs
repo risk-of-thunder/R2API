@@ -45,6 +45,10 @@ namespace R2API {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
+            if (CatalogBlockers.GetAvailability<EntityState>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add skill type {t} after the EntityStateCatalog has initialized!");
+                return false;
+            }
             if (t == null || !t.IsSubclassOf(typeof(EntityState)) || t.IsAbstract) {
                 R2API.Logger.LogError("Invalid skill type.");
                 return false;
@@ -66,6 +70,10 @@ namespace R2API {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
+            if (CatalogBlockers.GetAvailability<EntityState>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add skill type {typeof(T)} after the EntityStateCatalog has initialized!");
+                return new SerializableEntityStateType();
+            }
             R2APIContentManager.HandleEntityState(Assembly.GetCallingAssembly(), typeof(T));
             return new SerializableEntityStateType(typeof(T));
         }
@@ -80,6 +88,10 @@ namespace R2API {
         public static bool AddSkillDef(SkillDef? s) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
+            }
+            if (CatalogBlockers.GetAvailability<SkillDef>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add skillDef {s.skillName} after the SkillCatalog has initialized!");
+                return false;
             }
             if (!s) {
                 R2API.Logger.LogError("Invalid SkillDef");
@@ -99,6 +111,9 @@ namespace R2API {
         public static bool AddSkillFamily(SkillFamily? sf) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
+            }
+            if (CatalogBlockers.GetAvailability<SkillFamily>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add skillFamily after the SkillCatalog has initialized!");
             }
             if (!sf) {
                 R2API.Logger.LogError("Invalid SkillFamily");

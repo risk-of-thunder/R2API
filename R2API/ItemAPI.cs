@@ -23,9 +23,6 @@ namespace R2API {
         public static ObservableCollection<CustomItem?>? ItemDefinitions = new ObservableCollection<CustomItem?>();
         public static ObservableCollection<CustomEquipment?> EquipmentDefinitions = new ObservableCollection<CustomEquipment?>();
 
-        private static bool _itemCatalogInitialized;
-        private static bool _equipmentCatalogInitialized;
-
         private static ICollection<string> noDefaultIDRSCharacterList = new List<string>();
 
         public static int CustomItemCount, CustomEquipmentCount;
@@ -44,24 +41,16 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntriesAndLoadRelatedAPIs;
+            R2APIContentPackProvider.WhenAddingContentPacks += LoadRelatedAPIs;
             IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
             On.RoR2.ItemDisplayRuleSet.Init += AddingItemDisplayRulesToCharacterModels;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntriesAndLoadRelatedAPIs;
+            R2APIContentPackProvider.WhenAddingContentPacks -= LoadRelatedAPIs;
             IL.RoR2.CharacterModel.UpdateMaterials -= MaterialFixForItemDisplayOnCharacter;
             On.RoR2.ItemDisplayRuleSet.Init -= AddingItemDisplayRulesToCharacterModels;
-        }
-
-        private static void AvoidNewEntriesAndLoadRelatedAPIs() {
-            _itemCatalogInitialized = true;
-
-            LoadRelatedAPIs();
-
-            _equipmentCatalogInitialized = true;
         }
 
         private static void LoadRelatedAPIs() {
@@ -94,8 +83,8 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
-            if (_itemCatalogInitialized) {
-                R2API.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the item list was created");
+            if (!CatalogBlockers.GetAvailability<ItemDef>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the ItemCatalog has Initialized!");
             }
 
             if (!item.ItemDef) {
@@ -146,8 +135,8 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
-            if (_equipmentCatalogInitialized) {
-                R2API.Logger.LogError($"Too late ! Tried to add equipment item: {item.EquipmentDef.nameToken} after the equipment list was created");
+            if (CatalogBlockers.GetAvailability<EquipmentDef>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add equipment item: {item.EquipmentDef.nameToken} after the EquipmentCatalog has initialized!");
             }
 
             if (item.EquipmentDef == null) {

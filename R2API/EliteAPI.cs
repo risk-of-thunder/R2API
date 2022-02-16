@@ -19,8 +19,6 @@ namespace R2API {
     public static class EliteAPI {
         public static ObservableCollection<CustomElite?>? EliteDefinitions = new ObservableCollection<CustomElite?>();
 
-        private static bool _eliteCatalogInitialized;
-
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -92,7 +90,6 @@ namespace R2API {
 
                 OverrideCombatDirectorEliteTiers(currentEliteTiers);
             }
-            _eliteCatalogInitialized = true;
         }
 
         private static void RetrieveVanillaEliteTierCount(ILContext il) {
@@ -123,8 +120,8 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
             }
 
-            if (_eliteCatalogInitialized) {
-                R2API.Logger.LogError($"Too late ! Tried to add elite: {elite.EliteDef.modifierToken} after the elite list was created");
+            if (!CatalogBlockers.GetAvailability<EliteDef>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add elite: {elite.EliteDef.modifierToken} after the EliteCatalog has initialized!");
                 return false;
             }
 

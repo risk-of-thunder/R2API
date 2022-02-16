@@ -13,9 +13,6 @@ namespace R2API {
     [R2APISubmodule]
     [Obsolete($"The {nameof(ArtifactAPI)} is obsolete, please add your ArtifactDefs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
     public static class ArtifactAPI {
-
-        private static bool _artifactCatalogInitialized;
-
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -25,24 +22,6 @@ namespace R2API {
         }
 
         private static bool _loaded;
-
-        #region ModHelper Events and Hooks
-
-        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void SetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntries;
-        }
-
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntries;
-        }
-
-        private static void AvoidNewEntries() {
-            _artifactCatalogInitialized = true;
-        }
-
-        #endregion ModHelper Events and Hooks
 
         #region Add Methods
 
@@ -58,9 +37,9 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(ArtifactAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactAPI)})]");
             }
 
-            if (_artifactCatalogInitialized) {
+            if (!CatalogBlockers.GetAvailability<ArtifactDef>()) {
                 R2API.Logger.LogError(
-                    $"Too late ! Tried to add artifact: {artifactDef.cachedName} after the artifact list was created");
+                    $"Too late ! Tried to add artifact: {artifactDef.cachedName} after the ArtifactCatalog has initialized!");
                 return false;
             }
 
@@ -83,9 +62,9 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(ArtifactAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactAPI)})]");
             }
 
-            if (_artifactCatalogInitialized) {
+            if (!CatalogBlockers.GetAvailability<ArtifactDef>()) {
                 R2API.Logger.LogError(
-                    $"Too late ! Tried to add artifact: {name} after the artifact list was created");
+                    $"Too late ! Tried to add artifact: {name} after the ArtifactCatalog has initialized!");
                 return false;
             }
 

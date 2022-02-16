@@ -35,8 +35,6 @@ namespace R2API {
 
         private static readonly List<NetworkSoundEventDef> NetworkSoundEventDefs = new List<NetworkSoundEventDef>();
 
-        private static bool _NetworkSoundEventCatalogInitialized;
-
         #region Soundbank Setup
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
@@ -281,21 +279,6 @@ namespace R2API {
         #endregion Soundbank Setup
 
         #region NetworkSoundEventCatalog Setup
-
-        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void NetworkSetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += AvoidNewEntries;
-        }
-
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void NetworkUnsetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks -= AvoidNewEntries;
-        }
-
-        private static void AvoidNewEntries() {
-            _NetworkSoundEventCatalogInitialized = true;
-        }
-
         /// <summary>
         /// Add a custom network sound event to the list of available network sound events.
         /// If this is called after the NetworkSoundEventCatalog inits then this will return false and ignore the custom network sound event.
@@ -309,12 +292,12 @@ namespace R2API {
                     $"Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
             }
 
-            if (_NetworkSoundEventCatalogInitialized) {
+            if (!CatalogBlockers.GetAvailability<NetworkSoundEventDef>()) {
                 R2API.Logger.LogError(
                     "Too late ! " +
                     "Tried to add network sound event: " +
                     $"{networkSoundEventDef.eventName} " +
-                    "after the network sound event def list was created");
+                    "after the NetworkSoundEventCatalog has initalized!");
                 return false;
             }
 
@@ -344,10 +327,10 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
             }
 
-            if (_NetworkSoundEventCatalogInitialized) {
+            if (!CatalogBlockers.GetAvailability<NetworkSoundEventDef>()) {
                 R2API.Logger.LogError(
                     $"Too late! Tried to add network sound event: {eventName} " +
-                    "after the network sound event def list was created");
+                    "after the NetworkSoundEventCatalog has initalized!");
                 return false;
             }
 
