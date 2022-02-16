@@ -45,97 +45,17 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 
 **Current**
 
+* Updated for the game `Survivors of The Void`
+* [Complete Refractoring of Content Addition Systems, now uses the R2APIContentManager](https://github.com/risk-of-thunder/R2API/pull/338)
+* [Each mod now has it's own ContentPack managed by R2API](https://github.com/risk-of-thunder/R2API/pull/338#issue-1137783592)
+* [A Mod can add a PreExisting content pack to the R2APIContentManager](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1040337885)
+* [A PreExisting ContentPack can opt out from being loaded by R2API's Systems](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1040337885)
+* [Each mod can now add a valid content piece via ContentAdditionHelpers](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1041783985)
+* [Assets added by R2API will always have unique names](https://github.com/risk-of-thunder/R2API/pull/338#issue-1137783592)
+* [Made LoadRoR2ContentEarly public, mods can now access a readonly version of RoR2's ContentPack](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1040337885)
+* [UnlockableAPI's Overload Methods now point to a single private method](https://github.com/risk-of-thunder/R2API/pull/338/commits/82d6edb8933af7974683f411c65a256378a45ae1)
+* [Marked the following APIs As Obsolete: ArtifactAPI, BuffAPI, EffectAPI, ProjectileAPI and SurvivorAPI](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1041484037)
+* [Marked the following methods in LoadoutAPI as Obsolete: AddSkill, StateTypeOf, AddSkillDef, AddSkillFamily](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1041484037)
+* [Marked the AddNetworkedSoundEvent method in SoundAPI  as Obsolete](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1041484037)
 * [NetworkingAPI now has Send overloads for sending to specific network connections. Also have some documentation now](https://github.com/risk-of-thunder/R2API/pull/333)
 * [Allow character mods to opt out from default item display rules](https://github.com/risk-of-thunder/R2API/pull/330)
-
-**3.0.71**
-
-* [ItemAPI now warns that ItemDef/EquipmentDef.pickupModelPrefab should have an ItemDisplay attached to them when they have ParentedPrefab display rules linked to them](https://github.com/risk-of-thunder/R2API/pull/311)
-* [EliteAPI now exposes the default elite tiers array (through VanillaEliteTiers) before any changes are made to it for modder that want to change the vanilla elite tiers. Also, adding to the custom elite tier array now by default insert based on the cost multiplier of the elite tier.](https://github.com/risk-of-thunder/R2API/pull/308)
-* [RecalculateStatsAPI now warns modders that the submodule could be not loaded](https://github.com/risk-of-thunder/R2API/pull/307)
-* [Added Curse, Shield Multiplier, All Cooldown Reductions, Jump Power, Level Scaling, and Root to RecalculateStatsAPI](https://github.com/risk-of-thunder/R2API/pull/322)
-* [Fix SoundAPI throwing on dedicated server](https://github.com/risk-of-thunder/R2API/pull/306)
-* [Fix SoundAPI's music implementation stopping all music when an instance of a MusicTrackOverride gets destroyed](https://github.com/risk-of-thunder/R2API/pull/319)
-* [Added TempVisualEffectAPI](https://github.com/risk-of-thunder/R2API/pull/313)
-* [ArtifactCodeAPI's ArtifactCode Scriptable object now uses 3 Vector3Int for inputting the code, instead of a List of Ints](https://github.com/risk-of-thunder/R2API/pull/310)
-* [Added aditional overloads for AddUnlockable that accept a type parameter instead of using generics](https://github.com/risk-of-thunder/R2API/pull/317)
-* [UnlockableAPI can now add AchievementDefs directly](https://github.com/risk-of-thunder/R2API/pull/321)
-* [DotAPI no longer throws an error when no BuffDef is provided for the asociated BuffDef parameter](https://github.com/risk-of-thunder/R2API/pull/325)
-
-**3.0.59**
-
-* [Extended SoundAPI for adding custom music](https://github.com/risk-of-thunder/R2API/pull/305) 
-* [Added support for using existing UnlockableDefs in UnlockableAPI](https://github.com/risk-of-thunder/R2API/pull/304)
-* [fixing server unlockables](https://github.com/risk-of-thunder/R2API/pull/302)
-
-**3.0.52**
-
-* [Add NetworkSoundEventDef registration to SoundAPI](https://github.com/risk-of-thunder/R2API/pull/301)
-
-**3.0.50**
-
-* [Added ArtifactCodeAPI](https://github.com/risk-of-thunder/R2API/pull/299)
-* [Added support for new Artifact Code compounds](https://github.com/risk-of-thunder/R2API/pull/300)
-
-**3.0.48**
-
-* [Documentation for ItemDropAPI](https://github.com/risk-of-thunder/R2API/blob/master/ItemDropAPI%20Instructions%20For%20Use.txt)
-* [ItemDropAPI Overhall](https://github.com/risk-of-thunder/R2API/pull/295)
-* [Added MonsterItemsAPI back in](https://github.com/risk-of-thunder/R2API/pull/295)
-
-**3.0.44**
-
-* [Fixed PrefabAPI network registration](https://github.com/risk-of-thunder/R2API/pull/294)
-
-**3.0.43**
-
-* **IMPORTANT FOR MOD DEVS:** [R2API will no longer register mods to network if they don't depend on it with HardDependecy](https://github.com/risk-of-thunder/R2API/pull/286)
-* [Added DeployableAPI](https://github.com/risk-of-thunder/R2API/pull/279)
-* [Added DamageAPI](https://github.com/risk-of-thunder/R2API/pull/284)
-* [Added RecalcStatsAPI, migrated from TILER2](https://github.com/risk-of-thunder/R2API/pull/287)
-* [Updated DifficultyAPI, now has sprite ref overload](https://github.com/risk-of-thunder/R2API/pull/288)
-* [RecalcStatsAPI fixes](https://github.com/risk-of-thunder/R2API/pull/290)
-* [Missing MMHOOK/Publicized Assembly methods fixes](https://github.com/risk-of-thunder/R2API/pull/289)
-
-**3.0.30**
-
-* Fixes for current patch
-
-**3.0.25**
-
-* **IMPORTANT FOR MOD DEVS:** [R2API will no longer register mods to network if they don't depend on it](https://github.com/risk-of-thunder/R2API/pull/269)
-* [DotAPI fixes](https://github.com/risk-of-thunder/R2API/pull/270)
-* [EliteAPI fixes](https://github.com/risk-of-thunder/R2API/pull/271)
-
-**3.0.13**
-
-* [Updated UnlockableAPI, ItemDropAPI Overhall](https://github.com/risk-of-thunder/R2API/pull/265)
-* [Update internals for 1.1.1.2 game version](https://github.com/risk-of-thunder/R2API/pull/267)
-* Removed MonsterItemsAPI
-* Removed `patchers` folder
-
-**3.0.11**
-
-* [Updated ResourceAPI error messages](https://github.com/risk-of-thunder/R2API/pull/258)
-* SurvivorAPI Fixes: [A](https://github.com/risk-of-thunder/R2API/pull/259) [B](https://github.com/risk-of-thunder/R2API/pull/261)
-
-**3.0.7**
-
-* [Added ArtifactAPI and ProjectileAPI, BuffAPI fix](https://github.com/risk-of-thunder/R2API/pull/256)
-
-**3.0.1**
-
-* [Fixes for EffectAPI, LoadoutAPI and SoundAPI](https://github.com/risk-of-thunder/R2API/pull/254)
-
-**3.0.0**
-
-* Updated for the game `Anniversary Update`
-* No longer include `monomod` folder
-* [Various API Fixes. Removed AssetsAPI, InvetoryAPI. Moved MMHook to separate mod called (HookGenPatcher)](https://github.com/risk-of-thunder/R2API/pull/252)
-* Removed obsolete APIs and methods: [A](https://github.com/risk-of-thunder/R2API/pull/249) [B](https://github.com/risk-of-thunder/R2API/pull/243)
-* ItemAPI, ItemDropApi overhall. Added MonsterItemAPI: [A](https://github.com/risk-of-thunder/R2API/pull/214) [B](https://github.com/risk-of-thunder/R2API/pull/223) [C](https://github.com/risk-of-thunder/R2API/pull/228) [D](https://github.com/risk-of-thunder/R2API/pull/233) [E](https://github.com/risk-of-thunder/R2API/pull/234) [F](https://github.com/risk-of-thunder/R2API/pull/240) [G](https://github.com/risk-of-thunder/R2API/pull/245)
-* LanguageAPI refactoring and fixes: [A](https://github.com/risk-of-thunder/R2API/pull/229) [B](https://github.com/risk-of-thunder/R2API/pull/244)
-* [Added ILLine](https://github.com/risk-of-thunder/R2API/pull/230)
-* [Fix for networked achievements](https://github.com/risk-of-thunder/R2API/pull/208)
-* [Added SceneAssetAPI](https://github.com/risk-of-thunder/R2API/pull/210)
-* [Added InteractablesAPI](https://github.com/risk-of-thunder/R2API/pull/216)
