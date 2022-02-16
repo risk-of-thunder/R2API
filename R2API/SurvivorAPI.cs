@@ -23,7 +23,7 @@ namespace R2API {
         }
 
         private static bool _loaded;
-
+        [Obsolete($"This observable collection is obsolete, if you want to look at the survivorDefs added by R2API, look at R2API.ContentManagement.R2APIContentManager.ManagedContentPacks and do a SelectMany on the SurvivorDefs.")]
         public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace R2API {
         /// </summary>
         /// <param name="survivor">The survivor to add.</param>
         /// <returns>true if survivor will be added</returns>
-        [Obsolete($"AddSurvivor is obsolete, please add your SurvivorDefs via R2API.ContentManagment.R2APIContentManager.AddContent()\nYou can also add Your CharacterBody and MasterBody with the same method")]
+        [Obsolete($"AddSurvivor is obsolete, please add your SurvivorDefs via R2API.ContentManagement.ContentAdditionHelpers.AddSurvivorDef()\nYou can also add Your CharacterBody and MasterBody with AddBody() & AddMaster() respectively.")]
         public static bool AddSurvivor(SurvivorDef? survivor) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(SurvivorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SurvivorAPI)})]");

@@ -285,7 +285,7 @@ namespace R2API {
         /// </summary>
         /// <param name="networkSoundEventDef">The network sound event def to add.</param>
         /// <returns>true if added, false otherwise</returns>
-        [Obsolete($"AddNetworkedSoundEvent is obsolete, please add your NetworkSoundEventDefs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
+        [Obsolete($"AddNetworkedSoundEvent is obsolete, please add your NetworkSoundEventDefs via R2API.ContentManagement.ContentAdditionHelpers.AddNetworkSoundEventDef()")]
         public static bool AddNetworkedSoundEvent(NetworkSoundEventDef? networkSoundEventDef) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. " +
@@ -322,6 +322,7 @@ namespace R2API {
         /// </summary>
         /// <param name="eventName">The name of the AKWwise Sound Event to add.</param>
         /// <returns>true if added, false otherwise</returns>
+        [Obsolete($"AddNetworkedSoundEvent is obsolete, please add your NetworkSoundEventDefs via R2API.ContentManagement.ContentAdditionHelpers.AddNetworkSoundEventDef()")]
         public static bool AddNetworkedSoundEvent(string eventName) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");

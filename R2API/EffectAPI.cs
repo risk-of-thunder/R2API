@@ -11,7 +11,7 @@ using UnityEngine;
 namespace R2API {
 
     [R2APISubmodule]
-    [Obsolete($"The {nameof(EffectAPI)} is obsolete, please add your Effects via R2API.ContentManagment.R2APIContentManager.AddContent()")]
+    [Obsolete($"The {nameof(EffectAPI)} is obsolete, please add your Effects via R2API.ContentManagement.ContentAdditionHelpers.AddEffect()")]
     public static class EffectAPI {
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -32,7 +32,7 @@ namespace R2API {
         /// </summary>
         /// <param name="effect">The prefab of the effect to be added</param>
         /// <returns>True if the effect was added</returns>
-        [Obsolete($"AddEffect is obsolete, please add your Effect Prefabs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
+        [Obsolete($"AddEffect is obsolete, please add your Effect Prefabs via R2API.ContentManagement.ContentAdditionHelpers.AddEffect()")]
         public static bool AddEffect(GameObject? effect) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");
@@ -78,7 +78,7 @@ namespace R2API {
         /// </summary>
         /// <param name="effect">The EffectDef to addZ</param>
         /// <returns>False if the EffectDef was null</returns>
-        [Obsolete($"This method is obsolete, please Add the EffectDef using the method AddEffect(GameObject? effect)")]
+        [Obsolete($"This method is obsolete, please Add the EffectDef using R2API.ContentManagement.ContentAdditionHelpers.AddEffect()")]
         public static bool AddEffect(EffectDef? effect) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");

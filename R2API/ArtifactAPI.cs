@@ -11,7 +11,7 @@ namespace R2API {
     /// API for adding custom artifact to the game.
     /// </summary>
     [R2APISubmodule]
-    [Obsolete($"The {nameof(ArtifactAPI)} is obsolete, please add your ArtifactDefs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
+    [Obsolete($"The {nameof(ArtifactAPI)} is obsolete, please add your ArtifactDefs via R2API.ContentManagement.ContentAdditionHelpers.AddArtifactDef()")]
     public static class ArtifactAPI {
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -31,7 +31,7 @@ namespace R2API {
         /// </summary>
         /// <param name="artifactDef">The artifactDef to add.</param>
         /// <returns>true if added, false otherwise</returns>
-        [Obsolete($"Add is obsolete, please add your ArtifactDefs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
+        [Obsolete($"Add is obsolete, please add your ArtifactDefs via R2API.ContentManagement.ContentAdditionHelpers.AddArtifactDef()")]
         public static bool Add(ArtifactDef? artifactDef) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ArtifactAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactAPI)})]");
@@ -52,6 +52,7 @@ namespace R2API {
         /// If this is called after the ArtifactCatalog inits then this will return false and ignore the custom artifact.
         /// </summary>
         /// <returns>true if added, false otherwise</returns>
+        [Obsolete($"Add is obsolete, please add your ArtifactDefs via R2API.ContentManagement.ContentAdditionHelpers.AddArtifactDef()")]
         public static bool Add(
             string name,
             string descriptionToken, string nameToken,
