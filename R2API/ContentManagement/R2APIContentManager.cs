@@ -65,25 +65,6 @@ namespace R2API.ContentManagement {
 
         #region Public Methods
         /// <summary>
-        /// Adds a Content asset to your mod's pre-defined SerialziableContentPack.
-        /// Can be used to add any valid Asset that's valid for a ContentPack. 
-        /// </summary>
-        /// <param name="content">The type of content to add. This content should be supported by the ContentManager. </param>
-        public static void AddContent(Object content) => HandleContentAddition(Assembly.GetCallingAssembly(), content);
-
-        /// <summary>
-        /// Adds an EntityState to your mod's pre-defined SerialziableContentPack's EntityStateTypes Array.
-        /// <para>Also Creates a SerializableEntityStateType with a very simple syntax.</para>
-        /// Effectively the same as 'new SerializableEntityStateType()'
-        /// </summary>
-        /// <typeparam name="T">The state type</typeparam>
-        /// <returns>The created SerializableEntityStateType</returns>
-        public static SerializableEntityStateType AddEntityState<T>() where T : EntityState {
-            HandleEntityState(Assembly.GetCallingAssembly(), typeof(T));
-            return new SerializableEntityStateType(typeof(T));
-        }
-
-        /// <summary>
         /// Adds a Pre-Existing SerializableContentPack as your mod's content pack.
         /// <para>Example usage would be a Thunderkit mod adding their items via ItemAPI to get the advantage of using ItemAPI's IDRS Systems</para>
         /// </summary>
