@@ -40,6 +40,7 @@ namespace R2API {
         /// </summary>
         /// <param name="t">The type to add</param>
         /// <returns>True if succesfully added</returns>
+        [Obsolete($"AddSkill is obsolete, please add your SkillTypes via R2API.ContentManagment.R2APIContentManager.AddEntityState<T>()")]
         public static bool AddSkill(Type? t) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
@@ -59,6 +60,7 @@ namespace R2API {
         /// </summary>
         /// <typeparam name="T">The state type</typeparam>
         /// <returns>The created SerializableEntityStateType</returns>
+        [Obsolete($"StateTypeOf<T> is obsolete, please add your SkillTypes via R2API.ContentManagment.R2APIContentManager.AddEntityState<T>()")]
         public static SerializableEntityStateType StateTypeOf<T>()
             where T : EntityState, new() {
             if (!Loaded) {
@@ -74,6 +76,7 @@ namespace R2API {
         /// </summary>
         /// <param name="s">The SkillDef to add</param>
         /// <returns>True if the event was registered</returns>
+        [Obsolete($"AddSkillDef is obsolete, please add your SkillDefs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
         public static bool AddSkillDef(SkillDef? s) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
@@ -92,6 +95,7 @@ namespace R2API {
         /// </summary>
         /// <param name="sf">The skillfamily to add</param>
         /// <returns>True if the event was registered</returns>
+        [Obsolete($"AddSkillFamily is obsolete, please add your SkillFamilies via R2API.ContentManagment.R2APIContentManager.AddContent()")]
         public static bool AddSkillFamily(SkillFamily? sf) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");

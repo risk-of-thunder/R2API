@@ -12,6 +12,7 @@ namespace R2API {
     /// API for adding custom buffs to the game. Previously included in ItemAPI.
     /// </summary>
     [R2APISubmodule]
+    [Obsolete($"The {nameof(BuffAPI)} is obsolete, please add your BuffDefs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
     public static class BuffAPI {
 
         /// <summary>
@@ -59,6 +60,7 @@ namespace R2API {
         /// </summary>
         /// <param name="buff">The buff to add.</param>
         /// <returns>true if added, false otherwise</returns>
+        [Obsolete($"Add is obsolete, please add your BuffDefs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
         public static bool Add(CustomBuff? buff) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(BuffAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(BuffAPI)})]");

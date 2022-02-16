@@ -11,6 +11,7 @@ using UnityEngine;
 namespace R2API {
 
     [R2APISubmodule]
+    [Obsolete($"The {nameof(EffectAPI)} is obsolete, please add your Effects via R2API.ContentManagment.R2APIContentManager.AddContent()")]
     public static class EffectAPI {
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -31,6 +32,7 @@ namespace R2API {
         /// </summary>
         /// <param name="effect">The prefab of the effect to be added</param>
         /// <returns>True if the effect was added</returns>
+        [Obsolete($"AddEffect is obsolete, please add your Effect Prefabs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
         public static bool AddEffect(GameObject? effect) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");

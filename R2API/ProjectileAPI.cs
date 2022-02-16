@@ -10,6 +10,7 @@ namespace R2API {
     /// API for adding custom projectile to the game.
     /// </summary>
     [R2APISubmodule]
+    [Obsolete($"The {nameof(ProjectileAPI)} is obsolete, please add your Projectiles via R2API.ContentManagment.R2APIContentManager.AddContent()")]
     public static class ProjectileAPI {
 
         private static bool _projectileCatalogInitialized;
@@ -50,6 +51,7 @@ namespace R2API {
         /// </summary>
         /// <param name="projectile">The projectile prefab to add.</param>
         /// <returns>true if added, false otherwise</returns>
+        [Obsolete($"Add is obsolete, please add your Projectiles via R2API.ContentManagment.R2APIContentManager.AddContent()")]
         public static bool Add(GameObject? projectile) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ProjectileAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ProjectileAPI)})]");

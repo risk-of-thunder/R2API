@@ -302,6 +302,7 @@ namespace R2API {
         /// </summary>
         /// <param name="networkSoundEventDef">The network sound event def to add.</param>
         /// <returns>true if added, false otherwise</returns>
+        [Obsolete($"AddNetworkedSoundEvent is obsolete, please add your NetworkSoundEventDefs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
         public static bool AddNetworkedSoundEvent(NetworkSoundEventDef? networkSoundEventDef) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. " +

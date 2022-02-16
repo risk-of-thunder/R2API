@@ -11,6 +11,7 @@ namespace R2API {
     /// API for adding custom artifact to the game.
     /// </summary>
     [R2APISubmodule]
+    [Obsolete($"The {nameof(ArtifactAPI)} is obsolete, please add your ArtifactDefs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
     public static class ArtifactAPI {
 
         private static bool _artifactCatalogInitialized;
@@ -51,6 +52,7 @@ namespace R2API {
         /// </summary>
         /// <param name="artifactDef">The artifactDef to add.</param>
         /// <returns>true if added, false otherwise</returns>
+        [Obsolete($"Add is obsolete, please add your ArtifactDefs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
         public static bool Add(ArtifactDef? artifactDef) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ArtifactAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactAPI)})]");
