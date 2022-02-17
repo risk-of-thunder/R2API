@@ -1,18 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
-using RoR2.ContentManagement;
-using UnityEngine;
+using System;
+using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace R2API {
 
     // ReSharper disable once InconsistentNaming
     [R2APISubmodule]
+    [Obsolete($"The {nameof(SurvivorAPI)} is obsolete, please add your SurvivorDefs, BodyPrefabs and MasterPrefabs via R2API.ContentManagment.R2APIContentManager.AddContent()")]
     public static class SurvivorAPI {
 
         /// <summary>
@@ -24,10 +23,7 @@ namespace R2API {
         }
 
         private static bool _loaded;
-
-        private static bool _survivorsAlreadyAdded;
-
-        private static List<GameObject> SurvivorBodyPrefabs = new List<GameObject>();
+        [Obsolete($"This observable collection is obsolete, if you want to look at the survivorDefs added by R2API, look at R2API.ContentManagement.R2APIContentManager.ManagedContentPacks and do a SelectMany on the SurvivorDefs.")]
         public static ObservableCollection<SurvivorDef> SurvivorDefinitions = new ObservableCollection<SurvivorDef>();
 
         /// <summary>
@@ -40,13 +36,14 @@ namespace R2API {
         /// </summary>
         /// <param name="survivor">The survivor to add.</param>
         /// <returns>true if survivor will be added</returns>
+        [Obsolete($"AddSurvivor is obsolete, please add your SurvivorDefs via R2API.ContentManagement.ContentAdditionHelpers.AddSurvivorDef()\nYou can also add Your CharacterBody and MasterBody with AddBody() & AddMaster() respectively.")]
         public static bool AddSurvivor(SurvivorDef? survivor) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(SurvivorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SurvivorAPI)})]");
             }
 
-            if (_survivorsAlreadyAdded) {
-                R2API.Logger.LogError($"Tried to add survivor: {survivor.displayNameToken} after survivor list was created");
+            if (!CatalogBlockers.GetAvailability<SurvivorDef>()) {
+                R2API.Logger.LogError($"Tried to add survivor: {survivor.displayNameToken} After the SurvivorCatalog has initialized!");
                 return false;
             }
 
@@ -55,32 +52,22 @@ namespace R2API {
                 return false;
             }
 
-            SurvivorBodyPrefabs.Add(survivor.bodyPrefab);
             SurvivorDefinitions.Add(survivor);
+
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), survivor.bodyPrefab);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), survivor);
 
             return true;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddSurvivorsToGame;
             IL.RoR2.CharacterSelectBarController.Build += DescriptionTokenSafetyCheck;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddSurvivorsToGame;
             IL.RoR2.CharacterSelectBarController.Build -= DescriptionTokenSafetyCheck;
-        }
-
-        private static void AddSurvivorsToGame(ContentPack r2apiContentPack) {
-            foreach (var customSurvivor in SurvivorDefinitions) {
-                R2API.Logger.LogInfo($"Custom Survivor: {customSurvivor.cachedName} added");
-            }
-
-            r2apiContentPack.bodyPrefabs.Add(SurvivorBodyPrefabs.ToArray());
-            r2apiContentPack.survivorDefs.Add(SurvivorDefinitions.ToArray());
-            _survivorsAlreadyAdded = true;
         }
 
         // Add a safety check for SurvivorDef that are lacking

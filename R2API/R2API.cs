@@ -4,6 +4,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
+using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
 using System;
@@ -54,6 +55,7 @@ namespace R2API {
             On.RoR2.UnitySystemConsoleRedirector.Redirect += orig => { };
 
             LoadRoR2ContentEarly.Init();
+            R2APIContentManager.Init();
 
             var pluginScanner = new PluginScanner();
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);

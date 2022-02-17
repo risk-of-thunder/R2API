@@ -1,11 +1,11 @@
 using EntityStates;
+using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
-using RoR2.ContentManagement;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -29,32 +29,7 @@ namespace R2API {
 
         private static bool _loaded;
 
-        #region Submodule Hooks
-
-        private static readonly HashSet<Type> AddedStateTypes = new HashSet<Type>();
-
-        private static readonly HashSet<SkillDef> AddedSkills = new HashSet<SkillDef>();
-        private static readonly HashSet<SkillFamily> AddedSkillFamilies = new HashSet<SkillFamily>();
         private static readonly HashSet<SkinDef> AddedSkins = new HashSet<SkinDef>();
-
-        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddSkillsToGame;
-        }
-
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddSkillsToGame;
-        }
-
-        private static void AddSkillsToGame(ContentPack r2apiContentPack) {
-            r2apiContentPack.entityStateTypes.Add(AddedStateTypes.ToArray());
-
-            r2apiContentPack.skillDefs.Add(AddedSkills.ToArray());
-            r2apiContentPack.skillFamilies.Add(AddedSkillFamilies.ToArray());
-        }
-
-        #endregion Submodule Hooks
 
         #region Adding Skills
 
@@ -65,16 +40,21 @@ namespace R2API {
         /// </summary>
         /// <param name="t">The type to add</param>
         /// <returns>True if succesfully added</returns>
+        [Obsolete($"AddSkill is obsolete, please add your SkillTypes via R2API.ContentManagement.ContentAdditionHelpers.AddEntityState<T>()")]
         public static bool AddSkill(Type? t) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
+            }
+            if (CatalogBlockers.GetAvailability<EntityState>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add skill type {t} after the EntityStateCatalog has initialized!");
+                return false;
             }
             if (t == null || !t.IsSubclassOf(typeof(EntityState)) || t.IsAbstract) {
                 R2API.Logger.LogError("Invalid skill type.");
                 return false;
             }
 
-            AddedStateTypes.Add(t);
+            R2APIContentManager.HandleEntityState(Assembly.GetCallingAssembly(), t);
             return true;
         }
 
@@ -84,12 +64,17 @@ namespace R2API {
         /// </summary>
         /// <typeparam name="T">The state type</typeparam>
         /// <returns>The created SerializableEntityStateType</returns>
+        [Obsolete($"StateTypeOf<T> is obsolete, please add your SkillTypes via R2API.ContentManagement.ContentAdditionHelpers.AddEntityState<T>()")]
         public static SerializableEntityStateType StateTypeOf<T>()
             where T : EntityState, new() {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
-            LoadoutAPI.AddSkill(typeof(T));
+            if (CatalogBlockers.GetAvailability<EntityState>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add skill type {typeof(T)} after the EntityStateCatalog has initialized!");
+                return new SerializableEntityStateType();
+            }
+            R2APIContentManager.HandleEntityState(Assembly.GetCallingAssembly(), typeof(T));
             return new SerializableEntityStateType(typeof(T));
         }
 
@@ -99,15 +84,20 @@ namespace R2API {
         /// </summary>
         /// <param name="s">The SkillDef to add</param>
         /// <returns>True if the event was registered</returns>
+        [Obsolete($"AddSkillDef is obsolete, please add your SkillDefs via R2API.ContentManagement.ContentAdditionHelpers.AddSkillDef()")]
         public static bool AddSkillDef(SkillDef? s) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
+            }
+            if (CatalogBlockers.GetAvailability<SkillDef>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add skillDef {s.skillName} after the SkillCatalog has initialized!");
+                return false;
             }
             if (!s) {
                 R2API.Logger.LogError("Invalid SkillDef");
                 return false;
             }
-            AddedSkills.Add(s);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), s);
             return true;
         }
 
@@ -117,15 +107,19 @@ namespace R2API {
         /// </summary>
         /// <param name="sf">The skillfamily to add</param>
         /// <returns>True if the event was registered</returns>
+        [Obsolete($"AddSkillFamily is obsolete, please add your SkillFamilies via R2API.ContentManagement.ContentAdditionHelpers.AddSkillFamily()")]
         public static bool AddSkillFamily(SkillFamily? sf) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
+            }
+            if (CatalogBlockers.GetAvailability<SkillFamily>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add skillFamily after the SkillCatalog has initialized!");
             }
             if (!sf) {
                 R2API.Logger.LogError("Invalid SkillFamily");
                 return false;
             }
-            AddedSkillFamilies.Add(sf);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), sf);
             return true;
         }
 

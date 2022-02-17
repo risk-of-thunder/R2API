@@ -1,6 +1,5 @@
-﻿using System;
-
-using MonoMod.Cil;
+﻿using MonoMod.Cil;
+using System;
 
 namespace R2API.MiscHelpers {
     internal static class ILCursorExtensions {

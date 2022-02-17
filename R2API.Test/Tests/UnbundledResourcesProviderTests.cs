@@ -1,5 +1,5 @@
-﻿using System;
-using R2API.Utils;
+﻿using R2API.Utils;
+using System;
 using UnityEngine;
 using Xunit;
 

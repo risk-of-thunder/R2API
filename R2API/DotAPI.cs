@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.Utils;
 using RoR2;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -96,11 +96,12 @@ namespace R2API {
 
             if (dotDef.associatedBuff != null) {
                 R2API.Logger.LogInfo($"Custom Dot (Index: {dotDefIndex}) that uses Buff : {dotDef.associatedBuff.name} added");
-            } else {
+            }
+            else {
                 R2API.Logger.LogInfo($"Custom Dot (Index: {dotDefIndex}) with no associated Buff added");
             }
-            
-            
+
+
             return (DotController.DotIndex)dotDefIndex;
         }
 

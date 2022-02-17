@@ -1,8 +1,8 @@
+using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
-using RoR2.ContentManagement;
 using System;
-using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -11,6 +11,7 @@ using UnityEngine;
 namespace R2API {
 
     [R2APISubmodule]
+    [Obsolete($"The {nameof(EffectAPI)} is obsolete, please add your Effects via R2API.ContentManagement.ContentAdditionHelpers.AddEffect()")]
     public static class EffectAPI {
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -24,26 +25,6 @@ namespace R2API {
 
         private static bool _loaded;
 
-        private static readonly List<EffectDef> AddedEffects = new List<EffectDef>();
-
-        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddAdditionalEntries;
-        }
-
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddAdditionalEntries;
-        }
-
-        private static void AddAdditionalEntries(ContentPack r2apiContentPack) {
-            foreach (var customEffect in AddedEffects) {
-                R2API.Logger.LogInfo($"Custom Effect: {customEffect.prefabName} added");
-            }
-
-            r2apiContentPack.effectDefs.Add(AddedEffects.ToArray());
-        }
-
         /// <summary>
         /// Creates an EffectDef from a prefab and adds it to the EffectCatalog.
         /// The prefab must have an the following components: EffectComponent, VFXAttributes
@@ -51,9 +32,16 @@ namespace R2API {
         /// </summary>
         /// <param name="effect">The prefab of the effect to be added</param>
         /// <returns>True if the effect was added</returns>
+        [Obsolete($"AddEffect is obsolete, please add your Effect Prefabs via R2API.ContentManagement.ContentAdditionHelpers.AddEffect()")]
         public static bool AddEffect(GameObject? effect) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");
+            }
+
+            if (!CatalogBlockers.GetAvailability<EffectComponent>()) {
+                R2API.Logger.LogError(
+                    $"Too late ! Tried to add effect: {effect.name} after the EffectCatalog has initialized!");
+                return false;
             }
 
             if (effect == null) {
@@ -81,7 +69,8 @@ namespace R2API {
                 spawnSoundEventName = effectComp.soundName
             };
 
-            return AddEffect(def);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), effect);
+            return true;
         }
 
         /// <summary>
@@ -89,16 +78,22 @@ namespace R2API {
         /// </summary>
         /// <param name="effect">The EffectDef to addZ</param>
         /// <returns>False if the EffectDef was null</returns>
+        [Obsolete($"This method is obsolete, please Add the EffectDef using R2API.ContentManagement.ContentAdditionHelpers.AddEffect()")]
         public static bool AddEffect(EffectDef? effect) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EffectAPI)})]");
+            }
+            if (!CatalogBlockers.GetAvailability<EffectComponent>()) {
+                R2API.Logger.LogError(
+                    $"Too late ! Tried to add effect: {effect.prefab} after the EffectCatalog has initialized!");
+                return false;
             }
             if (effect == null) {
                 R2API.Logger.LogError("EffectDef was null.");
                 return false;
             }
 
-            AddedEffects.Add(effect);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), effect.prefab);
             return true;
         }
     }

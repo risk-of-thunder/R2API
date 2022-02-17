@@ -1,10 +1,9 @@
-﻿using MonoMod.Cil;
+﻿using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
-using RoR2.ContentManagement;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using UnityEngine;
 
 namespace R2API {
@@ -13,14 +12,14 @@ namespace R2API {
     /// API for adding custom buffs to the game. Previously included in ItemAPI.
     /// </summary>
     [R2APISubmodule]
+    [Obsolete($"The {nameof(BuffAPI)} is obsolete, please add your BuffDefs via R2API.ContentManagement.ContentAdditionHelpers.AddBuffDef()")]
     public static class BuffAPI {
 
         /// <summary>
         /// All custom buffs added by the API.
         /// </summary>
+        [Obsolete($"This observable collection is obsolete, if you want to look at the buffDefs added by R2API, look at R2API.ContentManagement.R2APIContentManager.ManagedContentPacks and do a SelectMany on the buffDefs.")]
         public static ObservableCollection<CustomBuff?>? BuffDefinitions = new ObservableCollection<CustomBuff>();
-
-        private static bool _buffCatalogInitialized;
 
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -32,32 +31,6 @@ namespace R2API {
 
         private static bool _loaded;
 
-        #region ModHelper Events and Hooks
-
-        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddBuffsToGame;
-        }
-
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddBuffsToGame;
-        }
-
-        private static void AddBuffsToGame(ContentPack r2apiContentPack) {
-            var buffDefs = new List<BuffDef>();
-            foreach (var customBuff in BuffDefinitions) {
-                buffDefs.Add(customBuff.BuffDef);
-
-                R2API.Logger.LogInfo($"Custom Buff: {customBuff.BuffDef.name} added");
-            }
-
-            r2apiContentPack.buffDefs.Add(buffDefs.ToArray());
-            _buffCatalogInitialized = true;
-        }
-
-        #endregion ModHelper Events and Hooks
-
         #region Add Methods
 
         /// <summary>
@@ -68,18 +41,19 @@ namespace R2API {
         /// </summary>
         /// <param name="buff">The buff to add.</param>
         /// <returns>true if added, false otherwise</returns>
+        [Obsolete($"Add is obsolete, please add your BuffDefs via R2API.ContentManagement.ContentAdditionHelpers.AddBuffDef()")]
         public static bool Add(CustomBuff? buff) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(BuffAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(BuffAPI)})]");
             }
 
-            if (_buffCatalogInitialized) {
+            if (!CatalogBlockers.GetAvailability<BuffDef>()) {
                 R2API.Logger.LogError(
-                    $"Too late ! Tried to add buff: {buff.BuffDef.name} after the buff list was created");
+                    $"Too late ! Tried to add buff: {buff.BuffDef.name} after the BuffCatalog has initialized!");
                 return false;
             }
 
-            BuffDefinitions.Add(buff);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), buff.BuffDef);
             return true;
         }
 

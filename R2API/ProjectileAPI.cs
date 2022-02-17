@@ -1,7 +1,8 @@
-﻿using R2API.Utils;
-using RoR2.ContentManagement;
+﻿using R2API.ContentManagement;
+using R2API.Utils;
+using RoR2.Projectile;
 using System;
-using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace R2API {
@@ -10,12 +11,8 @@ namespace R2API {
     /// API for adding custom projectile to the game.
     /// </summary>
     [R2APISubmodule]
+    [Obsolete($"The {nameof(ProjectileAPI)} is obsolete, please add your Projectiles via R2API.ContentManagment.R2APIContentManager.AddContent()")]
     public static class ProjectileAPI {
-
-        private static readonly List<GameObject> Projectiles = new List<GameObject>();
-
-        private static bool _projectileCatalogInitialized;
-
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -26,29 +23,6 @@ namespace R2API {
 
         private static bool _loaded;
 
-        #region ModHelper Events and Hooks
-
-        [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
-        internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddProjectilesToGame;
-        }
-
-        [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
-        internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddProjectilesToGame;
-        }
-
-        private static void AddProjectilesToGame(ContentPack r2apiContentPack) {
-            foreach (var projectile in Projectiles) {
-                R2API.Logger.LogInfo($"Custom Projectile: {projectile.name} added");
-            }
-
-            r2apiContentPack.projectilePrefabs.Add(Projectiles.ToArray());
-            _projectileCatalogInitialized = true;
-        }
-
-        #endregion ModHelper Events and Hooks
-
         #region Add Methods
 
         /// <summary>
@@ -57,18 +31,19 @@ namespace R2API {
         /// </summary>
         /// <param name="projectile">The projectile prefab to add.</param>
         /// <returns>true if added, false otherwise</returns>
+        [Obsolete($"Add is obsolete, please add your Projectiles via R2API.ContentManagement.ContentAdditionHelpers.AddProjectile()")]
         public static bool Add(GameObject? projectile) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ProjectileAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ProjectileAPI)})]");
             }
 
-            if (_projectileCatalogInitialized) {
+            if (!CatalogBlockers.GetAvailability<ProjectileController>()) {
                 R2API.Logger.LogError(
                     $"Too late ! Tried to add projectile: {projectile.name} after the projectile list was created");
                 return false;
             }
 
-            Projectiles.Add(projectile);
+            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), projectile);
             return true;
         }
 

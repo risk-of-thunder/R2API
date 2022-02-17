@@ -1,6 +1,5 @@
 ﻿using RoR2;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace R2API {
 
@@ -36,7 +35,8 @@ namespace R2API {
                             if (!ScrapItems.ContainsKey(itemDef.tier)) {
                                 ScrapItems.Add(itemDef.tier, itemIndex);
                             }
-                        } else if (itemDef.ContainsTag(ItemTag.WorldUnique)) {
+                        }
+                        else if (itemDef.ContainsTag(ItemTag.WorldUnique)) {
                             SpecialItems.Add(itemIndex);
                         }
                     }

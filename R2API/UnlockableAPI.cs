@@ -1,12 +1,13 @@
 ﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
 using RoR2.Achievements;
-using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 using BF = System.Reflection.BindingFlags;
@@ -130,10 +131,7 @@ namespace R2API {
     public static class UnlockableAPI {
 
         private static readonly HashSet<string> UnlockableIdentifiers = new HashSet<string>();
-        private static readonly List<UnlockableDef> Unlockables = new List<UnlockableDef>();
         private static readonly List<AchievementDef> Achievements = new List<AchievementDef>();
-
-        private static bool _unlockableCatalogInitialized;
 
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -147,23 +145,12 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddUnlockablesToGame;
             IL.RoR2.AchievementManager.CollectAchievementDefs += AddCustomAchievements;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddUnlockablesToGame;
             IL.RoR2.AchievementManager.CollectAchievementDefs -= AddCustomAchievements;
-        }
-
-        private static void AddUnlockablesToGame(ContentPack r2apiContentPack) {
-            foreach (var unlockable in Unlockables) {
-                R2API.Logger.LogInfo($"Custom Unlockable: {unlockable.cachedName} added");
-            }
-
-            r2apiContentPack.unlockableDefs.Add(Unlockables.ToArray());
-            _unlockableCatalogInitialized = true;
         }
 
         private static void AddCustomAchievements(ILContext il) {
@@ -215,23 +202,20 @@ namespace R2API {
         }
 
         [Obsolete("The bool parameter serverTracked is redundant. Instead, pass in a Type that inherits from BaseServerAchievement if it is server tracked, or nothing if it's not")]
-        public static UnlockableDef AddUnlockable<TUnlockable>(bool serverTracked) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
-        {
-            return AddUnlockable<TUnlockable>(null, null);
+        public static UnlockableDef AddUnlockable<TUnlockable>(bool serverTracked) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
+            return AddUnlockableInternal(typeof(TUnlockable), Assembly.GetCallingAssembly(), null, null);
         }
-        public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
-        {
-            return AddUnlockable<TUnlockable>(serverTrackerType, null);
+        public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
+            return AddUnlockableInternal(typeof(TUnlockable), Assembly.GetCallingAssembly(), serverTrackerType, null);
         }
-        public static UnlockableDef AddUnlockable<TUnlockable>(UnlockableDef unlockableDef) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
-        {
-            return AddUnlockable<TUnlockable>(null, unlockableDef);
+        public static UnlockableDef AddUnlockable<TUnlockable>(UnlockableDef unlockableDef) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
+            return AddUnlockableInternal(typeof(TUnlockable), Assembly.GetCallingAssembly(), null, unlockableDef);
         }
         public static UnlockableDef AddUnlockable(Type unlockableType, Type serverTrackerType) {
-            return AddUnlockable(unlockableType, serverTrackerType, null);
+            return AddUnlockableInternal(unlockableType, Assembly.GetCallingAssembly(), serverTrackerType, null);
         }
         public static UnlockableDef AddUnlockable(Type unlockableType, UnlockableDef unlockableDef) {
-            return AddUnlockable(unlockableType, null, unlockableDef);
+            return AddUnlockableInternal(unlockableType, Assembly.GetCallingAssembly(), null, unlockableDef);
         }
 
         /// <summary>
@@ -245,7 +229,7 @@ namespace R2API {
             }
             var identifiers = Achievements.Select(achievementDef => achievementDef.identifier);
             try {
-                if(identifiers.Contains(achievementDef.identifier)) {
+                if (identifiers.Contains(achievementDef.identifier)) {
                     throw new InvalidOperationException($"The achievement identifier '{achievementDef.identifier}' is already used by another mod.");
                 }
                 else {
@@ -253,7 +237,7 @@ namespace R2API {
                     return true;
                 }
             }
-            catch (Exception e){
+            catch (Exception e) {
                 R2API.Logger.LogError($"An error has occured while trying to add a new AchievementDef: {e}");
                 return false;
             }
@@ -268,7 +252,7 @@ namespace R2API {
         /// <param name="unlockableDef">For UnlockableDefs created in advance. Leaving null will generate an UnlockableDef instead.</param>
         /// <returns></returns>
         public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType = null, UnlockableDef unlockableDef = null) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new() {
-            return AddUnlockable(typeof(TUnlockable), serverTrackerType, unlockableDef);
+            return AddUnlockableInternal(typeof(TUnlockable), Assembly.GetCallingAssembly(), serverTrackerType, unlockableDef);
         }
 
         /// <summary>
@@ -280,14 +264,18 @@ namespace R2API {
         /// <param name="unlockableDef">For UnlockableDefs created in advance. Leaving null will generate an UnlockableDef instead.</param>
         /// <returns></returns>
         public static UnlockableDef AddUnlockable(Type unlockableType, Type serverTrackerType = null, UnlockableDef unlockableDef = null) {
+            return AddUnlockableInternal(unlockableType, Assembly.GetCallingAssembly(), serverTrackerType, unlockableDef);
+        }
+
+        private static UnlockableDef AddUnlockableInternal(Type unlockableType, Assembly assembly, Type serverTrackerType = null, UnlockableDef unlockableDef = null) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(UnlockableAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockableAPI)})]");
             }
 
             var instance = Activator.CreateInstance(unlockableType) as IModdedUnlockableDataProvider;
 
-            if (_unlockableCatalogInitialized) {
-                throw new InvalidOperationException($"Too late ! Tried to add unlockable: {instance.UnlockableIdentifier} after the unlockable list was created");
+            if (!CatalogBlockers.GetAvailability<UnlockableDef>()) {
+                throw new InvalidOperationException($"Too late ! Tried to add unlockable: {instance.UnlockableIdentifier} after the UnlockableCatalog");
             }
 
             string unlockableIdentifier = instance.UnlockableIdentifier;
@@ -319,8 +307,7 @@ namespace R2API {
                 type = instance.GetType(),
                 serverTrackerType = serverTrackerType,
             };
-
-            Unlockables.Add(unlockableDef);
+            R2APIContentManager.HandleContentAddition(assembly, unlockableDef);
             Achievements.Add(achievementDef);
 
             return unlockableDef;

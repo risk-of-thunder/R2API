@@ -1,12 +1,13 @@
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
-using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -21,9 +22,6 @@ namespace R2API {
     public static class ItemAPI {
         public static ObservableCollection<CustomItem?>? ItemDefinitions = new ObservableCollection<CustomItem?>();
         public static ObservableCollection<CustomEquipment?> EquipmentDefinitions = new ObservableCollection<CustomEquipment?>();
-
-        private static bool _itemCatalogInitialized;
-        private static bool _equipmentCatalogInitialized;
 
         private static ICollection<string> noDefaultIDRSCharacterList = new List<string>();
 
@@ -43,42 +41,16 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady += AddItemsToGame;
-
+            R2APIContentPackProvider.WhenAddingContentPacks += LoadRelatedAPIs;
             IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
             On.RoR2.ItemDisplayRuleSet.Init += AddingItemDisplayRulesToCharacterModels;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenContentPackReady -= AddItemsToGame;
-
+            R2APIContentPackProvider.WhenAddingContentPacks -= LoadRelatedAPIs;
             IL.RoR2.CharacterModel.UpdateMaterials -= MaterialFixForItemDisplayOnCharacter;
             On.RoR2.ItemDisplayRuleSet.Init -= AddingItemDisplayRulesToCharacterModels;
-        }
-
-        private static void AddItemsToGame(ContentPack r2apiContentPack) {
-            var itemDefs = new List<ItemDef>();
-            foreach (var customItem in ItemDefinitions) {
-                itemDefs.Add(customItem.ItemDef);
-
-                R2API.Logger.LogInfo($"Custom Item: {customItem.ItemDef.name} added");
-            }
-
-            r2apiContentPack.itemDefs.Add(itemDefs.ToArray());
-            _itemCatalogInitialized = true;
-
-            var equipmentDefs = new List<EquipmentDef>();
-            foreach (var customEquipment in EquipmentDefinitions) {
-                equipmentDefs.Add(customEquipment.EquipmentDef);
-
-                R2API.Logger.LogInfo($"Custom Equipment: {customEquipment.EquipmentDef.name} added");
-            }
-
-            LoadRelatedAPIs();
-
-            r2apiContentPack.equipmentDefs.Add(equipmentDefs.ToArray());
-            _equipmentCatalogInitialized = true;
         }
 
         private static void LoadRelatedAPIs() {
@@ -111,8 +83,8 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
-            if (_itemCatalogInitialized) {
-                R2API.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the item list was created");
+            if (!CatalogBlockers.GetAvailability<ItemDef>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the ItemCatalog has Initialized!");
             }
 
             if (!item.ItemDef) {
@@ -143,7 +115,7 @@ namespace R2API {
                 R2API.Logger.LogError($"Custom item '{item.ItemDef.name}' is not XMLsafe. Item not added.");
             }
             if (xmlSafe) {
-                ItemDefinitions.Add(item);
+                R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), item.ItemDef);
                 return true;
             }
 
@@ -163,8 +135,8 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
-            if (_equipmentCatalogInitialized) {
-                R2API.Logger.LogError($"Too late ! Tried to add equipment item: {item.EquipmentDef.nameToken} after the equipment list was created");
+            if (CatalogBlockers.GetAvailability<EquipmentDef>()) {
+                R2API.Logger.LogError($"Too late ! Tried to add equipment item: {item.EquipmentDef.nameToken} after the EquipmentCatalog has initialized!");
             }
 
             if (item.EquipmentDef == null) {
@@ -195,7 +167,7 @@ namespace R2API {
                 R2API.Logger.LogError($"Custom equipment '{item.EquipmentDef.name}' is not XMLsafe. Item not added.");
             }
             if (xmlSafe) {
-                EquipmentDefinitions.Add(item);
+                R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), item.EquipmentDef);
                 return true;
             }
 

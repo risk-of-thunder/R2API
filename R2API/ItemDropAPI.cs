@@ -1,18 +1,12 @@
-﻿using BepInEx.Logging;
-using MonoMod.RuntimeDetour;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
+﻿using MonoMod.RuntimeDetour;
 using R2API.ItemDrop;
 using R2API.ItemDropAPITools;
-using R2API.MiscHelpers;
 using R2API.Utils;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace R2API {
 
@@ -203,7 +197,8 @@ namespace R2API {
                         //if (new List<string>().Contains(interactableName)) {
                         //} else 
                         if (PlayerInteractables.InvalidInteractables.Contains(interactableName)) {
-                        } else {
+                        }
+                        else {
                             DropOdds.UpdateChestTierOdds(directorCard.spawnCard, interactableName);
                             DropOdds.UpdateDropTableTierOdds(directorCard.spawnCard, interactableName);
                             DropOdds.UpdateDropTableItemOdds(PlayerDropList, directorCard.spawnCard, interactableName);
@@ -245,7 +240,8 @@ namespace R2API {
             }
             if (PlayerInteractables.TiersPresent[dropType] || shopTerminalBehavior.dropTable != null) {
                 orig(shopTerminalBehavior);
-            } else {
+            }
+            else {
                 shopTerminalBehavior.SetNoPickup();
                 var purchaseInteraction = shopTerminalBehavior.GetComponent<PurchaseInteraction>();
                 if (purchaseInteraction != null) {
@@ -289,7 +285,8 @@ namespace R2API {
                 var bossDropChanceOld = bossGroup.bossDropChance;
                 if (!normalListValid) {
                     bossGroup.bossDropChance = 1;
-                } else if (bossDropsAdjusted.Count == 0) {
+                }
+                else if (bossDropsAdjusted.Count == 0) {
                     bossGroup.bossDropChance = 0;
                 }
 
@@ -310,7 +307,8 @@ namespace R2API {
                         optionsAdjusted.Add(option);
                     }
                 }
-            } else if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
+            }
+            else if (pickupPickerController.contextString.Contains(CommandCubeContextString)) {
                 foreach (var option in options) {
                     optionsAdjusted.Add(option);
                 }
@@ -387,7 +385,8 @@ namespace R2API {
                 arenaMissionController.rewardSpawnPosition = null;
                 orig(arenaMissionController);
                 arenaMissionController.rewardSpawnPosition = rewardSpawnPositionOld;
-            } else {
+            }
+            else {
                 orig(arenaMissionController);
             }
         }

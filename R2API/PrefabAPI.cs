@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -33,6 +34,8 @@ namespace R2API {
         private static bool needToRegister;
         private static GameObject _parent;
         private static readonly List<HashStruct> ThingsToHash = new List<HashStruct>();
+
+        internal static bool IsPrefabHashed(GameObject prefabToCheck) => ThingsToHash.Select(hash => hash.Prefab).Contains(prefabToCheck);
 
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 

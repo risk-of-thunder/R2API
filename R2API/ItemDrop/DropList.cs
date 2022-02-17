@@ -1,8 +1,6 @@
-﻿using R2API.ItemDrop;
-using RoR2;
+﻿using RoR2;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace R2API {
 
@@ -66,15 +64,20 @@ namespace R2API {
             public List<PickupIndex> GetDropList(ItemTier itemTier) {
                 if (itemTier == ItemTier.Tier1) {
                     return AvailableTier1DropList;
-                } else if (itemTier == ItemTier.Tier2) {
+                }
+                else if (itemTier == ItemTier.Tier2) {
                     return AvailableTier2DropList;
-                } else if (itemTier == ItemTier.Tier3) {
+                }
+                else if (itemTier == ItemTier.Tier3) {
                     return AvailableTier3DropList;
-                } else if (itemTier == ItemTier.Boss) {
+                }
+                else if (itemTier == ItemTier.Boss) {
                     return AvailableBossDropList;
-                } else if (itemTier == ItemTier.Lunar) {
+                }
+                else if (itemTier == ItemTier.Lunar) {
                     return AvailableLunarDropList;
-                } else {
+                }
+                else {
                     return AvailableNormalEquipmentDropList;
                 }
             }
@@ -138,7 +141,7 @@ namespace R2API {
                             SpecialItemsOriginal.Add(PickupCatalog.FindPickupIndex(itemIndex));
                         }
                     }
-                    
+
                     SpecialEquipmentOriginal.Clear();
                     foreach (var equipmentIndex in Catalog.EliteEquipment) {
                         var equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
@@ -181,29 +184,38 @@ namespace R2API {
                             if (!special) {
                                 if (itemDef.tier == ItemTier.Tier1) {
                                     dropList = AvailableTier1DropList;
-                                } else if (itemDef.tier == ItemTier.Tier2) {
+                                }
+                                else if (itemDef.tier == ItemTier.Tier2) {
                                     dropList = AvailableTier2DropList;
-                                } else if (itemDef.tier == ItemTier.Tier3) {
+                                }
+                                else if (itemDef.tier == ItemTier.Tier3) {
                                     dropList = AvailableTier3DropList;
-                                } else if (itemDef.tier == ItemTier.Boss) {
+                                }
+                                else if (itemDef.tier == ItemTier.Boss) {
                                     dropList = AvailableBossDropList;
-                                } else if (itemDef.tier == ItemTier.Lunar) {
+                                }
+                                else if (itemDef.tier == ItemTier.Lunar) {
                                     dropList = AvailableLunarDropList;
                                 }
-                            } else {
+                            }
+                            else {
                                 dropList = AvailableSpecialItems;
                             }
-                        } else if (equipmentIndex != EquipmentIndex.None) {
+                        }
+                        else if (equipmentIndex != EquipmentIndex.None) {
                             EquipmentDef equipmentDef = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
                             if (!special) {
                                 if (equipmentDef.isLunar) {
                                     dropList = AvailableLunarDropList;
-                                } else if (equipmentDef.isBoss) {
+                                }
+                                else if (equipmentDef.isBoss) {
                                     dropList = AvailableBossDropList;
-                                } else {
+                                }
+                                else {
                                     dropList = AvailableEquipmentDropList;
                                 }
-                            } else {
+                            }
+                            else {
                                 dropList = AvailableSpecialEquipment;
                             }
                         }
@@ -212,7 +224,8 @@ namespace R2API {
                             if (dropList.Contains(pickupIndex) == false) {
                                 dropList.Add(pickupIndex);
                             }
-                        } else {
+                        }
+                        else {
                             if (dropList.Contains(pickupIndex)) {
                                 dropList.Remove(pickupIndex);
                             }
@@ -227,7 +240,7 @@ namespace R2API {
                 }
                 ListsGenerated.Invoke();
             }
-            
+
             //  Sets the drop lists in Run using the adjusted, master lists.
             public void SetItems(Run run) {
                 foreach (var pickupIndex in AvailableTier1DropList) {
@@ -248,7 +261,8 @@ namespace R2API {
                     EquipmentIndex equipmentIndex = PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex;
                     if (itemIndex != ItemIndex.None) {
                         run.availableItems.Add(itemIndex);
-                    } else if (equipmentIndex != EquipmentIndex.None) {
+                    }
+                    else if (equipmentIndex != EquipmentIndex.None) {
                         run.availableEquipment.Add(equipmentIndex);
                     }
                 }
@@ -258,7 +272,8 @@ namespace R2API {
                     EquipmentIndex equipmentIndex = PickupCatalog.GetPickupDef(pickupIndex).equipmentIndex;
                     if (itemIndex != ItemIndex.None) {
                         run.availableItems.Add(itemIndex);
-                    } else if (equipmentIndex != EquipmentIndex.None) {
+                    }
+                    else if (equipmentIndex != EquipmentIndex.None) {
                         run.availableEquipment.Add(equipmentIndex);
                     }
                 }

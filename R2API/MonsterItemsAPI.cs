@@ -1,13 +1,9 @@
 ﻿using MonoMod.Cil;
-using MonoMod.RuntimeDetour;
-using R2API.ItemDrop;
 using R2API.ItemDropAPITools;
 using R2API.Utils;
 using RoR2;
 using RoR2.Artifacts;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Linq;
 
 namespace R2API {
 
@@ -202,7 +198,8 @@ namespace R2API {
             for (int listIndex = 0; listIndex < adjustedLists.Count; listIndex++) {
                 if (scavDropList[listIndex].Count == 0) {
                     tierValidScav.Add(false);
-                } else {
+                }
+                else {
                     tierValidScav.Add(true);
                 }
             }
@@ -245,12 +242,15 @@ namespace R2API {
                     ItemTier itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
                     if (itemTier == ItemTier.Tier1) {
                         adjustedDropLists[0].Add(pickupIndex);
-                    } else if (itemTier == ItemTier.Tier2) {
+                    }
+                    else if (itemTier == ItemTier.Tier2) {
                         adjustedDropLists[1].Add(pickupIndex);
-                    } else if (itemTier == ItemTier.Tier3) {
+                    }
+                    else if (itemTier == ItemTier.Tier3) {
                         adjustedDropLists[2].Add(pickupIndex);
                     }
-                } else if (equipmentIndex != EquipmentIndex.None) {
+                }
+                else if (equipmentIndex != EquipmentIndex.None) {
                     adjustedDropLists[3].Add(pickupIndex);
                 }
             }
