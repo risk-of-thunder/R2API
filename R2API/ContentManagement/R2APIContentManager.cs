@@ -66,7 +66,7 @@ namespace R2API.ContentManagement {
         /// </summary>
         public static List<string> ManagedContentPacksIdentifiers {
             get {
-                if(!contentPacksCreated) {
+                if (!contentPacksCreated) {
                     R2API.Logger.LogError($"Cannot return the identifiers for contentpacks when they havent been created!");
                     return null;
                 }
@@ -145,12 +145,12 @@ namespace R2API.ContentManagement {
         /// <param name="identifier">The identifier of the ContentPack you want</param>
         /// <returns>The ReadOnlyContentPack which's identifier matches the given identifier argument.</returns>
         public static ReadOnlyContentPack GetReadOnlyContentPack(string identifier) {
-            if(!contentPacksCreated) {
+            if (!contentPacksCreated) {
                 R2API.Logger.LogError($"Cannot return the identifiers for contentpacks when they havent been created!");
                 return new ReadOnlyContentPack(null);
             }
             ReadOnlyR2APIManagedContentPack readOnlyR2APIContentPack = ManagedContentPacks.Where(rocp => rocp.readOnlyContentPack.identifier == identifier).FirstOrDefault();
-            if(readOnlyR2APIContentPack.readOnlyContentPack.src != null) {
+            if (readOnlyR2APIContentPack.readOnlyContentPack.src != null) {
                 return readOnlyR2APIContentPack.readOnlyContentPack;
             }
             R2API.Logger.LogError($"Couldn't find a contentPack with identifier {identifier}!");
@@ -454,7 +454,7 @@ namespace R2API.ContentManagement {
                         R2API.Logger.LogDebug($"Not creating ContentPack for {bepInModName}, since it has declared r2api should not manage loading the content pack.");
                     }
 
-                    if(cp != null) {
+                    if (cp != null) {
                         readOnlyContentPacks.Add(new ReadOnlyR2APIManagedContentPack(cp, r2apiContentPack.shouldManageLoading));
                     }
                 }
