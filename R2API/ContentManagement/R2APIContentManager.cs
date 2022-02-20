@@ -17,31 +17,14 @@ using Object = UnityEngine.Object;
 namespace R2API.ContentManagement {
 
     /// <summary>
-    /// A struct that represents a SerializableContentPack managed by R2API in some way shape or form
+    /// A struct that represents a ContentPack managed by R2API in some way shape or form
     /// </summary>
-    internal struct R2APIManagedSerializableContentPack {
+    internal struct R2APIManagedContentPack {
         internal SerializableContentPack serializableContentPack;
         internal bool shouldManageLoading { get; }
 
-        public R2APIManagedSerializableContentPack(SerializableContentPack contentPack, bool shouldManageLoading = true) {
+        public R2APIManagedContentPack(SerializableContentPack contentPack, bool shouldManageLoading = true) {
             this.serializableContentPack = contentPack;
-            this.shouldManageLoading = shouldManageLoading;
-        }
-    }
-    /// <summary>
-    /// A struct that represetns a ContentPack managed by R2API using a ReadOnlyContentPack
-    /// </summary>
-    public struct ReadOnlyR2APIManagedContentPack {
-        /// <summary>
-        /// The ReadOnlyContentPack
-        /// </summary>
-        public ReadOnlyContentPack readOnlyContentPack;
-        /// <summary>
-        /// Wether or not R2API created a ContentPackProvider for this ContentPack
-        /// </summary>
-        public bool shouldManageLoading { get; }
-        internal ReadOnlyR2APIManagedContentPack(ContentPack contentPack, bool shouldManageLoading = true) {
-            this.readOnlyContentPack = new ReadOnlyContentPack(contentPack);
             this.shouldManageLoading = shouldManageLoading;
         }
     }
@@ -52,7 +35,7 @@ namespace R2API.ContentManagement {
         /// <summary>
         /// Returns a read only collection of all the ContentPacks created by R2API
         /// </summary>
-        public static ReadOnlyCollection<ReadOnlyR2APIManagedContentPack> ManagedContentPacks {
+        public static ReadOnlyCollection<ContentPack> ManagedContentPacks {
             get {
                 if (!contentPacksCreated) {
                     R2API.Logger.LogError($"Cannot return ContentPacks when they havent been created!");
@@ -61,21 +44,7 @@ namespace R2API.ContentManagement {
                 return _managedContentPacks;
             }
         }
-        /// <summary>
-        /// Returns all the identifiers from contentPacks that are loaded by R2API
-        /// </summary>
-        public static List<string> ManagedContentPacksIdentifiers {
-            get {
-                if(!contentPacksCreated) {
-                    R2API.Logger.LogError($"Cannot return the identifiers for contentpacks when they havent been created!");
-                    return null;
-                }
-                return _managedContentPacks.Select(rocp => rocp.readOnlyContentPack.identifier).ToList();
-            }
-        }
-        private static ReadOnlyCollection<ReadOnlyR2APIManagedContentPack> _managedContentPacks = null;
-
-
+        private static ReadOnlyCollection<ContentPack> _managedContentPacks = null;
         internal static List<R2APIGenericContentPack> genericContentPacks = new List<R2APIGenericContentPack>();
 
         /// <summary>
@@ -85,7 +54,7 @@ namespace R2API.ContentManagement {
         private static bool contentPacksCreated = false;
 
         //This is an easy way of storing the new content packs that are being created. not to mention that the ContentPack's identifier will be the plugin's GUID
-        private static Dictionary<string, R2APIManagedSerializableContentPack> BepInModNameToSerializableContentPack = new Dictionary<string, R2APIManagedSerializableContentPack>();
+        private static Dictionary<string, R2APIManagedContentPack> BepInModNameToSerializableContentPack = new Dictionary<string, R2APIManagedContentPack>();
         //Cache-ing the Assembly's main plugin in a dictionary for ease of access.
         private static Dictionary<Assembly, string> AssemblyToBepInModName = new Dictionary<Assembly, string>();
         //Due to the fact that all contents should have unique names to avoid issues with the catalogs, we need to make sure there are no duplicate names whatsoever.
@@ -119,7 +88,7 @@ namespace R2API.ContentManagement {
                 if (AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
                     serializableContentPack.name = modName;
                     if (!BepInModNameToSerializableContentPack.ContainsKey(modName)) {
-                        BepInModNameToSerializableContentPack.Add(modName, new R2APIManagedSerializableContentPack(serializableContentPack, shouldManageLoadingContentPack));
+                        BepInModNameToSerializableContentPack.Add(modName, new R2APIManagedContentPack(serializableContentPack, shouldManageLoadingContentPack));
                         R2API.Logger.LogInfo($"Added Pre-Existing SerializableContentPack from mod {modName}");
                         return;
                     }
@@ -138,24 +107,6 @@ namespace R2API.ContentManagement {
         /// </summary>
         /// <returns>The reserved SerializableContentPack</returns>
         public static SerializableContentPack ReserveSerializableContentPack() => GetOrCreateSerializableContentPack(Assembly.GetCallingAssembly());
-
-        /// <summary>
-        /// Gets a ReadOnlyContentPack that's managed by R2API
-        /// </summary>
-        /// <param name="identifier">The identifier of the ContentPack you want</param>
-        /// <returns>The ReadOnlyContentPack which's identifier matches the given identifier argument.</returns>
-        public static ReadOnlyContentPack GetReadOnlyContentPack(string identifier) {
-            if(!contentPacksCreated) {
-                R2API.Logger.LogError($"Cannot return the identifiers for contentpacks when they havent been created!");
-                return new ReadOnlyContentPack(null);
-            }
-            ReadOnlyR2APIManagedContentPack readOnlyR2APIContentPack = ManagedContentPacks.Where(rocp => rocp.readOnlyContentPack.identifier == identifier).FirstOrDefault();
-            if(readOnlyR2APIContentPack.readOnlyContentPack.src != null) {
-                return readOnlyR2APIContentPack.readOnlyContentPack;
-            }
-            R2API.Logger.LogError($"Couldn't find a contentPack with identifier {identifier}!");
-            return new ReadOnlyContentPack(null);
-        }
         #endregion
 
         #region Main Methods
@@ -440,11 +391,9 @@ namespace R2API.ContentManagement {
             if (!contentPacksCreated) {
                 R2API.Logger.LogInfo($"Generating a total of {BepInModNameToSerializableContentPack.Values.Count} ContentPacks...");
                 List<ContentPack> contentPacks = new List<ContentPack>();
-                List<ReadOnlyR2APIManagedContentPack> readOnlyContentPacks = new List<ReadOnlyR2APIManagedContentPack>();
                 foreach (var (bepInModName, r2apiContentPack) in BepInModNameToSerializableContentPack) {
-                    ContentPack cp = null;
                     if (ShouldContentPackBeLoadedByR2API(r2apiContentPack, out SerializableContentPack scp)) {
-                        cp = scp.CreateContentPack();
+                        ContentPack cp = scp.CreateContentPack();
                         cp.identifier = bepInModName;
                         contentPacks.Add(cp);
                         genericContentPacks.Add(new R2APIGenericContentPack(cp));
@@ -453,12 +402,8 @@ namespace R2API.ContentManagement {
                     else {
                         R2API.Logger.LogDebug($"Not creating ContentPack for {bepInModName}, since it has declared r2api should not manage loading the content pack.");
                     }
-
-                    if(cp != null) {
-                        readOnlyContentPacks.Add(new ReadOnlyR2APIManagedContentPack(cp, r2apiContentPack.shouldManageLoading));
-                    }
                 }
-                _managedContentPacks = new ReadOnlyCollection<ReadOnlyR2APIManagedContentPack>(readOnlyContentPacks);
+                _managedContentPacks = new ReadOnlyCollection<ContentPack>(contentPacks);
                 contentPacksCreated = true;
                 OnContentPacksCreated?.Invoke();
             }
@@ -491,7 +436,7 @@ namespace R2API.ContentManagement {
                     if (!BepInModNameToSerializableContentPack.ContainsKey(modName)) {
                         serializableContentPack = ScriptableObject.CreateInstance<SerializableContentPack>();
                         serializableContentPack.name = modName;
-                        BepInModNameToSerializableContentPack.Add(modName, new R2APIManagedSerializableContentPack(serializableContentPack));
+                        BepInModNameToSerializableContentPack.Add(modName, new R2APIManagedContentPack(serializableContentPack));
                         R2API.Logger.LogInfo($"Created a SerializableContentPack for mod {modName}");
                     }
                     return BepInModNameToSerializableContentPack[modName].serializableContentPack;
@@ -527,7 +472,7 @@ namespace R2API.ContentManagement {
             }
         }
 
-        private static bool ShouldContentPackBeLoadedByR2API(R2APIManagedSerializableContentPack managedContentPack, out SerializableContentPack contentPack) {
+        private static bool ShouldContentPackBeLoadedByR2API(R2APIManagedContentPack managedContentPack, out SerializableContentPack contentPack) {
             if (managedContentPack.shouldManageLoading) {
                 contentPack = managedContentPack.serializableContentPack;
                 return true;

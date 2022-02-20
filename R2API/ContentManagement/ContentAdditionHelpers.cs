@@ -196,6 +196,7 @@ namespace R2API.ContentManagement {
             //Add stuff here, i dont know what qualifies as a "valid" sceneDef, then again, people should just use ROS for handling sceneDefs, r2api just lets you add them this way for the sake of completion
             var asm = Assembly.GetCallingAssembly();
             if (CatalogBlockers.GetAvailability<SceneDef>()) {
+                R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is trying to add a SceneDef, R2API does not support weaving of Scenes, Use RainOfStages instead for weaving SceneDefs.");
                 R2APIContentManager.HandleContentAddition(asm, sceneDef);
                 return true;
             }
@@ -381,7 +382,7 @@ namespace R2API.ContentManagement {
         }
         /// <summary>
         /// Adds a MusicTrackDef to your Mod's ContentPack
-        /// <para>MusicTrackDefs should only be created in the editor due to WWise's unity integration. If you want to add new songs, use SoundAPI's Music class instead</para>
+        /// <para>MusicTrackDefs should only be created in the editor due to WWise's unity integration. If you want to add new songs, use SoundAPI's MusicAPI</para>
         /// </summary>
         /// <param name="musicTrackDef">The MusicTrackDef to Add.</param>
         /// <returns>true if valid and added, false if one of the requirements is not met</returns>
