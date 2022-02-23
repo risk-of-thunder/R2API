@@ -39,8 +39,8 @@ namespace R2API {
 
         private static readonly List<DotController.DotDef> CustomDots = new List<DotController.DotDef>();
 
-        private static int VanillaDotCount;
-        private static int CustomDotCount => CustomDots.Count;
+        public static int VanillaDotCount {get; private set;}
+        public static int CustomDotCount => CustomDots.Count;
 
 
         private static readonly Dictionary<DotController, bool[]> ActiveCustomDots = new Dictionary<DotController, bool[]>();
