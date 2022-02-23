@@ -39,7 +39,8 @@ namespace R2API {
 
         private static readonly List<DotController.DotDef> CustomDots = new List<DotController.DotDef>();
 
-        public static int VanillaDotCount {get; private set;}
+        public static int VanillaDotCount => _VanillaDotCount;
+        public static int _VanillaDotCount;
         public static int CustomDotCount => CustomDots.Count;
 
 
@@ -176,7 +177,7 @@ namespace R2API {
         private static void RetrieveVanillaCount(ILContext il) {
             var c = new ILCursor(il);
             if (c.TryGotoNext(
-                i => i.MatchLdcI4(out VanillaDotCount),
+                i => i.MatchLdcI4(out _VanillaDotCount),
                 i => i.MatchNewarr<DotController.DotDef>())) {
             }
             else {
