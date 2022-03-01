@@ -11,7 +11,6 @@ using RoR2.Projectile;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -66,7 +65,7 @@ namespace R2API.ContentManagement {
             _contentPack.identifier = scp.name;
             contentPack = new ReadOnlyContentPack(_contentPack);
 
-            if(autoCreateIContentPackProvider) {
+            if (autoCreateIContentPackProvider) {
                 HasAutoCreatedIContentPackProvider = true;
                 contentPackProvider = new R2APIGenericContentPack(_contentPack);
             }
@@ -497,7 +496,7 @@ namespace R2API.ContentManagement {
             if (!contentPacksCreated) {
                 R2API.Logger.LogInfo($"Generating a total of {BepInModNameToSerializableContentPack.Values.Count} ContentPacks...");
                 List<ManagedReadOnlyContentPack> managedReadOnlyContentPacks = new List<ManagedReadOnlyContentPack>();
-                foreach(var (modName, managedSCP) in BepInModNameToSerializableContentPack) {
+                foreach (var (modName, managedSCP) in BepInModNameToSerializableContentPack) {
                     managedReadOnlyContentPacks.Add(new ManagedReadOnlyContentPack(managedSCP.serializableContentPack, managedSCP.AutoCreateIContentPackProvider));
                 }
                 contentPacksCreated = true;

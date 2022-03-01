@@ -1,5 +1,8 @@
 ﻿using EntityStates;
+using R2API.ContentManagement;
 using RoR2;
+using RoR2.EntitlementManagement;
+using RoR2.ExpansionManagement;
 using RoR2.Projectile;
 using RoR2.Skills;
 using System;
@@ -8,9 +11,6 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
-using R2API.ContentManagement;
-using RoR2.ExpansionManagement;
-using RoR2.EntitlementManagement;
 
 namespace R2API {
     /// <summary>
@@ -237,7 +237,7 @@ namespace R2API {
         public static bool AddItemTierDef(ItemTierDef itemTierDef) {
             //Todo: finds what makes an itemTierDef invalid
             var asm = Assembly.GetCallingAssembly();
-            if(CatalogBlockers.GetAvailability<ItemTierDef>()) {
+            if (CatalogBlockers.GetAvailability<ItemTierDef>()) {
                 R2APIContentManager.HandleContentAddition(asm, itemTierDef);
                 return true;
             }
@@ -269,7 +269,7 @@ namespace R2API {
         public static bool AddItemRelationshipType(ItemRelationshipType itemRelationshipType) {
             //Todo: Find what makes an ItemRelationshipType invalid
             var asm = Assembly.GetCallingAssembly();
-            if(CatalogBlockers.GetAvailability<ItemRelationshipType>()) {
+            if (CatalogBlockers.GetAvailability<ItemRelationshipType>()) {
                 R2APIContentManager.HandleContentAddition(asm, itemRelationshipType);
                 return true;
             }
@@ -500,7 +500,7 @@ namespace R2API {
         public static bool AddExpansionDef(ExpansionDef expansionDef) {
             //Todo: Find what makes an ExpansionDef invalid
             var asm = Assembly.GetCallingAssembly();
-            if(CatalogBlockers.GetAvailability<ExpansionDef>()) {
+            if (CatalogBlockers.GetAvailability<ExpansionDef>()) {
                 R2APIContentManager.HandleContentAddition(asm, expansionDef);
                 return true;
             }
@@ -516,7 +516,7 @@ namespace R2API {
         public static bool AddEntitlementDef(EntitlementDef entitlementDef) {
             //Todo: Find what makes an EntitlementDef invalid
             var asm = Assembly.GetCallingAssembly();
-            if(CatalogBlockers.GetAvailability<EntitlementDef>()) {
+            if (CatalogBlockers.GetAvailability<EntitlementDef>()) {
                 R2APIContentManager.HandleContentAddition(asm, entitlementDef);
                 return true;
             }
@@ -531,7 +531,7 @@ namespace R2API {
         /// <returns>true if valid and added, false if one of the requirements is not met</returns>
         public static bool AddMiscPickupDef(MiscPickupDef miscPickupDef) {
             var asm = Assembly.GetCallingAssembly();
-            if(CatalogBlockers.GetAvailability<MiscPickupDef>()) {
+            if (CatalogBlockers.GetAvailability<MiscPickupDef>()) {
                 R2APIContentManager.HandleContentAddition(asm, miscPickupDef);
                 return true;
             }

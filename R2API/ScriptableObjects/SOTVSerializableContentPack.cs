@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using EntityStates;
+﻿using EntityStates;
 using RoR2;
 using RoR2.ContentManagement;
 using RoR2.EntitlementManagement;
 using RoR2.ExpansionManagement;
 using RoR2.Skills;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace R2API.ScriptableObjects {
@@ -141,6 +140,10 @@ namespace R2API.ScriptableObjects {
             return cp;
         }
 
+        /// <summary>
+        /// Creates the ContentPack tied to this SerializableContentPack, or returns one if its already been created.
+        /// </summary>
+        /// <returns>The ContentPack tied to this SerializableContentPack</returns>
         public ContentPack GetOrCreateContentPack() {
             if (contentPack != null)
                 return contentPack;
@@ -149,5 +152,6 @@ namespace R2API.ScriptableObjects {
                 return contentPack;
             }
         }
+        #endregion
     }
 }

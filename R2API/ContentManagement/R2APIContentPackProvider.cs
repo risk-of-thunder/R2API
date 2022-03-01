@@ -84,7 +84,7 @@ namespace R2API.ContentManagement {
             }
             R2APIContentManager.CreateContentPacks();
             foreach (ManagedReadOnlyContentPack managedReadOnlyContentPack in R2APIContentManager.ManagedContentPacks) {
-                if(managedReadOnlyContentPack.HasAutoCreatedIContentPackProvider) {
+                if (managedReadOnlyContentPack.HasAutoCreatedIContentPackProvider) {
                     addContentPackProvider(managedReadOnlyContentPack.contentPackProvider);
                 }
             }
