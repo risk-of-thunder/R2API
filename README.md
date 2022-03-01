@@ -59,3 +59,4 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 * [Marked the AddNetworkedSoundEvent method in SoundAPI  as Obsolete](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1041484037)
 * [NetworkingAPI now has Send overloads for sending to specific network connections. Also have some documentation now](https://github.com/risk-of-thunder/R2API/pull/333)
 * [Allow character mods to opt out from default item display rules](https://github.com/risk-of-thunder/R2API/pull/330)
+* [Make dotAPI parts accessible for modders](https://github.com/risk-of-thunder/R2API/pull/339)
