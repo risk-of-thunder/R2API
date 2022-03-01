@@ -8,12 +8,16 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
+using R2API.ContentManagement;
+using RoR2.ExpansionManagement;
+using RoR2.EntitlementManagement;
 
-namespace R2API.ContentManagement {
+namespace R2API {
     /// <summary>
     /// Class for adding Content Assets to your Mod's ContentPack.
     /// </summary>
-    public static class ContentAdditionHelpers {
+    public static class ContentAddition {
+
         #region Add Prefab Methods
         /// <summary>
         /// Adds a BodyPrefab to your Mod's ContentPack
@@ -143,6 +147,9 @@ namespace R2API.ContentManagement {
             RejectContent(effectPrefab, asm, "EffectPrefab", "but the EffectCatalog has already initialized!");
             return false;
         }
+        #endregion
+
+        #region Add Scriptable Methods
         /// <summary>
         /// Adds a SkillDef to your Mod's ContentPack
         /// <para>SkillDef Requires a valid activationState</para>
@@ -213,7 +220,7 @@ namespace R2API.ContentManagement {
         public static bool AddItemDef(ItemDef itemDef) {
             var asm = Assembly.GetCallingAssembly();
             if (CatalogBlockers.GetAvailability<ItemDef>()) {
-                R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {itemDef} via {nameof(ContentAdditionHelpers)}.{nameof(AddItemDef)}()" +
+                R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {itemDef} via {nameof(ContentAddition)}.{nameof(AddItemDef)}()" +
                     $"The assembly should ideally add them via {nameof(ItemAPI)} so that they can use ItemAPI's IDRS systems, adding anyways.");
                 ItemAPI.Add(new CustomItem(itemDef, Array.Empty<ItemDisplayRule>()));
                 return true;
@@ -221,6 +228,55 @@ namespace R2API.ContentManagement {
             RejectContent(itemDef, asm, "ItemDef", "but the ItemCatalog has already initialized!");
             return false;
         }
+
+        /// <summary>
+        /// Adds an ItemTierDef to your Mod's ContentPack
+        /// </summary>
+        /// <param name="itemTierDef">The ItemTierDef to add</param>
+        /// <returns>True if valid and added, false if one of the requirements is not met</returns>
+        public static bool AddItemTierDef(ItemTierDef itemTierDef) {
+            //Todo: finds what makes an itemTierDef invalid
+            var asm = Assembly.GetCallingAssembly();
+            if(CatalogBlockers.GetAvailability<ItemTierDef>()) {
+                R2APIContentManager.HandleContentAddition(asm, itemTierDef);
+                return true;
+            }
+            RejectContent(itemTierDef, asm, "ItemTierDef", "but the ItemTierCatalog has already initialized!");
+            return false;
+        }
+
+        /// <summary>
+        /// Adds an ItemRelationshipProvider to your Mod's ContentPack
+        /// </summary>
+        /// <param name="itemRelationshipProvider">The ItemRelationshipProvider to add</param>
+        /// <returns>True if valid and added, false if one of the requirements is not met</returns>
+        public static bool AddItemRelationshipProvider(ItemRelationshipProvider itemRelationshipProvider) {
+            //Todo: Find what makes an ItemRelationshipProvider invalid
+            var asm = Assembly.GetCallingAssembly();
+            if (CatalogBlockers.GetAvailability<ItemRelationshipProvider>()) {
+                R2APIContentManager.HandleContentAddition(asm, itemRelationshipProvider);
+                return true;
+            }
+            RejectContent(itemRelationshipProvider, asm, "ItemRelationshipProvider", "but the ItemCatalog has already initialized!");
+            return false;
+        }
+
+        /// <summary>
+        /// Adds an ItemRelationshipType to your Mod's ContentPack
+        /// </summary>
+        /// <param name="itemRelationshipType">The ItemRelationshipType to add</param>
+        /// <returns>True if valid and added, false if one of the requirements is not met</returns>
+        public static bool AddItemRelationshipType(ItemRelationshipType itemRelationshipType) {
+            //Todo: Find what makes an ItemRelationshipType invalid
+            var asm = Assembly.GetCallingAssembly();
+            if(CatalogBlockers.GetAvailability<ItemRelationshipType>()) {
+                R2APIContentManager.HandleContentAddition(asm, itemRelationshipType);
+                return true;
+            }
+            RejectContent(itemRelationshipType, asm, "ItemRelationshipType", "but the ItemCatalog has already initialized!");
+            return false;
+        }
+
         //EquipmentDefs should be added by ItemAPI, but this method is here purely for completion sake.
         /// <summary>
         /// Adds an EquipmentDef to your Mod's ContentPack
@@ -231,7 +287,7 @@ namespace R2API.ContentManagement {
         public static bool AddEquipmentDef(EquipmentDef equipmentDef) {
             var asm = Assembly.GetCallingAssembly();
             if (CatalogBlockers.GetAvailability<EquipmentDef>()) {
-                R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {equipmentDef} via {nameof(ContentAdditionHelpers)}.{nameof(AddEquipmentDef)}()" +
+                R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {equipmentDef} via {nameof(ContentAddition)}.{nameof(AddEquipmentDef)}()" +
                     $"The assembly should ideally add them via {nameof(ItemAPI)} so that they can use ItemAPI's IDRS systems, adding anyways.");
                 ItemAPI.Add(new CustomEquipment(equipmentDef, Array.Empty<ItemDisplayRule>()));
                 return true;
@@ -271,7 +327,7 @@ namespace R2API.ContentManagement {
         public static bool AddEliteDef(EliteDef eliteDef) {
             var asm = Assembly.GetCallingAssembly();
             if (CatalogBlockers.GetAvailability<EliteDef>()) {
-                R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {eliteDef} via {nameof(ContentAdditionHelpers)}.{nameof(AddEliteDef)}()" +
+                R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {eliteDef} via {nameof(ContentAddition)}.{nameof(AddEliteDef)}()" +
                     $"The assembly should ideally add them via {nameof(EliteAPI)} so that they can use EliteAPI's elite tier systems, adding the elite anyways as Tier1 elite.");
                 EliteAPI.Add(new CustomElite(eliteDef, new List<CombatDirector.EliteTierDef> { EliteAPI.VanillaEliteTiers[1], EliteAPI.VanillaEliteTiers[2] }));
                 return true;
@@ -435,6 +491,54 @@ namespace R2API.ContentManagement {
             return false;
 
         }
+
+        /// <summary>
+        /// Adds an ExpansionDef to your Mod's ContentPack
+        /// </summary>
+        /// <param name="expansionDef">The ExpansionDef to Add</param>
+        /// <returns>true if valid and added, false if one of the requirements is not met</returns>
+        public static bool AddExpansionDef(ExpansionDef expansionDef) {
+            //Todo: Find what makes an ExpansionDef invalid
+            var asm = Assembly.GetCallingAssembly();
+            if(CatalogBlockers.GetAvailability<ExpansionDef>()) {
+                R2APIContentManager.HandleContentAddition(asm, expansionDef);
+                return true;
+            }
+            RejectContent(expansionDef, asm, "ExpansionDef", "But the ExpansionCatalog has already initialized!");
+            return false;
+        }
+
+        /// <summary>
+        /// Adds an EntitlementDef to your Mod's ContentPack
+        /// </summary>
+        /// <param name="entitlementDef">The EntitlementDef to Add</param>
+        /// <returns>true if valid and added, false if one of the requirements is not met</returns>
+        public static bool AddEntitlementDef(EntitlementDef entitlementDef) {
+            //Todo: Find what makes an EntitlementDef invalid
+            var asm = Assembly.GetCallingAssembly();
+            if(CatalogBlockers.GetAvailability<EntitlementDef>()) {
+                R2APIContentManager.HandleContentAddition(asm, entitlementDef);
+                return true;
+            }
+            RejectContent(entitlementDef, asm, "EntitlementDef", "But the EntitlementCatalog has already initialized!");
+            return false;
+        }
+
+        /// <summary>
+        /// Adds a MiscPickupDef to your Mod's ContentPack
+        /// </summary>
+        /// <param name="miscPickupDef">The MiscPickupDef to Add</param>
+        /// <returns>true if valid and added, false if one of the requirements is not met</returns>
+        public static bool AddMiscPickupDef(MiscPickupDef miscPickupDef) {
+            var asm = Assembly.GetCallingAssembly();
+            if(CatalogBlockers.GetAvailability<MiscPickupDef>()) {
+                R2APIContentManager.HandleContentAddition(asm, miscPickupDef);
+                return true;
+            }
+            RejectContent(miscPickupDef, asm, "MiscPickupDef", "But the MiscPickupCatalog has already initailized!");
+            return false;
+        }
+
         /// <summary>
         /// Adds an EntitySateType to your Mod's ContentPack
         /// <para>State Type cannot be abstract</para>

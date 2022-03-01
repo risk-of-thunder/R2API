@@ -42,6 +42,9 @@ namespace R2API.ContentManagement {
             log.AddRange(contentPack.skillFamilies.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
             log.AddRange(contentPack.sceneDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
             log.AddRange(contentPack.itemDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.itemTierDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.itemRelationshipProviders.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.itemRelationshipTypes.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
             log.AddRange(contentPack.equipmentDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
             log.AddRange(contentPack.buffDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
             log.AddRange(contentPack.eliteDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
@@ -55,6 +58,9 @@ namespace R2API.ContentManagement {
             log.AddRange(contentPack.gameEndingDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
             log.AddRange(contentPack.entityStateConfigurations.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
             log.AddRange(contentPack.entityStateTypes.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.expansionDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.entitlementDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+            log.AddRange(contentPack.miscPickupDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
             R2API.Logger.LogDebug(string.Join("\n", log));
         }
     }
@@ -77,8 +83,10 @@ namespace R2API.ContentManagement {
                 }
             }
             R2APIContentManager.CreateContentPacks();
-            foreach (R2APIGenericContentPack gcp in R2APIContentManager.genericContentPacks) {
-                addContentPackProvider(gcp);
+            foreach (ManagedReadOnlyContentPack managedReadOnlyContentPack in R2APIContentManager.ManagedContentPacks) {
+                if(managedReadOnlyContentPack.HasAutoCreatedIContentPackProvider) {
+                    addContentPackProvider(managedReadOnlyContentPack.contentPackProvider);
+                }
             }
         }
     }

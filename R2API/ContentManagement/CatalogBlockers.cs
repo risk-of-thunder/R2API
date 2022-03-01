@@ -1,5 +1,7 @@
 ﻿using EntityStates;
 using RoR2;
+using RoR2.EntitlementManagement;
+using RoR2.ExpansionManagement;
 using RoR2.Projectile;
 using RoR2.Skills;
 using System;
@@ -19,6 +21,9 @@ namespace R2API.ContentManagement {
             {typeof(SkillFamily), true },
             {typeof(SceneDef), true },
             {typeof(ItemDef), true },
+            {typeof(ItemTierDef), true },
+            {typeof(ItemRelationshipProvider), true },
+            {typeof(ItemRelationshipType), true },
             {typeof(EquipmentDef), true },
             {typeof(BuffDef), true },
             {typeof(EliteDef), true },
@@ -31,6 +36,9 @@ namespace R2API.ContentManagement {
             {typeof(GameEndingDef), true },
             {typeof(EntityStateConfiguration), true },
             {typeof(EntityState), true },
+            {typeof(ExpansionDef), true },
+            {typeof(EntitlementDef), true },
+            {typeof(MiscPickupDef), true }
 
             //The rest are catalogs that arent added by scriptable objects or game objects yet.
         };
@@ -57,49 +65,88 @@ namespace R2API.ContentManagement {
         #region CatalogBlocker Methods
         [SystemInitializer(typeof(BodyCatalog))]
         private static void BlockBodies() => SetAvailability<CharacterBody>(false);
+
         [SystemInitializer(typeof(MasterCatalog))]
         private static void BlockMasters() => SetAvailability<CharacterMaster>(false);
+
         [SystemInitializer(typeof(ProjectileCatalog))]
         private static void BlockProjectiles() => SetAvailability<ProjectileController>(false);
+
         [SystemInitializer(typeof(GameModeCatalog))]
         private static void BlockGameModes() => SetAvailability<Run>(false);
-        [SystemInitializer(typeof(RoR2.Networking.GameNetworkManager))]
+
+        [SystemInitializer(typeof(RoR2.Networking.NetworkManagerSystem))]
         private static void BlockNetworkedPrefabs() => SetAvailability<NetworkIdentity>(false);
-        [SystemInitializer(typeof(EffectCatalog))]
-        private static void BlockEffects() => SetAvailability<EffectComponent>(false);
+
         [SystemInitializer(typeof(SkillCatalog))]
         private static void BlockSkills() => SetAvailability<SkillDef>(false);
+
         [SystemInitializer(typeof(SkillCatalog))]
         private static void BlockSkillFamilies() => SetAvailability<SkillFamily>(false);
+
         [SystemInitializer(typeof(SceneCatalog))]
         private static void BlockScenes() => SetAvailability<SceneDef>(false);
+
         [SystemInitializer(typeof(ItemCatalog))]
         private static void BlockItems() => SetAvailability<ItemDef>(false);
+
+        [SystemInitializer(typeof(ItemTierCatalog))]
+        private static void BlockItemTiers() => SetAvailability<ItemTierDef>(false);
+
+        [SystemInitializer(typeof(ItemCatalog))]
+        private static void BlockItemRelationshipProviders() => SetAvailability<ItemRelationshipProvider>(false);
+
+        [SystemInitializer(typeof(ItemCatalog))]
+        private static void BlockItemRelationshipTypes() => SetAvailability<ItemRelationshipType>(false);
+
         [SystemInitializer(typeof(EquipmentCatalog))]
         private static void BlockEquipments() => SetAvailability<EquipmentDef>(false);
+
         [SystemInitializer(typeof(BuffCatalog))]
         private static void BlockBuffs() => SetAvailability<BuffDef>(false);
+
         [SystemInitializer(typeof(EliteCatalog))]
         private static void BlockElites() => SetAvailability<EliteDef>(false);
+
         [SystemInitializer(typeof(UnlockableCatalog))]
         private static void BlockUnlockables() => SetAvailability<UnlockableDef>(false);
+
         [SystemInitializer(typeof(SurvivorCatalog))]
         private static void BlockSurvivors() => SetAvailability<SurvivorDef>(false);
+
         [SystemInitializer(typeof(ArtifactCatalog))]
         private static void BlockArtifacts() => SetAvailability<ArtifactDef>(false);
+
+        [SystemInitializer(typeof(EffectCatalog))]
+        private static void BlockEffects() => SetAvailability<EffectComponent>(false);
+
         [SystemInitializer(typeof(SurfaceDefCatalog))]
         private static void BlockSurfaceDefs() => SetAvailability<SurfaceDef>(false);
+
         [SystemInitializer(typeof(RoR2.Audio.NetworkSoundEventCatalog))]
         private static void BlockNetworkSoundEvent() => SetAvailability<NetworkSoundEventDef>(false);
+
         [SystemInitializer(typeof(MusicTrackCatalog))]
         private static void BlockMusicTracks() => SetAvailability<MusicTrackDef>(false);
+
         [SystemInitializer(typeof(GameEndingCatalog))]
         private static void BlockGameEndings() => SetAvailability<GameEndingDef>(false);
+
         [SystemInitializer(typeof(EntityStateCatalog))]
         private static void BlockEntityStateConfigurations() => SetAvailability<EntityStateConfiguration>(false);
+
+        [SystemInitializer(typeof(ExpansionCatalog))]
+        private static void BlockExpansionDefs() => SetAvailability<ExpansionDef>(false);
+
+        [SystemInitializer(typeof(EntitlementCatalog))]
+        private static void BlockEntitlementDefs() => SetAvailability<EntitlementDef>(false);
+
+        [SystemInitializer(typeof(MiscPickupCatalog))]
+        private static void BlockMiscPickupDefs() => SetAvailability<MiscPickupDef>(false);
+
         [SystemInitializer(typeof(EntityStateCatalog))]
         private static void BlockEntityStates() => SetAvailability<EntityState>(false);
+
         #endregion
-        //The rest are catalogs that arent added by scriptable objects or game objects yet.
     }
 }
