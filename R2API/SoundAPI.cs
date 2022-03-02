@@ -202,7 +202,7 @@ namespace R2API {
                 /// <summary>
                 /// Pointer to bank data
                 /// </summary>
-                internal nint? BankDataPtr;
+                internal IntPtr? BankDataPtr;
 
                 /// <summary>
                 /// BankData supplied by the user
@@ -238,7 +238,7 @@ namespace R2API {
                     BankDataPtr ??= (Memory = GCHandle.Alloc(BankData, GCHandleType.Pinned)).Value.AddrOfPinnedObject();
 
                     // Loads the entire array as a bank
-                    var result = AkSoundEngine.LoadBank(BankDataPtr!.Value, Size, out BankID);
+                    var result = AkSoundEngine.LoadBankMemoryView(BankDataPtr!.Value, Size, out BankID);
 
                     if (result != AKRESULT.AK_Success) {
                         Debug.LogError("WwiseUnity: AkMemBankLoader: bank loading failed with result " + result);
@@ -483,7 +483,7 @@ namespace R2API {
                 /// </summary>
                 public override void Preload() {
                     if (!string.IsNullOrWhiteSpace(SoundBankName)) {
-                        AkSoundEngine.LoadBank(SoundBankName, AkSoundEngine.AK_DEFAULT_POOL_ID, out _);
+                        AkSoundEngine.LoadBank(SoundBankName, out _);
                     }
                 }
 
@@ -569,7 +569,7 @@ namespace R2API {
                         continue;
                     }
 
-                    akResult = AkSoundEngine.LoadBank(data.InitBankName, AkSoundEngine.AK_DEFAULT_POOL_ID, out data._loadedInitBankId);
+                    akResult = AkSoundEngine.LoadBank(data.InitBankName, out data._loadedInitBankId);
                     if (akResult != AKRESULT.AK_Success) {
                         R2API.Logger.LogError(
                             $"Error loading init bank : {data.InitBankName}. " +
@@ -577,7 +577,7 @@ namespace R2API {
                         continue;
                     }
 
-                    akResult = AkSoundEngine.LoadBank(data.SoundBankName, AkSoundEngine.AK_DEFAULT_POOL_ID, out data._loadedSoundBankId);
+                    akResult = AkSoundEngine.LoadBank(data.SoundBankName, out data._loadedSoundBankId);
                     if (akResult != AKRESULT.AK_Success) {
                         R2API.Logger.LogError(
                             $"Error loading sound bank : {data.SoundBankName}. " +

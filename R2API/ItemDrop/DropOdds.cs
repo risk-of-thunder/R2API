@@ -189,7 +189,7 @@ namespace R2API.ItemDrop {
         private static void UpdateDropTableItemOdds(DropList dropList, ExplicitPickupDropTable dropTable, string interactableName) {
             if (!DropTableItemOdds.ContainsKey(interactableName)) {
                 DropTableItemOdds.Add(interactableName, new List<float>());
-                foreach (ExplicitPickupDropTable.Entry entry in dropTable.entries) {
+                foreach (ExplicitPickupDropTable.StringEntry entry in dropTable.entries) {
                     DropTableItemOdds[interactableName].Add(entry.pickupWeight);
                 }
             }

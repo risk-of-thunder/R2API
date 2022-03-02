@@ -217,7 +217,7 @@ namespace R2API.ItemDrop {
             if (dropList.AvailableLunarDropList.Count > 0) {
                 TiersPresent[DropType.lunar] = true;
             }
-            if (dropList.AvailableNormalEquipmentDropList.Count > 0) {
+            if (dropList.AvailableEquipmentDropList.Count > 0) {
                 TiersPresent[DropType.equipment] = true;
             }
             if (dropList.AvailableLunarEquipmentDropList.Count > 0) {
