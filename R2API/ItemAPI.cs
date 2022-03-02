@@ -41,29 +41,14 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks += LoadRelatedAPIs;
             IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
             On.RoR2.ItemDisplayRuleSet.Init += AddingItemDisplayRulesToCharacterModels;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            R2APIContentPackProvider.WhenAddingContentPacks -= LoadRelatedAPIs;
             IL.RoR2.CharacterModel.UpdateMaterials -= MaterialFixForItemDisplayOnCharacter;
             On.RoR2.ItemDisplayRuleSet.Init -= AddingItemDisplayRulesToCharacterModels;
-        }
-
-        private static void LoadRelatedAPIs() {
-            if (!ItemDropAPI.Loaded) {
-                try {
-                    ItemDropAPI.SetHooks();
-                    ItemDropAPI.Loaded = true;
-                }
-                catch (Exception e) {
-                    R2API.Logger.LogError($"ItemDropAPI hooks failed to initialize. Disabling the submodule. {e}");
-                    ItemDropAPI.UnsetHooks();
-                }
-            }
         }
 
         #endregion ModHelper Events and Hooks
@@ -99,8 +84,8 @@ namespace R2API {
                 R2API.Logger.LogWarning($"No ItemDef.pickupModelPrefab ({item.ItemDef.name}), the game will show nothing when the item is on the ground.");
             }
             else if (item.ItemDisplayRules != null &&
-                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
-                !item.ItemDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
+                     item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
+                     !item.ItemDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
                 R2API.Logger.LogWarning($"ItemDef.pickupModelPrefab ({item.ItemDef.name}) does not have an ItemDisplay component attached to it " +
                     "(there are ItemDisplayRuleType.ParentedPrefab rules), " +
                     "the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
@@ -151,8 +136,8 @@ namespace R2API {
                 R2API.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab ({item.EquipmentDef.name}), the game will show nothing when the item is on the ground.");
             }
             else if (item.ItemDisplayRules != null &&
-                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
-                !item.EquipmentDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
+                     item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
+                     !item.EquipmentDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
                 R2API.Logger.LogWarning($"EquipmentDef.pickupModelPrefab ({item.EquipmentDef.name}) does not have an ItemDisplay component attached to it " +
                     "(there are ItemDisplayRuleType.ParentedPrefab rules), " +
                     "the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
@@ -177,6 +162,7 @@ namespace R2API {
         #endregion Add Methods
 
         #region Other Modded Content Support
+
         /// <summary>
         /// Prevents bodies and charactermodels matching this name from having nonspecific item display rules applied to them
         /// </summary>
@@ -195,6 +181,7 @@ namespace R2API {
                 DoNotAutoIDRSFor(bodyPrefab.name);
             }
         }
+
         #endregion
 
         #region ItemDisplay Hooks
@@ -294,6 +281,7 @@ namespace R2API {
         }
 
         #endregion ItemDisplay Hooks
+
     }
 
     public class CustomItem {

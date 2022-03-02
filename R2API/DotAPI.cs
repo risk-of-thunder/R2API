@@ -215,8 +215,7 @@ namespace R2API {
             ActiveCustomDots.Remove(self);
         }
 
-        private static object GetDotDef(On.RoR2.DotController.orig_GetDotDef orig, DotController self,
-            DotController.DotIndex dotIndex) {
+        private static DotController.DotDef GetDotDef(On.RoR2.DotController.orig_GetDotDef orig, DotController.DotIndex dotIndex) {
             return DotDefs[(int)dotIndex];
         }
 
