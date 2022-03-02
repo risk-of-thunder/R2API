@@ -1,13 +1,16 @@
 ﻿using BepInEx;
 using EntityStates;
+using HG;
 using R2API.MiscHelpers;
+using R2API.ScriptableObjects;
 using RoR2;
 using RoR2.ContentManagement;
+using RoR2.EntitlementManagement;
+using RoR2.ExpansionManagement;
 using RoR2.Projectile;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -15,19 +18,64 @@ using UnityEngine.Networking;
 using Object = UnityEngine.Object;
 
 namespace R2API.ContentManagement {
-
     /// <summary>
-    /// A struct that represents a ContentPack managed by R2API in some way shape or form
+    /// Represents a SerializableContentPack that's managed by R2API in some way, shape or form
     /// </summary>
-    internal struct R2APIManagedContentPack {
-        internal SerializableContentPack serializableContentPack;
-        internal bool shouldManageLoading { get; }
+    public struct ManagedSerializableContentPack {
+        /// <summary>
+        /// The SerializableContentPack
+        /// </summary>
+        public SOTVSerializableContentPack serializableContentPack;
+        /// <summary>
+        /// Wether or not R2API will create an R2APIGenericContentPack for the finalized ContentPack.
+        /// </summary>
+        public bool AutoCreateIContentPackProvider { get; }
 
-        public R2APIManagedContentPack(SerializableContentPack contentPack, bool shouldManageLoading = true) {
-            this.serializableContentPack = contentPack;
-            this.shouldManageLoading = shouldManageLoading;
+        internal ManagedSerializableContentPack(SOTVSerializableContentPack serializableContentPack, bool autoCreateIContentPackProvider) {
+            this.serializableContentPack = serializableContentPack;
+            AutoCreateIContentPackProvider = autoCreateIContentPackProvider;
         }
     }
+
+    /// <summary>
+    /// Represents a ContentPack that's managed by R2API in some way, shape or form
+    /// </summary>
+    public struct ManagedReadOnlyContentPack {
+
+        /// <summary>
+        /// The ReadOnlyContentPack
+        /// </summary>
+        public ReadOnlyContentPack contentPack;
+
+        /// <summary>
+        /// The Identifier of the ReadOnlyContentPack
+        /// </summary>
+        public string Identifier => contentPack.identifier;
+
+        internal ContentPack _contentPack;
+
+        /// <summary>
+        /// Wether or not R2API created an R2APIGenericContentPack for this ContentPack
+        /// </summary>
+        public bool HasAutoCreatedIContentPackProvider { get; }
+        internal R2APIGenericContentPack contentPackProvider;
+
+        internal ManagedReadOnlyContentPack(SOTVSerializableContentPack scp, bool autoCreateIContentPackProvider) {
+            _contentPack = scp.GetOrCreateContentPack();
+            _contentPack.identifier = scp.name;
+            contentPack = new ReadOnlyContentPack(_contentPack);
+
+            if (autoCreateIContentPackProvider) {
+                HasAutoCreatedIContentPackProvider = true;
+                contentPackProvider = new R2APIGenericContentPack(_contentPack);
+            }
+            else {
+                HasAutoCreatedIContentPackProvider = false;
+                contentPackProvider = null;
+            }
+        }
+    }
+
     /// <summary>
     /// A class that's used for managing ContentPacks created by R2API
     /// </summary>
@@ -35,7 +83,7 @@ namespace R2API.ContentManagement {
         /// <summary>
         /// Returns a read only collection of all the ContentPacks created by R2API
         /// </summary>
-        public static ReadOnlyCollection<ContentPack> ManagedContentPacks {
+        public static ReadOnlyArray<ManagedReadOnlyContentPack> ManagedContentPacks {
             get {
                 if (!contentPacksCreated) {
                     R2API.Logger.LogError($"Cannot return ContentPacks when they havent been created!");
@@ -44,8 +92,7 @@ namespace R2API.ContentManagement {
                 return _managedContentPacks;
             }
         }
-        private static ReadOnlyCollection<ContentPack> _managedContentPacks = null;
-        internal static List<R2APIGenericContentPack> genericContentPacks = new List<R2APIGenericContentPack>();
+        private static ReadOnlyArray<ManagedReadOnlyContentPack> _managedContentPacks = null;
 
         /// <summary>
         /// When R2API finishes creating the ContentPacks that it manages, this Action is ran.
@@ -54,7 +101,7 @@ namespace R2API.ContentManagement {
         private static bool contentPacksCreated = false;
 
         //This is an easy way of storing the new content packs that are being created. not to mention that the ContentPack's identifier will be the plugin's GUID
-        private static Dictionary<string, R2APIManagedContentPack> BepInModNameToSerializableContentPack = new Dictionary<string, R2APIManagedContentPack>();
+        private static Dictionary<string, ManagedSerializableContentPack> BepInModNameToSerializableContentPack = new Dictionary<string, ManagedSerializableContentPack>();
         //Cache-ing the Assembly's main plugin in a dictionary for ease of access.
         private static Dictionary<Assembly, string> AssemblyToBepInModName = new Dictionary<Assembly, string>();
         //Due to the fact that all contents should have unique names to avoid issues with the catalogs, we need to make sure there are no duplicate names whatsoever.
@@ -65,12 +112,12 @@ namespace R2API.ContentManagement {
 
         #region Public Methods
         /// <summary>
-        /// Adds a Pre-Existing SerializableContentPack as your mod's content pack.
+        /// Adds a Pre-Existing SurvivorsOfTheVoidSerializableContentPack as your mod's content pack.
         /// <para>Example usage would be a Thunderkit mod adding their items via ItemAPI to get the advantage of using ItemAPI's IDRS Systems</para>
         /// </summary>
-        /// <param name="serializableContentPack">The serializable content pack that will be tied to your mod.</param>
-        /// <param name="shouldManageLoadingContentPack">If this is set to true, R2API will create a ContentPackProvider for your ContentPack and handle the loading for you.</param>
-        public static void AddPreExistingSerializableContentPack(SerializableContentPack serializableContentPack, bool shouldManageLoadingContentPack = true) {
+        /// <param name="sotvSCP">The SOTVSerializable Content Pack that will be tied to your mod.</param>
+        /// <param name="createIContentPackProvider">If this is set to true, R2API will create a ContentPackProvider for your ContentPack and handle the loading for you.</param>
+        public static void AddPreExistingSerializableContentPack(SOTVSerializableContentPack sotvSCP, bool createIContentPackProvider = true) {
             try {
                 Assembly assembly = Assembly.GetCallingAssembly();
                 if (!AssemblyToBepInModName.ContainsKey(assembly)) {
@@ -86,9 +133,9 @@ namespace R2API.ContentManagement {
                     }
                 }
                 if (AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
-                    serializableContentPack.name = modName;
+                    sotvSCP.name = modName;
                     if (!BepInModNameToSerializableContentPack.ContainsKey(modName)) {
-                        BepInModNameToSerializableContentPack.Add(modName, new R2APIManagedContentPack(serializableContentPack, shouldManageLoadingContentPack));
+                        BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(sotvSCP, createIContentPackProvider));
                         R2API.Logger.LogInfo($"Added Pre-Existing SerializableContentPack from mod {modName}");
                         return;
                     }
@@ -106,7 +153,7 @@ namespace R2API.ContentManagement {
         /// <para>If the SerializableContentPack already exists, it returns it.</para>
         /// </summary>
         /// <returns>The reserved SerializableContentPack</returns>
-        public static SerializableContentPack ReserveSerializableContentPack() => GetOrCreateSerializableContentPack(Assembly.GetCallingAssembly());
+        public static SOTVSerializableContentPack ReserveSerializableContentPack() => GetOrCreateSerializableContentPack(Assembly.GetCallingAssembly());
         #endregion
 
         #region Main Methods
@@ -160,8 +207,7 @@ namespace R2API.ContentManagement {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.effectDefs
                     .Select(ed => ed.prefab)
                     .Union(BepInModNameToSerializableContentPack.Values
-                        .SelectMany(scp => scp.serializableContentPack.effectDefs
-                            .Select(ed => ed.prefab)))
+                        .SelectMany(scp => scp.serializableContentPack.effectPrefabs))
                     .Select(go => go.name)
                     .ToArray();
             }
@@ -204,6 +250,33 @@ namespace R2API.ContentManagement {
                     .ToArray();
             }
             TypeToAllCurrentlyRegisteredNames.Add(typeof(ItemDef), ItemDefs);
+
+            string[] ItemTierDefs() {
+                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.itemTierDefs
+                    .Union(BepInModNameToSerializableContentPack.Values
+                        .SelectMany(scp => scp.serializableContentPack.itemTierDefs))
+                    .Select(itd => itd.name)
+                    .ToArray();
+            }
+            TypeToAllCurrentlyRegisteredNames.Add(typeof(ItemTierDef), ItemTierDefs);
+
+            string[] ItemRelationshipProviders() {
+                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.itemRelationshipProviders
+                    .Union(BepInModNameToSerializableContentPack.Values
+                        .SelectMany(scp => scp.serializableContentPack.itemRelationshipProviders))
+                    .Select(irp => irp.name)
+                    .ToArray();
+            }
+            TypeToAllCurrentlyRegisteredNames.Add(typeof(ItemRelationshipProvider), ItemRelationshipProviders);
+
+            string[] ItemRelationshipTypes() {
+                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.itemRelationshipTypes
+                    .Union(BepInModNameToSerializableContentPack.Values
+                        .SelectMany(scp => scp.serializableContentPack.itemRelationshipTypes))
+                    .Select(irt => irt.name)
+                    .ToArray();
+            }
+            TypeToAllCurrentlyRegisteredNames.Add(typeof(ItemRelationshipType), ItemRelationshipTypes);
 
             string[] EquipmentDefs() {
                 return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.equipmentDefs
@@ -303,10 +376,37 @@ namespace R2API.ContentManagement {
                     .ToArray();
             }
             TypeToAllCurrentlyRegisteredNames.Add(typeof(EntityStateConfiguration), EntityStateConfigurations);
+
+            string[] ExpansionDefs() {
+                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.expansionDefs
+                    .Union(BepInModNameToSerializableContentPack.Values
+                        .SelectMany(scp => scp.serializableContentPack.expansionDefs))
+                    .Select(ed => ed.name)
+                    .ToArray();
+            }
+            TypeToAllCurrentlyRegisteredNames.Add(typeof(ExpansionDef), ExpansionDefs);
+
+            string[] EntitlementDefs() {
+                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.entitlementDefs
+                    .Union(BepInModNameToSerializableContentPack.Values
+                        .SelectMany(scp => scp.serializableContentPack.entitlementDefs))
+                    .Select(ed => ed.name)
+                    .ToArray();
+            }
+            TypeToAllCurrentlyRegisteredNames.Add(typeof(EntitlementDef), EntitlementDefs);
+
+            string[] MiscPickupDefs() {
+                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.miscPickupDefs
+                    .Union(BepInModNameToSerializableContentPack.Values
+                        .SelectMany(scp => scp.serializableContentPack.miscPickupDefs))
+                    .Select(mpd => mpd.name)
+                    .ToArray();
+            }
+            TypeToAllCurrentlyRegisteredNames.Add(typeof(MiscPickupDef), MiscPickupDefs);
         }
 
         internal static void HandleContentAddition(Assembly assembly, Object content) {
-            SerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);
+            SOTVSerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);
             content = EnsureSafeContentName(content, scp.name);
             if (scp) {
                 try {
@@ -317,6 +417,9 @@ namespace R2API.ContentManagement {
                         case SkillFamily sf: AddSafe(ref scp.skillFamilies, sf, scp.name); added = true; break;
                         case SceneDef scd: AddSafe(ref scp.sceneDefs, scd, scp.name); added = true; break;
                         case ItemDef id: AddSafe(ref scp.itemDefs, id, scp.name); added = true; break;
+                        case ItemTierDef itd: AddSafe(ref scp.itemTierDefs, itd, scp.name); added = true; break;
+                        case ItemRelationshipProvider irp: AddSafe(ref scp.itemRelationshipProviders, irp, scp.name); added = true; break;
+                        case ItemRelationshipType irt: AddSafe(ref scp.itemRelationshipTypes, irt, scp.name); added = true; break;
                         case EquipmentDef eqd: AddSafe(ref scp.equipmentDefs, eqd, scp.name); added = true; break;
                         case BuffDef bd: AddSafe(ref scp.buffDefs, bd, scp.name); added = true; break;
                         case EliteDef ed: AddSafe(ref scp.eliteDefs, ed, scp.name); added = true; break;
@@ -328,6 +431,9 @@ namespace R2API.ContentManagement {
                         case MusicTrackDef mtd: AddSafe(ref scp.musicTrackDefs, mtd, scp.name); added = true; break;
                         case GameEndingDef ged: AddSafe(ref scp.gameEndingDefs, ged, scp.name); added = true; break;
                         case EntityStateConfiguration esc: AddSafe(ref scp.entityStateConfigurations, esc, scp.name); added = true; break;
+                        case ExpansionDef exd: AddSafe(ref scp.expansionDefs, exd, scp.name); added = true; break;
+                        case EntitlementDef end: AddSafe(ref scp.entitlementDefs, end, scp.name); added = true; break;
+                        case MiscPickupDef mpd: AddSafe(ref scp.miscPickupDefs, mpd, scp.name); added = true; break;
                     }
                     if (!added) {
                         throw new ArgumentException($"The content {content.name} ({content.GetType()}) is not supported by the ContentManager! \n" +
@@ -339,13 +445,13 @@ namespace R2API.ContentManagement {
         }
 
         internal static void HandleEntityState(Assembly assembly, Type type) {
-            SerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);
+            SOTVSerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);
             if (scp) {
                 AddSafeType(ref scp.entityStateTypes, new SerializableEntityStateType(type), scp.name);
             }
         }
 
-        private static void HandleGameObject(GameObject go, SerializableContentPack scp) {
+        private static void HandleGameObject(GameObject go, SOTVSerializableContentPack scp) {
             try {
                 bool alreadyNetworked = false;
                 bool addedToAnyCatalogs = false;
@@ -374,9 +480,8 @@ namespace R2API.ContentManagement {
                     AddSafe(ref scp.networkedObjectPrefabs, go, scp.name);
                     addedToAnyCatalogs = true;
                 }
-                //Modify this once dlc 1 comes out, as EffectDefs will be a game object array instead of an EffectDef array.
                 if (go.GetComponent<EffectComponent>()) {
-                    AddSafeType(ref scp.effectDefs, new EffectDef(go), scp.name);
+                    AddSafe(ref scp.effectPrefabs, go, scp.name);
                     addedToAnyCatalogs = true;
                 }
                 if (!addedToAnyCatalogs) {
@@ -390,21 +495,12 @@ namespace R2API.ContentManagement {
         internal static void CreateContentPacks() {
             if (!contentPacksCreated) {
                 R2API.Logger.LogInfo($"Generating a total of {BepInModNameToSerializableContentPack.Values.Count} ContentPacks...");
-                List<ContentPack> contentPacks = new List<ContentPack>();
-                foreach (var (bepInModName, r2apiContentPack) in BepInModNameToSerializableContentPack) {
-                    if (ShouldContentPackBeLoadedByR2API(r2apiContentPack, out SerializableContentPack scp)) {
-                        ContentPack cp = scp.CreateContentPack();
-                        cp.identifier = bepInModName;
-                        contentPacks.Add(cp);
-                        genericContentPacks.Add(new R2APIGenericContentPack(cp));
-                        R2API.Logger.LogDebug($"Content pack for {bepInModName} created.");
-                    }
-                    else {
-                        R2API.Logger.LogDebug($"Not creating ContentPack for {bepInModName}, since it has declared r2api should not manage loading the content pack.");
-                    }
+                List<ManagedReadOnlyContentPack> managedReadOnlyContentPacks = new List<ManagedReadOnlyContentPack>();
+                foreach (var (modName, managedSCP) in BepInModNameToSerializableContentPack) {
+                    managedReadOnlyContentPacks.Add(new ManagedReadOnlyContentPack(managedSCP.serializableContentPack, managedSCP.AutoCreateIContentPackProvider));
                 }
-                _managedContentPacks = new ReadOnlyCollection<ContentPack>(contentPacks);
                 contentPacksCreated = true;
+                _managedContentPacks = new ReadOnlyArray<ManagedReadOnlyContentPack>(managedReadOnlyContentPacks.ToArray());
                 OnContentPacksCreated?.Invoke();
             }
             else {
@@ -414,7 +510,7 @@ namespace R2API.ContentManagement {
         #endregion
 
         #region Util
-        private static SerializableContentPack GetOrCreateSerializableContentPack(Assembly assembly) {
+        internal static SOTVSerializableContentPack GetOrCreateSerializableContentPack(Assembly assembly) {
             try {
                 //If the assembly that's adding the item has not been cached, find the GUID of the assembly and cache it.
                 if (!AssemblyToBepInModName.ContainsKey(assembly)) {
@@ -431,12 +527,12 @@ namespace R2API.ContentManagement {
                 }
 
                 if (AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
-                    SerializableContentPack serializableContentPack;
+                    SOTVSerializableContentPack serializableContentPack;
                     //If this assembly does not have a content pack assigned to it, create a new one and add it to the dictionary
                     if (!BepInModNameToSerializableContentPack.ContainsKey(modName)) {
-                        serializableContentPack = ScriptableObject.CreateInstance<SerializableContentPack>();
+                        serializableContentPack = ScriptableObject.CreateInstance<SOTVSerializableContentPack>();
                         serializableContentPack.name = modName;
-                        BepInModNameToSerializableContentPack.Add(modName, new R2APIManagedContentPack(serializableContentPack));
+                        BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(serializableContentPack, true));
                         R2API.Logger.LogInfo($"Created a SerializableContentPack for mod {modName}");
                     }
                     return BepInModNameToSerializableContentPack[modName].serializableContentPack;
@@ -460,25 +556,11 @@ namespace R2API.ContentManagement {
 
         private static void AddSafeType<T>(ref T[] assetArray, T asset, string identifier) {
             if (!assetArray.Contains(asset)) {
-                if (asset is EffectDef ed) {
-                    HG.ArrayUtils.ArrayAppend(ref assetArray, asset);
-                }
-                else {
-                    HG.ArrayUtils.ArrayAppend(ref assetArray, asset);
-                }
+                HG.ArrayUtils.ArrayAppend(ref assetArray, asset);
             }
             else {
                 R2API.Logger.LogWarning($"Cannot add {asset} to content pack {identifier} because the asset has already been added to it's corresponding array!");
             }
-        }
-
-        private static bool ShouldContentPackBeLoadedByR2API(R2APIManagedContentPack managedContentPack, out SerializableContentPack contentPack) {
-            if (managedContentPack.shouldManageLoading) {
-                contentPack = managedContentPack.serializableContentPack;
-                return true;
-            }
-            contentPack = null;
-            return false;
         }
         #endregion
 
@@ -490,6 +572,9 @@ namespace R2API.ContentManagement {
                 case SkillFamily sf: return EnsureSafeScriptableObjectName<SkillFamily>(sf, identifier);
                 case SceneDef scd: return EnsureSafeScriptableObjectName<SceneDef>(scd, identifier);
                 case ItemDef id: return EnsureSafeScriptableObjectName<ItemDef>(id, identifier);
+                case ItemTierDef itd: return EnsureSafeScriptableObjectName<ItemTierDef>(itd, identifier);
+                case ItemRelationshipProvider irp: return EnsureSafeScriptableObjectName<ItemRelationshipProvider>(irp, identifier);
+                case ItemRelationshipType irt: return EnsureSafeScriptableObjectName<ItemRelationshipType>(irt, identifier);
                 case EquipmentDef eqd: return EnsureSafeScriptableObjectName<EquipmentDef>(eqd, identifier);
                 case BuffDef bd: return EnsureSafeScriptableObjectName<BuffDef>(bd, identifier);
                 case EliteDef ed: return EnsureSafeScriptableObjectName<EliteDef>(ed, identifier);
@@ -501,6 +586,9 @@ namespace R2API.ContentManagement {
                 case MusicTrackDef mtd: return EnsureSafeScriptableObjectName<MusicTrackDef>(mtd, identifier);
                 case GameEndingDef ged: return EnsureSafeScriptableObjectName<GameEndingDef>(ged, identifier);
                 case EntityStateConfiguration esc: return EnsureSafeScriptableObjectName<EntityStateConfiguration>(esc, identifier);
+                case ExpansionDef exd: return EnsureSafeScriptableObjectName<ExpansionDef>(exd, identifier);
+                case EntitlementDef end: return EnsureSafeScriptableObjectName<EntitlementDef>(end, identifier);
+                case MiscPickupDef mpd: return EnsureSafeScriptableObjectName<MiscPickupDef>(mpd, identifier);
             }
             return obj;
         }
@@ -562,7 +650,7 @@ namespace R2API.ContentManagement {
         }
 
         //Creates a new, generic name for a unity asset.
-        private static string GetNewName(Object obj, string identifier, string[] allAssets) {
+        internal static string GetNewName(Object obj, string identifier, string[] allAssets) {
             int i = 0;
             string newName = obj.name;
             while (allAssets.Contains(newName)) {
