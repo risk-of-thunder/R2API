@@ -31,9 +31,12 @@ namespace R2API.ContentManagement {
         /// </summary>
         public bool AutoCreateIContentPackProvider { get; }
 
-        internal ManagedSerializableContentPack(SOTVSerializableContentPack serializableContentPack, bool autoCreateIContentPackProvider) {
+        public Assembly AssemblyThatCreatedContentPack { get; }
+
+        internal ManagedSerializableContentPack(SOTVSerializableContentPack serializableContentPack, bool autoCreateIContentPackProvider, Assembly assemblyThatCreatedContentPack) {
             this.serializableContentPack = serializableContentPack;
             AutoCreateIContentPackProvider = autoCreateIContentPackProvider;
+            AssemblyThatCreatedContentPack = assemblyThatCreatedContentPack;
         }
     }
 
@@ -45,12 +48,14 @@ namespace R2API.ContentManagement {
         /// <summary>
         /// The ReadOnlyContentPack
         /// </summary>
-        public ReadOnlyContentPack contentPack;
+        public ReadOnlyContentPack ContentPack { get; }
 
         /// <summary>
         /// The Identifier of the ReadOnlyContentPack
         /// </summary>
-        public string Identifier => contentPack.identifier;
+        public string Identifier => _contentPack.identifier;
+
+        public Assembly TiedAssembly { get; }
 
         internal ContentPack _contentPack;
 
@@ -60,10 +65,12 @@ namespace R2API.ContentManagement {
         public bool HasAutoCreatedIContentPackProvider { get; }
         internal R2APIGenericContentPack contentPackProvider;
 
-        internal ManagedReadOnlyContentPack(SOTVSerializableContentPack scp, bool autoCreateIContentPackProvider) {
+        internal ManagedReadOnlyContentPack(SOTVSerializableContentPack scp, bool autoCreateIContentPackProvider, Assembly assemblyThatCreatedContentPack) {
             _contentPack = scp.GetOrCreateContentPack();
             _contentPack.identifier = scp.name;
-            contentPack = new ReadOnlyContentPack(_contentPack);
+            ContentPack = new ReadOnlyContentPack(_contentPack);
+
+            TiedAssembly = assemblyThatCreatedContentPack;
 
             if (autoCreateIContentPackProvider) {
                 HasAutoCreatedIContentPackProvider = true;
@@ -104,6 +111,8 @@ namespace R2API.ContentManagement {
         private static Dictionary<string, ManagedSerializableContentPack> BepInModNameToSerializableContentPack = new Dictionary<string, ManagedSerializableContentPack>();
         //Cache-ing the Assembly's main plugin in a dictionary for ease of access.
         private static Dictionary<Assembly, string> AssemblyToBepInModName = new Dictionary<Assembly, string>();
+        //Populated on CreateContentPacks
+        private static Dictionary<ContentPack, Assembly> ContentPackToAssembly = new Dictionary<ContentPack, Assembly>();
         //Due to the fact that all contents should have unique names to avoid issues with the catalogs, we need to make sure there are no duplicate names whatsoever.
         //This dictionary which gets populated in Init() can be used to get all the currently registered names of a content depending on it's type.
         //We use this to do a While() loop later to ensure no duplicate names between the RoR2ContentPacks, and our own.
@@ -135,7 +144,7 @@ namespace R2API.ContentManagement {
                 if (AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
                     sotvSCP.name = modName;
                     if (!BepInModNameToSerializableContentPack.ContainsKey(modName)) {
-                        BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(sotvSCP, createIContentPackProvider));
+                        BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(sotvSCP, createIContentPackProvider, assembly));
                         R2API.Logger.LogInfo($"Added Pre-Existing SerializableContentPack from mod {modName}");
                         return;
                     }
@@ -154,6 +163,13 @@ namespace R2API.ContentManagement {
         /// </summary>
         /// <returns>The reserved SerializableContentPack</returns>
         public static SOTVSerializableContentPack ReserveSerializableContentPack() => GetOrCreateSerializableContentPack(Assembly.GetCallingAssembly());
+
+        public static Assembly GetAssemblyFromContentPack(ContentPack contentPack) {
+            if(ContentPackToAssembly.TryGetValue(contentPack, out Assembly ass)) {
+                return ass;
+            }
+            return null;
+        }
         #endregion
 
         #region Main Methods
@@ -497,7 +513,8 @@ namespace R2API.ContentManagement {
                 R2API.Logger.LogInfo($"Generating a total of {BepInModNameToSerializableContentPack.Values.Count} ContentPacks...");
                 List<ManagedReadOnlyContentPack> managedReadOnlyContentPacks = new List<ManagedReadOnlyContentPack>();
                 foreach (var (modName, managedSCP) in BepInModNameToSerializableContentPack) {
-                    managedReadOnlyContentPacks.Add(new ManagedReadOnlyContentPack(managedSCP.serializableContentPack, managedSCP.AutoCreateIContentPackProvider));
+                    managedReadOnlyContentPacks.Add(new ManagedReadOnlyContentPack(managedSCP.serializableContentPack, managedSCP.AutoCreateIContentPackProvider, managedSCP.AssemblyThatCreatedContentPack));
+                    ContentPackToAssembly.Add(managedSCP.serializableContentPack.GetOrCreateContentPack(), managedSCP.AssemblyThatCreatedContentPack);
                 }
                 contentPacksCreated = true;
                 _managedContentPacks = new ReadOnlyArray<ManagedReadOnlyContentPack>(managedReadOnlyContentPacks.ToArray());
@@ -532,7 +549,7 @@ namespace R2API.ContentManagement {
                     if (!BepInModNameToSerializableContentPack.ContainsKey(modName)) {
                         serializableContentPack = ScriptableObject.CreateInstance<SOTVSerializableContentPack>();
                         serializableContentPack.name = modName;
-                        BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(serializableContentPack, true));
+                        BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(serializableContentPack, true, assembly));
                         R2API.Logger.LogInfo($"Created a SerializableContentPack for mod {modName}");
                     }
                     return BepInModNameToSerializableContentPack[modName].serializableContentPack;
