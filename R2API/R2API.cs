@@ -85,6 +85,7 @@ namespace R2API {
         }
 
         private static void CheckIfUsedOnRightGameVersion() {
+            // TODO: Check if it is set when user is using Epic games Online
             var buildId = SteamworksClientManager.instance.steamworksClient.BuildId;
 
             if (GameBuild == buildId)
