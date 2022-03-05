@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="MMHOOK_RoR2">
       <HintPath>libs\MMHOOK_RoR2.dll</HintPath>
+	  <Private>false</Private>
     </Reference>
     <Reference Include="SimpleJSON">
       <HintPath>libs\SimpleJSON.dll</HintPath>
