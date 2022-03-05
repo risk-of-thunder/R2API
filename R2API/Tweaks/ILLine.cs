@@ -8,35 +8,41 @@ using System.Reflection;
 namespace R2API.Tweaks {
 
     /// <summary>
-    /// class for language files to load
+    /// Show IL Instruction Line in stack traces instead of mangled data
     /// </summary>
     [R2APISubmodule]
     internal static class ILLine {
-        private static ILHook? hook;
+        private static ILHook? _hook;
 
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
         public static bool Loaded {
-            get; private set;
+            get => _loaded;
+            internal set => _loaded = value;
         }
+
+        private static bool _loaded;
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            if (hook != null) {
+            if (_hook != null) {
                 return;
             }
 
-            hook = new ILHook(typeof(StackTrace).GetMethod("AddFrames", BindingFlags.Instance | BindingFlags.NonPublic), new ILContext.Manipulator(IlHook));
+            _hook = new ILHook(typeof(StackTrace).GetMethod("AddFrames", BindingFlags.Instance | BindingFlags.NonPublic), new ILContext.Manipulator(IlHook));
 
             Loaded = true;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            if (hook == null) {
+            if (_hook == null) {
                 return;
             }
 
-            hook.Undo();
-            hook = null;
+            _hook.Undo();
+            _hook = null;
             Loaded = false;
         }
 
