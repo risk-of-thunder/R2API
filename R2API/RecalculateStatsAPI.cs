@@ -112,8 +112,8 @@ namespace R2API {
             /// <summary>Amount of Root effects currently applied. MOVE_SPEED ~ (moveSpeedRootCount > 0) ? 0 : MOVE_SPEED </summary>
             public int moveSpeedRootCount = 0;
 
-            /// <summary>Added to the direct multiplier to crit damage. CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageAdd) </summary>
-            public int critDamageAdd = 0;
+            /// <summary>Added to the direct multiplier to crit damage. CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd) </summary>
+            public int critDamageMultAdd = 0;
         }
 
         /// <summary>
@@ -355,16 +355,12 @@ namespace R2API {
                 x => x.MatchLdloc(out locOrigCrit),
                 x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.crit)))
             ) && c.TryGotoPrev( MoveType.After,
-                x => x.MatchLdloc(out _),
-                x => x.MatchConvR4(),
-                x => x.MatchMul(),
-                x => x.MatchAdd(),
                 x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.critMultiplier)))
                 );
 
             if (ILFound) {
                 c.Index--;
-                c.EmitDelegate<Func<float,float>>((origCritMult) => {return origCritMult + StatMods.critDamageAdd;});
+                c.EmitDelegate<Func<float,float>>((origCritMult) => {return origCritMult + StatMods.critDamageMultAdd;});
                 c.GotoNext(MoveType.After,x => x.MatchStloc(locOrigCrit));
                 c.Emit(OpCodes.Ldloc, locOrigCrit);
                 c.EmitDelegate<Func<float, float>>((origCrit) => { return origCrit + StatMods.critAdd; });
