@@ -40,7 +40,7 @@ namespace R2API {
             /// <summary>Added to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd).</summary>
             public float baseHealthAdd = 0f;
 
-            /// <summary>Added to base shield. MAX_SHIELD ~ BASE_SHIELD + baseShieldAdd.</summary>
+            /// <summary>Added to base shield. MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd) * (SHIELD_MULT + shieldMultAdd).</summary>
             public float baseShieldAdd = 0f;
 
             /// <summary>Added to the direct multiplier to base health regen. HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd) * (REGEN_MULT + regenMultAdd).</summary>
@@ -100,7 +100,7 @@ namespace R2API {
             /// <summary> (Special) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + specialCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
             public float specialCooldownMultAdd = 0f;
 
-            /// <summary>Added to the direct multiplier to base shield</summary>
+            /// <summary>Added to the direct multiplier to shields MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd) * (SHIELD_MULT + shieldMultAdd).</summary>
             public float shieldMultAdd = 0f;
 
             /// <summary>Added to base jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd)* (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
