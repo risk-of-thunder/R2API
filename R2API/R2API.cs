@@ -14,8 +14,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using HarmonyLib;
-using UnityEngine;
 
 namespace R2API {
 
@@ -42,25 +40,8 @@ namespace R2API {
 
         internal static R2API Instance { get; private set; }
 
-        private static Dictionary<Type, MethodInfo> typeCache = new();
-        private static UnityEngine.Object ResourceLoadDetour(string path, Type type) {
-            MethodInfo load;
-            if (!typeCache.TryGetValue(type, out load)) {
-                typeCache[type] = load = AccessTools.Method(typeof(LegacyResourcesAPI), nameof(LegacyResourcesAPI.Load)).MakeGenericMethod(type);
-            }
-
-            return (UnityEngine.Object)load.Invoke(null, new[] { path });
-        }
-
         public void Awake() {
             Instance = this;
-
-            var resources =
-                new NativeDetour(
-                    AccessTools.Method(typeof(Resources), nameof(Resources.Load),
-                        new[] { typeof(string), typeof(Type) }),
-                    AccessTools.Method(typeof(R2API), nameof(ResourceLoadDetour)));
-            resources.Apply();
 
             Logger = base.Logger;
             ModManager = new DetourModManager();
@@ -72,8 +53,6 @@ namespace R2API {
             }
 
             On.RoR2.UnitySystemConsoleRedirector.Redirect += orig => { };
-
-            //R2APIContentManager.Init();
 
             var pluginScanner = new PluginScanner();
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
