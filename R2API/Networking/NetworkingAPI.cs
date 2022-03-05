@@ -147,20 +147,20 @@ namespace R2API.Networking {
             RegisterMessageTypeInternal<ExampleMessage>();
             RegisterRequestTypesInternal<ExamplePing, ExamplePingReply>();
 
-            GameNetworkManager.onStartServerGlobal += RegisterServerHandlers;
-            GameNetworkManager.onStartClientGlobal += RegisterClientHandlers;
+            NetworkManagerSystem.onStartServerGlobal += RegisterServerHandlers;
+            NetworkManagerSystem.onStartClientGlobal += RegisterClientHandlers;
 
-            GameNetworkManager.onStopServerGlobal -= UnRegisterServerHandlers;
-            GameNetworkManager.onStopClientGlobal -= UnRegisterClientHandlers;
+            NetworkManagerSystem.onStopServerGlobal -= UnRegisterServerHandlers;
+            NetworkManagerSystem.onStopClientGlobal -= UnRegisterClientHandlers;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            GameNetworkManager.onStartServerGlobal -= RegisterServerHandlers;
-            GameNetworkManager.onStartClientGlobal -= RegisterClientHandlers;
+            NetworkManagerSystem.onStartServerGlobal -= RegisterServerHandlers;
+            NetworkManagerSystem.onStartClientGlobal -= RegisterClientHandlers;
 
-            GameNetworkManager.onStopServerGlobal += UnRegisterServerHandlers;
-            GameNetworkManager.onStopClientGlobal += UnRegisterClientHandlers;
+            NetworkManagerSystem.onStopServerGlobal += UnRegisterServerHandlers;
+            NetworkManagerSystem.onStopClientGlobal += UnRegisterClientHandlers;
         }
 
         private static void RegisterServerHandlers() {

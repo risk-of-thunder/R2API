@@ -215,8 +215,7 @@ namespace R2API {
             ActiveCustomDots.Remove(self);
         }
 
-        private static object GetDotDef(On.RoR2.DotController.orig_GetDotDef orig, DotController self,
-            DotController.DotIndex dotIndex) {
+        private static DotController.DotDef GetDotDef(On.RoR2.DotController.orig_GetDotDef orig, DotController.DotIndex dotIndex) {
             return DotDefs[(int)dotIndex];
         }
 
@@ -257,18 +256,14 @@ namespace R2API {
                     $"Failed finding IL Instructions. Aborting FixInflictDotReturnCheck IL Hook {index}");
             }
 
-            if (c.TryGotoNext(MoveType.After,
-                i => i.MatchLdarg(0),
-                i => i.MatchLdfld(out _),
-                i => i.MatchLdcI4(out _),
-                i => i.MatchBlt(out _),
 
-                i => i.MatchLdarg(0),
-                i => i.MatchLdfld(out _),
-                i => i.MatchLdcI4(out _),
-                i => i.MatchBlt(out _)
+            if (c.TryGotoNext(MoveType.After,
+                    x => x.MatchLdarg(0),
+                    x => x.MatchLdfld(typeof(InflictDotInfo), nameof(InflictDotInfo.dotIndex)),
+                    x => x.MatchLdcI4((int)DotController.DotIndex.Count)
                 )) {
-                c.Next.OpCode = OpCodes.Nop;
+                c.Prev.OpCode = OpCodes.Ldc_I4;
+                c.Prev.Operand = int.MaxValue;
             }
             else {
                 ILFailMessage(1);

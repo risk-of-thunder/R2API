@@ -5,13 +5,11 @@ using RoR2;
 using System;
 
 namespace R2API {
-
     /// <summary>
     /// API for computing bonuses granted by factors inside RecalculateStats.
     /// </summary>
     [R2APISubmodule]
     public static class RecalculateStatsAPI {
-
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
@@ -36,7 +34,6 @@ namespace R2API {
         /// A collection of modifiers for various stats. It will be passed down the event chain of GetStatCoefficients; add to the contained values to modify stats.
         /// </summary>
         public class StatHookEventArgs : EventArgs {
-
             /// <summary>Added to the direct multiplier to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd) / (BASE_CURSE_PENALTY + baseCurseAdd).</summary>
             public float healthMultAdd = 0f;
 
@@ -124,21 +121,26 @@ namespace R2API {
         public delegate void StatHookEventHandler(CharacterBody sender, StatHookEventArgs args);
 
         private static event StatHookEventHandler _getStatCoefficients;
+
         /// <summary>
         /// Subscribe to this event to modify one of the stat hooks which StatHookEventArgs covers. Fired during CharacterBody.RecalculateStats.
         /// </summary>
         public static event StatHookEventHandler GetStatCoefficients {
             add {
                 if (!Loaded) {
-                    throw new InvalidOperationException($"{nameof(RecalculateStatsAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(RecalculateStatsAPI)})]");
+                    throw new InvalidOperationException(
+                        $"{nameof(RecalculateStatsAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(RecalculateStatsAPI)})]");
                 }
+
                 _getStatCoefficients += value;
             }
 
             remove {
                 if (!Loaded) {
-                    throw new InvalidOperationException($"{nameof(RecalculateStatsAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(RecalculateStatsAPI)})]");
+                    throw new InvalidOperationException(
+                        $"{nameof(RecalculateStatsAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(RecalculateStatsAPI)})]");
                 }
+
                 _getStatCoefficients -= value;
             }
         }
@@ -174,7 +176,8 @@ namespace R2API {
                         @event(characterBody, StatMods);
                     }
                     catch (Exception e) {
-                        R2API.Logger.LogError($"Exception thrown by : {@event.Method.DeclaringType.Name}.{@event.Method.Name}:\n{e}");
+                        R2API.Logger.LogError(
+                            $"Exception thrown by : {@event.Method.DeclaringType.Name}.{@event.Method.Name}:\n{e}");
                     }
                 }
             }
@@ -185,17 +188,15 @@ namespace R2API {
             c.Index = 0;
 
             bool ILFound = c.TryGotoNext(MoveType.After,
-        x => x.MatchLdarg(0),
+                x => x.MatchLdarg(0),
                 x => x.MatchLdcR4(1),
                 x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.cursePenalty))
-        ));
+                ));
 
             if (ILFound) {
                 c.MoveAfterLabels();
                 c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Action<CharacterBody>>((body) => {
-                    body.cursePenalty += StatMods.baseCurseAdd;
-                });
+                c.EmitDelegate<Action<CharacterBody>>((body) => { body.cursePenalty += StatMods.baseCurseAdd; });
             }
             else {
                 R2API.Logger.LogError($"{nameof(ModifyCurseStat)} failed.");
@@ -207,33 +208,65 @@ namespace R2API {
             c.Index = 0;
             int ILFound = 0;
             while (c.TryGotoNext(
-            x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale)))
-                ) && c.TryGotoNext(
-            x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction)))
-                )) { ILFound++; }
+                       x => x.MatchCallOrCallvirt(
+                           typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale)))
+                   ) && c.TryGotoNext(
+                       x => x.MatchCallOrCallvirt(
+                           typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction)))
+                   )) {
+                ILFound++;
+            }
 
             if (ILFound >= 4) {
                 c.Index = 0;
-                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
-                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.primaryCooldownMultAdd); });
-                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
-                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+                c.GotoNext(x =>
+                    x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => {
+                    return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.primaryCooldownMultAdd);
+                });
+                c.GotoNext(x =>
+                    x.MatchCallOrCallvirt(
+                        typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => {
+                    return oldCooldown + StatMods.cooldownReductionAdd;
+                });
 
-                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
-                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.secondaryCooldownMultAdd); });
-                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
-                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+                c.GotoNext(x =>
+                    x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => {
+                    return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.secondaryCooldownMultAdd);
+                });
+                c.GotoNext(x =>
+                    x.MatchCallOrCallvirt(
+                        typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => {
+                    return oldCooldown + StatMods.cooldownReductionAdd;
+                });
 
-                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
-                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.utilityCooldownMultAdd); });
-                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
-                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+                c.GotoNext(x =>
+                    x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => {
+                    return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.utilityCooldownMultAdd);
+                });
+                c.GotoNext(x =>
+                    x.MatchCallOrCallvirt(
+                        typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => {
+                    return oldCooldown + StatMods.cooldownReductionAdd;
+                });
 
 
-                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
-                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.specialCooldownMultAdd); });
-                c.GotoNext(x => x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
-                c.EmitDelegate<Func<float, float>>((oldCooldown) => { return oldCooldown + StatMods.cooldownReductionAdd; });
+                c.GotoNext(x =>
+                    x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => {
+                    return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.specialCooldownMultAdd);
+                });
+                c.GotoNext(x =>
+                    x.MatchCallOrCallvirt(
+                        typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
+                c.EmitDelegate<Func<float, float>>((oldCooldown) => {
+                    return oldCooldown + StatMods.cooldownReductionAdd;
+                });
             }
             else {
                 R2API.Logger.LogError($"{nameof(ModifyCooldownStat)} failed.");
@@ -245,8 +278,8 @@ namespace R2API {
             c.Index = 0;
             bool ILFound = c.TryGotoNext(MoveType.After,
                 x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertyGetter(nameof(CharacterBody.level))),
-        x => x.MatchLdcR4(1),
-        x => x.MatchSub()
+                x => x.MatchLdcR4(1),
+                x => x.MatchSub()
             );
 
             if (ILFound) {
@@ -271,9 +304,7 @@ namespace R2API {
             );
 
             if (ILFound) {
-                c.EmitDelegate<Func<float, float>>((oldArmor) => {
-                    return oldArmor + StatMods.armorAdd;
-                });
+                c.EmitDelegate<Func<float, float>>((oldArmor) => { return oldArmor + StatMods.armorAdd; });
             }
             else {
                 R2API.Logger.LogError($"{nameof(ModifyArmorStat)} failed.");
@@ -301,9 +332,7 @@ namespace R2API {
             if (ILFound) {
                 c.GotoPrev(x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.baseAttackSpeed)));
                 c.GotoNext(x => x.MatchStloc(locBaseAttackSpeedIndex));
-                c.EmitDelegate<Func<float, float>>((origSpeed) => {
-                    return origSpeed + StatMods.baseAttackSpeedAdd;
-                });
+                c.EmitDelegate<Func<float, float>>((origSpeed) => { return origSpeed + StatMods.baseAttackSpeedAdd; });
                 c.GotoNext(x => x.MatchStloc(locAttackSpeedMultIndex));
                 c.EmitDelegate<Func<float, float>>((origSpeedMult) => {
                     return origSpeedMult + StatMods.attackSpeedMultAdd;
@@ -325,9 +354,7 @@ namespace R2API {
 
             if (ILFound) {
                 c.Emit(OpCodes.Ldloc, locOrigCrit);
-                c.EmitDelegate<Func<float, float>>((origCrit) => {
-                    return origCrit + StatMods.critAdd;
-                });
+                c.EmitDelegate<Func<float, float>>((origCrit) => { return origCrit + StatMods.critAdd; });
                 c.Emit(OpCodes.Stloc, locOrigCrit);
             }
             else {
@@ -356,9 +383,7 @@ namespace R2API {
             if (ILFound) {
                 c.GotoPrev(x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.baseDamage)));
                 c.GotoNext(x => x.MatchStloc(locBaseDamageIndex));
-                c.EmitDelegate<Func<float, float>>((origDamage) => {
-                    return origDamage + StatMods.baseDamageAdd;
-                });
+                c.EmitDelegate<Func<float, float>>((origDamage) => { return origDamage + StatMods.baseDamageAdd; });
                 c.GotoNext(x => x.MatchStloc(locDamageMultIndex));
                 c.EmitDelegate<Func<float, float>>((origDamageMult) => {
                     return origDamageMult + StatMods.damageMultAdd;
@@ -435,9 +460,9 @@ namespace R2API {
             ) && c.TryGotoNext(
                 x => x.MatchStloc(out locBaseShieldIndex)
             ) && c.TryGotoNext(
-        x => x.MatchLdloc(locBaseShieldIndex),
-        x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.maxShield)))
-        );
+                x => x.MatchLdloc(locBaseShieldIndex),
+                x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.maxShield)))
+            );
 
             if (ILFound) {
                 c.Index++;
@@ -472,9 +497,7 @@ namespace R2API {
 
             if (ILFound) {
                 c.GotoNext(x => x.MatchLdloc(out locRegenMultIndex));
-                c.EmitDelegate<Func<float>>(() => {
-                    return StatMods.baseRegenAdd;
-                });
+                c.EmitDelegate<Func<float>>(() => { return StatMods.baseRegenAdd; });
                 c.Emit(OpCodes.Add);
                 c.GotoNext(x => x.MatchMul());
                 c.EmitDelegate<Func<float, float>>((origRegenMult) => {
@@ -506,17 +529,14 @@ namespace R2API {
                 x => x.MatchMul(),
                 x => x.MatchStloc(locBaseSpeedIndex)
             ) && c.TryGotoNext(MoveType.After,
-        x => x.MatchLdloc(out _),
-        x => x.MatchLdloc(out _),
-        x => x.MatchOr(),
-        x => x.MatchLdloc(out _),
-        x => x.MatchOr()
-        );
+                x => x.MatchLdloc(out _),
+                x => x.MatchOr(),
+                x => x.MatchLdloc(out _),
+                x => x.MatchOr()
+            );
 
             if (ILFound) {
-                c.EmitDelegate<Func<bool>>(() => {
-                    return (StatMods.moveSpeedRootCount > 0);
-                });
+                c.EmitDelegate<Func<bool>>(() => { return (StatMods.moveSpeedRootCount > 0); });
                 c.Emit(OpCodes.Or);
                 c.GotoPrev(x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.levelMoveSpeed)));
                 c.GotoNext(x => x.MatchStloc(locBaseSpeedIndex));

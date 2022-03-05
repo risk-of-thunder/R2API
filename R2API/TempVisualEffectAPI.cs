@@ -91,7 +91,7 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             On.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects += UpdateAllHook;
-            IL.RoR2.CharacterBody.UpdateSingleTemporaryVisualEffect += UpdateSingleHook;
+            IL.RoR2.CharacterBody.UpdateSingleTemporaryVisualEffect_refTemporaryVisualEffect_string_float_bool_string += UpdateSingleHook;
             R2APIContentPackProvider.WhenAddingContentPacks += DontAllowNewEntries;
             CharacterBody.onBodyStartGlobal += BodyStart;
         }
@@ -99,7 +99,7 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             On.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects -= UpdateAllHook;
-            IL.RoR2.CharacterBody.UpdateSingleTemporaryVisualEffect += UpdateSingleHook;
+            IL.RoR2.CharacterBody.UpdateSingleTemporaryVisualEffect_refTemporaryVisualEffect_string_float_bool_string += UpdateSingleHook;
             R2APIContentPackProvider.WhenAddingContentPacks -= DontAllowNewEntries;
             CharacterBody.onBodyStartGlobal -= BodyStart;
         }
@@ -142,7 +142,7 @@ namespace R2API {
             var resourceStringIndex = -1;
             if (cursor.TryGotoNext(MoveType.After,
                 x => x.MatchLdarg(out resourceStringIndex),
-                x => x.MatchCallOrCallvirt<Resources>(nameof(Resources.Load))
+                x => x.MatchCallOrCallvirt(typeof(LegacyResourcesAPI).GetMethod(nameof(LegacyResourcesAPI.Load)).MakeGenericMethod(typeof(GameObject)))
             )) {
                 cursor.Emit(OpCodes.Ldarg, resourceStringIndex);
                 cursor.EmitDelegate<Func<GameObject, string, GameObject>>(GetCustomTVE);

@@ -157,9 +157,10 @@ namespace R2API.ContentManagement {
         #endregion
 
         #region Main Methods
+        /*
         internal static void Init() {
             string[] BodyPrefabs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.bodyPrefabs
+                return RoR2Content.contentPack.bodyPrefabs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.bodyPrefabs))
                     .Select(go => go.name)
@@ -168,7 +169,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(CharacterBody), BodyPrefabs);
 
             string[] MasterPrefabs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.masterPrefabs
+                return RoR2Content.contentPack.masterPrefabs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.masterPrefabs))
                     .Select(go => go.name)
@@ -177,7 +178,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(CharacterMaster), MasterPrefabs);
 
             string[] ProjectilePrefabs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.projectilePrefabs
+                return RoR2Content.contentPack.projectilePrefabs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.projectilePrefabs))
                     .Select(go => go.name)
@@ -186,7 +187,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(ProjectileController), ProjectilePrefabs);
 
             string[] RunPrefabs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.gameModePrefabs
+                return RoR2Content.contentPack.gameModePrefabs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.gameModePrefabs))
                     .Select(go => go.name)
@@ -195,7 +196,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(Run), RunPrefabs);
 
             string[] NetworkedPrefabs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.networkedObjectPrefabs
+                return RoR2Content.contentPack.networkedObjectPrefabs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.networkedObjectPrefabs))
                     .Select(go => go.name)
@@ -204,7 +205,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(NetworkIdentity), NetworkedPrefabs);
 
             string[] EffectPrefabs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.effectDefs
+                return RoR2Content.contentPack.effectDefs
                     .Select(ed => ed.prefab)
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.effectPrefabs))
@@ -214,7 +215,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(EffectDef), EffectPrefabs);
 
             string[] SkillDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.skillDefs
+                return RoR2Content.contentPack.skillDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.skillDefs))
                     .Select(sd => sd as ScriptableObject)
@@ -224,7 +225,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(SkillDef), SkillDefs);
 
             string[] SkillFamilies() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.skillFamilies
+                return RoR2Content.contentPack.skillFamilies
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.skillFamilies))
                     .Select(sf => sf as ScriptableObject)
@@ -234,7 +235,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(SkillFamily), SkillFamilies);
 
             string[] SceneDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.sceneDefs
+                return RoR2Content.contentPack.sceneDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.sceneDefs))
                     .Select(sd => sd.cachedName)
@@ -243,7 +244,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(SceneDef), SceneDefs);
 
             string[] ItemDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.itemDefs
+                return RoR2Content.contentPack.itemDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.itemDefs))
                     .Select(id => id.name)
@@ -252,7 +253,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(ItemDef), ItemDefs);
 
             string[] ItemTierDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.itemTierDefs
+                return RoR2Content.contentPack.itemTierDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.itemTierDefs))
                     .Select(itd => itd.name)
@@ -261,7 +262,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(ItemTierDef), ItemTierDefs);
 
             string[] ItemRelationshipProviders() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.itemRelationshipProviders
+                return RoR2Content.contentPack.itemRelationshipProviders
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.itemRelationshipProviders))
                     .Select(irp => irp.name)
@@ -270,7 +271,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(ItemRelationshipProvider), ItemRelationshipProviders);
 
             string[] ItemRelationshipTypes() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.itemRelationshipTypes
+                return RoR2Content.contentPack.itemRelationshipTypes
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.itemRelationshipTypes))
                     .Select(irt => irt.name)
@@ -279,7 +280,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(ItemRelationshipType), ItemRelationshipTypes);
 
             string[] EquipmentDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.equipmentDefs
+                return RoR2Content.contentPack.equipmentDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.equipmentDefs))
                     .Select(ed => ed.name)
@@ -288,7 +289,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(EquipmentDef), EquipmentDefs);
 
             string[] BuffDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.buffDefs
+                return RoR2Content.contentPack.buffDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.buffDefs))
                     .Select(bd => bd.name)
@@ -297,7 +298,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(BuffDef), BuffDefs);
 
             string[] EliteDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.eliteDefs
+                return RoR2Content.contentPack.eliteDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.eliteDefs))
                     .Select(ed => ed.name)
@@ -306,7 +307,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(EliteDef), EliteDefs);
 
             string[] UnlockableDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.unlockableDefs
+                return RoR2Content.contentPack.unlockableDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.unlockableDefs))
                     .Select(ud => ud.cachedName)
@@ -315,7 +316,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(UnlockableDef), UnlockableDefs);
 
             string[] SurvivorDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.survivorDefs
+                return RoR2Content.contentPack.survivorDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.survivorDefs))
                     .Select(sd => sd.cachedName)
@@ -324,7 +325,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(SurvivorDef), SurvivorDefs);
 
             string[] ArtifactDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.artifactDefs
+                return RoR2Content.contentPack.artifactDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.artifactDefs))
                     .Select(ad => ad.cachedName)
@@ -333,7 +334,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(ArtifactDef), ArtifactDefs);
 
             string[] SurfaceDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.surfaceDefs
+                return RoR2Content.contentPack.surfaceDefs
                         .Union(BepInModNameToSerializableContentPack.Values
                             .SelectMany(scp => scp.serializableContentPack.surfaceDefs))
                         .Select(sd => sd.name)
@@ -342,7 +343,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(SurfaceDef), SurfaceDefs);
 
             string[] NetworkSoundEventDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.networkSoundEventDefs
+                return RoR2Content.contentPack.networkSoundEventDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.networkSoundEventDefs))
                     .Select(nsed => nsed.name)
@@ -351,7 +352,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(NetworkSoundEventDef), NetworkSoundEventDefs);
 
             string[] MusicTrackDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.musicTrackDefs
+                return RoR2Content.contentPack.musicTrackDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.musicTrackDefs))
                     .Select(mtd => mtd.cachedName)
@@ -360,7 +361,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(MusicTrackDef), MusicTrackDefs);
 
             string[] GameEndingDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.gameEndingDefs
+                return RoR2Content.contentPack.gameEndingDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.gameEndingDefs))
                     .Select(ged => ged.cachedName)
@@ -369,7 +370,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(GameEndingDef), GameEndingDefs);
 
             string[] EntityStateConfigurations() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.entityStateConfigurations
+                return RoR2Content.contentPack.entityStateConfigurations
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.entityStateConfigurations))
                     .Select(esc => esc.name)
@@ -378,7 +379,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(EntityStateConfiguration), EntityStateConfigurations);
 
             string[] ExpansionDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.expansionDefs
+                return RoR2Content.contentPack.expansionDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.expansionDefs))
                     .Select(ed => ed.name)
@@ -387,7 +388,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(ExpansionDef), ExpansionDefs);
 
             string[] EntitlementDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.entitlementDefs
+                return RoR2Content.contentPack.entitlementDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.entitlementDefs))
                     .Select(ed => ed.name)
@@ -396,7 +397,7 @@ namespace R2API.ContentManagement {
             TypeToAllCurrentlyRegisteredNames.Add(typeof(EntitlementDef), EntitlementDefs);
 
             string[] MiscPickupDefs() {
-                return LoadRoR2ContentEarly.ReadOnlyRoR2ContentPack.miscPickupDefs
+                return RoR2Content.contentPack.miscPickupDefs
                     .Union(BepInModNameToSerializableContentPack.Values
                         .SelectMany(scp => scp.serializableContentPack.miscPickupDefs))
                     .Select(mpd => mpd.name)
@@ -404,6 +405,7 @@ namespace R2API.ContentManagement {
             }
             TypeToAllCurrentlyRegisteredNames.Add(typeof(MiscPickupDef), MiscPickupDefs);
         }
+        */
 
         internal static void HandleContentAddition(Assembly assembly, Object content) {
             SOTVSerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);

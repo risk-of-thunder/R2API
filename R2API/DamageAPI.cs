@@ -44,7 +44,7 @@ namespace R2API {
             On.RoR2.NetworkExtensions.Write_NetworkWriter_DamageInfo += WriteDamageInfo;
             On.RoR2.NetworkExtensions.ReadDamageInfo += ReadDamageInfo;
 
-            IL.RoR2.BulletAttack.DefaultHitCallback += BulletAttackDefaultHitCallbackIL;
+            IL.RoR2.BulletAttack.DefaultHitCallbackImplementation += BulletAttackDefaultHitCallbackIL;
 
             IL.RoR2.Orbs.DamageOrb.OnArrival += DamageOrbOnArrivalIL;
             IL.RoR2.Orbs.GenericDamageOrb.OnArrival += GenericDamageOrbOnArrivalIL;
@@ -94,7 +94,7 @@ namespace R2API {
             On.RoR2.NetworkExtensions.Write_NetworkWriter_DamageInfo -= WriteDamageInfo;
             On.RoR2.NetworkExtensions.ReadDamageInfo -= ReadDamageInfo;
 
-            IL.RoR2.BulletAttack.DefaultHitCallback -= BulletAttackDefaultHitCallbackIL;
+            IL.RoR2.BulletAttack.DefaultHitCallbackImplementation -= BulletAttackDefaultHitCallbackIL;
 
             IL.RoR2.Orbs.DamageOrb.OnArrival -= DamageOrbOnArrivalIL;
             IL.RoR2.Orbs.GenericDamageOrb.OnArrival -= GenericDamageOrbOnArrivalIL;

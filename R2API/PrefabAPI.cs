@@ -158,7 +158,7 @@ namespace R2API {
         private static void SetupRegistrationEvent() {
             if (!needToRegister) {
                 needToRegister = true;
-                RoR2.Networking.GameNetworkManager.onStartGlobal += RegisterClientPrefabsNStuff;
+                RoR2.Networking.NetworkManagerSystem.onStartGlobal += RegisterClientPrefabsNStuff;
             }
         }
 
