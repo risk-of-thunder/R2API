@@ -253,7 +253,7 @@ namespace R2API {
     /// <summary>
     /// Class that defines a custom Elite type for use in the game
     /// All Elites consistent of an Elite definition, a <see cref="CustomEquipment"/>
-    /// and a <see cref="CustomBuff"/>. The equipment is automatically provided to
+    /// and a <see cref="BuffDef"/>. The equipment is automatically provided to
     /// the Elite when it spawns and is configured to passively apply the buff.
     /// </summary>
     public class CustomElite {
