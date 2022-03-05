@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using UnityEngine;
 
 namespace R2API {
-
+#pragma warning disable CS0618 // Type or member is obsolete
     /// <summary>
     /// Scriptable object to ease the creation of Artifact codes.
     /// </summary>
@@ -110,4 +110,5 @@ namespace R2API {
             return asset;
         }
     }
+#pragma warning restore CS0618 // Type or member is obsolete
 }
