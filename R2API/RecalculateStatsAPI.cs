@@ -40,7 +40,7 @@ namespace R2API {
             /// <summary>Added to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd).</summary>
             public float baseHealthAdd = 0f;
 
-            /// <summary>Added to base shield. MAX_SHIELD ~ BASE_SHIELD + baseShieldAdd.</summary>
+            /// <summary>Added to base shield. MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd) * (SHIELD_MULT + shieldMultAdd).</summary>
             public float baseShieldAdd = 0f;
 
             /// <summary>Added to the direct multiplier to base health regen. HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd) * (REGEN_MULT + regenMultAdd).</summary>
@@ -100,7 +100,7 @@ namespace R2API {
             /// <summary> (Special) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + specialCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
             public float specialCooldownMultAdd = 0f;
 
-            /// <summary>Added to the direct multiplier to base shield</summary>
+            /// <summary>Added to the direct multiplier to shields MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd) * (SHIELD_MULT + shieldMultAdd).</summary>
             public float shieldMultAdd = 0f;
 
             /// <summary>Added to base jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd)* (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
@@ -111,6 +111,9 @@ namespace R2API {
 
             /// <summary>Amount of Root effects currently applied. MOVE_SPEED ~ (moveSpeedRootCount > 0) ? 0 : MOVE_SPEED </summary>
             public int moveSpeedRootCount = 0;
+
+            /// <summary>Added to the direct multiplier to crit damage. CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd) </summary>
+            public int critDamageMultAdd = 0;
         }
 
         /// <summary>
@@ -350,9 +353,15 @@ namespace R2API {
             bool ILFound = c.TryGotoNext(
                 x => x.MatchLdarg(0),
                 x => x.MatchLdloc(out locOrigCrit),
-                x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.crit))));
+                x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.crit)))
+            ) && c.TryGotoPrev( MoveType.After,
+                x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.critMultiplier)))
+                );
 
             if (ILFound) {
+                c.Index--;
+                c.EmitDelegate<Func<float,float>>((origCritMult) => {return origCritMult + StatMods.critDamageMultAdd;});
+                c.GotoNext(MoveType.After,x => x.MatchStloc(locOrigCrit));
                 c.Emit(OpCodes.Ldloc, locOrigCrit);
                 c.EmitDelegate<Func<float, float>>((origCrit) => { return origCrit + StatMods.critAdd; });
                 c.Emit(OpCodes.Stloc, locOrigCrit);
