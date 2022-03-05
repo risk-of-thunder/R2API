@@ -307,6 +307,7 @@ namespace R2API {
             bool canRemove,
             UnlockableDef unlockableDef,
             ItemDisplayRule[]? itemDisplayRules) {
+
             ItemDef = ScriptableObject.CreateInstance<ItemDef>();
             ItemDef.canRemove = canRemove;
             ItemDef.descriptionToken = descriptionToken;
@@ -333,6 +334,7 @@ namespace R2API {
             bool hidden,
             UnlockableDef unlockableDef = null,
             ItemDisplayRuleDict? itemDisplayRules = null) {
+
             ItemDef = ScriptableObject.CreateInstance<ItemDef>();
             ItemDef.canRemove = canRemove;
             ItemDef.descriptionToken = descriptionToken;
@@ -378,6 +380,7 @@ namespace R2API {
             ColorCatalog.ColorIndex colorIndex = ColorCatalog.ColorIndex.Equipment,
             bool appearsInMultiPlayer = true, bool appearsInSinglePlayer = true,
             ItemDisplayRule[]? itemDisplayRules = null) {
+
             EquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
             EquipmentDef.appearsInMultiPlayer = appearsInMultiPlayer;
             EquipmentDef.appearsInSinglePlayer = appearsInSinglePlayer;
@@ -413,6 +416,7 @@ namespace R2API {
             ColorCatalog.ColorIndex colorIndex = ColorCatalog.ColorIndex.Equipment,
             bool appearsInMultiPlayer = true, bool appearsInSinglePlayer = true,
             ItemDisplayRuleDict? itemDisplayRules = null) {
+
             EquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
             EquipmentDef.appearsInMultiPlayer = appearsInMultiPlayer;
             EquipmentDef.appearsInSinglePlayer = appearsInSinglePlayer;
