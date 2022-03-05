@@ -1,7 +1,5 @@
 using BepInEx;
 using BepInEx.Logging;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.ContentManagement;
