@@ -7,6 +7,11 @@ using Xunit;
 
 namespace R2API.Test {
     public class ReflectionTests {
+#pragma warning disable CS0414 // unusued
+#pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable IDE0051 // Remove unused private members
+
+
         public ReflectionTests() {
         }
 
@@ -284,4 +289,7 @@ namespace R2API.Test {
             {"thing", 5}
         };
     }
+#pragma warning restore IDE0044 // Add readonly modifier
+#pragma warning restore IDE0051 // Remove unused private members
+#pragma warning restore CS0414 // unusued
 }

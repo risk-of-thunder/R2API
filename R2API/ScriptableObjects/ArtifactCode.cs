@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace R2API {
 #pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS1587 // XML comment is not placed on a valid language element
+
     /// <summary>
     /// Scriptable object to ease the creation of Artifact codes.
     /// </summary>
@@ -14,6 +16,7 @@ namespace R2API {
 
         private const string constant = "For a list of accepted vanilla compound values, check ArtifactCodeAPI.CompoundValues";
         [Header(constant)]
+
         /// <summary>
         /// Compound values that represent the top 3 compounds. For a list of accepted vanilla compound values, check ArtifactCodeAPI.CompoundValues
         /// </summary>
@@ -111,4 +114,5 @@ namespace R2API {
         }
     }
 #pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning restore CS1587 // XML comment is not placed on a valid language element
 }

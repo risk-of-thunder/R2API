@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace R2API {
+#pragma warning disable CS0618 // Type or member is obsolete
 
     /// <summary>
     /// API for adding custom artifact codes to the game.
@@ -226,4 +227,5 @@ namespace R2API {
 
         #endregion Vanilla Compound Values
     }
+#pragma warning restore CS0618 // Type or member is obsolete
 }
