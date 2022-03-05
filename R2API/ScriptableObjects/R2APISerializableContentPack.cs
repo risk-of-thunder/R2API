@@ -10,8 +10,8 @@ using System.Linq;
 using UnityEngine;
 
 namespace R2API.ScriptableObjects {
-    [CreateAssetMenu(fileName = "new SOTVSerializableContentPack", menuName = "R2API/SOTVSerializableContentPack", order = 0)]
-    public class SOTVSerializableContentPack : ScriptableObject {
+    [CreateAssetMenu(fileName = "new R2APISerializableContentPack", menuName = "R2API/R2APISerializableContentPack", order = 0)]
+    public class R2APISerializableContentPack : ScriptableObject {
 
         #region Prefabs
         [Header("Prefabs")]

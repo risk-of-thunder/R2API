@@ -247,7 +247,7 @@ namespace R2API {
         /// Add an unlockable tied to an achievement.
         /// For an example usage check <see href="https://github.com/ArcPh1r3/HenryTutorial/blob/master/HenryMod/Modules/Achievements/HenryMasteryAchievement.cs">rob repository</see>
         /// </summary>
-        /// <typeparam name="TUnlockable">Class that inherits from BaseAchievement and implements IModdedUnlockableDataProvider</typeparam>
+        /// <typeparam name="TUnlockable">Class that inherits from BaseAchievement and implements <see cref="IModdedUnlockableDataProvider"/></typeparam>
         /// <param name="serverTrackerType">Type that inherits from BaseServerAchievement for achievements that the server needs to track</param>
         /// <param name="unlockableDef">For UnlockableDefs created in advance. Leaving null will generate an UnlockableDef instead.</param>
         /// <returns></returns>
@@ -259,9 +259,9 @@ namespace R2API {
         /// Add an unlockable tied to an achievement.
         /// For an example usage check <see href="https://github.com/ArcPh1r3/HenryTutorial/blob/master/HenryMod/Modules/Achievements/HenryMasteryAchievement.cs">rob repository</see>
         /// </summary>
-        /// <param name="unlockableType">Class that inherits from BaseAchievement and implements IModdedUnlockableDataProvider</typeparam>
-        /// <param name="serverTrackerType">Type that inherits from BaseServerAchievement for achievements that the server needs to track</param>
-        /// <param name="unlockableDef">For UnlockableDefs created in advance. Leaving null will generate an UnlockableDef instead.</param>
+        /// <param name="unlockableType">Class that inherits from BaseAchievement and implements <see cref="IModdedUnlockableDataProvider"/></param>
+        /// <param name="serverTrackerType">Type that inherits from <see cref="BaseServerAchievement"/> for achievements that the server needs to track</param>
+        /// <param name="unlockableDef">For <see cref="UnlockableDef"/> created in advance. Leaving null will generate an <see cref="UnlockableDef"/> instead.</param>
         /// <returns></returns>
         public static UnlockableDef AddUnlockable(Type unlockableType, Type serverTrackerType = null, UnlockableDef unlockableDef = null) {
             return AddUnlockableInternal(unlockableType, Assembly.GetCallingAssembly(), serverTrackerType, unlockableDef);

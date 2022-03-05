@@ -1,7 +1,5 @@
 using BepInEx;
 using BepInEx.Logging;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.ContentManagement;
@@ -14,8 +12,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using HarmonyLib;
-using UnityEngine;
 
 namespace R2API {
 
@@ -29,7 +25,7 @@ namespace R2API {
         public const string PluginName = "R2API";
         public const string PluginVersion = "0.0.1";
 
-        private const int GameBuild = 6537444;
+        private const int SteamGameBuildId = 8288832;
 
         internal new static ManualLogSource Logger { get; set; }
         public static bool DebugMode { get; private set; } = false;
@@ -42,52 +38,29 @@ namespace R2API {
 
         internal static R2API Instance { get; private set; }
 
-        private static Dictionary<Type, MethodInfo> typeCache = new();
-        private static UnityEngine.Object ResourceLoadDetour(string path, Type type) {
-            MethodInfo load;
-            if (!typeCache.TryGetValue(type, out load)) {
-                typeCache[type] = load = AccessTools.Method(typeof(LegacyResourcesAPI), nameof(LegacyResourcesAPI.Load)).MakeGenericMethod(type);
-            }
-
-            return (UnityEngine.Object)load.Invoke(null, new[] { path });
-        }
-
         public void Awake() {
             Instance = this;
 
-            var resources =
-                new NativeDetour(
-                    AccessTools.Method(typeof(Resources), nameof(Resources.Load),
-                        new[] { typeof(string), typeof(Type) }),
-                    AccessTools.Method(typeof(R2API), nameof(ResourceLoadDetour)));
-            resources.Apply();
-
             Logger = base.Logger;
+
             ModManager = new DetourModManager();
             AddHookLogging();
+
             CheckForIncompatibleAssemblies();
 
             if (Environment.GetEnvironmentVariable("R2API_DEBUG") == "true") {
                 EnableDebug();
             }
 
-            On.RoR2.UnitySystemConsoleRedirector.Redirect += orig => { };
-
-            //R2APIContentManager.Init();
-
             var pluginScanner = new PluginScanner();
-            var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
+            var submoduleHandler = new APISubmoduleHandler(SteamGameBuildId, Logger);
             LoadedSubmodules = submoduleHandler.LoadRequested(pluginScanner);
             pluginScanner.ScanPlugins();
 
             var networkCompatibilityHandler = new NetworkCompatibilityHandler();
             networkCompatibilityHandler.BuildModList();
 
-            RoR2Application.isModded = true;
-
             SteamworksClientManager.onLoaded += CheckIfUsedOnRightGameVersion;
-
-            VanillaFixes();
 
             R2APIContentPackProvider.Init();
         }
@@ -112,71 +85,14 @@ namespace R2API {
         }
 
         private static void CheckIfUsedOnRightGameVersion() {
+            // TODO: Check if it is set when user is using Epic games Online
             var buildId = SteamworksClientManager.instance.steamworksClient.BuildId;
 
-            if (GameBuild == buildId)
+            if (SteamGameBuildId == buildId)
                 return;
 
-            Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{buildId}\".");
+            Logger.LogWarning($"This version of R2API was built for build id \"{SteamGameBuildId}\", you are running \"{buildId}\".");
             Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
-        }
-
-        private static void VanillaFixes() {
-            // Temporary fix until the Eclipse Button in the main menu is correctly set by the game devs.
-            // It gets disabled when modded even though this option is currently singleplayer only.
-            On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
-                if (self.name == "GenericMenuButton (Eclipse)") {
-                    var button = self.GetComponent<RoR2.UI.MPButton>();
-                    if (button) {
-                        button.defaultFallbackButton = true;
-                    }
-                }
-                else {
-                    orig(self);
-                }
-            };
-
-            // Temporary fix until the KVP Foreach properly check for null Value before calling Equals on them
-            IL.RoR2.SteamworksLobbyDataGenerator.RebuildLobbyData += il => {
-                var c = new ILCursor(il);
-
-                // ReSharper disable once InconsistentNaming
-                static void ILFailMessage(int i) {
-                    R2API.Logger.LogError(
-                        $"Failed finding IL Instructions. Aborting RebuildLobbyData IL Hook ({i})");
-                }
-
-                if (c.TryGotoNext(i => i.MatchLdstr("v"))) {
-                    if (c.TryGotoPrev(i => i.MatchLdloca(out _),
-                        i => i.MatchCallOrCallvirt(out _))) {
-                        var labelBeginningForEach = c.MarkLabel();
-
-                        if (c.TryGotoPrev(i => i.MatchCallOrCallvirt<string>("Equals"))) {
-                            var kvpLoc = 0;
-                            if (c.TryGotoPrev(
-                                i => i.MatchLdloc(out _),
-                                i => i.MatchLdloca(out kvpLoc),
-                                i => i.MatchCallOrCallvirt(out _))) {
-                                c.Emit(OpCodes.Ldloc, kvpLoc);
-                                c.EmitDelegate<Func<KeyValuePair<string, string>, bool>>(kvp => kvp.Value == null);
-                                c.Emit(OpCodes.Brtrue, labelBeginningForEach);
-                            }
-                            else {
-                                ILFailMessage(4);
-                            }
-                        }
-                        else {
-                            ILFailMessage(3);
-                        }
-                    }
-                    else {
-                        ILFailMessage(2);
-                    }
-                }
-                else {
-                    ILFailMessage(1);
-                }
-            };
         }
 
         public void Start() {
