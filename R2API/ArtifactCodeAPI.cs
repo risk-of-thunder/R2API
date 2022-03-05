@@ -1,4 +1,5 @@
-﻿using R2API.Utils;
+﻿using R2API.ScriptableObjects;
+using R2API.Utils;
 using RoR2;
 using System;
 using System.Collections.Generic;

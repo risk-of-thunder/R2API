@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 
-namespace R2API {
+namespace R2API.ScriptableObjects {
 #pragma warning disable CS0618 // Type or member is obsolete
 #pragma warning disable CS1587 // XML comment is not placed on a valid language element
 
