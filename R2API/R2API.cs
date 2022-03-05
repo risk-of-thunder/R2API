@@ -44,15 +44,15 @@ namespace R2API {
             Instance = this;
 
             Logger = base.Logger;
+
             ModManager = new DetourModManager();
             AddHookLogging();
+
             CheckForIncompatibleAssemblies();
 
             if (Environment.GetEnvironmentVariable("R2API_DEBUG") == "true") {
                 EnableDebug();
             }
-
-            On.RoR2.UnitySystemConsoleRedirector.Redirect += orig => { };
 
             var pluginScanner = new PluginScanner();
             var submoduleHandler = new APISubmoduleHandler(GameBuild, Logger);
@@ -62,11 +62,7 @@ namespace R2API {
             var networkCompatibilityHandler = new NetworkCompatibilityHandler();
             networkCompatibilityHandler.BuildModList();
 
-            RoR2Application.isModded = true;
-
             SteamworksClientManager.onLoaded += CheckIfUsedOnRightGameVersion;
-
-            VanillaFixes();
 
             R2APIContentPackProvider.Init();
         }
@@ -98,64 +94,6 @@ namespace R2API {
 
             Logger.LogWarning($"This version of R2API was built for build id \"{GameBuild}\", you are running \"{buildId}\".");
             Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
-        }
-
-        private static void VanillaFixes() {
-            // Temporary fix until the Eclipse Button in the main menu is correctly set by the game devs.
-            // It gets disabled when modded even though this option is currently singleplayer only.
-            On.RoR2.DisableIfGameModded.OnEnable += (orig, self) => {
-                if (self.name == "GenericMenuButton (Eclipse)") {
-                    var button = self.GetComponent<RoR2.UI.MPButton>();
-                    if (button) {
-                        button.defaultFallbackButton = true;
-                    }
-                }
-                else {
-                    orig(self);
-                }
-            };
-
-            // Temporary fix until the KVP Foreach properly check for null Value before calling Equals on them
-            IL.RoR2.SteamworksLobbyDataGenerator.RebuildLobbyData += il => {
-                var c = new ILCursor(il);
-
-                // ReSharper disable once InconsistentNaming
-                static void ILFailMessage(int i) {
-                    R2API.Logger.LogError(
-                        $"Failed finding IL Instructions. Aborting RebuildLobbyData IL Hook ({i})");
-                }
-
-                if (c.TryGotoNext(i => i.MatchLdstr("v"))) {
-                    if (c.TryGotoPrev(i => i.MatchLdloca(out _),
-                        i => i.MatchCallOrCallvirt(out _))) {
-                        var labelBeginningForEach = c.MarkLabel();
-
-                        if (c.TryGotoPrev(i => i.MatchCallOrCallvirt<string>("Equals"))) {
-                            var kvpLoc = 0;
-                            if (c.TryGotoPrev(
-                                i => i.MatchLdloc(out _),
-                                i => i.MatchLdloca(out kvpLoc),
-                                i => i.MatchCallOrCallvirt(out _))) {
-                                c.Emit(OpCodes.Ldloc, kvpLoc);
-                                c.EmitDelegate<Func<KeyValuePair<string, string>, bool>>(kvp => kvp.Value == null);
-                                c.Emit(OpCodes.Brtrue, labelBeginningForEach);
-                            }
-                            else {
-                                ILFailMessage(4);
-                            }
-                        }
-                        else {
-                            ILFailMessage(3);
-                        }
-                    }
-                    else {
-                        ILFailMessage(2);
-                    }
-                }
-                else {
-                    ILFailMessage(1);
-                }
-            };
         }
 
         public void Start() {
