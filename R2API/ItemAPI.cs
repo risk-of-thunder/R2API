@@ -120,7 +120,7 @@ namespace R2API {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
-            if (CatalogBlockers.GetAvailability<EquipmentDef>()) {
+            if (!CatalogBlockers.GetAvailability<EquipmentDef>()) {
                 R2API.Logger.LogError($"Too late ! Tried to add equipment item: {item.EquipmentDef.nameToken} after the EquipmentCatalog has initialized!");
             }
 

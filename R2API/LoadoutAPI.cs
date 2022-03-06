@@ -45,7 +45,7 @@ namespace R2API {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
-            if (CatalogBlockers.GetAvailability<EntityState>()) {
+            if (!CatalogBlockers.GetAvailability<EntityState>()) {
                 R2API.Logger.LogError($"Too late ! Tried to add skill type {t} after the EntityStateCatalog has initialized!");
                 return false;
             }
@@ -70,7 +70,7 @@ namespace R2API {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
-            if (CatalogBlockers.GetAvailability<EntityState>()) {
+            if (!CatalogBlockers.GetAvailability<EntityState>()) {
                 R2API.Logger.LogError($"Too late ! Tried to add skill type {typeof(T)} after the EntityStateCatalog has initialized!");
                 return new SerializableEntityStateType();
             }
@@ -89,7 +89,7 @@ namespace R2API {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
-            if (CatalogBlockers.GetAvailability<SkillDef>()) {
+            if (!CatalogBlockers.GetAvailability<SkillDef>()) {
                 R2API.Logger.LogError($"Too late ! Tried to add skillDef {s.skillName} after the SkillCatalog has initialized!");
                 return false;
             }
@@ -112,7 +112,7 @@ namespace R2API {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
             }
-            if (CatalogBlockers.GetAvailability<SkillFamily>()) {
+            if (!CatalogBlockers.GetAvailability<SkillFamily>()) {
                 R2API.Logger.LogError($"Too late ! Tried to add skillFamily after the SkillCatalog has initialized!");
             }
             if (!sf) {
