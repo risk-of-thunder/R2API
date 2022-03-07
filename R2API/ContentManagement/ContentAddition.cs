@@ -222,7 +222,7 @@ namespace R2API {
             if (CatalogBlockers.GetAvailability<ItemDef>()) {
                 R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {itemDef} via {nameof(ContentAddition)}.{nameof(AddItemDef)}()" +
                     $"The assembly should ideally add them via {nameof(ItemAPI)} so that they can use ItemAPI's IDRS systems, adding anyways.");
-                ItemAPI.Add(new CustomItem(itemDef, Array.Empty<ItemDisplayRule>()));
+                ItemAPI.AddInternal(new CustomItem(itemDef, Array.Empty<ItemDisplayRule>()), asm);
                 return true;
             }
             RejectContent(itemDef, asm, "ItemDef", "but the ItemCatalog has already initialized!");
@@ -289,7 +289,7 @@ namespace R2API {
             if (CatalogBlockers.GetAvailability<EquipmentDef>()) {
                 R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {equipmentDef} via {nameof(ContentAddition)}.{nameof(AddEquipmentDef)}()" +
                     $"The assembly should ideally add them via {nameof(ItemAPI)} so that they can use ItemAPI's IDRS systems, adding anyways.");
-                ItemAPI.Add(new CustomEquipment(equipmentDef, Array.Empty<ItemDisplayRule>()));
+                ItemAPI.AddInternal(new CustomEquipment(equipmentDef, Array.Empty<ItemDisplayRule>()), asm);
                 return true;
             }
             RejectContent(equipmentDef, asm, "EquipmentDef", "but the EquipmnetCatalog has already initialized!");
@@ -329,7 +329,7 @@ namespace R2API {
             if (CatalogBlockers.GetAvailability<EliteDef>()) {
                 R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {eliteDef} via {nameof(ContentAddition)}.{nameof(AddEliteDef)}()" +
                     $"The assembly should ideally add them via {nameof(EliteAPI)} so that they can use EliteAPI's elite tier systems, adding the elite anyways as Tier1 elite.");
-                EliteAPI.Add(new CustomElite(eliteDef, new List<CombatDirector.EliteTierDef> { EliteAPI.VanillaEliteTiers[1], EliteAPI.VanillaEliteTiers[2] }));
+                EliteAPI.AddInternal(new CustomElite(eliteDef, new List<CombatDirector.EliteTierDef> { EliteAPI.VanillaEliteTiers[1], EliteAPI.VanillaEliteTiers[2] }), asm);
                 return true;
             }
             RejectContent(eliteDef, asm, "EliteDef", "but the EliteCatalog has already initialized!");

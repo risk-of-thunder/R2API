@@ -1,3 +1,4 @@
+using R2API.ScriptableObjects;
 using R2API.Utils;
 using RoR2;
 using System;
@@ -91,6 +92,18 @@ namespace R2API {
             }
             difficultyDefinitions[pendingIndex] = difficulty;
             return pendingIndex;
+        }
+
+        /// <summary>
+        /// Add a DifficultyDef to the list of available difficulties using a SerializableDifficultyDef
+        /// This must be called before the DifficultyCatalog inits, so before plugin.Start()
+        /// You can get the DifficultyIndex from the SerializableDifficultyDef's DifficultyIndex property
+        /// If this is called after the DifficultyCatalog inits, then the DifficultyIndex will return -1/DifficultyIndex.Invalid and ignore the difficulty
+        /// </summary>
+        /// <param name="serializableDifficultyDef">The SerializableDifficultyDef from which to create the DifficultyDef</param>
+        public static void AddDifficulty(SerializableDifficultyDef serializableDifficultyDef) {
+            serializableDifficultyDef.CreateDifficultyDef();
+            serializableDifficultyDef.DifficultyIndex = AddDifficulty(serializableDifficultyDef.DifficultyDef, serializableDifficultyDef.preferPositiveIndex);
         }
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]

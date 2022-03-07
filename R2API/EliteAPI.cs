@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -115,7 +116,12 @@ namespace R2API {
         /// </summary>
         /// <param name="elite">The elite to add.</param>
         /// <returns>true if added, false otherwise</returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static bool Add(CustomElite? elite) {
+            return AddInternal(elite, Assembly.GetCallingAssembly());
+        }
+
+        internal static bool AddInternal(CustomElite elite, Assembly addingAssembly) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
             }
@@ -130,7 +136,7 @@ namespace R2API {
 
             }
 
-            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), elite.EliteDef);
+            R2APIContentManager.HandleContentAddition(addingAssembly, elite.EliteDef);
             EliteDefinitions.Add(elite);
             return true;
         }
