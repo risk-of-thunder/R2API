@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -115,6 +116,7 @@ namespace R2API {
         /// </summary>
         /// <param name="elite">The elite to add.</param>
         /// <returns>true if added, false otherwise</returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static bool Add(CustomElite? elite) {
             return AddInternal(elite, Assembly.GetCallingAssembly());
         }

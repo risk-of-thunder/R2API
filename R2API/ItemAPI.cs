@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -63,6 +64,7 @@ namespace R2API {
         /// </summary>
         /// <param name="item">The item to add.</param>
         /// <returns>true if added, false otherwise</returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static bool Add(CustomItem? item) {
             return AddInternal(item, Assembly.GetCallingAssembly());
         }
@@ -121,6 +123,7 @@ namespace R2API {
         /// </summary>
         /// <param name="item">The equipment item to add.</param>
         /// <returns>true if added, false otherwise</returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static bool Add(CustomEquipment? item) {
             return AddInternal(item, Assembly.GetCallingAssembly());
         }
