@@ -64,6 +64,11 @@ namespace R2API {
         /// <param name="item">The item to add.</param>
         /// <returns>true if added, false otherwise</returns>
         public static bool Add(CustomItem? item) {
+            return AddInternal(item, Assembly.GetCallingAssembly());
+        }
+
+        internal static bool AddInternal(CustomItem item, Assembly addingAssembly) {
+
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
@@ -100,11 +105,12 @@ namespace R2API {
                 R2API.Logger.LogError($"Custom item '{item.ItemDef.name}' is not XMLsafe. Item not added.");
             }
             if (xmlSafe) {
-                R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), item.ItemDef);
+                R2APIContentManager.HandleContentAddition(addingAssembly, item.ItemDef);
                 return true;
             }
 
             return false;
+
         }
 
         /// <summary>
@@ -116,6 +122,10 @@ namespace R2API {
         /// <param name="item">The equipment item to add.</param>
         /// <returns>true if added, false otherwise</returns>
         public static bool Add(CustomEquipment? item) {
+            return AddInternal(item, Assembly.GetCallingAssembly());
+        }
+
+        internal static bool AddInternal(CustomEquipment item, Assembly addingAssembly) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
@@ -152,7 +162,7 @@ namespace R2API {
                 R2API.Logger.LogError($"Custom equipment '{item.EquipmentDef.name}' is not XMLsafe. Item not added.");
             }
             if (xmlSafe) {
-                R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), item.EquipmentDef);
+                R2APIContentManager.HandleContentAddition(addingAssembly, item.EquipmentDef);
                 return true;
             }
 

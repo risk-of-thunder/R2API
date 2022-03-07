@@ -116,6 +116,10 @@ namespace R2API {
         /// <param name="elite">The elite to add.</param>
         /// <returns>true if added, false otherwise</returns>
         public static bool Add(CustomElite? elite) {
+            return AddInternal(elite, Assembly.GetCallingAssembly());
+        }
+
+        internal static bool AddInternal(CustomElite elite, Assembly addingAssembly) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
             }
@@ -130,7 +134,7 @@ namespace R2API {
 
             }
 
-            R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), elite.EliteDef);
+            R2APIContentManager.HandleContentAddition(addingAssembly, elite.EliteDef);
             EliteDefinitions.Add(elite);
             return true;
         }
