@@ -2,6 +2,7 @@ using R2API.Utils;
 using RoR2;
 using System;
 
+// Changing namespace to R2API.Director would be breaking
 namespace R2API {
 
     //[R2APISubmodule]

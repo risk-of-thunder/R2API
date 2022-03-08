@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+// Changing namespace to R2API.Director would be breaking
 namespace R2API {
 
     /// <summary>
