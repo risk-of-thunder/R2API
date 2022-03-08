@@ -12,15 +12,15 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            On.RoR2.ClassicStageInfo.Awake += OnStageInfoAwake;
+            On.RoR2.ClassicStageInfo.Awake += ApplyChangesOnClassicStageInfoAwake;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            On.RoR2.ClassicStageInfo.Awake -= OnStageInfoAwake;
+            On.RoR2.ClassicStageInfo.Awake -= ApplyChangesOnClassicStageInfoAwake;
         }
 
-        private static void OnStageInfoAwake(On.RoR2.ClassicStageInfo.orig_Awake orig, ClassicStageInfo self) {
+        private static void ApplyChangesOnClassicStageInfoAwake(On.RoR2.ClassicStageInfo.orig_Awake orig, ClassicStageInfo self) {
             self.ApplyChanges();
             orig(self);
         }
@@ -38,10 +38,13 @@ namespace R2API {
                 stage = Stage.Custom,
                 CustomStageName = "",
             };
+
             var info = stage.GetComponent<SceneInfo>();
             if (!info) return stageInfo;
+
             var scene = info.sceneDef;
             if (!scene) return stageInfo;
+
             switch (scene.baseSceneName) {
                 case "golemplains":
                     stageInfo.stage = Stage.TitanicPlains;
@@ -108,6 +111,7 @@ namespace R2API {
                     stageInfo.CustomStageName = scene.baseSceneName;
                     break;
             }
+
             return stageInfo;
         }
 
@@ -118,60 +122,67 @@ namespace R2API {
         }
 
         private static void ApplyMonsterChanges(ClassicStageInfo self, StageInfo stage) {
-            var monsters = self.monsterCategories;
-            var monsterCards = new List<DirectorCardHolder>();
-            foreach (var cat in monsters.categories) {
-                MonsterCategory monstCat = GetMonsterCategory(cat.name);
-                InteractableCategory interCat = GetInteractableCategory(cat.name);
-                foreach (var t in cat.cards) {
-                    monsterCards.Add(new DirectorCardHolder {
-                        InteractableCategory = interCat,
-                        MonsterCategory = monstCat,
-                        Card = t
+            var monsterCategoriesSelection = self.monsterCategories;
+            var monsterDirectorCardHolders = new List<DirectorCardHolder>();
+
+            foreach (var cardCategorySelection in monsterCategoriesSelection.categories) {
+                var monsterCategory = GetMonsterCategory(cardCategorySelection.name);
+                var interactableCategory = GetInteractableCategory(cardCategorySelection.name);
+                foreach (var card in cardCategorySelection.cards) {
+                    monsterDirectorCardHolders.Add(new DirectorCardHolder {
+                        InteractableCategory = interactableCategory,
+                        MonsterCategory = monsterCategory,
+                        Card = card
                     });
                 }
             }
-            MonsterActions?.Invoke(monsterCards, stage);
-            var monsterBasic = new List<DirectorCard>();
-            var monsterSub = new List<DirectorCard>();
-            var monsterChamp = new List<DirectorCard>();
-            foreach (var hold in monsterCards) {
-                switch (hold.MonsterCategory) {
+
+            MonsterActions?.Invoke(monsterDirectorCardHolders, stage);
+
+            var basicMonsterCards = new List<DirectorCard>();
+            var miniBossCards = new List<DirectorCard>();
+            var championMonsterCards = new List<DirectorCard>();
+
+            foreach (var cardHolder in monsterDirectorCardHolders) {
+                switch (cardHolder.MonsterCategory) {
                     case MonsterCategory.BasicMonsters:
-                        monsterBasic.Add(hold.Card);
+                        basicMonsterCards.Add(cardHolder.Card);
                         break;
 
                     case MonsterCategory.Champions:
-                        monsterChamp.Add(hold.Card);
+                        championMonsterCards.Add(cardHolder.Card);
                         break;
 
                     case MonsterCategory.Minibosses:
-                        monsterSub.Add(hold.Card);
+                        miniBossCards.Add(cardHolder.Card);
                         break;
                 }
             }
-            for (int i = 0; i < monsters.categories.Length; i++) {
-                DirectorCardCategorySelection.Category cat = monsters.categories[i];
+
+            for (int i = 0; i < monsterCategoriesSelection.categories.Length; i++) {
+                DirectorCardCategorySelection.Category cat = monsterCategoriesSelection.categories[i];
                 switch (cat.name) {
                     case "Champions":
-                        cat.cards = monsterChamp.ToArray();
+                        cat.cards = championMonsterCards.ToArray();
                         break;
 
                     case "Minibosses":
-                        cat.cards = monsterSub.ToArray();
+                        cat.cards = miniBossCards.ToArray();
                         break;
 
                     case "Basic Monsters":
-                        cat.cards = monsterBasic.ToArray();
+                        cat.cards = basicMonsterCards.ToArray();
                         break;
                 }
-                monsters.categories[i] = cat;
+
+                monsterCategoriesSelection.categories[i] = cat;
             }
         }
 
         private static void ApplyInteractableChanges(ClassicStageInfo self, StageInfo stage) {
             var interactables = self.interactableCategories;
             var interactableCards = new List<DirectorCardHolder>();
+
             foreach (var cat in interactables.categories) {
                 MonsterCategory monstCat = GetMonsterCategory(cat.name);
                 InteractableCategory interCat = GetInteractableCategory(cat.name);
@@ -183,7 +194,9 @@ namespace R2API {
                     });
                 }
             }
+
             InteractableActions?.Invoke(interactableCards, stage);
+
             var interChests = new List<DirectorCard>();
             var interBarrels = new List<DirectorCard>();
             var interShrines = new List<DirectorCard>();
@@ -191,6 +204,7 @@ namespace R2API {
             var interMisc = new List<DirectorCard>();
             var interRare = new List<DirectorCard>();
             var interDupe = new List<DirectorCard>();
+
             foreach (var hold in interactableCards) {
                 switch (hold.InteractableCategory) {
                     case InteractableCategory.None:
@@ -226,6 +240,7 @@ namespace R2API {
                         break;
                 }
             }
+
             for (int i = 0; i < interactables.categories.Length; i++) {
                 DirectorCardCategorySelection.Category cat = interactables.categories[i];
                 switch (cat.name) {
@@ -257,14 +272,18 @@ namespace R2API {
                         cat.cards = interDupe.ToArray();
                         break;
                 }
+
                 interactables.categories[i] = cat;
             }
         }
 
         private static void ApplyFamilyChanges(ClassicStageInfo self, StageInfo stage) {
             var familyHolds = self.possibleMonsterFamilies.Select(GetMonsterFamilyHolder).ToList();
+
             FamilyActions?.Invoke(familyHolds, stage);
+
             self.possibleMonsterFamilies = new ClassicStageInfo.MonsterFamily[familyHolds.Count];
+
             for (int i = 0; i < familyHolds.Count; i++) {
                 self.possibleMonsterFamilies[i] = GetMonsterFamily(familyHolds[i]);
             }
@@ -276,42 +295,54 @@ namespace R2API {
                 SceneDirectorMonsterCredits = self.sceneDirectorMonsterCredits,
                 BonusCreditObjects = new Dictionary<GameObject, int>()
             };
+
             foreach (var bonusObj in self.bonusInteractibleCreditObjects) {
                 set.BonusCreditObjects[bonusObj.objectThatGrantsPointsIfEnabled] = bonusObj.points;
             }
+
             set.InteractableCategoryWeights = new Dictionary<InteractableCategory, float>();
             var interactableCategories = self.interactableCategories;
+
             foreach (var cat in interactableCategories.categories) {
                 set.InteractableCategoryWeights[GetInteractableCategory(cat.name)] = cat.selectionWeight;
             }
+
             set.MonsterCategoryWeights = new Dictionary<MonsterCategory, float>();
             var monsterCategories = self.monsterCategories;
+
             foreach (var cat in monsterCategories.categories) {
                 set.MonsterCategoryWeights[GetMonsterCategory(cat.name)] = cat.selectionWeight;
             }
+
             return set;
         }
 
         private static void SetStageSettings(ClassicStageInfo self, StageSettings set) {
             self.sceneDirectorInteractibleCredits = set.SceneDirectorInteractableCredits;
             self.sceneDirectorMonsterCredits = set.SceneDirectorMonsterCredits;
+
             var keys = set.BonusCreditObjects.Keys.ToArray();
             var bonuses = new ClassicStageInfo.BonusInteractibleCreditObject[keys.Length];
+
             for (int i = 0; i < keys.Length; i++) {
                 bonuses[i] = new ClassicStageInfo.BonusInteractibleCreditObject {
                     objectThatGrantsPointsIfEnabled = keys[i],
                     points = set.BonusCreditObjects[keys[i]]
                 };
             }
+
             self.bonusInteractibleCreditObjects = bonuses;
             var interactableCategories = self.interactableCategories;
+
             for (int i = 0; i < interactableCategories.categories.Length; i++) {
                 var cat = interactableCategories.categories[i];
                 InteractableCategory intCat = GetInteractableCategory(cat.name);
                 cat.selectionWeight = set.InteractableCategoryWeights[intCat];
                 interactableCategories.categories[i] = cat;
             }
+
             var monsterCategories = self.monsterCategories;
+
             for (int i = 0; i < monsterCategories.categories.Length; i++) {
                 var cat = monsterCategories.categories[i];
                 MonsterCategory monCat = GetMonsterCategory(cat.name);
@@ -349,6 +380,7 @@ namespace R2API {
                 FamilySelectionWeight = family.selectionWeight,
                 SelectionChatString = family.familySelectionChatString
             };
+
             var cards = family.monsterFamilyCategories.categories;
             foreach (var cat in cards) {
                 switch (cat.name) {
@@ -368,33 +400,38 @@ namespace R2API {
                         break;
                 }
             }
+
             return hold;
         }
 
         private static ClassicStageInfo.MonsterFamily GetMonsterFamily(MonsterFamilyHolder holder) {
-            var catSel = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
-            catSel.categories = new DirectorCardCategorySelection.Category[3];
-            catSel.categories[0] = new DirectorCardCategorySelection.Category {
+            var cardCategorySelection = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+
+            cardCategorySelection.categories = new DirectorCardCategorySelection.Category[3];
+            cardCategorySelection.categories[0] = new DirectorCardCategorySelection.Category {
                 name = "Champions",
                 selectionWeight = holder.FamilyChampionWeight,
                 cards = (holder.FamilyChampions != null ? holder.FamilyChampions.ToArray() : Array.Empty<DirectorCard>())
             };
-            catSel.categories[1] = new DirectorCardCategorySelection.Category {
+
+            cardCategorySelection.categories[1] = new DirectorCardCategorySelection.Category {
                 name = "Minibosses",
                 selectionWeight = holder.FamilyMinibossWeight,
                 cards = (holder.FamilyMinibosses != null ? holder.FamilyMinibosses.ToArray() : Array.Empty<DirectorCard>())
             };
-            catSel.categories[2] = new DirectorCardCategorySelection.Category {
+
+            cardCategorySelection.categories[2] = new DirectorCardCategorySelection.Category {
                 name = "Basic Monsters",
                 selectionWeight = holder.FamilyBasicMonsterWeight,
                 cards = holder.FamilyBasicMonsters != null ? holder.FamilyBasicMonsters.ToArray() : Array.Empty<DirectorCard>()
             };
+
             return new ClassicStageInfo.MonsterFamily {
                 familySelectionChatString = holder.SelectionChatString,
                 maximumStageCompletion = holder.MaxStageCompletion,
                 minimumStageCompletion = holder.MinStageCompletion,
                 selectionWeight = holder.FamilySelectionWeight,
-                monsterFamilyCategories = catSel
+                monsterFamilyCategories = cardCategorySelection
             };
         }
     }

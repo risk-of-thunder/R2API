@@ -114,7 +114,7 @@ namespace R2API {
             }
 
             /// <summary>
-            /// Try applying changes for the current stage (hot swap) for monster and family changes,
+            /// Try applying changes for the current stage (hot swap) for monster and family changes
             /// </summary>
             public static void TryApplyChangesNow() {
                 if (!Loaded) {
@@ -134,6 +134,7 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
+
                 MonsterActions += (monsters, currentStage) => {
                     foreach (var holder in monsters) {
                         if (string.Equals(holder.Card.spawnCard.name, monsterName, StringComparison.CurrentCultureIgnoreCase)) {
@@ -152,13 +153,15 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
-                DirectorCardHolder card = new DirectorCardHolder {
+
+                var directorCardHolder = new DirectorCardHolder {
                     Card = monsterCard,
                     InteractableCategory = InteractableCategory.None,
                     MonsterCategory = category
                 };
+
                 MonsterActions += (monsters, currentStage) => {
-                    monsters.Add(card);
+                    monsters.Add(directorCardHolder);
                 };
             }
 
@@ -174,15 +177,17 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
-                DirectorCardHolder card = new DirectorCardHolder {
+
+                var directorCardHolder = new DirectorCardHolder {
                     Card = monsterCard,
                     InteractableCategory = InteractableCategory.None,
                     MonsterCategory = category
                 };
+
                 MonsterActions += (monsters, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            monsters.Add(card);
+                            monsters.Add(directorCardHolder);
                         }
                     }
                 };
@@ -197,13 +202,15 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
-                DirectorCardHolder card = new DirectorCardHolder {
+
+                var directorCardHolder = new DirectorCardHolder {
                     Card = interactableCard,
                     InteractableCategory = category,
                     MonsterCategory = MonsterCategory.None
                 };
+
                 InteractableActions += (interactables, currentStage) => {
-                    interactables.Add(card);
+                    interactables.Add(directorCardHolder);
                 };
             }
 
@@ -219,15 +226,17 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
-                DirectorCardHolder card = new DirectorCardHolder {
+
+                var directorCardHolder = new DirectorCardHolder {
                     Card = interactableCard,
                     InteractableCategory = category,
                     MonsterCategory = MonsterCategory.None
                 };
+
                 InteractableActions += (interactables, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            interactables.Add(card);
+                            interactables.Add(directorCardHolder);
                         }
                     }
                 };
@@ -241,6 +250,7 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
+
                 MonsterActions += (monsters, currentStage) => {
                     monsters.RemoveAll((card) => (card.Card.spawnCard.name.ToLower() == monsterName.ToLower()));
                 };
@@ -257,6 +267,7 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
+
                 MonsterActions += (monsters, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -274,6 +285,7 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
+
                 InteractableActions += (interactables, currentStage) => {
                     interactables.RemoveAll((card) => (card.Card.spawnCard.name.ToLower() == interactableName.ToLower()));
                 };
@@ -290,6 +302,7 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
+
                 InteractableActions += (interactables, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -310,6 +323,7 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
+
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -330,6 +344,7 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
+
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -350,6 +365,7 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
+
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -370,6 +386,7 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
+
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -390,6 +407,7 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
+
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
@@ -410,6 +428,7 @@ namespace R2API {
                 if (!Loaded) {
                     throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
                 }
+
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
