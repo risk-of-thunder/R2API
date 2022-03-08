@@ -35,8 +35,8 @@ namespace R2API.ContentManagement {
         private void LogContentsFromContentPack() {
             if (logged)
                 return;
-            logged = true;
 
+            logged = true;
             List<string> log = new List<string>();
             log.Add($"Content added from {contentPack.identifier}:");
             log.AddRange(contentPack.bodyPrefabs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
