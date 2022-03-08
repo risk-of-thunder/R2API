@@ -170,7 +170,7 @@ namespace R2API {
             SirensCall = 1 << 8,
 
             /// <summary>
-            /// External / Internal Name : 	Hidden Realm: Gilded Coast / goldshores
+            /// External / Internal Name : Hidden Realm: Gilded Coast / goldshores
             /// </summary>
             GildedCoast = 1 << 9,
 
@@ -272,7 +272,7 @@ namespace R2API {
             VoidLocus = 1 << 28,
 
             /// <summary>
-            /// External / Internal Name : 	The Planetarium / voidstage
+            /// External / Internal Name : The Planetarium / voidstage
             /// </summary>
             ThePlanetarium = 1 << 29,
         }
