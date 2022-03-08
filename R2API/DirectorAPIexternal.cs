@@ -126,27 +126,154 @@ namespace R2API {
             /// <summary>
             /// When this is set to custom, check the string in StageInfo
             /// </summary>
-            Custom = 1,
+            Custom = 1 << 0,
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-            TitanicPlains = 2,
-            DistantRoost = 4,
-            WetlandAspect = 8,
-            AbandonedAqueduct = 16,
-            RallypointDelta = 32,
-            ScorchedAcres = 64,
-            AbyssalDepths = 128,
-            SirensCall = 256,
-            GildedCoast = 512,
-            MomentFractured = 1024,
-            Bazaar = 2048,
-            VoidCell = 4096,
-            MomentWhole = 8192,
-            SkyMeadow = 16384,
-            ArtifactReliquary = 32768,
-            Commencement = 65536,
-            SunderedGrove = 131072
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+            /// <summary>
+            /// External / Internal Name : Titanic Plains / golemplains
+            /// </summary>
+            TitanicPlains = 1 << 1,
+
+            /// <summary>
+            /// External / Internal Name : Distant Roost / blackbeach
+            /// </summary>
+            DistantRoost = 1 << 2,
+
+            /// <summary>
+            /// External / Internal Name : Wetland Aspect / foggyswamp
+            /// </summary>
+            WetlandAspect = 1 << 3,
+
+            /// <summary>
+            /// External / Internal Name : Abandoned Aqueduct / goolake
+            /// </summary>
+            AbandonedAqueduct = 1 << 4,
+
+            /// <summary>
+            /// External / Internal Name : Rallypoint Delta / frozenwall
+            /// </summary>
+            RallypointDelta = 1 << 5,
+
+            /// <summary>
+            /// External / Internal Name : Scorched Acres / wispgraveyard
+            /// </summary>
+            ScorchedAcres = 1 << 6,
+
+            /// <summary>
+            /// External / Internal Name : Abyssal Depths / dampcavesimple
+            /// </summary>
+            AbyssalDepths = 1 << 7,
+
+            /// <summary>
+            /// External / Internal Name : Siren's Call / shipgraveyard
+            /// </summary>
+            SirensCall = 1 << 8,
+
+            /// <summary>
+            /// External / Internal Name : 	Hidden Realm: Gilded Coast / goldshores
+            /// </summary>
+            GildedCoast = 1 << 9,
+
+            /// <summary>
+            /// External / Internal Name : Hidden Realm: A Moment, Fractured / mysteryspace
+            /// </summary>
+            MomentFractured = 1 << 10,
+
+            /// <summary>
+            /// External / Internal Name : Hidden Realm: Bazaar Between Time / bazaar
+            /// </summary>
+            Bazaar = 1 << 11,
+
+            /// <summary>
+            /// External / Internal Name : Void Fields / arena
+            /// </summary>
+            VoidCell = 1 << 12,
+
+            /// <summary>
+            /// External / Internal Name : Hidden Realm: A Moment, Whole / limbo
+            /// </summary>
+            MomentWhole = 1 << 13,
+
+            /// <summary>
+            /// External / Internal Name : Sky Meadow / skymeadow
+            /// </summary>
+            SkyMeadow = 1 << 14,
+
+            /// <summary>
+            /// External / Internal Name : Hidden Realm: Bulwark's Ambry / artifactworld
+            /// </summary>
+            ArtifactReliquary = 1 << 15,
+
+            /// <summary>
+            /// External / Internal Name : Commencement / moon2
+            /// </summary>
+            Commencement = 1 << 16,
+
+            /// <summary>
+            /// External / Internal Name : Sundered Grove / rootjungle
+            /// </summary>
+            SunderedGrove = 1 << 17,
+
+            // New entries for DLC1
+
+            /// <summary>
+            /// External / Internal Name : Aphelian Sanctuary / ancientloft
+            /// </summary>
+            AphelianSanctuary = 1 << 18,
+
+            /// <summary>
+            /// External / Internal Name : Aphelian Sanctuary - The Simulacrum / itancientloft
+            /// </summary>
+            AphelianSanctuarySimulacrum = 1 << 19,
+
+            /// <summary>
+            /// External / Internal Name : Abyssal Depths - The Simulacrum / itdampcave
+            /// </summary>
+            AbyssalDepthsSimulacrum = 1 << 20,
+
+            /// <summary>
+            /// External / Internal Name : Rallypoint Delta - The Simulacrum / itfrozenwall
+            /// </summary>
+            RallypointDeltaSimulacrum = 1 << 21,
+
+            /// <summary>
+            /// External / Internal Name : Titanic Plains - The Simulacrum / itgolemplains
+            /// </summary>
+            TitanicPlainsSimulacrum = 1 << 22,
+
+            /// <summary>
+            /// External / Internal Name : Abandoned Aqueduct - The Simulacrum / itgoolake
+            /// </summary>
+            AbandonedAqueductSimulacrum = 1 << 23,
+
+            /// <summary>
+            /// External / Internal Name : Commencement - The Simulacrum / itmoon
+            /// </summary>
+            CommencementSimulacrum = 1 << 24,
+
+            /// <summary>
+            /// External / Internal Name : Sky Meadow - The Simulacrum / itskymeadow
+            /// </summary>
+            SkyMeadowSimulacrum = 1 << 25,
+
+            /// <summary>
+            /// External / Internal Name : Siphoned Forest / snowyforest
+            /// </summary>
+            SiphonedForest = 1 << 26,
+
+            /// <summary>
+            /// External / Internal Name : Sulfur Pools / sulfurpools
+            /// </summary>
+            SulfurPools = 1 << 27,
+
+            /// <summary>
+            /// External / Internal Name : Void Locus / voidraid
+            /// </summary>
+            VoidLocus = 1 << 28,
+
+            /// <summary>
+            /// External / Internal Name : 	The Planetarium / voidstage
+            /// </summary>
+            ThePlanetarium = 1 << 29,
         }
 
         /// <summary>
