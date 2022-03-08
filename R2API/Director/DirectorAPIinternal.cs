@@ -55,12 +55,12 @@ namespace R2API {
                     stageInfo.stage = Stage.DistantRoost;
                     break;
 
-                case "goolake":
-                    stageInfo.stage = Stage.AbandonedAqueduct;
-                    break;
-
                 case "foggyswamp":
                     stageInfo.stage = Stage.WetlandAspect;
+                    break;
+
+                case "goolake":
+                    stageInfo.stage = Stage.AbandonedAqueduct;
                     break;
 
                 case "frozenwall":
@@ -81,6 +81,14 @@ namespace R2API {
 
                 case "goldshores":
                     stageInfo.stage = Stage.GildedCoast;
+                    break;
+
+                case "mysteryspace":
+                    stageInfo.stage = Stage.MomentFractured;
+                    break;
+
+                case "bazaar":
+                    stageInfo.stage = Stage.Bazaar;
                     break;
 
                 case "arena":
@@ -105,6 +113,54 @@ namespace R2API {
 
                 case "rootjungle":
                     stageInfo.stage = Stage.SunderedGrove;
+                    break;
+
+                case "ancientloft":
+                    stageInfo.stage = Stage.AphelianSanctuary;
+                    break;
+
+                case "itancientloft":
+                    stageInfo.stage = Stage.AphelianSanctuarySimulacrum;
+                    break;
+
+                case "itdampcave":
+                    stageInfo.stage = Stage.AbyssalDepthsSimulacrum;
+                    break;
+
+                case "itfrozenwall":
+                    stageInfo.stage = Stage.RallypointDeltaSimulacrum;
+                    break;
+
+                case "itgolemplains":
+                    stageInfo.stage = Stage.TitanicPlainsSimulacrum;
+                    break;
+
+                case "itgoolake":
+                    stageInfo.stage = Stage.AbandonedAqueductSimulacrum;
+                    break;
+
+                case "itmoon":
+                    stageInfo.stage = Stage.CommencementSimulacrum;
+                    break;
+
+                case "itskymeadow":
+                    stageInfo.stage = Stage.SkyMeadowSimulacrum;
+                    break;
+
+                case "snowyforest":
+                    stageInfo.stage = Stage.SiphonedForest;
+                    break;
+
+                case "sulfurpools":
+                    stageInfo.stage = Stage.SulfurPools;
+                    break;
+
+                case "voidraid":
+                    stageInfo.stage = Stage.VoidLocus;
+                    break;
+
+                case "voidstage":
+                    stageInfo.stage = Stage.ThePlanetarium;
                     break;
 
                 default:
