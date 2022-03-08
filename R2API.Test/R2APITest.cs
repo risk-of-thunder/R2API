@@ -22,7 +22,7 @@ namespace R2API.Test {
             var assembly = typeof(R2APITest).Assembly;
             var path = assembly.Location;
 
-            R2APITest.Logger.LogError($"Discovering tests in {path}...");
+            R2APITest.Logger.LogInfo($"Discovering tests in {path}...");
             XElement assemblyElement = new XElement("assembly");
             try {
                 var messageSink = new MessageSink {
@@ -50,11 +50,11 @@ namespace R2API.Test {
                     messageSink.DiscoveryCompletionWaitHandle.WaitOne();
                     ITestCase[] testCases = messageSink.TestCases.ToArray();
                     lock (this) {
-                        R2APITest.Logger.LogError(
+                        R2APITest.Logger.LogInfo(
                             $"{testCases.Length} test cases were found in {path}:"
                         );
                         foreach (ITestCase testCase in testCases) {
-                            R2APITest.Logger.LogError($"- {testCase.DisplayName}");
+                            R2APITest.Logger.LogInfo($"- {testCase.DisplayName}");
                         }
 
                         Console.Error.Flush();
