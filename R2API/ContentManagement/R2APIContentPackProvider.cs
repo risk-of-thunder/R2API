@@ -14,14 +14,16 @@ namespace R2API.ContentManagement {
 
         private ContentPack contentPack;
 
+        private bool logged = false;
+
         public IEnumerator FinalizeAsync(FinalizeAsyncArgs args) {
+            LogContentsFromContentPack();
             args.ReportProgress(1f);
             yield break;
         }
 
         public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args) {
             ContentPack.Copy(contentPack, args.output);
-            LogContentsFromContentPack();
             args.ReportProgress(1f);
             yield break;
         }
@@ -31,6 +33,10 @@ namespace R2API.ContentManagement {
             yield break;
         }
         private void LogContentsFromContentPack() {
+            if (logged)
+                return;
+            logged = true;
+
             List<string> log = new List<string>();
             log.Add($"Content added from {contentPack.identifier}:");
             log.AddRange(contentPack.bodyPrefabs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
