@@ -1,5 +1,8 @@
-﻿using R2API.Utils;
+﻿using HG;
+using MonoMod.Cil;
+using R2API.Utils;
 using RoR2;
+using RoR2.ExpansionManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,43 +13,71 @@ namespace R2API {
 
     [R2APISubmodule]
     public static partial class DirectorAPI {
+        private static DirectorCardCategorySelection _dccsMixEnemyArtifact;
+
+        private static void ThrowIfNotLoaded() {
+            if (!Loaded) {
+                throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
+            }
+        }
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            On.RoR2.ClassicStageInfo.Awake += ApplyChangesOnClassicStageInfoAwake;
+            On.RoR2.ClassicStageInfo.Start += ApplyChangesOnStart;
+            IL.RoR2.ClassicStageInfo.HandleMixEnemyArtifact += SwapVanillaDccsWithOurs;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            On.RoR2.ClassicStageInfo.Awake -= ApplyChangesOnClassicStageInfoAwake;
+            On.RoR2.ClassicStageInfo.Start -= ApplyChangesOnStart;
+            IL.RoR2.ClassicStageInfo.HandleMixEnemyArtifact -= SwapVanillaDccsWithOurs;
         }
 
-        private static void ApplyChangesOnClassicStageInfoAwake(On.RoR2.ClassicStageInfo.orig_Awake orig, ClassicStageInfo self) {
-            self.ApplyChanges();
-            orig(self);
+        private static void ApplyChangesOnStart(On.RoR2.ClassicStageInfo.orig_Start orig, ClassicStageInfo classicStageInfo) {
+            classicStageInfo.ApplyChanges();
+            orig(classicStageInfo);
         }
 
-        internal static void ApplyChanges(this ClassicStageInfo self) {
-            var stageInfo = GetStageInfo(self);
-            ApplySettingsChanges(self, stageInfo);
-            ApplyMonsterChanges(self, stageInfo);
-            ApplyInteractableChanges(self, stageInfo);
-            ApplyFamilyChanges(self, stageInfo);
+        private static void SwapVanillaDccsWithOurs(ILContext il) {
+            var cursor = new ILCursor(il);
+
+            if (cursor.TryGotoNext(
+                i => i.MatchCallOrCallvirt<DirectorCardCategorySelection>(nameof(DirectorCardCategorySelection.CopyFrom))
+                )) {
+                cursor.EmitDelegate(SwapDccs);
+            }
+
+            static DirectorCardCategorySelection SwapDccs(DirectorCardCategorySelection vanillaDccs) {
+                return _dccsMixEnemyArtifact;
+            }
         }
 
-        private static StageInfo GetStageInfo(ClassicStageInfo stage) {
-            StageInfo stageInfo = new StageInfo {
+        internal static void ApplyChanges(this ClassicStageInfo classicStageInfo) {
+            var stageInfo = GetStageInfo(classicStageInfo);
+
+            ApplyMonsterChanges(classicStageInfo, stageInfo);
+            ApplyInteractableChanges(classicStageInfo, stageInfo);
+            ApplySettingsChanges(classicStageInfo, stageInfo);
+        }
+
+        private static StageInfo GetStageInfo(ClassicStageInfo classicStageInfo) {
+            var stageInfo = new StageInfo {
                 stage = Stage.Custom,
                 CustomStageName = "",
             };
 
-            var info = stage.GetComponent<SceneInfo>();
-            if (!info) return stageInfo;
+            var sceneInfo = classicStageInfo.GetComponent<SceneInfo>();
+            if (!sceneInfo) return stageInfo;
 
-            var scene = info.sceneDef;
-            if (!scene) return stageInfo;
+            var sceneDef = sceneInfo.sceneDef;
+            if (!sceneDef) return stageInfo;
+            stageInfo = SetStageEnumFromBaseSceneName(stageInfo, sceneDef);
 
-            switch (scene.baseSceneName) {
+            return stageInfo;
+        }
+
+        private static StageInfo SetStageEnumFromBaseSceneName(StageInfo stageInfo, SceneDef sceneDef) {
+            switch (sceneDef.baseSceneName) {
                 case "golemplains":
                     stageInfo.stage = Stage.TitanicPlains;
                     break;
@@ -165,331 +196,373 @@ namespace R2API {
 
                 default:
                     stageInfo.stage = Stage.Custom;
-                    stageInfo.CustomStageName = scene.baseSceneName;
+                    stageInfo.CustomStageName = sceneDef.baseSceneName;
                     break;
             }
 
             return stageInfo;
         }
 
-        private static void ApplySettingsChanges(ClassicStageInfo self, StageInfo stageInfo) {
-            StageSettings settings = GetStageSettings(self);
-            StageSettingsActions?.Invoke(settings, stageInfo);
-            SetStageSettings(self, settings);
+        private static void ApplySettingsChanges(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
+            var stageSettings = GetStageSettings(classicStageInfo);
+            StageSettingsActions?.Invoke(stageSettings, stageInfo);
+            SetStageSettings(classicStageInfo, stageSettings);
         }
 
-        private static void ApplyMonsterChanges(ClassicStageInfo self, StageInfo stage) {
-            var monsterCategoriesSelection = self.monsterCategories;
-            var monsterDirectorCardHolders = new List<DirectorCardHolder>();
+        public class OriginalClassicStageInfo {
+            public List<DccsPool.Category> monsterDccsPoolCategories;
+            public DirectorCardCategorySelection monsterCategories;
 
-            foreach (var cardCategorySelection in monsterCategoriesSelection.categories) {
-                var monsterCategory = GetMonsterCategory(cardCategorySelection.name);
-                var interactableCategory = GetInteractableCategory(cardCategorySelection.name);
-                foreach (var card in cardCategorySelection.cards) {
-                    monsterDirectorCardHolders.Add(new DirectorCardHolder {
-                        InteractableCategory = interactableCategory,
-                        MonsterCategory = monsterCategory,
-                        Card = card
-                    });
-                }
-            }
-
-            MonsterActions?.Invoke(monsterDirectorCardHolders, stage);
-
-            var basicMonsterCards = new List<DirectorCard>();
-            var miniBossCards = new List<DirectorCard>();
-            var championMonsterCards = new List<DirectorCard>();
-
-            foreach (var cardHolder in monsterDirectorCardHolders) {
-                switch (cardHolder.MonsterCategory) {
-                    case MonsterCategory.BasicMonsters:
-                        basicMonsterCards.Add(cardHolder.Card);
-                        break;
-
-                    case MonsterCategory.Champions:
-                        championMonsterCards.Add(cardHolder.Card);
-                        break;
-
-                    case MonsterCategory.Minibosses:
-                        miniBossCards.Add(cardHolder.Card);
-                        break;
-                }
-            }
-
-            for (int i = 0; i < monsterCategoriesSelection.categories.Length; i++) {
-                DirectorCardCategorySelection.Category cat = monsterCategoriesSelection.categories[i];
-                switch (cat.name) {
-                    case "Champions":
-                        cat.cards = championMonsterCards.ToArray();
-                        break;
-
-                    case "Minibosses":
-                        cat.cards = miniBossCards.ToArray();
-                        break;
-
-                    case "Basic Monsters":
-                        cat.cards = basicMonsterCards.ToArray();
-                        break;
-                }
-
-                monsterCategoriesSelection.categories[i] = cat;
-            }
+            public List<DccsPool.Category> interactableDccsPoolCategories;
+            public DirectorCardCategorySelection interactableCategories;
         }
 
-        private static void ApplyInteractableChanges(ClassicStageInfo self, StageInfo stage) {
-            var interactables = self.interactableCategories;
-            var interactableCards = new List<DirectorCardHolder>();
+        private static readonly Dictionary<string, OriginalClassicStageInfo> _originalClassicStageInfos = new();
+        private static void ApplyMonsterChanges(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
+            RestoreClassicStageInfoToOriginalState(classicStageInfo, stageInfo);
 
-            foreach (var cat in interactables.categories) {
-                MonsterCategory monstCat = GetMonsterCategory(cat.name);
-                InteractableCategory interCat = GetInteractableCategory(cat.name);
-                foreach (var t in cat.cards) {
-                    interactableCards.Add(new DirectorCardHolder {
-                        InteractableCategory = interCat,
-                        MonsterCategory = monstCat,
-                        Card = t
-                    });
-                }
+            List<DirectorCardHolder> oldDccs = null;
+            if (!classicStageInfo.monsterCategories) {
+                oldDccs = GetDirectorCardHoldersFromDCCS(classicStageInfo.monsterCategories);
             }
 
-            InteractableActions?.Invoke(interactableCards, stage);
+            InitCustomMixEnemyArtifactDccs();
+            var cardHoldersMixEnemyArtifact = GetDirectorCardHoldersFromDCCS(_dccsMixEnemyArtifact);
 
-            var interChests = new List<DirectorCard>();
-            var interBarrels = new List<DirectorCard>();
-            var interShrines = new List<DirectorCard>();
-            var interDrones = new List<DirectorCard>();
-            var interMisc = new List<DirectorCard>();
-            var interRare = new List<DirectorCard>();
-            var interDupe = new List<DirectorCard>();
+            MonsterActions?.Invoke(classicStageInfo.monsterDccsPool, oldDccs, cardHoldersMixEnemyArtifact, stageInfo);
 
-            foreach (var hold in interactableCards) {
-                switch (hold.InteractableCategory) {
-                    case InteractableCategory.None:
-                        R2API.Logger.LogWarning("InteractableCategory from DirectorCardHolder is None !");
-                        break;
-
-                    case InteractableCategory.Chests:
-                        interChests.Add(hold.Card);
-                        break;
-
-                    case InteractableCategory.Barrels:
-                        interBarrels.Add(hold.Card);
-                        break;
-
-                    case InteractableCategory.Drones:
-                        interDrones.Add(hold.Card);
-                        break;
-
-                    case InteractableCategory.Duplicator:
-                        interDupe.Add(hold.Card);
-                        break;
-
-                    case InteractableCategory.Misc:
-                        interMisc.Add(hold.Card);
-                        break;
-
-                    case InteractableCategory.Rare:
-                        interRare.Add(hold.Card);
-                        break;
-
-                    case InteractableCategory.Shrines:
-                        interShrines.Add(hold.Card);
-                        break;
-                }
+            if (oldDccs != null) {
+                ApplyNewCardHoldersToDCCS(classicStageInfo.monsterCategories, oldDccs);
             }
 
-            for (int i = 0; i < interactables.categories.Length; i++) {
-                DirectorCardCategorySelection.Category cat = interactables.categories[i];
-                switch (cat.name) {
-                    case "Chests":
-                        cat.cards = interChests.ToArray();
-                        break;
+            ApplyNewCardHoldersToDCCS(_dccsMixEnemyArtifact, cardHoldersMixEnemyArtifact);
+        }
 
-                    case "Barrels":
-                        cat.cards = interBarrels.ToArray();
-                        break;
-
-                    case "Shrines":
-                        cat.cards = interShrines.ToArray();
-                        break;
-
-                    case "Drones":
-                        cat.cards = interDrones.ToArray();
-                        break;
-
-                    case "Misc":
-                        cat.cards = interMisc.ToArray();
-                        break;
-
-                    case "Rare":
-                        cat.cards = interRare.ToArray();
-                        break;
-
-                    case "Duplicator":
-                        cat.cards = interDupe.ToArray();
-                        break;
+        // Somehow the changes persist across stages, so... copy the originals,
+        // and restore them each time before invoking the events
+        private static void RestoreClassicStageInfoToOriginalState(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
+            var key = stageInfo.stage == Stage.Custom ? stageInfo.CustomStageName : stageInfo.stage.ToString();
+            if (!_originalClassicStageInfos.TryGetValue(key, out var originalClassicStageInfo)) {
+                originalClassicStageInfo = new();
+                if (classicStageInfo.monsterDccsPool) {
+                    originalClassicStageInfo.monsterDccsPoolCategories = CopyDccsPoolCategories(classicStageInfo.monsterDccsPool.poolCategories);
+                }
+                if (classicStageInfo.monsterCategories) {
+                    originalClassicStageInfo.monsterCategories = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+                    originalClassicStageInfo.monsterCategories.CopyFrom(classicStageInfo.monsterCategories);
                 }
 
-                interactables.categories[i] = cat;
+                if (classicStageInfo.interactableDccsPool) {
+                    originalClassicStageInfo.interactableDccsPoolCategories = CopyDccsPoolCategories(classicStageInfo.interactableDccsPool.poolCategories);
+                }
+                if (classicStageInfo.interactableCategories) {
+                    originalClassicStageInfo.interactableCategories = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+                    originalClassicStageInfo.interactableCategories.CopyFrom(classicStageInfo.interactableCategories);
+                }
+
+                _originalClassicStageInfos[key] = originalClassicStageInfo;
+            }
+            else {
+                classicStageInfo.monsterDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.monsterDccsPoolCategories).ToArray();
+                classicStageInfo.monsterCategories.CopyFrom(originalClassicStageInfo.monsterCategories);
+
+                classicStageInfo.interactableDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.interactableDccsPoolCategories).ToArray();
+                classicStageInfo.interactableCategories.CopyFrom(originalClassicStageInfo.interactableCategories);
             }
         }
 
-        private static void ApplyFamilyChanges(ClassicStageInfo self, StageInfo stage) {
-            var familyHolds = self.possibleMonsterFamilies.Select(GetMonsterFamilyHolder).ToList();
+        private static List<DccsPool.Category> CopyDccsPoolCategories(IEnumerable<DccsPool.Category> dccsPoolCategories) {
+            var backup = new List<DccsPool.Category>();
+            foreach (var poolCategory in dccsPoolCategories) {
 
-            FamilyActions?.Invoke(familyHolds, stage);
+                var poolCategoryBackup = new DccsPool.Category();
 
-            self.possibleMonsterFamilies = new ClassicStageInfo.MonsterFamily[familyHolds.Count];
+                poolCategoryBackup.name = poolCategory.name;
 
-            for (int i = 0; i < familyHolds.Count; i++) {
-                self.possibleMonsterFamilies[i] = GetMonsterFamily(familyHolds[i]);
+                poolCategoryBackup.categoryWeight = poolCategory.categoryWeight;
+
+                poolCategoryBackup.alwaysIncluded = CopyPoolEntries(poolCategory.alwaysIncluded).ToArray();
+                poolCategoryBackup.includedIfConditionsMet = CopyConditionalPoolEntries(poolCategory.includedIfConditionsMet).ToArray();
+                poolCategoryBackup.includedIfNoConditionsMet = CopyPoolEntries(poolCategory.includedIfNoConditionsMet).ToArray();
+
+                backup.Add(poolCategoryBackup);
+            }
+
+            return backup;
+        }
+
+        private static List<DccsPool.ConditionalPoolEntry> CopyConditionalPoolEntries(IEnumerable<DccsPool.ConditionalPoolEntry> poolEntries) {
+            List<DccsPool.ConditionalPoolEntry> backup = new();
+
+            foreach (var poolEntry in poolEntries) {
+                var poolEntryBackup = new DccsPool.ConditionalPoolEntry();
+
+                poolEntryBackup.requiredExpansions = ArrayUtils.Clone<ExpansionDef>(poolEntry.requiredExpansions);
+
+                poolEntryBackup.weight = poolEntry.weight;
+
+                poolEntryBackup.dccs = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+                poolEntryBackup.dccs.CopyFrom(poolEntry.dccs);
+                poolEntryBackup.dccs.name = poolEntry.dccs.name;
+
+                backup.Add(poolEntryBackup);
+            }
+
+            return backup;
+        }
+
+        private static List<DccsPool.PoolEntry> CopyPoolEntries(IEnumerable<DccsPool.PoolEntry> poolEntries) {
+            List<DccsPool.PoolEntry> backup = new();
+
+            foreach (var poolEntry in poolEntries) {
+                var poolEntryBackup = new DccsPool.PoolEntry();
+
+                poolEntryBackup.weight = poolEntry.weight;
+
+                poolEntryBackup.dccs = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+                poolEntryBackup.dccs.CopyFrom(poolEntry.dccs);
+                poolEntryBackup.dccs.name = poolEntry.dccs.name;
+
+                backup.Add(poolEntryBackup);
+            }
+
+            return backup;
+        }
+
+        private static List<DirectorCardHolder> GetDirectorCardHoldersFromDCCS(DirectorCardCategorySelection dccs) {
+            var cardHolders = new List<DirectorCardHolder>();
+
+            if (dccs) {
+                foreach (var dccsCategory in dccs.categories) {
+                    if (dccsCategory.cards.Length > 0) {
+                        var isInteractable = false;
+                        isInteractable = IsInteractableDccsCategory(dccsCategory);
+
+                        foreach (var card in dccsCategory.cards) {
+                            var cardHolder = new DirectorCardHolder();
+                            cardHolder.Card = card;
+
+                            if (isInteractable) {
+                                var interactableCategory = Helpers.GetInteractableCategory(dccsCategory.name);
+                                cardHolder.InteractableCategory = interactableCategory;
+                                if (interactableCategory == InteractableCategory.Custom) {
+                                    cardHolder.CustomInteractableCategory = dccsCategory.name;
+                                }
+                            }
+                            else {
+                                var monsterCategory = Helpers.GetMonsterCategory(dccsCategory.name);
+                                cardHolder.MonsterCategory = monsterCategory;
+                                if (monsterCategory == MonsterCategory.Custom) {
+                                    cardHolder.CustomMonsterCategory = dccsCategory.name;
+                                }
+                            }
+
+                            cardHolders.Add(cardHolder);
+                        }
+                    }
+                }
+            }
+
+            return cardHolders;
+        }
+
+        private static bool IsInteractableDccsCategory(DirectorCardCategorySelection.Category dccsCategory) {
+            bool isInteractable = false;
+            foreach (var item in dccsCategory.cards) {
+                if (item.spawnCard) {
+                    if (item.spawnCard.GetType().IsSameOrSubclassOf<InteractableSpawnCard>()) {
+                        isInteractable = true;
+                        break;
+                    }
+                }
+            }
+
+            return isInteractable;
+        }
+
+        private static void ApplyNewCardHoldersToDCCS(DirectorCardCategorySelection dccs, List<DirectorCardHolder> directorCardHolders) {
+            dccs.Clear();
+            foreach (var dch in directorCardHolders) {
+                dccs.AddCard(dch);
             }
         }
 
-        private static StageSettings GetStageSettings(ClassicStageInfo self) {
-            var set = new StageSettings {
-                SceneDirectorInteractableCredits = self.sceneDirectorInteractibleCredits,
-                SceneDirectorMonsterCredits = self.sceneDirectorMonsterCredits,
+        private static void ApplyInteractableChanges(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
+            List<DirectorCardHolder> oldDccs = null;
+            if (!classicStageInfo.interactableDccsPool) {
+                oldDccs = GetDirectorCardHoldersFromDCCS(classicStageInfo.interactableCategories);
+            }
+
+            InteractableActions?.Invoke(classicStageInfo.interactableDccsPool, oldDccs, stageInfo);
+
+            if (oldDccs != null) {
+                ApplyNewCardHoldersToDCCS(classicStageInfo.interactableCategories, oldDccs);
+            }
+        }
+
+        private static StageSettings GetStageSettings(ClassicStageInfo classicStageInfo) {
+            var stageSettings = new StageSettings {
+                SceneDirectorInteractableCredits = classicStageInfo.sceneDirectorInteractibleCredits,
+                SceneDirectorMonsterCredits = classicStageInfo.sceneDirectorMonsterCredits,
                 BonusCreditObjects = new Dictionary<GameObject, int>()
             };
 
-            foreach (var bonusObj in self.bonusInteractibleCreditObjects) {
-                set.BonusCreditObjects[bonusObj.objectThatGrantsPointsIfEnabled] = bonusObj.points;
+            foreach (var bonusObj in classicStageInfo.bonusInteractibleCreditObjects) {
+                stageSettings.BonusCreditObjects[bonusObj.objectThatGrantsPointsIfEnabled] = bonusObj.points;
             }
 
-            set.InteractableCategoryWeights = new Dictionary<InteractableCategory, float>();
-            var interactableCategories = self.interactableCategories;
+            GetMonsterCategoryWeightsPerDccs(classicStageInfo, stageSettings);
 
-            foreach (var cat in interactableCategories.categories) {
-                set.InteractableCategoryWeights[GetInteractableCategory(cat.name)] = cat.selectionWeight;
-            }
+            GetInteractableCategoryWeightsPerDccs(classicStageInfo, stageSettings);
 
-            set.MonsterCategoryWeights = new Dictionary<MonsterCategory, float>();
-            var monsterCategories = self.monsterCategories;
-
-            foreach (var cat in monsterCategories.categories) {
-                set.MonsterCategoryWeights[GetMonsterCategory(cat.name)] = cat.selectionWeight;
-            }
-
-            return set;
+            return stageSettings;
         }
 
-        private static void SetStageSettings(ClassicStageInfo self, StageSettings set) {
-            self.sceneDirectorInteractibleCredits = set.SceneDirectorInteractableCredits;
-            self.sceneDirectorMonsterCredits = set.SceneDirectorMonsterCredits;
+        private static void InitCustomMixEnemyArtifactDccs() {
+            _dccsMixEnemyArtifact = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+            _dccsMixEnemyArtifact.name = "dccsR2APIMixEnemyArtifact";
+            _dccsMixEnemyArtifact.CopyFrom(RoR2Content.mixEnemyMonsterCards);
+        }
 
-            var keys = set.BonusCreditObjects.Keys.ToArray();
+        private static void GetMonsterCategoryWeightsPerDccs(ClassicStageInfo classicStageInfo, StageSettings stageSettings) {
+            stageSettings.MonsterCategoryWeightsPerDccs = new();
+
+            GetMonsterCategoryWeights(stageSettings, _dccsMixEnemyArtifact);
+
+            if (classicStageInfo.monsterDccsPool) {
+                foreach (var poolCategory in classicStageInfo.monsterDccsPool.poolCategories) {
+                    GetMonsterCategoryWeights(stageSettings, poolCategory.alwaysIncluded);
+                    GetMonsterCategoryWeights(stageSettings, poolCategory.includedIfConditionsMet);
+                    GetMonsterCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
+                }
+            }
+            else {
+                var oldDccs = classicStageInfo.monsterCategories;
+                GetMonsterCategoryWeights(stageSettings, oldDccs);
+            }
+        }
+
+        private static void GetMonsterCategoryWeights(StageSettings stageSettings, DirectorCardCategorySelection dccs) {
+            stageSettings.MonsterCategoryWeightsPerDccs[dccs] = new();
+
+            foreach (var category in dccs.categories) {
+                stageSettings.MonsterCategoryWeightsPerDccs[dccs][category.name] = category.selectionWeight;
+            }
+        }
+
+        private static void GetMonsterCategoryWeights(StageSettings stageSettings, DccsPool.PoolEntry[] poolCategories) {
+            foreach (var poolEntry in poolCategories) {
+                GetMonsterCategoryWeights(stageSettings, poolEntry.dccs);
+            }
+        }
+
+        private static void GetInteractableCategoryWeightsPerDccs(ClassicStageInfo classicStageInfo, StageSettings stageSettings) {
+            stageSettings.InteractableCategoryWeightsPerDccs = new();
+
+            if (classicStageInfo.interactableDccsPool) {
+                foreach (var poolCategory in classicStageInfo.interactableDccsPool.poolCategories) {
+                    GetInteractableCategoryWeights(stageSettings, poolCategory.alwaysIncluded);
+                    GetInteractableCategoryWeights(stageSettings, poolCategory.includedIfConditionsMet);
+                    GetInteractableCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
+                }
+            }
+            else {
+                var oldDccs = classicStageInfo.interactableCategories;
+                GetInteractableCategoryWeights(stageSettings, oldDccs);
+            }
+        }
+
+        private static void GetInteractableCategoryWeights(StageSettings stageSettings, DccsPool.PoolEntry[] poolCategories) {
+            foreach (var poolEntry in poolCategories) {
+                GetInteractableCategoryWeights(stageSettings, poolEntry.dccs);
+            }
+        }
+
+        private static void GetInteractableCategoryWeights(StageSettings stageSettings, DirectorCardCategorySelection dccs) {
+            stageSettings.InteractableCategoryWeightsPerDccs[dccs] = new();
+            foreach (var category in dccs.categories) {
+                stageSettings.InteractableCategoryWeightsPerDccs[dccs][category.name] = category.selectionWeight;
+            }
+        }
+
+        private static void SetStageSettings(ClassicStageInfo classicStageInfo, StageSettings stageSettings) {
+            classicStageInfo.sceneDirectorInteractibleCredits = stageSettings.SceneDirectorInteractableCredits;
+            classicStageInfo.sceneDirectorMonsterCredits = stageSettings.SceneDirectorMonsterCredits;
+
+            var keys = stageSettings.BonusCreditObjects.Keys.ToArray();
             var bonuses = new ClassicStageInfo.BonusInteractibleCreditObject[keys.Length];
 
             for (int i = 0; i < keys.Length; i++) {
                 bonuses[i] = new ClassicStageInfo.BonusInteractibleCreditObject {
                     objectThatGrantsPointsIfEnabled = keys[i],
-                    points = set.BonusCreditObjects[keys[i]]
+                    points = stageSettings.BonusCreditObjects[keys[i]]
                 };
             }
 
-            self.bonusInteractibleCreditObjects = bonuses;
-            var interactableCategories = self.interactableCategories;
+            classicStageInfo.bonusInteractibleCreditObjects = bonuses;
 
-            for (int i = 0; i < interactableCategories.categories.Length; i++) {
-                var cat = interactableCategories.categories[i];
-                InteractableCategory intCat = GetInteractableCategory(cat.name);
-                cat.selectionWeight = set.InteractableCategoryWeights[intCat];
-                interactableCategories.categories[i] = cat;
-            }
+            SetMonsterCategoryWeightsPerDccs(classicStageInfo, stageSettings);
 
-            var monsterCategories = self.monsterCategories;
-
-            for (int i = 0; i < monsterCategories.categories.Length; i++) {
-                var cat = monsterCategories.categories[i];
-                MonsterCategory monCat = GetMonsterCategory(cat.name);
-                cat.selectionWeight = set.MonsterCategoryWeights[monCat];
-                monsterCategories.categories[i] = cat;
-            }
+            SetInteractableCategoryWeightsPerDccs(classicStageInfo, stageSettings);
         }
 
-        private static MonsterCategory GetMonsterCategory(string s) {
-            return s switch {
-                "Champions" => MonsterCategory.Champions,
-                "Minibosses" => MonsterCategory.Minibosses,
-                "Basic Monsters" => MonsterCategory.BasicMonsters,
-                _ => MonsterCategory.None,
-            };
-        }
+        private static void SetMonsterCategoryWeightsPerDccs(ClassicStageInfo classicStageInfo, StageSettings stageSettings) {
+            SetMonsterCategoryWeights(_dccsMixEnemyArtifact, stageSettings.MonsterCategoryWeightsPerDccs[_dccsMixEnemyArtifact]);
 
-        private static InteractableCategory GetInteractableCategory(string s) {
-            return s switch {
-                "Chests" => InteractableCategory.Chests,
-                "Barrels" => InteractableCategory.Barrels,
-                "Shrines" => InteractableCategory.Shrines,
-                "Drones" => InteractableCategory.Drones,
-                "Misc" => InteractableCategory.Misc,
-                "Rare" => InteractableCategory.Rare,
-                "Duplicator" => InteractableCategory.Duplicator,
-                _ => InteractableCategory.None,
-            };
-        }
-
-        private static MonsterFamilyHolder GetMonsterFamilyHolder(ClassicStageInfo.MonsterFamily family) {
-            var hold = new MonsterFamilyHolder {
-                MaxStageCompletion = family.maximumStageCompletion,
-                MinStageCompletion = family.minimumStageCompletion,
-                FamilySelectionWeight = family.selectionWeight,
-                SelectionChatString = family.familySelectionChatString
-            };
-
-            var cards = family.monsterFamilyCategories.categories;
-            foreach (var cat in cards) {
-                switch (cat.name) {
-                    case "Basic Monsters":
-                        hold.FamilyBasicMonsterWeight = cat.selectionWeight;
-                        hold.FamilyBasicMonsters = cat.cards.ToList();
-                        break;
-
-                    case "Minibosses":
-                        hold.FamilyMinibossWeight = cat.selectionWeight;
-                        hold.FamilyMinibosses = cat.cards.ToList();
-                        break;
-
-                    case "Champions":
-                        hold.FamilyChampionWeight = cat.selectionWeight;
-                        hold.FamilyChampions = cat.cards.ToList();
-                        break;
+            if (classicStageInfo.monsterDccsPool) {
+                foreach (var poolCategory in classicStageInfo.monsterDccsPool.poolCategories) {
+                    SetMonsterCategoryWeights(stageSettings, poolCategory.alwaysIncluded);
+                    SetMonsterCategoryWeights(stageSettings, poolCategory.includedIfConditionsMet);
+                    SetMonsterCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
                 }
             }
-
-            return hold;
+            else {
+                var oldDccs = classicStageInfo.monsterCategories;
+                SetMonsterCategoryWeights(oldDccs, stageSettings.MonsterCategoryWeightsPerDccs[oldDccs]);
+            }
         }
 
-        private static ClassicStageInfo.MonsterFamily GetMonsterFamily(MonsterFamilyHolder holder) {
-            var cardCategorySelection = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+        private static void SetMonsterCategoryWeights(DirectorCardCategorySelection dccs, Dictionary<string, float> newMonsterCategoryWeights) {
+            for (int i = 0; i < dccs.categories.Length; i++) {
+                var category = dccs.categories[i];
+                var monsterCategory = category.name;
+                category.selectionWeight = newMonsterCategoryWeights[monsterCategory];
+                dccs.categories[i] = category;
+            }
+        }
 
-            cardCategorySelection.categories = new DirectorCardCategorySelection.Category[3];
-            cardCategorySelection.categories[0] = new DirectorCardCategorySelection.Category {
-                name = "Champions",
-                selectionWeight = holder.FamilyChampionWeight,
-                cards = (holder.FamilyChampions != null ? holder.FamilyChampions.ToArray() : Array.Empty<DirectorCard>())
-            };
+        private static void SetMonsterCategoryWeights(StageSettings stageSettings, DccsPool.PoolEntry[] poolCategories) {
+            foreach (var poolEntry in poolCategories) {
+                SetMonsterCategoryWeights(poolEntry.dccs, stageSettings.MonsterCategoryWeightsPerDccs[poolEntry.dccs]);
+            }
+        }
 
-            cardCategorySelection.categories[1] = new DirectorCardCategorySelection.Category {
-                name = "Minibosses",
-                selectionWeight = holder.FamilyMinibossWeight,
-                cards = (holder.FamilyMinibosses != null ? holder.FamilyMinibosses.ToArray() : Array.Empty<DirectorCard>())
-            };
+        private static void SetInteractableCategoryWeightsPerDccs(ClassicStageInfo classicStageInfo, StageSettings stageSettings) {
+            if (classicStageInfo.interactableDccsPool) {
+                foreach (var poolCategory in classicStageInfo.interactableDccsPool.poolCategories) {
+                    SetInteractableCategoryWeights(stageSettings, poolCategory.alwaysIncluded);
+                    SetInteractableCategoryWeights(stageSettings, poolCategory.includedIfConditionsMet);
+                    SetInteractableCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
+                }
+            }
+            else {
+                var oldDccs = classicStageInfo.interactableCategories;
+                SetInteractableCategoryWeights(oldDccs, stageSettings.InteractableCategoryWeightsPerDccs[oldDccs]);
+            }
+        }
 
-            cardCategorySelection.categories[2] = new DirectorCardCategorySelection.Category {
-                name = "Basic Monsters",
-                selectionWeight = holder.FamilyBasicMonsterWeight,
-                cards = holder.FamilyBasicMonsters != null ? holder.FamilyBasicMonsters.ToArray() : Array.Empty<DirectorCard>()
-            };
+        private static void SetInteractableCategoryWeights(StageSettings stageSettings, DccsPool.PoolEntry[] poolCategories) {
+            foreach (var poolEntry in poolCategories) {
+                SetInteractableCategoryWeights(poolEntry.dccs, stageSettings.InteractableCategoryWeightsPerDccs[poolEntry.dccs]);
+            }
+        }
 
-            return new ClassicStageInfo.MonsterFamily {
-                familySelectionChatString = holder.SelectionChatString,
-                maximumStageCompletion = holder.MaxStageCompletion,
-                minimumStageCompletion = holder.MinStageCompletion,
-                selectionWeight = holder.FamilySelectionWeight,
-                monsterFamilyCategories = cardCategorySelection
-            };
+        private static void SetInteractableCategoryWeights(DirectorCardCategorySelection dccs, Dictionary<string, float> newInteractableCategoryWeights) {
+            for (int i = 0; i < dccs.categories.Length; i++) {
+                var category = dccs.categories[i];
+                category.selectionWeight = newInteractableCategoryWeights[category.name];
+                dccs.categories[i] = category;
+            }
         }
     }
 }
