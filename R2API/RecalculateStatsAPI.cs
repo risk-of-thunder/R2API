@@ -113,7 +113,7 @@ namespace R2API {
             public int moveSpeedRootCount = 0;
 
             /// <summary>Added to the direct multiplier to crit damage. CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd) </summary>
-            public int critDamageMultAdd = 0;
+            public float critDamageMultAdd = 0;
         }
 
         /// <summary>
