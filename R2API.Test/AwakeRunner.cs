@@ -6,8 +6,8 @@ using Xunit.Abstractions;
 using Xunit.Runners;
 
 namespace R2API.Test {
-    internal class AwakeTestRunner {
-        internal void DiscoverAndRunTests() {
+    internal class AwakeRunner {
+        internal void DiscoverAndRun() {
             var assembly = typeof(R2APITest).Assembly;
             var path = assembly.Location;
 

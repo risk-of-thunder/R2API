@@ -18,8 +18,8 @@ namespace R2API.Test {
         private void Awake() {
             Logger = base.Logger;
 
-            var awakeTestRunner = new AwakeTestRunner();
-            awakeTestRunner.DiscoverAndRunTests();
+            var awakeRunner = new AwakeRunner();
+            awakeRunner.DiscoverAndRun();
         }
     }
 }
