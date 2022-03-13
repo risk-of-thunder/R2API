@@ -27,7 +27,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-      <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.1-r.1" />
+      <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.2-r.0" />
       <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
   </ItemGroup>
 
