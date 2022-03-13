@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace R2API {
 
@@ -25,7 +26,7 @@ namespace R2API {
         public const string PluginName = "R2API";
         public const string PluginVersion = "0.0.1";
 
-        private const int SteamGameBuildId = 8288832;
+        private const string GameBuildId = "1.2.2.0";
 
         internal new static ManualLogSource Logger { get; set; }
         public static bool DebugMode { get; private set; } = false;
@@ -53,7 +54,7 @@ namespace R2API {
             }
 
             var pluginScanner = new PluginScanner();
-            var submoduleHandler = new APISubmoduleHandler(SteamGameBuildId, Logger);
+            var submoduleHandler = new APISubmoduleHandler(Logger);
             LoadedSubmodules = submoduleHandler.LoadRequested(pluginScanner);
             pluginScanner.ScanPlugins();
 
@@ -85,13 +86,12 @@ namespace R2API {
         }
 
         private static void CheckIfUsedOnRightGameVersion() {
-            // TODO: Check if it is set when user is using Epic games Online
-            var buildId = SteamworksClientManager.instance.steamworksClient.BuildId;
+            var buildId = Application.version;
 
-            if (SteamGameBuildId == buildId)
+            if (GameBuildId == buildId)
                 return;
 
-            Logger.LogWarning($"This version of R2API was built for build id \"{SteamGameBuildId}\", you are running \"{buildId}\".");
+            Logger.LogWarning($"This version of R2API was built for build id \"{GameBuildId}\", you are running \"{buildId}\".");
             Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
         }
 
