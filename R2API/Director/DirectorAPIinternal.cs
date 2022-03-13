@@ -238,8 +238,9 @@ namespace R2API {
             ApplyNewCardHoldersToDCCS(_dccsMixEnemyArtifact, cardHoldersMixEnemyArtifact);
         }
 
-        // Somehow the changes persist across stages, so... copy the originals,
+        // Somehow the changes persist across stages sometimes, so... copy the originals,
         // and restore them each time before invoking the events
+        // todo: probably need to backup other data too ?
         private static void RestoreClassicStageInfoToOriginalState(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
             var key = stageInfo.stage == Stage.Custom ? stageInfo.CustomStageName : stageInfo.stage.ToString();
             if (!_originalClassicStageInfos.TryGetValue(key, out var originalClassicStageInfo)) {
