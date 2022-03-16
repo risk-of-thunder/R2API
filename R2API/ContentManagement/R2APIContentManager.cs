@@ -15,6 +15,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using BepInEx.Bootstrap;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityObject = UnityEngine.Object;
@@ -388,37 +389,35 @@ namespace R2API.ContentManagement {
 
         #region Util
         internal static R2APISerializableContentPack GetOrCreateSerializableContentPack(Assembly assembly) {
-            try {
-                //If the assembly that's adding the item has not been cached, find the GUID of the assembly and cache it.
-                if (!AssemblyToBepInModName.ContainsKey(assembly)) {
-                    Type mainClass = assembly.GetTypes()
-                     .Where(t => t.GetCustomAttribute<BepInPlugin>() != null)
-                     .FirstOrDefault();
+            //If the assembly that's adding the item has not been cached, find the GUID of the assembly and cache it.
+            if (!AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
+                var location = assembly.Location;
+                modName = Chainloader.PluginInfos.FirstOrDefault(x => location == x.Value.Location).Key;
+                if (modName == null) {
+                    R2API.Logger.LogWarning($"The assembly {assembly.FullName} is not a loaded BepInEx plugin, falling back to looking for attribute in assembly");
 
-                    if (mainClass != null) {
-                        BepInPlugin attribute = mainClass.GetCustomAttribute<BepInPlugin>();
-                        if (attribute != null) {
-                            AssemblyToBepInModName.Add(assembly, attribute.Name);
-                        }
+                    try {
+                        var infoAttribute = assembly.GetTypes().Select(x => x.GetCustomAttribute<BepInPlugin>()).First(x => x != null);
+                        modName = infoAttribute.GUID;
+                    }
+                    catch {
+                        R2API.Logger.LogWarning("Assembly did not have a BepInPlugin attribute or couldn't load its types, falling back to assembly name");
+                        modName = assembly.GetName().Name;
                     }
                 }
-                if (AssemblyToBepInModName.TryGetValue(assembly, out string modName)) {
-                    R2APISerializableContentPack serializableContentPack;
-                    //If this assembly does not have a content pack assigned to it, create a new one and add it to the dictionary
-                    if (!BepInModNameToSerializableContentPack.ContainsKey(modName)) {
-                        serializableContentPack = ScriptableObject.CreateInstance<R2APISerializableContentPack>();
-                        serializableContentPack.name = modName;
-                        BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(serializableContentPack, true, assembly));
-                        R2API.Logger.LogInfo($"Created a SerializableContentPack for mod {modName}");
-                    }
-                    return BepInModNameToSerializableContentPack[modName].serializableContentPack;
-                }
-                throw new NullReferenceException($"The assembly {assembly} does not have a class that has a BepInPlugin attribute! Cannot create ContentPack for {modName}!");
+
+                AssemblyToBepInModName[assembly] = modName;
             }
-            catch (Exception e) {
-                R2API.Logger.LogError(e);
-                return null;
+
+            R2APISerializableContentPack serializableContentPack;
+            //If this assembly does not have a content pack assigned to it, create a new one and add it to the dictionary
+            if (!BepInModNameToSerializableContentPack.ContainsKey(modName)) {
+                serializableContentPack = ScriptableObject.CreateInstance<R2APISerializableContentPack>();
+                serializableContentPack.name = modName;
+                BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(serializableContentPack, true, assembly));
+                R2API.Logger.LogInfo($"Created a SerializableContentPack for mod {modName}");
             }
+            return BepInModNameToSerializableContentPack[modName].serializableContentPack;
         }
 
         private static void AddSafe<T>(ref T[] assetArray, T asset, string identifier) where T : UnityObject {
