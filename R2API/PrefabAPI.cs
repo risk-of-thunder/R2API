@@ -35,7 +35,7 @@ namespace R2API {
         private static GameObject _parent;
         private static readonly List<HashStruct> ThingsToHash = new List<HashStruct>();
 
-        internal static bool IsPrefabHashed(GameObject prefabToCheck) => ThingsToHash.Select(hash => hash.Prefab).Contains(prefabToCheck);
+        public static bool IsPrefabHashed(GameObject prefabToCheck) => ThingsToHash.Select(hash => hash.Prefab).Contains(prefabToCheck);
 
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
