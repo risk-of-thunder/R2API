@@ -46,7 +46,6 @@ jobs:
         sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"$GitVersion_MajorMinorPatch\"/" R2API.Test/R2APITest.cs
     - name: Build
       run: dotnet build --no-restore -p:Version=$GitVersion_MajorMinorPatch
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+
     - name: Publish
       run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json'
