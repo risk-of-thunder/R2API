@@ -8,9 +8,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
     
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.7
       with:
@@ -20,18 +22,21 @@ jobs:
       uses: gittools/actions/gitversion/execute@v0.9.7
       
     - name: Setup NuGet.exe for use with actions
-    - uses: NuGet/setup-nuget@v1.0.5
+      uses: NuGet/setup-nuget@v1.0.5
       with:
         nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+        
     - name: Restore dependencies
-    - run: nuget restore R2API.sln
+      run: nuget restore R2API.sln
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+        
     - name: Restore dependencies
       run: dotnet restore
+      
     - name: Update versions
       run: |
         sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"$GitVersion_MajorMinorPatch\"/" R2API/R2API.cs
