@@ -3,26 +3,25 @@ name: NuGet Publish
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
+    
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.7
       with:
         versionSpec: '5.x'
+        
     - name: Determine Version
       uses: gittools/actions/gitversion/execute@v0.9.7
+      
     - name: Setup NuGet.exe for use with actions
-      # You may pin to the exact commit or the version.
-      # uses: NuGet/setup-nuget@04b0c2b8d1b97922f67eca497d7cf0bf17b8ffe1
     - uses: NuGet/setup-nuget@v1.0.5
       with:
-        # NuGet API Key to configure.
         nuget-api-key: ${{ secrets.NUGET_API_KEY }}
     - name: Restore dependencies
     - run: nuget restore R2API.sln
@@ -43,4 +42,4 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json'
