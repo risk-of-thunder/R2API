@@ -20,7 +20,7 @@ jobs:
     - name: Setup NuGet.exe for use with actions
       # You may pin to the exact commit or the version.
       # uses: NuGet/setup-nuget@04b0c2b8d1b97922f67eca497d7cf0bf17b8ffe1
-      uses: NuGet/setup-nuget@v1.0.5
+    - uses: NuGet/setup-nuget@v1.0.5
       with:
         # NuGet API Key to configure.
         nuget-api-key: ${{ secrets.NUGET_API_KEY }}
