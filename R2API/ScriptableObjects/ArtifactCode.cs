@@ -87,8 +87,8 @@ namespace R2API.ScriptableObjects {
             sequence.Add(middleRow.z);
             sequence.Add(bottomRow.z);
             sequence.Add(topRow.y);
-            sequence.Add(middleRow.y);
             sequence.Add(bottomRow.y);
+            sequence.Add(middleRow.y);
             sequence.Add(topRow.x);
             sequence.Add(middleRow.x);
             sequence.Add(bottomRow.x);
