@@ -1,3 +1,4 @@
+using R2API.MiscHelpers;
 using R2API.Utils;
 using RoR2;
 using System;
@@ -267,7 +268,7 @@ namespace R2API {
             public static void PreventElites(string? monsterName, bool elitesAllowed) {
                 ThrowIfNotLoaded();
 
-                MonsterActions += (dccsPool, oldDccs, mixEnemyArtifactMonsters, currentStage) => {
+                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
 
                     if (dccsPool) {
                         ForEachPoolEntryInDccsPool(dccsPool, (poolEntry) => {
@@ -277,6 +278,14 @@ namespace R2API {
                     else {
                         foreach (var holder in oldDccs) {
                             PreventElite(monsterName, elitesAllowed, holder.Card);
+                        }
+
+                        foreach (var holder in oldMonsterFamilies) {
+                            foreach (var (monsterCategoryString, monsterCards) in holder.MonsterCategoryToMonsterCards) {
+                                foreach (var monsterCard in monsterCards) {
+                                    PreventElite(monsterName, elitesAllowed, monsterCard);
+                                }
+                            }
                         }
                     }
 
@@ -314,33 +323,55 @@ namespace R2API {
                     MonsterCategory = monsterCategory
                 };
 
-                MonsterActions += (dccsPool, oldDccs, mixEnemyArtifactMonsters, currentStage) => {
-                    AddNewMonster(dccsPool, oldDccs, mixEnemyArtifactMonsters, directorCardHolder);
+                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
+                    AddNewMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, directorCardHolder, false);
                 };
             }
 
             /// <summary>
             /// Adds a new monster to all stages.
+            /// Also add to each existing monster families if second parameter is true.
             /// </summary>
             /// <param name="monsterCard"></param>
-            public static void AddNewMonster(DirectorCardHolder? monsterCard) {
+            /// <param name="addToFamilies"></param>
+            public static void AddNewMonster(DirectorCardHolder? monsterCard, bool addToFamilies) {
                 ThrowIfNotLoaded();
 
-                MonsterActions += (dccsPool, oldDccs, mixEnemyArtifactMonsters, currentStage) => {
-                    AddNewMonster(dccsPool, oldDccs, mixEnemyArtifactMonsters, monsterCard);
+                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
+                    AddNewMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
                 };
             }
 
             private static void AddNewMonster(
-                DccsPool dccsPool, List<DirectorCardHolder> oldDccs, List<DirectorCardHolder> mixEnemyArtifactMonsters,
-                DirectorCardHolder directorCardHolder) {
+                DccsPool dccsPool,
+                List<DirectorCardHolder> oldDccs, List<MonsterFamilyHolder> oldMonsterFamilies,
+                List<DirectorCardHolder> mixEnemyArtifactMonsters,
+                DirectorCardHolder directorCardHolder,
+                bool addToFamilies) {
                 if (dccsPool) {
-                    ForEachPoolEntryInDccsPool(dccsPool, (poolEntry) => {
-                        AddMonsterToPoolEntry(directorCardHolder, poolEntry);
+                    ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) => {
+                        var isNotAFamilyCategory = poolCategory.name != MonsterPoolCategories.Family;
+                        var isAFamilyCategoryAndShouldAddToIt = addToFamilies && poolCategory.name == MonsterPoolCategories.Family;
+                        if (isNotAFamilyCategory || isAFamilyCategoryAndShouldAddToIt) {
+                            ForEachPoolEntryInDccsPoolCategory(poolCategory, (poolEntry) => {
+                                AddMonsterToPoolEntry(directorCardHolder, poolEntry);
+                            });
+                        }
                     });
                 }
                 else {
                     oldDccs.Add(directorCardHolder);
+
+                    if (addToFamilies) {
+                        var cardMonsterCategoryName = directorCardHolder.GetCategoryName();
+                        foreach (var monsterFamilyHolder in oldMonsterFamilies) {
+                            foreach (var (monsterCategoryName, monsterCategoryCards) in monsterFamilyHolder.MonsterCategoryToMonsterCards) {
+                                if (monsterCategoryName == cardMonsterCategoryName) {
+                                    monsterCategoryCards.Add(directorCardHolder.Card);
+                                }
+                            }
+                        }
+                    }
                 }
 
                 mixEnemyArtifactMonsters.Add(directorCardHolder);
@@ -367,10 +398,10 @@ namespace R2API {
                     MonsterCategory = monsterCategory
                 };
 
-                MonsterActions += (dccsPool, oldDccs, mixEnemyArtifactMonsters, currentStage) => {
+                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            AddNewMonster(dccsPool, oldDccs, mixEnemyArtifactMonsters, directorCardHolder);
+                            AddNewMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, directorCardHolder, false);
                         }
                     }
                 };
@@ -378,18 +409,20 @@ namespace R2API {
 
             /// <summary>
             /// Adds a new monster to a specific stage.
+            /// Also add to each existing monster families if second parameter is true.
             /// For custom stages use Stage.Custom and enter the name of the stage in customStageName.
             /// </summary>
             /// <param name="monsterCard"></param>
+            /// <param name="addToFamilies"></param>
             /// <param name="stage"></param>
             /// <param name="customStageName"></param>
-            public static void AddNewMonsterToStage(DirectorCardHolder monsterCard, Stage stage, string? customStageName = "") {
+            public static void AddNewMonsterToStage(DirectorCardHolder monsterCard, bool addToFamilies, Stage stage, string? customStageName = "") {
                 ThrowIfNotLoaded();
 
-                MonsterActions += (dccsPool, oldDccs, mixEnemyArtifactMonsters, currentStage) => {
+                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            AddNewMonster(dccsPool, oldDccs, mixEnemyArtifactMonsters, monsterCard);
+                            AddNewMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
                         }
                     }
                 };
@@ -479,12 +512,15 @@ namespace R2API {
 
                 var monsterNameLowered = monsterName.ToLowerInvariant();
 
-                MonsterActions += (dccsPool, oldDccs, mixEnemyArtifactMonsters, currentStage) => {
-                    RemoveExistingMonster(dccsPool, oldDccs, mixEnemyArtifactMonsters, monsterNameLowered);
+                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
+                    RemoveExistingMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, monsterNameLowered);
                 };
             }
 
-            private static void RemoveExistingMonster(DccsPool dccsPool, List<DirectorCardHolder> oldDccs, List<DirectorCardHolder> mixEnemyArtifactMonsters, string monsterNameLowered) {
+            private static void RemoveExistingMonster(
+                DccsPool dccsPool,
+                List<DirectorCardHolder> oldDccs, List<MonsterFamilyHolder> oldMonsterFamilies,
+                List<DirectorCardHolder> mixEnemyArtifactMonsters, string monsterNameLowered) {
                 if (dccsPool) {
                     ForEachPoolEntryInDccsPool(dccsPool, (poolEntry) => {
                         RemoveMonsterFromPoolEntry(monsterNameLowered, poolEntry);
@@ -492,6 +528,12 @@ namespace R2API {
                 }
                 else {
                     oldDccs.RemoveAll((card) => card.Card.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
+
+                    foreach (var monsterFamily in oldMonsterFamilies) {
+                        foreach (var cards in monsterFamily.MonsterCategoryToMonsterCards.Values) {
+                            cards.RemoveAll(c => c.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
+                        }
+                    }
                 }
 
                 mixEnemyArtifactMonsters.RemoveAll((card) => card.Card.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
@@ -518,10 +560,10 @@ namespace R2API {
 
                 var monsterNameLowered = monsterName.ToLowerInvariant();
 
-                MonsterActions += (dccsPool, oldDccs, mixEnemyArtifactMonsters, currentStage) => {
+                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            RemoveExistingMonster(dccsPool, oldDccs, mixEnemyArtifactMonsters, monsterNameLowered);
+                            RemoveExistingMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, monsterNameLowered);
                         }
                     }
                 };
@@ -703,18 +745,38 @@ namespace R2API {
             /// <param name="dccsPool"></param>
             /// <param name="action"></param>
             public static void ForEachPoolEntryInDccsPool(DccsPool dccsPool, Action<DccsPool.PoolEntry> action) {
+                ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) => {
+                    ForEachPoolEntryInDccsPoolCategory(poolCategory, action);
+                });
+            }
+
+            /// <summary>
+            /// For each <see cref="DccsPool.Category"/> in a <see cref="DccsPool"/>, call the given <see cref="Action"/>.
+            /// </summary>
+            /// <param name="dccsPool"></param>
+            /// <param name="action"></param>
+            public static void ForEachPoolCategoryInDccsPool(DccsPool dccsPool, Action<DccsPool.Category> action) {
                 foreach (var poolCategory in dccsPool.poolCategories) {
-                    foreach (var poolEntry in poolCategory.alwaysIncluded) {
-                        action(poolEntry);
-                    }
+                    action(poolCategory);
+                }
+            }
 
-                    foreach (var poolEntry in poolCategory.includedIfConditionsMet) {
-                        action(poolEntry);
-                    }
+            /// <summary>
+            /// For each <see cref="DccsPool.PoolEntry"/> in a <see cref="DccsPool.Category"/>, call the given <see cref="Action"/>.
+            /// </summary>
+            /// <param name="dccsPoolCategory"></param>
+            /// <param name="action"></param>
+            public static void ForEachPoolEntryInDccsPoolCategory(DccsPool.Category dccsPoolCategory, Action<DccsPool.PoolEntry> action) {
+                foreach (var poolEntry in dccsPoolCategory.alwaysIncluded) {
+                    action(poolEntry);
+                }
 
-                    foreach (var poolEntry in poolCategory.includedIfNoConditionsMet) {
-                        action(poolEntry);
-                    }
+                foreach (var poolEntry in dccsPoolCategory.includedIfConditionsMet) {
+                    action(poolEntry);
+                }
+
+                foreach (var poolEntry in dccsPoolCategory.includedIfNoConditionsMet) {
+                    action(poolEntry);
                 }
             }
 

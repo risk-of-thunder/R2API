@@ -1,6 +1,7 @@
 ﻿using HG;
 using MonoMod.Cil;
 using R2API.Utils;
+using R2API.MiscHelpers;
 using RoR2;
 using RoR2.ExpansionManagement;
 using System;
@@ -209,30 +210,27 @@ namespace R2API {
             SetStageSettings(classicStageInfo, stageSettings);
         }
 
-        public class OriginalClassicStageInfo {
-            public List<DccsPool.Category> monsterDccsPoolCategories;
-            public DirectorCardCategorySelection monsterCategories;
-
-            public List<DccsPool.Category> interactableDccsPoolCategories;
-            public DirectorCardCategorySelection interactableCategories;
-        }
-
-        private static readonly Dictionary<string, OriginalClassicStageInfo> _originalClassicStageInfos = new();
         private static void ApplyMonsterChanges(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
             RestoreClassicStageInfoToOriginalState(classicStageInfo, stageInfo);
 
             List<DirectorCardHolder> oldDccs = null;
-            if (!classicStageInfo.monsterCategories) {
+            var isUsingOldSystem = !classicStageInfo.monsterDccsPool && classicStageInfo.monsterCategories;
+            if (isUsingOldSystem) {
                 oldDccs = GetDirectorCardHoldersFromDCCS(classicStageInfo.monsterCategories);
             }
+
+            List<MonsterFamilyHolder> oldMonsterFamilies = null;
+            oldMonsterFamilies = classicStageInfo.possibleMonsterFamilies.Select(GetMonsterFamilyHolder).ToList();
 
             InitCustomMixEnemyArtifactDccs();
             var cardHoldersMixEnemyArtifact = GetDirectorCardHoldersFromDCCS(_dccsMixEnemyArtifact);
 
-            MonsterActions?.Invoke(classicStageInfo.monsterDccsPool, oldDccs, cardHoldersMixEnemyArtifact, stageInfo);
+            MonsterActions?.Invoke(classicStageInfo.monsterDccsPool, oldDccs, oldMonsterFamilies, cardHoldersMixEnemyArtifact, stageInfo);
 
-            if (oldDccs != null) {
+            if (isUsingOldSystem) {
                 ApplyNewCardHoldersToDCCS(classicStageInfo.monsterCategories, oldDccs);
+
+                classicStageInfo.possibleMonsterFamilies = oldMonsterFamilies.Select(GetMonsterFamily).ToArray();
             }
 
             ApplyNewCardHoldersToDCCS(_dccsMixEnemyArtifact, cardHoldersMixEnemyArtifact);
@@ -241,9 +239,20 @@ namespace R2API {
         // Somehow the changes persist across stages sometimes, so... copy the originals,
         // and restore them each time before invoking the events
         // todo: probably need to backup other data too ?
+        public class OriginalClassicStageInfo {
+            public List<DccsPool.Category> monsterDccsPoolCategories;
+            public DirectorCardCategorySelection monsterCategories;
+            public List<ClassicStageInfo.MonsterFamily> possibleMonsterFamilies;
+
+            public List<DccsPool.Category> interactableDccsPoolCategories;
+            public DirectorCardCategorySelection interactableCategories;
+        }
+
+        private static readonly Dictionary<string, OriginalClassicStageInfo> _classicStageInfoNameToOriginalClassicStageInfos = new();
+
         private static void RestoreClassicStageInfoToOriginalState(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
             var key = stageInfo.stage == Stage.Custom ? stageInfo.CustomStageName : stageInfo.stage.ToString();
-            if (!_originalClassicStageInfos.TryGetValue(key, out var originalClassicStageInfo)) {
+            if (!_classicStageInfoNameToOriginalClassicStageInfos.TryGetValue(key, out var originalClassicStageInfo)) {
                 originalClassicStageInfo = new();
                 if (classicStageInfo.monsterDccsPool) {
                     originalClassicStageInfo.monsterDccsPoolCategories = CopyDccsPoolCategories(classicStageInfo.monsterDccsPool.poolCategories);
@@ -251,6 +260,9 @@ namespace R2API {
                 if (classicStageInfo.monsterCategories) {
                     originalClassicStageInfo.monsterCategories = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
                     originalClassicStageInfo.monsterCategories.CopyFrom(classicStageInfo.monsterCategories);
+                }
+                if (classicStageInfo.possibleMonsterFamilies != null) {
+                    originalClassicStageInfo.possibleMonsterFamilies = classicStageInfo.possibleMonsterFamilies.ToList();
                 }
 
                 if (classicStageInfo.interactableDccsPool) {
@@ -261,11 +273,12 @@ namespace R2API {
                     originalClassicStageInfo.interactableCategories.CopyFrom(classicStageInfo.interactableCategories);
                 }
 
-                _originalClassicStageInfos[key] = originalClassicStageInfo;
+                _classicStageInfoNameToOriginalClassicStageInfos[key] = originalClassicStageInfo;
             }
             else {
                 classicStageInfo.monsterDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.monsterDccsPoolCategories).ToArray();
                 classicStageInfo.monsterCategories.CopyFrom(originalClassicStageInfo.monsterCategories);
+                classicStageInfo.possibleMonsterFamilies = originalClassicStageInfo.possibleMonsterFamilies.ToArray();
 
                 classicStageInfo.interactableDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.interactableDccsPoolCategories).ToArray();
                 classicStageInfo.interactableCategories.CopyFrom(originalClassicStageInfo.interactableCategories);
@@ -390,13 +403,14 @@ namespace R2API {
 
         private static void ApplyInteractableChanges(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
             List<DirectorCardHolder> oldDccs = null;
-            if (!classicStageInfo.interactableDccsPool) {
+            var isUsingOldSystem = !classicStageInfo.interactableDccsPool;
+            if (isUsingOldSystem) {
                 oldDccs = GetDirectorCardHoldersFromDCCS(classicStageInfo.interactableCategories);
             }
 
             InteractableActions?.Invoke(classicStageInfo.interactableDccsPool, oldDccs, stageInfo);
 
-            if (oldDccs != null) {
+            if (isUsingOldSystem) {
                 ApplyNewCardHoldersToDCCS(classicStageInfo.interactableCategories, oldDccs);
             }
         }
@@ -484,6 +498,47 @@ namespace R2API {
             foreach (var category in dccs.categories) {
                 stageSettings.InteractableCategoryWeightsPerDccs[dccs][category.name] = category.selectionWeight;
             }
+        }
+
+        private static MonsterFamilyHolder GetMonsterFamilyHolder(ClassicStageInfo.MonsterFamily family) {
+            var holder = new MonsterFamilyHolder {
+                MaxStageCompletion = family.maximumStageCompletion,
+                MinStageCompletion = family.minimumStageCompletion,
+                FamilySelectionWeight = family.selectionWeight,
+                SelectionChatString = family.familySelectionChatString
+            };
+
+            var monsterCategories = family.monsterFamilyCategories.categories;
+            foreach (var monsterCategory in monsterCategories) {
+                if (!holder.MonsterCategoryToMonsterCards.ContainsKey(monsterCategory.name)) {
+                    holder.MonsterCategoryToMonsterCards[monsterCategory.name] = monsterCategory.cards != null ? monsterCategory.cards.ToList() : new();
+                    holder.MonsterCategoryToSelectionWeights[monsterCategory.name] = monsterCategory.selectionWeight;
+                }
+            }
+
+            return holder;
+        }
+
+        private static ClassicStageInfo.MonsterFamily GetMonsterFamily(MonsterFamilyHolder holder) {
+            var dccs = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+
+            var monsterCategories = new List<DirectorCardCategorySelection.Category>();
+
+            foreach (var (monsterCategoryName, monsterCategoryCards) in holder.MonsterCategoryToMonsterCards) {
+                monsterCategories.Add(new() {
+                    name = monsterCategoryName,
+                    selectionWeight = holder.MonsterCategoryToSelectionWeights[monsterCategoryName],
+                    cards = monsterCategoryCards.ToArray()
+                });
+            }
+
+            return new ClassicStageInfo.MonsterFamily {
+                familySelectionChatString = holder.SelectionChatString,
+                maximumStageCompletion = holder.MaxStageCompletion,
+                minimumStageCompletion = holder.MinStageCompletion,
+                selectionWeight = holder.FamilySelectionWeight,
+                monsterFamilyCategories = dccs
+            };
         }
 
         private static void SetStageSettings(ClassicStageInfo classicStageInfo, StageSettings stageSettings) {

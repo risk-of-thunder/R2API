@@ -34,9 +34,9 @@ namespace R2API {
         ///
         /// <para>
         /// First parameter is the <see cref="ClassicStageInfo.monsterDccsPool"/>,
-        /// depending if the stage was updated or not to use the new <see cref="DccsPool"/> that field can be null,
+        /// depending if the stage was updated or not to use the new <see cref="DccsPool"/> that field CAN BE NULL,
         /// if null, its the <see cref="ClassicStageInfo.monsterCategories"/> field that is used instead, which is always passed as
-        /// the second parameter of this event.
+        /// the second parameter of this event : CAN BE NULL.
         /// One of those field is what is used to ultimately select the final <see cref="DirectorCardCategorySelection"/>.
         /// </para>
         ///
@@ -45,9 +45,15 @@ namespace R2API {
         /// </para>
         ///
         /// <para>
+        /// The third parameter is the list of monster families and their cards. OLD SYSTEM AND CAN BE NULL. Its still here because some vanilla stages
+        /// are still using it, very much like the second parameter above.
+        /// Please refer to the paragraphs below for the new system, the families are now under a specific <see cref="DccsPool.Category"/>.
+        /// </para>
+        /// 
+        /// <para>
         /// For the Artifact of Dissonance <see cref="RoR2Content.Artifacts.mixEnemyArtifactDef"/>,
         /// the original DCCS is located in <see cref="RoR2Content.mixEnemyMonsterCards"/>
-        /// which is represented by the third parameter of this event.
+        /// which is represented by the fourth parameter of this event.
         /// </para>
         ///
         /// <para>
@@ -55,6 +61,10 @@ namespace R2API {
         /// 3 <see cref="DccsPool.poolCategories"/>, written out in <see cref="Helpers.MonsterPoolCategories"/>.
         /// </para>
         ///
+        /// <para>
+        /// Below is an explanation of the <see cref="ClassicStageInfo.monsterDccsPool"/> categories.
+        /// </para>
+        /// 
         /// <para>
         /// The first category, <see cref="Helpers.MonsterPoolCategories.Standard"/> has, right now,
         /// a single <see cref="DccsPool.ConditionalPoolEntry"/> (contained in <see cref="DccsPool.Category.includedIfConditionsMet"/>)
@@ -68,7 +78,7 @@ namespace R2API {
         /// <para>
         /// The second category, <see cref="Helpers.MonsterPoolCategories.Family"/> has, right now,
         /// multiple <see cref="DccsPool.ConditionalPoolEntry"/> (contained in <see cref="DccsPool.Category.includedIfConditionsMet"/>)
-        /// which contains the <see cref="DirectorCardCategorySelection"/> used for family events.
+        /// which contains the <see cref="DirectorCardCategorySelection"/>s used for family events.
         /// They don't have a corresponding <see cref="DccsPool.ConditionalPoolEntry.requiredExpansions"/>,
         /// so they are effectively always added to the pool of choice.
         /// </para>
@@ -81,7 +91,7 @@ namespace R2API {
         /// so they are only added to the pool of choice if the DLC1 expansion is enabled.
         /// </para>
         /// </summary>
-        public static event Action<DccsPool, List<DirectorCardHolder>, List<DirectorCardHolder>, StageInfo>? MonsterActions;
+        public static event Action<DccsPool, List<DirectorCardHolder>, List<MonsterFamilyHolder>, List<DirectorCardHolder>, StageInfo>? MonsterActions;
 
         /// <summary>
         /// <para>
@@ -100,8 +110,7 @@ namespace R2API {
         /// </para>
         ///
         /// <para>
-        /// It is recommended to always apply your changes to both the first and second parameter,
-        /// just make sure to guard with if checks for not getting <see cref="NullReferenceException"/>
+        /// Make sure to guard with a if else null checks, either applying your changes to the first OR second parameter.
         /// </para>
         /// 
         /// <para>
@@ -516,6 +525,8 @@ namespace R2API {
 
         /// <summary>
         /// Add a <see cref="DirectorCardHolder"/> to a <see cref="DirectorCardCategorySelection"/>.
+        /// If the category from the given card parameter is not in the given dccs parameter,
+        /// the category is created and added to the dccs.
         /// Returns the card index in the category if successful.
         /// </summary>
         /// <param name="dccs"></param>
@@ -535,6 +546,42 @@ namespace R2API {
             var categoryWeight = cardHolder.IsMonster ? cardHolder.MonsterCategorySelectionWeight : cardHolder.InteractableCategorySelectionWeight;
             var categoryIndex = dccs.AddCategory(categoryName, categoryWeight);
             return dccs.AddCard(categoryIndex, cardHolder.Card);
+        }
+
+        /// <summary>
+        /// A wrapper class for Monster Families.
+        /// </summary>
+        public class MonsterFamilyHolder {
+            /// <summary>
+            /// List of all monster per monster category name that can spawn during this family event.
+            /// </summary>
+            public Dictionary<string, List<DirectorCard>> MonsterCategoryToMonsterCards;
+
+            /// <summary>
+            /// The selection weight per monster category name during the family event.
+            /// </summary>
+            public Dictionary<string, float> MonsterCategoryToSelectionWeights;
+
+            /// <summary>
+            /// The minimum number of stages completed for this family event to occur.
+            /// </summary>
+            public int MinStageCompletion;
+
+            /// <summary>
+            /// The maximum number of stages for this family event to occur.
+            /// </summary>
+            public int MaxStageCompletion;
+
+            /// <summary>
+            /// The weight of this monster family relative to other monster families.
+            /// Does NOT increase the chances of a family event occuring, just the chance that this will be chosen when one does occur.
+            /// </summary>
+            public float FamilySelectionWeight;
+
+            /// <summary>
+            /// The message sent to chat when this family is selected.
+            /// </summary>
+            public string? SelectionChatString;
         }
     }
 }
