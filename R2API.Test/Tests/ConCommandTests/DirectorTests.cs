@@ -1,6 +1,6 @@
-﻿using RoR2;
+﻿using BepInEx.Configuration;
+using RoR2;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine.AddressableAssets;
 
 namespace R2API.Test.Tests.ConCommandTests {
@@ -32,7 +32,8 @@ namespace R2API.Test.Tests.ConCommandTests {
         }
 
         private static void OnlyGup(
-            DccsPool dccsPool, List<DirectorAPI.DirectorCardHolder> oldDccs,
+            DccsPool dccsPool,
+            List<DirectorAPI.DirectorCardHolder> oldDccs, List<DirectorAPI.MonsterFamilyHolder> oldMonsterFamilyHolders,
             List<DirectorAPI.DirectorCardHolder> mixEnemyArtifactsCards,
             DirectorAPI.StageInfo stageInfo) {
 
@@ -44,12 +45,30 @@ namespace R2API.Test.Tests.ConCommandTests {
             if (dccsPool) {
                 DirectorAPI.Helpers.ForEachPoolEntryInDccsPool(dccsPool, (poolEntry) => {
                     poolEntry.dccs.Clear();
-                    poolEntry.dccs.AddCard(cardHolder);
+                    _ = poolEntry.dccs.AddCard(cardHolder);
                 });
             }
             else {
                 oldDccs.Clear();
                 oldDccs.Add(cardHolder);
+
+                var basicMonsterCategoryName = DirectorAPI.Helpers.GetVanillaMonsterCategoryName(DirectorAPI.MonsterCategory.BasicMonsters);
+                var categoryNameToCards = new Dictionary<string, List<DirectorCard>> {
+                    [basicMonsterCategoryName] = new() { _myGupDC },
+                };
+                var categoryNameToSelectionWeights = new Dictionary<string, float> {
+                    [basicMonsterCategoryName] = 1
+                };
+
+                oldMonsterFamilyHolders.Clear();
+                oldMonsterFamilyHolders.Add(new DirectorAPI.MonsterFamilyHolder() {
+                    FamilySelectionWeight = 1,
+                    MaxStageCompletion = 1,
+                    MinStageCompletion = 1,
+                    MonsterCategoryToMonsterCards = categoryNameToCards,
+                    MonsterCategoryToSelectionWeights = categoryNameToSelectionWeights,
+                    SelectionChatString = "Test Gup Family selected"
+                });
             }
 
             mixEnemyArtifactsCards.Add(cardHolder);
