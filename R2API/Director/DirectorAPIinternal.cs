@@ -26,12 +26,16 @@ namespace R2API {
         internal static void SetHooks() {
             On.RoR2.ClassicStageInfo.Start += ApplyChangesOnStart;
             IL.RoR2.ClassicStageInfo.HandleMixEnemyArtifact += SwapVanillaDccsWithOurs;
+
+            On.RoR2.SceneCatalog.Init += InitStageEnumToSceneDefs;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             On.RoR2.ClassicStageInfo.Start -= ApplyChangesOnStart;
             IL.RoR2.ClassicStageInfo.HandleMixEnemyArtifact -= SwapVanillaDccsWithOurs;
+
+            On.RoR2.SceneCatalog.Init -= InitStageEnumToSceneDefs;
         }
 
         private static void ApplyChangesOnStart(On.RoR2.ClassicStageInfo.orig_Start orig, ClassicStageInfo classicStageInfo) {
@@ -50,6 +54,16 @@ namespace R2API {
 
             static DirectorCardCategorySelection SwapDccs(DirectorCardCategorySelection vanillaDccs) {
                 return _dccsMixEnemyArtifact;
+            }
+        }
+
+        private static void InitStageEnumToSceneDefs(On.RoR2.SceneCatalog.orig_Init orig) {
+            orig();
+
+            var groups = SceneCatalog.allStageSceneDefs.GroupBy(sceneDef => GetStageEnumFromSceneDef(sceneDef), sceneDef => sceneDef);
+
+            foreach (var group in groups) {
+                VanillaStageToSceneDefs[group.Key] = group.ToArray();
             }
         }
 
@@ -72,133 +86,9 @@ namespace R2API {
 
             var sceneDef = sceneInfo.sceneDef;
             if (!sceneDef) return stageInfo;
-            stageInfo = SetStageEnumFromBaseSceneName(stageInfo, sceneDef);
-
-            return stageInfo;
-        }
-
-        private static StageInfo SetStageEnumFromBaseSceneName(StageInfo stageInfo, SceneDef sceneDef) {
-            switch (sceneDef.baseSceneName) {
-                case "golemplains":
-                    stageInfo.stage = Stage.TitanicPlains;
-                    break;
-
-                case "blackbeach":
-                    stageInfo.stage = Stage.DistantRoost;
-                    break;
-
-                case "foggyswamp":
-                    stageInfo.stage = Stage.WetlandAspect;
-                    break;
-
-                case "goolake":
-                    stageInfo.stage = Stage.AbandonedAqueduct;
-                    break;
-
-                case "frozenwall":
-                    stageInfo.stage = Stage.RallypointDelta;
-                    break;
-
-                case "wispgraveyard":
-                    stageInfo.stage = Stage.ScorchedAcres;
-                    break;
-
-                case "dampcavesimple":
-                    stageInfo.stage = Stage.AbyssalDepths;
-                    break;
-
-                case "shipgraveyard":
-                    stageInfo.stage = Stage.SirensCall;
-                    break;
-
-                case "goldshores":
-                    stageInfo.stage = Stage.GildedCoast;
-                    break;
-
-                case "mysteryspace":
-                    stageInfo.stage = Stage.MomentFractured;
-                    break;
-
-                case "bazaar":
-                    stageInfo.stage = Stage.Bazaar;
-                    break;
-
-                case "arena":
-                    stageInfo.stage = Stage.VoidCell;
-                    break;
-
-                case "limbo":
-                    stageInfo.stage = Stage.MomentWhole;
-                    break;
-
-                case "skymeadow":
-                    stageInfo.stage = Stage.SkyMeadow;
-                    break;
-
-                case "artifactworld":
-                    stageInfo.stage = Stage.ArtifactReliquary;
-                    break;
-
-                case "moon2":
-                    stageInfo.stage = Stage.Commencement;
-                    break;
-
-                case "rootjungle":
-                    stageInfo.stage = Stage.SunderedGrove;
-                    break;
-
-                case "ancientloft":
-                    stageInfo.stage = Stage.AphelianSanctuary;
-                    break;
-
-                case "itancientloft":
-                    stageInfo.stage = Stage.AphelianSanctuarySimulacrum;
-                    break;
-
-                case "itdampcave":
-                    stageInfo.stage = Stage.AbyssalDepthsSimulacrum;
-                    break;
-
-                case "itfrozenwall":
-                    stageInfo.stage = Stage.RallypointDeltaSimulacrum;
-                    break;
-
-                case "itgolemplains":
-                    stageInfo.stage = Stage.TitanicPlainsSimulacrum;
-                    break;
-
-                case "itgoolake":
-                    stageInfo.stage = Stage.AbandonedAqueductSimulacrum;
-                    break;
-
-                case "itmoon":
-                    stageInfo.stage = Stage.CommencementSimulacrum;
-                    break;
-
-                case "itskymeadow":
-                    stageInfo.stage = Stage.SkyMeadowSimulacrum;
-                    break;
-
-                case "snowyforest":
-                    stageInfo.stage = Stage.SiphonedForest;
-                    break;
-
-                case "sulfurpools":
-                    stageInfo.stage = Stage.SulfurPools;
-                    break;
-
-                case "voidraid":
-                    stageInfo.stage = Stage.VoidLocus;
-                    break;
-
-                case "voidstage":
-                    stageInfo.stage = Stage.ThePlanetarium;
-                    break;
-
-                default:
-                    stageInfo.stage = Stage.Custom;
-                    stageInfo.CustomStageName = sceneDef.baseSceneName;
-                    break;
+            stageInfo.stage = GetStageEnumFromSceneDef(sceneDef);
+            if (stageInfo.stage == Stage.Custom) {
+                stageInfo.CustomStageName = sceneDef.baseSceneName;
             }
 
             return stageInfo;

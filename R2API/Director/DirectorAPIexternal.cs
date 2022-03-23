@@ -376,6 +376,52 @@ namespace R2API {
         }
 
         /// <summary>
+        /// Returns the <see cref="Stage"/> based on the <see cref="SceneDef.baseSceneName"/>.
+        /// Returns <see cref="Stage.Custom"/> if the <see cref="SceneDef"/> is not vanilla.
+        /// </summary>
+        /// <param name="sceneDef"></param>
+        /// <returns></returns>
+        public static Stage GetStageEnumFromSceneDef(SceneDef sceneDef) {
+            return sceneDef.baseSceneName switch {
+                "golemplains" => Stage.TitanicPlains,
+                "blackbeach" => Stage.DistantRoost,
+                "foggyswamp" => Stage.WetlandAspect,
+                "goolake" => Stage.AbandonedAqueduct,
+                "frozenwall" => Stage.RallypointDelta,
+                "wispgraveyard" => Stage.ScorchedAcres,
+                "dampcavesimple" => Stage.AbyssalDepths,
+                "shipgraveyard" => Stage.SirensCall,
+                "goldshores" => Stage.GildedCoast,
+                "mysteryspace" => Stage.MomentFractured,
+                "bazaar" => Stage.Bazaar,
+                "arena" => Stage.VoidCell,
+                "limbo" => Stage.MomentWhole,
+                "skymeadow" => Stage.SkyMeadow,
+                "artifactworld" => Stage.ArtifactReliquary,
+                "moon2" => Stage.Commencement,
+                "rootjungle" => Stage.SunderedGrove,
+                "ancientloft" => Stage.AphelianSanctuary,
+                "itancientloft" => Stage.AphelianSanctuarySimulacrum,
+                "itdampcave" => Stage.AbyssalDepthsSimulacrum,
+                "itfrozenwall" => Stage.RallypointDeltaSimulacrum,
+                "itgolemplains" => Stage.TitanicPlainsSimulacrum,
+                "itgoolake" => Stage.AbandonedAqueductSimulacrum,
+                "itmoon" => Stage.CommencementSimulacrum,
+                "itskymeadow" => Stage.SkyMeadowSimulacrum,
+                "snowyforest" => Stage.SiphonedForest,
+                "sulfurpools" => Stage.SulfurPools,
+                "voidraid" => Stage.VoidLocus,
+                "voidstage" => Stage.ThePlanetarium,
+                _ => Stage.Custom,
+            };
+        }
+
+        /// <summary>
+        /// Maps vanilla <see cref="Stage"/> to its <see cref="SceneDef"/>.
+        /// </summary>
+        public static Dictionary<Stage, SceneDef[]> VanillaStageToSceneDefs { get; private set; } = new();
+
+        /// <summary>
         /// Struct for holding information about the stage.
         /// </summary>
         public struct StageInfo {
