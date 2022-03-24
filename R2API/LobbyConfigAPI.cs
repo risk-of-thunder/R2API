@@ -9,7 +9,7 @@ using UnityEngine;
 namespace R2API {
 
     // ReSharper disable once InconsistentNaming
-    [R2APISubmodule(Build = 4892828)]
+    [R2APISubmodule]
     public static class LobbyConfigAPI {
 
         /// <summary>

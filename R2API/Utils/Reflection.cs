@@ -1018,5 +1018,9 @@ namespace R2API.Utils {
             }
             return null;
         }
+
+        public static bool IsSameOrSubclassOf<OtherType>(this Type type) {
+            return type == typeof(OtherType) || type.IsSubclassOf(typeof(OtherType));
+        }
     }
 }

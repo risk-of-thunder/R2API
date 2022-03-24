@@ -23,9 +23,7 @@ namespace R2API.Utils {
     // ReSharper disable once InconsistentNaming
     [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Class)]
-    internal class R2APISubmodule : Attribute {
-        public int Build;
-    }
+    internal class R2APISubmodule : Attribute { }
 
     // ReSharper disable once InconsistentNaming
     [MeansImplicitUse]
@@ -53,13 +51,11 @@ namespace R2API.Utils {
     ///
     /// </summary>
     public class APISubmoduleHandler {
-        private readonly int _build;
         private readonly ManualLogSource? _logger;
         private HashSet<string> _moduleSet;
         private static HashSet<string> LoadedModules;
 
-        internal APISubmoduleHandler(int build, ManualLogSource? logger = null) {
-            _build = build;
+        internal APISubmoduleHandler(ManualLogSource? logger = null) {
             _logger = logger;
         }
 
@@ -147,10 +143,6 @@ namespace R2API.Utils {
                     return false;
                 }
             }
-
-            if (attr.Build != default && attr.Build != _build)
-                _logger?.Log(LogLevel.Debug,
-                    $"{type.Name} was built for build {attr.Build}, current build is {_build}.");
 
             return true;
         }

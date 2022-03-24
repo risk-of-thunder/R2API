@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Xunit;
 
-namespace R2API.Test {
+namespace R2API.Test.Tests.AwakeTests {
     public class ReflectionTests {
 #pragma warning disable CS0414 // unusued
 #pragma warning disable IDE0051 // Remove unused private members
