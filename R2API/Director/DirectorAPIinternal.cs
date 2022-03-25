@@ -104,13 +104,16 @@ namespace R2API {
             RestoreClassicStageInfoToOriginalState(classicStageInfo, stageInfo);
 
             List<DirectorCardHolder> oldDccs = null;
+            List<MonsterFamilyHolder> oldMonsterFamilies = null;
+
             var isUsingOldSystem = !classicStageInfo.monsterDccsPool && classicStageInfo.monsterCategories;
             if (isUsingOldSystem) {
                 oldDccs = GetDirectorCardHoldersFromDCCS(classicStageInfo.monsterCategories);
-            }
 
-            List<MonsterFamilyHolder> oldMonsterFamilies = null;
-            oldMonsterFamilies = classicStageInfo.possibleMonsterFamilies.Select(GetMonsterFamilyHolder).ToList();
+                if (classicStageInfo.possibleMonsterFamilies != null) {
+                    oldMonsterFamilies = classicStageInfo.possibleMonsterFamilies.Select(GetMonsterFamilyHolder).ToList();
+                }
+            }
 
             InitCustomMixEnemyArtifactDccs();
             var cardHoldersMixEnemyArtifact = GetDirectorCardHoldersFromDCCS(_dccsMixEnemyArtifact);
