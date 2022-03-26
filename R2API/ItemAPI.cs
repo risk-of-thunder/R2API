@@ -90,12 +90,13 @@ namespace R2API {
             if (!item.ItemDef.pickupModelPrefab) {
                 R2API.Logger.LogWarning($"No ItemDef.pickupModelPrefab ({item.ItemDef.name}), the game will show nothing when the item is on the ground.");
             }
-            else if (item.ItemDisplayRules != null &&
-                     item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
-                     !item.ItemDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
-                R2API.Logger.LogWarning($"ItemDef.pickupModelPrefab ({item.ItemDef.name}) does not have an ItemDisplay component attached to it " +
-                    "(there are ItemDisplayRuleType.ParentedPrefab rules), " +
-                    "the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
+
+            if(item.ItemDisplayRules != null &&
+                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
+                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => !rule.followerPrefab.GetComponent<ItemDisplay>()))) {
+                R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomItem ({item.ItemDef.name}) have an {nameof(ItemDisplayRule.followerPrefab)} with no {nameof(ItemDisplay)} component " +
+                    $"(there are ItemDisplayRuleType.ParentedPrefab rules), " +
+                    $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
             }
 
             bool xmlSafe = false;
@@ -129,45 +130,46 @@ namespace R2API {
             return AddInternal(item, Assembly.GetCallingAssembly());
         }
 
-        internal static bool AddInternal(CustomEquipment item, Assembly addingAssembly) {
+        internal static bool AddInternal(CustomEquipment equip, Assembly addingAssembly) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
             }
 
             if (!CatalogBlockers.GetAvailability<EquipmentDef>()) {
-                R2API.Logger.LogError($"Too late ! Tried to add equipment item: {item.EquipmentDef.nameToken} after the EquipmentCatalog has initialized!");
+                R2API.Logger.LogError($"Too late ! Tried to add equipment item: {equip.EquipmentDef.nameToken} after the EquipmentCatalog has initialized!");
             }
 
-            if (item.EquipmentDef == null) {
+            if (equip.EquipmentDef == null) {
                 R2API.Logger.LogError("EquipmentDef is null ! Can't add the custom Equipment.");
             }
 
-            if (string.IsNullOrEmpty(item.EquipmentDef.name)) {
+            if (string.IsNullOrEmpty(equip.EquipmentDef.name)) {
                 R2API.Logger.LogError("EquipmentDef.name is null or empty ! Can't add the custom Equipment.");
             }
 
-            if (!item.EquipmentDef.pickupModelPrefab) {
-                R2API.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab ({item.EquipmentDef.name}), the game will show nothing when the item is on the ground.");
+            if (!equip.EquipmentDef.pickupModelPrefab) {
+                R2API.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab ({equip.EquipmentDef.name}), the game will show nothing when the equipment is on the ground.");
             }
-            else if (item.ItemDisplayRules != null &&
-                     item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
-                     !item.EquipmentDef.pickupModelPrefab.GetComponent<ItemDisplay>()) {
-                R2API.Logger.LogWarning($"EquipmentDef.pickupModelPrefab ({item.EquipmentDef.name}) does not have an ItemDisplay component attached to it " +
-                    "(there are ItemDisplayRuleType.ParentedPrefab rules), " +
-                    "the pickup model should have one and have atleast a rendererInfo in it for having correct visibility levels.");
+
+            if (equip.ItemDisplayRules != null &&
+                     equip.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
+                     equip.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => !rule.followerPrefab.GetComponent<ItemDisplay>()))) {
+                R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomEquipment ({equip.EquipmentDef.name}) have an {nameof(ItemDisplayRule.followerPrefab)} with no {nameof(ItemDisplay)} component " +
+                    $"(there are ItemDisplayRuleType.ParentedPrefab rules), " +
+                    $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
             }
 
             bool xmlSafe = false;
             try {
-                XElement element = new(item.EquipmentDef.name);
+                XElement element = new(equip.EquipmentDef.name);
                 xmlSafe = true;
             }
             catch {
-                R2API.Logger.LogError($"Custom equipment '{item.EquipmentDef.name}' is not XMLsafe. Item not added.");
+                R2API.Logger.LogError($"Custom equipment '{equip.EquipmentDef.name}' is not XMLsafe. Equipment not added.");
             }
             if (xmlSafe) {
-                R2APIContentManager.HandleContentAddition(addingAssembly, item.EquipmentDef);
-                EquipmentDefinitions.Add(item);
+                R2APIContentManager.HandleContentAddition(addingAssembly, equip.EquipmentDef);
+                EquipmentDefinitions.Add(equip);
                 return true;
             }
 
@@ -505,7 +507,6 @@ namespace R2API {
             itemDisplayRules = this[bodyPrefabName];
             return bodyPrefabName != null && Dictionary.ContainsKey(bodyPrefabName);
         }
-
         /// <summary>
         /// The default rules to apply when no matching model is found.
         /// </summary>
