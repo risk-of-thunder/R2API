@@ -108,6 +108,7 @@ namespace R2API {
             }
             if (xmlSafe) {
                 R2APIContentManager.HandleContentAddition(addingAssembly, item.ItemDef);
+                ItemDefinitions.Add(item);
                 return true;
             }
 
@@ -166,6 +167,7 @@ namespace R2API {
             }
             if (xmlSafe) {
                 R2APIContentManager.HandleContentAddition(addingAssembly, item.EquipmentDef);
+                EquipmentDefinitions.Add(item);
                 return true;
             }
 
