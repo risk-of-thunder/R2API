@@ -11,7 +11,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using UnityEngine;
+using R2API.MiscHelpers;
 using Object = UnityEngine.Object;
+using System.Text;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -92,11 +94,13 @@ namespace R2API {
             }
 
             if(item.ItemDisplayRules != null &&
-                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
-                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => !rule.followerPrefab.GetComponent<ItemDisplay>()))) {
-                R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomItem ({item.ItemDef.name}) have an {nameof(ItemDisplayRule.followerPrefab)} with no {nameof(ItemDisplay)} component " +
-                    $"(there are ItemDisplayRuleType.ParentedPrefab rules), " +
-                    $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
+                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab))) {
+                if(item.ItemDisplayRules.HasInvalidDisplays(out var log)) {
+                    R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomItem ({item.ItemDef}) have an invalid {nameof(ItemDisplayRule.followerPrefab)}. " +
+                        $"(There are ItemDisplayRuleType.ParentedPrefab rules)," +
+                        $"Logging invalid rules...");
+                    R2API.Logger.LogDebug(log.ToString());
+                }
             }
 
             bool xmlSafe = false;
@@ -152,11 +156,13 @@ namespace R2API {
             }
 
             if (equip.ItemDisplayRules != null &&
-                     equip.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab)) &&
-                     equip.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => !rule.followerPrefab.GetComponent<ItemDisplay>()))) {
-                R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomEquipment ({equip.EquipmentDef.name}) have an {nameof(ItemDisplayRule.followerPrefab)} with no {nameof(ItemDisplay)} component " +
-                    $"(there are ItemDisplayRuleType.ParentedPrefab rules), " +
-                    $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
+                equip.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab))) {
+                if (equip.ItemDisplayRules.HasInvalidDisplays(out var log)) {
+                    R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomEquipment ({equip.EquipmentDef}) have an invalid {nameof(ItemDisplayRule.followerPrefab)}. " +
+                        $"(There are ItemDisplayRuleType.ParentedPrefab rules)," +
+                        $"Logging invalid rules...");
+                    R2API.Logger.LogDebug(log.ToString());
+                }
             }
 
             bool xmlSafe = false;
@@ -511,6 +517,39 @@ namespace R2API {
         /// The default rules to apply when no matching model is found.
         /// </summary>
         public ItemDisplayRule[]? DefaultRules { get; private set; }
+
+        internal bool HasInvalidDisplays(out StringBuilder logger) {
+            bool invalidDisplays = false;
+            logger = new StringBuilder();
+            foreach(var (bodyName, rules) in Dictionary) {
+                for (int i = 0; i < rules.Length; i++) {
+                    ItemDisplayRule rule = rules[i];
+                    if (rule.ruleType != ItemDisplayRuleType.ParentedPrefab)
+                        continue;
+
+                    if (!rule.followerPrefab) {
+                        logger.AppendLine($"invalid follower prefab for entry {bodyName}. The follower prefab of entry N°{i} is null. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)");
+                        invalidDisplays = false;
+                        continue;
+                    }
+
+                    if (!rule.followerPrefab.GetComponent<ItemDisplay>()) {
+                        logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) does not have an ItemDisplay component. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab) " +
+                            $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
+                        invalidDisplays = false;
+                        continue;
+                    }
+
+                    if (rule.followerPrefab.GetComponent<ItemDisplay>().rendererInfos.Length == 0) {
+                        logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) has an ItemDisplay component, but no RendererInfos assigned. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)" +
+                            $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels." );
+                        invalidDisplays = false;
+                        continue;
+                    }
+                }
+            }
+            return invalidDisplays;
+        }
 
         internal Dictionary<string, ItemDisplayRule[]?> Dictionary { get; private set; }
 
