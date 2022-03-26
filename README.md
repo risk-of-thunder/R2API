@@ -36,6 +36,7 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 
 **Current**
 
+* [Fix ItemDisplay addition for Items and Equipment](https://github.com/risk-of-thunder/R2API/pull/369)
 * [Fix contentpacks that did not have the correct name in some cases](https://github.com/risk-of-thunder/R2API/pull/366)
 * [Crit damage multiplier is now a float](https://github.com/risk-of-thunder/R2API/pull/365)
 * [ArtifactCode fix, ContentLogging fix](https://github.com/risk-of-thunder/R2API/pull/361)
