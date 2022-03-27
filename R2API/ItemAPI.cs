@@ -529,21 +529,21 @@ namespace R2API {
 
                     if (!rule.followerPrefab) {
                         logger.AppendLine($"invalid follower prefab for entry {bodyName}. The follower prefab of entry N°{i} is null. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)");
-                        invalidDisplays = false;
+                        invalidDisplays = true;
                         continue;
                     }
 
                     if (!rule.followerPrefab.GetComponent<ItemDisplay>()) {
                         logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) does not have an ItemDisplay component. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab) " +
                             $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
-                        invalidDisplays = false;
+                        invalidDisplays = true;
                         continue;
                     }
 
                     if (rule.followerPrefab.GetComponent<ItemDisplay>().rendererInfos.Length == 0) {
                         logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) has an ItemDisplay component, but no RendererInfos assigned. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)" +
                             $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels." );
-                        invalidDisplays = false;
+                        invalidDisplays = true;
                         continue;
                     }
                 }
