@@ -31,6 +31,9 @@ namespace R2API {
 
         private static bool _loaded;
 
+        /// <summary>
+        /// See <see cref="CombatDirectorInitNoTimingIssue"/>
+        /// </summary>
         static EliteAPI() {
             CombatDirectorInitNoTimingIssue();
 
@@ -63,9 +66,14 @@ namespace R2API {
             CombatDirectorInitNoTimingIssue();
         }
 
-        // Only hope at this point is HG using extensible code and not hard coding
-        // Before we were loading all hard refs earlier, but we removed that in favor of a bit better loading screen
-        // Bandaid fix for now for the api to work again : replace the RoR2Content hard refs with Addressables Load Asset
+        /// <summary>
+        /// Only hope at this point is HG using extensible code and not hard coding.
+        /// Before we were loading all hard refs earlier, but we removed that in favor of a bit better loading screen.
+        /// Bandaid fix for now for the api to work again : replace the RoR2Content hard refs with Addressables Load Asset.
+        /// Todo : investigate if adding an event like the other catalogs have + putting code inside a GenerateContentPackAsync
+        /// would be a cleaner fix or not.
+        /// Note: Will be breaking as opposed to current solution below which doesnt change anything on how the old mods were operating.
+        /// </summary>
         private static void CombatDirectorInitNoTimingIssue() {
             if (_combatDirectorInitialized) {
                 return;
