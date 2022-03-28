@@ -84,6 +84,14 @@ namespace R2API.Test.Tests.AwakeTests {
             eliteBuffDef.eliteDef = customEliteDef;
 
             Assert.True(EliteAPI.Add(new CustomElite(customEliteDef, customEliteTierDefs)));
+
+            // this may break, but right now thats the index where our custom tier should end up
+            const int ourIndex = 1;
+            Assert.True(CombatDirector.eliteTiers[ourIndex].costMultiplier == 6);
+
+            // Should be length 0 if its our custom tier def,
+            // the eliteDef will be added when content packs get added to game content. (EliteAPI.AddElitesToGame)
+            Assert.True(CombatDirector.eliteTiers[ourIndex].eliteTypes.Length == 0);
         }
 
         private bool SetAvailability(SpawnCard.EliteRules arg) {
