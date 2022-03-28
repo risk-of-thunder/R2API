@@ -398,7 +398,9 @@ namespace R2API {
                 MaxStageCompletion = family.maximumStageCompletion,
                 MinStageCompletion = family.minimumStageCompletion,
                 FamilySelectionWeight = family.selectionWeight,
-                SelectionChatString = family.familySelectionChatString
+                SelectionChatString = family.familySelectionChatString,
+                MonsterCategoryToMonsterCards = new(),
+                MonsterCategoryToSelectionWeights = new()
             };
 
             var monsterCategories = family.monsterFamilyCategories.categories;
@@ -424,6 +426,8 @@ namespace R2API {
                     cards = monsterCategoryCards.ToArray()
                 });
             }
+
+            dccs.categories = monsterCategories.ToArray();
 
             return new ClassicStageInfo.MonsterFamily {
                 familySelectionChatString = holder.SelectionChatString,
