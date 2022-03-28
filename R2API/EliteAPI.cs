@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -30,12 +31,22 @@ namespace R2API {
 
         private static bool _loaded;
 
+        static EliteAPI() {
+            CombatDirectorInitNoTimingIssue();
+
+            VanillaEliteTiers = RetrieveVanillaEliteTiers();
+            VanillaFirstTierDef = RetrieveFirstVanillaTierDef();
+            VanillaEliteOnlyFirstTierDef = RetrieveVanillaEliteOnlyFirstTierDef();
+
+            R2API.Logger.LogDebug("EliteAPI.cctor finished.");
+        }
+
         #region ModHelper Events and Hooks
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.CombatDirector.Init += RetrieveVanillaEliteTierCount;
-            On.RoR2.CombatDirector.Init += AddCustomEliteTiers;
+            On.RoR2.CombatDirector.Init += UseOurCombatDirectorInitInstead;
 
             R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
         }
@@ -43,53 +54,101 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             IL.RoR2.CombatDirector.Init -= RetrieveVanillaEliteTierCount;
-            On.RoR2.CombatDirector.Init -= AddCustomEliteTiers;
+            On.RoR2.CombatDirector.Init -= UseOurCombatDirectorInitInstead;
 
             R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
         }
 
-        [R2APISubmoduleInit(Stage = InitStage.Load)]
-        private static void Load() {
-            LazyInitVanillaEliteTiers();
+        private static void UseOurCombatDirectorInitInstead(On.RoR2.CombatDirector.orig_Init orig) {
+            CombatDirectorInitNoTimingIssue();
         }
 
-        private static void AddCustomEliteTiers(On.RoR2.CombatDirector.orig_Init orig) {
-            if (!_eliteTierCatalogInitialized) {
-                orig();
-                CombatDirector.eliteTiers = CombatDirector.eliteTiers.Concat(CustomEliteTierDefs).ToArray();
+        // Only hope at this point is HG using extensible code and not hard coding
+        // Before we were loading all hard refs earlier, but we removed that in favor of a bit better loading screen
+        // Bandaid fix for now for the api to work again : replace the RoR2Content hard refs with Addressables Load Asset
+        private static void CombatDirectorInitNoTimingIssue() {
+            if (_combatDirectorInitialized) {
+                return;
             }
-        }
 
-        private static void LazyInitVanillaEliteTiers() {
-            CombatDirector.Init();
+            var eliteTiersDef = new List<CombatDirector.EliteTierDef>();
+
+            var eliteTierDef = new CombatDirector.EliteTierDef {
+                costMultiplier = 1f,
+                eliteTypes = new EliteDef[1],
+                isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.NotEliteOnlyArtifactActive(),
+                canSelectWithoutAvailableEliteDef = true
+            };
+            eliteTiersDef.Add(eliteTierDef);
+
+            eliteTierDef = new CombatDirector.EliteTierDef {
+                costMultiplier = CombatDirector.baseEliteCostMultiplier,
+                eliteTypes = new EliteDef[] {
+                    Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteLightning/edLightning.asset").WaitForCompletion(),
+                    Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteIce/edIce.asset").WaitForCompletion(),
+                    Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteFire/edFire.asset").WaitForCompletion(),
+                    Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC1/EliteEarth/edEarth.asset").WaitForCompletion(),
+                },
+                isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.NotEliteOnlyArtifactActive() && rules == SpawnCard.EliteRules.Default,
+                canSelectWithoutAvailableEliteDef = false
+            };
+            eliteTiersDef.Add(eliteTierDef);
+
+            eliteTierDef = new CombatDirector.EliteTierDef {
+                costMultiplier = Mathf.LerpUnclamped(1f, CombatDirector.baseEliteCostMultiplier, 0.5f),
+                eliteTypes = new EliteDef[] {
+                    Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteLightning/edLightningHonor.asset").WaitForCompletion(),
+                    Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteIce/edIceHonor.asset").WaitForCompletion(),
+                    Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteFire/edFireHonor.asset").WaitForCompletion(),
+                    Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC1/EliteEarth/edEarthHonor.asset").WaitForCompletion(),
+                },
+                isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.IsEliteOnlyArtifactActive(),
+                canSelectWithoutAvailableEliteDef = false
+            };
+            eliteTiersDef.Add(eliteTierDef);
+
+            eliteTierDef = new CombatDirector.EliteTierDef {
+                costMultiplier = CombatDirector.baseEliteCostMultiplier * 6f,
+                eliteTypes = new EliteDef[] {
+                    Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/ElitePoison/edPoison.asset").WaitForCompletion(),
+                    Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteHaunted/edHaunted.asset").WaitForCompletion(),
+                },
+                isAvailable = (SpawnCard.EliteRules rules) => Run.instance.loopClearCount > 0 && rules == SpawnCard.EliteRules.Default,
+                canSelectWithoutAvailableEliteDef = false
+            };
+            eliteTiersDef.Add(eliteTierDef);
+
+            eliteTierDef = new CombatDirector.EliteTierDef {
+                costMultiplier = CombatDirector.baseEliteCostMultiplier,
+                eliteTypes = new EliteDef[] {
+                    Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteLunar/edLunar.asset").WaitForCompletion(),
+                },
+                isAvailable = (SpawnCard.EliteRules rules) => rules == SpawnCard.EliteRules.Lunar,
+                canSelectWithoutAvailableEliteDef = false
+            };
+            eliteTiersDef.Add(eliteTierDef);
+
+            CombatDirector.eliteTiers = eliteTiersDef.ToArray();
+
+            _combatDirectorInitialized = true;
         }
 
         private static void AddElitesToGame() {
-            LazyInitVanillaEliteTiers();
-
             foreach (var customElite in EliteDefinitions) {
 
-                var currentEliteTiers = GetCombatDirectorEliteTiers();
-
                 foreach (var eliteTierDef in customElite.EliteTierDefs) {
-                    if (eliteTierDef == VanillaFirstTierDef) {
-                        var eliteTypeIndex = VanillaFirstTierDef.eliteTypes.Length;
-                        Array.Resize(ref VanillaFirstTierDef.eliteTypes, eliteTypeIndex + 1);
-                        VanillaFirstTierDef.eliteTypes[eliteTypeIndex] = customElite.EliteDef;
-
-                        // Copy the elite types to VanillaEliteOnlyFirstTierDef.
-                        // VanillaEliteOnlyFirstTierDef stores the same elites as VanillaFirstTierDef
-                        // elite-only artifact equivalent
-                        VanillaEliteOnlyFirstTierDef.eliteTypes = VanillaFirstTierDef.eliteTypes;
+                    if (eliteTierDef.eliteTypes == null) {
+                        eliteTierDef.eliteTypes = Array.Empty<EliteDef>();
                     }
                     else {
-                        var eliteTypeIndex = eliteTierDef.eliteTypes.Length;
-                        Array.Resize(ref eliteTierDef.eliteTypes, eliteTypeIndex + 1);
-                        eliteTierDef.eliteTypes[eliteTypeIndex] = customElite.EliteDef;
+                        var isCustomEliteAlreadyInEliteTierDef = eliteTierDef.eliteTypes.Any(e => e == customElite.EliteDef);
+                        if (isCustomEliteAlreadyInEliteTierDef) {
+                            continue;
+                        }
                     }
-                }
 
-                OverrideCombatDirectorEliteTiers(currentEliteTiers);
+                    HG.ArrayUtils.ArrayAppend(ref eliteTierDef.eliteTypes, customElite.EliteDef);
+                }
             }
         }
 
@@ -109,10 +168,11 @@ namespace R2API {
         #region Add Methods
 
         /// <summary>
-        /// Add a custom elite to the list of available elites.
-        /// Value for EliteDef.eliteIndex can be ignored.
-        /// We can't give you the EliteIndex anymore in the method return param.
-        /// If this is called after the ItemCatalog inits then this will ignore the custom elite.
+        /// Add a custom elite to the elite catalog.
+        /// If this is called after the <see cref="EliteCatalog"/> inits then this will throw.
+        /// <see cref="CustomElite.EliteTierDefs"/> shouldnt be empty if you want to see your custom elite appear in the game.
+        /// You can also directly modify <see cref="CombatDirector.eliteTiers"/>.
+        /// Please check the constructors docs of <see cref="CustomElite"/> for more information.
         /// </summary>
         /// <param name="elite">The elite to add.</param>
         /// <returns>true if added, false otherwise</returns>
@@ -121,23 +181,26 @@ namespace R2API {
             return AddInternal(elite, Assembly.GetCallingAssembly());
         }
 
-        internal static bool AddInternal(CustomElite elite, Assembly addingAssembly) {
+        internal static bool AddInternal(CustomElite customElite, Assembly addingAssembly) {
             if (!Loaded) {
                 throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
             }
 
+            if (!customElite.EliteDef) {
+                throw new ArgumentNullException("customElite.EliteDef");
+            }
+
             if (!CatalogBlockers.GetAvailability<EliteDef>()) {
-                R2API.Logger.LogError($"Too late ! Tried to add elite: {elite.EliteDef.modifierToken} after the EliteCatalog has initialized!");
+                R2API.Logger.LogError($"Too late ! Tried to add elite: {customElite.EliteDef.modifierToken} after the EliteCatalog has initialized!");
                 return false;
             }
 
-            if (elite.EliteTierDefs == null || elite.EliteTierDefs.Count() <= 0) {
-                throw new ArgumentNullException("CustomElite.EliteTierDefs");
-
+            if (customElite.EliteTierDefs == null || customElite.EliteTierDefs.Count() <= 0) {
+                throw new ArgumentNullException("customElite.EliteTierDefs");
             }
 
-            R2APIContentManager.HandleContentAddition(addingAssembly, elite.EliteDef);
-            EliteDefinitions.Add(elite);
+            R2APIContentManager.HandleContentAddition(addingAssembly, customElite.EliteDef);
+            EliteDefinitions.Add(customElite);
             return true;
         }
 
@@ -146,41 +209,37 @@ namespace R2API {
         #region Combat Director Modifications
 
         private static CombatDirector.EliteTierDef[] RetrieveVanillaEliteTiers() {
-            LazyInitVanillaEliteTiers();
-
             return CombatDirector.eliteTiers;
         }
 
         private static CombatDirector.EliteTierDef RetrieveFirstVanillaTierDef() {
-            LazyInitVanillaEliteTiers();
-
             return CombatDirector.eliteTiers[1];
         }
 
         private static CombatDirector.EliteTierDef RetrieveVanillaEliteOnlyFirstTierDef() {
-            LazyInitVanillaEliteTiers();
-
             return CombatDirector.eliteTiers[2];
         }
 
-        public static CombatDirector.EliteTierDef[] VanillaEliteTiers { get; private set; } = RetrieveVanillaEliteTiers();
-        public static CombatDirector.EliteTierDef VanillaFirstTierDef { get; private set; } = RetrieveFirstVanillaTierDef();
-        public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef { get; private set; } = RetrieveVanillaEliteOnlyFirstTierDef();
+        public static CombatDirector.EliteTierDef[] VanillaEliteTiers { get; private set; }
+        public static CombatDirector.EliteTierDef VanillaFirstTierDef { get; private set; }
+        public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef { get; private set; }
 
         /// <summary>
         /// Returns the current elite tier definitions used by the Combat Director for doing its elite spawning while doing a run.
         /// </summary>
-        public static CombatDirector.EliteTierDef?[]? GetCombatDirectorEliteTiers() => CombatDirector.eliteTiers;
-        private static bool _eliteTierCatalogInitialized => CombatDirector.eliteTiers != null && CombatDirector.eliteTiers.Length > 0;
+        public static CombatDirector.EliteTierDef?[]? GetCombatDirectorEliteTiers() {
+            return CombatDirector.eliteTiers;
+        }
+
+        private static bool _combatDirectorInitialized;
 
         public static int VanillaEliteTierCount;
-
         private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = new List<CombatDirector.EliteTierDef>();
         public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
 
         /// <summary>
         /// The EliteTierDef array is used by the Combat Director for doing its elite spawning while doing a run.
-        /// You can get the current array used by the director with EliteAPI.GetCombatDirectorEliteTiers()
+        /// You can get the current array used by the director with <see cref="GetCombatDirectorEliteTiers"/>
         /// </summary>
         /// <param name="newEliteTiers">The new elite tiers that will be used by the combat director.</param>
         public static void OverrideCombatDirectorEliteTiers(CombatDirector.EliteTierDef?[]? newEliteTiers) {
@@ -206,7 +265,7 @@ namespace R2API {
         /// </summary>
         /// <param name="eliteTierDef">The new elite tier to add.</param>
         public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef) {
-            var indexToInsertAt = Array.FindIndex(CombatDirector.eliteTiers, x => x.costMultiplier >= eliteTierDef.costMultiplier);
+            var indexToInsertAt = Array.FindIndex(GetCombatDirectorEliteTiers(), x => x.costMultiplier >= eliteTierDef.costMultiplier);
             if (indexToInsertAt >= 0) {
                 return AddCustomEliteTier(eliteTierDef, indexToInsertAt);
             }
@@ -217,9 +276,9 @@ namespace R2API {
 
         // todo : maybe sort the CombatDirector.eliteTiers array based on cost ? the game code isnt the cleanest about this
         /// <summary>
-        /// Allows for adding a new elite tier def to the combat director.
-        /// When adding a new elite tier, do not fill the eliteTypes field with your custom elites defs if your goal is to add your custom elite in it right after.
-        /// Because when doing EliteAPI.Add, the API will add your elite to the specified tiers <see cref="CustomElite.EliteTierDefs"/>.
+        /// Allows for adding a new <see cref="CombatDirector.EliteTierDef"/>
+        /// Do NOT fill the <see cref="CombatDirector.EliteTierDef.eliteTypes"/> field with your custom elites defs if your goal is to add your custom elite in it right after.
+        /// Because when doing <see cref="Add"/>, it'll add your elite to the specified <see cref="CustomElite.EliteTierDefs"/>.
         /// </summary>
         /// <param name="eliteTierDef">The new elite tier to add.</param>
         /// <param name="indexToInsertAt">Optional index to specify if you want to insert a cheaper elite tier</param>
@@ -232,16 +291,14 @@ namespace R2API {
 
             var currentEliteTiers = GetCombatDirectorEliteTiers();
             if (currentEliteTiers != null) {
-                Array.Resize(ref currentEliteTiers, eliteTiersSize + 1);
 
                 if (indexToInsertAt == -1) {
-                    indexToInsertAt = eliteTiersSize;
+                    indexToInsertAt = currentEliteTiers.Length;
+                    HG.ArrayUtils.ArrayAppend(ref currentEliteTiers, eliteTierDef);
                 }
                 else {
-                    // Shift right starting from indexToInsertAt
-                    Array.Copy(currentEliteTiers, indexToInsertAt, currentEliteTiers, indexToInsertAt + 1, currentEliteTiers.Length - indexToInsertAt - 1);
+                    HG.ArrayUtils.ArrayInsert(ref currentEliteTiers, indexToInsertAt, eliteTierDef);
                 }
-                currentEliteTiers[indexToInsertAt] = eliteTierDef;
 
                 OverrideCombatDirectorEliteTiers(currentEliteTiers);
             }
@@ -258,9 +315,10 @@ namespace R2API {
 
     /// <summary>
     /// Class that defines a custom Elite type for use in the game
-    /// All Elites consistent of an Elite definition, a <see cref="CustomEquipment"/>
-    /// and a <see cref="BuffDef"/>. The equipment is automatically provided to
-    /// the Elite when it spawns and is configured to passively apply the buff.
+    /// All Elites consist of an <see cref="RoR2.EliteDef"/>, an <see cref="EquipmentDef"/>
+    /// and a <see cref="BuffDef"/>. 
+    /// An Elite can only spawn if its in one of the available <see cref="CombatDirector.eliteTiers"/> (vanilla or custom).
+    /// Please check the constructors docs for more information.
     /// </summary>
     public class CustomElite {
 
@@ -275,10 +333,12 @@ namespace R2API {
         public IEnumerable<CombatDirector.EliteTierDef> EliteTierDefs;
 
         /// <summary>
-        /// You can omit the index references for the EliteDef, as those will be filled in automatically by the API.
-        /// You can retrieve a vanilla EquipmentDef through RoR2Content.Equipments class
-        /// Also, don't forget to give it a valid eliteTier so that your custom elite correctly get spawned.
-        /// You can also make a totally new tier, by using OverrideCombatDirectorEliteTiers for example.
+        /// You can omit giving a value to <see cref="EliteDef.eliteIndex"/>, as it'll be filled in automatically by the game.
+        /// For your custom elite to spawn, you need to provide an enumerable of <see cref="CombatDirector.EliteTierDef"/> as second parameter.
+        /// The API will then add your <see cref="EliteDef"/> in them.
+        /// You can also make a totally new tier, by either
+        /// directly modifying the array through <see cref="EliteAPI.GetCombatDirectorEliteTiers"/> and <see cref="EliteAPI.OverrideCombatDirectorEliteTiers"/>
+        /// or by using <see cref="EliteAPI.AddCustomEliteTier(CombatDirector.EliteTierDef?)"/>
         /// </summary>
         public CustomElite(string? name, EquipmentDef equipmentDef, Color32 color, string? modifierToken, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs) {
             EliteDef = ScriptableObject.CreateInstance<EliteDef>();
@@ -289,11 +349,7 @@ namespace R2API {
             EliteTierDefs = eliteTierDefs;
         }
 
-        /// <summary>
-        /// You can omit the index references for the EliteDef, as those will be filled in automatically by the API.
-        /// But don't forget to give it a valid eliteTier so that your custom elite correctly get spawned.
-        /// You can also make a totally new tier, by using OverrideCombatDirectorEliteTiers for example.
-        /// </summary>
+        /// <inheritdoc cref="CustomElite(string?, EquipmentDef, Color32, string?, IEnumerable{CombatDirector.EliteTierDef})"/>
         public CustomElite(EliteDef? eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs) {
             EliteDef = eliteDef;
             EliteTierDefs = eliteTierDefs;
