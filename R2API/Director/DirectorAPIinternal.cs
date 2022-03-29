@@ -104,13 +104,16 @@ namespace R2API {
             RestoreClassicStageInfoToOriginalState(classicStageInfo, stageInfo);
 
             List<DirectorCardHolder> oldDccs = null;
+            List<MonsterFamilyHolder> oldMonsterFamilies = null;
+
             var isUsingOldSystem = !classicStageInfo.monsterDccsPool && classicStageInfo.monsterCategories;
             if (isUsingOldSystem) {
                 oldDccs = GetDirectorCardHoldersFromDCCS(classicStageInfo.monsterCategories);
-            }
 
-            List<MonsterFamilyHolder> oldMonsterFamilies = null;
-            oldMonsterFamilies = classicStageInfo.possibleMonsterFamilies.Select(GetMonsterFamilyHolder).ToList();
+                if (classicStageInfo.possibleMonsterFamilies != null) {
+                    oldMonsterFamilies = classicStageInfo.possibleMonsterFamilies.Select(GetMonsterFamilyHolder).ToList();
+                }
+            }
 
             InitCustomMixEnemyArtifactDccs();
             var cardHoldersMixEnemyArtifact = GetDirectorCardHoldersFromDCCS(_dccsMixEnemyArtifact);
@@ -395,7 +398,9 @@ namespace R2API {
                 MaxStageCompletion = family.maximumStageCompletion,
                 MinStageCompletion = family.minimumStageCompletion,
                 FamilySelectionWeight = family.selectionWeight,
-                SelectionChatString = family.familySelectionChatString
+                SelectionChatString = family.familySelectionChatString,
+                MonsterCategoryToMonsterCards = new(),
+                MonsterCategoryToSelectionWeights = new()
             };
 
             var monsterCategories = family.monsterFamilyCategories.categories;
@@ -421,6 +426,8 @@ namespace R2API {
                     cards = monsterCategoryCards.ToArray()
                 });
             }
+
+            dccs.categories = monsterCategories.ToArray();
 
             return new ClassicStageInfo.MonsterFamily {
                 familySelectionChatString = holder.SelectionChatString,

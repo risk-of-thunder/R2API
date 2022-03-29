@@ -2,6 +2,7 @@
 using BepInEx;
 using BepInEx.Logging;
 using HG.Reflection;
+using System;
 
 [assembly: SearchableAttribute.OptIn]
 
@@ -17,6 +18,10 @@ namespace R2API.Test {
 
         private void Awake() {
             Logger = base.Logger;
+
+            if (!R2API.DebugMode) {
+                throw new Exception("R2API.DebugMode is not enabled");
+            }
 
             var awakeRunner = new AwakeRunner();
             awakeRunner.DiscoverAndRun();
