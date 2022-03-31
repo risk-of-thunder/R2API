@@ -376,45 +376,90 @@ namespace R2API {
         }
 
         /// <summary>
+        /// Returns the <see cref="Stage"/> based on the internal name (<see cref="SceneDef.baseSceneName"/>) of the stage.
+        /// Returns <see cref="Stage.Custom"/> if the name is not vanilla.
+        /// </summary>
+        /// <param name="internalStageName"></param>
+        /// <returns></returns>
+        public static Stage ParseInternalStageName(string internalStageName) => internalStageName switch {
+            "golemplains" => Stage.TitanicPlains,
+            "blackbeach" => Stage.DistantRoost,
+            "foggyswamp" => Stage.WetlandAspect,
+            "goolake" => Stage.AbandonedAqueduct,
+            "frozenwall" => Stage.RallypointDelta,
+            "wispgraveyard" => Stage.ScorchedAcres,
+            "dampcavesimple" => Stage.AbyssalDepths,
+            "shipgraveyard" => Stage.SirensCall,
+            "goldshores" => Stage.GildedCoast,
+            "mysteryspace" => Stage.MomentFractured,
+            "bazaar" => Stage.Bazaar,
+            "arena" => Stage.VoidCell,
+            "limbo" => Stage.MomentWhole,
+            "skymeadow" => Stage.SkyMeadow,
+            "artifactworld" => Stage.ArtifactReliquary,
+            "moon2" => Stage.Commencement,
+            "rootjungle" => Stage.SunderedGrove,
+            "ancientloft" => Stage.AphelianSanctuary,
+            "itancientloft" => Stage.AphelianSanctuarySimulacrum,
+            "itdampcave" => Stage.AbyssalDepthsSimulacrum,
+            "itfrozenwall" => Stage.RallypointDeltaSimulacrum,
+            "itgolemplains" => Stage.TitanicPlainsSimulacrum,
+            "itgoolake" => Stage.AbandonedAqueductSimulacrum,
+            "itmoon" => Stage.CommencementSimulacrum,
+            "itskymeadow" => Stage.SkyMeadowSimulacrum,
+            "snowyforest" => Stage.SiphonedForest,
+            "sulfurpools" => Stage.SulfurPools,
+            "voidraid" => Stage.VoidLocus,
+            "voidstage" => Stage.ThePlanetarium,
+            _ => Stage.Custom,
+        };
+
+        /// <summary>
         /// Returns the <see cref="Stage"/> based on the <see cref="SceneDef.baseSceneName"/>.
         /// Returns <see cref="Stage.Custom"/> if the <see cref="SceneDef"/> is not vanilla.
         /// </summary>
         /// <param name="sceneDef"></param>
         /// <returns></returns>
-        public static Stage GetStageEnumFromSceneDef(SceneDef sceneDef) {
-            return sceneDef.baseSceneName switch {
-                "golemplains" => Stage.TitanicPlains,
-                "blackbeach" => Stage.DistantRoost,
-                "foggyswamp" => Stage.WetlandAspect,
-                "goolake" => Stage.AbandonedAqueduct,
-                "frozenwall" => Stage.RallypointDelta,
-                "wispgraveyard" => Stage.ScorchedAcres,
-                "dampcavesimple" => Stage.AbyssalDepths,
-                "shipgraveyard" => Stage.SirensCall,
-                "goldshores" => Stage.GildedCoast,
-                "mysteryspace" => Stage.MomentFractured,
-                "bazaar" => Stage.Bazaar,
-                "arena" => Stage.VoidCell,
-                "limbo" => Stage.MomentWhole,
-                "skymeadow" => Stage.SkyMeadow,
-                "artifactworld" => Stage.ArtifactReliquary,
-                "moon2" => Stage.Commencement,
-                "rootjungle" => Stage.SunderedGrove,
-                "ancientloft" => Stage.AphelianSanctuary,
-                "itancientloft" => Stage.AphelianSanctuarySimulacrum,
-                "itdampcave" => Stage.AbyssalDepthsSimulacrum,
-                "itfrozenwall" => Stage.RallypointDeltaSimulacrum,
-                "itgolemplains" => Stage.TitanicPlainsSimulacrum,
-                "itgoolake" => Stage.AbandonedAqueductSimulacrum,
-                "itmoon" => Stage.CommencementSimulacrum,
-                "itskymeadow" => Stage.SkyMeadowSimulacrum,
-                "snowyforest" => Stage.SiphonedForest,
-                "sulfurpools" => Stage.SulfurPools,
-                "voidraid" => Stage.VoidLocus,
-                "voidstage" => Stage.ThePlanetarium,
-                _ => Stage.Custom,
-            };
-        }
+        public static Stage GetStageEnumFromSceneDef(SceneDef sceneDef) => ParseInternalStageName(sceneDef.baseSceneName);
+
+        /// <summary>
+        /// Returns the internal name (<see cref="SceneDef.baseSceneName"/>) of the stage based on the <see cref="Stage"/>.
+        /// Returns the empty string if the stage is not vanilla.
+        /// </summary>
+        /// <param name="stage"></param>
+        /// <returns></returns>
+        public static string ToInternalStageName(Stage stage) => stage switch {
+            Stage.TitanicPlains => "golemplains",
+            Stage.DistantRoost => "blackbeach",
+            Stage.WetlandAspect => "foggyswamp",
+            Stage.AbandonedAqueduct => "goolake",
+            Stage.RallypointDelta => "frozenwall",
+            Stage.ScorchedAcres => "wispgraveyard",
+            Stage.AbyssalDepths => "dampcavesimple",
+            Stage.SirensCall => "shipgraveyard",
+            Stage.GildedCoast => "goldshores",
+            Stage.MomentFractured => "mysteryspace",
+            Stage.Bazaar => "bazaar",
+            Stage.VoidCell => "arena",
+            Stage.MomentWhole => "limbo",
+            Stage.SkyMeadow => "skymeadow",
+            Stage.ArtifactReliquary => "artifactworld",
+            Stage.Commencement => "moon2",
+            Stage.SunderedGrove => "rootjungle",
+            Stage.AphelianSanctuary => "ancientloft",
+            Stage.AphelianSanctuarySimulacrum => "itancientloft",
+            Stage.AbyssalDepthsSimulacrum => "itdampcave",
+            Stage.RallypointDeltaSimulacrum => "itfrozenwall",
+            Stage.TitanicPlainsSimulacrum => "itgolemplains",
+            Stage.AbandonedAqueductSimulacrum => "itgoolake",
+            Stage.CommencementSimulacrum => "itmoon",
+            Stage.SkyMeadowSimulacrum => "itskymeadow",
+            Stage.SiphonedForest => "snowyforest",
+            Stage.SulfurPools => "sulfurpools",
+            Stage.VoidLocus => "voidraid",
+            Stage.ThePlanetarium => "voidstage",
+            _ => "", // Stage.Custom
+        };
 
         /// <summary>
         /// Maps vanilla <see cref="Stage"/> to its <see cref="SceneDef"/>.
@@ -435,6 +480,24 @@ namespace R2API {
             /// This is set to the name of the custom stage. Is left blank for vanilla stages.
             /// </summary>
             public string CustomStageName;
+
+            /// <summary>
+            /// Returns the <see cref="StageInfo"/> based on the internal name (<see cref="SceneDef.baseSceneName"/>) of the stage.
+            /// </summary>
+            public static StageInfo ParseInternalStageName(string internalStageName) {
+                StageInfo stage;
+                stage.stage = DirectorAPI.ParseInternalStageName(internalStageName);
+                stage.CustomStageName = stage.stage is Stage.Custom ? "" : internalStageName;
+                return stage;
+            }
+
+            /// <summary>
+            /// The internal name (<see cref="SceneDef.baseSceneName"/>) of the current stage.
+            /// </summary>
+            public string ToInternalStageName() {
+                string internalStageName = DirectorAPI.ToInternalStageName(stage);
+                return internalStageName is "" ? CustomStageName : internalStageName;
+            }
 
             /// <summary>
             /// Returns true if the current stage matches any of the stages you specify.
