@@ -409,6 +409,24 @@ namespace R2API {
             }
 
             /// <summary>
+            /// Adds a new monster to matching stages.
+            /// Also add to each existing monster families if second parameter is true.
+            /// For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            /// </summary>
+            /// <param name="monsterCard"></param>
+            /// <param name="addToFamilies"></param>
+            /// <param name="matchStage"></param>
+            public static void AddNewMonsterToStagesWhere(DirectorCardHolder monsterCard, bool addToFamilies, Predicate<StageInfo> matchStage) {
+                ThrowIfNotLoaded();
+
+                MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
+                    if (matchStage(currentStage)) {
+                        AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
+                    }
+                };
+            }
+
+            /// <summary>
             /// Adds a new interactable to all stages.
             /// </summary>
             /// <param name="interactableCard">The DirectorCard for the interactable</param>
