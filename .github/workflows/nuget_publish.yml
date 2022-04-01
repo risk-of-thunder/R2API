@@ -32,9 +32,7 @@ jobs:
       run: nuget restore R2API.sln
     
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
+      uses: actions/setup-dotnet@v1.7.2
         
     - name: Restore dependencies
       run: dotnet restore
