@@ -34,26 +34,14 @@ namespace R2API {
         ///
         /// <para>
         /// First parameter is the <see cref="ClassicStageInfo.monsterDccsPool"/>,
-        /// depending if the stage was updated or not to use the new <see cref="DccsPool"/> that field CAN BE NULL,
-        /// if null, its the <see cref="ClassicStageInfo.monsterCategories"/> field that is used instead, which is always passed as
-        /// the second parameter of this event : CAN BE NULL.
-        /// One of those field is what is used to ultimately select the final <see cref="DirectorCardCategorySelection"/>.
-        /// </para>
-        ///
-        /// <para>
-        /// Make sure to guard with a if else null checks, either applying your changes to the first OR second parameter.
-        /// </para>
-        ///
-        /// <para>
-        /// The third parameter is the list of monster families and their cards. OLD SYSTEM AND CAN BE NULL. Its still here because some vanilla stages
-        /// are still using it, very much like the second parameter above.
-        /// Please refer to the paragraphs below for the new system, the families are now under a specific <see cref="DccsPool.Category"/>.
+        /// depending if the stage was updated or not to use the new <see cref="DccsPool"/>,
+        /// some of the <see cref="DccsPool.Category"/> and <see cref="DccsPool.PoolEntry"/> can be here or not.
         /// </para>
         /// 
         /// <para>
         /// For the Artifact of Dissonance <see cref="RoR2Content.Artifacts.mixEnemyArtifactDef"/>,
         /// the original DCCS is located in <see cref="RoR2Content.mixEnemyMonsterCards"/>
-        /// which is represented by the fourth parameter of this event.
+        /// which is represented by the second parameter of this event.
         /// </para>
         ///
         /// <para>
@@ -69,6 +57,7 @@ namespace R2API {
         /// The first category, <see cref="Helpers.MonsterPoolCategories.Standard"/> has, right now,
         /// a single <see cref="DccsPool.ConditionalPoolEntry"/> (contained in <see cref="DccsPool.Category.includedIfConditionsMet"/>)
         /// which contains the <see cref="DirectorCardCategorySelection"/> used for DLC1 SOTV.
+        /// Note : This <see cref="DccsPool.ConditionalPoolEntry"/> is only here for stages that were setup for having DLC1 SOTV content.
         /// If the <see cref="DccsPool.ConditionalPoolEntry.requiredExpansions"/> is not enabled in the current lobby,
         /// they are not added to the pool of choice.
         /// Right now, there is a single PoolEntry in <see cref="DccsPool.Category.includedIfNoConditionsMet"/>,
@@ -89,9 +78,10 @@ namespace R2API {
         /// which contains the <see cref="DirectorCardCategorySelection"/> used for void invasion events.
         /// It has a corresponding <see cref="DccsPool.ConditionalPoolEntry.requiredExpansions"/>,
         /// so they are only added to the pool of choice if the DLC1 expansion is enabled.
+        /// Note : This category is only here if the stage has DLC content, which is not guaranted.
         /// </para>
         /// </summary>
-        public static event Action<DccsPool, List<DirectorCardHolder>, List<MonsterFamilyHolder>, List<DirectorCardHolder>, StageInfo>? MonsterActions;
+        public static event Action<DccsPool, List<DirectorCardHolder>, StageInfo>? MonsterActions;
 
         /// <summary>
         /// <para>
@@ -100,17 +90,7 @@ namespace R2API {
         ///
         /// <para>
         /// First parameter is the <see cref="ClassicStageInfo.interactableDccsPool"/>,
-        /// which is used to select a <see cref="DirectorCardCategorySelection"/>. IT CAN BE NULL
-        /// </para>
-        ///
-        /// <para>
-        /// Second parameter is the <see cref="ClassicStageInfo.interactableCategories"/>,
-        /// which is used to select a <see cref="DirectorCardCategorySelection"/> in cases
-        /// the new system with <see cref="ClassicStageInfo.interactableDccsPool"/> is not used. IT CAN BE NULL
-        /// </para>
-        ///
-        /// <para>
-        /// Make sure to guard with a if else null checks, either applying your changes to the first OR second parameter.
+        /// which is used to select a <see cref="DirectorCardCategorySelection"/>.
         /// </para>
         /// 
         /// <para>
@@ -122,13 +102,14 @@ namespace R2API {
         /// The first category, <see cref="Helpers.InteractablePoolCategories.Standard"/> has, right now,
         /// a single <see cref="DccsPool.ConditionalPoolEntry"/> (contained in <see cref="DccsPool.Category.includedIfConditionsMet"/>)
         /// which contains the <see cref="DirectorCardCategorySelection"/> used for DLC1 SOTV.
+        /// Note : This <see cref="DccsPool.ConditionalPoolEntry"/> is only here for stages that were setup for having DLC1 SOTV content.
         /// If the <see cref="DccsPool.ConditionalPoolEntry.requiredExpansions"/> is not enabled in the current lobby,
         /// they are not added to the pool of choice.
         /// Right now, there is a single PoolEntry in <see cref="DccsPool.Category.includedIfNoConditionsMet"/>,
         /// which is the vanilla (no expansion) dccs.
         /// </para>
         /// </summary>
-        public static event Action<DccsPool, List<DirectorCardHolder>, StageInfo>? InteractableActions;
+        public static event Action<DccsPool, StageInfo>? InteractableActions;
 
         /// <summary>
         /// The categories for monsters.
