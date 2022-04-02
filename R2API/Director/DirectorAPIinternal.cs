@@ -112,9 +112,7 @@ namespace R2API {
         private static void PortToNewMonsterSystem(ClassicStageInfo classicStageInfo) {
             var isUsingOldSystem = !classicStageInfo.monsterDccsPool && classicStageInfo.monsterCategories;
             if (isUsingOldSystem) {
-                if (RoR2.Stage.instance && RoR2.Stage.instance.sceneDef) {
-                    R2API.Logger.LogInfo($"{RoR2.Stage.instance.sceneDef.baseSceneName} is using old monster dccs system, porting to new one");
-                }
+                R2API.Logger.LogInfo($"Current scene is using old monster dccs system, porting to new one");
 
                 var newDccsPool = ScriptableObject.CreateInstance<DccsPool>();
                 newDccsPool.name = "R2API_" + "dp" + classicStageInfo.name + "Monsters";
@@ -145,6 +143,7 @@ namespace R2API {
                         weight = 1
                     }
                 };
+
             dccsPoolCategories.Add(standardCategory);
         }
 
@@ -178,9 +177,7 @@ namespace R2API {
         private static void PortToNewInteractableSystem(ClassicStageInfo classicStageInfo) {
             var isUsingOldSystem = !classicStageInfo.interactableDccsPool && classicStageInfo.interactableCategories;
             if (isUsingOldSystem) {
-                if (RoR2.Stage.instance && RoR2.Stage.instance.sceneDef) {
-                    R2API.Logger.LogInfo($"{RoR2.Stage.instance.sceneDef.baseSceneName} is using old interactable dccs system, porting to new one");
-                }
+                    R2API.Logger.LogInfo($"Current scene is using old interactable dccs system, porting to new one");
 
                 var newDccsPool = ScriptableObject.CreateInstance<DccsPool>();
                 newDccsPool.name = "R2API_" + "dp" + classicStageInfo.name + "Interactables";
@@ -391,17 +388,7 @@ namespace R2API {
         }
 
         private static void ApplyInteractableChanges(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
-            List<DirectorCardHolder> oldDccs = null;
-            var isUsingOldSystem = !classicStageInfo.interactableDccsPool;
-            if (isUsingOldSystem) {
-                oldDccs = GetDirectorCardHoldersFromDCCS(classicStageInfo.interactableCategories);
-            }
-
             InteractableActions?.Invoke(classicStageInfo.interactableDccsPool, stageInfo);
-
-            if (isUsingOldSystem) {
-                ApplyNewCardHoldersToDCCS(classicStageInfo.interactableCategories, oldDccs);
-            }
         }
 
         private static StageSettings GetStageSettings(ClassicStageInfo classicStageInfo) {
@@ -442,10 +429,6 @@ namespace R2API {
                     GetMonsterCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
                 }
             }
-            else {
-                var oldDccs = classicStageInfo.monsterCategories;
-                GetMonsterCategoryWeights(stageSettings, oldDccs);
-            }
         }
 
         private static void GetMonsterCategoryWeights(StageSettings stageSettings, DirectorCardCategorySelection dccs) {
@@ -472,10 +455,6 @@ namespace R2API {
                     GetInteractableCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
                 }
             }
-            else {
-                var oldDccs = classicStageInfo.interactableCategories;
-                GetInteractableCategoryWeights(stageSettings, oldDccs);
-            }
         }
 
         private static void GetInteractableCategoryWeights(StageSettings stageSettings, DccsPool.PoolEntry[] poolCategories) {
@@ -489,51 +468,6 @@ namespace R2API {
             foreach (var category in dccs.categories) {
                 stageSettings.InteractableCategoryWeightsPerDccs[dccs][category.name] = category.selectionWeight;
             }
-        }
-
-        private static MonsterFamilyHolder GetMonsterFamilyHolder(ClassicStageInfo.MonsterFamily family) {
-            var holder = new MonsterFamilyHolder {
-                MaxStageCompletion = family.maximumStageCompletion,
-                MinStageCompletion = family.minimumStageCompletion,
-                FamilySelectionWeight = family.selectionWeight,
-                SelectionChatString = family.familySelectionChatString,
-                MonsterCategoryToMonsterCards = new(),
-                MonsterCategoryToSelectionWeights = new()
-            };
-
-            var monsterCategories = family.monsterFamilyCategories.categories;
-            foreach (var monsterCategory in monsterCategories) {
-                if (!holder.MonsterCategoryToMonsterCards.ContainsKey(monsterCategory.name)) {
-                    holder.MonsterCategoryToMonsterCards[monsterCategory.name] = monsterCategory.cards != null ? monsterCategory.cards.ToList() : new();
-                    holder.MonsterCategoryToSelectionWeights[monsterCategory.name] = monsterCategory.selectionWeight;
-                }
-            }
-
-            return holder;
-        }
-
-        private static ClassicStageInfo.MonsterFamily GetMonsterFamily(MonsterFamilyHolder holder) {
-            var dccs = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
-
-            var monsterCategories = new List<DirectorCardCategorySelection.Category>();
-
-            foreach (var (monsterCategoryName, monsterCategoryCards) in holder.MonsterCategoryToMonsterCards) {
-                monsterCategories.Add(new() {
-                    name = monsterCategoryName,
-                    selectionWeight = holder.MonsterCategoryToSelectionWeights[monsterCategoryName],
-                    cards = monsterCategoryCards.ToArray()
-                });
-            }
-
-            dccs.categories = monsterCategories.ToArray();
-
-            return new ClassicStageInfo.MonsterFamily {
-                familySelectionChatString = holder.SelectionChatString,
-                maximumStageCompletion = holder.MaxStageCompletion,
-                minimumStageCompletion = holder.MinStageCompletion,
-                selectionWeight = holder.FamilySelectionWeight,
-                monsterFamilyCategories = dccs
-            };
         }
 
         private static void SetStageSettings(ClassicStageInfo classicStageInfo, StageSettings stageSettings) {
@@ -567,10 +501,6 @@ namespace R2API {
                     SetMonsterCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
                 }
             }
-            else {
-                var oldDccs = classicStageInfo.monsterCategories;
-                SetMonsterCategoryWeights(oldDccs, stageSettings.MonsterCategoryWeightsPerDccs[oldDccs]);
-            }
         }
 
         private static void SetMonsterCategoryWeights(DirectorCardCategorySelection dccs, Dictionary<string, float> newMonsterCategoryWeights) {
@@ -595,10 +525,6 @@ namespace R2API {
                     SetInteractableCategoryWeights(stageSettings, poolCategory.includedIfConditionsMet);
                     SetInteractableCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
                 }
-            }
-            else {
-                var oldDccs = classicStageInfo.interactableCategories;
-                SetInteractableCategoryWeights(oldDccs, stageSettings.InteractableCategoryWeightsPerDccs[oldDccs]);
             }
         }
 
