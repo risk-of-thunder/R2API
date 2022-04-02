@@ -38,11 +38,16 @@ jobs:
       run: |
         find ./ReleaseOutput ! -name R2API.dll ! -name R2API.xml ! -name R2API*.nupkg -type f -delete
 
+    - name: Publish to NuGet
+      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json'
+
     - name: Install TCLI
       run: dotnet tool install --global tcli --version 0.1.4
+
+    - name: Cleanup Release Output for TS Release
+      run: rm ReleaseOutput/*.nupkg
 
     - name: Publish to thunderstore.io
       run: tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN }} --package-version ${{ env.GitVersion_MajorMinorPatch }} --config-path ./thunderstore.toml
 
-    - name: Publish to NuGet
-      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json'
+
