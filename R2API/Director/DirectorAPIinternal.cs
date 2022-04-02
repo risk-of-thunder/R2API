@@ -39,6 +39,7 @@ namespace R2API {
         }
 
         private static void ApplyChangesOnStart(On.RoR2.ClassicStageInfo.orig_Start orig, ClassicStageInfo classicStageInfo) {
+            classicStageInfo.PortToNewSystem();
             classicStageInfo.ApplyChanges();
             orig(classicStageInfo);
         }
@@ -67,8 +68,16 @@ namespace R2API {
             }
         }
 
+        // Some stages are still on the old system, those don't have any dlc related content
+        private static void PortToNewSystem(this ClassicStageInfo classicStageInfo) {
+            PortToNewMonsterSystem(classicStageInfo);
+            PortToNewInteractableSystem(classicStageInfo);
+        }
+
         internal static void ApplyChanges(this ClassicStageInfo classicStageInfo) {
             var stageInfo = GetStageInfo(classicStageInfo);
+
+            BackupOrRestoreClassicStageInfoToOriginalState(classicStageInfo, stageInfo);
 
             ApplyMonsterChanges(classicStageInfo, stageInfo);
             ApplyInteractableChanges(classicStageInfo, stageInfo);
@@ -100,31 +109,105 @@ namespace R2API {
             SetStageSettings(classicStageInfo, stageSettings);
         }
 
-        private static void ApplyMonsterChanges(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
-            RestoreClassicStageInfoToOriginalState(classicStageInfo, stageInfo);
-
-            List<DirectorCardHolder> oldDccs = null;
-            List<MonsterFamilyHolder> oldMonsterFamilies = null;
-
+        private static void PortToNewMonsterSystem(ClassicStageInfo classicStageInfo) {
             var isUsingOldSystem = !classicStageInfo.monsterDccsPool && classicStageInfo.monsterCategories;
             if (isUsingOldSystem) {
-                oldDccs = GetDirectorCardHoldersFromDCCS(classicStageInfo.monsterCategories);
+                R2API.Logger.LogInfo($"Current scene is using old monster dccs system, porting to new one");
+
+                var newDccsPool = ScriptableObject.CreateInstance<DccsPool>();
+                newDccsPool.name = "R2API_" + "dp" + classicStageInfo.name + "Monsters";
+
+                var dccsPoolCategories = new List<DccsPool.Category>();
+
+                PortOldStandardMonsterCategoriesToNewDccsPoolSystem(classicStageInfo.monsterCategories, dccsPoolCategories);
 
                 if (classicStageInfo.possibleMonsterFamilies != null) {
-                    oldMonsterFamilies = classicStageInfo.possibleMonsterFamilies.Select(GetMonsterFamilyHolder).ToList();
+                    PortOldMonsterFamiliesToNewDccsPoolSystem(classicStageInfo.possibleMonsterFamilies, dccsPoolCategories);
+                }
+
+                newDccsPool.poolCategories = dccsPoolCategories.ToArray();
+                classicStageInfo.monsterDccsPool = newDccsPool;
+            }
+        }
+
+        private static void PortOldStandardMonsterCategoriesToNewDccsPoolSystem(DirectorCardCategorySelection monsterCategories, List<DccsPool.Category> dccsPoolCategories) {
+            var standardCategory = new DccsPool.Category();
+            standardCategory.name = Helpers.MonsterPoolCategories.Standard;
+            standardCategory.categoryWeight = Helpers.MonsterPoolCategories.StandardWeight;
+
+            standardCategory.alwaysIncluded = Array.Empty<DccsPool.PoolEntry>();
+            standardCategory.includedIfConditionsMet = Array.Empty<DccsPool.ConditionalPoolEntry>();
+            standardCategory.includedIfNoConditionsMet = new DccsPool.PoolEntry[] {
+                    new DccsPool.PoolEntry() {
+                        dccs = monsterCategories,
+                        weight = 1
+                    }
+                };
+
+            dccsPoolCategories.Add(standardCategory);
+        }
+
+        private static void PortOldMonsterFamiliesToNewDccsPoolSystem(ClassicStageInfo.MonsterFamily[] possibleMonsterFamilies, List<DccsPool.Category> dccsPoolCategories) {
+            var familyCategory = new DccsPool.Category();
+            familyCategory.name = Helpers.MonsterPoolCategories.Family;
+            familyCategory.categoryWeight = ClassicStageInfo.monsterFamilyChance;
+
+            familyCategory.alwaysIncluded = Array.Empty<DccsPool.PoolEntry>();
+
+            var familyPoolEntries = new List<DccsPool.ConditionalPoolEntry>();
+            foreach (var monsterFamily in possibleMonsterFamilies) {
+                if (monsterFamily.monsterFamilyCategories is FamilyDirectorCardCategorySelection familyDccs) {
+                    familyPoolEntries.Add(new DccsPool.ConditionalPoolEntry() {
+                        dccs = familyDccs,
+                        weight = monsterFamily.selectionWeight,
+                        requiredExpansions = Array.Empty<ExpansionDef>()
+                    });
+                }
+                else {
+                    R2API.Logger.LogError($"classicStageInfo.possibleMonsterFamilies {monsterFamily.monsterFamilyCategories.name} not setup correctly");
                 }
             }
+            familyCategory.includedIfConditionsMet = familyPoolEntries.ToArray();
 
+            familyCategory.includedIfNoConditionsMet = Array.Empty<DccsPool.PoolEntry>();
+
+            dccsPoolCategories.Add(familyCategory);
+        }
+
+        private static void PortToNewInteractableSystem(ClassicStageInfo classicStageInfo) {
+            var isUsingOldSystem = !classicStageInfo.interactableDccsPool && classicStageInfo.interactableCategories;
+            if (isUsingOldSystem) {
+                    R2API.Logger.LogInfo($"Current scene is using old interactable dccs system, porting to new one");
+
+                var newDccsPool = ScriptableObject.CreateInstance<DccsPool>();
+                newDccsPool.name = "R2API_" + "dp" + classicStageInfo.name + "Interactables";
+
+                var dccsPoolCategories = new List<DccsPool.Category>();
+
+                var standardCategory = new DccsPool.Category();
+                standardCategory.name = Helpers.InteractablePoolCategories.Standard;
+                standardCategory.categoryWeight = Helpers.InteractablePoolCategories.StandardWeight;
+
+                standardCategory.alwaysIncluded = Array.Empty<DccsPool.PoolEntry>();
+                standardCategory.includedIfConditionsMet = Array.Empty<DccsPool.ConditionalPoolEntry>();
+                standardCategory.includedIfNoConditionsMet = new DccsPool.PoolEntry[] {
+                    new DccsPool.PoolEntry() {
+                        dccs = classicStageInfo.interactableCategories,
+                        weight = 1
+                    }
+                };
+                dccsPoolCategories.Add(standardCategory);
+
+                newDccsPool.poolCategories = dccsPoolCategories.ToArray();
+                classicStageInfo.interactableDccsPool = newDccsPool;
+            }
+        }
+
+        private static void ApplyMonsterChanges(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
             InitCustomMixEnemyArtifactDccs();
             var cardHoldersMixEnemyArtifact = GetDirectorCardHoldersFromDCCS(_dccsMixEnemyArtifact);
 
-            MonsterActions?.Invoke(classicStageInfo.monsterDccsPool, oldDccs, oldMonsterFamilies, cardHoldersMixEnemyArtifact, stageInfo);
-
-            if (isUsingOldSystem) {
-                ApplyNewCardHoldersToDCCS(classicStageInfo.monsterCategories, oldDccs);
-
-                classicStageInfo.possibleMonsterFamilies = oldMonsterFamilies.Select(GetMonsterFamily).ToArray();
-            }
+            MonsterActions?.Invoke(classicStageInfo.monsterDccsPool, cardHoldersMixEnemyArtifact, stageInfo);
 
             ApplyNewCardHoldersToDCCS(_dccsMixEnemyArtifact, cardHoldersMixEnemyArtifact);
         }
@@ -143,7 +226,7 @@ namespace R2API {
 
         private static readonly Dictionary<string, OriginalClassicStageInfo> _classicStageInfoNameToOriginalClassicStageInfos = new();
 
-        private static void RestoreClassicStageInfoToOriginalState(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
+        private static void BackupOrRestoreClassicStageInfoToOriginalState(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
             var key = stageInfo.stage == Stage.Custom ? stageInfo.CustomStageName : stageInfo.stage.ToString();
             if (!_classicStageInfoNameToOriginalClassicStageInfos.TryGetValue(key, out var originalClassicStageInfo)) {
                 originalClassicStageInfo = new();
@@ -169,12 +252,22 @@ namespace R2API {
                 _classicStageInfoNameToOriginalClassicStageInfos[key] = originalClassicStageInfo;
             }
             else {
-                classicStageInfo.monsterDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.monsterDccsPoolCategories).ToArray();
-                classicStageInfo.monsterCategories.CopyFrom(originalClassicStageInfo.monsterCategories);
-                classicStageInfo.possibleMonsterFamilies = originalClassicStageInfo.possibleMonsterFamilies.ToArray();
+                if (originalClassicStageInfo.monsterDccsPoolCategories != null) {
+                    classicStageInfo.monsterDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.monsterDccsPoolCategories).ToArray();
+                }
+                if (originalClassicStageInfo.monsterCategories) {
+                    classicStageInfo.monsterCategories.CopyFrom(originalClassicStageInfo.monsterCategories);
+                }
+                if (originalClassicStageInfo.possibleMonsterFamilies != null) {
+                    classicStageInfo.possibleMonsterFamilies = originalClassicStageInfo.possibleMonsterFamilies.ToArray();
+                }
 
-                classicStageInfo.interactableDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.interactableDccsPoolCategories).ToArray();
-                classicStageInfo.interactableCategories.CopyFrom(originalClassicStageInfo.interactableCategories);
+                if (originalClassicStageInfo.interactableDccsPoolCategories != null) {
+                    classicStageInfo.interactableDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.interactableDccsPoolCategories).ToArray();
+                }
+                if (originalClassicStageInfo.interactableCategories) {
+                    classicStageInfo.interactableCategories.CopyFrom(originalClassicStageInfo.interactableCategories);
+                }
             }
         }
 
@@ -295,17 +388,7 @@ namespace R2API {
         }
 
         private static void ApplyInteractableChanges(ClassicStageInfo classicStageInfo, StageInfo stageInfo) {
-            List<DirectorCardHolder> oldDccs = null;
-            var isUsingOldSystem = !classicStageInfo.interactableDccsPool;
-            if (isUsingOldSystem) {
-                oldDccs = GetDirectorCardHoldersFromDCCS(classicStageInfo.interactableCategories);
-            }
-
-            InteractableActions?.Invoke(classicStageInfo.interactableDccsPool, oldDccs, stageInfo);
-
-            if (isUsingOldSystem) {
-                ApplyNewCardHoldersToDCCS(classicStageInfo.interactableCategories, oldDccs);
-            }
+            InteractableActions?.Invoke(classicStageInfo.interactableDccsPool, stageInfo);
         }
 
         private static StageSettings GetStageSettings(ClassicStageInfo classicStageInfo) {
@@ -316,7 +399,9 @@ namespace R2API {
             };
 
             foreach (var bonusObj in classicStageInfo.bonusInteractibleCreditObjects) {
-                stageSettings.BonusCreditObjects[bonusObj.objectThatGrantsPointsIfEnabled] = bonusObj.points;
+                if (bonusObj.objectThatGrantsPointsIfEnabled) {
+                    stageSettings.BonusCreditObjects[bonusObj.objectThatGrantsPointsIfEnabled] = bonusObj.points;
+                }
             }
 
             GetMonsterCategoryWeightsPerDccs(classicStageInfo, stageSettings);
@@ -344,10 +429,6 @@ namespace R2API {
                     GetMonsterCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
                 }
             }
-            else {
-                var oldDccs = classicStageInfo.monsterCategories;
-                GetMonsterCategoryWeights(stageSettings, oldDccs);
-            }
         }
 
         private static void GetMonsterCategoryWeights(StageSettings stageSettings, DirectorCardCategorySelection dccs) {
@@ -374,10 +455,6 @@ namespace R2API {
                     GetInteractableCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
                 }
             }
-            else {
-                var oldDccs = classicStageInfo.interactableCategories;
-                GetInteractableCategoryWeights(stageSettings, oldDccs);
-            }
         }
 
         private static void GetInteractableCategoryWeights(StageSettings stageSettings, DccsPool.PoolEntry[] poolCategories) {
@@ -391,51 +468,6 @@ namespace R2API {
             foreach (var category in dccs.categories) {
                 stageSettings.InteractableCategoryWeightsPerDccs[dccs][category.name] = category.selectionWeight;
             }
-        }
-
-        private static MonsterFamilyHolder GetMonsterFamilyHolder(ClassicStageInfo.MonsterFamily family) {
-            var holder = new MonsterFamilyHolder {
-                MaxStageCompletion = family.maximumStageCompletion,
-                MinStageCompletion = family.minimumStageCompletion,
-                FamilySelectionWeight = family.selectionWeight,
-                SelectionChatString = family.familySelectionChatString,
-                MonsterCategoryToMonsterCards = new(),
-                MonsterCategoryToSelectionWeights = new()
-            };
-
-            var monsterCategories = family.monsterFamilyCategories.categories;
-            foreach (var monsterCategory in monsterCategories) {
-                if (!holder.MonsterCategoryToMonsterCards.ContainsKey(monsterCategory.name)) {
-                    holder.MonsterCategoryToMonsterCards[monsterCategory.name] = monsterCategory.cards != null ? monsterCategory.cards.ToList() : new();
-                    holder.MonsterCategoryToSelectionWeights[monsterCategory.name] = monsterCategory.selectionWeight;
-                }
-            }
-
-            return holder;
-        }
-
-        private static ClassicStageInfo.MonsterFamily GetMonsterFamily(MonsterFamilyHolder holder) {
-            var dccs = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
-
-            var monsterCategories = new List<DirectorCardCategorySelection.Category>();
-
-            foreach (var (monsterCategoryName, monsterCategoryCards) in holder.MonsterCategoryToMonsterCards) {
-                monsterCategories.Add(new() {
-                    name = monsterCategoryName,
-                    selectionWeight = holder.MonsterCategoryToSelectionWeights[monsterCategoryName],
-                    cards = monsterCategoryCards.ToArray()
-                });
-            }
-
-            dccs.categories = monsterCategories.ToArray();
-
-            return new ClassicStageInfo.MonsterFamily {
-                familySelectionChatString = holder.SelectionChatString,
-                maximumStageCompletion = holder.MaxStageCompletion,
-                minimumStageCompletion = holder.MinStageCompletion,
-                selectionWeight = holder.FamilySelectionWeight,
-                monsterFamilyCategories = dccs
-            };
         }
 
         private static void SetStageSettings(ClassicStageInfo classicStageInfo, StageSettings stageSettings) {
@@ -469,10 +501,6 @@ namespace R2API {
                     SetMonsterCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
                 }
             }
-            else {
-                var oldDccs = classicStageInfo.monsterCategories;
-                SetMonsterCategoryWeights(oldDccs, stageSettings.MonsterCategoryWeightsPerDccs[oldDccs]);
-            }
         }
 
         private static void SetMonsterCategoryWeights(DirectorCardCategorySelection dccs, Dictionary<string, float> newMonsterCategoryWeights) {
@@ -497,10 +525,6 @@ namespace R2API {
                     SetInteractableCategoryWeights(stageSettings, poolCategory.includedIfConditionsMet);
                     SetInteractableCategoryWeights(stageSettings, poolCategory.includedIfNoConditionsMet);
                 }
-            }
-            else {
-                var oldDccs = classicStageInfo.interactableCategories;
-                SetInteractableCategoryWeights(oldDccs, stageSettings.InteractableCategoryWeightsPerDccs[oldDccs]);
             }
         }
 

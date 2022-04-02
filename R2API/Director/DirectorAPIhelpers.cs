@@ -98,7 +98,7 @@ namespace R2API {
                 public static readonly string VoidJailerAlly = "cscvoidjailerally";
                 public static readonly string VoidDevastator = "cscvoidmegacrab";
                 public static readonly string Voidling = "cscvoidraidcrab";
-                public static readonly string VoidlingJoint= "cscvoidraidcrabjoint";
+                public static readonly string VoidlingJoint = "cscvoidraidcrabjoint";
                 public static readonly string VoidlingBase = "cscminivoidraidcrabbase";
                 public static readonly string VoidlingPhase1 = "cscminivoidraidcrabphase1";
                 public static readonly string VoidlingPhase2 = "cscminivoidraidcrabphase2";
@@ -268,25 +268,12 @@ namespace R2API {
             public static void PreventElites(string? monsterName, bool elitesAllowed) {
                 ThrowIfNotLoaded();
 
-                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
+                MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
 
                     if (dccsPool) {
                         ForEachPoolEntryInDccsPool(dccsPool, (poolEntry) => {
                             PreventElitesForPoolEntry(monsterName, elitesAllowed, poolEntry);
                         });
-                    }
-                    else {
-                        foreach (var holder in oldDccs) {
-                            PreventElite(monsterName, elitesAllowed, holder.Card);
-                        }
-
-                        foreach (var holder in oldMonsterFamilies) {
-                            foreach (var (monsterCategoryString, monsterCards) in holder.MonsterCategoryToMonsterCards) {
-                                foreach (var monsterCard in monsterCards) {
-                                    PreventElite(monsterName, elitesAllowed, monsterCard);
-                                }
-                            }
-                        }
                     }
 
                     foreach (var holder in mixEnemyArtifactMonsters) {
@@ -323,8 +310,8 @@ namespace R2API {
                     MonsterCategory = monsterCategory
                 };
 
-                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
-                    AddNewMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, directorCardHolder, false);
+                MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
+                    AddNewMonster(dccsPool, mixEnemyArtifactMonsters, directorCardHolder, false);
                 };
             }
 
@@ -337,14 +324,13 @@ namespace R2API {
             public static void AddNewMonster(DirectorCardHolder? monsterCard, bool addToFamilies) {
                 ThrowIfNotLoaded();
 
-                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
-                    AddNewMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
+                MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
+                    AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
                 };
             }
 
             private static void AddNewMonster(
                 DccsPool dccsPool,
-                List<DirectorCardHolder> oldDccs, List<MonsterFamilyHolder> oldMonsterFamilies,
                 List<DirectorCardHolder> mixEnemyArtifactMonsters,
                 DirectorCardHolder directorCardHolder,
                 bool addToFamilies) {
@@ -358,20 +344,6 @@ namespace R2API {
                             });
                         }
                     });
-                }
-                else {
-                    oldDccs.Add(directorCardHolder);
-
-                    if (addToFamilies) {
-                        var cardMonsterCategoryName = directorCardHolder.GetCategoryName();
-                        foreach (var monsterFamilyHolder in oldMonsterFamilies) {
-                            foreach (var (monsterCategoryName, monsterCategoryCards) in monsterFamilyHolder.MonsterCategoryToMonsterCards) {
-                                if (monsterCategoryName == cardMonsterCategoryName) {
-                                    monsterCategoryCards.Add(directorCardHolder.Card);
-                                }
-                            }
-                        }
-                    }
                 }
 
                 mixEnemyArtifactMonsters.Add(directorCardHolder);
@@ -398,10 +370,10 @@ namespace R2API {
                     MonsterCategory = monsterCategory
                 };
 
-                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
+                MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            AddNewMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, directorCardHolder, false);
+                            AddNewMonster(dccsPool, mixEnemyArtifactMonsters, directorCardHolder, false);
                         }
                     }
                 };
@@ -419,10 +391,10 @@ namespace R2API {
             public static void AddNewMonsterToStage(DirectorCardHolder monsterCard, bool addToFamilies, Stage stage, string? customStageName = "") {
                 ThrowIfNotLoaded();
 
-                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
+                MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            AddNewMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
+                            AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
                         }
                     }
                 };
@@ -442,8 +414,8 @@ namespace R2API {
                     InteractableCategory = interactableCategory,
                 };
 
-                InteractableActions += (interactablesDccsPool, oldDccs, currentStage) => {
-                    AddNewInteractableToStage(interactablesDccsPool, oldDccs, directorCardHolder);
+                InteractableActions += (interactablesDccsPool, currentStage) => {
+                    AddNewInteractableToStage(interactablesDccsPool, directorCardHolder);
                 };
             }
 
@@ -454,8 +426,8 @@ namespace R2API {
             public static void AddNewInteractable(DirectorCardHolder? directorCardHolder) {
                 ThrowIfNotLoaded();
 
-                InteractableActions += (interactablesDccsPool, oldDccs, currentStage) => {
-                    AddNewInteractableToStage(interactablesDccsPool, oldDccs, directorCardHolder);
+                InteractableActions += (interactablesDccsPool, currentStage) => {
+                    AddNewInteractableToStage(interactablesDccsPool, directorCardHolder);
                 };
             }
 
@@ -480,25 +452,22 @@ namespace R2API {
                     InteractableCategory = interactableCategory
                 };
 
-                InteractableActions += (interactablesDccsPool, oldDccs, currentStage) => {
+                InteractableActions += (interactablesDccsPool, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            AddNewInteractableToStage(interactablesDccsPool, oldDccs, directorCardHolder);
+                            AddNewInteractableToStage(interactablesDccsPool, directorCardHolder);
                         }
                     }
                 };
             }
 
             private static void AddNewInteractableToStage(
-                DccsPool interactablesDccsPool, List<DirectorCardHolder> oldDccs,
+                DccsPool interactablesDccsPool,
                 DirectorCardHolder directorCardHolder) {
                 if (interactablesDccsPool) {
                     ForEachPoolEntryInDccsPool(interactablesDccsPool, (poolEntry) => {
                         AddInteractableToPoolEntry(directorCardHolder, poolEntry);
                     });
-                }
-                else {
-                    oldDccs.Add(directorCardHolder);
                 }
             }
 
@@ -512,28 +481,19 @@ namespace R2API {
 
                 var monsterNameLowered = monsterName.ToLowerInvariant();
 
-                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
-                    RemoveExistingMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, monsterNameLowered);
+                MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
+                    RemoveExistingMonster(dccsPool, mixEnemyArtifactMonsters, monsterNameLowered);
                 };
             }
 
             private static void RemoveExistingMonster(
                 DccsPool dccsPool,
-                List<DirectorCardHolder> oldDccs, List<MonsterFamilyHolder> oldMonsterFamilies,
-                List<DirectorCardHolder> mixEnemyArtifactMonsters, string monsterNameLowered) {
+                List<DirectorCardHolder> mixEnemyArtifactMonsters,
+                string monsterNameLowered) {
                 if (dccsPool) {
                     ForEachPoolEntryInDccsPool(dccsPool, (poolEntry) => {
                         RemoveMonsterFromPoolEntry(monsterNameLowered, poolEntry);
                     });
-                }
-                else {
-                    oldDccs.RemoveAll((card) => card.Card.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
-
-                    foreach (var monsterFamily in oldMonsterFamilies) {
-                        foreach (var cards in monsterFamily.MonsterCategoryToMonsterCards.Values) {
-                            cards.RemoveAll(c => c.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
-                        }
-                    }
                 }
 
                 mixEnemyArtifactMonsters.RemoveAll((card) => card.Card.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
@@ -560,10 +520,10 @@ namespace R2API {
 
                 var monsterNameLowered = monsterName.ToLowerInvariant();
 
-                MonsterActions += (dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, currentStage) => {
+                MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            RemoveExistingMonster(dccsPool, oldDccs, oldMonsterFamilies, mixEnemyArtifactMonsters, monsterNameLowered);
+                            RemoveExistingMonster(dccsPool, mixEnemyArtifactMonsters, monsterNameLowered);
                         }
                     }
                 };
@@ -579,19 +539,16 @@ namespace R2API {
 
                 var interactableNameLowered = interactableName.ToLowerInvariant();
 
-                InteractableActions += (interactablesDccsPool, oldDccs, currentStage) => {
-                    RemoveExistingInteractable(interactablesDccsPool, oldDccs, interactableNameLowered);
+                InteractableActions += (interactablesDccsPool, currentStage) => {
+                    RemoveExistingInteractable(interactablesDccsPool, interactableNameLowered);
                 };
             }
 
-            private static void RemoveExistingInteractable(DccsPool interactablesDccsPool, List<DirectorCardHolder> oldDccs, string interactableNameLowered) {
+            private static void RemoveExistingInteractable(DccsPool interactablesDccsPool, string interactableNameLowered) {
                 if (interactablesDccsPool) {
                     ForEachPoolEntryInDccsPool(interactablesDccsPool, (poolEntry) => {
                         RemoveInteractableFromPoolEntry(interactableNameLowered, poolEntry);
                     });
-                }
-                else {
-                    oldDccs.RemoveAll((card) => card.Card.spawnCard.name.ToLowerInvariant() == interactableNameLowered);
                 }
             }
 
@@ -608,10 +565,10 @@ namespace R2API {
 
                 var interactableNameLowered = interactableName.ToLowerInvariant();
 
-                InteractableActions += (interactablesDccsPool, oldDccs, currentStage) => {
+                InteractableActions += (interactablesDccsPool, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            RemoveExistingInteractable(interactablesDccsPool, oldDccs, interactableNameLowered);
+                            RemoveExistingInteractable(interactablesDccsPool, interactableNameLowered);
                         }
                     }
                 };
