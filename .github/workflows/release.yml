@@ -23,18 +23,31 @@ jobs:
     - name: Determine Version
       uses: gittools/actions/gitversion/execute@v0.9.7
 
+    - name: Setup NuGet.exe for use with actions
+      uses: NuGet/setup-nuget@v1.0.5
+      with:
+        nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+
     - name: Update versions
       run: |
         sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"$GitVersion_MajorMinorPatch\"/" R2API/R2API.cs
     - uses: actions/setup-dotnet@v1.7.2
-    - run: dotnet build . --configuration Release --output ./ReleaseOutput
+    - run: dotnet build . --configuration Release --output ./ReleaseOutput -p:Version=$GitVersion_MajorMinorPatch
 
     - name: Cleanup Release Output
       run: |
-        find ./ReleaseOutput ! -name R2API.dll ! -name R2API.xml -type f -delete
+        find ./ReleaseOutput ! -name R2API.dll ! -name R2API.xml ! -name R2API*.nupkg -type f -delete
+
+    - name: Publish to NuGet
+      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json'
 
     - name: Install TCLI
       run: dotnet tool install --global tcli --version 0.1.4
 
+    - name: Cleanup Release Output for TS Release
+      run: rm ReleaseOutput/*.nupkg
+
     - name: Publish to thunderstore.io
       run: tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN }} --package-version ${{ env.GitVersion_MajorMinorPatch }} --config-path ./thunderstore.toml
+
+
