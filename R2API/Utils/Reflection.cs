@@ -16,15 +16,15 @@ namespace R2API.Utils {
         private const BindingFlags AllFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static |
                                               BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
-        private delegate T GetDelegate<out T>(object instance);
+        public delegate T GetDelegate<out T>(object instance);
 
-        private delegate void SetDelegate<in T>(object instance, T value);
+        public delegate void SetDelegate<in T>(object instance, T value);
 
         //private delegate object CallDelegate(object instance, object[] arguments);
 
-        private delegate void SetDelegateRef<TInstance, in TValue>(ref TInstance instance, TValue value) where TInstance : struct;
+        public delegate void SetDelegateRef<TInstance, in TValue>(ref TInstance instance, TValue value) where TInstance : struct;
 
-        private delegate T GetDelegateRef<TInstance, out T>(ref TInstance instance) where TInstance : struct;
+        public delegate T GetDelegateRef<TInstance, out T>(ref TInstance instance) where TInstance : struct;
 
         #region Caches
 
@@ -192,15 +192,15 @@ namespace R2API.Utils {
             return null;
         }
 
-        private static GetDelegate<TReturn> GetFieldGetDelegate<TReturn>(this FieldInfo field) =>
+        public static GetDelegate<TReturn> GetFieldGetDelegate<TReturn>(this FieldInfo field) =>
             FieldGetDelegateCache.GetOrAdd(field, x => x.CreateGetDelegate<TReturn>())
                 .CastDelegate<GetDelegate<TReturn>>();
 
-        private static SetDelegate<TValue> GetFieldSetDelegate<TValue>(this FieldInfo field) =>
+        public static SetDelegate<TValue> GetFieldSetDelegate<TValue>(this FieldInfo field) =>
             FieldSetDelegateCache.GetOrAdd(field, x => x.CreateSetDelegate<TValue>())
                 .CastDelegate<SetDelegate<TValue>>();
 
-        private static SetDelegateRef<TInstance, TValue> GetFieldSetDelegateRef<TInstance, TValue>(this FieldInfo field) where TInstance : struct =>
+        public static SetDelegateRef<TInstance, TValue> GetFieldSetDelegateRef<TInstance, TValue>(this FieldInfo field) where TInstance : struct =>
             FieldSetDelegateCache.GetOrAdd(field, x => x.CreateSetDelegateRef<TInstance, TValue>())
                 .CastDelegate<SetDelegateRef<TInstance, TValue>>();
 
@@ -325,16 +325,16 @@ namespace R2API.Utils {
         public static MethodInfo GetPropertySetter(this Type type, string nameOfProperty) =>
             type.GetProperty(nameOfProperty, AllFlags).GetSetMethod(true);
 
-        private static GetDelegate<TReturn> GetPropertyGetDelegate<TReturn>(this PropertyInfo property) =>
+        public static GetDelegate<TReturn> GetPropertyGetDelegate<TReturn>(this PropertyInfo property) =>
             PropertyGetDelegateCache.GetOrAdd(property, prop => prop.CreateGetDelegate<TReturn>())
                 .CastDelegate<GetDelegate<TReturn>>();
 
-        private static GetDelegateRef<TInstance, TReturn> GetPropertyGetDelegateRef<TInstance, TReturn>(this PropertyInfo property)
+        public static GetDelegateRef<TInstance, TReturn> GetPropertyGetDelegateRef<TInstance, TReturn>(this PropertyInfo property)
             where TInstance : struct =>
             PropertyGetDelegateCache.GetOrAdd(property, prop => prop.CreateGetDelegate<TInstance, TReturn>())
                 .CastDelegate<GetDelegateRef<TInstance, TReturn>>();
 
-        private static SetDelegate<TValue> GetPropertySetDelegate<TValue>(this PropertyInfo property) =>
+        public static SetDelegate<TValue> GetPropertySetDelegate<TValue>(this PropertyInfo property) =>
             PropertySetDelegateCache.GetOrAdd(property, prop => prop.CreateSetDelegate<TValue>())
                 .CastDelegate<SetDelegate<TValue>>();
 
@@ -506,7 +506,7 @@ namespace R2API.Utils {
         public static void InvokeMethod(this Type? staticType, string? methodName, params object?[]? methodParams) =>
             staticType.InvokeMethod<object>(methodName, methodParams);
 
-        private static FastReflectionDelegate GetMethodDelegateCached(this MethodInfo methodInfo) =>
+        public static FastReflectionDelegate GetMethodDelegateCached(this MethodInfo methodInfo) =>
             DelegateCache.GetOrAdd(methodInfo, method => method.GenerateCallDelegate());
 
         #endregion Method
