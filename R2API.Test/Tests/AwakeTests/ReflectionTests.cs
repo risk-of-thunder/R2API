@@ -91,6 +91,18 @@ namespace R2API.Test.Tests.AwakeTests {
         }
 
         [Fact]
+        public void TestReflectionCombineHashCode() {
+            var hashcode1 = Reflection.CombineHashCode(new Type[]
+                {typeof(string), typeof(int), typeof(string), typeof(int)});
+            var hashcode2 = Reflection.CombineHashCode(new Type[]
+                {typeof(string), typeof(string), typeof(int), typeof(int)});
+            var hashcode3 = Reflection.CombineHashCode(new Type[]
+                {typeof(string), typeof(string), typeof(int), typeof(int)});
+            Assert.NotEqual(hashcode1, hashcode2);
+            Assert.Equal(hashcode2, hashcode3);
+        }
+
+        [Fact]
         public void TestReflectionConstructorCache() {
             var cacheDict = typeof(Reflection).GetFieldValue<ConcurrentDictionary<(Type, int), ConstructorInfo>>("ConstructorCache");
             var key = (typeof(ReflectionTestObject), Reflection.CombineHashCode(new Type[]{}));

@@ -71,16 +71,11 @@ namespace R2API.Utils {
             new ConcurrentDictionary<(Type T, string name), Type>();
 
         // Helper methods
-        public static int CombineHashCode<T>(IList<T> list) {
+        public static int CombineHashCode<T>(IEnumerable<T> enumerable) {
             unchecked {
                 var hash = 0;
-                var last = list.Count - 1;
-                for (var i = 0; i < list.Count; i++) {
-                    if (i == last) {
-                        hash += EqualityComparer<T>.Default.GetHashCode(list[i]);
-                    } else {
-                        hash += EqualityComparer<T>.Default.GetHashCode(list[i]) * -1521134295;
-                    }
+                foreach (var item in enumerable) {
+                    hash = hash * 486187739 + EqualityComparer<T>.Default.GetHashCode(item);
                 }
 
                 return hash;
