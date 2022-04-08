@@ -25,16 +25,16 @@ namespace R2API {
 
         private static bool _loaded;
 
-        internal static uint currentProcTypeIndex = (uint)ProcType.Count;
+        internal static uint currentProcTypeIndex = (uint)ProcType.Count + 1;
 
         /// <summary>
         /// Reserve a unique ProcType for use with ProcChainMask.
         /// </summary>
         public static ProcType ReserveProcType() {
-            if (!Loaded) {
+            if (!Loaded)
+            {
                 throw new InvalidOperationException($"{nameof(ProcTypeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ProcTypeAPI)})]");
             }
-
 
             return (ProcType)currentProcTypeIndex++;
         }

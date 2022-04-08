@@ -50,7 +50,7 @@ namespace R2API {
             if (cursor.TryGotoNext(
                 i => i.MatchCallOrCallvirt<DirectorCardCategorySelection>(nameof(DirectorCardCategorySelection.CopyFrom))
                 )) {
-                cursor.EmitDelegate(SwapDccs);
+                //cursor.EmitDelegate(SwapDccs);
             }
 
             static DirectorCardCategorySelection SwapDccs(DirectorCardCategorySelection vanillaDccs) {
