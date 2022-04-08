@@ -52,23 +52,35 @@ namespace R2API.Utils {
         private static readonly ConcurrentDictionary<(Type T, string name), MethodInfo> MethodCache =
             new ConcurrentDictionary<(Type T, string name), MethodInfo>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name, Type[] argumentTypes), MethodInfo>
+        private static readonly ConcurrentDictionary<(Type T, string name, int argumentTypesHashCode), MethodInfo>
             OverloadedMethodCache =
-                new ConcurrentDictionary<(Type T, string name, Type[] argumentTypes), MethodInfo>();
+                new ConcurrentDictionary<(Type T, string name, int argumentTypesHashCode), MethodInfo>();
 
         private static readonly ConcurrentDictionary<(Type T, string name), FastReflectionDelegate> MethodDelegateCache =
             new ConcurrentDictionary<(Type T, string name), FastReflectionDelegate>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name, Type[] argumentTypes), FastReflectionDelegate>
+        private static readonly ConcurrentDictionary<(Type T, string name, int argumentTypesHashCode), FastReflectionDelegate>
             OverloadedMethodDelegateCache =
-                new ConcurrentDictionary<(Type T, string name, Type[] argumentTypes), FastReflectionDelegate>();
+                new ConcurrentDictionary<(Type T, string name, int argumentTypesHashCode), FastReflectionDelegate>();
 
         // Class
-        private static readonly ConcurrentDictionary<(Type T, Type[] argumentTypes), ConstructorInfo> ConstructorCache =
-            new ConcurrentDictionary<(Type T, Type[] argumentTypes), ConstructorInfo>();
+        private static readonly ConcurrentDictionary<(Type T, int argumentTypesHashCode), ConstructorInfo> ConstructorCache =
+            new ConcurrentDictionary<(Type T, int argumentTypesHashCode), ConstructorInfo>();
 
         private static readonly ConcurrentDictionary<(Type T, string name), Type> NestedTypeCache =
             new ConcurrentDictionary<(Type T, string name), Type>();
+
+        // Helper methods
+        public static int CombineHashCode<T>(IEnumerable<T> enumerable) {
+            unchecked {
+                var hash = 0;
+                foreach (var item in enumerable) {
+                    hash = hash * -1521134295 + EqualityComparer<T>.Default.GetHashCode(item);
+                }
+
+                return hash;
+            }
+        }
 
         #endregion Caches
 
@@ -401,11 +413,12 @@ namespace R2API.Utils {
         /// <param name="name">The name of the method to find</param>
         /// <param name="argumentTypes">The types of the argument</param>
         public static MethodInfo GetMethodCached(this Type? T, string? name, Type?[]? argumentTypes) {
-            if (OverloadedMethodCache.TryGetValue((T, name, argumentTypes), out var result)) {
+            var key = (T, name, CombineHashCode(argumentTypes));
+            if (OverloadedMethodCache.TryGetValue(key, out var result)) {
                 return result;
             }
 
-            return OverloadedMethodCache[(T, name, argumentTypes)] = T.GetMethod(name, AllFlags, null, argumentTypes, null);
+            return OverloadedMethodCache[key] = T.GetMethod(name, AllFlags, null, argumentTypes, null);
         }
 
         /// <summary>
@@ -505,11 +518,12 @@ namespace R2API.Utils {
         }
 
         public static FastReflectionDelegate GetMethodDelegateCached(this Type type, string? methodName, Type[] argumentTypes) {
-            if (OverloadedMethodDelegateCache.TryGetValue((type, methodName, argumentTypes), out var result)) {
+            var key = (type, methodName, CombineHashCode(argumentTypes));
+            if (OverloadedMethodDelegateCache.TryGetValue(key, out var result)) {
                 return result;
             }
 
-            return OverloadedMethodDelegateCache[(type, methodName, argumentTypes)] = type.GetMethodCached(methodName, argumentTypes).GenerateCallDelegate();
+            return OverloadedMethodDelegateCache[key] = type.GetMethodCached(methodName, argumentTypes).GenerateCallDelegate();
         }
 
         #endregion Method
@@ -532,11 +546,12 @@ namespace R2API.Utils {
         /// <param name="argumentTypes">The types of the arguments on the constructor to find</param>
         /// <returns></returns>
         public static ConstructorInfo GetConstructorCached(this Type? T, Type?[]? argumentTypes) {
-            if (ConstructorCache.TryGetValue((T, argumentTypes), out var result)) {
+            var key = (T, CombineHashCode(argumentTypes));
+            if (ConstructorCache.TryGetValue(key, out var result)) {
                 return result;
             }
 
-            return ConstructorCache[(T, argumentTypes)] = T.GetConstructor(argumentTypes);
+            return ConstructorCache[key] = T.GetConstructor(argumentTypes);
         }
 
         /// <summary>

@@ -2,7 +2,10 @@ using R2API.Utils;
 using RoR2;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Reflection;
+using MonoMod.Utils;
 using Xunit;
 
 namespace R2API.Test.Tests.AwakeTests {
@@ -66,6 +69,38 @@ namespace R2API.Test.Tests.AwakeTests {
         }
 
         [Fact]
+        public void TestReflectionFastReflectionDelegateCache() {
+            var cacheDict = typeof(Reflection).GetFieldValue<ConcurrentDictionary<(Type, string, int), FastReflectionDelegate>>("OverloadedMethodDelegateCache");
+            var key = (typeof(ReflectionTestObject), "Test3", Reflection.CombineHashCode(new Type[]{}));
+            Assert.False(cacheDict.ContainsKey(key));
+
+            var testObject = new ReflectionTestObject();
+            testObject.InvokeMethod<string>("Test3", new object[]{});
+            Assert.True(cacheDict.ContainsKey(key));
+        }
+
+        [Fact]
+        public void TestReflectionMethodInfoCache() {
+            var cacheDict = typeof(Reflection).GetFieldValue<ConcurrentDictionary<(Type, string, int), MethodInfo>>("OverloadedMethodCache");
+            var key = (typeof(ReflectionTestObject), "Test3", Reflection.CombineHashCode(new Type[]{typeof(string)}));
+            Assert.False(cacheDict.ContainsKey(key));
+
+            var testObject = new ReflectionTestObject();
+            testObject.InvokeMethod<string>("Test3", "1");
+            Assert.True(cacheDict.ContainsKey(key));
+        }
+
+        [Fact]
+        public void TestReflectionConstructorCache() {
+            var cacheDict = typeof(Reflection).GetFieldValue<ConcurrentDictionary<(Type, int), ConstructorInfo>>("ConstructorCache");
+            var key = (typeof(ReflectionTestObject), Reflection.CombineHashCode(new Type[]{}));
+            Assert.False(cacheDict.ContainsKey(key));
+
+            typeof(ReflectionTestObject).Instantiate(new object[] { });
+            Assert.True(cacheDict.ContainsKey(key));
+        }
+
+        [Fact]
         public void TestReflectionCallVoid() {
             var testObject = new ReflectionTestObject();
             testObject.InvokeMethod("Test2", "testValue");
@@ -97,7 +132,7 @@ namespace R2API.Test.Tests.AwakeTests {
 
         [Fact]
         public void TestReflectionWrongArgumentCount() {
-            Assert.Throws<Exception>(() => {
+            Assert.ThrowsAny<Exception>(() => {
                 var val = typeof(StaticReflectionTestObject).InvokeMethod<string>("Test", "a");
             });
         }
@@ -265,6 +300,14 @@ namespace R2API.Test.Tests.AwakeTests {
 
         private void Test2(string privateValue) {
             PrivateValue1 = privateValue;
+        }
+
+        private string Test3() {
+            return "";
+        }
+
+        private string Test3(string arg) {
+            return arg;
         }
     }
 
