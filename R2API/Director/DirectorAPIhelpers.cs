@@ -336,7 +336,7 @@ namespace R2API {
             /// <param name="mixEnemyArtifactMonsters"></param>
             /// <param name="monsterCardHolder"></param>
             /// <param name="addToFamilies">Whether to also add to each existing monster family</param>
-            private static void AddNewMonster(
+            public static void AddNewMonster(
                 DccsPool dccsPool,
                 List<DirectorCardHolder> mixEnemyArtifactMonsters,
                 DirectorCardHolder monsterCardHolder,
