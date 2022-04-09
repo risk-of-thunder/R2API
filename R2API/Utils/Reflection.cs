@@ -29,46 +29,46 @@ namespace R2API.Utils {
         #region Caches
 
         // Field
-        private static readonly ConcurrentDictionary<(Type T, string name), FieldInfo> FieldCache =
-            new ConcurrentDictionary<(Type T, string name), FieldInfo>();
+        private static readonly Dictionary<(Type T, string name), FieldInfo> FieldCache =
+            new Dictionary<(Type T, string name), FieldInfo>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name), Delegate> FieldGetDelegateCache =
-            new ConcurrentDictionary<(Type T, string name), Delegate>();
+        private static readonly Dictionary<(Type T, string name), Delegate> FieldGetDelegateCache =
+            new Dictionary<(Type T, string name), Delegate>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name), Delegate> FieldSetDelegateCache =
-            new ConcurrentDictionary<(Type T, string name), Delegate>();
+        private static readonly Dictionary<(Type T, string name), Delegate> FieldSetDelegateCache =
+            new Dictionary<(Type T, string name), Delegate>();
 
         // Property
-        private static readonly ConcurrentDictionary<(Type T, string name), PropertyInfo> PropertyCache =
-            new ConcurrentDictionary<(Type T, string name), PropertyInfo>();
+        private static readonly Dictionary<(Type T, string name), PropertyInfo> PropertyCache =
+            new Dictionary<(Type T, string name), PropertyInfo>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name), Delegate> PropertyGetDelegateCache =
-            new ConcurrentDictionary<(Type T, string name), Delegate>();
+        private static readonly Dictionary<(Type T, string name), Delegate> PropertyGetDelegateCache =
+            new Dictionary<(Type T, string name), Delegate>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name), Delegate> PropertySetDelegateCache =
-            new ConcurrentDictionary<(Type T, string name), Delegate>();
+        private static readonly Dictionary<(Type T, string name), Delegate> PropertySetDelegateCache =
+            new Dictionary<(Type T, string name), Delegate>();
 
         // Method
-        private static readonly ConcurrentDictionary<(Type T, string name), MethodInfo> MethodCache =
-            new ConcurrentDictionary<(Type T, string name), MethodInfo>();
+        private static readonly Dictionary<(Type T, string name), MethodInfo> MethodCache =
+            new Dictionary<(Type T, string name), MethodInfo>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name, int argumentTypesHashCode), MethodInfo>
+        private static readonly Dictionary<(Type T, string name, int argumentTypesHashCode), MethodInfo>
             OverloadedMethodCache =
-                new ConcurrentDictionary<(Type T, string name, int argumentTypesHashCode), MethodInfo>();
+                new Dictionary<(Type T, string name, int argumentTypesHashCode), MethodInfo>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name), FastReflectionDelegate> MethodDelegateCache =
-            new ConcurrentDictionary<(Type T, string name), FastReflectionDelegate>();
+        private static readonly Dictionary<(Type T, string name), FastReflectionDelegate> MethodDelegateCache =
+            new Dictionary<(Type T, string name), FastReflectionDelegate>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name, int argumentTypesHashCode), FastReflectionDelegate>
+        private static readonly Dictionary<(Type T, string name, int argumentTypesHashCode), FastReflectionDelegate>
             OverloadedMethodDelegateCache =
-                new ConcurrentDictionary<(Type T, string name, int argumentTypesHashCode), FastReflectionDelegate>();
+                new Dictionary<(Type T, string name, int argumentTypesHashCode), FastReflectionDelegate>();
 
         // Class
-        private static readonly ConcurrentDictionary<(Type T, int argumentTypesHashCode), ConstructorInfo> ConstructorCache =
-            new ConcurrentDictionary<(Type T, int argumentTypesHashCode), ConstructorInfo>();
+        private static readonly Dictionary<(Type T, int argumentTypesHashCode), ConstructorInfo> ConstructorCache =
+            new Dictionary<(Type T, int argumentTypesHashCode), ConstructorInfo>();
 
-        private static readonly ConcurrentDictionary<(Type T, string name), Type> NestedTypeCache =
-            new ConcurrentDictionary<(Type T, string name), Type>();
+        private static readonly Dictionary<(Type T, string name), Type> NestedTypeCache =
+            new Dictionary<(Type T, string name), Type>();
 
         // Helper methods
         public static int CombineHashCode<T>(IEnumerable<T> enumerable) {
