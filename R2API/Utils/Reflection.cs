@@ -32,21 +32,21 @@ namespace R2API.Utils {
         private static readonly Dictionary<(Type T, string name), FieldInfo> FieldCache =
             new Dictionary<(Type T, string name), FieldInfo>();
 
-        private static readonly Dictionary<(Type T, string name), Delegate> FieldGetDelegateCache =
-            new Dictionary<(Type T, string name), Delegate>();
+        private static readonly Dictionary<(Type T, string name, Type TReturn), Delegate> FieldGetDelegateCache =
+            new Dictionary<(Type T, string name, Type TReturn), Delegate>();
 
-        private static readonly Dictionary<(Type T, string name), Delegate> FieldSetDelegateCache =
-            new Dictionary<(Type T, string name), Delegate>();
+        private static readonly Dictionary<(Type T, string name, Type TValue), Delegate> FieldSetDelegateCache =
+            new Dictionary<(Type T, string name, Type TValue), Delegate>();
 
         // Property
         private static readonly Dictionary<(Type T, string name), PropertyInfo> PropertyCache =
             new Dictionary<(Type T, string name), PropertyInfo>();
 
-        private static readonly Dictionary<(Type T, string name), Delegate> PropertyGetDelegateCache =
-            new Dictionary<(Type T, string name), Delegate>();
+        private static readonly Dictionary<(Type T, string name, Type TInstance, Type TReturn), Delegate> PropertyGetDelegateCache =
+            new Dictionary<(Type T, string name, Type TInstance, Type TReturn), Delegate>();
 
-        private static readonly Dictionary<(Type T, string name), Delegate> PropertySetDelegateCache =
-            new Dictionary<(Type T, string name), Delegate>();
+        private static readonly Dictionary<(Type T, string name, Type TInstance, Type TValue), Delegate> PropertySetDelegateCache =
+            new Dictionary<(Type T, string name, Type TInstance, Type TValue), Delegate>();
 
         // Method
         private static readonly Dictionary<(Type T, string name), MethodInfo> MethodCache =
@@ -185,27 +185,27 @@ namespace R2API.Utils {
         }
 
         public static GetDelegate<TReturn> GetFieldGetDelegate<TReturn>(this Type type, string? fieldName) {
-            if (FieldGetDelegateCache.TryGetValue((type, fieldName), out var result)) {
+            if (FieldGetDelegateCache.TryGetValue((type, fieldName, typeof(TReturn)), out var result)) {
                 return (GetDelegate<TReturn>)result;
             }
 
-            return (GetDelegate<TReturn>)(FieldGetDelegateCache[(type, fieldName)] = type.GetFieldCached(fieldName).CreateGetDelegate<TReturn>());
+            return (GetDelegate<TReturn>)(FieldGetDelegateCache[(type, fieldName, typeof(TReturn))] = type.GetFieldCached(fieldName).CreateGetDelegate<TReturn>());
         }
 
         public static SetDelegate<TValue> GetFieldSetDelegate<TValue>(this Type type, string? fieldName) {
-            if (FieldSetDelegateCache.TryGetValue((type, fieldName), out var result)) {
+            if (FieldSetDelegateCache.TryGetValue((type, fieldName, typeof(TValue)), out var result)) {
                 return (SetDelegate<TValue>)result;
             }
 
-            return (SetDelegate<TValue>)(FieldSetDelegateCache[(type, fieldName)] = type.GetFieldCached(fieldName).CreateSetDelegate<TValue>());
+            return (SetDelegate<TValue>)(FieldSetDelegateCache[(type, fieldName, typeof(TValue))] = type.GetFieldCached(fieldName).CreateSetDelegate<TValue>());
         }
 
         public static SetDelegateRef<TInstance, TValue> GetFieldSetDelegateRef<TInstance, TValue>(this Type type, string? fieldName) where TInstance : struct {
-            if (FieldSetDelegateCache.TryGetValue((type, fieldName), out var result)) {
+            if (FieldSetDelegateCache.TryGetValue((type, fieldName, typeof(TValue)), out var result)) {
                 return (SetDelegateRef<TInstance, TValue>)result;
             }
 
-            return (SetDelegateRef<TInstance, TValue>)(FieldSetDelegateCache[(type, fieldName)] = type.GetFieldCached(fieldName).CreateSetDelegateRef<TInstance, TValue>());
+            return (SetDelegateRef<TInstance, TValue>)(FieldSetDelegateCache[(type, fieldName, typeof(TValue))] = type.GetFieldCached(fieldName).CreateSetDelegateRef<TInstance, TValue>());
         }
 
         #endregion Field
@@ -312,38 +312,38 @@ namespace R2API.Utils {
             type.GetProperty(propName, AllFlags).GetSetMethod(true);
 
         public static GetDelegate<TReturn> GetPropertyGetDelegate<TReturn>(this Type type, string? propName) {
-            if (PropertyGetDelegateCache.TryGetValue((type, propName), out var result)) {
+            if (PropertyGetDelegateCache.TryGetValue((type, propName, typeof(object), typeof(TReturn)), out var result)) {
                 return (GetDelegate<TReturn>)result;
             }
 
-            return (GetDelegate<TReturn>)(PropertyGetDelegateCache[(type, propName)] = type.GetPropertyCached(propName).CreateGetDelegate<TReturn>());
+            return (GetDelegate<TReturn>)(PropertyGetDelegateCache[(type, propName, typeof(object), typeof(TReturn))] = type.GetPropertyCached(propName).CreateGetDelegate<TReturn>());
         }
 
         public static GetDelegateRef<TInstance, TReturn> GetPropertyGetDelegateRef<TInstance, TReturn>(this Type type, string? propName)
             where TInstance : struct {
-            if (PropertyGetDelegateCache.TryGetValue((type, propName), out var result)) {
+            if (PropertyGetDelegateCache.TryGetValue((type, propName, typeof(TInstance), typeof(TReturn)), out var result)) {
                 return (GetDelegateRef<TInstance, TReturn>)result;
             }
 
-            return (GetDelegateRef<TInstance, TReturn>)(PropertyGetDelegateCache[(type, propName)] = type.GetPropertyCached(propName).CreateGetDelegate<TInstance, TReturn>());
+            return (GetDelegateRef<TInstance, TReturn>)(PropertyGetDelegateCache[(type, propName, typeof(TInstance), typeof(TReturn))] = type.GetPropertyCached(propName).CreateGetDelegate<TInstance, TReturn>());
         }
 
         public static SetDelegate<TValue> GetPropertySetDelegate<TValue>(this Type type, string? propName) {
-            if (PropertySetDelegateCache.TryGetValue((type, propName), out var result)) {
+            if (PropertySetDelegateCache.TryGetValue((type, propName, typeof(object), typeof(TValue)), out var result)) {
                 return (SetDelegate<TValue>)result;
             }
 
-            return (SetDelegate<TValue>)(PropertySetDelegateCache[(type, propName)] = type.GetPropertyCached(propName).CreateSetDelegate<TValue>());
+            return (SetDelegate<TValue>)(PropertySetDelegateCache[(type, propName, typeof(object), typeof(TValue))] = type.GetPropertyCached(propName).CreateSetDelegate<TValue>());
         }
 
         private static SetDelegateRef<TInstance, TValue> GetPropertySetDelegateRef<TInstance, TValue>(
             this Type type, string? propName)
             where TInstance : struct {
-            if (PropertySetDelegateCache.TryGetValue((type, propName), out var result)) {
+            if (PropertySetDelegateCache.TryGetValue((type, propName, typeof(TInstance), typeof(TValue)), out var result)) {
                 return (SetDelegateRef<TInstance, TValue>)result;
             }
 
-            return (SetDelegateRef<TInstance, TValue>)(PropertySetDelegateCache[(type, propName)] = type.GetPropertyCached(propName).CreateSetDelegateRef<TInstance, TValue>());
+            return (SetDelegateRef<TInstance, TValue>)(PropertySetDelegateCache[(type, propName, typeof(TInstance), typeof(TValue))] = type.GetPropertyCached(propName).CreateSetDelegateRef<TInstance, TValue>());
         }
 
         #endregion Property

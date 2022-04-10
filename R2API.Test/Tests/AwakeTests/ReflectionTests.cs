@@ -41,6 +41,24 @@ namespace R2API.Test.Tests.AwakeTests {
         }
 
         [Fact]
+        public void TestReflectionGetFieldGetDelegate() {
+            var val1 = typeof(ReflectionTestObject).GetFieldGetDelegate<object>("PrivateValue1");
+            var val2 = typeof(ReflectionTestObject).GetFieldGetDelegate<object>("PrivateValue1");
+            var val3 = typeof(ReflectionTestObject).GetFieldGetDelegate<string>("PrivateValue1");
+            Assert.Same(val1, val2);
+            Assert.NotSame(val1, val3);
+        }
+
+        [Fact]
+        public void TestReflectionGetFieldSetDelegate() {
+            var val1 = typeof(ReflectionTestObject).GetFieldSetDelegate<object>("PrivateValue2");
+            var val2 = typeof(ReflectionTestObject).GetFieldSetDelegate<object>("PrivateValue2");
+            var val3 = typeof(ReflectionTestObject).GetFieldSetDelegate<int>("PrivateValue2");
+            Assert.Same(val1, val2);
+            Assert.NotSame(val1, val3);
+        }
+
+        [Fact]
         public void TestReflectionPropertyGetAndSet() {
             var testObject = new ReflectionTestObject();
             var val = testObject.GetPropertyValue<string>("PrivateProperty");
@@ -301,6 +319,7 @@ namespace R2API.Test.Tests.AwakeTests {
 
     public class ReflectionTestObject : ReflectionTestBaseObject {
         private string PrivateValue1 = "SECRET1";
+        private object PrivateValue2 = "SECRET2";
         private string PrivateValueCollide = "SECRET_COLLIDE_CORRECT";
         private TestEnum TestEnum = TestEnum.Test2;
 
