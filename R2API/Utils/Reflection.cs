@@ -3,7 +3,6 @@ using MonoMod.Cil;
 using MonoMod.Utils;
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -52,28 +51,28 @@ namespace R2API.Utils {
         private static readonly Dictionary<(Type T, string name), MethodInfo> MethodCache =
             new Dictionary<(Type T, string name), MethodInfo>();
 
-        private static readonly Dictionary<(Type T, string name, int argumentTypesHashCode), MethodInfo>
+        private static readonly Dictionary<(Type T, string name, long argumentTypesHashCode), MethodInfo>
             OverloadedMethodCache =
-                new Dictionary<(Type T, string name, int argumentTypesHashCode), MethodInfo>();
+                new Dictionary<(Type T, string name, long argumentTypesHashCode), MethodInfo>();
 
         private static readonly Dictionary<(Type T, string name), FastReflectionDelegate> MethodDelegateCache =
             new Dictionary<(Type T, string name), FastReflectionDelegate>();
 
-        private static readonly Dictionary<(Type T, string name, int argumentTypesHashCode), FastReflectionDelegate>
+        private static readonly Dictionary<(Type T, string name, long argumentTypesHashCode), FastReflectionDelegate>
             OverloadedMethodDelegateCache =
-                new Dictionary<(Type T, string name, int argumentTypesHashCode), FastReflectionDelegate>();
+                new Dictionary<(Type T, string name, long argumentTypesHashCode), FastReflectionDelegate>();
 
         // Class
-        private static readonly Dictionary<(Type T, int argumentTypesHashCode), ConstructorInfo> ConstructorCache =
-            new Dictionary<(Type T, int argumentTypesHashCode), ConstructorInfo>();
+        private static readonly Dictionary<(Type T, long argumentTypesHashCode), ConstructorInfo> ConstructorCache =
+            new Dictionary<(Type T, long argumentTypesHashCode), ConstructorInfo>();
 
         private static readonly Dictionary<(Type T, string name), Type> NestedTypeCache =
             new Dictionary<(Type T, string name), Type>();
 
         // Helper methods
-        public static int CombineHashCode<T>(IEnumerable<T> enumerable) {
+        public static long CombineHashCode<T>(IEnumerable<T> enumerable) {
             unchecked {
-                var hash = 0;
+                long hash = 0;
                 foreach (var item in enumerable) {
                     hash = hash * 486187739 + EqualityComparer<T>.Default.GetHashCode(item);
                 }
@@ -700,6 +699,11 @@ namespace R2API.Utils {
                 }
 
                 il.Emit(!field.IsStatic ? OpCodes.Ldfld : OpCodes.Ldsfld, field);
+
+                if (field.FieldType.IsValueType && !typeof(TReturn).IsValueType) {
+                    il.Emit(OpCodes.Box, field.FieldType);
+                }
+
                 il.Emit(OpCodes.Ret);
 
                 return (GetDelegate<TReturn>)method.Generate().CreateDelegate(typeof(GetDelegate<TReturn>));
@@ -722,6 +726,11 @@ namespace R2API.Utils {
                 }
 
                 il.Emit(OpCodes.Ldarg_1);
+
+                if (!field.FieldType.IsValueType && typeof(TValue).IsValueType) {
+                    il.Emit(OpCodes.Box, typeof(TValue));
+                }
+
                 il.Emit(!field.IsStatic ? OpCodes.Stfld : OpCodes.Stsfld, field);
 
                 il.Emit(OpCodes.Ret);
@@ -770,6 +779,11 @@ namespace R2API.Utils {
                 }
 
                 il.Emit(OpCodes.Call, getMethod);
+
+                if (property.PropertyType.IsValueType && !typeof(TReturn).IsValueType) {
+                    il.Emit(OpCodes.Box, property.PropertyType);
+                }
+
                 il.Emit(OpCodes.Ret);
 
                 return (GetDelegate<TReturn>)method.Generate().CreateDelegate(typeof(GetDelegate<TReturn>));
@@ -794,6 +808,11 @@ namespace R2API.Utils {
                 }
 
                 il.Emit(OpCodes.Call, getMethod);
+
+                if (property.PropertyType.IsValueType && !typeof(TReturn).IsValueType) {
+                    il.Emit(OpCodes.Box, property.PropertyType);
+                }
+
                 il.Emit(OpCodes.Ret);
 
                 return (GetDelegateRef<TInstance, TReturn>)method.Generate().CreateDelegate(typeof(GetDelegateRef<TInstance, TReturn>));
@@ -818,6 +837,11 @@ namespace R2API.Utils {
                 }
 
                 il.Emit(OpCodes.Ldarg_1);
+
+                if (!property.PropertyType.IsValueType && typeof(TValue).IsValueType) {
+                    il.Emit(OpCodes.Box, typeof(TValue));
+                }
+
                 il.Emit(OpCodes.Call, setMethod);
                 il.Emit(OpCodes.Ret);
 
@@ -843,6 +867,11 @@ namespace R2API.Utils {
                 }
 
                 il.Emit(OpCodes.Ldarg_1);
+
+                if (!property.PropertyType.IsValueType && typeof(TValue).IsValueType) {
+                    il.Emit(OpCodes.Box, typeof(TValue));
+                }
+
                 il.Emit(OpCodes.Call, setMethod);
                 il.Emit(OpCodes.Ret);
 

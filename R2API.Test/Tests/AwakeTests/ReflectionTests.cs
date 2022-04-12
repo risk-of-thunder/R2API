@@ -167,6 +167,50 @@ namespace R2API.Test.Tests.AwakeTests {
         }
 
         [Fact]
+        public void TestReflectionGetFieldValueBoxed() {
+            var testObject = new ReflectionTestObject();
+            var boxedValue = testObject.GetFieldValue<object>("TestEnum");
+            Assert.Equal(TestEnum.Test2, boxedValue);
+        }
+
+        [Fact]
+        public void TestReflectionSetFieldValueBoxed() {
+            var testObject = new ReflectionTestObject();
+            testObject.SetFieldValue("PrivateValue2", 123);
+            Assert.Equal(123, testObject.GetFieldValue<object>("PrivateValue2"));
+        }
+
+        [Fact]
+        public void TestReflectionGetPropertyValueBoxed() {
+            var testObject = new ReflectionTestObject();
+            var boxedValue = testObject.GetPropertyValue<object>("PrivateIntProperty");
+            Assert.Equal(123, boxedValue);
+        }
+
+        [Fact]
+        public void TestReflectionSetPropertyValueBoxed() {
+            var testObject = new ReflectionTestObject();
+            testObject.SetPropertyValue("PrivateObjectProperty", 123);
+            Assert.Equal(123, testObject.GetPropertyValue<object>("PrivateObjectProperty"));
+        }
+
+        [Fact]
+        public void TestReflectionGetStructPropertyValueBoxed() {
+            var myTestStruct = new MyTestStruct();
+            myTestStruct.SetStructPropertyValue("PrivateProperty", 123);
+            var boxedValue = myTestStruct.GetStructPropertyValue<MyTestStruct, object>("PrivateProperty");
+            Assert.Equal(123, boxedValue);
+        }
+
+        [Fact]
+        public void TestReflectionSetStructPropertyValueBoxed() {
+            var myTestStruct = new MyTestStruct();
+            myTestStruct.SetStructPropertyValue("PrivateObjectProperty", 123);
+            var boxedValue = myTestStruct.GetStructPropertyValue<MyTestStruct, object>("PrivateObjectProperty");
+            Assert.Equal(123, boxedValue);
+        }
+
+        [Fact]
         public void TestReflectionStructFieldGetAndSet() {
             var i = new MyTestStruct(5);
             var newVal = new MyOtherStruct(3);
@@ -267,8 +311,8 @@ namespace R2API.Test.Tests.AwakeTests {
     }
 
     public enum TestEnum {
-        Test1 = 0,
-        Test2 = 1
+        Test1 = 1,
+        Test2 = 0
     }
 
     public struct MyOtherStruct {
@@ -286,6 +330,7 @@ namespace R2API.Test.Tests.AwakeTests {
             _typeName = new MyOtherStruct(val);
             privateField = val;
             PrivateProperty = val;
+            PrivateObjectProperty = val;
             PublicProperty = val;
             PublicProperty2 = "nice";
         }
@@ -295,6 +340,7 @@ namespace R2API.Test.Tests.AwakeTests {
         private int privateField;
 
         private int PrivateProperty { get; set; }
+        private object PrivateObjectProperty { get; set; }
         public int PublicProperty { get; set; }
 
         public string PublicProperty2 { get; set; }
@@ -316,6 +362,9 @@ namespace R2API.Test.Tests.AwakeTests {
         private TestEnum TestEnum = TestEnum.Test2;
 
         private string PrivateProperty { get; set; } = "Get off my lawn";
+
+        private int PrivateIntProperty { get; set; } = 123;
+        private object PrivateObjectProperty { get; set; } = "SECRET3";
 
         private string Test(string a, string b) {
             return a + b;
