@@ -88,24 +88,18 @@ namespace R2API.Test.Tests.AwakeTests {
 
         [Fact]
         public void TestReflectionFastReflectionDelegateCache() {
-            var cacheDict = typeof(Reflection).GetFieldValue<ConcurrentDictionary<(Type, string, int), FastReflectionDelegate>>("OverloadedMethodDelegateCache");
-            var key = (typeof(ReflectionTestObject), "Test3", Reflection.CombineHashCode(new Type[]{}));
-            Assert.False(cacheDict.ContainsKey(key));
-
-            var testObject = new ReflectionTestObject();
-            testObject.InvokeMethod<string>("Test3", new object[]{});
-            Assert.True(cacheDict.ContainsKey(key));
+            var val1 = typeof(ReflectionTestObject).GetMethodDelegateCached("Test3", new Type[]{});
+            var val2 = typeof(ReflectionTestObject).GetMethodDelegateCached("Test3", new Type[]{});
+            Assert.NotNull(val1);
+            Assert.Same(val1, val2);
         }
 
         [Fact]
         public void TestReflectionMethodInfoCache() {
-            var cacheDict = typeof(Reflection).GetFieldValue<ConcurrentDictionary<(Type, string, int), MethodInfo>>("OverloadedMethodCache");
-            var key = (typeof(ReflectionTestObject), "Test3", Reflection.CombineHashCode(new Type[]{typeof(string)}));
-            Assert.False(cacheDict.ContainsKey(key));
-
-            var testObject = new ReflectionTestObject();
-            testObject.InvokeMethod<string>("Test3", "1");
-            Assert.True(cacheDict.ContainsKey(key));
+            var val1 = typeof(ReflectionTestObject).GetMethodCached("Test3", new Type[]{});
+            var val2 = typeof(ReflectionTestObject).GetMethodCached("Test3", new Type[]{});
+            Assert.NotNull(val1);
+            Assert.Same(val1, val2);
         }
 
         [Fact]
@@ -122,12 +116,10 @@ namespace R2API.Test.Tests.AwakeTests {
 
         [Fact]
         public void TestReflectionConstructorCache() {
-            var cacheDict = typeof(Reflection).GetFieldValue<ConcurrentDictionary<(Type, int), ConstructorInfo>>("ConstructorCache");
-            var key = (typeof(ReflectionTestObject), Reflection.CombineHashCode(new Type[]{}));
-            Assert.False(cacheDict.ContainsKey(key));
-
-            typeof(ReflectionTestObject).Instantiate(new object[] { });
-            Assert.True(cacheDict.ContainsKey(key));
+            var val1 = typeof(ReflectionTestObject).GetConstructorCached(new Type[]{});
+            var val2 = typeof(ReflectionTestObject).GetConstructorCached(new Type[]{});
+            Assert.NotNull(val1);
+            Assert.Same(val1, val2);
         }
 
         [Fact]
