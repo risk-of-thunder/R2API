@@ -88,24 +88,18 @@ namespace R2API.Test.Tests.AwakeTests {
 
         [Fact]
         public void TestReflectionFastReflectionDelegateCache() {
-            var cacheDict = typeof(Reflection).GetFieldValue<ConcurrentDictionary<(Type, string, int), FastReflectionDelegate>>("OverloadedMethodDelegateCache");
-            var key = (typeof(ReflectionTestObject), "Test3", Reflection.CombineHashCode(new Type[]{}));
-            Assert.False(cacheDict.ContainsKey(key));
-
-            var testObject = new ReflectionTestObject();
-            testObject.InvokeMethod<string>("Test3", new object[]{});
-            Assert.True(cacheDict.ContainsKey(key));
+            var val1 = typeof(ReflectionTestObject).GetMethodDelegateCached("Test3", new Type[]{});
+            var val2 = typeof(ReflectionTestObject).GetMethodDelegateCached("Test3", new Type[]{});
+            Assert.NotNull(val1);
+            Assert.Same(val1, val2);
         }
 
         [Fact]
         public void TestReflectionMethodInfoCache() {
-            var cacheDict = typeof(Reflection).GetFieldValue<ConcurrentDictionary<(Type, string, int), MethodInfo>>("OverloadedMethodCache");
-            var key = (typeof(ReflectionTestObject), "Test3", Reflection.CombineHashCode(new Type[]{typeof(string)}));
-            Assert.False(cacheDict.ContainsKey(key));
-
-            var testObject = new ReflectionTestObject();
-            testObject.InvokeMethod<string>("Test3", "1");
-            Assert.True(cacheDict.ContainsKey(key));
+            var val1 = typeof(ReflectionTestObject).GetMethodCached("Test3", new Type[]{});
+            var val2 = typeof(ReflectionTestObject).GetMethodCached("Test3", new Type[]{});
+            Assert.NotNull(val1);
+            Assert.Same(val1, val2);
         }
 
         [Fact]
@@ -122,12 +116,10 @@ namespace R2API.Test.Tests.AwakeTests {
 
         [Fact]
         public void TestReflectionConstructorCache() {
-            var cacheDict = typeof(Reflection).GetFieldValue<ConcurrentDictionary<(Type, int), ConstructorInfo>>("ConstructorCache");
-            var key = (typeof(ReflectionTestObject), Reflection.CombineHashCode(new Type[]{}));
-            Assert.False(cacheDict.ContainsKey(key));
-
-            typeof(ReflectionTestObject).Instantiate(new object[] { });
-            Assert.True(cacheDict.ContainsKey(key));
+            var val1 = typeof(ReflectionTestObject).GetConstructorCached(new Type[]{});
+            var val2 = typeof(ReflectionTestObject).GetConstructorCached(new Type[]{});
+            Assert.NotNull(val1);
+            Assert.Same(val1, val2);
         }
 
         [Fact]
@@ -172,6 +164,50 @@ namespace R2API.Test.Tests.AwakeTests {
             var testObject = new ReflectionTestObject();
             var enumValue = testObject.GetFieldValue<TestEnum>("TestEnum");
             Assert.Equal(TestEnum.Test2, enumValue);
+        }
+
+        [Fact]
+        public void TestReflectionGetFieldValueBoxed() {
+            var testObject = new ReflectionTestObject();
+            var boxedValue = testObject.GetFieldValue<object>("TestEnum");
+            Assert.Equal(TestEnum.Test2, boxedValue);
+        }
+
+        [Fact]
+        public void TestReflectionSetFieldValueBoxed() {
+            var testObject = new ReflectionTestObject();
+            testObject.SetFieldValue("PrivateValue2", 123);
+            Assert.Equal(123, testObject.GetFieldValue<object>("PrivateValue2"));
+        }
+
+        [Fact]
+        public void TestReflectionGetPropertyValueBoxed() {
+            var testObject = new ReflectionTestObject();
+            var boxedValue = testObject.GetPropertyValue<object>("PrivateIntProperty");
+            Assert.Equal(123, boxedValue);
+        }
+
+        [Fact]
+        public void TestReflectionSetPropertyValueBoxed() {
+            var testObject = new ReflectionTestObject();
+            testObject.SetPropertyValue("PrivateObjectProperty", 123);
+            Assert.Equal(123, testObject.GetPropertyValue<object>("PrivateObjectProperty"));
+        }
+
+        [Fact]
+        public void TestReflectionGetStructPropertyValueBoxed() {
+            var myTestStruct = new MyTestStruct();
+            myTestStruct.SetStructPropertyValue("PrivateProperty", 123);
+            var boxedValue = myTestStruct.GetStructPropertyValue<MyTestStruct, object>("PrivateProperty");
+            Assert.Equal(123, boxedValue);
+        }
+
+        [Fact]
+        public void TestReflectionSetStructPropertyValueBoxed() {
+            var myTestStruct = new MyTestStruct();
+            myTestStruct.SetStructPropertyValue("PrivateObjectProperty", 123);
+            var boxedValue = myTestStruct.GetStructPropertyValue<MyTestStruct, object>("PrivateObjectProperty");
+            Assert.Equal(123, boxedValue);
         }
 
         [Fact]
@@ -275,8 +311,8 @@ namespace R2API.Test.Tests.AwakeTests {
     }
 
     public enum TestEnum {
-        Test1 = 0,
-        Test2 = 1
+        Test1 = 1,
+        Test2 = 0
     }
 
     public struct MyOtherStruct {
@@ -294,6 +330,7 @@ namespace R2API.Test.Tests.AwakeTests {
             _typeName = new MyOtherStruct(val);
             privateField = val;
             PrivateProperty = val;
+            PrivateObjectProperty = val;
             PublicProperty = val;
             PublicProperty2 = "nice";
         }
@@ -303,6 +340,7 @@ namespace R2API.Test.Tests.AwakeTests {
         private int privateField;
 
         private int PrivateProperty { get; set; }
+        private object PrivateObjectProperty { get; set; }
         public int PublicProperty { get; set; }
 
         public string PublicProperty2 { get; set; }
@@ -324,6 +362,9 @@ namespace R2API.Test.Tests.AwakeTests {
         private TestEnum TestEnum = TestEnum.Test2;
 
         private string PrivateProperty { get; set; } = "Get off my lawn";
+
+        private int PrivateIntProperty { get; set; } = 123;
+        private object PrivateObjectProperty { get; set; } = "SECRET3";
 
         private string Test(string a, string b) {
             return a + b;
