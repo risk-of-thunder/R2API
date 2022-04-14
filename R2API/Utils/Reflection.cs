@@ -657,20 +657,20 @@ namespace R2API.Utils {
             return fieldInfo;
         }
 
+        private static FieldInfo ThrowIfFieldIsConst(this FieldInfo fieldInfo) {
+            if (fieldInfo.IsLiteral && !fieldInfo.IsInitOnly) {
+                throw new FieldAccessException($"Unable to set constant field {fieldInfo.Name} of type {fieldInfo.DeclaringType.FullName}.");
+            }
+
+            return fieldInfo;
+        }
+
         private static PropertyInfo ThrowIfTCannotBeAssignedToProperty<T>(this PropertyInfo propertyInfo) {
             if (!propertyInfo.PropertyType.IsAssignableFrom(typeof(T))) {
                 throw new InvalidCastException($"{propertyInfo.Name} is of type {propertyInfo.PropertyType}. An instance of {typeof(T)} cannot be assigned to it.");
             }
 
             return propertyInfo;
-        }
-
-        private static FieldInfo ThrowIfTNotEqualToFieldType<T>(this FieldInfo fieldInfo) {
-            if (fieldInfo.FieldType != typeof(T)) {
-                throw new InvalidCastException($"{fieldInfo.Name} is of type {fieldInfo.FieldType}. {typeof(T)} is a different type.");
-            }
-
-            return fieldInfo;
         }
 
         private static PropertyInfo ThrowIfTNotEqualToPropertyType<T>(this PropertyInfo propertyInfo) {
@@ -687,6 +687,14 @@ namespace R2API.Utils {
             }
 
             field.ThrowIfFieldTypeCannotBeAssignedTo<TReturn>();
+
+            if (field.IsLiteral && !field.IsInitOnly) {
+                object value = field.GetValue(null);
+                TReturn returnValue = value == null ? default : (TReturn)value;
+                Func<object, TReturn> func = _ => returnValue;
+
+                return func.CastDelegate<GetDelegate<TReturn>>();
+            }
 
             using (var method = new DynamicMethodDefinition($"{field} Getter", typeof(TReturn), new[] { typeof(object) })) {
                 var il = method.GetILProcessor();
@@ -716,6 +724,7 @@ namespace R2API.Utils {
             }
 
             field.ThrowIfTCannotBeAssignedToField<TValue>();
+            field.ThrowIfFieldIsConst();
 
             using (var method = new DynamicMethodDefinition($"{field} Setter", typeof(void),
                 new[] { typeof(object), typeof(TValue) })) {
@@ -744,7 +753,8 @@ namespace R2API.Utils {
                 throw new ArgumentException("Field cannot be null.", nameof(field));
             }
 
-            field.ThrowIfTNotEqualToFieldType<TValue>();
+            field.ThrowIfTCannotBeAssignedToField<TValue>();
+            field.ThrowIfFieldIsConst();
 
             using (var method = new DynamicMethodDefinition($"{field} SetterByRef", typeof(void),
                 new[] { typeof(TInstance).MakeByRefType(), typeof(TValue) })) {
@@ -755,6 +765,11 @@ namespace R2API.Utils {
                 }
 
                 il.Emit(OpCodes.Ldarg_1);
+
+                if (!field.FieldType.IsValueType && typeof(TValue).IsValueType) {
+                    il.Emit(OpCodes.Box, typeof(TValue));
+                }
+
                 il.Emit(!field.IsStatic ? OpCodes.Stfld : OpCodes.Stsfld, field);
                 il.Emit(OpCodes.Ret);
 
