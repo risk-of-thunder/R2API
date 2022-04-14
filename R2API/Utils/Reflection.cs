@@ -673,14 +673,6 @@ namespace R2API.Utils {
             return propertyInfo;
         }
 
-        private static FieldInfo ThrowIfTNotEqualToFieldType<T>(this FieldInfo fieldInfo) {
-            if (fieldInfo.FieldType != typeof(T)) {
-                throw new InvalidCastException($"{fieldInfo.Name} is of type {fieldInfo.FieldType}. {typeof(T)} is a different type.");
-            }
-
-            return fieldInfo;
-        }
-
         private static PropertyInfo ThrowIfTNotEqualToPropertyType<T>(this PropertyInfo propertyInfo) {
             if (propertyInfo.PropertyType != typeof(T)) {
                 throw new InvalidCastException($"{propertyInfo.Name} is of type {propertyInfo.PropertyType}. {typeof(T)} is a different type.");
@@ -761,7 +753,7 @@ namespace R2API.Utils {
                 throw new ArgumentException("Field cannot be null.", nameof(field));
             }
 
-            field.ThrowIfTNotEqualToFieldType<TValue>();
+            field.ThrowIfTCannotBeAssignedToField<TValue>();
             field.ThrowIfFieldIsConst();
 
             using (var method = new DynamicMethodDefinition($"{field} SetterByRef", typeof(void),
@@ -773,6 +765,11 @@ namespace R2API.Utils {
                 }
 
                 il.Emit(OpCodes.Ldarg_1);
+
+                if (!field.FieldType.IsValueType && typeof(TValue).IsValueType) {
+                    il.Emit(OpCodes.Box, typeof(TValue));
+                }
+
                 il.Emit(!field.IsStatic ? OpCodes.Stfld : OpCodes.Stsfld, field);
                 il.Emit(OpCodes.Ret);
 

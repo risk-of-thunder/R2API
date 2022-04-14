@@ -187,6 +187,10 @@ namespace R2API.Test.Tests.AwakeTests {
             var testObject = new ReflectionTestObject();
             testObject.SetFieldValue("PrivateValue2", 123);
             Assert.Equal(123, testObject.GetFieldValue<object>("PrivateValue2"));
+
+            var testStruct = new MyTestStruct(123);
+            testStruct.SetStructFieldValue("privateObjectField", 456);
+            Assert.Equal(456, testStruct.GetFieldValue<object>("privateObjectField"));
         }
 
         [Fact]
@@ -338,6 +342,7 @@ namespace R2API.Test.Tests.AwakeTests {
         public MyTestStruct(int val) {
             _typeName = new MyOtherStruct(val);
             privateField = val;
+            privateObjectField = val;
             PrivateProperty = val;
             PrivateObjectProperty = val;
             PublicProperty = val;
@@ -347,6 +352,7 @@ namespace R2API.Test.Tests.AwakeTests {
         private MyOtherStruct _typeName;
 
         private int privateField;
+        private object privateObjectField;
 
         private int PrivateProperty { get; set; }
         private object PrivateObjectProperty { get; set; }
