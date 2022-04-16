@@ -98,7 +98,7 @@ namespace R2API {
                 if(item.ItemDisplayRules.HasInvalidDisplays(out var log)) {
                     R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomItem ({item.ItemDef}) have an invalid {nameof(ItemDisplayRule.followerPrefab)}. " +
                         $"(There are ItemDisplayRuleType.ParentedPrefab rules)," +
-                        $"Logging invalid rules...");
+                        $"Logging invalid rules... (For full details, check the Log file)");
                     R2API.Logger.LogDebug(log.ToString());
                 }
             }
@@ -160,7 +160,7 @@ namespace R2API {
                 if (equip.ItemDisplayRules.HasInvalidDisplays(out var log)) {
                     R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomEquipment ({equip.EquipmentDef}) have an invalid {nameof(ItemDisplayRule.followerPrefab)}. " +
                         $"(There are ItemDisplayRuleType.ParentedPrefab rules)," +
-                        $"Logging invalid rules...");
+                        $"Logging invalid rules... (For full details, check the Log file)");
                     R2API.Logger.LogDebug(log.ToString());
                 }
             }
@@ -528,7 +528,7 @@ namespace R2API {
                         continue;
 
                     if (!rule.followerPrefab) {
-                        logger.AppendLine($"invalid follower prefab for entry {bodyName}. The follower prefab of entry N°{i} is null. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)");
+                        logger.AppendLine($"invalid follower prefab for entry {bodyName}. The follower prefab of entry NÂ°{i} is null. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)");
                         invalidDisplays = true;
                         continue;
                     }
