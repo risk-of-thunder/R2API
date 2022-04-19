@@ -28,18 +28,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-      <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.2-r.0" />
-      <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
+	<PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.3.1-r.0" />
+    <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
+	<PackageReference Include="MMHOOK.RoR2" Version="2022.4.19">
+      <NoWarn>NU1701</NoWarn>
+	</PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Facepunch.Steamworks, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>libs\Facepunch.Steamworks.dll</HintPath>
       <Private>false</Private>
-    </Reference>
-    <Reference Include="MMHOOK_RoR2">
-      <HintPath>libs\MMHOOK_RoR2.dll</HintPath>
-	  <Private>false</Private>
     </Reference>
     <Reference Include="SimpleJSON">
       <HintPath>libs\SimpleJSON.dll</HintPath>
