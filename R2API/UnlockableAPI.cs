@@ -1,16 +1,13 @@
-﻿using Mono.Cecil.Cil;
-using MonoMod.Cil;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
 using RoR2.Achievements;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using RoR2BepInExPack.VanillaFixes;
 using UnityEngine;
-
-using BF = System.Reflection.BindingFlags;
 
 namespace R2API {
 
@@ -145,44 +142,26 @@ namespace R2API {
 
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
-            IL.RoR2.AchievementManager.CollectAchievementDefs += AddCustomAchievements;
+            SaferAchievementManager.OnCollectAchievementDefs += AddOurDefs;
+        }
+
+        private static void AddOurDefs(List<string> identifiers, Dictionary<string, AchievementDef> stringToAchievementDef, List<AchievementDef> achievementDefs) {
+            for (var i = 0; i < Achievements.Count; i++) {
+                var achievement = Achievements[i];
+
+                if (achievement is null) {
+                    continue;
+                }
+
+                identifiers.Add(achievement.identifier);
+                achievementDefs.Add(achievement);
+                stringToAchievementDef.Add(achievement.identifier, achievement);
+            }
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
-            IL.RoR2.AchievementManager.CollectAchievementDefs -= AddCustomAchievements;
-        }
-
-        private static void AddCustomAchievements(ILContext il) {
-            var achievementIdentifierField = typeof(AchievementManager).GetField(nameof(AchievementManager.achievementIdentifiers), BF.Public | BF.Static | BF.NonPublic);
-            if (achievementIdentifierField is null) {
-                throw new NullReferenceException($"Could not find field in {nameof(AchievementManager)}");
-            }
-
-            var cursor = new ILCursor(il);
-            cursor.GotoNext(MoveType.After,
-                x => x.MatchEndfinally(),
-                x => x.MatchLdloc(1)
-            );
-
-            void AddOurDefs(List<AchievementDef> achievementDefs, Dictionary<string, AchievementDef> stringToAchievementDef, List<string> identifiers) {
-                for (var i = 0; i < Achievements.Count; i++) {
-                    var achievement = Achievements[i];
-
-                    if (achievement is null) {
-                        continue;
-                    }
-
-                    identifiers.Add(achievement.identifier);
-                    achievementDefs.Add(achievement);
-                    stringToAchievementDef.Add(achievement.identifier, achievement);
-                }
-            }
-
-            cursor.Emit(OpCodes.Ldarg_0);
-            cursor.Emit(OpCodes.Ldsfld, achievementIdentifierField);
-            cursor.EmitDelegate<Action<List<AchievementDef>, Dictionary<string, AchievementDef>, List<string>>>(AddOurDefs);
-            cursor.Emit(OpCodes.Ldloc_1);
+            SaferAchievementManager.OnCollectAchievementDefs -= AddOurDefs;
         }
 
         internal static UnlockableDef CreateNewUnlockable(UnlockableInfo unlockableInfo) {
@@ -278,7 +257,7 @@ namespace R2API {
                 throw new InvalidOperationException($"Too late ! Tried to add unlockable: {instance.UnlockableIdentifier} after the UnlockableCatalog");
             }
 
-            string unlockableIdentifier = instance.UnlockableIdentifier;
+            var unlockableIdentifier = instance.UnlockableIdentifier;
 
             if (!UnlockableIdentifiers.Add(unlockableIdentifier)) {
                 throw new InvalidOperationException($"The unlockable identifier '{unlockableIdentifier}' is already used by another mod.");
@@ -288,7 +267,7 @@ namespace R2API {
                 unlockableDef = ScriptableObject.CreateInstance<UnlockableDef>();
             }
 
-            UnlockableInfo unlockableInfo = new UnlockableInfo {
+            var unlockableInfo = new UnlockableInfo {
                 Name = instance.UnlockableIdentifier,
                 HowToUnlockString = instance.GetHowToUnlock,
                 UnlockedString = instance.GetUnlocked,

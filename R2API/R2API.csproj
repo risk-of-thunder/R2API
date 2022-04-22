@@ -40,6 +40,10 @@
       <HintPath>libs\Facepunch.Steamworks.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="RoR2BepInExPack">
+      <HintPath>libs\RoR2BepInExPack.dll</HintPath>
+	  <Private>false</Private>
+    </Reference>
     <Reference Include="SimpleJSON">
       <HintPath>libs\SimpleJSON.dll</HintPath>
       <Private>false</Private>
