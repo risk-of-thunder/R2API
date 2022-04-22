@@ -19,6 +19,7 @@ namespace R2API {
     /// <summary>
     /// Interface used to provide the metadata needed to register an achievement + unlockable
     /// </summary>
+    [Obsolete(UnlockableAPI.ObsoleteMessage)]
     public interface IModdedUnlockableDataProvider {
 
         /// <summary>
@@ -77,6 +78,7 @@ namespace R2API {
     /// <summary>
     /// Class used to provide the metadata needed to register an achievement + unlockable
     /// </summary>
+    [Obsolete(UnlockableAPI.ObsoleteMessage)]
     public abstract class ModdedUnlockable : BaseAchievement, IModdedUnlockableDataProvider {
         public abstract string AchievementIdentifier { get; }
         public abstract string UnlockableIdentifier { get; }
@@ -127,9 +129,13 @@ namespace R2API {
     /// <summary>
     /// API for adding custom unlockables to the game.
     /// </summary>
+    [Obsolete(UnlockableAPI.ObsoleteMessage)]
     [R2APISubmodule]
     public static class UnlockableAPI {
 
+        public const string ObsoleteMessage = "The patch 1.2.3 for RoR2 has made UnlockableAPI's methods and implementations redundant.\n" +
+            "From now on use The game's \"RegisterAchievement\" attribute on top of baseAchievement inheriting classes to register AchievementDefs and tie AchievementDefs to their respective UnlockableDefs.\n" +
+            "UnlockableAPI will be removed on the next major RoR2 release.";
         private static readonly HashSet<string> UnlockableIdentifiers = new HashSet<string>();
         private static readonly List<AchievementDef> Achievements = new List<AchievementDef>();
 
