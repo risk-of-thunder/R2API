@@ -146,9 +146,7 @@ namespace R2API {
         }
 
         private static void AddOurDefs(List<string> identifiers, Dictionary<string, AchievementDef> stringToAchievementDef, List<AchievementDef> achievementDefs) {
-            for (var i = 0; i < Achievements.Count; i++) {
-                var achievement = Achievements[i];
-
+            foreach (var achievement in Achievements) {
                 if (achievement is null) {
                     continue;
                 }
