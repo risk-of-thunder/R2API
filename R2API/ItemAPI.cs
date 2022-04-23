@@ -331,7 +331,7 @@ namespace R2API {
             bool canRemove,
             UnlockableDef unlockableDef,
             ItemDisplayRule[]? itemDisplayRules,
-            ItemTierDef itemTierDef) {
+            ItemTierDef itemTierDef = null) {
 
             ItemDef = ScriptableObject.CreateInstance<ItemDef>();
             ItemDef.canRemove = canRemove;
@@ -347,8 +347,9 @@ namespace R2API {
             ItemDef.unlockableDef = unlockableDef;
 
             //If the tier isnt assigned at runtime, load tier from addressables, this should make it so mods that add items dont break.
-            //We dont want to set the .tier directly, because that'll attem
-            if(tier != ItemTier.AssignedAtRuntime) {
+            //We dont want to set the .tier directly, because that'll attempt to load the itemTierDef via the itemTierCatalog, and we cant
+            //Guarantee said catalog has been initialized at that point
+            if (tier != ItemTier.AssignedAtRuntime) {
                 ItemDef._itemTierDef = LoadTierFromAddress(tier);
                 return;
             }
@@ -393,7 +394,8 @@ namespace R2API {
             ItemDisplayRules = itemDisplayRules;
 
             //If the tier isnt assigned at runtime, load tier from addressables, this should make it so mods that add items dont break.
-            //We dont want to set the .tier directly, because that'll attem
+            //We dont want to set the .tier directly, because that'll attempt to load the itemTierDef via the itemTierCatalog, and we cant
+            //Guarantee said catalog has been initialized at that point
             if(tier != ItemTier.AssignedAtRuntime) {
                 ItemDef._itemTierDef = LoadTierFromAddress(tier);
                 return;
