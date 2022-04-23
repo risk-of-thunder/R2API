@@ -1,10 +1,3 @@
-using BepInEx;
-using BepInEx.Logging;
-using MonoMod.RuntimeDetour;
-using MonoMod.RuntimeDetour.HookGen;
-using R2API.ContentManagement;
-using R2API.Utils;
-using RoR2;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +5,13 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using BepInEx;
+using BepInEx.Logging;
+using MonoMod.RuntimeDetour;
+using MonoMod.RuntimeDetour.HookGen;
+using R2API.ContentManagement;
+using R2API.Utils;
+using RoR2;
 using UnityEngine;
 
 namespace R2API {
@@ -26,9 +26,9 @@ namespace R2API {
         public const string PluginName = "R2API";
         public const string PluginVersion = "0.0.1";
 
-        private const string GameBuildId = "1.2.2.0";
+        private const string GameBuildId = "1.2.3.1";
 
-        internal new static ManualLogSource Logger { get; set; }
+        internal static new ManualLogSource Logger { get; set; }
         public static bool DebugMode { get; private set; } = false;
 
         internal static DetourModManager ModManager;
@@ -88,8 +88,9 @@ namespace R2API {
         private static void CheckIfUsedOnRightGameVersion() {
             var buildId = Application.version;
 
-            if (GameBuildId == buildId)
+            if (GameBuildId == buildId) {
                 return;
+            }
 
             Logger.LogWarning($"This version of R2API was built for build id \"{GameBuildId}\", you are running \"{buildId}\".");
             Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
@@ -173,8 +174,9 @@ namespace R2API {
                     , RegexOptions.Compiled | RegexOptions.IgnoreCase))
                 .Select(x => x.Name));
 
-            if (info.Count == countEmpty)
+            if (info.Count == countEmpty) {
                 return;
+            }
 
             Logger.LogBlockError(info);
         }
