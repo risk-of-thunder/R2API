@@ -14,6 +14,7 @@ using UnityEngine;
 using R2API.MiscHelpers;
 using Object = UnityEngine.Object;
 using System.Text;
+using UnityEngine.AddressableAssets;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -329,7 +330,8 @@ namespace R2API {
             bool hidden,
             bool canRemove,
             UnlockableDef unlockableDef,
-            ItemDisplayRule[]? itemDisplayRules) {
+            ItemDisplayRule[]? itemDisplayRules,
+            ItemTierDef itemTierDef) {
 
             ItemDef = ScriptableObject.CreateInstance<ItemDef>();
             ItemDef.canRemove = canRemove;
@@ -342,8 +344,25 @@ namespace R2API {
             ItemDef.pickupModelPrefab = pickupModelPrefab;
             ItemDef.pickupToken = pickupToken;
             ItemDef.tags = tags;
-            ItemDef.tier = tier;
             ItemDef.unlockableDef = unlockableDef;
+
+            //If the tier isnt assigned at runtime, load tier from addressables, this should make it so mods that add items dont break.
+            //We dont want to set the .tier directly, because that'll attem
+            if(tier != ItemTier.AssignedAtRuntime) {
+                ItemDef._itemTierDef = LoadTierFromAddress(tier);
+                return;
+            }
+            else {
+                //If the itemTier is AssignedAtRuntime, but an itemTierDef is not assigned, default to noTier and warn the user
+                if(!itemTierDef) {
+                    ItemDef._itemTierDef = null;
+                    R2API.Logger.LogWarning($"Trying to create an itemDef ({name}), but the \"tier\" argument is set to {nameof(ItemTier.AssignedAtRuntime)}" +
+                        $"And the argument \"itemTierDef\" is null! Resorting to setting tier to NoTier");
+                }
+                else {
+                    ItemDef._itemTierDef = itemTierDef;
+                }
+            }
 
             ItemDisplayRules = new ItemDisplayRuleDict(itemDisplayRules);
         }
@@ -356,7 +375,8 @@ namespace R2API {
             bool canRemove,
             bool hidden,
             UnlockableDef unlockableDef = null,
-            ItemDisplayRuleDict? itemDisplayRules = null) {
+            ItemDisplayRuleDict? itemDisplayRules = null,
+            ItemTierDef itemTierDef = null) {
 
             ItemDef = ScriptableObject.CreateInstance<ItemDef>();
             ItemDef.canRemove = canRemove;
@@ -369,11 +389,56 @@ namespace R2API {
             ItemDef.pickupModelPrefab = pickupModelPrefab;
             ItemDef.pickupToken = pickupToken;
             ItemDef.tags = tags;
-            ItemDef.tier = tier;
             ItemDef.unlockableDef = unlockableDef;
-
             ItemDisplayRules = itemDisplayRules;
+
+            //If the tier isnt assigned at runtime, load tier from addressables, this should make it so mods that add items dont break.
+            //We dont want to set the .tier directly, because that'll attem
+            if(tier != ItemTier.AssignedAtRuntime) {
+                ItemDef._itemTierDef = LoadTierFromAddress(tier);
+                return;
+            }
+            else {
+                //If the itemTier is AssignedAtRuntime, but an itemTierDef is not assigned, default to noTier and warn the user
+                if(!itemTierDef) {
+                    ItemDef._itemTierDef = null;
+                    R2API.Logger.LogWarning($"Trying to create an itemDef ({name}), but the \"tier\" argument is set to {nameof(ItemTier.AssignedAtRuntime)}" +
+                        $"And the argument \"itemTierDef\" is null! Resorting to setting tier to NoTier");
+                }
+                else {
+                    ItemDef._itemTierDef = itemTierDef;
+                }
+            }
         }
+
+        private ItemTierDef LoadTierFromAddress(ItemTier itemTierToLoad) {
+            switch(itemTierToLoad) {
+                case ItemTier.Tier1:
+                    return LoadTier("RoR2/Base/Common/Tier1Def.asset");
+                case ItemTier.Tier2:
+                    return LoadTier("RoR2/Base/Common/Tier2Def.asset");
+                case ItemTier.Tier3:
+                    return LoadTier("RoR2/Base/Common/Tier3Def.asset");
+                case ItemTier.Lunar:
+                    return LoadTier("RoR2/Base/Common/LunarTierDef.asset");
+                case ItemTier.Boss:
+                    return LoadTier("RoR2/Base/Common/BossTierDef.asset");
+
+                //Void
+                case ItemTier.VoidTier1:
+                    return LoadTier("RoR2/DLC1/Common/VoidTier1Def.asset");
+                case ItemTier.VoidTier2:
+                    return LoadTier("RoR2/DLC1/Common/VoidTier2Def.asset");
+                case ItemTier.VoidTier3:
+                    return LoadTier("RoR2/DLC1/Common/VoidTier3Def.asset");
+                case ItemTier.VoidBoss:
+                    return LoadTier("RoR2/DLC1/Common/VoidBossDef.asset");
+                default:
+                    return null;
+            }
+        }
+
+        private ItemTierDef LoadTier(string address) => Addressables.LoadAssetAsync<ItemTierDef>(address).WaitForCompletion();
     }
 
     public class CustomEquipment {
