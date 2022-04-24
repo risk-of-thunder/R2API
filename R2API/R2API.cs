@@ -61,7 +61,7 @@ namespace R2API {
             var networkCompatibilityHandler = new NetworkCompatibilityHandler();
             networkCompatibilityHandler.BuildModList();
 
-            SteamworksClientManager.onLoaded += CheckIfUsedOnRightGameVersion;
+            On.RoR2.RoR2Application.Awake += CheckIfUsedOnRightGameVersion;
 
             R2APIContentPackProvider.Init();
         }
@@ -85,7 +85,9 @@ namespace R2API {
             Logger.LogDebug(caller + " : " + debugText.ToString());
         }
 
-        private static void CheckIfUsedOnRightGameVersion() {
+        private void CheckIfUsedOnRightGameVersion(On.RoR2.RoR2Application.orig_Awake orig, RoR2Application self) {
+            orig(self);
+
             var buildId = Application.version;
 
             if (GameBuildId == buildId) {
