@@ -35,8 +35,20 @@ A lot of documentation is in the included *xmldocs*, and further information may
 The most recent changelog can always be found on the [GitHub](https://github.com/risk-of-thunder/R2API/blob/master/Archived%20changelogs.md). In this readme, only the most recent *minor* version will have a changelog.
 
 **Current**
-* [Friendlier internal stage names by @bb010g](https://github.com/risk-of-thunder/R2API/pull/373)
-* [Fix DirectorApi spawning by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/374)
+* [UnlockableAPI: Fix custom achievements not working for current patch by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/391)
+* [UnlockableAPI: Marked as Obsolete by @Nebby1999](https://github.com/risk-of-thunder/R2API/pull/390)
+* [DirectorAPI: Add AddNewMonsterToStagesWhere & AddSelectedNewMonsters, and publicize base AddNewMonster by @bb010g](https://github.com/risk-of-thunder/R2API/pull/382)
+* [ItemAPI: Specify IDRS log is in the log file by @Nebby1999](https://github.com/risk-of-thunder/R2API/pull/387)
+* [ItemAPI: Tier error fix by @Nebby1999](https://github.com/risk-of-thunder/R2API/pull/394)
+* [Fix R2API erroring in the Epic Games version of the game by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/392)
+
+* [Reflection: Improve speed by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/378)
+* [Reflection: Fix MethodInfo/ConstructorInfo not cache properly by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/380)
+* [Reflection: Fix CombineHashCode returning the same result on arrays of different order by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/381)
+* [Reflection: Fix different generic parameters returning the same delegate by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/384)
+* [Reflection: Fix delegate not box value by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/385)
+* [Reflection: Support reading constant field by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/386)
+* [Reflection: Use normal dictionaries instead of Concurrent ones by @Windows10CE](https://github.com/risk-of-thunder/R2API/pull/383)
 
 
 **4.3.x**
@@ -44,6 +56,8 @@ The most recent changelog can always be found on the [GitHub](https://github.com
 * [Fix ItemDisplay issues by @KomradeSpectre](https://github.com/risk-of-thunder/R2API/pull/369)
 * [ItemAPI ItemDisplay fixes by @Nebby1999](https://github.com/risk-of-thunder/R2API/pull/371)
 * [Fix EliteAPI and bug fix DirectorAPI by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/372)
+* [Friendlier internal stage names by @bb010g](https://github.com/risk-of-thunder/R2API/pull/373)
+* [Fix DirectorApi spawning by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/374)
 
 **4.2.x**
 * [NuGet package is now available!](https://www.nuget.org/packages/R2API/)
