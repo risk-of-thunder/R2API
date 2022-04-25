@@ -305,13 +305,13 @@ namespace R2API {
             public static void AddNewMonster(DirectorCard? monsterCard, MonsterCategory monsterCategory) {
                 ThrowIfNotLoaded();
 
-                var directorCardHolder = new DirectorCardHolder {
+                var monsterCardHolder = new DirectorCardHolder {
                     Card = monsterCard,
                     MonsterCategory = monsterCategory
                 };
 
                 MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
-                    AddNewMonster(dccsPool, mixEnemyArtifactMonsters, directorCardHolder, false);
+                    AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCardHolder, false);
                 };
             }
 
@@ -329,28 +329,36 @@ namespace R2API {
                 };
             }
 
-            private static void AddNewMonster(
+            /// <summary>
+            /// Adds a new monster to a pool of monsters that can spawn in a given stage (see <see cref="MonsterActions"/>).
+            /// </summary>
+            /// <param name="dccsPool"></param>
+            /// <param name="mixEnemyArtifactMonsters"></param>
+            /// <param name="monsterCardHolder"></param>
+            /// <param name="addToFamilies">Whether to also add to each existing monster family</param>
+            public static void AddNewMonster(
                 DccsPool dccsPool,
                 List<DirectorCardHolder> mixEnemyArtifactMonsters,
-                DirectorCardHolder directorCardHolder,
-                bool addToFamilies) {
+                DirectorCardHolder monsterCardHolder,
+                bool addToFamilies
+            ) {
                 if (dccsPool) {
                     ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) => {
                         var isNotAFamilyCategory = poolCategory.name != MonsterPoolCategories.Family;
                         var isAFamilyCategoryAndShouldAddToIt = addToFamilies && poolCategory.name == MonsterPoolCategories.Family;
                         if (isNotAFamilyCategory || isAFamilyCategoryAndShouldAddToIt) {
                             ForEachPoolEntryInDccsPoolCategory(poolCategory, (poolEntry) => {
-                                AddMonsterToPoolEntry(directorCardHolder, poolEntry);
+                                AddMonsterToPoolEntry(monsterCardHolder, poolEntry);
                             });
                         }
                     });
                 }
 
-                mixEnemyArtifactMonsters.Add(directorCardHolder);
+                mixEnemyArtifactMonsters.Add(monsterCardHolder);
             }
 
-            private static void AddMonsterToPoolEntry(DirectorCardHolder directorCardHolder, DccsPool.PoolEntry poolEntry) {
-                poolEntry.dccs.AddCard(directorCardHolder);
+            private static void AddMonsterToPoolEntry(DirectorCardHolder monsterCardHolder, DccsPool.PoolEntry poolEntry) {
+                poolEntry.dccs.AddCard(monsterCardHolder);
             }
 
             /// <summary>
@@ -365,7 +373,7 @@ namespace R2API {
             public static void AddNewMonsterToStage(DirectorCard? monsterCard, MonsterCategory monsterCategory, Stage stage, string? customStageName = "") {
                 ThrowIfNotLoaded();
 
-                var directorCardHolder = new DirectorCardHolder {
+                var monsterCardHolder = new DirectorCardHolder {
                     Card = monsterCard,
                     MonsterCategory = monsterCategory
                 };
@@ -373,7 +381,7 @@ namespace R2API {
                 MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            AddNewMonster(dccsPool, mixEnemyArtifactMonsters, directorCardHolder, false);
+                            AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCardHolder, false);
                         }
                     }
                 };
@@ -401,6 +409,24 @@ namespace R2API {
             }
 
             /// <summary>
+            /// Adds a new monster to matching stages.
+            /// Also add to each existing monster families if second parameter is true.
+            /// For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            /// </summary>
+            /// <param name="monsterCard"></param>
+            /// <param name="addToFamilies"></param>
+            /// <param name="matchStage"></param>
+            public static void AddNewMonsterToStagesWhere(DirectorCardHolder monsterCard, bool addToFamilies, Predicate<StageInfo> matchStage) {
+                ThrowIfNotLoaded();
+
+                MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
+                    if (matchStage(currentStage)) {
+                        AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
+                    }
+                };
+            }
+
+            /// <summary>
             /// Adds a new interactable to all stages.
             /// </summary>
             /// <param name="interactableCard">The DirectorCard for the interactable</param>
@@ -409,30 +435,30 @@ namespace R2API {
             public static void AddNewInteractable(DirectorCard? interactableCard, InteractableCategory interactableCategory) {
                 ThrowIfNotLoaded();
 
-                var directorCardHolder = new DirectorCardHolder {
+                var interactableCardHolder = new DirectorCardHolder {
                     Card = interactableCard,
                     InteractableCategory = interactableCategory,
                 };
 
                 InteractableActions += (interactablesDccsPool, currentStage) => {
-                    AddNewInteractableToStage(interactablesDccsPool, directorCardHolder);
+                    AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder);
                 };
             }
 
             /// <summary>
             /// Adds a new interactable to all stages.
             /// </summary>
-            /// <param name="directorCardHolder"></param>
-            public static void AddNewInteractable(DirectorCardHolder? directorCardHolder) {
+            /// <param name="interactableCardHolder"></param>
+            public static void AddNewInteractable(DirectorCardHolder? interactableCardHolder) {
                 ThrowIfNotLoaded();
 
                 InteractableActions += (interactablesDccsPool, currentStage) => {
-                    AddNewInteractableToStage(interactablesDccsPool, directorCardHolder);
+                    AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder);
                 };
             }
 
-            private static void AddInteractableToPoolEntry(DirectorCardHolder directorCardHolder, DccsPool.PoolEntry poolEntry) {
-                poolEntry.dccs.AddCard(directorCardHolder);
+            private static void AddInteractableToPoolEntry(DirectorCardHolder interactableCardHolder, DccsPool.PoolEntry poolEntry) {
+                poolEntry.dccs.AddCard(interactableCardHolder);
             }
 
             /// <summary>
@@ -447,7 +473,7 @@ namespace R2API {
             public static void AddNewInteractableToStage(DirectorCard? interactableCard, InteractableCategory interactableCategory, Stage stage, string? customStageName = "") {
                 ThrowIfNotLoaded();
 
-                var directorCardHolder = new DirectorCardHolder {
+                var interactableCardHolder = new DirectorCardHolder {
                     Card = interactableCard,
                     InteractableCategory = interactableCategory
                 };
@@ -455,7 +481,7 @@ namespace R2API {
                 InteractableActions += (interactablesDccsPool, currentStage) => {
                     if (currentStage.stage == stage) {
                         if (currentStage.CheckStage(stage, customStageName)) {
-                            AddNewInteractableToStage(interactablesDccsPool, directorCardHolder);
+                            AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder);
                         }
                     }
                 };
@@ -463,10 +489,10 @@ namespace R2API {
 
             private static void AddNewInteractableToStage(
                 DccsPool interactablesDccsPool,
-                DirectorCardHolder directorCardHolder) {
+                DirectorCardHolder interactableCardHolder) {
                 if (interactablesDccsPool) {
                     ForEachPoolEntryInDccsPool(interactablesDccsPool, (poolEntry) => {
-                        AddInteractableToPoolEntry(directorCardHolder, poolEntry);
+                        AddInteractableToPoolEntry(interactableCardHolder, poolEntry);
                     });
                 }
             }
