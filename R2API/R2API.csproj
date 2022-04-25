@@ -6,8 +6,8 @@
     <Version>2.0.0</Version>
     <Nullable>annotations</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>$(NoWarn);NU5104</NoWarn>
   </PropertyGroup>
-
 
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -15,30 +15,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BepInEx.Analyzers" Version="*">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="bbepis-BepInExPack" Version="5.4.1905" GeneratePathProperty="true" PrivateAssets="all" ExcludeAssets="all" IncludeAssets="none" />
+    <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
     <PackageReference Include="BepInEx.Core" Version="5.4.19" />
-    <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.10.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Nullable" Version="1.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-	<PackageReference Include="RiskOfRain2.GameLibs" Version="*-*" />
+    <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.13.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+    <PackageReference Include="MMHOOK.RoR2" Version="2022.4.19" NoWarn="NU1701" />
+    <PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+    <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.3.1-r.0" NoWarn="NU5104" />
     <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
-	<PackageReference Include="MMHOOK.RoR2" Version="*">
-      <NoWarn>NU1701</NoWarn>
-	</PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="RoR2BepInExPack">
-      <HintPath>libs\RoR2BepInExPack.dll</HintPath>
-	  <Private>false</Private>
+      <HintPath>$(Pkgbbepis-BepInExPack)\lib\$(TargetFramework)\RoR2BepInExPack.dll</HintPath>
+      <Private>true</Private>
     </Reference>
     <Reference Include="SimpleJSON">
       <HintPath>libs\SimpleJSON.dll</HintPath>

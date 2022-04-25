@@ -12,12 +12,12 @@
 	<ItemGroup>
 		<ProjectReference Include="..\R2API\R2API.csproj" />
 
-		<PackageReference Include="BepInEx.Analyzers" Version="1.0.*">
+		<PackageReference Include="BepInEx.Analyzers" Version="1.0.8">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		
-		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.10.0">
+		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.13.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
