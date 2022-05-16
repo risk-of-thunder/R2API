@@ -1039,17 +1039,17 @@ namespace R2API.Utils {
         /// </summary>
         /// <param name="assembly"></param>
         /// <param name="assemblyTypes"></param>
-        /// <returns>true if a ReflectionTypeLoadException was caught</returns>
+        /// <returns>false if a ReflectionTypeLoadException was caught</returns>
         public static bool GetTypesSafe(Assembly assembly, out Type[] assemblyTypes) {
             try {
                 assemblyTypes = assembly.GetTypes();
             }
             catch (ReflectionTypeLoadException re) {
                 assemblyTypes = re.Types.Where(t => t != null).ToArray();
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
 
         public static System.Reflection.FieldInfo GetNestedField(Type type, string fieldName) {
