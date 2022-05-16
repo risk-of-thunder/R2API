@@ -344,8 +344,9 @@ namespace R2API {
             ) {
                 if (dccsPool) {
                     ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) => {
-                        var isNotAFamilyCategory = poolCategory.name != MonsterPoolCategories.Family;
-                        var isAFamilyCategoryAndShouldAddToIt = addToFamilies && poolCategory.name == MonsterPoolCategories.Family;
+                        var isNotAFamilyCategory = poolCategory.name == MonsterPoolCategories.Standard;
+                        var isAFamilyCategory = !isNotAFamilyCategory;
+                        var isAFamilyCategoryAndShouldAddToIt = addToFamilies && isAFamilyCategory;
                         if (isNotAFamilyCategory || isAFamilyCategoryAndShouldAddToIt) {
                             ForEachPoolEntryInDccsPoolCategory(poolCategory, (poolEntry) => {
                                 AddMonsterToPoolEntry(monsterCardHolder, poolEntry);
