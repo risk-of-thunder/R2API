@@ -81,7 +81,8 @@ namespace R2API.Utils {
             }
 
             void CallWhenAssembliesAreScanned() {
-                var moduleTypes = Assembly.GetExecutingAssembly().GetTypes().Where(APISubmoduleFilter).ToList();
+                _ = Reflection.GetTypesSafe(Assembly.GetExecutingAssembly(), out var types);
+                var moduleTypes = types.Where(APISubmoduleFilter).ToList();
 
                 foreach (var moduleType in moduleTypes) {
                     R2API.Logger.LogInfo($"Enabling R2API Submodule: {moduleType.Name}");

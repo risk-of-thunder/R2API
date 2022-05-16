@@ -1034,6 +1034,24 @@ namespace R2API.Utils {
 
         #endregion Fast Reflection
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="assemblyTypes"></param>
+        /// <returns>true if a ReflectionTypeLoadException was caught</returns>
+        public static bool GetTypesSafe(Assembly assembly, out Type[] assemblyTypes) {
+            try {
+                assemblyTypes = assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException re) {
+                assemblyTypes = re.Types.Where(t => t != null).ToArray();
+                return true;
+            }
+
+            return false;
+        }
+
         public static System.Reflection.FieldInfo GetNestedField(Type type, string fieldName) {
             var nestedTypes = type.GetNestedTypes(AllFlags);
             foreach (Type nestedType in nestedTypes) {
