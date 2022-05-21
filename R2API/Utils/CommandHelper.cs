@@ -75,10 +75,10 @@ namespace R2API.Utils {
         }
 
         private static void RegisterCommands(Assembly assembly) {
-            var types = assembly?.GetTypes();
-            if (types == null) {
+            if (assembly == null) {
                 return;
             }
+            _ = Reflection.GetTypesSafe(assembly, out var types);
 
             try {
                 var catalog = _console.concommandCatalog;
@@ -112,9 +112,14 @@ namespace R2API.Utils {
         }
 
         private static void RegisterConVars(Assembly assembly) {
+            if (assembly == null) {
+                return;
+            }
+            _ = Reflection.GetTypesSafe(assembly, out var types);
+
             try {
                 var customVars = new List<BaseConVar>();
-                foreach (var type in assembly.GetTypes()) {
+                foreach (var type in types) {
                     foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
                         if (field.FieldType.IsSubclassOf(typeof(BaseConVar))) {
                             if (field.IsStatic) {

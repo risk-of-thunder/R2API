@@ -140,7 +140,8 @@ namespace R2API.ContentManagement {
             try {
                 Assembly assembly = Assembly.GetCallingAssembly();
                 if (!AssemblyToBepInModName.ContainsKey(assembly)) {
-                    Type mainClass = assembly.GetTypes()
+                    _ = Reflection.GetTypesSafe(assembly, out var types);
+                    Type mainClass = types
                         .Where(t => t.GetCustomAttribute<BepInPlugin>() != null)
                         .FirstOrDefault();
 
@@ -397,7 +398,8 @@ namespace R2API.ContentManagement {
                     R2API.Logger.LogWarning($"The assembly {assembly.FullName} is not a loaded BepInEx plugin, falling back to looking for attribute in assembly");
 
                     try {
-                        var infoAttribute = assembly.GetTypes().Select(x => x.GetCustomAttribute<BepInPlugin>()).First(x => x != null);
+                        _ = Reflection.GetTypesSafe(assembly, out var types);
+                        var infoAttribute = types.Select(x => x.GetCustomAttribute<BepInPlugin>()).First(x => x != null);
                         modName = infoAttribute.GUID;
                     }
                     catch {
