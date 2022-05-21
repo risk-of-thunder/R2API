@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    # uses *.csproj files from projects in /R2API.sln
+    directory: "/"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "UnityEngine.Modules"
+      - dependency-name: "BepInEx.Core"
+        update-types: ["version-update:semver-major"]
