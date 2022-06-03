@@ -46,7 +46,7 @@ namespace R2API {
         private static readonly Dictionary<DotController, bool[]> ActiveCustomDots = new Dictionary<DotController, bool[]>();
 
         /// <summary>
-        /// Allows for custom behaviours when applying the dot. EG, percentburn. <see cref="DotController.AddDot(GameObject, float, DotController.DotIndex, float, uint?, float?)"/>
+        /// Allows for custom behaviours when applying the dot. EG, percentburn. <see cref="DotController.AddDot(GameObject, float, DotController.DotIndex, float, uint?, float?, DotController.DotIndex?)"/>
         /// </summary>
         /// <param name="self"></param>
         /// <param name="dotStack"></param>
