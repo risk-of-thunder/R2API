@@ -49,6 +49,7 @@ namespace R2API {
             IL.RoR2.Orbs.DamageOrb.OnArrival += DamageOrbOnArrivalIL;
             IL.RoR2.Orbs.GenericDamageOrb.OnArrival += GenericDamageOrbOnArrivalIL;
             IL.RoR2.Orbs.LightningOrb.OnArrival += LightningOrbOnArrivalIL;
+            IL.RoR2.Orbs.ChainGunOrb.OnArrival += ChainGunOrbOnArrivalIL;
 
             IL.RoR2.Projectile.DeathProjectile.FixedUpdate += DeathProjectileFixedUpdateIL;
             IL.RoR2.Projectile.ProjectileDotZone.ResetOverlap += ProjectileDotZoneResetOverlapIL;
@@ -99,6 +100,7 @@ namespace R2API {
             IL.RoR2.Orbs.DamageOrb.OnArrival -= DamageOrbOnArrivalIL;
             IL.RoR2.Orbs.GenericDamageOrb.OnArrival -= GenericDamageOrbOnArrivalIL;
             IL.RoR2.Orbs.LightningOrb.OnArrival -= LightningOrbOnArrivalIL;
+            IL.RoR2.Orbs.ChainGunOrb.OnArrival -= ChainGunOrbOnArrivalIL;
 
             IL.RoR2.Projectile.DeathProjectile.FixedUpdate -= DeathProjectileFixedUpdateIL;
             IL.RoR2.Projectile.ProjectileDotZone.ResetOverlap -= ProjectileDotZoneResetOverlapIL;
@@ -219,6 +221,26 @@ namespace R2API {
 
             c.Emit(OpCodes.Ldarg_0);
             c.Emit(OpCodes.Ldloc, damageInfoIndex);
+
+            EmitCopyCall(c);
+        }
+
+        private static void ChainGunOrbOnArrivalIL(ILContext il) {
+            var c = new ILCursor(il);
+            var damageInfoIndex = GotoDamageInfo(c);
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Ldloc, damageInfoIndex);
+
+            EmitCopyCall(c);
+
+            var chainGunOrbIndex = -1;
+            c.GotoNext(
+                x => x.MatchNewobj<ChainGunOrb>(),
+                x => x.MatchStloc(out chainGunOrbIndex));
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Ldloc, chainGunOrbIndex);
 
             EmitCopyCall(c);
         }
