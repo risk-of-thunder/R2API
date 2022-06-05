@@ -26,8 +26,8 @@ namespace R2API {
             }
         }
 
-        private static readonly Dictionary<string, Dictionary<string, string>> CustomLanguage = new Dictionary<string, Dictionary<string, string>>();
-        private static readonly Dictionary<string, Dictionary<string, string>> OverlayLanguage = new Dictionary<string, Dictionary<string, string>>();
+        private static readonly Dictionary<string, Dictionary<string, string>> CustomLanguage = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, Dictionary<string, string>> OverlayLanguage = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
         private static readonly List<LanguageOverlay> temporaryOverlays = new List<LanguageOverlay>();
         private const string genericLanguage = "generic";
 

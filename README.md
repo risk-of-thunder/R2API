@@ -35,6 +35,7 @@ A lot of documentation is in the included *xmldocs*, and further information may
 The most recent changelog can always be found on the [GitHub](https://github.com/risk-of-thunder/R2API/blob/master/Archived%20changelogs.md). In this readme, only the most recent *minor* version will have a changelog.
 
 **Current**
+* [Fix LanguageAPI being case dependent, add support for ChainGunOrb in DamageAPI by @KingEnderBrine](https://github.com/risk-of-thunder/R2API/pull/402)
 * [UnlockableAPI: Fix custom achievements not working for current patch by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/391)
 * [UnlockableAPI: Marked as Obsolete by @Nebby1999](https://github.com/risk-of-thunder/R2API/pull/390)
 * [DirectorAPI: Add AddNewMonsterToStagesWhere & AddSelectedNewMonsters, and publicize base AddNewMonster by @bb010g](https://github.com/risk-of-thunder/R2API/pull/382)

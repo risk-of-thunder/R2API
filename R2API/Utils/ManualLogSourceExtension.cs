@@ -18,7 +18,7 @@ namespace R2API.Utils {
 
             logger.Log(level, barrier);
             logger.Log(level, empty);
-            logger.Log(level, CenterText($"!{header}!"));
+            logger.Log(level, CenterText($"!{header}!", width));
 
             lines.ToList().ForEach(x => logger.Log(level, CenterText(x, width)));
 
