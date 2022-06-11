@@ -1,4 +1,6 @@
-﻿using R2API.ScriptableObjects;
+﻿using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using R2API.ScriptableObjects;
 using R2API.Utils;
 using RoR2;
 using System;
@@ -11,10 +13,7 @@ namespace R2API {
     /// </summary>
     [R2APISubmodule]
     public static class ColorsAPI {
-        private static List<DamageColorIndex> registeredDColorIndices = new List<DamageColorIndex>();
         private static List<SerializableDamageColor> addedSerializableDamageColors = new List<SerializableDamageColor>();
-
-        private static List<ColorCatalog.ColorIndex> registeredColorIndices = new List<ColorCatalog.ColorIndex>();
         private static List<SerializableColorCatalogEntry> addedSerializableColors = new List<SerializableColorCatalogEntry>();
 
         /// <summary>
@@ -31,37 +30,39 @@ namespace R2API {
         [R2APISubmoduleInit(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             //Color Catalog
-            On.RoR2.ColorCatalog.GetColor += GetCustomColor;
-            On.RoR2.ColorCatalog.GetColorHexString += GetCustomColorHexString;
+            IL.RoR2.ColorCatalog.GetColor += GetColorIL;
+            IL.RoR2.ColorCatalog.GetColorHexString += GetColorIL;
 
-            //Damage Color
-            On.RoR2.DamageColor.FindColor += FindCustomColor;
+            //DamageColor
+            IL.RoR2.DamageColor.FindColor += GetColorIL;
         }
 
         [R2APISubmoduleInit(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             //Color Catalog
-            On.RoR2.ColorCatalog.GetColor -= GetCustomColor;
-            On.RoR2.ColorCatalog.GetColorHexString -= GetCustomColorHexString;
+            IL.RoR2.ColorCatalog.GetColor -= GetColorIL;
+            IL.RoR2.ColorCatalog.GetColorHexString -= GetColorIL;
 
-            //Damage Color
-            On.RoR2.DamageColor.FindColor -= FindCustomColor;
-        }
-        #endregion
-
-        #region Color Catalog Hook Implementation
-        private static Color32 GetCustomColor(On.RoR2.ColorCatalog.orig_GetColor orig, RoR2.ColorCatalog.ColorIndex colorIndex) {
-            return registeredColorIndices.Contains(colorIndex) ? ColorCatalog.indexToColor32[(int)colorIndex] : orig(colorIndex);
+            //DamageColor
+            IL.RoR2.DamageColor.FindColor -= GetColorIL;
         }
 
-        private static string GetCustomColorHexString(On.RoR2.ColorCatalog.orig_GetColorHexString orig, RoR2.ColorCatalog.ColorIndex colorIndex) {
-            return registeredColorIndices.Contains(colorIndex) ? ColorCatalog.indexToHexString[(int)colorIndex] : orig(colorIndex);
-        }
-        #endregion
-
-        #region Damage Color Hook Implementation
-        private static Color FindCustomColor(On.RoR2.DamageColor.orig_FindColor orig, RoR2.DamageColorIndex dColorIndex) {
-            return registeredDColorIndices.Contains(dColorIndex) ? DamageColor.colors[(int)dColorIndex] : orig(dColorIndex);
+        private static void GetColorIL(ILContext il) {
+            var c = new ILCursor(il);
+            Mono.Cecil.FieldReference arrayToGetLength = null;
+            //Get the array (indexToColor32/ indexToHexString)
+            c.GotoNext(inst => inst.MatchLdsfld(out arrayToGetLength));
+            //Move to right before where ColorIndex.Count is loaded
+            c.GotoPrev(MoveType.After, inst => inst.MatchLdarg(0));
+            //replace with loadArray (from previously)
+            c.Emit(OpCodes.Ldsfld, arrayToGetLength);
+            //get array length
+            c.Emit(OpCodes.Ldlen);
+            //type safety?
+            c.Emit(OpCodes.Conv_I4);
+            //Remove the old stuff.
+            c.Index++;
+            c.Emit(OpCodes.Pop);
         }
         #endregion
 
@@ -79,7 +80,6 @@ namespace R2API {
             int nextColorIndex = DamageColor.colors.Length;
             DamageColorIndex newIndex = (DamageColorIndex)nextColorIndex;
             HG.ArrayUtils.ArrayAppend(ref DamageColor.colors, color);
-            registeredDColorIndices.Add(newIndex);
             return newIndex;
         }
 
@@ -116,7 +116,6 @@ namespace R2API {
             ColorCatalog.ColorIndex newIndex = (ColorCatalog.ColorIndex)nextColorIndex;
             HG.ArrayUtils.ArrayAppend(ref ColorCatalog.indexToColor32, color);
             HG.ArrayUtils.ArrayAppend(ref ColorCatalog.indexToHexString, Util.RGBToHex(color));
-            registeredColorIndices.Add(newIndex);
             return newIndex;
         }
 
