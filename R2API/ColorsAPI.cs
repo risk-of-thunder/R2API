@@ -16,7 +16,7 @@ namespace R2API {
         private static List<SerializableDamageColor> addedSerializableDamageColors = new List<SerializableDamageColor>();
 
         private static List<ColorCatalog.ColorIndex> registeredColorIndices = new List<ColorCatalog.ColorIndex>();
-        private static List<SerializableColor> addedSerializableColors = new List<SerializableColor>();
+        private static List<SerializableColorCatalogEntry> addedSerializableColors = new List<SerializableColorCatalogEntry>();
 
         /// <summary>
         /// Return true if the submodule is loaded.
@@ -122,11 +122,11 @@ namespace R2API {
         }
 
         /// <summary>
-        /// Adds a new Color to the <see cref="ColorCatalog"/> using a <see cref="SerializableColor"/>
-        /// <para>The <see cref="ColorCatalog.ColorIndex"/> is set in <paramref name="serializableColor"/>'s <see cref="SerializableColor.ColorIndex"/></para>
+        /// Adds a new Color to the <see cref="ColorCatalog"/> using a <see cref="SerializableColorCatalogEntry"/>
+        /// <para>The <see cref="ColorCatalog.ColorIndex"/> is set in <paramref name="serializableColor"/>'s <see cref="SerializableColorCatalogEntry.ColorIndex"/></para>
         /// </summary>
         /// <param name="serializableColor">The <see cref="SerializableDamageColor"/> to add</param>
-        public static void AddSerializableColor(SerializableColor serializableColor) {
+        public static void AddSerializableColor(SerializableColorCatalogEntry serializableColor) {
             if (!Loaded)
                 throw new InvalidOperationException($"{nameof(ColorsAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}({nameof(ColorsAPI)})]");
 
