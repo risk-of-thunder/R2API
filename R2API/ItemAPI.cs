@@ -1,6 +1,7 @@
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.ContentManagement;
+using R2API.MiscHelpers;
 using R2API.Utils;
 using RoR2;
 using System;
@@ -9,12 +10,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Xml.Linq;
 using UnityEngine;
-using R2API.MiscHelpers;
-using Object = UnityEngine.Object;
-using System.Text;
 using UnityEngine.AddressableAssets;
+using Object = UnityEngine.Object;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -94,9 +94,9 @@ namespace R2API {
                 R2API.Logger.LogWarning($"No ItemDef.pickupModelPrefab ({item.ItemDef.name}), the game will show nothing when the item is on the ground.");
             }
 
-            if(item.ItemDisplayRules != null &&
+            if (item.ItemDisplayRules != null &&
                 item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab))) {
-                if(item.ItemDisplayRules.HasInvalidDisplays(out var log)) {
+                if (item.ItemDisplayRules.HasInvalidDisplays(out var log)) {
                     R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomItem ({item.ItemDef}) have an invalid {nameof(ItemDisplayRule.followerPrefab)}. " +
                         $"(There are ItemDisplayRuleType.ParentedPrefab rules)," +
                         $"Logging invalid rules... (For full details, check the Log file)");
@@ -355,7 +355,7 @@ namespace R2API {
             bool canRemove,
             bool hidden,
             UnlockableDef unlockableDef = null,
-            ItemDisplayRuleDict? itemDisplayRules = null){
+            ItemDisplayRuleDict? itemDisplayRules = null) {
             SetupItem(name, nameToken, descriptionToken, loreToken, pickupToken, pickupIconSprite, pickupModelPrefab, tier, tags, canRemove, hidden, unlockableDef, itemDisplayRules);
         }
 
@@ -583,7 +583,7 @@ namespace R2API {
         internal bool HasInvalidDisplays(out StringBuilder logger) {
             bool invalidDisplays = false;
             logger = new StringBuilder();
-            foreach(var (bodyName, rules) in Dictionary) {
+            foreach (var (bodyName, rules) in Dictionary) {
                 if (rules == null)
                     continue;
 
@@ -607,7 +607,7 @@ namespace R2API {
 
                     if (itemDisplay.rendererInfos != null && itemDisplay.rendererInfos.Length != 0) {
                         logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) has an ItemDisplay component, but no RendererInfos assigned. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)" +
-                            $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels." );
+                            $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
                         invalidDisplays = true;
                         continue;
                     }

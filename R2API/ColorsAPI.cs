@@ -1,10 +1,9 @@
-﻿using R2API.Utils;
+﻿using R2API.ScriptableObjects;
+using R2API.Utils;
+using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
-using RoR2;
-using R2API.ScriptableObjects;
 
 namespace R2API {
     /// <summary>
