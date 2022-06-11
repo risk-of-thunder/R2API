@@ -584,9 +584,6 @@ namespace R2API {
             bool invalidDisplays = false;
             logger = new StringBuilder();
             foreach (var (bodyName, rules) in Dictionary) {
-                if (rules == null)
-                    continue;
-
                 for (int i = 0; i < rules.Length; i++) {
                     ItemDisplayRule rule = rules[i];
                     if (rule.ruleType != ItemDisplayRuleType.ParentedPrefab)
