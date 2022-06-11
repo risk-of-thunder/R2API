@@ -584,6 +584,9 @@ namespace R2API {
             bool invalidDisplays = false;
             logger = new StringBuilder();
             foreach(var (bodyName, rules) in Dictionary) {
+                if (rules == null)
+                    continue;
+
                 for (int i = 0; i < rules.Length; i++) {
                     ItemDisplayRule rule = rules[i];
                     if (rule.ruleType != ItemDisplayRuleType.ParentedPrefab)
@@ -594,15 +597,15 @@ namespace R2API {
                         invalidDisplays = true;
                         continue;
                     }
-
-                    if (!rule.followerPrefab.GetComponent<ItemDisplay>()) {
+                    ItemDisplay itemDisplay = rule.followerPrefab.GetComponent<ItemDisplay>();
+                    if (!itemDisplay) {
                         logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) does not have an ItemDisplay component. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab) " +
                             $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
                         invalidDisplays = true;
                         continue;
                     }
 
-                    if (rule.followerPrefab.GetComponent<ItemDisplay>().rendererInfos.Length == 0) {
+                    if (itemDisplay.rendererInfos != null && itemDisplay.rendererInfos.Length != 0) {
                         logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) has an ItemDisplay component, but no RendererInfos assigned. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)" +
                             $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels." );
                         invalidDisplays = true;
