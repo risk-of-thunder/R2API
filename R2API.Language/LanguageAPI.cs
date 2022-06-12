@@ -14,30 +14,19 @@ namespace R2API {
     /// class for language files to load
     /// </summary>
     public static class LanguageAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".language";
+        public const string PluginName = R2API.PluginName + ".Language";
+        public const string PluginVersion = "0.0.1";
 
-        public static bool Loaded {
-            get; private set;
-        }
-
-        private static void ThrowIfNotLoaded() {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(LanguageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LanguageAPI)})]");
-            }
-        }
+        public static bool Loaded => true;
 
         private static readonly Dictionary<string, Dictionary<string, string>> CustomLanguage = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, Dictionary<string, string>> OverlayLanguage = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
         private static readonly List<LanguageOverlay> temporaryOverlays = new List<LanguageOverlay>();
         private const string genericLanguage = "generic";
 
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
-        internal static void LanguageAwake() {
-            if (Loaded) {
-                return;
-            }
-
-            Loaded = true;
-
+        #region Hooks
+        internal static void SetHooks() { 
             var languagePaths = Directory.GetFiles(Paths.PluginPath, "*.language", SearchOption.AllDirectories);
             foreach (var path in languagePaths) {
                 AddPath(path);
@@ -45,6 +34,11 @@ namespace R2API {
 
             On.RoR2.Language.GetLocalizedStringByToken += Language_GetLocalizedStringByToken;
             On.RoR2.Language.TokenIsRegistered += Language_TokenIsRegistered;
+        }
+
+        internal static void UnsetHooks() {
+            On.RoR2.Language.GetLocalizedStringByToken -= Language_GetLocalizedStringByToken;
+            On.RoR2.Language.TokenIsRegistered -= Language_TokenIsRegistered;
         }
 
         private static bool Language_TokenIsRegistered(On.RoR2.Language.orig_TokenIsRegistered orig, Language self, string token) {
@@ -96,6 +90,7 @@ namespace R2API {
             }
             return orig(self, token);
         }
+        #endregion
 
         private static Dictionary<string, Dictionary<string, string>>? LoadFile(string fileContent) {
             Dictionary<string, Dictionary<string, string>> dict = new Dictionary<string, Dictionary<string, string>>();
@@ -143,7 +138,6 @@ namespace R2API {
         /// <param name="key">Token the game asks</param>
         /// <param name="value">Value it gives back</param>
         public static void Add(string? key, string? value) {
-            ThrowIfNotLoaded();
             if (key == null) {
                 throw new NullReferenceException($"param {nameof(key)} is null");
             }
@@ -161,7 +155,6 @@ namespace R2API {
         /// <param name="value">Value it gives back</param>
         /// <param name="language">Language you want to add this to</param>
         public static void Add(string? key, string? value, string? language) {
-            ThrowIfNotLoaded();
             if (key == null) {
                 throw new NullReferenceException($"param {nameof(key)} is null");
             }
@@ -186,7 +179,6 @@ namespace R2API {
         /// </summary>
         /// <param name="path">absolute path to file</param>
         public static void AddPath(string? path) {
-            ThrowIfNotLoaded();
             if (path == null) {
                 throw new NullReferenceException($"param {nameof(path)} is null");
             }
@@ -200,7 +192,6 @@ namespace R2API {
         /// </summary>
         /// <param name="file">entire file as string</param>
         public static void Add(string? file) {
-            ThrowIfNotLoaded();
             if (file == null) {
                 throw new NullReferenceException($"param {nameof(file)} is null");
             }
@@ -218,7 +209,6 @@ namespace R2API {
         /// </summary>
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         public static void Add(Dictionary<string, string?>? tokenDictionary) {
-            ThrowIfNotLoaded();
             Add(tokenDictionary, genericLanguage);
         }
 
@@ -228,7 +218,6 @@ namespace R2API {
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         /// <param name="language">Language you want to add this to</param>
         public static void Add(Dictionary<string, string?>? tokenDictionary, string? language) {
-            ThrowIfNotLoaded();
             if (tokenDictionary == null) {
                 throw new NullReferenceException($"param {nameof(tokenDictionary)} is null");
             }
@@ -246,7 +235,6 @@ namespace R2API {
         /// </summary>
         /// <param name="languageDictionary">dictionary of languages containing dictionaries of key-value (eg ["en"]["mytoken"]="mystring")</param>
         public static void Add(Dictionary<string, Dictionary<string, string?>?>? languageDictionary) {
-            ThrowIfNotLoaded();
             if (languageDictionary == null) {
                 throw new NullReferenceException($"param {nameof(languageDictionary)} is null");
             }
@@ -300,7 +288,6 @@ namespace R2API {
         /// <param name="value">Value it gives back</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. May be safely disposed after calling .Remove().</returns>
         public static LanguageOverlay AddOverlay(string? key, string? value) {
-            ThrowIfNotLoaded();
             if (key == null) {
                 throw new NullReferenceException($"param {nameof(key)} is null");
             }
@@ -319,7 +306,6 @@ namespace R2API {
         /// <param name="lang">Language you want to add this to</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. May be safely disposed after calling .Remove().</returns>
         public static LanguageOverlay AddOverlay(string? key, string? value, string? lang) {
-            ThrowIfNotLoaded();
             if (key == null) {
                 throw new NullReferenceException($"param {nameof(key)} is null");
             }
@@ -343,7 +329,6 @@ namespace R2API {
         /// <param name="path">absolute path to file</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. Returns null if the target file is missing or cannot be parsed, or if no changes would otherwise be made.</returns>
         public static LanguageOverlay? AddOverlayPath(string? path) {
-            ThrowIfNotLoaded();
             if (path == null) {
                 throw new NullReferenceException($"param {nameof(path)} is null");
             }
@@ -361,7 +346,6 @@ namespace R2API {
         /// <param name="file">entire file as string</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. Returns null if no changes would be made.</returns>
         public static LanguageOverlay? AddOverlay(string? file) {
-            ThrowIfNotLoaded();
             if (file == null) {
                 throw new NullReferenceException($"param {nameof(file)} is null");
             }
@@ -379,7 +363,6 @@ namespace R2API {
         /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
         public static LanguageOverlay AddOverlay(Dictionary<string, string?>? tokenDictionary) {
-            ThrowIfNotLoaded();
             if (tokenDictionary == null) {
                 throw new NullReferenceException($"param {nameof(tokenDictionary)} is null");
             }
@@ -394,7 +377,6 @@ namespace R2API {
         /// <param name="language">Language you want to add this to</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
         public static LanguageOverlay AddOverlay(Dictionary<string, string?>? tokenDictionary, string? language) {
-            ThrowIfNotLoaded();
             if (tokenDictionary == null) {
                 throw new NullReferenceException($"param {nameof(tokenDictionary)} is null");
             }
@@ -419,7 +401,6 @@ namespace R2API {
         /// <param name="languageDictionary">dictionary of languages containing dictionaries of key-value (eg ["en"]["mytoken"]="mystring")</param>
         /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
         public static LanguageOverlay AddOverlay(Dictionary<string, Dictionary<string, string?>?>? languageDictionary) {
-            ThrowIfNotLoaded();
             if (languageDictionary == null) {
                 throw new NullReferenceException($"param {nameof(languageDictionary)} is null");
             }
