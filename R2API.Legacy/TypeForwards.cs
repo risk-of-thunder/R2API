@@ -6,3 +6,4 @@ using TF = System.Runtime.CompilerServices.TypeForwardedToAttribute;
 [assembly: TF(typeof(ArtifactCodeAPI))]
 [assembly: TF(typeof(DifficultyAPI))]
 [assembly: TF(typeof(EliteAPI))]
+[assembly: TF(typeof(RecalculateStatsAPI))]

@@ -9,22 +9,19 @@ namespace R2API {
     /// API for computing bonuses granted by factors inside RecalculateStats.
     /// </summary>
     public static class RecalculateStatsAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".recalculatestats";
+        public const string PluginName = R2API.PluginName + ".RecalculateStats";
+        public const string PluginVersion = "0.0.1";
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
+        public static bool Loaded => true;
 
-        private static bool _loaded;
-
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.CharacterBody.RecalculateStats += HookRecalculateStats;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
         }
@@ -129,20 +126,10 @@ namespace R2API {
         /// </summary>
         public static event StatHookEventHandler GetStatCoefficients {
             add {
-                if (!Loaded) {
-                    throw new InvalidOperationException(
-                        $"{nameof(RecalculateStatsAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(RecalculateStatsAPI)})]");
-                }
-
                 _getStatCoefficients += value;
             }
 
             remove {
-                if (!Loaded) {
-                    throw new InvalidOperationException(
-                        $"{nameof(RecalculateStatsAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(RecalculateStatsAPI)})]");
-                }
-
                 _getStatCoefficients -= value;
             }
         }
