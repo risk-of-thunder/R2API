@@ -14,18 +14,18 @@ namespace R2API.Utils {
     /// </summary>
     [Obsolete($"Add [assembly: HG.Reflection.SearchableAttribute.OptInAttribute] to your assembly instead")]
     public class CommandHelper {
+        public const string PluginGUID = R2API.PluginGUID + ".commandhelper";
+        public const string PluginName = R2API.PluginName + ".CommandHelper";
+        public const string PluginVersion = "0.0.1";
+
         private static readonly Queue<Assembly> Assemblies = new Queue<Assembly>();
         private static RoR2.Console _console;
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-
-        private static bool _loaded;
+        [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+        public static bool Loaded => true;
 
         /// <summary>
         /// Scans the calling assembly for ConCommand attributes and Convar fields and adds these to the console.
@@ -33,10 +33,6 @@ namespace R2API.Utils {
         /// </summary>
         /// <exception cref="InvalidOperationException"></exception>
         public static void AddToConsoleWhenReady() {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(CommandHelper)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(CommandHelper)})]");
-            }
-
             var assembly = Assembly.GetCallingAssembly();
             Assemblies.Enqueue(assembly);
             HandleCommandsConvars();
@@ -59,9 +55,6 @@ namespace R2API.Utils {
 
         private static void HandleCommandsConvars() {
             if (_console == null) {
-                if (!Loaded) {
-                    throw new InvalidOperationException($"{nameof(CommandHelper)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(CommandHelper)})]");
-                }
                 return;
             }
 
