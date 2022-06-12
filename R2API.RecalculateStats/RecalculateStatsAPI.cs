@@ -16,6 +16,7 @@ namespace R2API {
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
+        [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
         public static bool Loaded => true;
 
         internal static void SetHooks() {

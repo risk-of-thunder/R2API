@@ -17,8 +17,10 @@ namespace R2API.Utils {
     /// e.g: [R2APISubmoduleDependency("SurvivorAPI", "ItemAPI")]
     /// </summary>
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
-    [Obsolete("All submodules are automatically loaded and this attribute is now unused.", false)]
+    [Obsolete(attributeObsolete, false)]
     public class R2APISubmoduleDependency : Attribute {
+        public const string attributeObsolete = "All submodules are automatically loaded and this attribute is now unused.";
+        public const string propertyObsolete = "All submodules are automatically loaded and this property is now unused";
         public string?[]? SubmoduleNames { get; }
 
         public R2APISubmoduleDependency(params string[] submoduleName) {

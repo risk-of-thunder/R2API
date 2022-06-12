@@ -26,6 +26,7 @@ namespace R2API {
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         // ReSharper disable once ConvertToAutoProperty
+        [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
         public static bool Loaded => true;
 
         private static bool needToRegister;

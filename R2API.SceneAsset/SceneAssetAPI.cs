@@ -19,6 +19,7 @@ namespace R2API {
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
+        [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
         public static bool Loaded => true;
 
         private static readonly Dictionary<string, List<Action<GameObject[]>>> SceneNameToAssetRequests =
@@ -71,10 +72,6 @@ namespace R2API {
         /// the GameObject[] will contains the scene root game objects.</param>
         /// <exception cref="InvalidOperationException"></exception>
         public static void AddAssetRequest(string? sceneName, Action<GameObject[]>? onSceneObjectsLoaded) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(SceneAssetAPI)} is not loaded. " +
-                                                    $"Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SceneAssetAPI)})]");
-            }
 
             if (SceneNameToAssetRequests.TryGetValue(sceneName, out var actionList)) {
                 actionList.Add(onSceneObjectsLoaded);

@@ -27,6 +27,7 @@ namespace R2API {
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
+        [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
         public static bool Loaded => true;
 
         /// <summary>
@@ -189,9 +190,6 @@ namespace R2API {
         }
 
         internal static bool AddInternal(CustomElite customElite, Assembly addingAssembly) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
-            }
 
             if (!customElite.EliteDef) {
                 throw new ArgumentNullException("customElite.EliteDef");
@@ -290,10 +288,6 @@ namespace R2API {
         /// <param name="eliteTierDef">The new elite tier to add.</param>
         /// <param name="indexToInsertAt">Optional index to specify if you want to insert a cheaper elite tier</param>
         public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef, int indexToInsertAt = -1) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(EliteAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(EliteAPI)})]");
-            }
-
             var eliteTiersSize = VanillaEliteTierCount + CustomEliteTierCount;
 
             var currentEliteTiers = GetCombatDirectorEliteTiers();

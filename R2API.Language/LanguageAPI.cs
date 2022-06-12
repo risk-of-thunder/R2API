@@ -18,6 +18,7 @@ namespace R2API {
         public const string PluginName = R2API.PluginName + ".Language";
         public const string PluginVersion = "0.0.1";
 
+        [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
         public static bool Loaded => true;
 
         private static readonly Dictionary<string, Dictionary<string, string>> CustomLanguage = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
