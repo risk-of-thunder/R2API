@@ -12,17 +12,16 @@ namespace R2API {
     /// API for adding difficulties like Drizzle, Rainstorm, and Monsoon to the game. Does not cover "very easy, easy, ..., HAHAHAHA".
     /// </summary>
     public class DifficultyAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".difficulty";
+        public const string PluginName = R2API.PluginName + ".Difficulty";
+        public const string PluginVersion = "0.0.1";
+
         private static bool difficultyAlreadyAdded = false;
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-
-        private static bool _loaded;
+        public static bool Loaded => true;
 
         /// <summary>
         /// Fired right before the hooks for the difficultyAPI are set. This is the last chance to add difficulties to the API.
@@ -73,10 +72,6 @@ namespace R2API {
         /// <param name="preferPositive">If you prefer to be appended to the array. In game version 1.0.0.X this means you will get all Eclipse modifiers as well when your difficulty is selected. </param>
         /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
         public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty, bool preferPositive = false) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(DifficultyAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DifficultyAPI)})]");
-            }
-
             if (difficultyAlreadyAdded) {
                 R2API.Logger.LogError($"Tried to add difficulty: {difficulty.nameToken} after difficulty list was created");
                 return DifficultyIndex.Invalid;
@@ -105,14 +100,12 @@ namespace R2API {
             serializableDifficultyDef.DifficultyIndex = AddDifficulty(serializableDifficultyDef.DifficultyDef, serializableDifficultyDef.preferPositiveIndex);
         }
 
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             DifficultyCatalogReady?.Invoke(null, null);
             On.RoR2.DifficultyCatalog.GetDifficultyDef += GetExtendedDifficultyDef;
             On.RoR2.RuleDef.FromDifficulty += InitialiseRuleBookAndFinalizeList;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             On.RoR2.DifficultyCatalog.GetDifficultyDef -= GetExtendedDifficultyDef;
             On.RoR2.RuleDef.FromDifficulty -= InitialiseRuleBookAndFinalizeList;
