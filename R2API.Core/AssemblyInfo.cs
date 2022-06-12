@@ -33,3 +33,4 @@ using IVT = System.Runtime.CompilerServices.InternalsVisibleToAttribute;
 [assembly: IVT("R2API.SceneAsset")]
 [assembly: IVT("R2API.Orb")]
 [assembly: IVT("R2API.Loadout")]
+[assembly: IVT("R2API.Dot")]
