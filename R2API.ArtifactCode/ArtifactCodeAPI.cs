@@ -173,9 +173,6 @@ namespace R2API {
         /// <param name="compoundModelPrefab">The Model Prefab of the Compound.</param>
         /// <returns></returns>
         public static bool AddCompound(int compoundValue, Material compoundDecalMaterial, GameObject compoundModelPrefab) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(ArtifactCodeAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ArtifactCodeAPI)})]");
-            }
             ArtifactCompoundDef compoundDef = ScriptableObject.CreateInstance<ArtifactCompoundDef>();
             compoundDef.value = compoundValue;
             compoundDef.decalMaterial = compoundDecalMaterial;
