@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.ArtifactCode", "R2API
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Difficulty", "R2API.Difficulty\R2API.Difficulty.csproj", "{E93454A4-E87A-4D24-995A-660676F99395}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Elites", "R2API.Elites\R2API.Elites.csproj", "{B9929B43-1266-43B7-9E2E-483C4BAB7B34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Elites", "R2API.Elites\R2API.Elites.csproj", "{938C42A4-4EC6-4D1A-8924-6B5DA8CE3117}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,10 +71,10 @@ Global
 		{E93454A4-E87A-4D24-995A-660676F99395}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E93454A4-E87A-4D24-995A-660676F99395}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E93454A4-E87A-4D24-995A-660676F99395}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9929B43-1266-43B7-9E2E-483C4BAB7B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9929B43-1266-43B7-9E2E-483C4BAB7B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9929B43-1266-43B7-9E2E-483C4BAB7B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9929B43-1266-43B7-9E2E-483C4BAB7B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{938C42A4-4EC6-4D1A-8924-6B5DA8CE3117}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{938C42A4-4EC6-4D1A-8924-6B5DA8CE3117}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{938C42A4-4EC6-4D1A-8924-6B5DA8CE3117}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{938C42A4-4EC6-4D1A-8924-6B5DA8CE3117}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

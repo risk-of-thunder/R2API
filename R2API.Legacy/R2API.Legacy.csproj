@@ -9,6 +9,7 @@
       <ProjectReference Include="../R2API.Items/R2API.Items.csproj" />
       <ProjectReference Include="../R2API.ArtifactCode/R2API.ArtifactCode.csproj" />
       <ProjectReference Include="../R2API.Difficulty/R2API.Difficulty.csproj" />
+      <ProjectReference Include="../R2API.Elites/R2API.Elites.csproj" />
     </ItemGroup>
 
 </Project>

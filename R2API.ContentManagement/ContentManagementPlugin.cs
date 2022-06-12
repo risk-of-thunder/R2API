@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using BepInEx;
 
 [assembly: InternalsVisibleTo("R2API.Items")]
+[assembly: InternalsVisibleTo("R2API.Elites")]
 
 namespace R2API.ContentManagement;
 
