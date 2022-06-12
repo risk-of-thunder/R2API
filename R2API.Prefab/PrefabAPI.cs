@@ -17,18 +17,16 @@ namespace R2API {
 
     // ReSharper disable once InconsistentNaming
     public static class PrefabAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".prefab";
+        public const string PluginName = R2API.PluginName + ".Prefab";
+        public const string PluginVersion = "0.0.1";
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         // ReSharper disable once ConvertToAutoProperty
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-
-        private static bool _loaded;
+        public static bool Loaded => true;
 
         private static bool needToRegister;
         private static GameObject _parent;
@@ -71,9 +69,6 @@ namespace R2API {
         }
 
         private static GameObject InstantiateCloneInternal(this GameObject g, string nameToSet, bool registerNetwork) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(PrefabAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(PrefabAPI)})]");
-            }
             var prefab = UnityObject.Instantiate(g, GetParent().transform);
             prefab.name = nameToSet;
             if (registerNetwork) {
@@ -101,21 +96,13 @@ namespace R2API {
         }
 
         private static void RegisterNetworkPrefabInternal(GameObject g) {
-            if (!Loaded) {
-                R2API.Logger.LogError("PrefabAPI is not loaded. Please use [R2API.Utils.SubModuleDependency]");
-                return;
-            }
-
             RegisterPrefabInternal(g, new StackFrame(2));
         }
 
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
         }
-
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
         }
 

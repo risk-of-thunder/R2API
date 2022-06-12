@@ -11,6 +11,7 @@
       <ProjectReference Include="../R2API.Difficulty/R2API.Difficulty.csproj" />
       <ProjectReference Include="../R2API.Elites/R2API.Elites.csproj" />
       <ProjectReference Include="../R2API.RecalculateStats/R2API.RecalculateStats.csproj" />
+      <ProjectReference Include="../R2API.Prefab/R2API.Prefab.csproj" />
     </ItemGroup>
 
 </Project>
