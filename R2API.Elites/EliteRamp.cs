@@ -39,7 +39,7 @@ namespace R2API {
 
             if (firstMatchSuccesful && secondMatchSuccesful) {
                 c.Emit(OpCodes.Ldarg, 0);
-                c.EmitDelegate(UpdateRampProperly);
+                c.EmitDelegate<Action<CharacterModel>>(UpdateRampProperly);
             }
             else {
                 R2API.Logger.LogError($"Elite Ramp ILHook failed");

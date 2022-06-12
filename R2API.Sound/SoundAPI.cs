@@ -29,8 +29,6 @@ namespace R2API {
         [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
         public static bool Loaded => true;
 
-        private static bool _loaded;
-
         private static Hook AddBanksAfterEngineInitHook;
 
         private static readonly List<NetworkSoundEventDef> NetworkSoundEventDefs = new List<NetworkSoundEventDef>();
