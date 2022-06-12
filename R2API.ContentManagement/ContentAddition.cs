@@ -223,55 +223,11 @@ namespace R2API {
             if (CatalogBlockers.GetAvailability<ItemDef>()) {
                 R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {itemDef} via {nameof(ContentAddition)}.{nameof(AddItemDef)}()" +
                     $"The assembly should ideally add them via ItemAPI so that they can use ItemAPI's IDRS systems, adding anyways.");
-                AddItemInternal(new CustomItem(itemDef, Array.Empty<ItemDisplayRule>()), asm);
+                R2APIContentManager.HandleContentAddition(asm, itemDef);
                 return true;
             }
             RejectContent(itemDef, asm, "ItemDef", "but the ItemCatalog has already initialized!");
             return false;
-        }
-
-        internal static bool AddItemInternal(CustomItem item, Assembly addingAssembly) {
-            if (!CatalogBlockers.GetAvailability<ItemDef>()) {
-                R2API.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the ItemCatalog has Initialized!");
-            }
-
-            if (!item.ItemDef) {
-                R2API.Logger.LogError("ItemDef is null ! Can't add the custom item.");
-            }
-
-            if (string.IsNullOrEmpty(item.ItemDef.name)) {
-                R2API.Logger.LogError("ItemDef.name is null or empty ! Can't add the custom item.");
-            }
-
-            if (!item.ItemDef.pickupModelPrefab) {
-                R2API.Logger.LogWarning($"No ItemDef.pickupModelPrefab ({item.ItemDef.name}), the game will show nothing when the item is on the ground.");
-            }
-
-            if(item.ItemDisplayRules != null &&
-                item.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab))) {
-                if(item.ItemDisplayRules.HasInvalidDisplays(out var log)) {
-                    R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomItem ({item.ItemDef}) have an invalid {nameof(ItemDisplayRule.followerPrefab)}. " +
-                        $"(There are ItemDisplayRuleType.ParentedPrefab rules)," +
-                        $"Logging invalid rules... (For full details, check the Log file)");
-                    R2API.Logger.LogDebug(log.ToString());
-                }
-            }
-
-            bool xmlSafe = false;
-            try {
-                XElement element = new(item.ItemDef.name);
-                xmlSafe = true;
-            }
-            catch {
-                R2API.Logger.LogError($"Custom item '{item.ItemDef.name}' is not XMLsafe. Item not added.");
-            }
-            if (xmlSafe) {
-                R2APIContentManager.HandleContentAddition(addingAssembly, item.ItemDef);
-                return true;
-            }
-
-            return false;
-
         }
 
         /// <summary>
@@ -334,53 +290,10 @@ namespace R2API {
             if (CatalogBlockers.GetAvailability<EquipmentDef>()) {
                 R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {equipmentDef} via {nameof(ContentAddition)}.{nameof(AddEquipmentDef)}()" +
                     $"The assembly should ideally add them via ItemAPI so that they can use ItemAPI's IDRS systems, adding anyways.");
-                AddEquipmentInternal(new CustomEquipment(equipmentDef, Array.Empty<ItemDisplayRule>()), asm);
+                R2APIContentManager.HandleContentAddition(asm, equipmentDef);
                 return true;
             }
             RejectContent(equipmentDef, asm, "EquipmentDef", "but the EquipmnetCatalog has already initialized!");
-            return false;
-        }
-
-        internal static bool AddEquipmentInternal(CustomEquipment equip, Assembly addingAssembly) {
-            if (!CatalogBlockers.GetAvailability<EquipmentDef>()) {
-                R2API.Logger.LogError($"Too late ! Tried to add equipment item: {equip.EquipmentDef.nameToken} after the EquipmentCatalog has initialized!");
-            }
-
-            if (equip.EquipmentDef == null) {
-                R2API.Logger.LogError("EquipmentDef is null ! Can't add the custom Equipment.");
-            }
-
-            if (string.IsNullOrEmpty(equip.EquipmentDef.name)) {
-                R2API.Logger.LogError("EquipmentDef.name is null or empty ! Can't add the custom Equipment.");
-            }
-
-            if (!equip.EquipmentDef.pickupModelPrefab) {
-                R2API.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab ({equip.EquipmentDef.name}), the game will show nothing when the equipment is on the ground.");
-            }
-
-            if (equip.ItemDisplayRules != null &&
-                equip.ItemDisplayRules.Dictionary.Values.Any(rules => rules.Any(rule => rule.ruleType == ItemDisplayRuleType.ParentedPrefab))) {
-                if (equip.ItemDisplayRules.HasInvalidDisplays(out var log)) {
-                    R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomEquipment ({equip.EquipmentDef}) have an invalid {nameof(ItemDisplayRule.followerPrefab)}. " +
-                        $"(There are ItemDisplayRuleType.ParentedPrefab rules)," +
-                        $"Logging invalid rules... (For full details, check the Log file)");
-                    R2API.Logger.LogDebug(log.ToString());
-                }
-            }
-
-            bool xmlSafe = false;
-            try {
-                XElement element = new(equip.EquipmentDef.name);
-                xmlSafe = true;
-            }
-            catch {
-                R2API.Logger.LogError($"Custom equipment '{equip.EquipmentDef.name}' is not XMLsafe. Equipment not added.");
-            }
-            if (xmlSafe) {
-                R2APIContentManager.HandleContentAddition(addingAssembly, equip.EquipmentDef);
-                return true;
-            }
-
             return false;
         }
 
@@ -417,8 +330,8 @@ namespace R2API {
             var asm = Assembly.GetCallingAssembly();
             if (CatalogBlockers.GetAvailability<EliteDef>()) {
                 R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {eliteDef} via {nameof(ContentAddition)}.{nameof(AddEliteDef)}()" +
-                    $"The assembly should ideally add them via {nameof(EliteAPI)} so that they can use EliteAPI's elite tier systems, adding the elite anyways as Tier1 elite.");
-                EliteAPI.AddInternal(new CustomElite(eliteDef, new List<CombatDirector.EliteTierDef> { EliteAPI.VanillaEliteTiers[1], EliteAPI.VanillaEliteTiers[2] }), asm);
+                    $"The assembly should ideally add them via {nameof(EliteAPI)} so that they can use EliteAPI's elite tier systems, adding anyways.");
+                R2APIContentManager.HandleContentAddition(asm, eliteDef);
                 return true;
             }
             RejectContent(eliteDef, asm, "EliteDef", "but the EliteCatalog has already initialized!");

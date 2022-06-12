@@ -25,11 +25,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Items", "R2API.Items\R2API.Items.csproj", "{193B0EA3-6095-4B59-BC9C-4ED10E85418A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Items", "R2API.Items\R2API.Items.csproj", "{193B0EA3-6095-4B59-BC9C-4ED10E85418A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Legacy", "R2API.Legacy\R2API.Legacy.csproj", "{488CBD9D-B2FC-41F6-A994-02254CE62B92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Legacy", "R2API.Legacy\R2API.Legacy.csproj", "{488CBD9D-B2FC-41F6-A994-02254CE62B92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.ContentManagement", "R2API.ContentManagement\R2API.ContentManagement.csproj", "{E630009A-97EA-4F9F-AFE4-C9412FE30807}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.ContentManagement", "R2API.ContentManagement\R2API.ContentManagement.csproj", "{E630009A-97EA-4F9F-AFE4-C9412FE30807}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.ArtifactCode", "R2API.ArtifactCode\R2API.ArtifactCode.csproj", "{F20ED7D6-82CF-4ED9-BEA6-66493A7FDBC1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Difficulty", "R2API.Difficulty\R2API.Difficulty.csproj", "{E93454A4-E87A-4D24-995A-660676F99395}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Elites", "R2API.Elites\R2API.Elites.csproj", "{B9929B43-1266-43B7-9E2E-483C4BAB7B34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +63,18 @@ Global
 		{E630009A-97EA-4F9F-AFE4-C9412FE30807}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E630009A-97EA-4F9F-AFE4-C9412FE30807}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E630009A-97EA-4F9F-AFE4-C9412FE30807}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F20ED7D6-82CF-4ED9-BEA6-66493A7FDBC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F20ED7D6-82CF-4ED9-BEA6-66493A7FDBC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F20ED7D6-82CF-4ED9-BEA6-66493A7FDBC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F20ED7D6-82CF-4ED9-BEA6-66493A7FDBC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E93454A4-E87A-4D24-995A-660676F99395}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E93454A4-E87A-4D24-995A-660676F99395}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E93454A4-E87A-4D24-995A-660676F99395}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E93454A4-E87A-4D24-995A-660676F99395}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9929B43-1266-43B7-9E2E-483C4BAB7B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9929B43-1266-43B7-9E2E-483C4BAB7B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9929B43-1266-43B7-9E2E-483C4BAB7B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9929B43-1266-43B7-9E2E-483C4BAB7B34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
