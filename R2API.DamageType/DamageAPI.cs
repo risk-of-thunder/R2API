@@ -16,6 +16,10 @@ namespace R2API {
     /// API for handling DamageTypes added by mods
     /// </summary>
     public static class DamageAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".damagetyppe";
+        public const string PluginName = R2API.PluginName + ".DamageType";
+        public const string PluginVersion = "0.0.1";
+
         public enum ModdedDamageType { };
 
         private static readonly ConditionalWeakTable<object, ModdedDamageTypeHolder> damageTypeHolders = new();
@@ -25,11 +29,7 @@ namespace R2API {
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-        private static bool _loaded;
+        public static bool Loaded => true;
 
         /// <summary>
         /// Reserved ModdedDamageTypes count
@@ -38,7 +38,6 @@ namespace R2API {
 
 
         #region Hooks
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             On.RoR2.NetworkExtensions.Write_NetworkWriter_DamageInfo += WriteDamageInfo;
             On.RoR2.NetworkExtensions.ReadDamageInfo += ReadDamageInfo;
@@ -89,7 +88,6 @@ namespace R2API {
             IL.RoR2.DelayBlast.Detonate += DelayBlastDetonateIL;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             On.RoR2.NetworkExtensions.Write_NetworkWriter_DamageInfo -= WriteDamageInfo;
             On.RoR2.NetworkExtensions.ReadDamageInfo -= ReadDamageInfo;
@@ -656,10 +654,6 @@ namespace R2API {
         /// </summary>
         /// <returns></returns>
         public static ModdedDamageType ReserveDamageType() {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
-            }
-
             if (ModdedDamageTypeCount >= CompressedFlagArrayUtilities.sectionsCount * CompressedFlagArrayUtilities.flagsPerSection) {
                 //I doubt this is ever gonna happen, but just in case.
                 throw new IndexOutOfRangeException($"Reached the limit of {CompressedFlagArrayUtilities.sectionsCount * CompressedFlagArrayUtilities.flagsPerSection} ModdedDamageTypes. Please contact R2API developers to increase the limit");
@@ -726,10 +720,6 @@ namespace R2API {
         public static void AddModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(dotStack, moddedDamageType);
 
         private static void AddModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
-            }
-
             if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0) {
                 throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
             }
@@ -800,9 +790,6 @@ namespace R2API {
         public static bool RemoveModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(dotStack, moddedDamageType);
 
         private static bool RemoveModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
-            }
 
             if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0) {
                 throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
@@ -882,9 +869,6 @@ namespace R2API {
         public static bool HasModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(dotStack, moddedDamageType);
 
         private static bool HasModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
-            }
 
             if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0) {
                 throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
