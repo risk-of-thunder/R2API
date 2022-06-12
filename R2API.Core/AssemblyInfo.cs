@@ -40,3 +40,4 @@ using IVT = System.Runtime.CompilerServices.InternalsVisibleToAttribute;
 [assembly: IVT("R2API.Deployable")]
 [assembly: IVT("R2API.LobbyConfig")]
 [assembly: IVT("R2API.Networking")]
+[assembly: IVT("R2API.CommandHelper")]
