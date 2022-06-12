@@ -46,10 +46,8 @@ namespace R2API {
             ModManager = new DetourModManager();
             AddHookLogging();
 
-            CheckForIncompatibleAssemblies();
 
-            var networkCompatibilityHandler = new NetworkCompatibilityHandler();
-            networkCompatibilityHandler.BuildModList();
+            CheckForIncompatibleAssemblies();
 
             On.RoR2.RoR2Application.Awake += CheckIfUsedOnRightGameVersion;
         }

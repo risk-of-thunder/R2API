@@ -37,3 +37,6 @@ using IVT = System.Runtime.CompilerServices.InternalsVisibleToAttribute;
 [assembly: IVT("R2API.DamageType")]
 [assembly: IVT("R2API.Sound")]
 [assembly: IVT("R2API.Director")]
+[assembly: IVT("R2API.Deployable")]
+[assembly: IVT("R2API.LobbyConfig")]
+[assembly: IVT("R2API.Networking")]
