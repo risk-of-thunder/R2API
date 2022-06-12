@@ -3,19 +3,22 @@ using System.Text;
 using UnityEngine.AddressableAssets;
 using Xunit;
 
-namespace R2API.Test.Dumps.AwakeDumps {
+namespace R2API.Test.Dumps.AwakeDumps;
 
-    // Create dump for DirectorAPIhelpers.cs
+// Create dump for DirectorAPIhelpers.cs
 
-    public class CSCDump {
+public class CSCDump
+{
 
-        [Fact]
-        public void Awake() {
-            RoR2Application.onLoad += Dump;
-        }
+    [Fact]
+    public void Awake()
+    {
+        RoR2Application.onLoad += Dump;
+    }
 
-        private void Dump() {
-            var paths = @"RoR2/Base/Beetle/cscBeetle.asset
+    private void Dump()
+    {
+        var paths = @"RoR2/Base/Beetle/cscBeetle.asset
 RoR2/Base/Beetle/cscBeetleGuard.asset
 RoR2/Base/Beetle/cscBeetleQueen.asset
 RoR2/Base/Bell/cscBell.asset
@@ -101,12 +104,12 @@ RoR2/Junk/BeetleCrystal/cscBeetleCrystal.asset
 RoR2/Junk/BeetleGuardCrystal/cscBeetleGuardCrystal.asset
 RoR2/Junk/BrotherGlass/cscBrotherGlass.asset
 RoR2/Junk/Incubator/cscParentPod.asset";
-            var sb = new StringBuilder();
-            foreach (var path in paths.Split('\n')) {
-                var asset = Addressables.LoadAssetAsync<RoR2.CharacterSpawnCard>(path.Trim()).WaitForCompletion();
-                sb.AppendLine($"public static readonly string {asset.prefab.GetComponent<CharacterMaster>().bodyPrefab.GetComponent<CharacterBody>().GetDisplayName().Replace(" ", "")} = \"{asset.name.ToLowerInvariant()}\";");
-            }
-            R2APITest.Logger.LogError(sb.ToString());
+        var sb = new StringBuilder();
+        foreach (var path in paths.Split('\n'))
+        {
+            var asset = Addressables.LoadAssetAsync<RoR2.CharacterSpawnCard>(path.Trim()).WaitForCompletion();
+            sb.AppendLine($"public static readonly string {asset.prefab.GetComponent<CharacterMaster>().bodyPrefab.GetComponent<CharacterBody>().GetDisplayName().Replace(" ", "")} = \"{asset.name.ToLowerInvariant()}\";");
         }
+        R2APITest.Logger.LogError(sb.ToString());
     }
 }

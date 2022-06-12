@@ -12,12 +12,15 @@ using BepInEx;
 namespace R2API.ContentManagement;
 
 [BepInPlugin(R2APIContentManager.PluginGUID, R2APIContentManager.PluginName, R2APIContentManager.PluginVersion)]
-internal sealed class ContentManagementPlugin : BaseUnityPlugin {
-    private void OnEnable() {
+internal sealed class ContentManagementPlugin : BaseUnityPlugin
+{
+    private void OnEnable()
+    {
         R2APIContentManager.SetHooks();
     }
 
-    private void OnDisable() {
+    private void OnDisable()
+    {
         R2APIContentManager.UnsetHooks();
     }
 }

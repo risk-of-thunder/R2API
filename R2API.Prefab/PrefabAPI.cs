@@ -13,179 +13,202 @@ using UnityObject = UnityEngine.Object;
 
 // ReSharper disable UnusedMember.Global
 
-namespace R2API {
+namespace R2API;
 
-    // ReSharper disable once InconsistentNaming
-    public static class PrefabAPI {
-        public const string PluginGUID = R2API.PluginGUID + ".prefab";
-        public const string PluginName = R2API.PluginName + ".Prefab";
-        public const string PluginVersion = "0.0.1";
+// ReSharper disable once InconsistentNaming
+public static class PrefabAPI
+{
+    public const string PluginGUID = R2API.PluginGUID + ".prefab";
+    public const string PluginName = R2API.PluginName + ".Prefab";
+    public const string PluginVersion = "0.0.1";
 
-        /// <summary>
-        /// Return true if the submodule is loaded.
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        // ReSharper disable once ConvertToAutoProperty
-        [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
-        public static bool Loaded => true;
+    /// <summary>
+    /// Return true if the submodule is loaded.
+    /// </summary>
+    // ReSharper disable once MemberCanBePrivate.Global
+    // ReSharper disable once ConvertToAutoProperty
+    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+    public static bool Loaded => true;
 
-        private static bool needToRegister;
-        private static GameObject _parent;
-        private static readonly List<HashStruct> ThingsToHash = new List<HashStruct>();
+    private static bool needToRegister;
+    private static GameObject _parent;
+    private static readonly List<HashStruct> ThingsToHash = new List<HashStruct>();
 
-        public static bool IsPrefabHashed(GameObject prefabToCheck) => ThingsToHash.Select(hash => hash.Prefab).Contains(prefabToCheck);
+    public static bool IsPrefabHashed(GameObject prefabToCheck) => ThingsToHash.Select(hash => hash.Prefab).Contains(prefabToCheck);
 
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
-        /// <summary>
-        /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
-        /// Also registers the clone to network.
-        /// </summary>
-        /// <param name="g">The GameObject to clone</param>
-        /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
-        /// <returns>The GameObject of the clone</returns>
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static GameObject InstantiateClone(this GameObject g, string nameToSet) {
-            return InstantiateCloneInternal(g, nameToSet, true);
-        }
+    /// <summary>
+    /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
+    /// Also registers the clone to network.
+    /// </summary>
+    /// <param name="g">The GameObject to clone</param>
+    /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
+    /// <returns>The GameObject of the clone</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static GameObject InstantiateClone(this GameObject g, string nameToSet)
+    {
+        return InstantiateCloneInternal(g, nameToSet, true);
+    }
 
-        /// <summary>
-        /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
-        /// Also registers the clone to network if registerNetwork is not set to false.
-        /// </summary>
-        /// <param name="g">The GameObject to clone</param>
-        /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
-        /// <param name="registerNetwork">Should the object be registered to network</param>
-        /// <returns>The GameObject of the clone</returns>
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static GameObject InstantiateClone(this GameObject g, string nameToSet, bool registerNetwork) {
-            return InstantiateCloneInternal(g, nameToSet, registerNetwork);
-        }
+    /// <summary>
+    /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
+    /// Also registers the clone to network if registerNetwork is not set to false.
+    /// </summary>
+    /// <param name="g">The GameObject to clone</param>
+    /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
+    /// <param name="registerNetwork">Should the object be registered to network</param>
+    /// <returns>The GameObject of the clone</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static GameObject InstantiateClone(this GameObject g, string nameToSet, bool registerNetwork)
+    {
+        return InstantiateCloneInternal(g, nameToSet, registerNetwork);
+    }
 
-        [Obsolete("Left over to not break old mods")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static GameObject InstantiateClone(this GameObject? g, string? nameToSet, bool registerNetwork = true, [CallerFilePath] string? file = "", [CallerMemberName] string? member = "", [CallerLineNumber] int line = 0) {
-            return InstantiateCloneInternal(g, nameToSet, registerNetwork);
-        }
+    [Obsolete("Left over to not break old mods")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static GameObject InstantiateClone(this GameObject? g, string? nameToSet, bool registerNetwork = true, [CallerFilePath] string? file = "", [CallerMemberName] string? member = "", [CallerLineNumber] int line = 0)
+    {
+        return InstantiateCloneInternal(g, nameToSet, registerNetwork);
+    }
 
-        private static GameObject InstantiateCloneInternal(this GameObject g, string nameToSet, bool registerNetwork) {
-            var prefab = UnityObject.Instantiate(g, GetParent().transform);
-            prefab.name = nameToSet;
-            if (registerNetwork) {
-                RegisterPrefabInternal(prefab, new StackFrame(2));
-            }
-            return prefab;
+    private static GameObject InstantiateCloneInternal(this GameObject g, string nameToSet, bool registerNetwork)
+    {
+        var prefab = UnityObject.Instantiate(g, GetParent().transform);
+        prefab.name = nameToSet;
+        if (registerNetwork)
+        {
+            RegisterPrefabInternal(prefab, new StackFrame(2));
         }
+        return prefab;
+    }
 
-        /// <summary>
-        /// Registers a prefab so that NetworkServer.Spawn will function properly with it.
-        /// Only will work on prefabs with a NetworkIdentity component.
-        /// Is never needed for existing objects unless you have cloned them.
-        /// </summary>
-        /// <param name="g">The prefab to register</param>
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void RegisterNetworkPrefab(this GameObject g) {
-            RegisterNetworkPrefabInternal(g);
-        }
+    /// <summary>
+    /// Registers a prefab so that NetworkServer.Spawn will function properly with it.
+    /// Only will work on prefabs with a NetworkIdentity component.
+    /// Is never needed for existing objects unless you have cloned them.
+    /// </summary>
+    /// <param name="g">The prefab to register</param>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void RegisterNetworkPrefab(this GameObject g)
+    {
+        RegisterNetworkPrefabInternal(g);
+    }
 
-        [Obsolete("Left over to not break old mods.")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void RegisterNetworkPrefab(this GameObject? g, [CallerFilePath] string? file = "", [CallerMemberName] string? member = "", [CallerLineNumber] int line = 0) {
-            RegisterNetworkPrefabInternal(g);
-        }
+    [Obsolete("Left over to not break old mods.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void RegisterNetworkPrefab(this GameObject? g, [CallerFilePath] string? file = "", [CallerMemberName] string? member = "", [CallerLineNumber] int line = 0)
+    {
+        RegisterNetworkPrefabInternal(g);
+    }
 
-        private static void RegisterNetworkPrefabInternal(GameObject g) {
-            RegisterPrefabInternal(g, new StackFrame(2));
-        }
+    private static void RegisterNetworkPrefabInternal(GameObject g)
+    {
+        RegisterPrefabInternal(g, new StackFrame(2));
+    }
 
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
-        internal static void SetHooks() {
-        }
-        internal static void UnsetHooks() {
-        }
+    internal static void SetHooks()
+    {
+    }
+    internal static void UnsetHooks()
+    {
+    }
 
-        private static GameObject GetParent() {
-            if (!_parent) {
-                _parent = new GameObject("ModdedPrefabs");
-                UnityObject.DontDestroyOnLoad(_parent);
-                _parent.SetActive(false);
+    private static GameObject GetParent()
+    {
+        if (!_parent)
+        {
+            _parent = new GameObject("ModdedPrefabs");
+            UnityObject.DontDestroyOnLoad(_parent);
+            _parent.SetActive(false);
 
-                On.RoR2.Util.IsPrefab += (orig, obj) => {
-                    if (obj.transform.parent && obj.transform.parent.gameObject.name == "ModdedPrefabs") return true;
-                    return orig(obj);
-                };
-            }
-
-            return _parent;
-        }
-
-        private struct HashStruct {
-            public GameObject Prefab;
-            public string GoName;
-            public string TypeName;
-            public string MethodName;
-        }
-
-        private static void RegisterPrefabInternal(GameObject prefab, StackFrame frame) {
-            var method = frame.GetMethod();
-
-            var h = new HashStruct {
-                Prefab = prefab,
-                GoName = prefab.name,
-                TypeName = method.DeclaringType.AssemblyQualifiedName,
-                MethodName = method.Name,
+            On.RoR2.Util.IsPrefab += (orig, obj) =>
+            {
+                if (obj.transform.parent && obj.transform.parent.gameObject.name == "ModdedPrefabs") return true;
+                return orig(obj);
             };
-            ThingsToHash.Add(h);
-            SetupRegistrationEvent();
         }
 
-        private static void SetupRegistrationEvent() {
-            if (!needToRegister) {
-                needToRegister = true;
-                RoR2.Networking.NetworkManagerSystem.onStartGlobal += RegisterClientPrefabsNStuff;
-            }
-        }
+        return _parent;
+    }
 
-        private static readonly NetworkHash128 NullHash = new NetworkHash128 {
-            i0 = 0,
-            i1 = 0,
-            i2 = 0,
-            i3 = 0,
-            i4 = 0,
-            i5 = 0,
-            i6 = 0,
-            i7 = 0,
-            i8 = 0,
-            i9 = 0,
-            i10 = 0,
-            i11 = 0,
-            i12 = 0,
-            i13 = 0,
-            i14 = 0,
-            i15 = 0
+    private struct HashStruct
+    {
+        public GameObject Prefab;
+        public string GoName;
+        public string TypeName;
+        public string MethodName;
+    }
+
+    private static void RegisterPrefabInternal(GameObject prefab, StackFrame frame)
+    {
+        var method = frame.GetMethod();
+
+        var h = new HashStruct
+        {
+            Prefab = prefab,
+            GoName = prefab.name,
+            TypeName = method.DeclaringType.AssemblyQualifiedName,
+            MethodName = method.Name,
         };
+        ThingsToHash.Add(h);
+        SetupRegistrationEvent();
+    }
 
-        private static void RegisterClientPrefabsNStuff() {
-            foreach (var h in ThingsToHash) {
-                if (h.Prefab.GetComponent<NetworkIdentity>() != null) h.Prefab.GetComponent<NetworkIdentity>().SetFieldValue("m_AssetId", NullHash);
-                ClientScene.RegisterPrefab(h.Prefab, NetworkHash128.Parse(MakeHash(h.GoName + h.TypeName + h.MethodName)));
-            }
+    private static void SetupRegistrationEvent()
+    {
+        if (!needToRegister)
+        {
+            needToRegister = true;
+            RoR2.Networking.NetworkManagerSystem.onStartGlobal += RegisterClientPrefabsNStuff;
+        }
+    }
+
+    private static readonly NetworkHash128 NullHash = new NetworkHash128
+    {
+        i0 = 0,
+        i1 = 0,
+        i2 = 0,
+        i3 = 0,
+        i4 = 0,
+        i5 = 0,
+        i6 = 0,
+        i7 = 0,
+        i8 = 0,
+        i9 = 0,
+        i10 = 0,
+        i11 = 0,
+        i12 = 0,
+        i13 = 0,
+        i14 = 0,
+        i15 = 0
+    };
+
+    private static void RegisterClientPrefabsNStuff()
+    {
+        foreach (var h in ThingsToHash)
+        {
+            if (h.Prefab.GetComponent<NetworkIdentity>() != null) h.Prefab.GetComponent<NetworkIdentity>().SetFieldValue("m_AssetId", NullHash);
+            ClientScene.RegisterPrefab(h.Prefab, NetworkHash128.Parse(MakeHash(h.GoName + h.TypeName + h.MethodName)));
+        }
+    }
+
+    private static string MakeHash(string s)
+    {
+        var hash = MD5.Create();
+        byte[] prehash = hash.ComputeHash(Encoding.UTF8.GetBytes(s));
+        hash.Dispose();
+        var sb = new StringBuilder();
+
+        foreach (var t in prehash)
+        {
+            sb.Append(t.ToString("x2"));
         }
 
-        private static string MakeHash(string s) {
-            var hash = MD5.Create();
-            byte[] prehash = hash.ComputeHash(Encoding.UTF8.GetBytes(s));
-            hash.Dispose();
-            var sb = new StringBuilder();
-
-            foreach (var t in prehash) {
-                sb.Append(t.ToString("x2"));
-            }
-
-            return sb.ToString();
-        }
+        return sb.ToString();
     }
 }

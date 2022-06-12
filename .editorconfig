@@ -12,7 +12,10 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
 
-csharp_new_line_before_open_brace = none
+csharp_style_namespace_declarations = file_scoped:error
+dotnet_diagnostic.IDE0161.severity = error
+
+csharp_new_line_before_open_brace = all
 
 
 # CS1591: Missing XML comment for publicly visible type or member

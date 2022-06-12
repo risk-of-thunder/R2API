@@ -9,149 +9,155 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace R2API.ScriptableObjects {
-    [CreateAssetMenu(fileName = "new R2APISerializableContentPack", menuName = "R2API/R2APISerializableContentPack", order = 0)]
-    public class R2APISerializableContentPack : ScriptableObject {
+namespace R2API.ScriptableObjects;
 
-        #region Prefabs
-        [Header("Prefabs")]
-        [Tooltip("Prefabs with a CharacterBody component")]
-        public GameObject[] bodyPrefabs = Array.Empty<GameObject>();
+[CreateAssetMenu(fileName = "new R2APISerializableContentPack", menuName = "R2API/R2APISerializableContentPack", order = 0)]
+public class R2APISerializableContentPack : ScriptableObject
+{
 
-        [Tooltip("Prefabs with a CharacterMaster component")]
-        public GameObject[] masterPrefabs = Array.Empty<GameObject>();
+    #region Prefabs
+    [Header("Prefabs")]
+    [Tooltip("Prefabs with a CharacterBody component")]
+    public GameObject[] bodyPrefabs = Array.Empty<GameObject>();
 
-        [Tooltip("Prefabs with a ProjectileController component")]
-        public GameObject[] projectilePrefabs = Array.Empty<GameObject>();
+    [Tooltip("Prefabs with a CharacterMaster component")]
+    public GameObject[] masterPrefabs = Array.Empty<GameObject>();
 
-        [Tooltip("Prefabs with a component that inherits from \"Run\"")]
-        public GameObject[] gameModePrefabs = Array.Empty<GameObject>();
+    [Tooltip("Prefabs with a ProjectileController component")]
+    public GameObject[] projectilePrefabs = Array.Empty<GameObject>();
 
-        [Tooltip("Prefabs with an EffectComponent component")]
-        public GameObject[] effectPrefabs = Array.Empty<GameObject>();
+    [Tooltip("Prefabs with a component that inherits from \"Run\"")]
+    public GameObject[] gameModePrefabs = Array.Empty<GameObject>();
 
-        [Tooltip("Prefabs with a NetworkIdentity component that dont apply to the arrays above")]
-        public GameObject[] networkedObjectPrefabs = Array.Empty<GameObject>();
-        #endregion
+    [Tooltip("Prefabs with an EffectComponent component")]
+    public GameObject[] effectPrefabs = Array.Empty<GameObject>();
 
-        #region Scriptable Objects
-        [Space(5)]
-        [Header("Scriptable Objects")]
+    [Tooltip("Prefabs with a NetworkIdentity component that dont apply to the arrays above")]
+    public GameObject[] networkedObjectPrefabs = Array.Empty<GameObject>();
+    #endregion
 
-        public SkillDef[] skillDefs = Array.Empty<SkillDef>();
+    #region Scriptable Objects
+    [Space(5)]
+    [Header("Scriptable Objects")]
 
-        public SkillFamily[] skillFamilies = Array.Empty<SkillFamily>();
+    public SkillDef[] skillDefs = Array.Empty<SkillDef>();
 
-        public SceneDef[] sceneDefs = Array.Empty<SceneDef>();
+    public SkillFamily[] skillFamilies = Array.Empty<SkillFamily>();
 
-        public ItemDef[] itemDefs = Array.Empty<ItemDef>();
+    public SceneDef[] sceneDefs = Array.Empty<SceneDef>();
 
-        public ItemTierDef[] itemTierDefs = Array.Empty<ItemTierDef>();
+    public ItemDef[] itemDefs = Array.Empty<ItemDef>();
 
-        public ItemRelationshipProvider[] itemRelationshipProviders = Array.Empty<ItemRelationshipProvider>();
+    public ItemTierDef[] itemTierDefs = Array.Empty<ItemTierDef>();
 
-        public ItemRelationshipType[] itemRelationshipTypes = Array.Empty<ItemRelationshipType>();
+    public ItemRelationshipProvider[] itemRelationshipProviders = Array.Empty<ItemRelationshipProvider>();
 
-        public EquipmentDef[] equipmentDefs = Array.Empty<EquipmentDef>();
+    public ItemRelationshipType[] itemRelationshipTypes = Array.Empty<ItemRelationshipType>();
 
-        public BuffDef[] buffDefs = Array.Empty<BuffDef>();
+    public EquipmentDef[] equipmentDefs = Array.Empty<EquipmentDef>();
 
-        public EliteDef[] eliteDefs = Array.Empty<EliteDef>();
+    public BuffDef[] buffDefs = Array.Empty<BuffDef>();
 
-        public UnlockableDef[] unlockableDefs = Array.Empty<UnlockableDef>();
+    public EliteDef[] eliteDefs = Array.Empty<EliteDef>();
 
-        public SurvivorDef[] survivorDefs = Array.Empty<SurvivorDef>();
+    public UnlockableDef[] unlockableDefs = Array.Empty<UnlockableDef>();
 
-        public ArtifactDef[] artifactDefs = Array.Empty<ArtifactDef>();
+    public SurvivorDef[] survivorDefs = Array.Empty<SurvivorDef>();
 
-        public SurfaceDef[] surfaceDefs = Array.Empty<SurfaceDef>();
+    public ArtifactDef[] artifactDefs = Array.Empty<ArtifactDef>();
 
-        public NetworkSoundEventDef[] networkSoundEventDefs = Array.Empty<NetworkSoundEventDef>();
+    public SurfaceDef[] surfaceDefs = Array.Empty<SurfaceDef>();
 
-        public MusicTrackDef[] musicTrackDefs = Array.Empty<MusicTrackDef>();
+    public NetworkSoundEventDef[] networkSoundEventDefs = Array.Empty<NetworkSoundEventDef>();
 
-        public GameEndingDef[] gameEndingDefs = Array.Empty<GameEndingDef>();
+    public MusicTrackDef[] musicTrackDefs = Array.Empty<MusicTrackDef>();
 
-        public MiscPickupDef[] miscPickupDefs = Array.Empty<MiscPickupDef>();
-        #endregion
+    public GameEndingDef[] gameEndingDefs = Array.Empty<GameEndingDef>();
 
-        #region Entity States
-        [Space(5)]
-        [Header("EntityState Related")]
+    public MiscPickupDef[] miscPickupDefs = Array.Empty<MiscPickupDef>();
+    #endregion
 
-        public EntityStateConfiguration[] entityStateConfigurations = Array.Empty<EntityStateConfiguration>();
+    #region Entity States
+    [Space(5)]
+    [Header("EntityState Related")]
 
-        [Tooltip("Types inheriting from EntityState")]
-        public SerializableEntityStateType[] entityStateTypes = Array.Empty<SerializableEntityStateType>();
-        #endregion
+    public EntityStateConfiguration[] entityStateConfigurations = Array.Empty<EntityStateConfiguration>();
 
-        #region Expansion Related
-        [Space(5)]
-        [Header("Expansion Related")]
+    [Tooltip("Types inheriting from EntityState")]
+    public SerializableEntityStateType[] entityStateTypes = Array.Empty<SerializableEntityStateType>();
+    #endregion
 
-        public ExpansionDef[] expansionDefs = Array.Empty<ExpansionDef>();
+    #region Expansion Related
+    [Space(5)]
+    [Header("Expansion Related")]
 
-        public EntitlementDef[] entitlementDefs = Array.Empty<EntitlementDef>();
-        #endregion
+    public ExpansionDef[] expansionDefs = Array.Empty<ExpansionDef>();
 
-        private ContentPack contentPack;
-        #region Methods
-        private ContentPack CreateContentPackPrivate() {
-            ContentPack cp = new ContentPack();
-            cp.bodyPrefabs.Add(bodyPrefabs);
-            cp.masterPrefabs.Add(masterPrefabs);
-            cp.projectilePrefabs.Add(projectilePrefabs);
-            cp.gameModePrefabs.Add(gameModePrefabs);
-            cp.effectDefs.Add(effectPrefabs.Select(go => new EffectDef(go)).ToArray());
-            cp.networkedObjectPrefabs.Add(networkedObjectPrefabs);
-            cp.skillDefs.Add(skillDefs);
-            cp.skillFamilies.Add(skillFamilies);
-            cp.sceneDefs.Add(sceneDefs);
-            cp.itemDefs.Add(itemDefs);
-            cp.itemTierDefs.Add(itemTierDefs);
-            cp.itemRelationshipTypes.Add(itemRelationshipTypes);
-            cp.equipmentDefs.Add(equipmentDefs);
-            cp.buffDefs.Add(buffDefs);
-            cp.eliteDefs.Add(eliteDefs);
-            cp.unlockableDefs.Add(unlockableDefs);
-            cp.survivorDefs.Add(survivorDefs);
-            cp.artifactDefs.Add(artifactDefs);
-            cp.surfaceDefs.Add(surfaceDefs);
-            cp.networkSoundEventDefs.Add(networkSoundEventDefs);
-            cp.musicTrackDefs.Add(musicTrackDefs);
-            cp.gameEndingDefs.Add(gameEndingDefs);
-            cp.miscPickupDefs.Add(miscPickupDefs);
-            cp.entityStateConfigurations.Add(entityStateConfigurations);
+    public EntitlementDef[] entitlementDefs = Array.Empty<EntitlementDef>();
+    #endregion
 
-            List<Type> list = new List<Type>();
-            for (int i = 0; i < entityStateTypes.Length; i++) {
-                Type stateType = entityStateTypes[i].stateType;
-                if (stateType != null) {
-                    list.Add(stateType);
-                    continue;
-                }
-                Debug.LogWarning("SerializableContentPack \"" + base.name + "\" could not resolve type with name \"" + entityStateTypes[i].typeName + "\". The type will not be available in the content pack.");
+    private ContentPack contentPack;
+    #region Methods
+    private ContentPack CreateContentPackPrivate()
+    {
+        ContentPack cp = new ContentPack();
+        cp.bodyPrefabs.Add(bodyPrefabs);
+        cp.masterPrefabs.Add(masterPrefabs);
+        cp.projectilePrefabs.Add(projectilePrefabs);
+        cp.gameModePrefabs.Add(gameModePrefabs);
+        cp.effectDefs.Add(effectPrefabs.Select(go => new EffectDef(go)).ToArray());
+        cp.networkedObjectPrefabs.Add(networkedObjectPrefabs);
+        cp.skillDefs.Add(skillDefs);
+        cp.skillFamilies.Add(skillFamilies);
+        cp.sceneDefs.Add(sceneDefs);
+        cp.itemDefs.Add(itemDefs);
+        cp.itemTierDefs.Add(itemTierDefs);
+        cp.itemRelationshipTypes.Add(itemRelationshipTypes);
+        cp.equipmentDefs.Add(equipmentDefs);
+        cp.buffDefs.Add(buffDefs);
+        cp.eliteDefs.Add(eliteDefs);
+        cp.unlockableDefs.Add(unlockableDefs);
+        cp.survivorDefs.Add(survivorDefs);
+        cp.artifactDefs.Add(artifactDefs);
+        cp.surfaceDefs.Add(surfaceDefs);
+        cp.networkSoundEventDefs.Add(networkSoundEventDefs);
+        cp.musicTrackDefs.Add(musicTrackDefs);
+        cp.gameEndingDefs.Add(gameEndingDefs);
+        cp.miscPickupDefs.Add(miscPickupDefs);
+        cp.entityStateConfigurations.Add(entityStateConfigurations);
+
+        List<Type> list = new List<Type>();
+        for (int i = 0; i < entityStateTypes.Length; i++)
+        {
+            Type stateType = entityStateTypes[i].stateType;
+            if (stateType != null)
+            {
+                list.Add(stateType);
+                continue;
             }
-            cp.entityStateTypes.Add(list.ToArray());
-
-            cp.expansionDefs.Add(expansionDefs);
-            cp.entitlementDefs.Add(entitlementDefs);
-
-            return cp;
+            Debug.LogWarning("SerializableContentPack \"" + base.name + "\" could not resolve type with name \"" + entityStateTypes[i].typeName + "\". The type will not be available in the content pack.");
         }
+        cp.entityStateTypes.Add(list.ToArray());
 
-        /// <summary>
-        /// Creates the ContentPack tied to this SerializableContentPack, or returns one if its already been created.
-        /// </summary>
-        /// <returns>The ContentPack tied to this SerializableContentPack</returns>
-        public ContentPack GetOrCreateContentPack() {
-            if (contentPack != null)
-                return contentPack;
-            else {
-                contentPack = CreateContentPackPrivate();
-                return contentPack;
-            }
-        }
-        #endregion
+        cp.expansionDefs.Add(expansionDefs);
+        cp.entitlementDefs.Add(entitlementDefs);
+
+        return cp;
     }
+
+    /// <summary>
+    /// Creates the ContentPack tied to this SerializableContentPack, or returns one if its already been created.
+    /// </summary>
+    /// <returns>The ContentPack tied to this SerializableContentPack</returns>
+    public ContentPack GetOrCreateContentPack()
+    {
+        if (contentPack != null)
+            return contentPack;
+        else
+        {
+            contentPack = CreateContentPackPrivate();
+            return contentPack;
+        }
+    }
+    #endregion
 }
