@@ -4,6 +4,9 @@ using BepInEx;
 
 [assembly: InternalsVisibleTo("R2API.Items")]
 [assembly: InternalsVisibleTo("R2API.Elites")]
+[assembly: InternalsVisibleTo("R2API.Unlockable")]
+[assembly: InternalsVisibleTo("R2API.TempVisualEffect")]
+[assembly: InternalsVisibleTo("R2API.Loadout")]
 
 namespace R2API.ContentManagement;
 

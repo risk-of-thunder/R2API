@@ -6,6 +6,12 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <Compile Remove="ContentManagement\**" />
+    <EmbeddedResource Remove="ContentManagement\**" />
+    <None Remove="ContentManagement\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <PackageReference Include="bbepis-BepInExPack" Version="5.4.1905" GeneratePathProperty="true" PrivateAssets="all" ExcludeAssets="all" IncludeAssets="none" />
   </ItemGroup>
 
@@ -14,10 +20,6 @@
       <HintPath>$(Pkgbbepis-BepInExPack)\lib\$(TargetFramework)\RoR2BepInExPack.dll</HintPath>
       <Private>true</Private>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ContentManagement" />
   </ItemGroup>
 
 </Project>

@@ -12,26 +12,22 @@ namespace R2API {
     /// API for retrieving assets from the game scenes.
     /// </summary>
     public static class SceneAssetAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".sceneasset";
+        public const string PluginName = R2API.PluginName + ".SceneAsset";
+        public const string PluginVersion = "0.0.1";
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-
-        private static bool _loaded;
+        public static bool Loaded => true;
 
         private static readonly Dictionary<string, List<Action<GameObject[]>>> SceneNameToAssetRequests =
             new Dictionary<string, List<Action<GameObject[]>>>();
 
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             On.RoR2.SplashScreenController.Finish += PrepareRequests;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             On.RoR2.SplashScreenController.Finish -= PrepareRequests;
         }

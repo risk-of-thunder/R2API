@@ -15,16 +15,20 @@ using UnityEngine;
 
 namespace R2API {
 
+    [Obsolete(LoadoutAPI.ObsoleteMessage)]
     public static class LoadoutAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".loadout";
+        public const string PluginName = R2API.PluginName + ".Loadout";
+        public const string PluginVersion = "0.0.1";
 
+        public const string ObsoleteMessage = "The R2API version 4.x.x has made LoadoutAPI's Skill and entity state related methods and implementations obsolette.\n" +
+            "For adding new SkillDefs, SkillFamilies and EntityStates, use the ContentAddition class found in the R2API.ContentManagement assembly.\n" +
+            "The Skin methods of LoadoutAPI will be salvaged into an upcoming SkinAPI";
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
         // ReSharper disable once ConvertToAutoProperty
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
+        public static bool Loaded => true;
 
         private static bool _loaded;
 
@@ -41,9 +45,6 @@ namespace R2API {
         /// <returns>True if succesfully added</returns>
         [Obsolete($"AddSkill is obsolete, please add your SkillTypes via R2API.ContentManagement.ContentAdditionHelpers.AddEntityState<T>()")]
         public static bool AddSkill(Type? t) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
-            }
             if (!CatalogBlockers.GetAvailability<EntityState>()) {
                 R2API.Logger.LogError($"Too late ! Tried to add skill type {t} after the EntityStateCatalog has initialized!");
                 return false;
@@ -66,9 +67,6 @@ namespace R2API {
         [Obsolete($"StateTypeOf<T> is obsolete, please add your SkillTypes via R2API.ContentManagement.ContentAdditionHelpers.AddEntityState<T>()")]
         public static SerializableEntityStateType StateTypeOf<T>()
             where T : EntityState, new() {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
-            }
             if (!CatalogBlockers.GetAvailability<EntityState>()) {
                 R2API.Logger.LogError($"Too late ! Tried to add skill type {typeof(T)} after the EntityStateCatalog has initialized!");
                 return new SerializableEntityStateType();
@@ -85,9 +83,6 @@ namespace R2API {
         /// <returns>True if the event was registered</returns>
         [Obsolete($"AddSkillDef is obsolete, please add your SkillDefs via R2API.ContentManagement.ContentAdditionHelpers.AddSkillDef()")]
         public static bool AddSkillDef(SkillDef? s) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
-            }
             if (!CatalogBlockers.GetAvailability<SkillDef>()) {
                 R2API.Logger.LogError($"Too late ! Tried to add skillDef {s.skillName} after the SkillCatalog has initialized!");
                 return false;

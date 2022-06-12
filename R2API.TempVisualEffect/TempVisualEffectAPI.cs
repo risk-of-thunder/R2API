@@ -13,16 +13,14 @@ namespace R2API {
     /// API for adding custom TemporaryVisualEffects to CharacterBody components.
     /// </summary>
     public static class TempVisualEffectAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".tempvisualeffect";
+        public const string PluginName = R2API.PluginName + ".TempVisualEffect";
+        public const string PluginVersion = "0.0.1";
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-
-        private static bool _loaded;
+        public static bool Loaded => true;
         private static bool _TVEsAdded;
 
         /// <summary>
@@ -54,9 +52,6 @@ namespace R2API {
         /// /// <param name="condition"></param>
         /// <param name="childLocatorOverride"></param>
         public static bool AddTemporaryVisualEffect(GameObject effectPrefab, EffectCondition condition, bool useBestFitRadius = false, string childLocatorOverride = "") {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(TempVisualEffectAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(TempVisualEffectAPI)})]");
-            }
             if (effectPrefab == null) {
                 R2API.Logger.LogError($"Failed to add TVE: GameObject is null"); throw new ArgumentNullException($"{nameof(effectPrefab)} can't be null");
             }
@@ -87,7 +82,6 @@ namespace R2API {
             return true;
         }
 
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             On.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects += UpdateAllHook;
             IL.RoR2.CharacterBody.UpdateSingleTemporaryVisualEffect_refTemporaryVisualEffect_string_float_bool_string += UpdateSingleHook;
@@ -95,7 +89,6 @@ namespace R2API {
             CharacterBody.onBodyStartGlobal += BodyStart;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             On.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects -= UpdateAllHook;
             IL.RoR2.CharacterBody.UpdateSingleTemporaryVisualEffect_refTemporaryVisualEffect_string_float_bool_string += UpdateSingleHook;
