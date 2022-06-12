@@ -7,6 +7,7 @@
     <ItemGroup>
       <ProjectReference Include="../R2API.Core/R2API.Core.csproj" />
       <ProjectReference Include="../R2API.Items/R2API.Items.csproj" />
+      <ProjectReference Include="../R2API.ArtifactCode/R2API.ArtifactCode.csproj" />
     </ItemGroup>
 
 </Project>
