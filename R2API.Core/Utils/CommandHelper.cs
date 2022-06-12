@@ -12,6 +12,7 @@ namespace R2API.Utils {
     /// A submodule for scanning static methods of a given assembly
     /// so that they are registered as console commands for the in-game console.
     /// </summary>
+    [Obsolete($"Add [assembly: HG.Reflection.SearchableAttribute.OptInAttribute] to your assembly instead")]
     public class CommandHelper {
         private static readonly Queue<Assembly> Assemblies = new Queue<Assembly>();
         private static RoR2.Console _console;
@@ -41,12 +42,10 @@ namespace R2API.Utils {
             HandleCommandsConvars();
         }
 
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             On.RoR2.Console.InitConVars += ConsoleReady;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             On.RoR2.Console.InitConVars -= ConsoleReady;
         }
