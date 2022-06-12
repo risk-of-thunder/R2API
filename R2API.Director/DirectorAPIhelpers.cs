@@ -254,7 +254,6 @@ namespace R2API {
             /// Try applying changes for the current stage (hot swap) for monster and family changes
             /// </summary>
             public static void TryApplyChangesNow() {
-                ThrowIfNotLoaded();
 
                 ClassicStageInfo.instance.ApplyChanges();
                 ClassicStageInfo.instance.RebuildCards();
@@ -266,7 +265,6 @@ namespace R2API {
             /// <param name="monsterName">The name of the monster to edit</param>
             /// <param name="elitesAllowed">Should elites be allowed?</param>
             public static void PreventElites(string? monsterName, bool elitesAllowed) {
-                ThrowIfNotLoaded();
 
                 MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
 
@@ -303,7 +301,6 @@ namespace R2API {
             /// <param name="monsterCategory">The category to add the monster to</param>
             [Obsolete("Use the overload with the DirectorCardHolder instead")]
             public static void AddNewMonster(DirectorCard? monsterCard, MonsterCategory monsterCategory) {
-                ThrowIfNotLoaded();
 
                 var monsterCardHolder = new DirectorCardHolder {
                     Card = monsterCard,
@@ -322,7 +319,6 @@ namespace R2API {
             /// <param name="monsterCard"></param>
             /// <param name="addToFamilies"></param>
             public static void AddNewMonster(DirectorCardHolder? monsterCard, bool addToFamilies) {
-                ThrowIfNotLoaded();
 
                 MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
                     AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
@@ -372,7 +368,6 @@ namespace R2API {
             /// <param name="customStageName">The name of the custom stage</param>
             [Obsolete("Use the overload with the DirectorCardHolder instead")]
             public static void AddNewMonsterToStage(DirectorCard? monsterCard, MonsterCategory monsterCategory, Stage stage, string? customStageName = "") {
-                ThrowIfNotLoaded();
 
                 var monsterCardHolder = new DirectorCardHolder {
                     Card = monsterCard,
@@ -398,7 +393,6 @@ namespace R2API {
             /// <param name="stage"></param>
             /// <param name="customStageName"></param>
             public static void AddNewMonsterToStage(DirectorCardHolder monsterCard, bool addToFamilies, Stage stage, string? customStageName = "") {
-                ThrowIfNotLoaded();
 
                 MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
                     if (currentStage.stage == stage) {
@@ -418,7 +412,6 @@ namespace R2API {
             /// <param name="addToFamilies"></param>
             /// <param name="matchStage"></param>
             public static void AddNewMonsterToStagesWhere(DirectorCardHolder monsterCard, bool addToFamilies, Predicate<StageInfo> matchStage) {
-                ThrowIfNotLoaded();
 
                 MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) => {
                     if (matchStage(currentStage)) {
@@ -434,7 +427,6 @@ namespace R2API {
             /// <param name="interactableCategory">The category of the interactable</param>
             [Obsolete("Use the overload with the DirectorCardHolder instead")]
             public static void AddNewInteractable(DirectorCard? interactableCard, InteractableCategory interactableCategory) {
-                ThrowIfNotLoaded();
 
                 var interactableCardHolder = new DirectorCardHolder {
                     Card = interactableCard,
@@ -451,7 +443,6 @@ namespace R2API {
             /// </summary>
             /// <param name="interactableCardHolder"></param>
             public static void AddNewInteractable(DirectorCardHolder? interactableCardHolder) {
-                ThrowIfNotLoaded();
 
                 InteractableActions += (interactablesDccsPool, currentStage) => {
                     AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder);
@@ -472,7 +463,6 @@ namespace R2API {
             /// <param name="customStageName">The name of the custom stage</param>
             [Obsolete("Use the overload with the DirectorCardHolder instead")]
             public static void AddNewInteractableToStage(DirectorCard? interactableCard, InteractableCategory interactableCategory, Stage stage, string? customStageName = "") {
-                ThrowIfNotLoaded();
 
                 var interactableCardHolder = new DirectorCardHolder {
                     Card = interactableCard,
@@ -503,7 +493,6 @@ namespace R2API {
             /// </summary>
             /// <param name="monsterName">The name of the monster card to remove</param>
             public static void RemoveExistingMonster(string? monsterName) {
-                ThrowIfNotLoaded();
                 StringUtils.ThrowIfStringIsNullOrWhiteSpace(monsterName, nameof(monsterName));
 
                 var monsterNameLowered = monsterName.ToLowerInvariant();
@@ -542,7 +531,6 @@ namespace R2API {
             /// <param name="stage">The stage to remove on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void RemoveExistingMonsterFromStage(string? monsterName, Stage stage, string? customStageName = "") {
-                ThrowIfNotLoaded();
                 StringUtils.ThrowIfStringIsNullOrWhiteSpace(monsterName, nameof(monsterName));
 
                 var monsterNameLowered = monsterName.ToLowerInvariant();
@@ -561,7 +549,6 @@ namespace R2API {
             /// </summary>
             /// <param name="interactableName">Name of the interactable to remove</param>
             public static void RemoveExistingInteractable(string? interactableName) {
-                ThrowIfNotLoaded();
                 StringUtils.ThrowIfStringIsNullOrWhiteSpace(interactableName, nameof(interactableName));
 
                 var interactableNameLowered = interactableName.ToLowerInvariant();
@@ -587,7 +574,6 @@ namespace R2API {
             /// <param name="stage">The stage to remove on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void RemoveExistingInteractableFromStage(string? interactableName, Stage stage, string? customStageName = "") {
-                ThrowIfNotLoaded();
                 StringUtils.ThrowIfStringIsNullOrWhiteSpace(interactableName, nameof(interactableName));
 
                 var interactableNameLowered = interactableName.ToLowerInvariant();
@@ -617,7 +603,6 @@ namespace R2API {
             /// <param name="stage">The stage to add on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void AddSceneMonsterCredits(int increase, Stage stage, string? customStageName = "") {
-                ThrowIfNotLoaded();
 
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
@@ -636,7 +621,6 @@ namespace R2API {
             /// <param name="stage">The stage to add on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void AddSceneInteractableCredits(int increase, Stage stage, string? customStageName = "") {
-                ThrowIfNotLoaded();
 
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
@@ -655,7 +639,6 @@ namespace R2API {
             /// <param name="stage">The stage to multiply on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void MultiplySceneMonsterCredits(int multiplier, Stage stage, string? customStageName = "") {
-                ThrowIfNotLoaded();
 
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
@@ -674,7 +657,6 @@ namespace R2API {
             /// <param name="stage">The stage to multiply on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void MultiplySceneInteractableCredits(int multiplier, Stage stage, string? customStageName = "") {
-                ThrowIfNotLoaded();
 
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
@@ -693,7 +675,6 @@ namespace R2API {
             /// <param name="stage">The stage to divide on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void ReduceSceneMonsterCredits(int divisor, Stage stage, string? customStageName = "") {
-                ThrowIfNotLoaded();
 
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {
@@ -712,7 +693,6 @@ namespace R2API {
             /// <param name="stage">The stage to divide on</param>
             /// <param name="customStageName">The name of the custom stage</param>
             public static void ReduceSceneInteractableCredits(int divisor, Stage stage, string? customStageName = "") {
-                ThrowIfNotLoaded();
 
                 StageSettingsActions += (settings, currentStage) => {
                     if (currentStage.stage == stage) {

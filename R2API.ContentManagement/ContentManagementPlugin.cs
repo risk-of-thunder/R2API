@@ -7,6 +7,7 @@ using BepInEx;
 [assembly: InternalsVisibleTo("R2API.Unlockable")]
 [assembly: InternalsVisibleTo("R2API.TempVisualEffect")]
 [assembly: InternalsVisibleTo("R2API.Loadout")]
+[assembly: InternalsVisibleTo("R2API.Sound")]
 
 namespace R2API.ContentManagement;
 

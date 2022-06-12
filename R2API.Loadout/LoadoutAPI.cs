@@ -103,9 +103,6 @@ namespace R2API {
         /// <returns>True if the event was registered</returns>
         [Obsolete($"AddSkillFamily is obsolete, please add your SkillFamilies via R2API.ContentManagement.ContentAdditionHelpers.AddSkillFamily()")]
         public static bool AddSkillFamily(SkillFamily? sf) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
-            }
             if (!CatalogBlockers.GetAvailability<SkillFamily>()) {
                 R2API.Logger.LogError($"Too late ! Tried to add skillFamily after the SkillCatalog has initialized!");
             }
@@ -130,9 +127,6 @@ namespace R2API {
         /// <param name="left">The color of the left portion</param>
         /// <returns>The icon sprite</returns>
         public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
-            }
             return CreateSkinIcon(top, right, bottom, left, new Color(0.6f, 0.6f, 0.6f));
         }
 
@@ -146,9 +140,6 @@ namespace R2API {
         /// <param name="line">The color of the dividing lines</param>
         /// <returns></returns>
         public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left, Color line) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
-            }
             var tex = new Texture2D(128, 128, TextureFormat.RGBA32, false);
             new IconTexJob {
                 Top = top,
@@ -234,9 +225,6 @@ namespace R2API {
         /// <param name="skin"></param>
         /// <returns></returns>
         public static SkinDef CreateNewSkinDef(SkinDefInfo skin) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
-            }
             On.RoR2.SkinDef.Awake += DoNothing;
 
             var newSkin = ScriptableObject.CreateInstance<SkinDef>();
@@ -268,9 +256,6 @@ namespace R2API {
         /// <param name="skin">The SkinDefInfo for the skin to add</param>
         /// <returns>True if successful</returns>
         public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDefInfo skin) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
-            }
             var skinDef = CreateNewSkinDef(skin);
             return AddSkinToCharacter(bodyPrefab, skinDef);
         }
@@ -284,9 +269,6 @@ namespace R2API {
         /// <param name="skin">The SkinDef to add</param>
         /// <returns>True if successful</returns>
         public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDef? skin) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(LoadoutAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(LoadoutAPI)})]");
-            }
             if (bodyPrefab == null) {
                 R2API.Logger.LogError("Tried to add skin to null body prefab.");
                 return false;

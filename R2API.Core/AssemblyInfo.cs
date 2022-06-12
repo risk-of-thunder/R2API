@@ -34,3 +34,6 @@ using IVT = System.Runtime.CompilerServices.InternalsVisibleToAttribute;
 [assembly: IVT("R2API.Orb")]
 [assembly: IVT("R2API.Loadout")]
 [assembly: IVT("R2API.Dot")]
+[assembly: IVT("R2API.DamageType")]
+[assembly: IVT("R2API.Sound")]
+[assembly: IVT("R2API.Director")]

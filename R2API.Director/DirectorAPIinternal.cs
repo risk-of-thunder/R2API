@@ -14,13 +14,6 @@ namespace R2API {
     public static partial class DirectorAPI {
         private static DirectorCardCategorySelection _dccsMixEnemyArtifact;
 
-        private static void ThrowIfNotLoaded() {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(DirectorAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DirectorAPI)})]");
-            }
-        }
-
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             On.RoR2.ClassicStageInfo.Start += ApplyChangesOnStart;
             IL.RoR2.ClassicStageInfo.HandleMixEnemyArtifact += SwapVanillaDccsWithOurs;
@@ -28,7 +21,6 @@ namespace R2API {
             On.RoR2.SceneCatalog.Init += InitStageEnumToSceneDefs;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             On.RoR2.ClassicStageInfo.Start -= ApplyChangesOnStart;
             IL.RoR2.ClassicStageInfo.HandleMixEnemyArtifact -= SwapVanillaDccsWithOurs;

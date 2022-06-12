@@ -19,14 +19,14 @@ namespace R2API {
     /// API for adding sounds with Wwise
     /// </summary>
     public static class SoundAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".sound";
+        public const string PluginName = R2API.PluginName + ".Sound";
+        public const string PluginVersion = "0.0.1";
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
+        public static bool Loaded => true;
 
         private static bool _loaded;
 
@@ -36,17 +36,10 @@ namespace R2API {
 
         #region Soundbank Setup
 
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             // Disable SoundPlus if RoR2 is running with its graphics and sound engine disabled (Dedicated Servers) to avoid any bad side effects.
             if (Application.isBatchMode)
                 return;
-
-            if (Loaded) {
-                return;
-            }
-
-            Loaded = true;
 
             var files = Directory.GetFiles(Paths.PluginPath, "*.sound", SearchOption.AllDirectories);
 
@@ -61,7 +54,6 @@ namespace R2API {
             Music.SetHooks();
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             AddBanksAfterEngineInitHook.Dispose();
 
@@ -281,10 +273,6 @@ namespace R2API {
         /// <returns>true if added, false otherwise</returns>
         [Obsolete($"AddNetworkedSoundEvent is obsolete, please add your NetworkSoundEventDefs via R2API.ContentManagement.ContentAdditionHelpers.AddNetworkSoundEventDef()")]
         public static bool AddNetworkedSoundEvent(NetworkSoundEventDef? networkSoundEventDef) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. " +
-                    $"Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
-            }
 
             if (!CatalogBlockers.GetAvailability<NetworkSoundEventDef>()) {
                 R2API.Logger.LogError(
@@ -318,9 +306,6 @@ namespace R2API {
         /// <returns>true if added, false otherwise</returns>
         [Obsolete($"AddNetworkedSoundEvent is obsolete, please add your NetworkSoundEventDefs via R2API.ContentManagement.ContentAdditionHelpers.AddNetworkSoundEventDef()")]
         public static bool AddNetworkedSoundEvent(string eventName) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(SoundAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(SoundAPI)})]");
-            }
 
             if (!CatalogBlockers.GetAvailability<NetworkSoundEventDef>()) {
                 R2API.Logger.LogError(

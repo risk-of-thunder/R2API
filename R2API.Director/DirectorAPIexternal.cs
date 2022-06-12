@@ -11,16 +11,14 @@ namespace R2API {
     /// API for modifying the monster and scene directors.
     /// </summary>
     public static partial class DirectorAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".director";
+        public const string PluginName = R2API.PluginName + ".Director";
+        public const string PluginVersion = "0.0.1";
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-
-        private static bool _loaded;
+        public static bool Loaded => true;
 
         /// <summary>
         /// Event used to edit <see cref="StageSettings"/>.
