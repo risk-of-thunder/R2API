@@ -6,136 +6,163 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace R2API.Utils {
+namespace R2API.Utils;
+
+/// <summary>
+/// A submodule for scanning static methods of a given assembly
+/// so that they are registered as console commands for the in-game console.
+/// </summary>
+[Obsolete($"Add [assembly: HG.Reflection.SearchableAttribute.OptInAttribute] to your assembly instead")]
+public class CommandHelper
+{
+    public const string PluginGUID = R2API.PluginGUID + ".commandhelper";
+    public const string PluginName = R2API.PluginName + ".CommandHelper";
+    public const string PluginVersion = "0.0.1";
+
+    private static readonly Queue<Assembly> Assemblies = new Queue<Assembly>();
+    private static RoR2.Console _console;
 
     /// <summary>
-    /// A submodule for scanning static methods of a given assembly
-    /// so that they are registered as console commands for the in-game console.
+    /// Return true if the submodule is loaded.
     /// </summary>
-    [Obsolete($"Add [assembly: HG.Reflection.SearchableAttribute.OptInAttribute] to your assembly instead")]
-    public class CommandHelper {
-        public const string PluginGUID = R2API.PluginGUID + ".commandhelper";
-        public const string PluginName = R2API.PluginName + ".CommandHelper";
-        public const string PluginVersion = "0.0.1";
+    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+    public static bool Loaded => true;
 
-        private static readonly Queue<Assembly> Assemblies = new Queue<Assembly>();
-        private static RoR2.Console _console;
+    /// <summary>
+    /// Scans the calling assembly for ConCommand attributes and Convar fields and adds these to the console.
+    /// This method may be called at any time.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    public static void AddToConsoleWhenReady()
+    {
+        var assembly = Assembly.GetCallingAssembly();
+        Assemblies.Enqueue(assembly);
+        HandleCommandsConvars();
+    }
 
-        /// <summary>
-        /// Return true if the submodule is loaded.
-        /// </summary>
-        [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
-        public static bool Loaded => true;
+    internal static void SetHooks()
+    {
+        On.RoR2.Console.InitConVars += ConsoleReady;
+    }
 
-        /// <summary>
-        /// Scans the calling assembly for ConCommand attributes and Convar fields and adds these to the console.
-        /// This method may be called at any time.
-        /// </summary>
-        /// <exception cref="InvalidOperationException"></exception>
-        public static void AddToConsoleWhenReady() {
-            var assembly = Assembly.GetCallingAssembly();
-            Assemblies.Enqueue(assembly);
-            HandleCommandsConvars();
+    internal static void UnsetHooks()
+    {
+        On.RoR2.Console.InitConVars -= ConsoleReady;
+    }
+
+    private static void ConsoleReady(On.RoR2.Console.orig_InitConVars orig, RoR2.Console self)
+    {
+        orig(self);
+
+        _console = self;
+        HandleCommandsConvars();
+    }
+
+    private static void HandleCommandsConvars()
+    {
+        if (_console == null)
+        {
+            return;
         }
 
-        internal static void SetHooks() {
-            On.RoR2.Console.InitConVars += ConsoleReady;
+        while (Assemblies.Count > 0)
+        {
+            var assembly = Assemblies.Dequeue();
+            RegisterCommands(assembly);
+            RegisterConVars(assembly);
         }
+    }
 
-        internal static void UnsetHooks() {
-            On.RoR2.Console.InitConVars -= ConsoleReady;
+    private static void RegisterCommands(Assembly assembly)
+    {
+        if (assembly == null)
+        {
+            return;
         }
+        _ = Reflection.GetTypesSafe(assembly, out var types);
 
-        private static void ConsoleReady(On.RoR2.Console.orig_InitConVars orig, RoR2.Console self) {
-            orig(self);
+        try
+        {
+            var catalog = _console.concommandCatalog;
+            const BindingFlags consoleCommandsMethodFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+            var methods = types.SelectMany(t =>
+                t.GetMethods(consoleCommandsMethodFlags).Where(m => m.GetCustomAttribute<ConCommandAttribute>() != null));
 
-            _console = self;
-            HandleCommandsConvars();
-        }
+            foreach (var methodInfo in methods)
+            {
+                if (!methodInfo.IsStatic)
+                {
+                    R2API.Logger.LogError($"ConCommand defined as {methodInfo.Name} in {assembly.FullName} could not be registered. " +
+                        "ConCommands must be static methods.");
+                    continue;
+                }
 
-        private static void HandleCommandsConvars() {
-            if (_console == null) {
-                return;
-            }
+                var attributes = methodInfo.GetCustomAttributes<ConCommandAttribute>();
+                foreach (var attribute in attributes)
+                {
+                    var conCommand = new RoR2.Console.ConCommand
+                    {
+                        flags = attribute.flags,
+                        helpText = attribute.helpText,
+                        action = (RoR2.Console.ConCommandDelegate)Delegate.CreateDelegate(
+                            typeof(RoR2.Console.ConCommandDelegate), methodInfo)
+                    };
 
-            while (Assemblies.Count > 0) {
-                var assembly = Assemblies.Dequeue();
-                RegisterCommands(assembly);
-                RegisterConVars(assembly);
-            }
-        }
-
-        private static void RegisterCommands(Assembly assembly) {
-            if (assembly == null) {
-                return;
-            }
-            _ = Reflection.GetTypesSafe(assembly, out var types);
-
-            try {
-                var catalog = _console.concommandCatalog;
-                const BindingFlags consoleCommandsMethodFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-                var methods = types.SelectMany(t =>
-                    t.GetMethods(consoleCommandsMethodFlags).Where(m => m.GetCustomAttribute<ConCommandAttribute>() != null));
-
-                foreach (var methodInfo in methods) {
-                    if (!methodInfo.IsStatic) {
-                        R2API.Logger.LogError($"ConCommand defined as {methodInfo.Name} in {assembly.FullName} could not be registered. " +
-                                              "ConCommands must be static methods.");
-                        continue;
-                    }
-
-                    var attributes = methodInfo.GetCustomAttributes<ConCommandAttribute>();
-                    foreach (var attribute in attributes) {
-                        var conCommand = new RoR2.Console.ConCommand {
-                            flags = attribute.flags,
-                            helpText = attribute.helpText,
-                            action = (RoR2.Console.ConCommandDelegate)Delegate.CreateDelegate(
-                                typeof(RoR2.Console.ConCommandDelegate), methodInfo)
-                        };
-
-                        catalog[attribute.commandName.ToLower()] = conCommand;
-                    }
+                    catalog[attribute.commandName.ToLower()] = conCommand;
                 }
             }
-            catch (Exception e) {
-                R2API.Logger.LogError($"{nameof(CommandHelper)} failed to scan the assembly called {assembly.FullName}. Exception : {e}");
-            }
         }
+        catch (Exception e)
+        {
+            R2API.Logger.LogError($"{nameof(CommandHelper)} failed to scan the assembly called {assembly.FullName}. Exception : {e}");
+        }
+    }
 
-        private static void RegisterConVars(Assembly assembly) {
-            if (assembly == null) {
-                return;
-            }
-            _ = Reflection.GetTypesSafe(assembly, out var types);
+    private static void RegisterConVars(Assembly assembly)
+    {
+        if (assembly == null)
+        {
+            return;
+        }
+        _ = Reflection.GetTypesSafe(assembly, out var types);
 
-            try {
-                var customVars = new List<BaseConVar>();
-                foreach (var type in types) {
-                    foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
-                        if (field.FieldType.IsSubclassOf(typeof(BaseConVar))) {
-                            if (field.IsStatic) {
-                                _console.RegisterConVarInternal((BaseConVar)field.GetValue(null));
-                                customVars.Add((BaseConVar)field.GetValue(null));
-                            }
-                            else if (type.GetCustomAttribute<CompilerGeneratedAttribute>() == null) {
-                                R2API.Logger.LogError(
-                                    $"ConVar defined as {type.Name} in {assembly.FullName}. {field.Name} could not be registered. ConVars must be static fields.");
-                            }
+        try
+        {
+            var customVars = new List<BaseConVar>();
+            foreach (var type in types)
+            {
+                foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+                {
+                    if (field.FieldType.IsSubclassOf(typeof(BaseConVar)))
+                    {
+                        if (field.IsStatic)
+                        {
+                            _console.RegisterConVarInternal((BaseConVar)field.GetValue(null));
+                            customVars.Add((BaseConVar)field.GetValue(null));
+                        }
+                        else if (type.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+                        {
+                            R2API.Logger.LogError(
+                                $"ConVar defined as {type.Name} in {assembly.FullName}. {field.Name} could not be registered. ConVars must be static fields.");
                         }
                     }
                 }
-                foreach (var baseConVar in customVars) {
-                    if ((baseConVar.flags & ConVarFlags.Engine) != ConVarFlags.None) {
-                        baseConVar.defaultValue = baseConVar.GetString();
-                    }
-                    else if (baseConVar.defaultValue != null) {
-                        baseConVar.SetString(baseConVar.defaultValue);
-                    }
+            }
+            foreach (var baseConVar in customVars)
+            {
+                if ((baseConVar.flags & ConVarFlags.Engine) != ConVarFlags.None)
+                {
+                    baseConVar.defaultValue = baseConVar.GetString();
+                }
+                else if (baseConVar.defaultValue != null)
+                {
+                    baseConVar.SetString(baseConVar.defaultValue);
                 }
             }
-            catch (Exception e) {
-                R2API.Logger.LogError($"{nameof(CommandHelper)} failed to scan the assembly called {assembly.FullName}. Exception : {e}");
-            }
+        }
+        catch (Exception e)
+        {
+            R2API.Logger.LogError($"{nameof(CommandHelper)} failed to scan the assembly called {assembly.FullName}. Exception : {e}");
         }
     }
 }
