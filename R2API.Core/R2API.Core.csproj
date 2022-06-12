@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../R2API.props" />
-  
+
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <Compile Remove="ContentManagement\**" />
     <EmbeddedResource Remove="ContentManagement\**" />
     <None Remove="ContentManagement\**" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="bbepis-BepInExPack" Version="5.4.1905" GeneratePathProperty="true" PrivateAssets="all" ExcludeAssets="all" IncludeAssets="none" />
   </ItemGroup>

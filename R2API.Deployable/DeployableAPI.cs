@@ -21,8 +21,6 @@ namespace R2API {
         [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
         public static bool Loaded => true;
 
-        private static bool _loaded;
-
         private static readonly Dictionary<DeployableSlot, GetDeployableSameSlotLimit> moddedDeployables = new Dictionary<DeployableSlot, GetDeployableSameSlotLimit>();
 
         public static int VanillaDeployableSlotCount { get; }
