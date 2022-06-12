@@ -28,9 +28,8 @@ namespace R2API {
         /// Return true if the submodule is loaded.
         /// </summary>
         // ReSharper disable once ConvertToAutoProperty
+        [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
         public static bool Loaded => true;
-
-        private static bool _loaded;
 
         private static readonly HashSet<SkinDef> AddedSkins = new HashSet<SkinDef>();
 

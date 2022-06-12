@@ -30,6 +30,7 @@ namespace R2API {
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
+        [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
         public static bool Loaded => true;
 
         #region Hooks
@@ -93,9 +94,6 @@ namespace R2API {
         /// <param name="achievementDef">The achievementDef to add</param>
         /// <returns>True if succesful, false otherwise</returns>
         public static bool AddAchievement(AchievementDef achievementDef) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(UnlockableAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockableAPI)})]");
-            }
             var identifiers = Achievements.Select(achievementDef => achievementDef.identifier);
             try {
                 if (identifiers.Contains(achievementDef.identifier)) {
@@ -137,9 +135,6 @@ namespace R2API {
         }
 
         private static UnlockableDef AddUnlockableInternal(Type unlockableType, Assembly assembly, Type serverTrackerType = null, UnlockableDef unlockableDef = null) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(UnlockableAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(UnlockableAPI)})]");
-            }
 
             var instance = Activator.CreateInstance(unlockableType) as IModdedUnlockableDataProvider;
 
