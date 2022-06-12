@@ -9,3 +9,4 @@ using TF = System.Runtime.CompilerServices.TypeForwardedToAttribute;
 [assembly: TF(typeof(RecalculateStatsAPI))]
 [assembly: TF(typeof(PrefabAPI))]
 [assembly: TF(typeof(LanguageAPI))]
+[assembly: TF(typeof(UnlockableAPI))]

@@ -27,3 +27,5 @@ using IVT = System.Runtime.CompilerServices.InternalsVisibleToAttribute;
 [assembly: IVT("R2API.Elites")]
 [assembly: IVT("R2API.RecalculateStats")]
 [assembly: IVT("R2API.Prefab")]
+[assembly: IVT("R2API.Language")]
+[assembly: IVT("R2API.Unlockable")]

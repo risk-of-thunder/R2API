@@ -43,6 +43,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Prefab", "R2API.Prefa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Language", "R2API.Language\R2API.Language.csproj", "{B3F4F88F-754E-4B92-BE00-BB31C43D8307}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Unlockable", "R2API.Unlockable\R2API.Unlockable.csproj", "{F73112EF-38B3-4987-9E11-C3EA6817402C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{B3F4F88F-754E-4B92-BE00-BB31C43D8307}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3F4F88F-754E-4B92-BE00-BB31C43D8307}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3F4F88F-754E-4B92-BE00-BB31C43D8307}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F73112EF-38B3-4987-9E11-C3EA6817402C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F73112EF-38B3-4987-9E11-C3EA6817402C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F73112EF-38B3-4987-9E11-C3EA6817402C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F73112EF-38B3-4987-9E11-C3EA6817402C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
