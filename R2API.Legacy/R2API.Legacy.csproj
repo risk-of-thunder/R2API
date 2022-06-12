@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+  
+    <ItemGroup>
+      <ProjectReference Include="../R2API.Core/R2API.Core.csproj" />
+      <ProjectReference Include="../R2API.Items/R2API.Items.csproj" />
+    </ItemGroup>
+
+</Project>

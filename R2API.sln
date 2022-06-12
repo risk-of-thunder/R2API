@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API", "R2API\R2API.csproj", "{2F8A40CC-6D15-486D-B689-0A7A472DB89E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Core", "R2API.Core\R2API.Core.csproj", "{2F8A40CC-6D15-486D-B689-0A7A472DB89E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Test", "R2API.Test\R2API.Test.csproj", "{A10234E2-EEED-447D-857C-D68DBB561F3D}"
 EndProject
@@ -25,6 +25,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Items", "R2API.Items\R2API.Items.csproj", "{193B0EA3-6095-4B59-BC9C-4ED10E85418A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Legacy", "R2API.Legacy\R2API.Legacy.csproj", "{488CBD9D-B2FC-41F6-A994-02254CE62B92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.ContentManagement", "R2API.ContentManagement\R2API.ContentManagement.csproj", "{E630009A-97EA-4F9F-AFE4-C9412FE30807}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +45,18 @@ Global
 		{A10234E2-EEED-447D-857C-D68DBB561F3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A10234E2-EEED-447D-857C-D68DBB561F3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A10234E2-EEED-447D-857C-D68DBB561F3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{193B0EA3-6095-4B59-BC9C-4ED10E85418A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{193B0EA3-6095-4B59-BC9C-4ED10E85418A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{193B0EA3-6095-4B59-BC9C-4ED10E85418A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{193B0EA3-6095-4B59-BC9C-4ED10E85418A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{488CBD9D-B2FC-41F6-A994-02254CE62B92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{488CBD9D-B2FC-41F6-A994-02254CE62B92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{488CBD9D-B2FC-41F6-A994-02254CE62B92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{488CBD9D-B2FC-41F6-A994-02254CE62B92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E630009A-97EA-4F9F-AFE4-C9412FE30807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E630009A-97EA-4F9F-AFE4-C9412FE30807}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E630009A-97EA-4F9F-AFE4-C9412FE30807}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E630009A-97EA-4F9F-AFE4-C9412FE30807}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
