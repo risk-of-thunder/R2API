@@ -11,13 +11,14 @@ namespace R2API {
     /// API for handling deployables added by mods
     /// </summary>
     public static class DeployableAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".deployable";
+        public const string PluginName = R2API.PluginName + ".Deployable";
+        public const string PluginVersion = "0.0.1";
+
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
+        public static bool Loaded => true;
 
         private static bool _loaded;
 
@@ -30,12 +31,10 @@ namespace R2API {
             VanillaDeployableSlotCount = Enum.GetValues(typeof(DeployableSlot)).Length;
         }
 
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.CharacterMaster.GetDeployableSameSlotLimit += GetDeployableSameSlotLimitIL;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             IL.RoR2.CharacterMaster.GetDeployableSameSlotLimit -= GetDeployableSameSlotLimitIL;
         }
@@ -72,9 +71,6 @@ namespace R2API {
         /// <param name="getDeployableSameSlotLimit">Will be executed when new deployable added with returned DeployableSlot.</param>
         /// <returns>DeployableSlot that you should use when call `CharacterMaster.AddDeployable`</returns>
         public static DeployableSlot RegisterDeployableSlot(GetDeployableSameSlotLimit getDeployableSameSlotLimit) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(DeployableAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DeployableAPI)})]");
-            }
 
             if (getDeployableSameSlotLimit == null) {
                 throw new ArgumentNullException($"{nameof(getDeployableSameSlotLimit)} can't be null");
