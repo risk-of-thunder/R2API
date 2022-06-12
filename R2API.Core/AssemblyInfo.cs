@@ -1,5 +1,6 @@
 using System.Security;
 using System.Security.Permissions;
+using IVT = System.Runtime.CompilerServices.InternalsVisibleToAttribute;
 
 // SecurityPermision set to minimum and SkipVerification set to true
 // for skipping access modifiers check from the mono JIT
@@ -18,3 +19,11 @@ using System.Security.Permissions;
 //We can add dependencies to the SystemInitializer attribute, an example would be run
 //a piece of code that gets automatically ran once the ItemCatalog is initialized
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
+
+[assembly: IVT("R2API.Items")]
+[assembly: IVT("R2API.ContentManagement")]
+[assembly: IVT("R2API.ArtifactCode")]
+[assembly: IVT("R2API.Difficulty")]
+[assembly: IVT("R2API.Elites")]
+[assembly: IVT("R2API.RecalculateStats")]
+[assembly: IVT("R2API.Prefab")]
