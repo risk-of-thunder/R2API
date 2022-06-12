@@ -18,6 +18,11 @@
       <ProjectReference Include="../R2API.SceneAsset/R2API.SceneAsset.csproj" />
       <ProjectReference Include="../R2API.Orb/R2API.Orb.csproj" />
       <ProjectReference Include="../R2API.Loadout/R2API.Loadout.csproj" />
+      <ProjectReference Include="../R2API.DamageType/R2API.DamageType.csproj" />
+      <ProjectReference Include="../R2API.Deployable/R2API.Deployable.csproj" />
+      <ProjectReference Include="../R2API.Dot/R2API.Dot.csproj" />
+      <ProjectReference Include="../R2API.Sound/R2API.Sound.csproj" />
+      <ProjectReference Include="../R2API.Director/R2API.Director.csproj" />
     </ItemGroup>
 
 </Project>

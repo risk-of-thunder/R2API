@@ -10,16 +10,14 @@ namespace R2API {
 
     // ReSharper disable once InconsistentNaming
     public static class LobbyConfigAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".lobbyconfig";
+        public const string PluginName = R2API.PluginName + ".LobbyConfig";
+        public const string PluginVersion = "0.0.1";
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-
-        private static bool _loaded;
+        public static bool Loaded => true;
 
         private static int _ruleNameSequence;
 
