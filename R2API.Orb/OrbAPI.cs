@@ -9,22 +9,18 @@ namespace R2API {
 
     // ReSharper disable once InconsistentNaming
     public static class OrbAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".orb";
+        public const string PluginName = R2API.PluginName + ".Orb";
+        public const string PluginVersion = "0.0.1";
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-
-        private static bool _loaded;
+        public static bool Loaded => true;
 
         private static bool _orbsAlreadyAdded = false;
 
         public static ObservableCollection<Type?>? OrbDefinitions = new ObservableCollection<Type?>();
-
-        // TODO: Add generic overload for AddOrb
 
         /// <summary>
         /// Adds an Orb to the orb catalog.
@@ -34,9 +30,6 @@ namespace R2API {
         /// <param name="t">The type of the orb being added</param>
         /// <returns>True if orb will be added</returns>
         public static bool AddOrb(Type? t) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(OrbAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(OrbAPI)})]");
-            }
             if (_orbsAlreadyAdded) {
                 R2API.Logger.LogError($"Tried to add Orb type: {nameof(t)} after orb catalog was generated");
                 return false;
@@ -52,12 +45,33 @@ namespace R2API {
             return true;
         }
 
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
+        /// <summary>
+        /// Adds an Orb to the orb catalog.
+        /// This must be called during pplpugin Awake() or OnEnable()
+        /// The type of <typeparamref name="TOrb"/> must be a subclass of RoR2.Orbs.Orb
+        /// </summary>
+        /// <typeparam name="TOrb">The Type of orb being added</typeparam>
+        /// <returns>True if the orb will be added</returns>
+        public static bool AddOrb<TOrb>() where TOrb : RoR2.Orbs.Orb {
+            Type orbType = typeof(TOrb);
+            if (_orbsAlreadyAdded) {
+                R2API.Logger.LogError($"Tried to add Orb type: {orbType.Name} after orb catalog was generated");
+                return false;
+            }
+
+            if(!orbType.IsSubclassOf(typeof(RoR2.Orbs.Orb))) {
+                R2API.Logger.LogError($"Type: {orbType.Name} is not a subclass of RoR2.Orbs.Orb");
+                return false;
+            }
+
+            OrbDefinitions.Add(orbType);
+            return true;
+        }
+
         internal static void SetHooks() {
             On.RoR2.Orbs.OrbCatalog.GenerateCatalog += AddOrbs;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             On.RoR2.Orbs.OrbCatalog.GenerateCatalog -= AddOrbs;
         }

@@ -29,3 +29,7 @@ using IVT = System.Runtime.CompilerServices.InternalsVisibleToAttribute;
 [assembly: IVT("R2API.Prefab")]
 [assembly: IVT("R2API.Language")]
 [assembly: IVT("R2API.Unlockable")]
+[assembly: IVT("R2API.TempVisualEffect")]
+[assembly: IVT("R2API.SceneAsset")]
+[assembly: IVT("R2API.Orb")]
+[assembly: IVT("R2API.Loadout")]

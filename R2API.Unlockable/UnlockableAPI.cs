@@ -17,6 +17,9 @@ namespace R2API {
     /// </summary>
     [Obsolete(UnlockableAPI.ObsoleteMessage)]
     public static class UnlockableAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".unlockable";
+        public const string PluginName = R2API.PluginName + ".Unlockable";
+        public const string PluginVersion = "0.0.1";
 
         public const string ObsoleteMessage = "The patch 1.2.3 for RoR2 has made UnlockableAPI's methods and implementations redundant.\n" +
             "From now on use The game's \"RegisterAchievement\" attribute on top of baseAchievement inheriting classes to register AchievementDefs and tie AchievementDefs to their respective UnlockableDefs.\n" +
