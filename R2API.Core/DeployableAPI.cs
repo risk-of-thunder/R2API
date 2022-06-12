@@ -1,0 +1,98 @@
+﻿using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using R2API.Utils;
+using RoR2;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+
+namespace R2API {
+    /// <summary>
+    /// API for handling deployables added by mods
+    /// </summary>
+    public static class DeployableAPI {
+        /// <summary>
+        /// Return true if the submodule is loaded.
+        /// </summary>
+        public static bool Loaded {
+            get => _loaded;
+            internal set => _loaded = value;
+        }
+
+        private static bool _loaded;
+
+        private static readonly Dictionary<DeployableSlot, GetDeployableSameSlotLimit> moddedDeployables = new Dictionary<DeployableSlot, GetDeployableSameSlotLimit>();
+
+        public static int VanillaDeployableSlotCount { get; }
+        public static int ModdedDeployableSlotCount { get; private set; }
+
+        static DeployableAPI() {
+            VanillaDeployableSlotCount = Enum.GetValues(typeof(DeployableSlot)).Length;
+        }
+
+        [R2APIInitialize(Stage = InitStage.SetHooks)]
+        internal static void SetHooks() {
+            IL.RoR2.CharacterMaster.GetDeployableSameSlotLimit += GetDeployableSameSlotLimitIL;
+        }
+
+        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
+        internal static void UnsetHooks() {
+            IL.RoR2.CharacterMaster.GetDeployableSameSlotLimit -= GetDeployableSameSlotLimitIL;
+        }
+
+        private static void GetDeployableSameSlotLimitIL(MonoMod.Cil.ILContext il) {
+            var c = new ILCursor(il);
+
+            ILLabel switchEndLabel = null;
+            c.GotoNext(MoveType.After,
+                x => x.MatchSwitch(out _),
+                x => x.MatchBr(out switchEndLabel));
+
+            var switchDefaultLabel = il.DefineLabel();
+            c.Previous.Operand = switchDefaultLabel;
+
+            c.GotoLabel(switchEndLabel, MoveType.Before);
+            c.Emit(OpCodes.Ldarg_0);
+            switchDefaultLabel.Target = c.Previous;
+            c.Emit(OpCodes.Ldarg_1);
+            c.Emit(OpCodes.Ldloc, 1);
+            c.Emit(OpCodes.Ldloca, 0);
+            c.Emit(OpCodes.Call, typeof(DeployableAPI).GetMethod(nameof(GetModdedDeployableSameSlotLimit), BindingFlags.NonPublic | BindingFlags.Static));
+        }
+
+        private static void GetModdedDeployableSameSlotLimit(CharacterMaster self, DeployableSlot slot, int deployableCountMultiplier, ref int slotLimit) {
+            if (moddedDeployables.TryGetValue(slot, out var getDeployableSameSlotLimit)) {
+                slotLimit = getDeployableSameSlotLimit.Invoke(self, deployableCountMultiplier);
+            }
+        }
+
+        /// <summary>
+        /// Register new DeployableSlot with callback function to get deployable limit.
+        /// </summary>
+        /// <param name="getDeployableSameSlotLimit">Will be executed when new deployable added with returned DeployableSlot.</param>
+        /// <returns>DeployableSlot that you should use when call `CharacterMaster.AddDeployable`</returns>
+        public static DeployableSlot RegisterDeployableSlot(GetDeployableSameSlotLimit getDeployableSameSlotLimit) {
+            if (!Loaded) {
+                throw new InvalidOperationException($"{nameof(DeployableAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DeployableAPI)})]");
+            }
+
+            if (getDeployableSameSlotLimit == null) {
+                throw new ArgumentNullException($"{nameof(getDeployableSameSlotLimit)} can't be null");
+            }
+
+            var deployableSlot = (DeployableSlot)VanillaDeployableSlotCount + ModdedDeployableSlotCount++;
+            moddedDeployables[deployableSlot] = getDeployableSameSlotLimit;
+
+            return deployableSlot;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="self">Instance of a `CharacterMaster` for which this method is executed</param>
+        /// <param name="deployableCountMultiplier">Multiplier for minion count (if Swarms artifact is enabled value will be 2).
+        /// You don't have to use it, but you can for stuff like Beetle Guards</param>
+        /// <returns></returns>
+        public delegate int GetDeployableSameSlotLimit(CharacterMaster self, int deployableCountMultiplier);
+    }
+}
