@@ -5,3 +5,4 @@ using TF = System.Runtime.CompilerServices.TypeForwardedToAttribute;
 [assembly: TF(typeof(ItemAPI))]
 [assembly: TF(typeof(ArtifactCodeAPI))]
 [assembly: TF(typeof(DifficultyAPI))]
+[assembly: TF(typeof(EliteAPI))]

@@ -330,7 +330,7 @@ namespace R2API {
             var asm = Assembly.GetCallingAssembly();
             if (CatalogBlockers.GetAvailability<EliteDef>()) {
                 R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {eliteDef} via {nameof(ContentAddition)}.{nameof(AddEliteDef)}()" +
-                    $"The assembly should ideally add them via {nameof(EliteAPI)} so that they can use EliteAPI's elite tier systems, adding anyways.");
+                    $"The assembly should ideally add them via EliteAPI so that they can use EliteAPI's elite tier systems, adding anyways.");
                 R2APIContentManager.HandleContentAddition(asm, eliteDef);
                 return true;
             }

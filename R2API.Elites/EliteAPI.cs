@@ -18,17 +18,16 @@ namespace R2API {
 
     // ReSharper disable once InconsistentNaming
     public static class EliteAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".elites";
+        public const string PluginName = R2API.PluginName + ".Elites";
+        public const string PluginVersion = "0.0.1";
+
         public static ObservableCollection<CustomElite?>? EliteDefinitions = new ObservableCollection<CustomElite?>();
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-
-        private static bool _loaded;
+        public static bool Loaded => true;
 
         /// <summary>
         /// See <see cref="CombatDirectorInitNoTimingIssue"/>
@@ -44,8 +43,6 @@ namespace R2API {
         }
 
         #region ModHelper Events and Hooks
-
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.CombatDirector.Init += RetrieveVanillaEliteTierCount;
             On.RoR2.CombatDirector.Init += UseOurCombatDirectorInitInstead;
@@ -53,7 +50,6 @@ namespace R2API {
             R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             IL.RoR2.CombatDirector.Init -= RetrieveVanillaEliteTierCount;
             On.RoR2.CombatDirector.Init -= UseOurCombatDirectorInitInstead;
@@ -155,6 +151,10 @@ namespace R2API {
                     }
 
                     HG.ArrayUtils.ArrayAppend(ref eliteTierDef.eliteTypes, customElite.EliteDef);
+                }
+
+                if(customElite.EliteRamp) {
+                    EliteRamp.AddRamp(customElite.EliteDef, customElite.EliteRamp);
                 }
             }
         }
@@ -318,48 +318,5 @@ namespace R2API {
         }
 
         #endregion Combat Director Modifications
-    }
-
-    /// <summary>
-    /// Class that defines a custom Elite type for use in the game
-    /// All Elites consist of an <see cref="RoR2.EliteDef"/>, an <see cref="EquipmentDef"/>
-    /// and a <see cref="BuffDef"/>.
-    /// An Elite can only spawn if its in one of the available <see cref="CombatDirector.eliteTiers"/> (vanilla or custom).
-    /// Please check the constructors docs for more information.
-    /// </summary>
-    public class CustomElite {
-
-        /// <summary>
-        /// Elite definition
-        /// </summary>
-        public EliteDef? EliteDef;
-
-        /// <summary>
-        /// Elite tier(s) that the eliteDef will be on.
-        /// </summary>
-        public IEnumerable<CombatDirector.EliteTierDef> EliteTierDefs;
-
-        /// <summary>
-        /// You can omit giving a value to <see cref="EliteDef.eliteIndex"/>, as it'll be filled in automatically by the game.
-        /// For your custom elite to spawn, you need to provide an enumerable of <see cref="CombatDirector.EliteTierDef"/> as second parameter.
-        /// The API will then add your <see cref="EliteDef"/> in them.
-        /// You can also make a totally new tier, by either
-        /// directly modifying the array through <see cref="EliteAPI.GetCombatDirectorEliteTiers"/> and <see cref="EliteAPI.OverrideCombatDirectorEliteTiers"/>
-        /// or by using <see cref="EliteAPI.AddCustomEliteTier(CombatDirector.EliteTierDef?)"/>
-        /// </summary>
-        public CustomElite(string? name, EquipmentDef equipmentDef, Color32 color, string? modifierToken, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs) {
-            EliteDef = ScriptableObject.CreateInstance<EliteDef>();
-            EliteDef.name = name;
-            EliteDef.eliteEquipmentDef = equipmentDef;
-            EliteDef.color = color;
-            EliteDef.modifierToken = modifierToken;
-            EliteTierDefs = eliteTierDefs;
-        }
-
-        /// <inheritdoc cref="CustomElite(string?, EquipmentDef, Color32, string?, IEnumerable{CombatDirector.EliteTierDef})"/>
-        public CustomElite(EliteDef? eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs) {
-            EliteDef = eliteDef;
-            EliteTierDefs = eliteTierDefs;
-        }
     }
 }
