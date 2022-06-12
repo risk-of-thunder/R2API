@@ -14,16 +14,14 @@ namespace R2API {
     /// API for adding damage over time effects to the game.
     /// </summary>
     public static class DotAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".dot";
+        public const string PluginName = R2API.PluginName + ".DOT";
+        public const string PluginVersion = "0.0.1";
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-
-        private static bool _loaded;
+        public static bool Loaded => true;
 
         private static DotController.DotDef[] DotDefs {
             get => DotController.dotDefs;
@@ -73,9 +71,6 @@ namespace R2API {
         /// <returns></returns>
         public static DotController.DotIndex RegisterDotDef(DotController.DotDef? dotDef,
             CustomDotBehaviour? customDotBehaviour = null, CustomDotVisual? customDotVisual = null) {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(DotAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DotAPI)})]");
-            }
 
             var dotDefIndex = VanillaDotCount + CustomDotCount;
 
@@ -127,7 +122,6 @@ namespace R2API {
             return RegisterDotDef(dotDef, customDotBehaviour, customDotVisual);
         }
 
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             IL.RoR2.DotController.InitDotCatalog += RetrieveVanillaCount;
             IL.RoR2.DotController.Awake += ResizeTimerArray;
@@ -144,7 +138,6 @@ namespace R2API {
             IL.RoR2.GlobalEventManager.OnHitEnemy += FixDeathMark;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             IL.RoR2.DotController.InitDotCatalog -= RetrieveVanillaCount;
             IL.RoR2.DotController.Awake -= ResizeTimerArray;
