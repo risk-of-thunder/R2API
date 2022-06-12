@@ -15,16 +15,14 @@ namespace R2API.Networking {
     /// the tutorial for example usage.</see>
     /// </summary>
     public static class NetworkingAPI {
+        public const string PluginGUID = R2API.PluginGUID + ".networking";
+        public const string PluginName = R2API.PluginName + ".Networking";
+        public const string PluginVersion = "0.0.1";
 
         /// <summary>
         /// Return true if the submodule is loaded.
         /// </summary>
-        public static bool Loaded {
-            get => _loaded;
-            internal set => _loaded = value;
-        }
-
-        private static bool _loaded;
+        public static bool Loaded => true;
 
         internal static short MessageIndex => 2048;
         internal static short CommandIndex => 4096;
@@ -42,10 +40,6 @@ namespace R2API.Networking {
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         public static bool RegisterMessageType<TMessage>() where TMessage : INetMessage, new() {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(NetworkingAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(NetworkingAPI)})]");
-            }
-
             return RegisterMessageTypeInternal<TMessage>();
         }
 
@@ -72,10 +66,6 @@ namespace R2API.Networking {
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         public static bool RegisterCommandType<TCommand>() where TCommand : INetCommand, new() {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(NetworkingAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(NetworkingAPI)})]");
-            }
-
             return RegisterCommandTypeInternal<TCommand>();
         }
 
@@ -106,10 +96,6 @@ namespace R2API.Networking {
         public static bool RegisterRequestTypes<TRequest, TReply>()
             where TRequest : INetRequest<TRequest, TReply>, new()
             where TReply : INetRequestReply<TRequest, TReply>, new() {
-            if (!Loaded) {
-                throw new InvalidOperationException($"{nameof(NetworkingAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(NetworkingAPI)})]");
-            }
-
             return RegisterRequestTypesInternal<TRequest, TReply>();
         }
 
@@ -137,7 +123,6 @@ namespace R2API.Networking {
             return true;
         }
 
-        [R2APIInitialize(Stage = InitStage.SetHooks)]
         internal static void SetHooks() {
             RegisterMessageTypeInternal<DamageMessage>();
             RegisterMessageTypeInternal<BuffMessage>();
@@ -153,7 +138,6 @@ namespace R2API.Networking {
             NetworkManagerSystem.onStopClientGlobal -= UnRegisterClientHandlers;
         }
 
-        [R2APIInitialize(Stage = InitStage.UnsetHooks)]
         internal static void UnsetHooks() {
             NetworkManagerSystem.onStartServerGlobal -= RegisterServerHandlers;
             NetworkManagerSystem.onStartClientGlobal -= RegisterClientHandlers;
