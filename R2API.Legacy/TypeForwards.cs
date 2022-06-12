@@ -29,8 +29,6 @@ using TF = System.Runtime.CompilerServices.TypeForwardedToAttribute;
 [assembly: TF(typeof(R2API.ModdedUnlockable))]
 [assembly: TF(typeof(R2API.UnlockableAPI))]
 [assembly: TF(typeof(R2API.Utils.R2APISubmoduleDependency))]
-[assembly: TF(typeof(R2API.Utils.APISubmoduleHandler))]
-[assembly: TF(typeof(R2API.Utils.EnumerableExtensions))]
 [assembly: TF(typeof(R2API.Utils.CecilUtil))]
 [assembly: TF(typeof(R2API.Utils.ChatMessage))]
 [assembly: TF(typeof(R2API.Utils.CommandHelper))]

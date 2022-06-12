@@ -61,6 +61,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Sound", "R2API.Sound\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Director", "R2API.Director\R2API.Director.csproj", "{E5ABC7F3-E976-48CE-B3D4-BEA1DF0B01FE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Deployable", "R2API.Deployable\R2API.Deployable.csproj", "{27590A8E-7A63-47A3-987E-F1C23ADA3277}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.LobbyConfig", "R2API.LobbyConfig\R2API.LobbyConfig.csproj", "{51743E1F-E500-4A48-B3DB-97EA566E42CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +151,14 @@ Global
 		{E5ABC7F3-E976-48CE-B3D4-BEA1DF0B01FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5ABC7F3-E976-48CE-B3D4-BEA1DF0B01FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5ABC7F3-E976-48CE-B3D4-BEA1DF0B01FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27590A8E-7A63-47A3-987E-F1C23ADA3277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27590A8E-7A63-47A3-987E-F1C23ADA3277}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27590A8E-7A63-47A3-987E-F1C23ADA3277}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27590A8E-7A63-47A3-987E-F1C23ADA3277}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51743E1F-E500-4A48-B3DB-97EA566E42CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51743E1F-E500-4A48-B3DB-97EA566E42CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51743E1F-E500-4A48-B3DB-97EA566E42CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51743E1F-E500-4A48-B3DB-97EA566E42CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
