@@ -1,0 +1,27 @@
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "AuthorName"
+name = "PackageName"
+versionNumber = "0.0.1"
+description = "Example mod description"
+websiteUrl = ""
+containsNsfwContent = false
+
+[package.dependencies]
+Example-Dependency = "1.0.0"
+
+[build]
+icon = "./icon.png"
+readme = "./README.md"
+outdir = "./build"
+
+[[build.copy]]
+source = "./dist"
+target = ""
+
+[publish]
+repository = "https://thunderstore.io"
+communities = []
+categories = []
