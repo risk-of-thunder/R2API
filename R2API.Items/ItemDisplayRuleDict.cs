@@ -98,8 +98,8 @@ public class ItemDisplayRuleDict
                     invalidDisplays = true;
                     continue;
                 }
-
-                if (!rule.followerPrefab.GetComponent<ItemDisplay>())
+                ItemDisplay itemDisplay = rule.followerPrefab.GetComponent<ItemDisplay>();
+                if (!itemDisplay)
                 {
                     logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) does not have an ItemDisplay component. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab) " +
                         $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
@@ -107,7 +107,7 @@ public class ItemDisplayRuleDict
                     continue;
                 }
 
-                if (rule.followerPrefab.GetComponent<ItemDisplay>().rendererInfos.Length == 0)
+                if (itemDisplay.rendererInfos != null && itemDisplay.rendererInfos.Length != 0)
                 {
                     logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) has an ItemDisplay component, but no RendererInfos assigned. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)" +
                         $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
