@@ -18,7 +18,7 @@ namespace R2API;
 /// </summary>
 public static class DamageAPI
 {
-    public const string PluginGUID = R2API.PluginGUID + ".damagetyppe";
+    public const string PluginGUID = R2API.PluginGUID + ".damagetype";
     public const string PluginName = R2API.PluginName + ".DamageType";
     public const string PluginVersion = "0.0.1";
 

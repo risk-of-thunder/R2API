@@ -32,6 +32,7 @@ public static class ArtifactCodeAPI
     private static readonly List<(ArtifactDef, Sha256HashAsset)> artifactCodes = new List<(ArtifactDef, Sha256HashAsset)>();
     private static readonly List<ArtifactCompoundDef> artifactCompounds = new List<ArtifactCompoundDef>();
 
+    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
     public static bool Loaded => true;
 
     #region Hooks
@@ -41,7 +42,6 @@ public static class ArtifactCodeAPI
         On.RoR2.PortalDialerController.Awake += AddCodes;
         On.RoR2.PortalDialerController.PerformActionServer += Print;
     }
-
 
     internal static void UnsetHooks()
     {
