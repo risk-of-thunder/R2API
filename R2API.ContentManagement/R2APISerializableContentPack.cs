@@ -100,6 +100,8 @@ public class R2APISerializableContentPack : ScriptableObject
     #region Methods
     private ContentPack CreateContentPackPrivate()
     {
+        EnsureNoFieldsAreNull();
+
         ContentPack cp = new ContentPack();
         cp.bodyPrefabs.Add(bodyPrefabs);
         cp.masterPrefabs.Add(masterPrefabs);
@@ -157,6 +159,47 @@ public class R2APISerializableContentPack : ScriptableObject
         {
             contentPack = CreateContentPackPrivate();
             return contentPack;
+        }
+    }
+
+    private void EnsureNoFieldsAreNull()
+    {
+        RemoveNullFields(ref bodyPrefabs);
+        RemoveNullFields(ref masterPrefabs);
+        RemoveNullFields(ref projectilePrefabs);
+        RemoveNullFields(ref gameModePrefabs);
+        RemoveNullFields(ref effectPrefabs);
+        RemoveNullFields(ref networkedObjectPrefabs);
+
+        RemoveNullFields(ref skillDefs);
+        RemoveNullFields(ref skillFamilies);
+        RemoveNullFields(ref sceneDefs);
+        RemoveNullFields(ref itemDefs);
+        RemoveNullFields(ref itemTierDefs);
+        RemoveNullFields(ref itemRelationshipProviders);
+        RemoveNullFields(ref itemRelationshipTypes);
+        RemoveNullFields(ref equipmentDefs);
+        RemoveNullFields(ref buffDefs);
+        RemoveNullFields(ref eliteDefs);
+        RemoveNullFields(ref unlockableDefs);
+        RemoveNullFields(ref survivorDefs);
+        RemoveNullFields(ref artifactDefs);
+        RemoveNullFields(ref surfaceDefs);
+        RemoveNullFields(ref networkSoundEventDefs);
+        RemoveNullFields(ref gameEndingDefs);
+        RemoveNullFields(ref musicTrackDefs);
+        RemoveNullFields(ref miscPickupDefs);
+
+        RemoveNullFields(ref entityStateConfigurations);
+        RemoveNullFields(ref entityStateTypes);
+
+        RemoveNullFields(ref expansionDefs);
+        RemoveNullFields(ref entitlementDefs);
+
+        void RemoveNullFields<T>(ref T[] array)
+        {
+            IEnumerable<T> nonNullValues = array.Where(obj => obj != null);
+            array = nonNullValues.ToArray();
         }
     }
     #endregion
