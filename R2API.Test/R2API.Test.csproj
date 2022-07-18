@@ -17,7 +17,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		
-		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.13.0">
+		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.14.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
