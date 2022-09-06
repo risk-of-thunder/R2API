@@ -29,6 +29,7 @@
       <ProjectReference Include="../R2API.Networking/R2API.Networking.csproj" />
       <ProjectReference Include="../R2API.CommandHelper/R2API.CommandHelper.csproj" />
       <ProjectReference Include="../R2API.Colors/R2API.Colors.csproj" />
+      <ProjectReference Include="..\R2API.ContentManagement\R2API.ContentManagement.csproj" />
     </ItemGroup>
 
 </Project>
