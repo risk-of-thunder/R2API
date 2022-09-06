@@ -2,6 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>R2API</AssemblyName>
+        <RootNamespace>R2API</RootNamespace>
     </PropertyGroup>
   
     <ItemGroup>
