@@ -191,8 +191,8 @@ namespace R2API {
             c.Index = 0;
 
             bool ILFound = c.TryGotoNext(MoveType.After,
-                x => x.MatchLdarg(0),
-                x => x.MatchLdcR4(1),
+                x => x.MatchLdcR4(10),
+                x => x.MatchMul(),
                 x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.cursePenalty))
                 ));
 
