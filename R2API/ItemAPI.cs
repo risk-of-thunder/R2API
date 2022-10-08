@@ -202,12 +202,12 @@ namespace R2API {
                 R2API.Logger.LogError($"Too late ! Tried to add itemTag: {name} after the ItemCatalog has Initialized!");
                 return (ItemTag)(-1);
             }
-            var result = customItemTags.IndexOf(name) + 1;
-            if(result == 0){
+            int result = (int)FindItemTagByName(name);
+            if(result == -1){
                customItemTags.Add(name);
-               result = customItemTags.Count;
+               result = customItemTags.Count + (int)ItemTag.Count;
             }
-            return (ItemTag)(result + ItemTag.Count);
+            return (ItemTag)result;
         }
 
         #endregion Add Methods
