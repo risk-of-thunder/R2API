@@ -32,9 +32,9 @@ public static class PrefabAPI
 
     private static bool needToRegister;
     private static GameObject _parent;
-    private static readonly List<HashStruct> ThingsToHash = new List<HashStruct>();
+    private static readonly List<HashStruct> thingsToHash = new List<HashStruct>();
 
-    public static bool IsPrefabHashed(GameObject prefabToCheck) => ThingsToHash.Select(hash => hash.Prefab).Contains(prefabToCheck);
+    public static bool IsPrefabHashed(GameObject prefabToCheck) => thingsToHash.Select(hash => hash.Prefab).Contains(prefabToCheck);
 
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
@@ -155,7 +155,7 @@ public static class PrefabAPI
             TypeName = method.DeclaringType.AssemblyQualifiedName,
             MethodName = method.Name,
         };
-        ThingsToHash.Add(h);
+        thingsToHash.Add(h);
         SetupRegistrationEvent();
     }
 
@@ -190,7 +190,7 @@ public static class PrefabAPI
 
     private static void RegisterClientPrefabsNStuff()
     {
-        foreach (var h in ThingsToHash)
+        foreach (var h in thingsToHash)
         {
             if (h.Prefab.GetComponent<NetworkIdentity>() != null) h.Prefab.GetComponent<NetworkIdentity>().SetFieldValue("m_AssetId", NullHash);
             ClientScene.RegisterPrefab(h.Prefab, NetworkHash128.Parse(MakeHash(h.GoName + h.TypeName + h.MethodName)));
