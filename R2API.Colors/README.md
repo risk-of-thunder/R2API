@@ -1,17 +1,21 @@
-# R2API.ArtifactCode - Artifact Codes and Compound addition
+# R2API.Colors - Easy Addition of Colors and Damage Colors
 
 ## About
 
-R2API.ArtifactCode is a submodule assembly for R2API that simplifies the process of adding new Artifact Codes to the Artifact Portal Dialer in Sky Meadow, alongside the additon of custom Artifact Compounds (Such as the vanilla compounds, Circle, Square, Triangle & Diamond).
+R2API.Colors is a Submodule Assembly for R2API that adds a single unified method for adding both Colors and Damage Colors to the game, These new colors can be used on Attacks for adding unique coloration to the damage numbers, and add Unique colors to ItemTiers, and more miscelaneous color usages.
 
-## Use Cases
+## Use Cases / Features
 
-R2API.ArtifactCode can be used for mods to add their own ArtifactTrials to the game so their artifacts can be unlocked like regular, vanilla artifacts.
+R2API.Colors can be used for mods to add their own ColorIndex and DamageColorIndex to the game, which then can be used in a plethora of scenarios.
 
-## Developing/Contribution
+This is done via Code by methods that return the ColorCatalog.ColorIndex or DamageColorIndex that will represent said color.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eget enim a mi aliquam pulvinar. Curabitur lectus nibh, mattis eget fermentum vitae, sodales ut risus. Nunc venenatis leo quis augue blandit, ac vestibulum risus feugiat. Quisque consectetur molestie massa, quis vestibulum augue aliquet ut. Aliquam id laoreet est, eget congue.
+Alongsided this, R2API.Colors also adds two new Scriptable Objects, which can be used to pre-serialize Color Indices. these are the SerializableColorCatalogEntry and the SerializableDamageColor.
+
+These scriptable objects can later be used for example, in EntityStateConfigurations for serializing the DamageColorIndex of a certain attack in an entity state.
+## Related Pages
 
 ## Changelog
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc id lacinia velit. Vestibulum sapien eros, finibus ut magna quis, consequat dapibus lectus. Curabitur porta ligula in pretium bibendum. Vestibulum consectetur accumsan pulvinar. Mauris efficitur placerat magna, eget faucibus nunc venenatis at. Ut varius, sapien vel luctus semper, sem leo tempus.
+### '1.0.0'
+* Split from the main R2API.dll into its own submodule.

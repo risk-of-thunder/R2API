@@ -628,6 +628,7 @@ public static class ContentAddition
     /// <returns>A SerializableEntityStateType, the StateType will be null if "wasAdded" is false.</returns>
     public static SerializableEntityStateType AddEntityState<T>(out bool wasAdded) where T : EntityState
     {
+        return AddEntityState(typeof(T), out wasAdded);
         var asm = Assembly.GetCallingAssembly();
         Type t = typeof(T);
         if (CatalogBlockers.GetAvailability<EntityState>())
@@ -643,6 +644,40 @@ public static class ContentAddition
             return new SerializableEntityStateType(t);
         }
         RejectContent(t, asm, "EntityStateType", "but the EntityStateCatalog has already initialzed!");
+        wasAdded = false;
+        return new SerializableEntityStateType();
+    }
+
+    /// <summary>
+    /// Adds an EntityStateType to your Mod's ContentPack
+    /// <para>entityStateType cannot be abstract</para>
+    /// </summary>
+    /// <param name="entityStateType">The State's StateType</param>
+    /// <param name="wasAdded">wether or not the state type was succesfully added or not</param>
+    /// <returns>A SerializableEntityStateType, the StateType will be null if wasAdded is false.</returns>
+    public static SerializableEntityStateType AddEntityState(Type entityStateType, out bool wasAdded)
+    {
+        var asm = Assembly.GetCallingAssembly();
+
+        if(CatalogBlockers.GetAvailability<EntityState>())
+        {
+            if(entityStateType.IsAbstract)
+            {
+                RejectContent(entityStateType, asm, "EntityStateType", "but the entity state type is marked as abstract!");
+                wasAdded = false;
+                return new SerializableEntityStateType();
+            }
+            if(!typeof(EntityStates.EntityState).IsAssignableFrom(entityStateType))
+            {
+                RejectContent(entityStateType, asm, "EntityStateType", "but the provided entity state type does not inherit from EntityState!");
+                wasAdded = false;
+                return new SerializableEntityStateType();
+            }
+            wasAdded = true;
+            R2APIContentManager.HandleEntityState(asm, entityStateType);
+            return new SerializableEntityStateType(entityStateType);
+        }
+        RejectContent(entityStateType, asm, "EntityStateType", "but the EntityStateCatalog has already initialized!");
         wasAdded = false;
         return new SerializableEntityStateType();
     }
