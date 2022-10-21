@@ -33,6 +33,8 @@ public static class ItemAPI
 
     private static ICollection<string> noDefaultIDRSCharacterList = new List<string>();
 
+    private static List<string> customItemTags = new List<string>();
+
     public static int CustomItemCount, CustomEquipmentCount;
 
     /// <summary>
@@ -47,12 +49,14 @@ public static class ItemAPI
     {
         IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
         On.RoR2.ItemDisplayRuleSet.Init += AddingItemDisplayRulesToCharacterModels;
+        IL.RoR2.ItemCatalog.SetItemDefs += AddCustomTagsToItemCatalog;
     }
 
     internal static void UnsetHooks()
     {
         IL.RoR2.CharacterModel.UpdateMaterials -= MaterialFixForItemDisplayOnCharacter;
         On.RoR2.ItemDisplayRuleSet.Init -= AddingItemDisplayRulesToCharacterModels;
+        IL.RoR2.ItemCatalog.SetItemDefs -= AddCustomTagsToItemCatalog;
     }
 
     #endregion ModHelper Events and Hooks
@@ -194,6 +198,81 @@ public static class ItemAPI
     }
     #endregion Add Methods
 
+    #region ItemTags
+    /// <summary>
+    /// Add a custom item tag to the list of item tags.
+    /// If this is called after the ItemCatalog inits then this will return -1 and ignore the custom item tag.
+    /// </summary>
+    /// <param name="name">The tag to add.</param>
+    /// <returns>ItemTag value if added or already existent, (-1) cast to ItemTag otherwise</returns>
+    public static ItemTag AddItemTag(string name)
+    {
+        if (!Loaded)
+        {
+            throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
+        }
+
+        if (!CatalogBlockers.GetAvailability<ItemDef>())
+        {
+            R2API.Logger.LogError($"Too late ! Tried to add itemTag: {name} after the ItemCatalog has Initialized!");
+            return (ItemTag)(-1);
+        }
+        int result = (int)FindItemTagByName(name);
+        if (result == -1)
+        {
+            customItemTags.Add(name);
+            result = customItemTags.Count + (int)ItemTag.Count;
+        }
+        return (ItemTag)result;
+    }
+
+    /// <summary>
+    /// Gets ItemTag value for tag of given name
+    /// </summary>
+    /// <param name="name">The tag name string to match</param>
+    /// <returns>ItemTag value if found,(-1) cast to ItemTag otherwise</returns>
+    public static ItemTag FindItemTagByName(string name)
+    {
+        ItemTag result = (ItemTag)customItemTags.IndexOf(name);
+        if ((int)result == -1)
+        {
+            if (Enum.TryParse(name, out result))
+            {
+                return result;
+            }
+            else
+            {
+                return (ItemTag)(-1);
+            }
+        }
+        return (ItemTag)(result + 1 + (int)ItemTag.Count);
+    }
+
+    /// <summary>
+    /// Applies given ItemTag to the ItemDef (by Tag Name Overload)
+    /// </summary>
+    /// <param name="tagName">The name of the tag to apply</param>
+    /// <param name="item"> The ItemDef to apply the tag to</param>
+    public static void ApplyTagToItem(string tagName, ItemDef item)
+    {
+        ApplyTagToItem(FindItemTagByName(tagName), item);
+    }
+
+    /// <summary>
+    /// Applies given ItemTag to the ItemDef
+    /// </summary>
+    /// <param name="tag">The ItemTag to apply</param>
+    /// <param name="item"> The ItemDef to apply the tag to</param>
+    public static void ApplyTagToItem(ItemTag tag, ItemDef item)
+    {
+        HG.ArrayUtils.ArrayAppend(ref item.tags, tag);
+        if (!CatalogBlockers.GetAvailability<ItemDef>())
+        {
+            HG.ArrayUtils.ArrayAppend(ref ItemCatalog.itemIndicesByTag[(int)tag], item.itemIndex);
+        }
+    }
+    #endregion
+
     #region Other Modded Content Support
 
     /// <summary>
@@ -332,4 +411,15 @@ public static class ItemAPI
 
     #endregion ItemDisplay Hooks
 
+    #region ItemTag Hooks
+    private static void AddCustomTagsToItemCatalog(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+        if (c.TryGotoNext(MoveType.After, x => x.MatchLdcI4((int)ItemTag.Count)))
+        {
+            c.EmitDelegate<Func<int>>(() => customItemTags.Count + 1);
+            c.Emit(OpCodes.Add);
+        }
+    }
+    #endregion
 }

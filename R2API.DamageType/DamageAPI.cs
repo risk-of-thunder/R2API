@@ -951,6 +951,79 @@ public static class DamageAPI
     }
     #endregion
 
+    #region GetModdedDamageTypeHolder
+    /// <summary>
+    /// Returns ModdedDamageTypeHolder for DamageInfo instance.
+    /// </summary>
+    /// <param name="damageInfo"></param>
+    /// <returns></returns>
+    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this DamageInfo damageInfo) => GetModdedDamageTypeHolderInternal(damageInfo);
+
+    /// <summary>
+    /// Returns ModdedDamageTypeHolder for BulletAttack instance.
+    /// </summary>
+    /// <param name="bulletAttack"></param>
+    /// <returns></returns>
+    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this BulletAttack bulletAttack) => GetModdedDamageTypeHolderInternal(bulletAttack);
+
+    /// <summary>
+    /// Returns ModdedDamageTypeHolder for DamageOrb instance.
+    /// </summary>
+    /// <param name="damageOrb"></param>
+    /// <returns></returns>
+    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this DamageOrb damageOrb) => GetModdedDamageTypeHolderInternal(damageOrb);
+
+    /// <summary>
+    /// Returns ModdedDamageTypeHolder for GenericDamageOrb instance.
+    /// </summary>
+    /// <param name="genericDamageOrb"></param>
+    /// <returns></returns>
+    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this GenericDamageOrb genericDamageOrb) => GetModdedDamageTypeHolderInternal(genericDamageOrb);
+
+    /// <summary>
+    /// Returns ModdedDamageTypeHolder for LightningOrb instance.
+    /// </summary>
+    /// <param name="lightningOrb"></param>
+    /// <returns></returns>
+    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this LightningOrb lightningOrb) => GetModdedDamageTypeHolderInternal(lightningOrb);
+
+    /// <summary>
+    /// Returns ModdedDamageTypeHolder for BlastAttack instance.
+    /// </summary>
+    /// <param name="blastAttack"></param>
+    /// <returns></returns>
+    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this BlastAttack blastAttack) => GetModdedDamageTypeHolderInternal(blastAttack);
+
+    /// <summary>
+    /// Returns ModdedDamageTypeHolder for OverlapAttack instance.
+    /// </summary>
+    /// <param name="overlapAttack"></param>
+    /// <returns></returns>
+    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this OverlapAttack overlapAttack) => GetModdedDamageTypeHolderInternal(overlapAttack);
+
+    /// <summary>
+    /// Returns ModdedDamageTypeHolder for DotController.DotStack instance.
+    /// </summary>
+    /// <param name="dotStack"></param>
+    /// <returns></returns>
+    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this DotController.DotStack dotStack) => GetModdedDamageTypeHolderInternal(dotStack);
+
+    private static ModdedDamageTypeHolder GetModdedDamageTypeHolderInternal(object obj)
+    {
+        if (!Loaded)
+        {
+            throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
+        }
+
+        if (!damageTypeHolders.TryGetValue(obj, out var holder))
+        {
+            return null;
+        }
+
+        return holder;
+    }
+    #endregion
+
     #region ExtraTypes
     /// <summary>
     /// Holds flag values of ModdedDamageType.
