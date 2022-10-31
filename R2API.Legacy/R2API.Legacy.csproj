@@ -2,6 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>R2API</AssemblyName>
+        <RootNamespace>R2API</RootNamespace>
     </PropertyGroup>
   
     <ItemGroup>
@@ -27,6 +29,7 @@
       <ProjectReference Include="../R2API.Networking/R2API.Networking.csproj" />
       <ProjectReference Include="../R2API.CommandHelper/R2API.CommandHelper.csproj" />
       <ProjectReference Include="../R2API.Colors/R2API.Colors.csproj" />
+      <ProjectReference Include="..\R2API.ContentManagement\R2API.ContentManagement.csproj" />
     </ItemGroup>
 
 </Project>

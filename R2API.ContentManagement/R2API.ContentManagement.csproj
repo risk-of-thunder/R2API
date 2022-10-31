@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="../R2API.props" />
 
     <PropertyGroup>
@@ -6,8 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="../R2API.Core/R2API.Core.csproj" />
-      <ProjectReference Include="../R2API.Prefab/R2API.Prefab.csproj" />
+      <ProjectReference Include="../R2API.Core/R2API.Core.csproj" Private="false" ExcludeAssets="all"/>
+      <ProjectReference Include="../R2API.Prefab/R2API.Prefab.csproj" Private="false" ExcludeAssets="all"/>
     </ItemGroup>
 
 </Project>
