@@ -250,56 +250,67 @@ public static partial class DirectorAPI
         var key = stageInfo.stage == Stage.Custom ? stageInfo.CustomStageName : stageInfo.stage.ToString();
         if (!_classicStageInfoNameToOriginalClassicStageInfos.TryGetValue(key, out var originalClassicStageInfo))
         {
-            originalClassicStageInfo = new();
-            if (classicStageInfo.monsterDccsPool)
-            {
-                originalClassicStageInfo.monsterDccsPoolCategories = CopyDccsPoolCategories(classicStageInfo.monsterDccsPool.poolCategories);
-            }
-            if (classicStageInfo.monsterCategories)
-            {
-                originalClassicStageInfo.monsterCategories = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
-                originalClassicStageInfo.monsterCategories.CopyFrom(classicStageInfo.monsterCategories);
-            }
-            if (classicStageInfo.possibleMonsterFamilies != null)
-            {
-                originalClassicStageInfo.possibleMonsterFamilies = classicStageInfo.possibleMonsterFamilies.ToList();
-            }
-
-            if (classicStageInfo.interactableDccsPool)
-            {
-                originalClassicStageInfo.interactableDccsPoolCategories = CopyDccsPoolCategories(classicStageInfo.interactableDccsPool.poolCategories);
-            }
-            if (classicStageInfo.interactableCategories)
-            {
-                originalClassicStageInfo.interactableCategories = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
-                originalClassicStageInfo.interactableCategories.CopyFrom(classicStageInfo.interactableCategories);
-            }
-
-            _classicStageInfoNameToOriginalClassicStageInfos[key] = originalClassicStageInfo;
+            BackupClassicStageInfoToOriginalState(classicStageInfo, key);
         }
         else
         {
-            if (originalClassicStageInfo.monsterDccsPoolCategories != null)
-            {
-                classicStageInfo.monsterDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.monsterDccsPoolCategories).ToArray();
-            }
-            if (originalClassicStageInfo.monsterCategories)
-            {
-                classicStageInfo.monsterCategories.CopyFrom(originalClassicStageInfo.monsterCategories);
-            }
-            if (originalClassicStageInfo.possibleMonsterFamilies != null)
-            {
-                classicStageInfo.possibleMonsterFamilies = originalClassicStageInfo.possibleMonsterFamilies.ToArray();
-            }
+            RestoreClassicStageInfoToOriginalState(classicStageInfo, originalClassicStageInfo);
+        }
+    }
 
-            if (originalClassicStageInfo.interactableDccsPoolCategories != null)
-            {
-                classicStageInfo.interactableDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.interactableDccsPoolCategories).ToArray();
-            }
-            if (originalClassicStageInfo.interactableCategories)
-            {
-                classicStageInfo.interactableCategories.CopyFrom(originalClassicStageInfo.interactableCategories);
-            }
+    private static void BackupClassicStageInfoToOriginalState(ClassicStageInfo classicStageInfo, string key)
+    {
+        OriginalClassicStageInfo originalClassicStageInfo = new();
+
+        if (classicStageInfo.monsterDccsPool)
+        {
+            originalClassicStageInfo.monsterDccsPoolCategories = CopyDccsPoolCategories(classicStageInfo.monsterDccsPool.poolCategories);
+        }
+        if (classicStageInfo.monsterCategories)
+        {
+            originalClassicStageInfo.monsterCategories = (DirectorCardCategorySelection)ScriptableObject.CreateInstance(classicStageInfo.monsterCategories.GetType());
+            originalClassicStageInfo.monsterCategories.CopyFrom(classicStageInfo.monsterCategories);
+        }
+        if (classicStageInfo.possibleMonsterFamilies != null)
+        {
+            originalClassicStageInfo.possibleMonsterFamilies = classicStageInfo.possibleMonsterFamilies.ToList();
+        }
+
+        if (classicStageInfo.interactableDccsPool)
+        {
+            originalClassicStageInfo.interactableDccsPoolCategories = CopyDccsPoolCategories(classicStageInfo.interactableDccsPool.poolCategories);
+        }
+        if (classicStageInfo.interactableCategories)
+        {
+            originalClassicStageInfo.interactableCategories = (DirectorCardCategorySelection)ScriptableObject.CreateInstance(classicStageInfo.interactableCategories.GetType());
+            originalClassicStageInfo.interactableCategories.CopyFrom(classicStageInfo.interactableCategories);
+        }
+
+        _classicStageInfoNameToOriginalClassicStageInfos[key] = originalClassicStageInfo;
+    }
+
+    private static void RestoreClassicStageInfoToOriginalState(ClassicStageInfo classicStageInfo, OriginalClassicStageInfo originalClassicStageInfo)
+    {
+        if (originalClassicStageInfo.monsterDccsPoolCategories != null)
+        {
+            classicStageInfo.monsterDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.monsterDccsPoolCategories).ToArray();
+        }
+        if (originalClassicStageInfo.monsterCategories)
+        {
+            classicStageInfo.monsterCategories.CopyFrom(originalClassicStageInfo.monsterCategories);
+        }
+        if (originalClassicStageInfo.possibleMonsterFamilies != null)
+        {
+            classicStageInfo.possibleMonsterFamilies = originalClassicStageInfo.possibleMonsterFamilies.ToArray();
+        }
+
+        if (originalClassicStageInfo.interactableDccsPoolCategories != null)
+        {
+            classicStageInfo.interactableDccsPool.poolCategories = CopyDccsPoolCategories(originalClassicStageInfo.interactableDccsPoolCategories).ToArray();
+        }
+        if (originalClassicStageInfo.interactableCategories)
+        {
+            classicStageInfo.interactableCategories.CopyFrom(originalClassicStageInfo.interactableCategories);
         }
     }
 
@@ -337,7 +348,7 @@ public static partial class DirectorAPI
 
             poolEntryBackup.weight = poolEntry.weight;
 
-            poolEntryBackup.dccs = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+            poolEntryBackup.dccs = (DirectorCardCategorySelection)ScriptableObject.CreateInstance(poolEntry.dccs.GetType());
             poolEntryBackup.dccs.CopyFrom(poolEntry.dccs);
             poolEntryBackup.dccs.name = poolEntry.dccs.name;
 
@@ -357,7 +368,7 @@ public static partial class DirectorAPI
 
             poolEntryBackup.weight = poolEntry.weight;
 
-            poolEntryBackup.dccs = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+            poolEntryBackup.dccs = (DirectorCardCategorySelection)ScriptableObject.CreateInstance(poolEntry.dccs.GetType());
             poolEntryBackup.dccs.CopyFrom(poolEntry.dccs);
             poolEntryBackup.dccs.name = poolEntry.dccs.name;
 
