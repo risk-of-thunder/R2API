@@ -33,6 +33,7 @@ public static class OrbAPI
     /// <returns>True if orb will be added</returns>
     public static bool AddOrb(Type? t)
     {
+        OrbAPI.SetHooks();
         if (_orbsAlreadyAdded)
         {
             R2API.Logger.LogError($"Tried to add Orb type: {nameof(t)} after orb catalog was generated");
@@ -59,6 +60,7 @@ public static class OrbAPI
     /// <returns>True if the orb will be added</returns>
     public static bool AddOrb<TOrb>() where TOrb : RoR2.Orbs.Orb
     {
+        OrbAPI.SetHooks();
         Type orbType = typeof(TOrb);
         if (_orbsAlreadyAdded)
         {
@@ -76,14 +78,25 @@ public static class OrbAPI
         return true;
     }
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         On.RoR2.Orbs.OrbCatalog.GenerateCatalog += AddOrbs;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         On.RoR2.Orbs.OrbCatalog.GenerateCatalog -= AddOrbs;
+
+        _hooksEnabled = false;
     }
 
     private static void AddOrbs(On.RoR2.Orbs.OrbCatalog.orig_GenerateCatalog orig)

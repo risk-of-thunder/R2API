@@ -1,4 +1,5 @@
-﻿using R2API.MiscHelpers;
+﻿using HarmonyLib;
+using R2API.MiscHelpers;
 using R2API.Networking;
 using RoR2;
 using System;
@@ -69,6 +70,17 @@ internal class NetworkCompatibilityHandler
         R2API.R2APIStart += ScanPluginsForNetworkCompat;
     }
 
+    internal void CleanupModList()
+    {
+        if (NetworkModCompatibilityHelper.networkModList != null &&
+            NetworkModCompatibilityHelper.networkModList.Count() > 0)
+        {
+            var networkModList = NetworkModCompatibilityHelper.networkModList.ToList();
+            _ = networkModList.RemoveAll(ModList.Contains);
+            NetworkModCompatibilityHelper.networkModList = networkModList;
+        }
+    }
+
     private void ScanPluginsForNetworkCompat(object? _, EventArgs __)
     {
         foreach (var (_, pluginInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos)
@@ -83,7 +95,8 @@ internal class NetworkCompatibilityHandler
                     continue;
                 }
 
-                if (pluginInfo.Dependencies.All(dependency => dependency.DependencyGUID != R2API.PluginGUID || dependency.Flags == BepInEx.BepInDependency.DependencyFlags.SoftDependency))
+                if (pluginInfo.Dependencies.All(dependency => dependency.DependencyGUID != R2API.PluginGUID ||
+                    dependency.Flags == BepInEx.BepInDependency.DependencyFlags.SoftDependency))
                 {
                     continue;
                 }

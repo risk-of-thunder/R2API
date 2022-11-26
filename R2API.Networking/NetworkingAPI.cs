@@ -43,6 +43,7 @@ public static class NetworkingAPI
     /// <exception cref="InvalidOperationException"></exception>
     public static bool RegisterMessageType<TMessage>() where TMessage : INetMessage, new()
     {
+        Networking.NetworkingAPI.SetHooks();
         return RegisterMessageTypeInternal<TMessage>();
     }
 
@@ -73,6 +74,7 @@ public static class NetworkingAPI
     /// <exception cref="InvalidOperationException"></exception>
     public static bool RegisterCommandType<TCommand>() where TCommand : INetCommand, new()
     {
+        Networking.NetworkingAPI.SetHooks();
         return RegisterCommandTypeInternal<TCommand>();
     }
 
@@ -107,6 +109,7 @@ public static class NetworkingAPI
         where TRequest : INetRequest<TRequest, TReply>, new()
         where TReply : INetRequestReply<TRequest, TReply>, new()
     {
+        Networking.NetworkingAPI.SetHooks();
         return RegisterRequestTypesInternal<TRequest, TReply>();
     }
 
@@ -136,8 +139,15 @@ public static class NetworkingAPI
         return true;
     }
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         RegisterMessageTypeInternal<DamageMessage>();
         RegisterMessageTypeInternal<BuffMessage>();
         RegisterMessageTypeInternal<DotMessage>();
@@ -150,6 +160,8 @@ public static class NetworkingAPI
 
         NetworkManagerSystem.onStopServerGlobal -= UnRegisterServerHandlers;
         NetworkManagerSystem.onStopClientGlobal -= UnRegisterClientHandlers;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
@@ -159,6 +171,8 @@ public static class NetworkingAPI
 
         NetworkManagerSystem.onStopServerGlobal += UnRegisterServerHandlers;
         NetworkManagerSystem.onStopClientGlobal += UnRegisterClientHandlers;
+
+        _hooksEnabled = false;
     }
 
     private static void RegisterServerHandlers()

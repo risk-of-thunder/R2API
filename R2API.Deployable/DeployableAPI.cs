@@ -33,14 +33,25 @@ public static class DeployableAPI
         VanillaDeployableSlotCount = Enum.GetValues(typeof(DeployableSlot)).Length;
     }
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         IL.RoR2.CharacterMaster.GetDeployableSameSlotLimit += GetDeployableSameSlotLimitIL;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         IL.RoR2.CharacterMaster.GetDeployableSameSlotLimit -= GetDeployableSameSlotLimitIL;
+
+        _hooksEnabled = false;
     }
 
     private static void GetDeployableSameSlotLimitIL(MonoMod.Cil.ILContext il)
@@ -79,7 +90,7 @@ public static class DeployableAPI
     /// <returns>DeployableSlot that you should use when call `CharacterMaster.AddDeployable`</returns>
     public static DeployableSlot RegisterDeployableSlot(GetDeployableSameSlotLimit getDeployableSameSlotLimit)
     {
-
+        DeployableAPI.SetHooks();
         if (getDeployableSameSlotLimit == null)
         {
             throw new ArgumentNullException($"{nameof(getDeployableSameSlotLimit)} can't be null");

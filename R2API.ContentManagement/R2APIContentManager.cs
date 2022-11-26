@@ -114,6 +114,8 @@ public static class R2APIContentManager
     {
         get
         {
+            R2APIContentManager.SetHooks();
+
             if (!_contentPacksCreated)
             {
                 R2API.Logger.LogError($"Cannot return ContentPacks when they havent been created!");
@@ -147,6 +149,7 @@ public static class R2APIContentManager
     /// <param name="createIContentPackProvider">If this is set to true, R2API will create a ContentPackProvider for your ContentPack and handle the loading for you.</param>
     public static void AddPreExistingSerializableContentPack(R2APISerializableContentPack sotvSCP, bool createIContentPackProvider = true)
     {
+        ContentManagement.R2APIContentManager.SetHooks();
         try
         {
             Assembly assembly = Assembly.GetCallingAssembly();
@@ -194,6 +197,7 @@ public static class R2APIContentManager
 
     public static Assembly GetAssemblyFromContentPack(ContentPack contentPack)
     {
+        ContentManagement.R2APIContentManager.SetHooks();
         if (ContentPackToAssembly.TryGetValue(contentPack, out Assembly ass))
         {
             return ass;
@@ -204,14 +208,25 @@ public static class R2APIContentManager
 
     #region Main Methods
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         On.RoR2.ContentManagement.ContentManager.SetContentPacks += EnsureUniqueNames;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         On.RoR2.ContentManagement.ContentManager.SetContentPacks -= EnsureUniqueNames;
+
+        _hooksEnabled = false;
     }
 
     private static void EnsureUniqueNames(On.RoR2.ContentManagement.ContentManager.orig_SetContentPacks orig, List<ReadOnlyContentPack> newContentPacks)
@@ -312,6 +327,8 @@ public static class R2APIContentManager
 
     internal static void HandleContentAddition(Assembly assembly, UnityObject content)
     {
+        SetHooks();
+
         R2APISerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);
         if (scp)
         {
@@ -355,6 +372,8 @@ public static class R2APIContentManager
 
     internal static void HandleEntityState(Assembly assembly, Type type)
     {
+        SetHooks();
+
         R2APISerializableContentPack scp = GetOrCreateSerializableContentPack(assembly);
         if (scp)
         {

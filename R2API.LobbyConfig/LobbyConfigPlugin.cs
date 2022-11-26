@@ -3,14 +3,9 @@ using BepInEx;
 namespace R2API;
 
 [BepInPlugin(LobbyConfigAPI.PluginGUID, LobbyConfigAPI.PluginName, LobbyConfigAPI.PluginVersion)]
-public sealed class DepplpoyablePlugin : BaseUnityPlugin
+public sealed class LobbyConfigPlugin : BaseUnityPlugin
 {
-    private void OnEnable()
-    {
-        LobbyConfigAPI.SetHooks();
-    }
-
-    private void OnDisable()
+    private void OnDestroy()
     {
         LobbyConfigAPI.UnsetHooks();
     }

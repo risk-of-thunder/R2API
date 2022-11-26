@@ -21,14 +21,25 @@ public static class RecalculateStatsAPI
     [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
     public static bool Loaded => true;
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         IL.RoR2.CharacterBody.RecalculateStats += HookRecalculateStats;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
+
+        _hooksEnabled = false;
     }
 
     /// <summary>
@@ -134,11 +145,15 @@ public static class RecalculateStatsAPI
     {
         add
         {
+            SetHooks();
+
             _getStatCoefficients += value;
         }
 
         remove
         {
+            SetHooks();
+
             _getStatCoefficients -= value;
         }
     }

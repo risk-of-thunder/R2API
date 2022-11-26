@@ -36,8 +36,15 @@ public static class SoundAPI
 
     #region Soundbank Setup
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         // Disable SoundPlus if RoR2 is running with its graphics and sound engine disabled (Dedicated Servers) to avoid any bad side effects.
         if (Application.isBatchMode)
             return;
@@ -54,6 +61,8 @@ public static class SoundAPI
             typeof(SoundAPI).GetMethodCached(nameof(AddBanksAfterEngineInit)));
 
         Music.SetHooks();
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
@@ -61,6 +70,8 @@ public static class SoundAPI
         AddBanksAfterEngineInitHook.Dispose();
 
         Music.UnsetHooks();
+
+        _hooksEnabled = false;
     }
 
     private static bool AddBanksAfterEngineInit(Func<bool> orig)
@@ -121,6 +132,7 @@ public static class SoundAPI
         /// <param name="bank">byte array of the entire .bnk file</param>
         public static uint Add(byte[]? bank)
         {
+            SoundAPI.SetHooks();
             var bankToAdd = new Bank(bank);
             if (Loaded)
             {
@@ -142,6 +154,7 @@ public static class SoundAPI
         /// <param name="path">the absolute path to the file</param>
         public static uint Add(string? path)
         {
+            SoundAPI.SetHooks();
             byte[] bank = File.ReadAllBytes(path);
 
             return Add(bank);
@@ -155,6 +168,7 @@ public static class SoundAPI
         /// <returns></returns>
         public static uint Add(string resourceName, Assembly owningAssembly)
         {
+            SoundAPI.SetHooks();
             var (ptr, size) = EmbeddedResources.GetEmbeddedResource(resourceName, owningAssembly);
             if (ptr == 0 || size == 0) throw new ArgumentException($"{resourceName} did not return a valid resource", nameof(resourceName));
 
@@ -181,6 +195,7 @@ public static class SoundAPI
         /// <returns></returns>
         public static AKRESULT Remove(uint ID)
         {
+            SoundAPI.SetHooks();
             var bankToUnload = soundBanks.Find(bank => bank.PublicID == ID);
             return bankToUnload.UnLoad();
         }
@@ -302,7 +317,7 @@ public static class SoundAPI
     [Obsolete($"AddNetworkedSoundEvent is obsolete, please add your NetworkSoundEventDefs via R2API.ContentManagement.ContentAdditionHelpers.AddNetworkSoundEventDef()")]
     public static bool AddNetworkedSoundEvent(NetworkSoundEventDef? networkSoundEventDef)
     {
-
+        SoundAPI.SetHooks();
         if (!CatalogBlockers.GetAvailability<NetworkSoundEventDef>())
         {
             R2API.Logger.LogError(
@@ -338,7 +353,7 @@ public static class SoundAPI
     [Obsolete($"AddNetworkedSoundEvent is obsolete, please add your NetworkSoundEventDefs via R2API.ContentManagement.ContentAdditionHelpers.AddNetworkSoundEventDef()")]
     public static bool AddNetworkedSoundEvent(string eventName)
     {
-
+        SoundAPI.SetHooks();
         if (!CatalogBlockers.GetAvailability<NetworkSoundEventDef>())
         {
             R2API.Logger.LogError(
@@ -457,6 +472,8 @@ public static class SoundAPI
             /// <inheritdoc cref="MainAndBossTracks"/>
             public MainAndBossTracks(MusicTrackDef mainTrack, MusicTrackDef bossTrack)
             {
+                SetHooks();
+
                 MainTrack = mainTrack;
                 BossTrack = bossTrack;
             }
@@ -504,6 +521,7 @@ public static class SoundAPI
             /// </summary>
             public override void Preload()
             {
+                SoundAPI.Music.SetHooks();
                 if (!string.IsNullOrWhiteSpace(SoundBankName))
                 {
                     AkSoundEngine.LoadBank(SoundBankName, out _);
@@ -515,6 +533,7 @@ public static class SoundAPI
             /// </summary>
             public override void Play()
             {
+                SoundAPI.Music.SetHooks();
                 Preload();
 
                 foreach (var customState in CustomStates)
@@ -528,6 +547,7 @@ public static class SoundAPI
             /// </summary>
             public override void Stop()
             {
+                SoundAPI.Music.SetHooks();
                 foreach (var customState in CustomStates)
                 {
                     AkSoundEngine.SetState(customState.GroupId, 0U);
@@ -553,8 +573,15 @@ public static class SoundAPI
 
         private static Hook AddCustomMusicDatasHook;
 
+        private static bool _hooksEnabled = false;
+
         internal static void SetHooks()
         {
+            if (_hooksEnabled)
+            {
+                return;
+            }
+
             AddCustomMusicDatasHook = new Hook(
                 typeof(AkWwiseInitializationSettings).GetMethodCached(nameof(AkWwiseInitializationSettings.InitializeSoundEngine)),
                 typeof(Music).GetMethodCached(nameof(AddCustomMusicDatas)));
@@ -565,14 +592,8 @@ public static class SoundAPI
             On.RoR2.MusicController.UpdateState += IsGameMusicBankInUse;
 
             IL.RoR2.MusicController.LateUpdate += PauseMusicIfGameMusicBankNotInUse;
-        }
 
-        private static void IsGameMusicBankInUse(On.RoR2.MusicController.orig_UpdateState orig, MusicController self)
-        {
-            orig(self);
-
-            if (self && self.currentTrack)
-                GameMusicBankInUse = IsVanillaMusicTrack(self.currentTrack);
+            _hooksEnabled = true;
         }
 
         internal static void UnsetHooks()
@@ -585,6 +606,16 @@ public static class SoundAPI
             On.RoR2.MusicController.UpdateState -= IsGameMusicBankInUse;
 
             IL.RoR2.MusicController.LateUpdate -= PauseMusicIfGameMusicBankNotInUse;
+
+            _hooksEnabled = false;
+        }
+
+        private static void IsGameMusicBankInUse(On.RoR2.MusicController.orig_UpdateState orig, MusicController self)
+        {
+            orig(self);
+
+            if (self && self.currentTrack)
+                GameMusicBankInUse = IsVanillaMusicTrack(self.currentTrack);
         }
 
         private static bool AddCustomMusicDatas(Func<bool> orig)
@@ -718,6 +749,7 @@ public static class SoundAPI
         /// <returns>True if the preliminary checks succeed</returns>
         public static bool Add(CustomMusicData data)
         {
+            SoundAPI.Music.SetHooks();
             if (data.BepInPlugin == null)
             {
                 throw new ArgumentNullException(nameof(CustomMusicData) + "." + nameof(CustomMusicData.BepInPlugin));
@@ -780,6 +812,7 @@ public static class SoundAPI
         /// <returns></returns>
         public static bool Remove(CustomMusicData data)
         {
+            SoundAPI.Music.SetHooks();
             var akResult = AkSoundEngine.UnloadBank(data.LoadedSoundBankId, IntPtr.Zero);
             if (akResult != AKRESULT.AK_Success)
             {

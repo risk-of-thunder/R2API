@@ -39,10 +39,16 @@ public static class DamageAPI
     /// </summary>
     public static int ModdedDamageTypeCount { get; private set; }
 
+    private static bool _hooksEnabled = false;
 
     #region Hooks
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         On.RoR2.NetworkExtensions.Write_NetworkWriter_DamageInfo += WriteDamageInfo;
         On.RoR2.NetworkExtensions.ReadDamageInfo += ReadDamageInfo;
 
@@ -90,6 +96,8 @@ public static class DamageAPI
         IL.RoR2.ContactDamage.FireOverlaps += ContactDamageFireOverlapsIL;
 
         IL.RoR2.DelayBlast.Detonate += DelayBlastDetonateIL;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
@@ -141,6 +149,8 @@ public static class DamageAPI
         IL.RoR2.ContactDamage.FireOverlaps -= ContactDamageFireOverlapsIL;
 
         IL.RoR2.DelayBlast.Detonate -= DelayBlastDetonateIL;
+
+        _hooksEnabled = false;
     }
 
     #region DamageInfo
@@ -713,6 +723,7 @@ public static class DamageAPI
     /// <returns></returns>
     public static ModdedDamageType ReserveDamageType()
     {
+        DamageAPI.SetHooks();
         if (ModdedDamageTypeCount >= CompressedFlagArrayUtilities.sectionsCount * CompressedFlagArrayUtilities.flagsPerSection)
         {
             //I doubt this is ever gonna happen, but just in case.
@@ -781,6 +792,8 @@ public static class DamageAPI
 
     private static void AddModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType)
     {
+        SetHooks();
+
         if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
         {
             throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
@@ -854,6 +867,7 @@ public static class DamageAPI
 
     private static bool RemoveModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType)
     {
+        SetHooks();
 
         if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
         {
@@ -936,6 +950,7 @@ public static class DamageAPI
 
     private static bool HasModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType)
     {
+        SetHooks();
 
         if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
         {
@@ -1010,10 +1025,7 @@ public static class DamageAPI
 
     private static ModdedDamageTypeHolder GetModdedDamageTypeHolderInternal(object obj)
     {
-        if (!Loaded)
-        {
-            throw new InvalidOperationException($"{nameof(DamageAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(DamageAPI)})]");
-        }
+        SetHooks();
 
         if (!damageTypeHolders.TryGetValue(obj, out var holder))
         {
@@ -1032,10 +1044,12 @@ public static class DamageAPI
     {
         private byte[] values;
 
-        public ModdedDamageTypeHolder() { }
+        public ModdedDamageTypeHolder() { SetHooks(); }
 
         public ModdedDamageTypeHolder(byte[] values)
         {
+            SetHooks();
+
             this.values = values?.ToArray();
         }
 
@@ -1121,6 +1135,7 @@ public static class DamageAPI
         /// <returns></returns>
         public ModdedDamageTypeHolder MakeCopy()
         {
+            DamageAPI.SetHooks();
             var holder = new ModdedDamageTypeHolder
             {
                 values = values?.ToArray()
@@ -1135,6 +1150,7 @@ public static class DamageAPI
         /// <returns></returns>
         public static ModdedDamageTypeHolder ReadFromNetworkReader(NetworkReader reader)
         {
+            DamageAPI.SetHooks();
             var values = CompressedFlagArrayUtilities.ReadFromNetworkReader(reader);
             if (values == null)
             {
@@ -1248,6 +1264,7 @@ public static class DamageAPI
         /// <returns></returns>
         public ModdedDamageTypeHolder MakeHolder()
         {
+            DamageAPI.SetHooks();
             return new ModdedDamageTypeHolder(values);
         }
     }
