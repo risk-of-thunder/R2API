@@ -35,19 +35,31 @@ public class CommandHelper
     /// <exception cref="InvalidOperationException"></exception>
     public static void AddToConsoleWhenReady()
     {
+        Utils.CommandHelper.SetHooks();
         var assembly = Assembly.GetCallingAssembly();
         Assemblies.Enqueue(assembly);
         HandleCommandsConvars();
     }
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         On.RoR2.Console.InitConVars += ConsoleReady;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         On.RoR2.Console.InitConVars -= ConsoleReady;
+
+        _hooksEnabled = false;
     }
 
     private static void ConsoleReady(On.RoR2.Console.orig_InitConVars orig, RoR2.Console self)

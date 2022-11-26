@@ -57,6 +57,7 @@ public static class TempVisualEffectAPI
     /// <param name="childLocatorOverride"></param>
     public static bool AddTemporaryVisualEffect(GameObject effectPrefab, EffectCondition condition, bool useBestFitRadius = false, string childLocatorOverride = "")
     {
+        TempVisualEffectAPI.SetHooks();
         if (effectPrefab == null)
         {
             R2API.Logger.LogError($"Failed to add TVE: GameObject is null"); throw new ArgumentNullException($"{nameof(effectPrefab)} can't be null");
@@ -92,12 +93,21 @@ public static class TempVisualEffectAPI
         return true;
     }
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         On.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects += UpdateAllHook;
         IL.RoR2.CharacterBody.UpdateSingleTemporaryVisualEffect_refTemporaryVisualEffect_string_float_bool_string += UpdateSingleHook;
         R2APIContentPackProvider.WhenAddingContentPacks += DontAllowNewEntries;
         CharacterBody.onBodyStartGlobal += BodyStart;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
@@ -106,6 +116,8 @@ public static class TempVisualEffectAPI
         IL.RoR2.CharacterBody.UpdateSingleTemporaryVisualEffect_refTemporaryVisualEffect_string_float_bool_string += UpdateSingleHook;
         R2APIContentPackProvider.WhenAddingContentPacks -= DontAllowNewEntries;
         CharacterBody.onBodyStartGlobal -= BodyStart;
+
+        _hooksEnabled = false;
     }
 
     private static void BodyStart(CharacterBody body)

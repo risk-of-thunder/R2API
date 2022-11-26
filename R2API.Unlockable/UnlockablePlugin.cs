@@ -7,12 +7,7 @@ namespace R2API;
 [Obsolete(UnlockableAPI.ObsoleteMessage)]
 public sealed class ItemsPlugin : BaseUnityPlugin
 {
-    private void OnEnable()
-    {
-        UnlockableAPI.SetHooks();
-    }
-
-    private void OnDisable()
+    private void OnDestroy()
     {
         UnlockableAPI.UnsetHooks();
     }

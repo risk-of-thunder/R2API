@@ -73,6 +73,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.AutoVersionGen", "R2A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Colors", "R2API.Colors\R2API.Colors.csproj", "{5A25F18B-BCD4-44B1-B0FA-295298DDFDF5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Analyzer", "R2API.Analyzer\R2API.Analyzer\R2API.Analyzer.csproj", "{5DE3623A-52A0-43E4-9DE5-8FFD0DDE8870}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Analyzer.CodeFixes", "R2API.Analyzer\R2API.Analyzer.CodeFixes\R2API.Analyzer.CodeFixes.csproj", "{C085C476-2882-49CD-8FE4-71F88E4E5EEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -183,6 +187,14 @@ Global
 		{5A25F18B-BCD4-44B1-B0FA-295298DDFDF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A25F18B-BCD4-44B1-B0FA-295298DDFDF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A25F18B-BCD4-44B1-B0FA-295298DDFDF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DE3623A-52A0-43E4-9DE5-8FFD0DDE8870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE3623A-52A0-43E4-9DE5-8FFD0DDE8870}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE3623A-52A0-43E4-9DE5-8FFD0DDE8870}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE3623A-52A0-43E4-9DE5-8FFD0DDE8870}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C085C476-2882-49CD-8FE4-71F88E4E5EEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C085C476-2882-49CD-8FE4-71F88E4E5EEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C085C476-2882-49CD-8FE4-71F88E4E5EEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C085C476-2882-49CD-8FE4-71F88E4E5EEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

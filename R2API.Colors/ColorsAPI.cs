@@ -1,11 +1,10 @@
-﻿using Mono.Cecil.Cil;
+﻿using System;
+using System.Collections.Generic;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.ScriptableObjects;
 using R2API.Utils;
 using RoR2;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using R2API.ScriptableObjects;
 using UnityEngine;
 
 namespace R2API;
@@ -21,15 +20,24 @@ public static class ColorsAPI
     [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
     public static bool Loaded => true;
 
+    private static bool _hookEnabled = false;
+
     #region Hooks
     internal static void SetHooks()
     {
+        if (_hookEnabled)
+        {
+            return;
+        }
+
         //Color Catalog
         IL.RoR2.ColorCatalog.GetColor += GetColorIL;
         IL.RoR2.ColorCatalog.GetColorHexString += GetColorIL;
 
         //DamageColor
         IL.RoR2.DamageColor.FindColor += GetColorIL;
+
+        _hookEnabled = true;
     }
 
     internal static void UnsetHooks()
@@ -40,6 +48,8 @@ public static class ColorsAPI
 
         //DamageColor
         IL.RoR2.DamageColor.FindColor -= GetColorIL;
+
+        _hookEnabled = false;
     }
 
     private static void GetColorIL(ILContext il)
@@ -71,6 +81,7 @@ public static class ColorsAPI
     /// <exception cref="InvalidOperationException"></exception>
     public static DamageColorIndex RegisterDamageColor(Color color)
     {
+        ColorsAPI.SetHooks();
         int nextColorIndex = DamageColor.colors.Length;
         DamageColorIndex newIndex = (DamageColorIndex)nextColorIndex;
         HG.ArrayUtils.ArrayAppend(ref DamageColor.colors, color);
@@ -84,6 +95,7 @@ public static class ColorsAPI
     /// <param name="serializableDamageColor">The <see cref="SerializableDamageColor"/> to add</param>
     public static void AddSerializableDamageColor(SerializableDamageColor serializableDamageColor)
     {
+        ColorsAPI.SetHooks();
         if (addedSerializableDamageColors.Contains(serializableDamageColor))
         {
             R2API.Logger.LogError($"Attempted to add SerializableDamageColor {serializableDamageColor} twice! aborting.");
@@ -103,6 +115,7 @@ public static class ColorsAPI
     /// <exception cref="InvalidOperationException"></exception>
     public static ColorCatalog.ColorIndex RegisterColor(Color color)
     {
+        ColorsAPI.SetHooks();
         int nextColorIndex = ColorCatalog.indexToColor32.Length;
         ColorCatalog.ColorIndex newIndex = (ColorCatalog.ColorIndex)nextColorIndex;
         HG.ArrayUtils.ArrayAppend(ref ColorCatalog.indexToColor32, color);
@@ -117,6 +130,7 @@ public static class ColorsAPI
     /// <param name="serializableColor">The <see cref="SerializableDamageColor"/> to add</param>
     public static void AddSerializableColor(SerializableColorCatalogEntry serializableColor)
     {
+        ColorsAPI.SetHooks();
         if (addedSerializableColors.Contains(serializableColor))
         {
             R2API.Logger.LogError($"Attempted to add SerializableColor {serializableColor} twice! aborting.");

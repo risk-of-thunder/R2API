@@ -47,6 +47,7 @@ public class DifficultyAPI
     /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
     public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty)
     {
+        DifficultyAPI.SetHooks();
         return AddDifficulty(difficulty, false);
     }
 
@@ -61,6 +62,7 @@ public class DifficultyAPI
     /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
     public static DifficultyIndex AddDifficulty(DifficultyDef difficulty, Sprite difficultyIcon)
     {
+        DifficultyAPI.SetHooks();
         difficulty.foundIconSprite = true;
         difficulty.iconSprite = difficultyIcon;
         return AddDifficulty(difficulty, false);
@@ -77,6 +79,7 @@ public class DifficultyAPI
     /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
     public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty, bool preferPositive = false)
     {
+        DifficultyAPI.SetHooks();
         if (difficultyAlreadyAdded)
         {
             R2API.Logger.LogError($"Tried to add difficulty: {difficulty.nameToken} after difficulty list was created");
@@ -105,21 +108,33 @@ public class DifficultyAPI
     /// <param name="serializableDifficultyDef">The SerializableDifficultyDef from which to create the DifficultyDef</param>
     public static void AddDifficulty(SerializableDifficultyDef serializableDifficultyDef)
     {
+        DifficultyAPI.SetHooks();
         serializableDifficultyDef.CreateDifficultyDef();
         serializableDifficultyDef.DifficultyIndex = AddDifficulty(serializableDifficultyDef.DifficultyDef, serializableDifficultyDef.preferPositiveIndex);
     }
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         DifficultyCatalogReady?.Invoke(null, null);
         On.RoR2.DifficultyCatalog.GetDifficultyDef += GetExtendedDifficultyDef;
         On.RoR2.RuleDef.FromDifficulty += InitialiseRuleBookAndFinalizeList;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         On.RoR2.DifficultyCatalog.GetDifficultyDef -= GetExtendedDifficultyDef;
         On.RoR2.RuleDef.FromDifficulty -= InitialiseRuleBookAndFinalizeList;
+
+        _hooksEnabled = false;
     }
 
     private static DifficultyDef GetExtendedDifficultyDef(On.RoR2.DifficultyCatalog.orig_GetDifficultyDef orig, DifficultyIndex difficultyIndex)

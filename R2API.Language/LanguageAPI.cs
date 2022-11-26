@@ -28,8 +28,16 @@ public static class LanguageAPI
     private const string genericLanguage = "generic";
 
     #region Hooks
+
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         var languagePaths = Directory.GetFiles(Paths.PluginPath, "*.language", SearchOption.AllDirectories);
         foreach (var path in languagePaths)
         {
@@ -38,12 +46,16 @@ public static class LanguageAPI
 
         On.RoR2.Language.GetLocalizedStringByToken += Language_GetLocalizedStringByToken;
         On.RoR2.Language.TokenIsRegistered += Language_TokenIsRegistered;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         On.RoR2.Language.GetLocalizedStringByToken -= Language_GetLocalizedStringByToken;
         On.RoR2.Language.TokenIsRegistered -= Language_TokenIsRegistered;
+
+        _hooksEnabled = false;
     }
 
     private static bool Language_TokenIsRegistered(On.RoR2.Language.orig_TokenIsRegistered orig, Language self, string token)
@@ -172,6 +184,7 @@ public static class LanguageAPI
     /// <param name="value">Value it gives back</param>
     public static void Add(string? key, string? value)
     {
+        LanguageAPI.SetHooks();
         if (key == null)
         {
             throw new NullReferenceException($"param {nameof(key)} is null");
@@ -192,6 +205,7 @@ public static class LanguageAPI
     /// <param name="language">Language you want to add this to</param>
     public static void Add(string? key, string? value, string? language)
     {
+        LanguageAPI.SetHooks();
         if (key == null)
         {
             throw new NullReferenceException($"param {nameof(key)} is null");
@@ -222,6 +236,7 @@ public static class LanguageAPI
     /// <param name="path">absolute path to file</param>
     public static void AddPath(string? path)
     {
+        LanguageAPI.SetHooks();
         if (path == null)
         {
             throw new NullReferenceException($"param {nameof(path)} is null");
@@ -237,6 +252,7 @@ public static class LanguageAPI
     /// <param name="file">entire file as string</param>
     public static void Add(string? file)
     {
+        LanguageAPI.SetHooks();
         if (file == null)
         {
             throw new NullReferenceException($"param {nameof(file)} is null");
@@ -257,6 +273,7 @@ public static class LanguageAPI
     /// <param name="tokenDictionary">dictionaries of key-value (eg ["mytoken"]="mystring")</param>
     public static void Add(Dictionary<string, string?>? tokenDictionary)
     {
+        LanguageAPI.SetHooks();
         Add(tokenDictionary, genericLanguage);
     }
 
@@ -267,6 +284,7 @@ public static class LanguageAPI
     /// <param name="language">Language you want to add this to</param>
     public static void Add(Dictionary<string, string?>? tokenDictionary, string? language)
     {
+        LanguageAPI.SetHooks();
         if (tokenDictionary == null)
         {
             throw new NullReferenceException($"param {nameof(tokenDictionary)} is null");
@@ -288,6 +306,7 @@ public static class LanguageAPI
     /// <param name="languageDictionary">dictionary of languages containing dictionaries of key-value (eg ["en"]["mytoken"]="mystring")</param>
     public static void Add(Dictionary<string, Dictionary<string, string?>?>? languageDictionary)
     {
+        LanguageAPI.SetHooks();
         if (languageDictionary == null)
         {
             throw new NullReferenceException($"param {nameof(languageDictionary)} is null");
@@ -334,6 +353,7 @@ public static class LanguageAPI
         /// <summary>Undoes this LanguageOverlay's language token changes; you may safely dispose it afterwards. Requires a language reload to take effect.</summary>
         public void Remove()
         {
+            LanguageAPI.SetHooks();
             temporaryOverlays.Remove(this);
             OverlayLanguage.Clear();
             foreach (var item in temporaryOverlays)
@@ -351,6 +371,7 @@ public static class LanguageAPI
     /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. May be safely disposed after calling .Remove().</returns>
     public static LanguageOverlay AddOverlay(string? key, string? value)
     {
+        LanguageAPI.SetHooks();
         if (key == null)
         {
             throw new NullReferenceException($"param {nameof(key)} is null");
@@ -372,6 +393,7 @@ public static class LanguageAPI
     /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. May be safely disposed after calling .Remove().</returns>
     public static LanguageOverlay AddOverlay(string? key, string? value, string? lang)
     {
+        LanguageAPI.SetHooks();
         if (key == null)
         {
             throw new NullReferenceException($"param {nameof(key)} is null");
@@ -399,6 +421,7 @@ public static class LanguageAPI
     /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. Returns null if the target file is missing or cannot be parsed, or if no changes would otherwise be made.</returns>
     public static LanguageOverlay? AddOverlayPath(string? path)
     {
+        LanguageAPI.SetHooks();
         if (path == null)
         {
             throw new NullReferenceException($"param {nameof(path)} is null");
@@ -419,6 +442,7 @@ public static class LanguageAPI
     /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change. Returns null if no changes would be made.</returns>
     public static LanguageOverlay? AddOverlay(string? file)
     {
+        LanguageAPI.SetHooks();
         if (file == null)
         {
             throw new NullReferenceException($"param {nameof(file)} is null");
@@ -439,6 +463,7 @@ public static class LanguageAPI
     /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
     public static LanguageOverlay AddOverlay(Dictionary<string, string?>? tokenDictionary)
     {
+        LanguageAPI.SetHooks();
         if (tokenDictionary == null)
         {
             throw new NullReferenceException($"param {nameof(tokenDictionary)} is null");
@@ -455,6 +480,7 @@ public static class LanguageAPI
     /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
     public static LanguageOverlay AddOverlay(Dictionary<string, string?>? tokenDictionary, string? language)
     {
+        LanguageAPI.SetHooks();
         if (tokenDictionary == null)
         {
             throw new NullReferenceException($"param {nameof(tokenDictionary)} is null");
@@ -484,6 +510,7 @@ public static class LanguageAPI
     /// <returns>A LanguageOverlay representing your language addition/override; call .Remove() on it to undo the change.</returns>
     public static LanguageOverlay AddOverlay(Dictionary<string, Dictionary<string, string?>?>? languageDictionary)
     {
+        LanguageAPI.SetHooks();
         if (languageDictionary == null)
         {
             throw new NullReferenceException($"param {nameof(languageDictionary)} is null");

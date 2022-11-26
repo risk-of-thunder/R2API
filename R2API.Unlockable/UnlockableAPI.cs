@@ -34,15 +34,26 @@ public static class UnlockableAPI
     [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
     public static bool Loaded => true;
 
+    private static bool _hooksEnabled = false;
+
     #region Hooks
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         SaferAchievementManager.OnCollectAchievementDefs += AddOurDefs;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         SaferAchievementManager.OnCollectAchievementDefs -= AddOurDefs;
+
+        _hooksEnabled = false;
     }
 
     private static void AddOurDefs(List<string> identifiers, Dictionary<string, AchievementDef> stringToAchievementDef, List<AchievementDef> achievementDefs)
@@ -82,22 +93,27 @@ public static class UnlockableAPI
     [Obsolete("The bool parameter serverTracked is redundant. Instead, pass in a Type that inherits from BaseServerAchievement if it is server tracked, or nothing if it's not")]
     public static UnlockableDef AddUnlockable<TUnlockable>(bool serverTracked) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
     {
+        UnlockableAPI.SetHooks();
         return AddUnlockableInternal(typeof(TUnlockable), Assembly.GetCallingAssembly(), null, null);
     }
     public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
     {
+        UnlockableAPI.SetHooks();
         return AddUnlockableInternal(typeof(TUnlockable), Assembly.GetCallingAssembly(), serverTrackerType, null);
     }
     public static UnlockableDef AddUnlockable<TUnlockable>(UnlockableDef unlockableDef) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
     {
+        UnlockableAPI.SetHooks();
         return AddUnlockableInternal(typeof(TUnlockable), Assembly.GetCallingAssembly(), null, unlockableDef);
     }
     public static UnlockableDef AddUnlockable(Type unlockableType, Type serverTrackerType)
     {
+        UnlockableAPI.SetHooks();
         return AddUnlockableInternal(unlockableType, Assembly.GetCallingAssembly(), serverTrackerType, null);
     }
     public static UnlockableDef AddUnlockable(Type unlockableType, UnlockableDef unlockableDef)
     {
+        UnlockableAPI.SetHooks();
         return AddUnlockableInternal(unlockableType, Assembly.GetCallingAssembly(), null, unlockableDef);
     }
 
@@ -108,6 +124,7 @@ public static class UnlockableAPI
     /// <returns>True if succesful, false otherwise</returns>
     public static bool AddAchievement(AchievementDef achievementDef)
     {
+        UnlockableAPI.SetHooks();
         var identifiers = Achievements.Select(achievementDef => achievementDef.identifier);
         try
         {
@@ -138,6 +155,7 @@ public static class UnlockableAPI
     /// <returns></returns>
     public static UnlockableDef AddUnlockable<TUnlockable>(Type serverTrackerType = null, UnlockableDef unlockableDef = null) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()
     {
+        UnlockableAPI.SetHooks();
         return AddUnlockableInternal(typeof(TUnlockable), Assembly.GetCallingAssembly(), serverTrackerType, unlockableDef);
     }
 
@@ -151,6 +169,7 @@ public static class UnlockableAPI
     /// <returns></returns>
     public static UnlockableDef AddUnlockable(Type unlockableType, Type serverTrackerType = null, UnlockableDef unlockableDef = null)
     {
+        UnlockableAPI.SetHooks();
         return AddUnlockableInternal(unlockableType, Assembly.GetCallingAssembly(), serverTrackerType, unlockableDef);
     }
 

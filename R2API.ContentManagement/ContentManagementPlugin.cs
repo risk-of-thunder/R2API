@@ -14,12 +14,7 @@ namespace R2API.ContentManagement;
 [BepInPlugin(R2APIContentManager.PluginGUID, R2APIContentManager.PluginName, R2APIContentManager.PluginVersion)]
 internal sealed class ContentManagementPlugin : BaseUnityPlugin
 {
-    private void OnEnable()
-    {
-        R2APIContentManager.SetHooks();
-    }
-
-    private void OnDisable()
+    private void OnDestroy()
     {
         R2APIContentManager.UnsetHooks();
     }

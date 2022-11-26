@@ -629,23 +629,6 @@ public static class ContentAddition
     public static SerializableEntityStateType AddEntityState<T>(out bool wasAdded) where T : EntityState
     {
         return AddEntityState(typeof(T), out wasAdded);
-        var asm = Assembly.GetCallingAssembly();
-        Type t = typeof(T);
-        if (CatalogBlockers.GetAvailability<EntityState>())
-        {
-            if (t.IsAbstract)
-            {
-                RejectContent(t, asm, "EntityStateType", "but the entity state type is markeed as abstract!");
-                wasAdded = false;
-                return new SerializableEntityStateType();
-            }
-            wasAdded = true;
-            R2APIContentManager.HandleEntityState(asm, t);
-            return new SerializableEntityStateType(t);
-        }
-        RejectContent(t, asm, "EntityStateType", "but the EntityStateCatalog has already initialzed!");
-        wasAdded = false;
-        return new SerializableEntityStateType();
     }
 
     /// <summary>

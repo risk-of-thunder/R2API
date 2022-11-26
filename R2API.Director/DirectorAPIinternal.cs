@@ -1,12 +1,11 @@
-﻿using HG;
-using MonoMod.Cil;
-using R2API.Utils;
-using R2API.MiscHelpers;
-using RoR2;
-using RoR2.ExpansionManagement;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HG;
+using MonoMod.Cil;
+using R2API.Utils;
+using RoR2;
+using RoR2.ExpansionManagement;
 using UnityEngine;
 
 // Changing namespace to R2API.Director would be breaking
@@ -16,12 +15,21 @@ public static partial class DirectorAPI
 {
     private static DirectorCardCategorySelection _dccsMixEnemyArtifact;
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         On.RoR2.ClassicStageInfo.Start += ApplyChangesOnStart;
         IL.RoR2.ClassicStageInfo.HandleMixEnemyArtifact += SwapVanillaDccsWithOurs;
 
         On.RoR2.SceneCatalog.Init += InitStageEnumToSceneDefs;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
@@ -30,6 +38,8 @@ public static partial class DirectorAPI
         IL.RoR2.ClassicStageInfo.HandleMixEnemyArtifact -= SwapVanillaDccsWithOurs;
 
         On.RoR2.SceneCatalog.Init -= InitStageEnumToSceneDefs;
+
+        _hooksEnabled = false;
     }
 
     private static void ApplyChangesOnStart(On.RoR2.ClassicStageInfo.orig_Start orig, ClassicStageInfo classicStageInfo)

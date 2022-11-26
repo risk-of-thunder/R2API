@@ -26,14 +26,25 @@ public static class SceneAssetAPI
     private static readonly Dictionary<string, List<Action<GameObject[]>>> SceneNameToAssetRequests =
         new Dictionary<string, List<Action<GameObject[]>>>();
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         On.RoR2.SplashScreenController.Finish += PrepareRequests;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         On.RoR2.SplashScreenController.Finish -= PrepareRequests;
+
+        _hooksEnabled = false;
     }
 
     private static void PrepareRequests(On.RoR2.SplashScreenController.orig_Finish orig, RoR2.SplashScreenController self)
@@ -82,7 +93,7 @@ public static class SceneAssetAPI
     /// <exception cref="InvalidOperationException"></exception>
     public static void AddAssetRequest(string? sceneName, Action<GameObject[]>? onSceneObjectsLoaded)
     {
-
+        SceneAssetAPI.SetHooks();
         if (SceneNameToAssetRequests.TryGetValue(sceneName, out var actionList))
         {
             actionList.Add(onSceneObjectsLoaded);

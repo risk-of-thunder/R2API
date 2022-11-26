@@ -17,18 +17,29 @@ public static class EliteRamp
     private static Texture2D vanillaEliteRamp;
     private static int EliteRampPropertyID => Shader.PropertyToID("_EliteRamp");
 
+    private static bool _hooksEnabled = false;
+
     #region Hooks
     internal static async void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         IL.RoR2.CharacterModel.UpdateMaterials += UpdateRampProperly;
         RoR2Application.onLoad += SetupDictionary;
         vanillaEliteRamp = await Addressables.LoadAssetAsync<Texture2D>("RoR2/Base/Common/ColorRamps/texRampElites.psd").Task;
+
+        _hooksEnabled = true;
     }
     internal static void UnsetHooks()
     {
         IL.RoR2.CharacterModel.UpdateMaterials -= UpdateRampProperly;
         RoR2Application.onLoad -= SetupDictionary;
         vanillaEliteRamp = null;
+
+        _hooksEnabled = false;
     }
 
     private static void UpdateRampProperly(MonoMod.Cil.ILContext il)
@@ -75,6 +86,7 @@ public static class EliteRamp
 
     public static void AddRamp(EliteDef eliteDef, Texture2D ramp)
     {
+        EliteRamp.SetHooks();
         try
         {
             if (eliteDef.shaderEliteRampIndex > 0)
@@ -90,6 +102,7 @@ public static class EliteRamp
 
     public static void AddRampToMultipleElites(IEnumerable<EliteDef> eliteDefs, Texture2D ramp)
     {
+        EliteRamp.SetHooks();
         foreach (EliteDef def in eliteDefs)
         {
             AddRamp(def, ramp);

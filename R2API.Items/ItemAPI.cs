@@ -1,20 +1,17 @@
-﻿using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using R2API.ContentManagement;
-using R2API.Utils;
-using RoR2;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using R2API.ContentManagement;
+using R2API.Utils;
+using RoR2;
 using UnityEngine;
-using R2API.MiscHelpers;
 using Object = UnityEngine.Object;
-using System.Text;
-using UnityEngine.AddressableAssets;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -45,11 +42,20 @@ public static class ItemAPI
 
     #region ModHelper Events and Hooks
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
         On.RoR2.ItemDisplayRuleSet.Init += AddingItemDisplayRulesToCharacterModels;
         IL.RoR2.ItemCatalog.SetItemDefs += AddCustomTagsToItemCatalog;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
@@ -57,6 +63,8 @@ public static class ItemAPI
         IL.RoR2.CharacterModel.UpdateMaterials -= MaterialFixForItemDisplayOnCharacter;
         On.RoR2.ItemDisplayRuleSet.Init -= AddingItemDisplayRulesToCharacterModels;
         IL.RoR2.ItemCatalog.SetItemDefs -= AddCustomTagsToItemCatalog;
+
+        _hooksEnabled = false;
     }
 
     #endregion ModHelper Events and Hooks
@@ -74,6 +82,7 @@ public static class ItemAPI
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static bool Add(CustomItem? item)
     {
+        ItemAPI.SetHooks();
         return AddItemInternal(item, Assembly.GetCallingAssembly());
     }
     internal static bool AddItemInternal(CustomItem item, Assembly addingAssembly)
@@ -140,6 +149,7 @@ public static class ItemAPI
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static bool Add(CustomEquipment? item)
     {
+        ItemAPI.SetHooks();
         return AddEquippmentInternal(item, Assembly.GetCallingAssembly());
     }
 
@@ -207,10 +217,7 @@ public static class ItemAPI
     /// <returns>ItemTag value if added or already existent, (-1) cast to ItemTag otherwise</returns>
     public static ItemTag AddItemTag(string name)
     {
-        if (!Loaded)
-        {
-            throw new InvalidOperationException($"{nameof(ItemAPI)} is not loaded. Please use [{nameof(R2APISubmoduleDependency)}(nameof({nameof(ItemAPI)})]");
-        }
+        ItemAPI.SetHooks();
 
         if (!CatalogBlockers.GetAvailability<ItemDef>())
         {
@@ -233,6 +240,7 @@ public static class ItemAPI
     /// <returns>ItemTag value if found,(-1) cast to ItemTag otherwise</returns>
     public static ItemTag FindItemTagByName(string name)
     {
+        ItemAPI.SetHooks();
         ItemTag result = (ItemTag)customItemTags.IndexOf(name);
         if ((int)result == -1)
         {
@@ -255,6 +263,7 @@ public static class ItemAPI
     /// <param name="item"> The ItemDef to apply the tag to</param>
     public static void ApplyTagToItem(string tagName, ItemDef item)
     {
+        ItemAPI.SetHooks();
         ApplyTagToItem(FindItemTagByName(tagName), item);
     }
 
@@ -265,6 +274,7 @@ public static class ItemAPI
     /// <param name="item"> The ItemDef to apply the tag to</param>
     public static void ApplyTagToItem(ItemTag tag, ItemDef item)
     {
+        ItemAPI.SetHooks();
         HG.ArrayUtils.ArrayAppend(ref item.tags, tag);
         if (!CatalogBlockers.GetAvailability<ItemDef>())
         {
@@ -281,6 +291,7 @@ public static class ItemAPI
     /// <param name="bodyPrefabOrCharacterModelName">The string to match</param>
     public static void DoNotAutoIDRSFor(string bodyPrefabOrCharacterModelName)
     {
+        ItemAPI.SetHooks();
         noDefaultIDRSCharacterList.Add(bodyPrefabOrCharacterModelName);
     }
 
@@ -290,6 +301,7 @@ public static class ItemAPI
     /// <param name="bodyPrefab">The body prefab to match</param>
     public static void DoNotAutoIDRSFor(GameObject bodyPrefab)
     {
+        ItemAPI.SetHooks();
         var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
         if (characterModel)
         {

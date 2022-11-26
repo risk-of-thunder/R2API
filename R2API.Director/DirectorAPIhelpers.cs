@@ -261,7 +261,7 @@ public static partial class DirectorAPI
         /// </summary>
         public static void TryApplyChangesNow()
         {
-
+            DirectorAPI.SetHooks();
             ClassicStageInfo.instance.ApplyChanges();
             ClassicStageInfo.instance.RebuildCards();
         }
@@ -273,7 +273,7 @@ public static partial class DirectorAPI
         /// <param name="elitesAllowed">Should elites be allowed?</param>
         public static void PreventElites(string? monsterName, bool elitesAllowed)
         {
-
+            DirectorAPI.SetHooks();
             MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
             {
 
@@ -319,7 +319,7 @@ public static partial class DirectorAPI
         [Obsolete("Use the overload with the DirectorCardHolder instead")]
         public static void AddNewMonster(DirectorCard? monsterCard, MonsterCategory monsterCategory)
         {
-
+            DirectorAPI.SetHooks();
             var monsterCardHolder = new DirectorCardHolder
             {
                 Card = monsterCard,
@@ -340,7 +340,7 @@ public static partial class DirectorAPI
         /// <param name="addToFamilies"></param>
         public static void AddNewMonster(DirectorCardHolder? monsterCard, bool addToFamilies)
         {
-
+            DirectorAPI.SetHooks();
             MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
             {
                 AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
@@ -361,6 +361,7 @@ public static partial class DirectorAPI
             bool addToFamilies
         )
         {
+            DirectorAPI.SetHooks();
             if (dccsPool)
             {
                 ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) =>
@@ -397,7 +398,7 @@ public static partial class DirectorAPI
         [Obsolete("Use the overload with the DirectorCardHolder instead")]
         public static void AddNewMonsterToStage(DirectorCard? monsterCard, MonsterCategory monsterCategory, Stage stage, string? customStageName = "")
         {
-
+            DirectorAPI.SetHooks();
             var monsterCardHolder = new DirectorCardHolder
             {
                 Card = monsterCard,
@@ -427,7 +428,7 @@ public static partial class DirectorAPI
         /// <param name="customStageName"></param>
         public static void AddNewMonsterToStage(DirectorCardHolder monsterCard, bool addToFamilies, Stage stage, string? customStageName = "")
         {
-
+            DirectorAPI.SetHooks();
             MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
             {
                 if (currentStage.stage == stage)
@@ -450,7 +451,7 @@ public static partial class DirectorAPI
         /// <param name="matchStage"></param>
         public static void AddNewMonsterToStagesWhere(DirectorCardHolder monsterCard, bool addToFamilies, Predicate<StageInfo> matchStage)
         {
-
+            DirectorAPI.SetHooks();
             MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
             {
                 if (matchStage(currentStage))
@@ -468,7 +469,7 @@ public static partial class DirectorAPI
         [Obsolete("Use the overload with the DirectorCardHolder instead")]
         public static void AddNewInteractable(DirectorCard? interactableCard, InteractableCategory interactableCategory)
         {
-
+            DirectorAPI.SetHooks();
             var interactableCardHolder = new DirectorCardHolder
             {
                 Card = interactableCard,
@@ -487,7 +488,7 @@ public static partial class DirectorAPI
         /// <param name="interactableCardHolder"></param>
         public static void AddNewInteractable(DirectorCardHolder? interactableCardHolder)
         {
-
+            DirectorAPI.SetHooks();
             InteractableActions += (interactablesDccsPool, currentStage) =>
             {
                 AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder);
@@ -510,7 +511,7 @@ public static partial class DirectorAPI
         [Obsolete("Use the overload with the DirectorCardHolder instead")]
         public static void AddNewInteractableToStage(DirectorCard? interactableCard, InteractableCategory interactableCategory, Stage stage, string? customStageName = "")
         {
-
+            DirectorAPI.SetHooks();
             var interactableCardHolder = new DirectorCardHolder
             {
                 Card = interactableCard,
@@ -548,6 +549,7 @@ public static partial class DirectorAPI
         /// <param name="monsterName">The name of the monster card to remove</param>
         public static void RemoveExistingMonster(string? monsterName)
         {
+            DirectorAPI.SetHooks();
             StringUtils.ThrowIfStringIsNullOrWhiteSpace(monsterName, nameof(monsterName));
 
             var monsterNameLowered = monsterName.ToLowerInvariant();
@@ -593,6 +595,7 @@ public static partial class DirectorAPI
         /// <param name="customStageName">The name of the custom stage</param>
         public static void RemoveExistingMonsterFromStage(string? monsterName, Stage stage, string? customStageName = "")
         {
+            DirectorAPI.SetHooks();
             StringUtils.ThrowIfStringIsNullOrWhiteSpace(monsterName, nameof(monsterName));
 
             var monsterNameLowered = monsterName.ToLowerInvariant();
@@ -615,6 +618,7 @@ public static partial class DirectorAPI
         /// <param name="interactableName">Name of the interactable to remove</param>
         public static void RemoveExistingInteractable(string? interactableName)
         {
+            DirectorAPI.SetHooks();
             StringUtils.ThrowIfStringIsNullOrWhiteSpace(interactableName, nameof(interactableName));
 
             var interactableNameLowered = interactableName.ToLowerInvariant();
@@ -645,6 +649,7 @@ public static partial class DirectorAPI
         /// <param name="customStageName">The name of the custom stage</param>
         public static void RemoveExistingInteractableFromStage(string? interactableName, Stage stage, string? customStageName = "")
         {
+            DirectorAPI.SetHooks();
             StringUtils.ThrowIfStringIsNullOrWhiteSpace(interactableName, nameof(interactableName));
 
             var interactableNameLowered = interactableName.ToLowerInvariant();
@@ -680,7 +685,7 @@ public static partial class DirectorAPI
         /// <param name="customStageName">The name of the custom stage</param>
         public static void AddSceneMonsterCredits(int increase, Stage stage, string? customStageName = "")
         {
-
+            DirectorAPI.SetHooks();
             StageSettingsActions += (settings, currentStage) =>
             {
                 if (currentStage.stage == stage)
@@ -702,7 +707,7 @@ public static partial class DirectorAPI
         /// <param name="customStageName">The name of the custom stage</param>
         public static void AddSceneInteractableCredits(int increase, Stage stage, string? customStageName = "")
         {
-
+            DirectorAPI.SetHooks();
             StageSettingsActions += (settings, currentStage) =>
             {
                 if (currentStage.stage == stage)
@@ -724,7 +729,7 @@ public static partial class DirectorAPI
         /// <param name="customStageName">The name of the custom stage</param>
         public static void MultiplySceneMonsterCredits(int multiplier, Stage stage, string? customStageName = "")
         {
-
+            DirectorAPI.SetHooks();
             StageSettingsActions += (settings, currentStage) =>
             {
                 if (currentStage.stage == stage)
@@ -746,7 +751,7 @@ public static partial class DirectorAPI
         /// <param name="customStageName">The name of the custom stage</param>
         public static void MultiplySceneInteractableCredits(int multiplier, Stage stage, string? customStageName = "")
         {
-
+            DirectorAPI.SetHooks();
             StageSettingsActions += (settings, currentStage) =>
             {
                 if (currentStage.stage == stage)
@@ -768,7 +773,7 @@ public static partial class DirectorAPI
         /// <param name="customStageName">The name of the custom stage</param>
         public static void ReduceSceneMonsterCredits(int divisor, Stage stage, string? customStageName = "")
         {
-
+            DirectorAPI.SetHooks();
             StageSettingsActions += (settings, currentStage) =>
             {
                 if (currentStage.stage == stage)
@@ -790,7 +795,7 @@ public static partial class DirectorAPI
         /// <param name="customStageName">The name of the custom stage</param>
         public static void ReduceSceneInteractableCredits(int divisor, Stage stage, string? customStageName = "")
         {
-
+            DirectorAPI.SetHooks();
             StageSettingsActions += (settings, currentStage) =>
             {
                 if (currentStage.stage == stage)
@@ -810,6 +815,7 @@ public static partial class DirectorAPI
         /// <param name="action"></param>
         public static void ForEachPoolEntryInDccsPool(DccsPool dccsPool, Action<DccsPool.PoolEntry> action)
         {
+            DirectorAPI.SetHooks();
             ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) =>
             {
                 ForEachPoolEntryInDccsPoolCategory(poolCategory, action);
@@ -823,6 +829,7 @@ public static partial class DirectorAPI
         /// <param name="action"></param>
         public static void ForEachPoolCategoryInDccsPool(DccsPool dccsPool, Action<DccsPool.Category> action)
         {
+            DirectorAPI.SetHooks();
             foreach (var poolCategory in dccsPool.poolCategories)
             {
                 action(poolCategory);
@@ -836,6 +843,7 @@ public static partial class DirectorAPI
         /// <param name="action"></param>
         public static void ForEachPoolEntryInDccsPoolCategory(DccsPool.Category dccsPoolCategory, Action<DccsPool.PoolEntry> action)
         {
+            DirectorAPI.SetHooks();
             foreach (var poolEntry in dccsPoolCategory.alwaysIncluded)
             {
                 action(poolEntry);
@@ -860,6 +868,7 @@ public static partial class DirectorAPI
         /// <returns></returns>
         public static bool IsSameMonsterCategory(ref DirectorCardCategorySelection.Category category, MonsterCategory monsterCategory)
         {
+            DirectorAPI.SetHooks();
             return GetMonsterCategory(category.name) == monsterCategory;
         }
 
@@ -871,6 +880,7 @@ public static partial class DirectorAPI
         /// <exception cref="ArgumentException"></exception>
         public static MonsterCategory GetMonsterCategory(string categoryString)
         {
+            DirectorAPI.SetHooks();
             if (string.IsNullOrWhiteSpace(categoryString))
             {
                 throw new ArgumentException(nameof(categoryString));
@@ -895,6 +905,7 @@ public static partial class DirectorAPI
         /// <exception cref="ArgumentException"></exception>
         public static string GetVanillaMonsterCategoryName(MonsterCategory monsterCategory)
         {
+            DirectorAPI.SetHooks();
             return monsterCategory switch
             {
                 MonsterCategory.BasicMonsters => "Basic Monsters",
@@ -913,6 +924,7 @@ public static partial class DirectorAPI
         /// <exception cref="ArgumentException"></exception>
         public static InteractableCategory GetInteractableCategory(string categoryString)
         {
+            DirectorAPI.SetHooks();
             if (string.IsNullOrWhiteSpace(categoryString))
             {
                 throw new ArgumentException(nameof(categoryString));
@@ -941,6 +953,7 @@ public static partial class DirectorAPI
         /// <exception cref="ArgumentException"></exception>
         public static string GetVanillaInteractableCategoryName(InteractableCategory interactableCategory)
         {
+            DirectorAPI.SetHooks();
             return interactableCategory switch
             {
                 InteractableCategory.Chests => "Chests",
@@ -963,6 +976,7 @@ public static partial class DirectorAPI
         /// <returns></returns>
         public static bool IsSameInteractableCategory(ref DirectorCardCategorySelection.Category category, InteractableCategory interactableCategory)
         {
+            DirectorAPI.SetHooks();
             return GetInteractableCategory(category.name) == interactableCategory;
         }
     }

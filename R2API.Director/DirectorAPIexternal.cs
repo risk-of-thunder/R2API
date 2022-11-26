@@ -38,7 +38,7 @@ public static partial class DirectorAPI
     /// depending if the stage was updated or not to use the new <see cref="DccsPool"/>,
     /// some of the <see cref="DccsPool.Category"/> and <see cref="DccsPool.PoolEntry"/> can be here or not.
     /// </para>
-    /// 
+    ///
     /// <para>
     /// For the Artifact of Dissonance <see cref="RoR2Content.Artifacts.mixEnemyArtifactDef"/>,
     /// the original DCCS is located in <see cref="RoR2Content.mixEnemyMonsterCards"/>
@@ -53,7 +53,7 @@ public static partial class DirectorAPI
     /// <para>
     /// Below is an explanation of the <see cref="ClassicStageInfo.monsterDccsPool"/> categories.
     /// </para>
-    /// 
+    ///
     /// <para>
     /// The first category, <see cref="Helpers.MonsterPoolCategories.Standard"/> has, right now,
     /// a single <see cref="DccsPool.ConditionalPoolEntry"/> (contained in <see cref="DccsPool.Category.includedIfConditionsMet"/>)
@@ -93,7 +93,7 @@ public static partial class DirectorAPI
     /// First parameter is the <see cref="ClassicStageInfo.interactableDccsPool"/>,
     /// which is used to select a <see cref="DirectorCardCategorySelection"/>.
     /// </para>
-    /// 
+    ///
     /// <para>
     /// A <see cref="ClassicStageInfo.interactableDccsPool"/> usually contains, in a vanilla stage, the following :
     /// 1 <see cref="DccsPool.poolCategories"/>, written out in <see cref="Helpers.InteractablePoolCategories"/>.
@@ -474,6 +474,7 @@ public static partial class DirectorAPI
         /// </summary>
         public static StageInfo ParseInternalStageName(string internalStageName)
         {
+            DirectorAPI.SetHooks();
             StageInfo stage;
             stage.stage = DirectorAPI.ParseInternalStageName(internalStageName);
             stage.CustomStageName = stage.stage is Stage.Custom ? "" : internalStageName;
@@ -485,6 +486,7 @@ public static partial class DirectorAPI
         /// </summary>
         public string ToInternalStageName()
         {
+            DirectorAPI.SetHooks();
             string internalStageName = DirectorAPI.ToInternalStageName(stage);
             return internalStageName is "" ? CustomStageName : internalStageName;
         }
@@ -498,6 +500,7 @@ public static partial class DirectorAPI
         /// <returns></returns>
         public bool CheckStage(Stage stage, params string[] customStageNames)
         {
+            DirectorAPI.SetHooks();
             if (!stage.HasFlag(this.stage)) return false;
             return this.stage != Stage.Custom || customStageNames.Length == 0 || customStageNames.Contains(CustomStageName);
         }
@@ -587,6 +590,7 @@ public static partial class DirectorAPI
 
         public bool IsValid()
         {
+            DirectorAPI.SetHooks();
             if (InteractableCategory == InteractableCategory.Invalid &&
                 MonsterCategory == MonsterCategory.Invalid)
             {
@@ -598,6 +602,7 @@ public static partial class DirectorAPI
 
         public void ThrowIfInvalid()
         {
+            DirectorAPI.SetHooks();
             if (!IsValid())
             {
                 throw new Exception("Both DirectorCardHolder.InteractableCategory and DirectorCardHolder.MonsterCategory are invalid");
@@ -606,6 +611,7 @@ public static partial class DirectorAPI
 
         public string GetCategoryName()
         {
+            DirectorAPI.SetHooks();
             ThrowIfInvalid();
 
             string categoryName;
@@ -647,6 +653,7 @@ public static partial class DirectorAPI
     /// <returns></returns>
     public static int AddCard(this DirectorCardCategorySelection dccs, DirectorCardHolder cardHolder)
     {
+        DirectorAPI.SetHooks();
         string categoryName;
         categoryName = cardHolder.GetCategoryName();
 

@@ -6,19 +6,18 @@ namespace R2API.Networking;
 [BepInPlugin(NetworkingAPI.PluginGUID, NetworkingAPI.PluginName, NetworkingAPI.PluginVersion)]
 public sealed class NetworkingPlugin : BaseUnityPlugin
 {
+    private NetworkCompatibilityHandler _networkCompatibilityHandler;
+
     private void Awake()
     {
-        var networkCompatibilityHandler = new NetworkCompatibilityHandler();
-        networkCompatibilityHandler.BuildModList();
+        _networkCompatibilityHandler = new NetworkCompatibilityHandler();
+        _networkCompatibilityHandler.BuildModList();
     }
 
-    private void OnEnable()
+    private void OnDestroy()
     {
-        NetworkingAPI.SetHooks();
-    }
+        _networkCompatibilityHandler.CleanupModList();
 
-    private void OnDisable()
-    {
         NetworkingAPI.UnsetHooks();
     }
 }

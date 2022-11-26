@@ -1,17 +1,6 @@
-using EntityStates;
-using R2API.ContentManagement;
 using RoR2;
-using RoR2.EntitlementManagement;
-using RoR2.ExpansionManagement;
-using RoR2.Projectile;
-using RoR2.Skills;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Networking;
 
 namespace R2API;
 
