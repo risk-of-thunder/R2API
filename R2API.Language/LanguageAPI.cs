@@ -38,16 +38,24 @@ public static class LanguageAPI
             return;
         }
 
-        var languagePaths = Directory.GetFiles(Paths.PluginPath, "*.language", SearchOption.AllDirectories);
-        foreach (var path in languagePaths)
-        {
-            AddPath(path);
-        }
+        // Setting the bool to true for avoiding infinite recursion (cause AddPath call SetHooks)
+        _hooksEnabled = true;
+        LoadLanguageFilesFromPluginFolder();
+        _hooksEnabled = false;
 
         On.RoR2.Language.GetLocalizedStringByToken += Language_GetLocalizedStringByToken;
         On.RoR2.Language.TokenIsRegistered += Language_TokenIsRegistered;
 
         _hooksEnabled = true;
+    }
+
+    private static void LoadLanguageFilesFromPluginFolder()
+    {
+        var languagePaths = Directory.GetFiles(Paths.PluginPath, "*.language", SearchOption.AllDirectories);
+        foreach (var path in languagePaths)
+        {
+            AddPath(path);
+        }
     }
 
     internal static void UnsetHooks()
