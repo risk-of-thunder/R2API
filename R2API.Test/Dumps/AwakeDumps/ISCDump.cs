@@ -6,8 +6,9 @@ using Xunit;
 
 namespace R2API.Test.Dumps.AwakeDumps;
 
-// Create dump for DirectorAPIhelpers.cs
-
+/// <summary>
+/// Create dump for DirectorAPIhelpers.cs
+/// </summary>
 public class ISCDump
 {
 
