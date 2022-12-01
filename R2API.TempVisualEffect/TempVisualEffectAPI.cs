@@ -1,11 +1,9 @@
-﻿using Mono.Cecil.Cil;
-using MonoMod.Cil;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace R2API;
