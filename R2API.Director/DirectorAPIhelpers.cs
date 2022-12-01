@@ -530,6 +530,29 @@ public static partial class DirectorAPI
             };
         }
 
+        /// <summary>
+        /// Adds a new interactable to a specific stage.
+        /// For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+        /// </summary>
+        /// <param name="interactableCardHolder">The DirectorCardHolder, should have its Card and InteractableCategory members correctly filled</param>
+        /// <param name="stage">The stage to add the interactable to</param>
+        /// <param name="customStageName">The name of the custom stage</param>
+        public static void AddNewInteractableToStage(DirectorCardHolder interactableCardHolder, Stage stage, string customStageName = "")
+        {
+            DirectorAPI.SetHooks();
+
+            InteractableActions += (interactablesDccsPool, currentStage) =>
+            {
+                if (currentStage.stage == stage)
+                {
+                    if (currentStage.CheckStage(stage, customStageName))
+                    {
+                        AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder);
+                    }
+                }
+            };
+        }
+
         private static void AddNewInteractableToStage(
             DccsPool interactablesDccsPool,
             DirectorCardHolder interactableCardHolder)
