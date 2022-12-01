@@ -133,11 +133,6 @@ public static class ContentAddition
                 RejectContent(networkedObject, asm, "NetworkedObject", $"but it has no {nameof(NetworkIdentity)} component!");
                 return false;
             }
-            if (PrefabAPI.IsPrefabHashed(networkedObject))
-            {
-                RejectContent(networkedObject, asm, "NetworkedObject", $"but its already being networked by {nameof(PrefabAPI)}!");
-                return false;
-            }
             R2APIContentManager.HandleContentAddition(asm, networkedObject);
             return true;
         }
