@@ -142,14 +142,15 @@ public static class R2APIContentManager
 
     #region Public Methods
     /// <summary>
-    /// Adds a Pre-Existing SurvivorsOfTheVoidSerializableContentPack as your mod's content pack.
+    /// Adds a Pre-Existing R2APISerializableContentPack as your mod's content pack.
     /// <para>Example usage would be a Thunderkit mod adding their items via ItemAPI to get the advantage of using ItemAPI's IDRS Systems</para>
     /// </summary>
-    /// <param name="sotvSCP">The SOTVSerializable Content Pack that will be tied to your mod.</param>
+    /// <param name="contentPack">The R2APISerializableContentPack that will be tied to your mod.</param>
     /// <param name="createIContentPackProvider">If this is set to true, R2API will create a ContentPackProvider for your ContentPack and handle the loading for you.</param>
-    public static void AddPreExistingSerializableContentPack(R2APISerializableContentPack sotvSCP, bool createIContentPackProvider = true)
+    public static void AddPreExistingSerializableContentPack(R2APISerializableContentPack contentPack, bool createIContentPackProvider = true)
     {
         ContentManagement.R2APIContentManager.SetHooks();
+
         try
         {
             Assembly assembly = Assembly.GetCallingAssembly();
@@ -171,10 +172,10 @@ public static class R2APIContentManager
             }
             if (AssemblyToBepInModName.TryGetValue(assembly, out string modName))
             {
-                sotvSCP.name = modName;
+                contentPack.name = modName;
                 if (!BepInModNameToSerializableContentPack.ContainsKey(modName))
                 {
-                    BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(sotvSCP, createIContentPackProvider, assembly));
+                    BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(contentPack, createIContentPackProvider, assembly));
                     R2API.Logger.LogInfo($"Added Pre-Existing SerializableContentPack from mod {modName}");
                     return;
                 }
@@ -412,7 +413,7 @@ public static class R2APIContentManager
                 addedToAnyCatalogs = true;
             }
             //ror2 automatically networks prefabs that are in the arrays above this one. (since all of them already have network identities)
-            if (!alreadyNetworked && !PrefabAPI.IsPrefabHashed(go) && go.GetComponent<NetworkIdentity>())
+            if (!alreadyNetworked && go.GetComponent<NetworkIdentity>())
             {
                 AddSafe(ref scp.networkedObjectPrefabs, go, scp.name);
                 addedToAnyCatalogs = true;

@@ -1,9 +1,11 @@
+using R2API.ContentManagement;
 using R2API.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -143,59 +145,34 @@ public static class PrefabAPI
         public string GoName;
         public string TypeName;
         public string MethodName;
+        public Assembly Assembly;
     }
 
     private static void RegisterPrefabInternal(GameObject prefab, StackFrame frame)
     {
         var method = frame.GetMethod();
-
         var h = new HashStruct
         {
             Prefab = prefab,
             GoName = prefab.name,
             TypeName = method.DeclaringType.AssemblyQualifiedName,
             MethodName = method.Name,
+            Assembly = method.DeclaringType.Assembly
         };
         _thingsToHash.Add(h);
-        SetupRegistrationEvent();
-    }
 
-    private static void SetupRegistrationEvent()
-    {
-        if (_needToRegister)
+        var networkIdentity = h.Prefab.GetComponent<NetworkIdentity>();
+        if (networkIdentity)
         {
-            _needToRegister = false;
-
-            RoR2.Networking.NetworkManagerSystem.onStartGlobal += RegisterClientPrefabsNStuff;
+            networkIdentity.SetFieldValue("m_AssetId", NetworkHash128.Parse(MakeHash(h.GoName + h.TypeName + h.MethodName)));
+            var contentPack = R2APIContentManager.GetOrCreateSerializableContentPack(h.Assembly);
+            var networkedObjectPrefabs = contentPack.networkedObjectPrefabs.ToList();
+            networkedObjectPrefabs.Add(h.Prefab);
+            contentPack.networkedObjectPrefabs = networkedObjectPrefabs.ToArray();
         }
-    }
-
-    private static readonly NetworkHash128 NullHash = new NetworkHash128
-    {
-        i0 = 0,
-        i1 = 0,
-        i2 = 0,
-        i3 = 0,
-        i4 = 0,
-        i5 = 0,
-        i6 = 0,
-        i7 = 0,
-        i8 = 0,
-        i9 = 0,
-        i10 = 0,
-        i11 = 0,
-        i12 = 0,
-        i13 = 0,
-        i14 = 0,
-        i15 = 0
-    };
-
-    private static void RegisterClientPrefabsNStuff()
-    {
-        foreach (var h in _thingsToHash)
+        else
         {
-            if (h.Prefab.GetComponent<NetworkIdentity>() != null) h.Prefab.GetComponent<NetworkIdentity>().SetFieldValue("m_AssetId", NullHash);
-            ClientScene.RegisterPrefab(h.Prefab, NetworkHash128.Parse(MakeHash(h.GoName + h.TypeName + h.MethodName)));
+            R2API.Logger.LogError($"PrefabAPI: {h.Prefab} don't have a NetworkIdentity Component. Can't register.");
         }
     }
 
