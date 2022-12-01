@@ -6,7 +6,7 @@ R2API.Unlockable is a submodule assembly for R2API that allows mod creators to a
 
 ## Use Cases / Features
 
-R2API.Unlockable is mainly used for adding Unlockables that get unlocked after obtaining an AchievementDef, please note that Certain unlocks (Such as LogBooks) should not be added with R2API.Unlockable.
+R2API.Unlockable is mainly used for adding Unlockables that get unlocked after obtaining an AchievementDef, please note that unlocks such as stage / monsters log books should not be added with R2API.Unlockable but rather with `R2API.ContentAddition`
 
 A valid unlockable and achievement pair is defined by a class that inherits from both BaseAchievement and IModdedUnlockableDataProvider, which gives enough data to create both the UnlockableDef and AchievementDef.
 
