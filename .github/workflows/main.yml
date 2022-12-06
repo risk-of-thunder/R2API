@@ -20,7 +20,7 @@ jobs:
 
     - name: Prepare Artifact
       run: |
-        find ./DebugOutput ! -name R2API* ! -name xunit* -type f -delete
+        find ./DebugOutput ! -name 'R2API*' ! -name 'xunit*' -type f -delete
 
     - name: Upload R2API Build Artifact
       uses: actions/upload-artifact@v2

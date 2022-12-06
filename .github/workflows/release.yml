@@ -64,8 +64,8 @@ jobs:
               is_project_built=true
             fi
 
-            find . -name "*.pdb" -type f -delete
-            find . -name "*.deps.json" -type f -delete
+            find . -name '*.pdb' -type f -delete
+            find . -name '*.deps.json' -type f -delete
 
             if [ "$namespace" == "RiskofThunder" ]; then
               tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN_RISK_OF_THUNDER }} --package-version $version --config-path ./thunderstore.toml
