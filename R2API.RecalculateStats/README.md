@@ -2,7 +2,9 @@
 
 ## About
 
-R2API.RecalculateStats is a submodule assembly for R2API that allows mod creators to finely tune stat changes for Characters ingame, It is inteded to be a global solution for mods in general.
+R2API.RecalculateStats is a submodule assembly for R2API that allows mod creators to finely tune stat changes for Characters ingame
+
+It is intended to be a global solution for mods in general.
 
 ## Use Cases / Features
 

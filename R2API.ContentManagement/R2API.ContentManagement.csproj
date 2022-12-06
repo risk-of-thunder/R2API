@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="../R2API.Core/R2API.Core.csproj" Private="false" ExcludeAssets="all"/>
+      <ProjectReference Include="../R2API.Core/R2API.Core.csproj" Private="false"/>
     </ItemGroup>
 
 </Project>

@@ -6,9 +6,15 @@ R2API.Prefab is a submodule assembly for R2API that allows mod creators to add n
 
 ## Use Cases / Features
 
-The prefabs created via PrefabAPI are mainly created using the InstantiateClone method, which instantiates a clone of an existing prefab and leaves it disabled and stored in memory, this sleeping prefab can later be instantiated like regular prefabs.
+The prefabs created via PrefabAPI are mainly created using the `InstantiateClone` method, which instantiates a clone of an existing prefab and leaves it disabled and stored in memory, 
+this sleeping state mimic the behaviour like regular prefabs in the Unity Editor.
 
-Prefabs created like this and that have NetworkIdentity components are not networked, as such, you can manually network your prefabs using PrefabAPI's RegisterNetworkPrefab method.
+By default the `InstantiateClone` method assume that it is a prefab with a `NetworkIdentity` component, and will attempt to register it internally using the `RegisterNetworkPrefab` method described below
+
+If its not the case make sure to make the `bool` argument is `false` when calling `InstantiateClone`.
+
+You can also use this API for registering prefab to the network client catalog so that its properly networked (when using NetworkServer.Spawn for example) 
+by using the `RegisterNetworkPrefab` method.
 
 ## Related Pages
 
