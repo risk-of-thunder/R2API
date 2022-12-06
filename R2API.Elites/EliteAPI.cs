@@ -45,13 +45,22 @@ public static class EliteAPI
         R2API.Logger.LogDebug("EliteAPI.cctor finished.");
     }
 
+    private static bool _hooksEnabled = false;
+
     #region ModHelper Events and Hooks
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         IL.RoR2.CombatDirector.Init += RetrieveVanillaEliteTierCount;
         On.RoR2.CombatDirector.Init += UseOurCombatDirectorInitInstead;
 
         R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
@@ -60,6 +69,8 @@ public static class EliteAPI
         On.RoR2.CombatDirector.Init -= UseOurCombatDirectorInitInstead;
 
         R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
+
+        _hooksEnabled = false;
     }
 
     private static void UseOurCombatDirectorInitInstead(On.RoR2.CombatDirector.orig_Init orig)
@@ -209,6 +220,7 @@ public static class EliteAPI
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static bool Add(CustomElite? elite)
     {
+        EliteAPI.SetHooks();
         return AddInternal(elite, Assembly.GetCallingAssembly());
     }
 
@@ -264,6 +276,7 @@ public static class EliteAPI
     /// </summary>
     public static CombatDirector.EliteTierDef?[]? GetCombatDirectorEliteTiers()
     {
+        EliteAPI.SetHooks();
         return CombatDirector.eliteTiers;
     }
 
@@ -280,6 +293,7 @@ public static class EliteAPI
     /// <param name="newEliteTiers">The new elite tiers that will be used by the combat director.</param>
     public static void OverrideCombatDirectorEliteTiers(CombatDirector.EliteTierDef?[]? newEliteTiers)
     {
+        EliteAPI.SetHooks();
         CombatDirector.eliteTiers = newEliteTiers;
     }
 
@@ -292,6 +306,7 @@ public static class EliteAPI
     /// <param name="eliteTierDef">The new elite tier to add.</param>
     public static int AppendCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef)
     {
+        EliteAPI.SetHooks();
         return AddCustomEliteTier(eliteTierDef, -1);
     }
 
@@ -304,6 +319,7 @@ public static class EliteAPI
     /// <param name="eliteTierDef">The new elite tier to add.</param>
     public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef)
     {
+        EliteAPI.SetHooks();
         var indexToInsertAt = Array.FindIndex(GetCombatDirectorEliteTiers(), x => x.costMultiplier >= eliteTierDef.costMultiplier);
         if (indexToInsertAt >= 0)
         {
@@ -325,6 +341,7 @@ public static class EliteAPI
     /// <param name="indexToInsertAt">Optional index to specify if you want to insert a cheaper elite tier</param>
     public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef, int indexToInsertAt = -1)
     {
+        EliteAPI.SetHooks();
         var eliteTiersSize = VanillaEliteTierCount + CustomEliteTierCount;
 
         var currentEliteTiers = GetCombatDirectorEliteTiers();

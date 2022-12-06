@@ -7,11 +7,5 @@ namespace R2API;
 [Obsolete(LoadoutAPI.ObsoleteMessage)]
 public sealed class LoadoutPlugin : BaseUnityPlugin
 {
-    private void OnEnable()
-    {
-    }
 
-    private void OnDisable()
-    {
-    }
 }

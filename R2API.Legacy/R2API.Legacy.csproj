@@ -7,29 +7,29 @@
     </PropertyGroup>
   
     <ItemGroup>
-      <ProjectReference Include="../R2API.Core/R2API.Core.csproj" />
-      <ProjectReference Include="../R2API.Items/R2API.Items.csproj" />
-      <ProjectReference Include="../R2API.ArtifactCode/R2API.ArtifactCode.csproj" />
-      <ProjectReference Include="../R2API.Difficulty/R2API.Difficulty.csproj" />
-      <ProjectReference Include="../R2API.Elites/R2API.Elites.csproj" />
-      <ProjectReference Include="../R2API.RecalculateStats/R2API.RecalculateStats.csproj" />
-      <ProjectReference Include="../R2API.Prefab/R2API.Prefab.csproj" />
-      <ProjectReference Include="../R2API.Language/R2API.Language.csproj" />
-      <ProjectReference Include="../R2API.Unlockable/R2API.Unlockable.csproj" />
-      <ProjectReference Include="../R2API.TempVisualEffect/R2API.TempVisualEffect.csproj" />
-      <ProjectReference Include="../R2API.SceneAsset/R2API.SceneAsset.csproj" />
-      <ProjectReference Include="../R2API.Orb/R2API.Orb.csproj" />
-      <ProjectReference Include="../R2API.Loadout/R2API.Loadout.csproj" />
-      <ProjectReference Include="../R2API.DamageType/R2API.DamageType.csproj" />
-      <ProjectReference Include="../R2API.Deployable/R2API.Deployable.csproj" />
-      <ProjectReference Include="../R2API.Dot/R2API.Dot.csproj" />
-      <ProjectReference Include="../R2API.Sound/R2API.Sound.csproj" />
-      <ProjectReference Include="../R2API.Director/R2API.Director.csproj" />
-      <ProjectReference Include="../R2API.LobbyConfig/R2API.LobbyConfig.csproj" />
-      <ProjectReference Include="../R2API.Networking/R2API.Networking.csproj" />
-      <ProjectReference Include="../R2API.CommandHelper/R2API.CommandHelper.csproj" />
-      <ProjectReference Include="../R2API.Colors/R2API.Colors.csproj" />
-      <ProjectReference Include="..\R2API.ContentManagement\R2API.ContentManagement.csproj" />
+      <ProjectReference Include="../R2API.Core/R2API.Core.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Items/R2API.Items.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.ArtifactCode/R2API.ArtifactCode.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Difficulty/R2API.Difficulty.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Elites/R2API.Elites.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.RecalculateStats/R2API.RecalculateStats.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Prefab/R2API.Prefab.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Language/R2API.Language.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Unlockable/R2API.Unlockable.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.TempVisualEffect/R2API.TempVisualEffect.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.SceneAsset/R2API.SceneAsset.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Orb/R2API.Orb.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Loadout/R2API.Loadout.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.DamageType/R2API.DamageType.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Deployable/R2API.Deployable.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Dot/R2API.Dot.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Sound/R2API.Sound.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Director/R2API.Director.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.LobbyConfig/R2API.LobbyConfig.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Networking/R2API.Networking.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.CommandHelper/R2API.CommandHelper.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Colors/R2API.Colors.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.ContentManagement/R2API.ContentManagement.csproj" Private="false"/>
     </ItemGroup>
 
 </Project>

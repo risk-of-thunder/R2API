@@ -76,7 +76,7 @@ public static class DotAPI
     public static DotController.DotIndex RegisterDotDef(DotController.DotDef? dotDef,
         CustomDotBehaviour? customDotBehaviour = null, CustomDotVisual? customDotVisual = null)
     {
-
+        DotAPI.SetHooks();
         var dotDefIndex = VanillaDotCount + CustomDotCount;
 
         if (DotDefs != null)
@@ -122,6 +122,7 @@ public static class DotAPI
         DamageColorIndex colorIndex, BuffDef associatedBuff = null, CustomDotBehaviour customDotBehaviour = null,
         CustomDotVisual customDotVisual = null)
     {
+        DotAPI.SetHooks();
         var dotDef = new DotController.DotDef
         {
             associatedBuff = associatedBuff,
@@ -132,8 +133,15 @@ public static class DotAPI
         return RegisterDotDef(dotDef, customDotBehaviour, customDotVisual);
     }
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         IL.RoR2.DotController.InitDotCatalog += RetrieveVanillaCount;
         IL.RoR2.DotController.Awake += ResizeTimerArray;
         On.RoR2.DotController.InitDotCatalog += AddCustomDots;
@@ -147,6 +155,8 @@ public static class DotAPI
         IL.RoR2.DotController.EvaluateDotStacksForType += EvaluateDotStacksForType;
 
         IL.RoR2.GlobalEventManager.OnHitEnemy += FixDeathMark;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
@@ -163,6 +173,8 @@ public static class DotAPI
         IL.RoR2.DotController.EvaluateDotStacksForType -= EvaluateDotStacksForType;
 
         IL.RoR2.GlobalEventManager.OnHitEnemy -= FixDeathMark;
+
+        _hooksEnabled = false;
     }
 
     private static void EvaluateDotStacksForType(ILContext il)

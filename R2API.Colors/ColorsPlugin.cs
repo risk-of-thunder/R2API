@@ -5,12 +5,7 @@ namespace R2API;
 [BepInPlugin(ColorsAPI.PluginGUID, ColorsAPI.PluginName, ColorsAPI.PluginVersion)]
 public sealed class ColorsPlugin : BaseUnityPlugin
 {
-    private void OnEnable()
-    {
-        ColorsAPI.SetHooks();
-    }
-
-    private void OnDisable()
+    private void OnDestroy()
     {
         ColorsAPI.UnsetHooks();
     }

@@ -45,6 +45,7 @@ public static class LobbyConfigAPI
         /// <param name="description">Should the category be empty, you can show this description.</param>
         public LobbyCategory(string? title, Color color, string? description)
         {
+            LobbyConfigAPI.SetHooks();
             typeof(RuleCatalog).GetMethodCached("AddCategory"
                     , new[] { typeof(string), typeof(Color), typeof(string), typeof(Func<bool>) })
                 .Invoke(null, new object[] { title, color, description, null });
@@ -58,6 +59,7 @@ public static class LobbyConfigAPI
         /// <param name="category">The category.</param>
         public LobbyCategory(RuleCategoryDef? category)
         {
+            LobbyConfigAPI.SetHooks();
             Def = category;
         }
 
@@ -69,6 +71,7 @@ public static class LobbyConfigAPI
         /// <returns>'this', for chaining.</returns>
         public LobbyCategory PushRule<T>(LobbyRule<T> rule)
         {
+            LobbyConfigAPI.SetHooks();
             rule.Pushed = true;
 
             rule.Def.globalIndex = RuleCatalog.ruleCount;
@@ -100,6 +103,7 @@ public static class LobbyConfigAPI
         /// <returns>'this', for chaining.</returns>
         public LobbyCategory AddChildCategory(LobbyCategory? category)
         {
+            LobbyConfigAPI.SetHooks();
             if (category == this)
                 throw new ArgumentException("Cannot be own parent.");
 
@@ -156,6 +160,7 @@ public static class LobbyConfigAPI
         /// </summary>
         public LobbyRule()
         {
+            LobbyConfigAPI.SetHooks();
             Def = new RuleDef(RuleNameSequence(), "R2API_RULE");
         }
 
@@ -172,6 +177,7 @@ public static class LobbyConfigAPI
         public LobbyRule<T> AddChoice(T value, string? title, string? description
             , Color titleColor, Color descriptionColor, string? sprite = "")
         {
+            LobbyConfigAPI.SetHooks();
             if (Pushed)
                 throw new NotSupportedException("Cannot add choice after rule has been pushed.");
 
@@ -194,6 +200,7 @@ public static class LobbyConfigAPI
         /// <returns>'this', for chaining.</returns>
         public LobbyRule<T> MakeValueDefault(T value)
         {
+            LobbyConfigAPI.SetHooks();
             var choice = Def.choices.FirstOrDefault(x => value.Equals(x.extraData));
 
             if (choice != null)
@@ -261,11 +268,20 @@ public static class LobbyConfigAPI
 
     #endregion Hooks
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         On.RoR2.PreGameController.Awake += HookAwake_PreGameController;
         On.RoR2.UI.RuleBookViewer.Start += HookStart_RuleBookViewer;
         On.RoR2.UI.RuleCategoryController.TogglePopoutPanel += HookTogglePopoutPanel_RuleCategoryController;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
@@ -273,5 +289,7 @@ public static class LobbyConfigAPI
         On.RoR2.PreGameController.Awake -= HookAwake_PreGameController;
         On.RoR2.RuleBook.ApplyChoice -= HookApplyChoice_RuleBook;
         On.RoR2.UI.RuleBookViewer.Start -= HookStart_RuleBookViewer;
+
+        _hooksEnabled = false;
     }
 }

@@ -1,21 +1,11 @@
-﻿using Mono.Cecil.Cil;
-using MonoMod.Cil;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using R2API.ScriptableObjects;
 using R2API.Utils;
 using RoR2;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 using UnityEngine;
-using R2API.MiscHelpers;
-using Object = UnityEngine.Object;
-using System.Text;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
-using R2API.ScriptableObjects;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -35,12 +25,21 @@ public static class ArtifactCodeAPI
     [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
     public static bool Loaded => true;
 
+    private static bool _hooksEnabled = false;
+
     #region Hooks
     internal static void SetHooks()
     {
+        if (_hooksEnabled)
+        {
+            return;
+        }
+
         On.RoR2.PortalDialerButtonController.OnStartClient += AddCompounds;
         On.RoR2.PortalDialerController.Awake += AddCodes;
         On.RoR2.PortalDialerController.PerformActionServer += Print;
+
+        _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
@@ -48,6 +47,8 @@ public static class ArtifactCodeAPI
         On.RoR2.PortalDialerButtonController.OnStartClient -= AddCompounds;
         On.RoR2.PortalDialerController.Awake -= AddCodes;
         On.RoR2.PortalDialerController.PerformActionServer -= Print;
+
+        _hooksEnabled = false;
     }
 
     private static void AddCompounds(On.RoR2.PortalDialerButtonController.orig_OnStartClient orig, PortalDialerButtonController self)
@@ -122,6 +123,7 @@ public static class ArtifactCodeAPI
     /// <param name="sha256HashAsset">The artifact code.</param>
     public static void AddCode(ArtifactDef? artifactDef, Sha256HashAsset? sha256HashAsset)
     {
+        ArtifactCodeAPI.SetHooks();
         artifactCodes.Add((artifactDef, sha256HashAsset));
     }
 
@@ -133,6 +135,7 @@ public static class ArtifactCodeAPI
     /// <param name="artifactCode">The artifactCode written in the ArtifactCodeScriptableObject.</param>
     public static void AddCode(ArtifactDef? artifactDef, ArtifactCode? artifactCode)
     {
+        ArtifactCodeAPI.SetHooks();
         artifactCode.Start();
         artifactCodes.Add((artifactDef, artifactCode.hashAsset));
     }
@@ -148,6 +151,7 @@ public static class ArtifactCodeAPI
     /// <param name="code_24_31">The values printed by R2API when a code is inputted.</param>
     public static void AddCode(ArtifactDef? artifactDef, ulong code_00_07, ulong code_08_15, ulong code_16_23, ulong code_24_31)
     {
+        ArtifactCodeAPI.SetHooks();
         Sha256HashAsset hashAsset = ScriptableObject.CreateInstance<Sha256HashAsset>();
         hashAsset.value._00_07 = code_00_07;
         hashAsset.value._08_15 = code_08_15;
@@ -165,6 +169,7 @@ public static class ArtifactCodeAPI
     /// <param name="CompoundValues">An IEnumerable of type "int" with a size of 9 filled with compound values.</param>
     public static void AddCode(ArtifactDef? artifactDef, IEnumerable<int> CompoundValues)
     {
+        ArtifactCodeAPI.SetHooks();
         ArtifactCode artifactCode = ScriptableObject.CreateInstance<ArtifactCode>();
         artifactCode.ArtifactCompounds = (List<int>)CompoundValues;
         AddCode(artifactDef, artifactCode);
@@ -179,6 +184,7 @@ public static class ArtifactCodeAPI
     /// <returns>True if added to the button prefab, false otherwise.</returns>
     public static bool AddCompound(ArtifactCompoundDef artifactCompoundDef)
     {
+        ArtifactCodeAPI.SetHooks();
         artifactCompounds.Add(artifactCompoundDef);
         return true;
     }
@@ -192,6 +198,7 @@ public static class ArtifactCodeAPI
     /// <returns></returns>
     public static bool AddCompound(int compoundValue, Material compoundDecalMaterial, GameObject compoundModelPrefab)
     {
+        ArtifactCodeAPI.SetHooks();
         ArtifactCompoundDef compoundDef = ScriptableObject.CreateInstance<ArtifactCompoundDef>();
         compoundDef.value = compoundValue;
         compoundDef.decalMaterial = compoundDecalMaterial;

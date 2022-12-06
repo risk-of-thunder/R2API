@@ -2,10 +2,10 @@
 
 ## About
 
-R2API.ArtifactCode is a submodule assembly for R2API that simplifies the process of adding new Artifact Codes to the Artifact Portal Dialer in Sky Meadow, alongside the additon of custom Artifact Compounds (Such as the vanilla compounds, Circle, Square, Triangle & Diamond).
+R2API.ArtifactCode is a submodule assembly for R2API that simplifies the process of adding new Artifact Codes to the Artifact Portal Dialer in Sky Meadow,
+alongside the additon of custom Artifact Compounds (Such as the vanilla compounds, Circle, Square, Triangle & Diamond).
 
 ## Use Cases / Features
-
 
 R2API.ArtifactCode can be used for mods to add their own ArtifactTrials to the game so their artifacts can be unlocked like regular, vanilla artifacts.
 
