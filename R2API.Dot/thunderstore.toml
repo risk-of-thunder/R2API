@@ -1,26 +1,28 @@
+
 [config]
 schemaVersion = "0.0.1"
 
 [package]
-namespace = "tristanmcpherson"
-name = "R2API"
-versionNumber = "0.0.1"
-description = "A modding API for Risk of Rain 2"
+namespace = "RiskofThunder"
+name = "R2API_Dot"
+versionNumber = "1.0.0"
+description = "API for adding custom damage over time effects"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
 
 [package.dependencies]
-bbepis-BepInExPack = "5.4.9"
-RiskofThunder-HookGenPatcher = "1.2.1"
+bbepis-BepInExPack = "5.4.2103"
+RiskofThunder-HookGenPatcher = "1.2.3"
+RiskofThunder-R2API_Core = "1.0.0"
 
 [build]
-icon = "./icon.png"
+icon = "../icon.png"
 readme = "./README.md"
 outdir = "./build"
 
 [[build.copy]]
 source = "./ReleaseOutput"
-target = "./plugins/R2API"
+target = "./plugins/R2API.Dot"
 
 [publish]
 repository = "https://thunderstore.io"

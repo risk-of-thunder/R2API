@@ -13,8 +13,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../R2API.Analyzer/R2API.Analyzer/R2API.Analyzer.csproj" PrivateAssets="all" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
-        <ProjectReference Include="../R2API.Analyzer/R2API.Analyzer.CodeFixes/R2API.Analyzer.CodeFixes.csproj" PrivateAssets="all" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="../R2API.Analyzer/R2API.Analyzer/R2API.Analyzer.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="../R2API.Analyzer/R2API.Analyzer.CodeFixes/R2API.Analyzer.CodeFixes.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
         <ProjectReference Include="../R2API.AutoVersionGen/R2API.AutoVersionGen.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
 
         <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />

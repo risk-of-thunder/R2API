@@ -6,41 +6,25 @@ jobs:
   build:
     runs-on: ubuntu-latest  
     steps:
-          
+
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v3
       with:
-        fetch-depth: 0
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
-      with:
-        versionSpec: '5.x'
-    - name: Determine Version
-      uses: gittools/actions/gitversion/execute@v0.9.7
-    - name: Update versions
-      run: |
-        sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"$GitVersion_MajorMinorPatch\"/" R2API/R2API.cs
-        sed -i -E "s/(\"version_number\":\s*)\"0.0.1\"/\1\"$GitVersion_MajorMinorPatch\"/" manifest.json
-        sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"$GitVersion_MajorMinorPatch\"/" R2API.Test/R2APITest.cs
-    - name: Build project
-      uses: actions/setup-dotnet@v1.7.2
-    - run: dotnet build .
+        dotnet-version: 7.0.x
+
+    - name: Build projects
+      run: dotnet build --configuration Debug --output ./DebugOutput /p:OutputPath=./DebugOutput
+
     - name: Prepare Artifact
       run: |
-        mkdir plugins
-        mkdir plugins/R2API
-        mkdir plugins/R2API/Tests
-        cp R2API/bin/Debug/**/*.dll plugins/R2API/
-        cp R2API/bin/Debug/**/*.pdb plugins/R2API/
-        cp R2API/bin/Debug/**/*.xml plugins/R2API/
-        cp R2API.Test/bin/Debug/**/R2API.Test.* plugins/R2API/Tests/
-        cp R2API.Test/bin/Debug/**/xunit* plugins/R2API/Tests/
+        find ./DebugOutput ! -name R2API* ! -name xunit* -type f -delete
+
     - name: Upload R2API Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: R2API
         path: |
-          plugins/*
-          manifest.json
-          icon.png
-          README.md
+          DebugOutput/*

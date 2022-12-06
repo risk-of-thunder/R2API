@@ -10,10 +10,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3A26DDA8-2697-4D64-962B-DB9E2DC00EF6}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		manifest.json = manifest.json
 		nuget.config = nuget.config
 		README.md = README.md
-		thunderstore.toml = thunderstore.toml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{68B36E72-17D9-4D17-8C52-DB612CF24001}"
@@ -76,6 +74,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Analyzer", "R2API.Analyzer\R2API.Analyzer\R2API.Analyzer.csproj", "{5DE3623A-52A0-43E4-9DE5-8FFD0DDE8870}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Analyzer.CodeFixes", "R2API.Analyzer\R2API.Analyzer.CodeFixes\R2API.Analyzer.CodeFixes.csproj", "{C085C476-2882-49CD-8FE4-71F88E4E5EEB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildCI", "BuildCI\BuildCI.csproj", "{238ED894-932A-40B8-BD59-0E0F16242C10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -195,6 +195,10 @@ Global
 		{C085C476-2882-49CD-8FE4-71F88E4E5EEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C085C476-2882-49CD-8FE4-71F88E4E5EEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C085C476-2882-49CD-8FE4-71F88E4E5EEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{238ED894-932A-40B8-BD59-0E0F16242C10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{238ED894-932A-40B8-BD59-0E0F16242C10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{238ED894-932A-40B8-BD59-0E0F16242C10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{238ED894-932A-40B8-BD59-0E0F16242C10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
