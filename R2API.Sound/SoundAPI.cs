@@ -50,12 +50,17 @@ public static partial class SoundAPI
         if (Application.isBatchMode)
             return;
 
+        // Setting the bool to true for avoiding infinite recursion
+        _hooksEnabled = true;
+
         var files = Directory.GetFiles(Paths.PluginPath, "*.sound", SearchOption.AllDirectories);
 
         foreach (var file in files)
         {
             SoundBanks.Add(file);
         }
+
+        _hooksEnabled = false;
 
         AddBanksAfterEngineInitHook = new Hook(
             typeof(AkWwiseInitializationSettings).GetMethodCached(nameof(AkWwiseInitializationSettings.InitializeSoundEngine)),
