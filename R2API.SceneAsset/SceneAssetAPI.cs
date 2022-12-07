@@ -1,8 +1,9 @@
-﻿using R2API.MiscHelpers;
-using R2API.Utils;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using R2API.AutoVersionGen;
+using R2API.MiscHelpers;
+using R2API.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,11 +12,11 @@ namespace R2API;
 /// <summary>
 /// API for retrieving assets from the game scenes.
 /// </summary>
-public static class SceneAssetAPI
+[AutoVersion]
+public static partial class SceneAssetAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".sceneasset";
     public const string PluginName = R2API.PluginName + ".SceneAsset";
-    public const string PluginVersion = "0.0.1";
 
     /// <summary>
     /// Return true if the submodule is loaded.

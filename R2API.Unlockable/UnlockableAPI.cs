@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using R2API.AutoVersionGen;
 using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
@@ -16,11 +17,11 @@ namespace R2API;
 /// API for adding custom unlockables to the game.
 /// </summary>
 [Obsolete(UnlockableAPI.ObsoleteMessage)]
-public static class UnlockableAPI
+[AutoVersion]
+public static partial class UnlockableAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".unlockable";
     public const string PluginName = R2API.PluginName + ".Unlockable";
-    public const string PluginVersion = "0.0.1";
 
     public const string ObsoleteMessage = "The patch 1.2.3 for RoR2 has made UnlockableAPI's methods and implementations redundant.\n" +
         "From now on use The game's \"RegisterAchievement\" attribute on top of baseAchievement inheriting classes to register AchievementDefs and tie AchievementDefs to their respective UnlockableDefs.\n" +

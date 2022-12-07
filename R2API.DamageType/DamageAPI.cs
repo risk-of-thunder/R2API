@@ -1,13 +1,14 @@
-﻿using Mono.Cecil.Cil;
+﻿using System;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
+using R2API.AutoVersionGen;
 using R2API.Utils;
 using RoR2;
 using RoR2.Orbs;
 using RoR2.Projectile;
-using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -16,11 +17,12 @@ namespace R2API;
 /// <summary>
 /// API for handling DamageTypes added by mods
 /// </summary>
-public static class DamageAPI
+
+[AutoVersion]
+public static partial class DamageAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".damagetype";
     public const string PluginName = R2API.PluginName + ".DamageType";
-    public const string PluginVersion = "0.0.1";
 
     public enum ModdedDamageType { };
 

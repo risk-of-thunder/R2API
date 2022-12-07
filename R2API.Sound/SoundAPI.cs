@@ -1,16 +1,17 @@
-using BepInEx;
-using MonoMod.Cil;
-using MonoMod.RuntimeDetour;
-using R2API.ContentManagement;
-using R2API.MiscHelpers;
-using R2API.Utils;
-using RoR2;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using BepInEx;
+using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
+using R2API.AutoVersionGen;
+using R2API.ContentManagement;
+using R2API.MiscHelpers;
+using R2API.Utils;
+using RoR2;
 using UnityEngine;
 
 namespace R2API;
@@ -18,11 +19,11 @@ namespace R2API;
 /// <summary>
 /// API for adding sounds with Wwise
 /// </summary>
-public static class SoundAPI
+[AutoVersion]
+public static partial class SoundAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".sound";
     public const string PluginName = R2API.PluginName + ".Sound";
-    public const string PluginVersion = "0.0.1";
 
     /// <summary>
     /// Return true if the submodule is loaded.

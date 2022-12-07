@@ -1,5 +1,3 @@
-using R2API.ContentManagement;
-using R2API.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +7,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using R2API.AutoVersionGen;
+using R2API.ContentManagement;
+using R2API.Utils;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityObject = UnityEngine.Object;
@@ -18,11 +19,11 @@ using UnityObject = UnityEngine.Object;
 namespace R2API;
 
 // ReSharper disable once InconsistentNaming
-public static class PrefabAPI
+[AutoVersion]
+public static partial class PrefabAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".prefab";
     public const string PluginName = R2API.PluginName + ".Prefab";
-    public const string PluginVersion = "0.0.1";
 
     /// <summary>
     /// Return true if the submodule is loaded.

@@ -1,8 +1,9 @@
-using R2API.Utils;
-using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using R2API.AutoVersionGen;
+using R2API.Utils;
+using RoR2;
 using UnityEngine;
 
 // Changing namespace to R2API.Director would be breaking
@@ -11,11 +12,11 @@ namespace R2API;
 /// <summary>
 /// API for modifying the monster and scene directors.
 /// </summary>
+[AutoVersion]
 public static partial class DirectorAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".director";
     public const string PluginName = R2API.PluginName + ".Director";
-    public const string PluginVersion = "0.0.1";
 
     /// <summary>
     /// Return true if the submodule is loaded.

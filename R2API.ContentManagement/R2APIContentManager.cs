@@ -1,6 +1,13 @@
-﻿using BepInEx;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using BepInEx;
+using BepInEx.Bootstrap;
 using EntityStates;
 using HG;
+using R2API.AutoVersionGen;
 using R2API.MiscHelpers;
 using R2API.ScriptableObjects;
 using R2API.Utils;
@@ -10,12 +17,6 @@ using RoR2.EntitlementManagement;
 using RoR2.ExpansionManagement;
 using RoR2.Projectile;
 using RoR2.Skills;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using BepInEx.Bootstrap;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityObject = UnityEngine.Object;
@@ -96,11 +97,11 @@ public struct ManagedReadOnlyContentPack
 /// <summary>
 /// A class that's used for managing ContentPacks created by R2API
 /// </summary>
-public static class R2APIContentManager
+[AutoVersion]
+public static partial class R2APIContentManager
 {
     public const string PluginGUID = R2API.PluginGUID + ".content_management";
     public const string PluginName = R2API.PluginName + ".ContentManagement";
-    public const string PluginVersion = "0.0.1";
 
     /// <summary>
     /// Return true if the submodule is loaded.

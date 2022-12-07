@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.AutoVersionGen;
 using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
@@ -19,11 +20,11 @@ using Object = UnityEngine.Object;
 namespace R2API;
 
 // ReSharper disable once InconsistentNaming
-public static class ItemAPI
+[AutoVersion]
+public static partial class ItemAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".items";
     public const string PluginName = R2API.PluginName + ".Items";
-    public const string PluginVersion = "0.0.1";
 
     public static ObservableCollection<CustomItem?>? ItemDefinitions = new ObservableCollection<CustomItem?>();
     public static ObservableCollection<CustomEquipment?> EquipmentDefinitions = new ObservableCollection<CustomEquipment?>();

@@ -1,19 +1,20 @@
-﻿using Mono.Cecil.Cil;
+﻿using System;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.AutoVersionGen;
 using R2API.Utils;
 using RoR2;
-using System;
 
 namespace R2API;
 
 /// <summary>
 /// API for computing bonuses granted by factors inside RecalculateStats.
 /// </summary>
-public static class RecalculateStatsAPI
+[AutoVersion]
+public static partial class RecalculateStatsAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".recalculatestats";
     public const string PluginName = R2API.PluginName + ".RecalculateStats";
-    public const string PluginVersion = "0.0.1";
 
     /// <summary>
     /// Return true if the submodule is loaded.

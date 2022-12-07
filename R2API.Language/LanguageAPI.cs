@@ -1,11 +1,12 @@
-﻿using BepInEx;
-using R2API.Utils;
-using RoR2;
-using SimpleJSON;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using BepInEx;
+using R2API.AutoVersionGen;
+using R2API.Utils;
+using RoR2;
+using SimpleJSON;
 using UnityEngine;
 
 namespace R2API;
@@ -13,11 +14,11 @@ namespace R2API;
 /// <summary>
 /// class for language files to load
 /// </summary>
-public static class LanguageAPI
+[AutoVersion]
+public static partial class LanguageAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".language";
     public const string PluginName = R2API.PluginName + ".Language";
-    public const string PluginVersion = "0.0.1";
 
     [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
     public static bool Loaded => true;

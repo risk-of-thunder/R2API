@@ -1,11 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using EntityStates;
+using R2API.AutoVersionGen;
 using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
 using RoR2.Skills;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -16,11 +17,11 @@ using UnityEngine;
 namespace R2API;
 
 [Obsolete(LoadoutAPI.ObsoleteMessage)]
-public static class LoadoutAPI
+[AutoVersion]
+public static partial class LoadoutAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".loadout";
     public const string PluginName = R2API.PluginName + ".Loadout";
-    public const string PluginVersion = "0.0.1";
 
     public const string ObsoleteMessage = "The R2API version 4.x.x has made LoadoutAPI's Skill and entity state related methods and implementations obsolette.\n" +
         "For adding new SkillDefs, SkillFamilies and EntityStates, use the ContentAddition class found in the R2API.ContentManagement assembly.\n" +

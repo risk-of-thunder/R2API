@@ -1,10 +1,11 @@
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using R2API.Utils;
-using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using R2API.AutoVersionGen;
+using R2API.Utils;
+using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -13,11 +14,11 @@ namespace R2API;
 /// <summary>
 /// API for adding damage over time effects to the game.
 /// </summary>
-public static class DotAPI
+[AutoVersion]
+public static partial class DotAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".dot";
     public const string PluginName = R2API.PluginName + ".DOT";
-    public const string PluginVersion = "0.0.1";
 
     /// <summary>
     /// Return true if the submodule is loaded.

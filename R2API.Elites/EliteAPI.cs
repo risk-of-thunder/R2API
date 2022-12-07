@@ -1,13 +1,14 @@
-﻿using MonoMod.Cil;
-using R2API.ContentManagement;
-using R2API.Utils;
-using RoR2;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using MonoMod.Cil;
+using R2API.AutoVersionGen;
+using R2API.ContentManagement;
+using R2API.Utils;
+using RoR2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -17,11 +18,11 @@ using UnityEngine.AddressableAssets;
 namespace R2API;
 
 // ReSharper disable once InconsistentNaming
-public static class EliteAPI
+[AutoVersion]
+public static partial class EliteAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".elites";
     public const string PluginName = R2API.PluginName + ".Elites";
-    public const string PluginVersion = "0.0.1";
 
     public static ObservableCollection<CustomElite?>? EliteDefinitions = new ObservableCollection<CustomElite?>();
 

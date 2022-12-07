@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API.AutoVersionGen;
 using R2API.ScriptableObjects;
 using R2API.Utils;
 using RoR2;
 using UnityEngine;
 
 namespace R2API;
-public static class ColorsAPI
+
+[AutoVersion]
+public static partial class ColorsAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".colors";
     public const string PluginName = R2API.PluginName + ".Colors";
-    public const string PluginVersion = "0.0.1";
 
     private static List<SerializableDamageColor> addedSerializableDamageColors = new List<SerializableDamageColor>();
     private static List<SerializableColorCatalogEntry> addedSerializableColors = new List<SerializableColorCatalogEntry>();

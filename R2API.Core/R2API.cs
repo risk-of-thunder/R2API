@@ -9,8 +9,8 @@ using BepInEx;
 using BepInEx.Logging;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
-using R2API.Utils;
 using R2API.AutoVersionGen;
+using R2API.Utils;
 using RoR2;
 using UnityEngine;
 
@@ -21,7 +21,6 @@ namespace R2API;
 // ReSharper disable once InconsistentNaming
 public partial class R2API : BaseUnityPlugin
 {
-
     // ReSharper disable once InconsistentNaming
     public const string PluginGUID = "com.bepis.r2api";
 

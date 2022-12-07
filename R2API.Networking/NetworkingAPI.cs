@@ -1,9 +1,10 @@
-﻿using R2API.Networking.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using R2API.AutoVersionGen;
+using R2API.Networking.Interfaces;
 using R2API.Networking.Messages;
 using R2API.Utils;
 using RoR2.Networking;
-using System;
-using System.Collections.Generic;
 using UnityEngine.Networking;
 
 namespace R2API.Networking;
@@ -14,11 +15,11 @@ namespace R2API.Networking;
 /// <see href="https://github.com/risk-of-thunder/R2Wiki/wiki/Networking-with-R2API.NetworkingAPI-(INetMessage)">
 /// the tutorial for example usage.</see>
 /// </summary>
-public static class NetworkingAPI
+[AutoVersion]
+public static partial class NetworkingAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".networking";
     public const string PluginName = R2API.PluginName + ".Networking";
-    public const string PluginVersion = "0.0.1";
 
     /// <summary>
     /// Return true if the submodule is loaded.

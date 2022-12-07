@@ -1,21 +1,22 @@
-﻿using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using R2API.Utils;
-using RoR2;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using R2API.AutoVersionGen;
+using R2API.Utils;
+using RoR2;
 
 namespace R2API;
 
 /// <summary>
 /// API for handling deployables added by mods
 /// </summary>
-public static class DeployableAPI
+[AutoVersion]
+public static partial class DeployableAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".deployable";
     public const string PluginName = R2API.PluginName + ".Deployable";
-    public const string PluginVersion = "0.0.1";
 
     /// <summary>
     /// Return true if the submodule is loaded.

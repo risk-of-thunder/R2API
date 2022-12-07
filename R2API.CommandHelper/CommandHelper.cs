@@ -1,10 +1,11 @@
-﻿using RoR2;
-using RoR2.ConVar;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using R2API.AutoVersionGen;
+using RoR2;
+using RoR2.ConVar;
 
 namespace R2API.Utils;
 
@@ -13,11 +14,11 @@ namespace R2API.Utils;
 /// so that they are registered as console commands for the in-game console.
 /// </summary>
 [Obsolete($"Add [assembly: HG.Reflection.SearchableAttribute.OptInAttribute] to your assembly instead")]
-public class CommandHelper
+[AutoVersion]
+public partial class CommandHelper
 {
     public const string PluginGUID = R2API.PluginGUID + ".commandhelper";
     public const string PluginName = R2API.PluginName + ".CommandHelper";
-    public const string PluginVersion = "0.0.1";
 
     private static readonly Queue<Assembly> Assemblies = new Queue<Assembly>();
     private static RoR2.Console _console;

@@ -1,19 +1,20 @@
-using R2API.Utils;
-using RoR2;
-using RoR2.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using R2API.AutoVersionGen;
+using R2API.Utils;
+using RoR2;
+using RoR2.UI;
 using UnityEngine;
 
 namespace R2API;
 
 // ReSharper disable once InconsistentNaming
-public static class LobbyConfigAPI
+[AutoVersion]
+public static partial class LobbyConfigAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".lobbyconfig";
     public const string PluginName = R2API.PluginName + ".LobbyConfig";
-    public const string PluginVersion = "0.0.1";
 
     /// <summary>
     /// Return true if the submodule is loaded.

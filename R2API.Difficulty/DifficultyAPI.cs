@@ -1,9 +1,9 @@
+using System;
+using System.Collections.Concurrent;
+using R2API.AutoVersionGen;
 using R2API.ScriptableObjects;
 using R2API.Utils;
 using RoR2;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace R2API;
@@ -11,11 +11,11 @@ namespace R2API;
 /// <summary>
 /// API for adding difficulties like Drizzle, Rainstorm, and Monsoon to the game. Does not cover "very easy, easy, ..., HAHAHAHA".
 /// </summary>
-public class DifficultyAPI
+[AutoVersion]
+public partial class DifficultyAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".difficulty";
     public const string PluginName = R2API.PluginName + ".Difficulty";
-    public const string PluginVersion = "0.0.1";
 
     private static bool difficultyAlreadyAdded = false;
 

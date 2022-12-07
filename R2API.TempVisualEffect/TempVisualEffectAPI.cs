@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using R2API.AutoVersionGen;
 using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
@@ -11,11 +12,11 @@ namespace R2API;
 /// <summary>
 /// API for adding custom TemporaryVisualEffects to CharacterBody components.
 /// </summary>
-public static class TempVisualEffectAPI
+[AutoVersion]
+public static partial class TempVisualEffectAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".tempvisualeffect";
     public const string PluginName = R2API.PluginName + ".TempVisualEffect";
-    public const string PluginVersion = "0.0.1";
 
     /// <summary>
     /// Return true if the submodule is loaded.
