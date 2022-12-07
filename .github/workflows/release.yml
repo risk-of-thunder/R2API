@@ -24,7 +24,7 @@ jobs:
       with:
         dotnet-version: 7.0.x
 
-    - name: Build projects
+    - name: Build and Publish
       run: |
         cd BuildCI
 
@@ -68,9 +68,15 @@ jobs:
             find . -name '*.deps.json' -type f -delete
 
             if [ "$namespace" == "RiskofThunder" ]; then
-              tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN_RISK_OF_THUNDER }} --package-version $version --config-path ./thunderstore.toml
+              tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN_RISK_OF_THUNDER }}
             else
-              tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN }} --package-version $version --config-path ./thunderstore.toml
+              tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN }}
             fi
+
+            rm -rf ./build
+          fi
+
+          if [ "is_project_built" = true ] ; then
+            rm -rf ./ReleaseOutput
           fi
         done
