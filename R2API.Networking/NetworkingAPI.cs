@@ -57,7 +57,7 @@ public static partial class NetworkingAPI
 
         if (NetMessages.ContainsKey(hash))
         {
-            R2API.Logger.LogError("Tried to register a message type with a duplicate hash");
+            NetworkingPlugin.Logger.LogError("Tried to register a message type with a duplicate hash");
             return false;
         }
         else
@@ -88,7 +88,7 @@ public static partial class NetworkingAPI
 
         if (NetCommands.ContainsKey(hash))
         {
-            R2API.Logger.LogError("Tried to register a command type with a duplicate hash");
+            NetworkingPlugin.Logger.LogError("Tried to register a command type with a duplicate hash");
             return false;
         }
         else
@@ -133,7 +133,7 @@ public static partial class NetworkingAPI
 
         if (NetRequests.ContainsKey(requestHash))
         {
-            R2API.Logger.LogError("Tried to register a request type with a duplicate hash");
+            NetworkingPlugin.Logger.LogError("Tried to register a request type with a duplicate hash");
             return false;
         }
         NetRequests[requestHash] = new RequestPerformer<TRequest, TReply>(request, reply);
@@ -178,7 +178,7 @@ public static partial class NetworkingAPI
 
     private static void RegisterServerHandlers()
     {
-        R2API.Logger.LogInfo("Server Handlers registered");
+        NetworkingPlugin.Logger.LogInfo("Server Handlers registered");
         NetworkServer.RegisterHandler(MessageIndex, HandleMessageServer);
         NetworkServer.RegisterHandler(CommandIndex, HandleCommandServer);
         NetworkServer.RegisterHandler(RequestIndex, HandleRequestServer);
@@ -187,7 +187,7 @@ public static partial class NetworkingAPI
 
     private static void RegisterClientHandlers(NetworkClient client)
     {
-        R2API.Logger.LogInfo("Client Handlers registered");
+        NetworkingPlugin.Logger.LogInfo("Client Handlers registered");
         client.RegisterHandler(MessageIndex, HandleMessageClient);
         client.RegisterHandler(CommandIndex, HandleCommandClient);
         client.RegisterHandler(RequestIndex, HandleRequestClient);
@@ -196,7 +196,7 @@ public static partial class NetworkingAPI
 
     private static void UnRegisterServerHandlers()
     {
-        R2API.Logger.LogInfo("Server Handlers unregistered");
+        NetworkingPlugin.Logger.LogInfo("Server Handlers unregistered");
         NetworkServer.UnregisterHandler(MessageIndex);
         NetworkServer.UnregisterHandler(CommandIndex);
         NetworkServer.UnregisterHandler(RequestIndex);
@@ -205,7 +205,7 @@ public static partial class NetworkingAPI
 
     private static void UnRegisterClientHandlers()
     {
-        R2API.Logger.LogInfo("Client Handlers unregistered");
+        NetworkingPlugin.Logger.LogInfo("Client Handlers unregistered");
 
         foreach (var client in NetworkClient.allClients)
         {
@@ -246,7 +246,7 @@ public static partial class NetworkingAPI
             }
             else
             {
-                R2API.Logger.LogError("Unhandled command received, you may be missing mods");
+                NetworkingPlugin.Logger.LogError("Unhandled command received, you may be missing mods");
             }
         }
 
@@ -296,7 +296,7 @@ public static partial class NetworkingAPI
             }
             else
             {
-                R2API.Logger.LogError("Unhandled message received, you may be missing mods");
+                NetworkingPlugin.Logger.LogError("Unhandled message received, you may be missing mods");
             }
         }
 
@@ -355,7 +355,7 @@ public static partial class NetworkingAPI
             }
             else
             {
-                R2API.Logger.LogError("Unhandled request message received, you may be missing mods");
+                NetworkingPlugin.Logger.LogError("Unhandled request message received, you may be missing mods");
             }
         }
 
@@ -406,7 +406,7 @@ public static partial class NetworkingAPI
             }
             else
             {
-                R2API.Logger.LogError("Unhandled reply received, you may be missing mods");
+                NetworkingPlugin.Logger.LogError("Unhandled reply received, you may be missing mods");
             }
         }
 
@@ -455,7 +455,7 @@ public static partial class NetworkingAPI
             }
             else
             {
-                R2API.Logger.LogError("Unhandled command received, you may be missing mods");
+                NetworkingPlugin.Logger.LogError("Unhandled command received, you may be missing mods");
             }
         }
     }
@@ -476,7 +476,7 @@ public static partial class NetworkingAPI
             }
             else
             {
-                R2API.Logger.LogError("Unhandled message received, you may be missing mods");
+                NetworkingPlugin.Logger.LogError("Unhandled message received, you may be missing mods");
             }
         }
     }
@@ -504,7 +504,7 @@ public static partial class NetworkingAPI
             }
             else
             {
-                R2API.Logger.LogError("Unhandled request message received, you may be missing mods");
+                NetworkingPlugin.Logger.LogError("Unhandled request message received, you may be missing mods");
             }
         }
     }
@@ -524,7 +524,7 @@ public static partial class NetworkingAPI
             }
             else
             {
-                R2API.Logger.LogError("Unhandled reply received, you may be missing mods");
+                NetworkingPlugin.Logger.LogError("Unhandled reply received, you may be missing mods");
             }
         }
     }

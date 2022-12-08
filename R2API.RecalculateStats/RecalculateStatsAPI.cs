@@ -196,7 +196,7 @@ public static partial class RecalculateStatsAPI
                 }
                 catch (Exception e)
                 {
-                    R2API.Logger.LogError(
+                    RecalculateStatsPlugin.Logger.LogError(
                         $"Exception thrown by : {@event.Method.DeclaringType.Name}.{@event.Method.Name}:\n{e}");
                 }
             }
@@ -222,7 +222,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyCurseStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyCurseStat)} failed.");
         }
     }
 
@@ -304,7 +304,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyCooldownStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyCooldownStat)} failed.");
         }
     }
 
@@ -327,7 +327,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyLevelingStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyLevelingStat)} failed.");
         }
     }
 
@@ -349,7 +349,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyArmorStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyArmorStat)} failed.");
         }
     }
 
@@ -385,7 +385,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyAttackSpeedStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyAttackSpeedStat)} failed.");
         }
     }
 
@@ -413,7 +413,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyCritStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyCritStat)} failed.");
         }
     }
 
@@ -449,7 +449,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyDamageStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyDamageStat)} failed.");
         }
     }
 
@@ -474,7 +474,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyJumpStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpStat)} failed.");
         }
     }
 
@@ -513,7 +513,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyHealthStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyHealthStat)} failed.");
         }
     }
 
@@ -549,7 +549,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyShieldStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyShieldStat)} failed.");
         }
     }
 
@@ -582,7 +582,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyHealthRegenStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyHealthRegenStat)} failed.");
         }
     }
 
@@ -636,7 +636,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            R2API.Logger.LogError($"{nameof(ModifyMovementSpeedStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyMovementSpeedStat)} failed.");
         }
     }
 }

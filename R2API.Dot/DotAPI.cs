@@ -18,7 +18,7 @@ namespace R2API;
 public static partial class DotAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".dot";
-    public const string PluginName = R2API.PluginName + ".DOT";
+    public const string PluginName = R2API.PluginName + ".Dot";
 
     /// <summary>
     /// Return true if the submodule is loaded.
@@ -97,11 +97,11 @@ public static partial class DotAPI
 
         if (dotDef.associatedBuff != null)
         {
-            R2API.Logger.LogInfo($"Custom Dot (Index: {dotDefIndex}) that uses Buff : {dotDef.associatedBuff.name} added");
+            DotPlugin.Logger.LogInfo($"Custom Dot (Index: {dotDefIndex}) that uses Buff : {dotDef.associatedBuff.name} added");
         }
         else
         {
-            R2API.Logger.LogInfo($"Custom Dot (Index: {dotDefIndex}) with no associated Buff added");
+            DotPlugin.Logger.LogInfo($"Custom Dot (Index: {dotDefIndex}) with no associated Buff added");
         }
 
 
@@ -201,7 +201,7 @@ public static partial class DotAPI
         }
         else
         {
-            R2API.Logger.LogError("Failed finding IL Instructions. Aborting RetrieveVanillaCount IL Hook");
+            DotPlugin.Logger.LogError("Failed finding IL Instructions. Aborting RetrieveVanillaCount IL Hook");
         }
     }
 
@@ -217,7 +217,7 @@ public static partial class DotAPI
         }
         else
         {
-            R2API.Logger.LogError("Failed finding IL Instructions. Aborting ResizeTimerArray IL Hook");
+            DotPlugin.Logger.LogError("Failed finding IL Instructions. Aborting ResizeTimerArray IL Hook");
         }
     }
 
@@ -288,7 +288,7 @@ public static partial class DotAPI
         // ReSharper disable once InconsistentNaming
         static void ILFailMessage(int index)
         {
-            R2API.Logger.LogError(
+            DotPlugin.Logger.LogError(
                 $"Failed finding IL Instructions. Aborting FixInflictDotReturnCheck IL Hook {index}");
         }
 
@@ -316,7 +316,7 @@ public static partial class DotAPI
         // ReSharper disable once InconsistentNaming
         static void ILFailMessage(int index)
         {
-            R2API.Logger.LogError(
+            DotPlugin.Logger.LogError(
                 $"Failed finding IL Instructions. Aborting OnAddDot IL Hook {index}");
         }
 
@@ -372,7 +372,7 @@ public static partial class DotAPI
         // ReSharper disable once InconsistentNaming
         static void ILFailMessage(int index)
         {
-            R2API.Logger.LogError(
+            DotPlugin.Logger.LogError(
                 $"Failed finding IL Instructions. Aborting FixDeathMark IL Hook {index}");
         }
 

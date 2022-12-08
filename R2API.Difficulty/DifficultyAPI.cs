@@ -82,7 +82,7 @@ public partial class DifficultyAPI
         DifficultyAPI.SetHooks();
         if (difficultyAlreadyAdded)
         {
-            R2API.Logger.LogError($"Tried to add difficulty: {difficulty.nameToken} after difficulty list was created");
+            DifficultyPlugin.Logger.LogError($"Tried to add difficulty: {difficulty.nameToken} after difficulty list was created");
             return DifficultyIndex.Invalid;
         }
 

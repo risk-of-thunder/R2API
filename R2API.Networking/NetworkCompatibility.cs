@@ -111,8 +111,8 @@ internal class NetworkCompatibilityHandler
             }
             catch (Exception e)
             {
-                R2API.Logger.LogError($"Exception in ScanPluginsForNetworkCompat while scanning plugin {pluginInfo.Metadata.GUID}");
-                R2API.Logger.LogError("R2API Failed to properly scan the assembly." + Environment.NewLine +
+                NetworkingPlugin.Logger.LogError($"Exception in ScanPluginsForNetworkCompat while scanning plugin {pluginInfo.Metadata.GUID}");
+                NetworkingPlugin.Logger.LogError("R2API Failed to properly scan the assembly." + Environment.NewLine +
                     "Please make sure you are compiling against net standard 2.0 " +
                     "and not anything else when making a plugin for Risk of Rain 2 !" +
                     Environment.NewLine + e);
@@ -157,10 +157,10 @@ internal class NetworkCompatibilityHandler
         {
             var sortedModList = ModList.ToList();
             sortedModList.Sort(StringComparer.InvariantCulture);
-            R2API.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
+            NetworkingPlugin.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
             foreach (var mod in sortedModList)
             {
-                R2API.Logger.LogInfo(mod);
+                NetworkingPlugin.Logger.LogInfo(mod);
                 NetworkModCompatibilityHelper.networkModList = NetworkModCompatibilityHelper.networkModList.Append(mod);
             }
         }

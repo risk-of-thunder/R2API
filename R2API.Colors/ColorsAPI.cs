@@ -100,7 +100,7 @@ public static partial class ColorsAPI
         ColorsAPI.SetHooks();
         if (addedSerializableDamageColors.Contains(serializableDamageColor))
         {
-            R2API.Logger.LogError($"Attempted to add SerializableDamageColor {serializableDamageColor} twice! aborting.");
+            ColorsPlugin.Logger.LogError($"Attempted to add SerializableDamageColor {serializableDamageColor} twice! aborting.");
             return;
         }
 
@@ -135,7 +135,7 @@ public static partial class ColorsAPI
         ColorsAPI.SetHooks();
         if (addedSerializableColors.Contains(serializableColor))
         {
-            R2API.Logger.LogError($"Attempted to add SerializableColor {serializableColor} twice! aborting.");
+            ColorsPlugin.Logger.LogError($"Attempted to add SerializableColor {serializableColor} twice! aborting.");
             return;
         }
 

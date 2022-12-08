@@ -61,6 +61,5 @@ using TF = System.Runtime.CompilerServices.TypeForwardedToAttribute;
 [assembly: TF(typeof(R2API.ContentManagement.ManagedSerializableContentPack))]
 [assembly: TF(typeof(R2API.ContentManagement.ManagedReadOnlyContentPack))]
 [assembly: TF(typeof(R2API.ContentManagement.R2APIContentManager))]
-[assembly: TF(typeof(R2API.ColorsAPI))]
 [assembly: TF(typeof(R2API.ScriptableObjects.SerializableColorCatalogEntry))]
 [assembly: TF(typeof(R2API.ScriptableObjects.SerializableDamageColor))]

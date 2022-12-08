@@ -14,7 +14,6 @@ containsNsfwContent = false
 bbepis-BepInExPack = "5.4.2103"
 RiskofThunder-HookGenPatcher = "1.2.3"
 RiskofThunder-R2API_ArtifactCode = "1.0.0"
-RiskofThunder-R2API_Colors = "1.0.0"
 RiskofThunder-R2API_CommandHelper = "1.0.0"
 RiskofThunder-R2API_ContentManagement = "1.0.0"
 RiskofThunder-R2API_Core = "1.0.0"

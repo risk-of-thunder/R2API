@@ -57,7 +57,7 @@ public class ArtifactCode : ScriptableObject
 
         if (ArtifactCompounds.Count > 0)
         {
-            R2API.Logger.LogWarning($"Artifact Code of name {name} is using the deprecated ArtifactCompounds list.");
+            ArtifactCodePlugin.Logger.LogWarning($"Artifact Code of name {name} is using the deprecated ArtifactCompounds list.");
             artifactSequence = CreateSequenceFromList();
             hashAsset = CreateHashAsset(CreateHash());
         }

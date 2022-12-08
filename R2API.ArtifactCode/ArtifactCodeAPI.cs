@@ -58,11 +58,11 @@ public static partial class ArtifactCodeAPI
         {
             if (CheckForDuplicateCompoundValue(compoundDef, self.digitDefs))
             {
-                R2API.Logger.LogWarning($"A compound with the value of {compoundDef.value} has already been added to the portal dialer button controller. Ignoring entry.");
+                ArtifactCodePlugin.Logger.LogWarning($"A compound with the value of {compoundDef.value} has already been added to the portal dialer button controller. Ignoring entry.");
                 continue;
             }
             HG.ArrayUtils.ArrayAppend(ref self.digitDefs, compoundDef);
-            R2API.Logger.LogInfo($"Added compound to portal dialer button with value of {compoundDef.value}");
+            ArtifactCodePlugin.Logger.LogInfo($"Added compound to portal dialer button with value of {compoundDef.value}");
             orig(self);
         }
     }
@@ -73,12 +73,12 @@ public static partial class ArtifactCodeAPI
         {
             if (artifactDef.artifactIndex == ArtifactIndex.None)
             {
-                R2API.Logger.LogWarning($"ArtifactDef of name {artifactDef.cachedName} has an index of -1! ignoring entry.");
+                ArtifactCodePlugin.Logger.LogWarning($"ArtifactDef of name {artifactDef.cachedName} has an index of -1! ignoring entry.");
                 continue;
             }
             if (CheckIfCodeIsUsed(artifactCode, self.actions))
             {
-                R2API.Logger.LogWarning($"A code with the values of {artifactCode.name} has already been added to the portal dialer controller. ignoring entry.");
+                ArtifactCodePlugin.Logger.LogWarning($"A code with the values of {artifactCode.name} has already been added to the portal dialer controller. ignoring entry.");
                 continue;
             }
 
@@ -90,14 +90,14 @@ public static partial class ArtifactCodeAPI
             dialedAction.action.AddListener(Wrapper);
 
             HG.ArrayUtils.ArrayAppend(ref self.actions, dialedAction);
-            R2API.Logger.LogInfo($"Added code for {artifactDef.cachedName}");
+            ArtifactCodePlugin.Logger.LogInfo($"Added code for {artifactDef.cachedName}");
         }
         orig(self);
     }
     private static bool Print(On.RoR2.PortalDialerController.orig_PerformActionServer orig, PortalDialerController self, byte[] sequence)
     {
         var result = self.GetResult(sequence);
-        R2API.Logger.LogInfo("Inputted Artifact Code:\n_00_07: " + result._00_07 + "\n_08_15: " + result._08_15 + "\n_16_23: " + result._16_23 + "\n_24_31: " + result._24_31);
+        ArtifactCodePlugin.Logger.LogInfo("Inputted Artifact Code:\n_00_07: " + result._00_07 + "\n_08_15: " + result._08_15 + "\n_16_23: " + result._16_23 + "\n_24_31: " + result._24_31);
         return orig(self, sequence);
     }
     #endregion

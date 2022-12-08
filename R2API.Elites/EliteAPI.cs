@@ -43,7 +43,7 @@ public static partial class EliteAPI
         VanillaFirstTierDef = RetrieveFirstVanillaTierDef();
         VanillaEliteOnlyFirstTierDef = RetrieveVanillaEliteOnlyFirstTierDef();
 
-        R2API.Logger.LogDebug("EliteAPI.cctor finished.");
+        ElitesPlugin.Logger.LogDebug("EliteAPI.cctor finished.");
     }
 
     private static bool _hooksEnabled = false;
@@ -201,7 +201,7 @@ public static partial class EliteAPI
         }
         else
         {
-            R2API.Logger.LogError("Failed finding IL Instructions. Aborting RetrieveVanillaEliteTierCount IL Hook");
+            ElitesPlugin.Logger.LogError("Failed finding IL Instructions. Aborting RetrieveVanillaEliteTierCount IL Hook");
         }
     }
 
@@ -235,7 +235,7 @@ public static partial class EliteAPI
 
         if (!CatalogBlockers.GetAvailability<EliteDef>())
         {
-            R2API.Logger.LogError($"Too late ! Tried to add elite: {customElite.EliteDef.modifierToken} after the EliteCatalog has initialized!");
+            ElitesPlugin.Logger.LogError($"Too late ! Tried to add elite: {customElite.EliteDef.modifierToken} after the EliteCatalog has initialized!");
             return false;
         }
 
@@ -364,7 +364,7 @@ public static partial class EliteAPI
 
         CustomEliteTierDefs.Add(eliteTierDef);
 
-        R2API.Logger.LogInfo($"Custom Elite Tier : (Index : {indexToInsertAt}) added");
+        ElitesPlugin.Logger.LogInfo($"Custom Elite Tier : (Index : {indexToInsertAt}) added");
 
         return indexToInsertAt;
     }

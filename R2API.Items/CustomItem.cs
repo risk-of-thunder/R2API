@@ -115,7 +115,7 @@ public class CustomItem
             if (!itemTierDef)
             {
                 ItemDef._itemTierDef = null;
-                R2API.Logger.LogWarning($"Trying to create an itemDef ({name}), but the \"tier\" argument is set to {nameof(ItemTier.AssignedAtRuntime)}" +
+                ItemsPlugin.Logger.LogWarning($"Trying to create an itemDef ({name}), but the \"tier\" argument is set to {nameof(ItemTier.AssignedAtRuntime)}" +
                     $"And the argument \"itemTierDef\" is null! Resorting to setting tier to NoTier");
             }
             else

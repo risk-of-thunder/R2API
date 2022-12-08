@@ -59,7 +59,7 @@ public static class NetworkingHelpers
             {
                 if (stacks < 0)
                 {
-                    R2API.Logger.LogError("Cannot remove duration from a buff");
+                    NetworkingPlugin.Logger.LogError("Cannot remove duration from a buff");
                     return;
                 }
 

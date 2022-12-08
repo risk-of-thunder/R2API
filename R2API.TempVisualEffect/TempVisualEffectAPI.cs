@@ -58,26 +58,26 @@ public static partial class TempVisualEffectAPI
 
         if (effectPrefab == null)
         {
-            R2API.Logger.LogError($"Failed to add TVE: GameObject is null"); throw new ArgumentNullException($"{nameof(effectPrefab)} can't be null");
+            TempVisualEffectPlugin.Logger.LogError($"Failed to add TVE: GameObject is null"); throw new ArgumentNullException($"{nameof(effectPrefab)} can't be null");
         }
 
         var prefabName = effectPrefab.name;
 
         if (_TVEsAdded)
         {
-            R2API.Logger.LogError($"Failed to add TVE: {prefabName} after TVE list was created"); return false;
+            TempVisualEffectPlugin.Logger.LogError($"Failed to add TVE: {prefabName} after TVE list was created"); return false;
         }
         if (condition == null)
         {
-            R2API.Logger.LogError($"Failed to add TVE: {prefabName} no condition attached"); return false;
+            TempVisualEffectPlugin.Logger.LogError($"Failed to add TVE: {prefabName} no condition attached"); return false;
         }
         if (tves.Any(name => name.effectName == prefabName))
         {
-            R2API.Logger.LogError($"Failed to add TVE: {prefabName} name already exists in list"); return false;
+            TempVisualEffectPlugin.Logger.LogError($"Failed to add TVE: {prefabName} name already exists in list"); return false;
         }
         if (!effectPrefab.GetComponent<TemporaryVisualEffect>())
         {
-            R2API.Logger.LogError($"Failed to add TVE: {prefabName} GameObject has no TemporaryVisualEffect component"); return false;
+            TempVisualEffectPlugin.Logger.LogError($"Failed to add TVE: {prefabName} GameObject has no TemporaryVisualEffect component"); return false;
         }
 
         var newTVE = new TemporaryVisualEffectStruct();
@@ -89,7 +89,7 @@ public static partial class TempVisualEffectAPI
         newTVE.effectName = prefabName;
 
         tves.Add(newTVE);
-        R2API.Logger.LogMessage($"Added new TVE: {newTVE}");
+        TempVisualEffectPlugin.Logger.LogMessage($"Added new TVE: {newTVE}");
 
         return true;
     }

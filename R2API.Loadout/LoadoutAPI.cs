@@ -49,12 +49,12 @@ public static partial class LoadoutAPI
     {
         if (!CatalogBlockers.GetAvailability<EntityState>())
         {
-            R2API.Logger.LogError($"Too late ! Tried to add skill type {t} after the EntityStateCatalog has initialized!");
+            LoadoutPlugin.Logger.LogError($"Too late ! Tried to add skill type {t} after the EntityStateCatalog has initialized!");
             return false;
         }
         if (t == null || !t.IsSubclassOf(typeof(EntityState)) || t.IsAbstract)
         {
-            R2API.Logger.LogError("Invalid skill type.");
+            LoadoutPlugin.Logger.LogError("Invalid skill type.");
             return false;
         }
 
@@ -74,7 +74,7 @@ public static partial class LoadoutAPI
     {
         if (!CatalogBlockers.GetAvailability<EntityState>())
         {
-            R2API.Logger.LogError($"Too late ! Tried to add skill type {typeof(T)} after the EntityStateCatalog has initialized!");
+            LoadoutPlugin.Logger.LogError($"Too late ! Tried to add skill type {typeof(T)} after the EntityStateCatalog has initialized!");
             return new SerializableEntityStateType();
         }
         R2APIContentManager.HandleEntityState(Assembly.GetCallingAssembly(), typeof(T));
@@ -92,12 +92,12 @@ public static partial class LoadoutAPI
     {
         if (!CatalogBlockers.GetAvailability<SkillDef>())
         {
-            R2API.Logger.LogError($"Too late ! Tried to add skillDef {s.skillName} after the SkillCatalog has initialized!");
+            LoadoutPlugin.Logger.LogError($"Too late ! Tried to add skillDef {s.skillName} after the SkillCatalog has initialized!");
             return false;
         }
         if (!s)
         {
-            R2API.Logger.LogError("Invalid SkillDef");
+            LoadoutPlugin.Logger.LogError("Invalid SkillDef");
             return false;
         }
         R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), s);
@@ -115,11 +115,11 @@ public static partial class LoadoutAPI
     {
         if (!CatalogBlockers.GetAvailability<SkillFamily>())
         {
-            R2API.Logger.LogError($"Too late ! Tried to add skillFamily after the SkillCatalog has initialized!");
+            LoadoutPlugin.Logger.LogError($"Too late ! Tried to add skillFamily after the SkillCatalog has initialized!");
         }
         if (!sf)
         {
-            R2API.Logger.LogError("Invalid SkillFamily");
+            LoadoutPlugin.Logger.LogError("Invalid SkillFamily");
             return false;
         }
         R2APIContentManager.HandleContentAddition(Assembly.GetCallingAssembly(), sf);
@@ -297,13 +297,13 @@ public static partial class LoadoutAPI
     {
         if (bodyPrefab == null)
         {
-            R2API.Logger.LogError("Tried to add skin to null body prefab.");
+            LoadoutPlugin.Logger.LogError("Tried to add skin to null body prefab.");
             return false;
         }
 
         if (skin == null)
         {
-            R2API.Logger.LogError("Tried to add invalid skin.");
+            LoadoutPlugin.Logger.LogError("Tried to add invalid skin.");
             return false;
         }
         AddedSkins.Add(skin);
@@ -311,45 +311,45 @@ public static partial class LoadoutAPI
         var modelLocator = bodyPrefab.GetComponent<ModelLocator>();
         if (modelLocator == null)
         {
-            R2API.Logger.LogError("Tried to add skin to invalid body prefab (No ModelLocator).");
+            LoadoutPlugin.Logger.LogError("Tried to add skin to invalid body prefab (No ModelLocator).");
             return false;
         }
 
         var model = modelLocator.modelTransform;
         if (model == null)
         {
-            R2API.Logger.LogError("Tried to add skin to body prefab with no modelTransform.");
+            LoadoutPlugin.Logger.LogError("Tried to add skin to body prefab with no modelTransform.");
             return false;
         }
 
         if (skin.rootObject != model.gameObject)
         {
-            R2API.Logger.LogError("Tried to add skin with improper root object set.");
+            LoadoutPlugin.Logger.LogError("Tried to add skin with improper root object set.");
             return false;
         }
 
         var modelSkins = model.GetComponent<ModelSkinController>();
         if (modelSkins == null)
         {
-            R2API.Logger.LogWarning(bodyPrefab.name + " does not have a modelSkinController.\nAdding a new one and attempting to populate the default skin.\nHighly recommended you set the controller up manually.");
+            LoadoutPlugin.Logger.LogWarning(bodyPrefab.name + " does not have a modelSkinController.\nAdding a new one and attempting to populate the default skin.\nHighly recommended you set the controller up manually.");
             var charModel = model.GetComponent<CharacterModel>();
             if (charModel == null)
             {
-                R2API.Logger.LogError("Unable to locate CharacterModel, default skin creation aborted.");
+                LoadoutPlugin.Logger.LogError("Unable to locate CharacterModel, default skin creation aborted.");
                 return false;
             }
 
             var skinnedRenderer = charModel.mainSkinnedMeshRenderer;
             if (skinnedRenderer == null)
             {
-                R2API.Logger.LogError("CharacterModel did not contain a main SkinnedMeshRenderer, default skin creation aborted.");
+                LoadoutPlugin.Logger.LogError("CharacterModel did not contain a main SkinnedMeshRenderer, default skin creation aborted.");
                 return false;
             }
 
             var baseRenderInfos = charModel.baseRendererInfos;
             if (baseRenderInfos == null || baseRenderInfos.Length == 0)
             {
-                R2API.Logger.LogError("CharacterModel rendererInfos are invalid, default skin creation aborted.");
+                LoadoutPlugin.Logger.LogError("CharacterModel rendererInfos are invalid, default skin creation aborted.");
                 return false;
             }
 

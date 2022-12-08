@@ -37,7 +37,7 @@ public class ItemDisplayRuleDict
         {
             if (string.IsNullOrEmpty(bodyPrefabName))
             {
-                R2API.Logger.LogWarning("DefaultRules overwritten with Indexer! Please set them with the constructor instead!");
+                ItemsPlugin.Logger.LogWarning("DefaultRules overwritten with Indexer! Please set them with the constructor instead!");
                 DefaultRules = value;
                 return;
             }

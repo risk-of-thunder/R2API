@@ -37,13 +37,13 @@ public static partial class OrbAPI
         OrbAPI.SetHooks();
         if (_orbsAlreadyAdded)
         {
-            R2API.Logger.LogError($"Tried to add Orb type: {nameof(t)} after orb catalog was generated");
+            OrbPlugin.Logger.LogError($"Tried to add Orb type: {nameof(t)} after orb catalog was generated");
             return false;
         }
 
         if (t == null || !t.IsSubclassOf(typeof(RoR2.Orbs.Orb)))
         {
-            R2API.Logger.LogError($"Type: {nameof(t)} is null or not a subclass of RoR2.Orbs.Orb");
+            OrbPlugin.Logger.LogError($"Type: {nameof(t)} is null or not a subclass of RoR2.Orbs.Orb");
             return false;
         }
 
@@ -65,13 +65,13 @@ public static partial class OrbAPI
         Type orbType = typeof(TOrb);
         if (_orbsAlreadyAdded)
         {
-            R2API.Logger.LogError($"Tried to add Orb type: {orbType.Name} after orb catalog was generated");
+            OrbPlugin.Logger.LogError($"Tried to add Orb type: {orbType.Name} after orb catalog was generated");
             return false;
         }
 
         if (!orbType.IsSubclassOf(typeof(RoR2.Orbs.Orb)))
         {
-            R2API.Logger.LogError($"Type: {orbType.Name} is not a subclass of RoR2.Orbs.Orb");
+            OrbPlugin.Logger.LogError($"Type: {orbType.Name} is not a subclass of RoR2.Orbs.Orb");
             return false;
         }
 

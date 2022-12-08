@@ -119,7 +119,7 @@ public static partial class R2APIContentManager
 
             if (!_contentPacksCreated)
             {
-                R2API.Logger.LogError($"Cannot return ContentPacks when they havent been created!");
+                ContentManagementPlugin.Logger.LogError($"Cannot return ContentPacks when they havent been created!");
                 return null;
             }
             return _managedContentPacks;
@@ -177,7 +177,7 @@ public static partial class R2APIContentManager
                 if (!BepInModNameToSerializableContentPack.ContainsKey(modName))
                 {
                     BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(contentPack, createIContentPackProvider, assembly));
-                    R2API.Logger.LogInfo($"Added Pre-Existing SerializableContentPack from mod {modName}");
+                    ContentManagementPlugin.Logger.LogInfo($"Added Pre-Existing SerializableContentPack from mod {modName}");
                     return;
                 }
                 throw new InvalidOperationException($"The Mod {modName} already has a Serializable Content Pack assigned to it!");
@@ -186,7 +186,7 @@ public static partial class R2APIContentManager
         }
         catch (Exception e)
         {
-            R2API.Logger.LogError(e);
+            ContentManagementPlugin.Logger.LogError(e);
         }
     }
 
@@ -269,7 +269,7 @@ public static partial class R2APIContentManager
                                 }
                                 else
                                 {
-                                    R2API.Logger.LogError($"The exact same asset {firstAsset} is being added by two different content packs : {firstContentPack.identifier} and {secondContentPack.identifier}");
+                                    ContentManagementPlugin.Logger.LogError($"The exact same asset {firstAsset} is being added by two different content packs : {firstContentPack.identifier} and {secondContentPack.identifier}");
                                     // Todo, try removing it from the non-vanilla contentPack, lot of annoying code to write that I cant bother writing right now
                                 }
                             }
@@ -308,7 +308,7 @@ public static partial class R2APIContentManager
     {
         var newName = $"{changingContentPack.identifier}_{changingAsset.name}_{assetIndex++}";
 
-        R2API.Logger.LogWarning($"Asset name from {changingContentPack.identifier} is conflicting with {notChangingContentPack.identifier}. " +
+        ContentManagementPlugin.Logger.LogWarning($"Asset name from {changingContentPack.identifier} is conflicting with {notChangingContentPack.identifier}. " +
             $"Old name : {changingAsset.name}, new name : {newName}");
         changingAsset.name = newName;
     }
@@ -368,7 +368,7 @@ public static partial class R2APIContentManager
                         $"If you think this is an Error and it should be supported, please file a bug report.");
                 }
             }
-            catch (Exception e) { R2API.Logger.LogError(e); }
+            catch (Exception e) { ContentManagementPlugin.Logger.LogError(e); }
         }
     }
 
@@ -430,14 +430,14 @@ public static partial class R2APIContentManager
                     $"If you think this is an Error and it should be supported, please file a bug report.");
             }
         }
-        catch (Exception e) { R2API.Logger.LogError(e); }
+        catch (Exception e) { ContentManagementPlugin.Logger.LogError(e); }
     }
 
     internal static void CreateContentPacks()
     {
         if (!_contentPacksCreated)
         {
-            R2API.Logger.LogInfo($"Generating a total of {BepInModNameToSerializableContentPack.Values.Count} ContentPacks...");
+            ContentManagementPlugin.Logger.LogInfo($"Generating a total of {BepInModNameToSerializableContentPack.Values.Count} ContentPacks...");
             List<ManagedReadOnlyContentPack> managedReadOnlyContentPacks = new List<ManagedReadOnlyContentPack>();
             foreach (var (modName, managedSCP) in BepInModNameToSerializableContentPack)
             {
@@ -465,7 +465,7 @@ public static partial class R2APIContentManager
             modName = Chainloader.PluginInfos.FirstOrDefault(x => location == x.Value.Location).Key;
             if (modName == null)
             {
-                R2API.Logger.LogWarning($"The assembly {assembly.FullName} is not a loaded BepInEx plugin, falling back to looking for attribute in assembly");
+                ContentManagementPlugin.Logger.LogWarning($"The assembly {assembly.FullName} is not a loaded BepInEx plugin, falling back to looking for attribute in assembly");
 
                 try
                 {
@@ -475,7 +475,7 @@ public static partial class R2APIContentManager
                 }
                 catch
                 {
-                    R2API.Logger.LogWarning("Assembly did not have a BepInPlugin attribute or couldn't load its types, falling back to assembly name");
+                    ContentManagementPlugin.Logger.LogWarning("Assembly did not have a BepInPlugin attribute or couldn't load its types, falling back to assembly name");
                     modName = assembly.GetName().Name;
                 }
             }
@@ -490,7 +490,7 @@ public static partial class R2APIContentManager
             serializableContentPack = ScriptableObject.CreateInstance<R2APISerializableContentPack>();
             serializableContentPack.name = modName;
             BepInModNameToSerializableContentPack.Add(modName, new ManagedSerializableContentPack(serializableContentPack, true, assembly));
-            R2API.Logger.LogInfo($"Created a SerializableContentPack for mod {modName}");
+            ContentManagementPlugin.Logger.LogInfo($"Created a SerializableContentPack for mod {modName}");
         }
         return BepInModNameToSerializableContentPack[modName].serializableContentPack;
     }
@@ -503,7 +503,7 @@ public static partial class R2APIContentManager
         }
         else
         {
-            R2API.Logger.LogWarning($"Cannot add {asset} to content pack {identifier} because the asset has already been added to it's corresponding array!");
+            ContentManagementPlugin.Logger.LogWarning($"Cannot add {asset} to content pack {identifier} because the asset has already been added to it's corresponding array!");
         }
     }
 
@@ -515,7 +515,7 @@ public static partial class R2APIContentManager
         }
         else
         {
-            R2API.Logger.LogWarning($"Cannot add {asset} to content pack {identifier} because the asset has already been added to it's corresponding array!");
+            ContentManagementPlugin.Logger.LogWarning($"Cannot add {asset} to content pack {identifier} because the asset has already been added to it's corresponding array!");
         }
     }
     #endregion

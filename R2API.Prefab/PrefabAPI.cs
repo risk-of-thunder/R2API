@@ -173,7 +173,7 @@ public static partial class PrefabAPI
         }
         else
         {
-            R2API.Logger.LogError($"PrefabAPI: {h.Prefab} don't have a NetworkIdentity Component. Can't register.");
+            PrefabPlugin.Logger.LogError($"{h.Prefab} don't have a NetworkIdentity Component. Can't register.");
         }
     }
 

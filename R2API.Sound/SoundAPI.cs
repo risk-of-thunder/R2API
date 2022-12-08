@@ -117,7 +117,7 @@ public static partial class SoundAPI
 
         if (loadedABank)
         {
-            R2API.Logger.LogInfo("Custom sound banks loaded.");
+            SoundPlugin.Logger.LogInfo("Custom sound banks loaded.");
         }
     }
 
@@ -326,7 +326,7 @@ public static partial class SoundAPI
         SoundAPI.SetHooks();
         if (!CatalogBlockers.GetAvailability<NetworkSoundEventDef>())
         {
-            R2API.Logger.LogError(
+            SoundPlugin.Logger.LogError(
                 "Too late ! " +
                 "Tried to add network sound event: " +
                 $"{networkSoundEventDef.eventName} " +
@@ -337,7 +337,7 @@ public static partial class SoundAPI
         if (NetworkSoundEventDefs.Contains(networkSoundEventDef) ||
             NetworkSoundEventDefs.Any(n => n.eventName == networkSoundEventDef.eventName))
         {
-            R2API.Logger.LogError(
+            SoundPlugin.Logger.LogError(
                 "NetworkSoundEventDef or NetworkSoundEventDef " +
                 $"with EventName: {networkSoundEventDef.eventName} " +
                 $"already exists in the catalog! " +
@@ -362,7 +362,7 @@ public static partial class SoundAPI
         SoundAPI.SetHooks();
         if (!CatalogBlockers.GetAvailability<NetworkSoundEventDef>())
         {
-            R2API.Logger.LogError(
+            SoundPlugin.Logger.LogError(
                 $"Too late! Tried to add network sound event: {eventName} " +
                 "after the NetworkSoundEventCatalog has initalized!");
             return false;
@@ -373,7 +373,7 @@ public static partial class SoundAPI
 
         if (NetworkSoundEventDefs.Any(n => n.eventName == eventName))
         {
-            R2API.Logger.LogError(
+            SoundPlugin.Logger.LogError(
                 $"NetworkSoundEventDef with Event Name: {eventName} " +
                 "already exists in the catalog! " +
                 "Consider changing your event name to avoid the collision. Aborting!");
@@ -633,7 +633,7 @@ public static partial class SoundAPI
                 var akResult = AkSoundEngine.AddBasePath(data.BanksFolderPath);
                 if (akResult != AKRESULT.AK_Success)
                 {
-                    R2API.Logger.LogError(
+                    SoundPlugin.Logger.LogError(
                         $"Error adding base path : {data.BanksFolderPath}. " +
                         $"Error code : {akResult}");
                     continue;
@@ -642,7 +642,7 @@ public static partial class SoundAPI
                 akResult = AkSoundEngine.LoadBank(data.InitBankName, out data._loadedInitBankId);
                 if (akResult != AKRESULT.AK_Success)
                 {
-                    R2API.Logger.LogError(
+                    SoundPlugin.Logger.LogError(
                         $"Error loading init bank : {data.InitBankName}. " +
                         $"Error code : {akResult}");
                     continue;
@@ -651,7 +651,7 @@ public static partial class SoundAPI
                 akResult = AkSoundEngine.LoadBank(data.SoundBankName, out data._loadedSoundBankId);
                 if (akResult != AKRESULT.AK_Success)
                 {
-                    R2API.Logger.LogError(
+                    SoundPlugin.Logger.LogError(
                         $"Error loading sound bank : {data.SoundBankName}. " +
                         $"Error code : {akResult}");
                     continue;
@@ -763,7 +763,7 @@ public static partial class SoundAPI
 
             if (data.InitBankName == GameInitBankName)
             {
-                R2API.Logger.LogError(
+                SoundPlugin.Logger.LogError(
                     "Error loading custom init bank. " +
                     "Called the same as the game Init Bank. " +
                     "The name must be different.");
@@ -772,7 +772,7 @@ public static partial class SoundAPI
 
             if (string.IsNullOrWhiteSpace(data.InitBankName))
             {
-                R2API.Logger.LogError(
+                SoundPlugin.Logger.LogError(
                     "Error loading custom init bank. " +
                     "Should not be empty.");
                 return false;
@@ -780,7 +780,7 @@ public static partial class SoundAPI
 
             if (data.PlayMusicSystemEventName == GameEventNamePlayMusicSystem)
             {
-                R2API.Logger.LogError(
+                SoundPlugin.Logger.LogError(
                     "Error adding the play music system event name. " +
                     "Called the same as the game play music system event name. " +
                     "The name must be different.");
@@ -789,7 +789,7 @@ public static partial class SoundAPI
 
             if (string.IsNullOrWhiteSpace(data.PlayMusicSystemEventName))
             {
-                R2API.Logger.LogError(
+                SoundPlugin.Logger.LogError(
                     "Error adding the play music system event name. " +
                     "Should not be empty.");
                 return false;
@@ -797,7 +797,7 @@ public static partial class SoundAPI
 
             if (!PlayMusicSystemEventNames.Add(data.PlayMusicSystemEventName))
             {
-                R2API.Logger.LogError(
+                SoundPlugin.Logger.LogError(
                     $"Error adding playMusicSystemEventName : {data.PlayMusicSystemEventName}. " +
                     $"Already in use by {EventNameToBepinPlugin[data.PlayMusicSystemEventName].GUID}.");
                 return false;
@@ -822,7 +822,7 @@ public static partial class SoundAPI
             var akResult = AkSoundEngine.UnloadBank(data.LoadedSoundBankId, IntPtr.Zero);
             if (akResult != AKRESULT.AK_Success)
             {
-                R2API.Logger.LogError(
+                SoundPlugin.Logger.LogError(
                     $"Error unloading sound bank : {data.SoundBankName}. " +
                     $"Error code : {akResult}");
                 return false;
@@ -831,7 +831,7 @@ public static partial class SoundAPI
             akResult = AkSoundEngine.UnloadBank(data.LoadedInitBankId, IntPtr.Zero);
             if (akResult != AKRESULT.AK_Success)
             {
-                R2API.Logger.LogError(
+                SoundPlugin.Logger.LogError(
                     $"Error unloading init bank : {data.InitBankName}. " +
                     $"Error code : {akResult}");
                 return false;

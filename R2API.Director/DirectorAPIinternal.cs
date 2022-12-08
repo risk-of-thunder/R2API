@@ -130,7 +130,7 @@ public static partial class DirectorAPI
         var isUsingOldSystem = !classicStageInfo.monsterDccsPool && classicStageInfo.monsterCategories;
         if (isUsingOldSystem)
         {
-            R2API.Logger.LogInfo($"Current scene is using old monster dccs system, porting to new one");
+            DirectorPlugin.Logger.LogInfo($"Current scene is using old monster dccs system, porting to new one");
 
             var newDccsPool = ScriptableObject.CreateInstance<DccsPool>();
             newDccsPool.name = "R2API_" + "dp" + classicStageInfo.name + "Monsters";
@@ -189,7 +189,7 @@ public static partial class DirectorAPI
             }
             else
             {
-                R2API.Logger.LogError($"classicStageInfo.possibleMonsterFamilies {monsterFamily.monsterFamilyCategories.name} not setup correctly");
+                DirectorPlugin.Logger.LogError($"classicStageInfo.possibleMonsterFamilies {monsterFamily.monsterFamilyCategories.name} not setup correctly");
             }
         }
         familyCategory.includedIfConditionsMet = familyPoolEntries.ToArray();
@@ -204,7 +204,7 @@ public static partial class DirectorAPI
         var isUsingOldSystem = !classicStageInfo.interactableDccsPool && classicStageInfo.interactableCategories;
         if (isUsingOldSystem)
         {
-            R2API.Logger.LogInfo($"Current scene is using old interactable dccs system, porting to new one");
+            DirectorPlugin.Logger.LogInfo($"Current scene is using old interactable dccs system, porting to new one");
 
             var newDccsPool = ScriptableObject.CreateInstance<DccsPool>();
             newDccsPool.name = "R2API_" + "dp" + classicStageInfo.name + "Interactables";

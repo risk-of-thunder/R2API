@@ -19,7 +19,7 @@ internal struct ExamplePing : INetRequest<ExamplePing, ExamplePingReply>
 
     public ExamplePingReply OnRequestReceived()
     {
-        R2API.Logger.LogWarning("ExamplePing - Received this request : " + Integer);
+        NetworkingPlugin.Logger.LogWarning("ExamplePing - Received this request : " + Integer);
         return new ExamplePingReply { Str = "I'm answering you back this string" };
     }
 }
@@ -40,6 +40,6 @@ internal struct ExamplePingReply : INetRequestReply<ExamplePing, ExamplePingRepl
 
     public void OnReplyReceived()
     {
-        R2API.Logger.LogWarning("ExamplePingReply - Received this Reply : " + Str);
+        NetworkingPlugin.Logger.LogWarning("ExamplePingReply - Received this Reply : " + Str);
     }
 }

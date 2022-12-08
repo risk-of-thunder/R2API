@@ -86,7 +86,7 @@ public static class ContentAddition
             var pc = projectilePrefab.GetComponent<ProjectileController>();
             if (!pc.ghostPrefab)
             {
-                R2API.Logger.LogWarning($"Projectile {projectilePrefab} has no ghost prefab assigned! is this intentional?");
+                ContentManagementPlugin.Logger.LogWarning($"Projectile {projectilePrefab} has no ghost prefab assigned! is this intentional?");
             }
             R2APIContentManager.HandleContentAddition(asm, projectilePrefab);
             return true;
@@ -158,7 +158,7 @@ public static class ContentAddition
             }
             if (!HasComponent<VFXAttributes>(effectPrefab))
             {
-                R2API.Logger.LogWarning($"Effect {effectPrefab} has no {nameof(VFXAttributes)} component! is this intentional?");
+                ContentManagementPlugin.Logger.LogWarning($"Effect {effectPrefab} has no {nameof(VFXAttributes)} component! is this intentional?");
             }
             R2APIContentManager.HandleContentAddition(asm, effectPrefab);
             return true;
@@ -231,7 +231,7 @@ public static class ContentAddition
         var asm = Assembly.GetCallingAssembly();
         if (CatalogBlockers.GetAvailability<SceneDef>())
         {
-            R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is trying to add a SceneDef, R2API does not support weaving of Scenes, Use RainOfStages instead for weaving SceneDefs.");
+            ContentManagementPlugin.Logger.LogInfo($"Assembly {asm.GetName().Name} is trying to add a SceneDef, R2API does not support weaving of Scenes, Use RainOfStages instead for weaving SceneDefs.");
             R2APIContentManager.HandleContentAddition(asm, sceneDef);
             return true;
         }
@@ -250,7 +250,7 @@ public static class ContentAddition
         var asm = Assembly.GetCallingAssembly();
         if (CatalogBlockers.GetAvailability<ItemDef>())
         {
-            R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {itemDef} via {nameof(ContentAddition)}.{nameof(AddItemDef)}()" +
+            ContentManagementPlugin.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {itemDef} via {nameof(ContentAddition)}.{nameof(AddItemDef)}()" +
                 $"The assembly should ideally add them via ItemAPI so that they can use ItemAPI's IDRS systems, adding anyways.");
             R2APIContentManager.HandleContentAddition(asm, itemDef);
             return true;
@@ -325,7 +325,7 @@ public static class ContentAddition
         var asm = Assembly.GetCallingAssembly();
         if (CatalogBlockers.GetAvailability<EquipmentDef>())
         {
-            R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {equipmentDef} via {nameof(ContentAddition)}.{nameof(AddEquipmentDef)}()" +
+            ContentManagementPlugin.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {equipmentDef} via {nameof(ContentAddition)}.{nameof(AddEquipmentDef)}()" +
                 $"The assembly should ideally add them via ItemAPI so that they can use ItemAPI's IDRS systems, adding anyways.");
             R2APIContentManager.HandleContentAddition(asm, equipmentDef);
             return true;
@@ -348,11 +348,11 @@ public static class ContentAddition
         {
             if (buffDef.eliteDef && buffDef.eliteDef.eliteEquipmentDef && buffDef.eliteDef.eliteEquipmentDef.passiveBuffDef != buffDef)
             {
-                R2API.Logger.LogWarning($"Assembly {asm.GetName().Name} is adding an {buffDef} which has an eliteDef assigned, but said eliteDef's equipmentDef's passiveBuffDef is not {buffDef}! is this intentional?");
+                ContentManagementPlugin.Logger.LogWarning($"Assembly {asm.GetName().Name} is adding an {buffDef} which has an eliteDef assigned, but said eliteDef's equipmentDef's passiveBuffDef is not {buffDef}! is this intentional?");
             }
             if (buffDef.startSfx && (string.IsNullOrEmpty(buffDef.startSfx.eventName) || string.IsNullOrWhiteSpace(buffDef.startSfx.eventName)))
             {
-                R2API.Logger.LogWarning($"Assembly {asm.GetName().Name} is adding an {buffDef} that has a startSFX, but the startSFX's NetworkedSoundEventDef's eventName is Null, Empty or Whitespace! is this intentional?");
+                ContentManagementPlugin.Logger.LogWarning($"Assembly {asm.GetName().Name} is adding an {buffDef} that has a startSFX, but the startSFX's NetworkedSoundEventDef's eventName is Null, Empty or Whitespace! is this intentional?");
             }
             R2APIContentManager.HandleContentAddition(asm, buffDef);
             return true;
@@ -372,7 +372,7 @@ public static class ContentAddition
         var asm = Assembly.GetCallingAssembly();
         if (CatalogBlockers.GetAvailability<EliteDef>())
         {
-            R2API.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {eliteDef} via {nameof(ContentAddition)}.{nameof(AddEliteDef)}()" +
+            ContentManagementPlugin.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {eliteDef} via {nameof(ContentAddition)}.{nameof(AddEliteDef)}()" +
                 $"The assembly should ideally add them via EliteAPI so that they can use EliteAPI's elite tier systems, adding anyways.");
             R2APIContentManager.HandleContentAddition(asm, eliteDef);
             return true;
@@ -423,7 +423,7 @@ public static class ContentAddition
             }
             if (!survivorDef.displayPrefab)
             {
-                R2API.Logger.LogWarning($"Assembly {asm.GetName().Name} is adding an {survivorDef} that does not have a displayPrefab! is this intentional?");
+                ContentManagementPlugin.Logger.LogWarning($"Assembly {asm.GetName().Name} is adding an {survivorDef} that does not have a displayPrefab! is this intentional?");
             }
             R2APIContentManager.HandleContentAddition(asm, survivorDef);
             return true;
@@ -668,7 +668,7 @@ public static class ContentAddition
         {
             throw new InvalidOperationException($"Assembly {assembly.GetName().Name} is trying to add a {content} as a {contentType}, {problem}");
         }
-        catch (Exception e) { R2API.Logger.LogError(e); }
+        catch (Exception e) { ContentManagementPlugin.Logger.LogError(e); }
     }
     private static bool HasComponent<T>(GameObject obj) where T : Component => obj.GetComponent<T>();
     #endregion

@@ -90,22 +90,22 @@ public static partial class ItemAPI
     {
         if (!CatalogBlockers.GetAvailability<ItemDef>())
         {
-            R2API.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the ItemCatalog has Initialized!");
+            ItemsPlugin.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the ItemCatalog has Initialized!");
         }
 
         if (!item.ItemDef)
         {
-            R2API.Logger.LogError("ItemDef is null ! Can't add the custom item.");
+            ItemsPlugin.Logger.LogError("ItemDef is null ! Can't add the custom item.");
         }
 
         if (string.IsNullOrEmpty(item.ItemDef.name))
         {
-            R2API.Logger.LogError("ItemDef.name is null or empty ! Can't add the custom item.");
+            ItemsPlugin.Logger.LogError("ItemDef.name is null or empty ! Can't add the custom item.");
         }
 
         if (!item.ItemDef.pickupModelPrefab)
         {
-            R2API.Logger.LogWarning($"No ItemDef.pickupModelPrefab ({item.ItemDef.name}), the game will show nothing when the item is on the ground.");
+            ItemsPlugin.Logger.LogWarning($"No ItemDef.pickupModelPrefab ({item.ItemDef.name}), the game will show nothing when the item is on the ground.");
         }
 
         if (item.ItemDisplayRules != null &&
@@ -113,10 +113,10 @@ public static partial class ItemAPI
         {
             if (item.ItemDisplayRules.HasInvalidDisplays(out var log))
             {
-                R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomItem ({item.ItemDef}) have an invalid {nameof(ItemDisplayRule.followerPrefab)}. " +
+                ItemsPlugin.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomItem ({item.ItemDef}) have an invalid {nameof(ItemDisplayRule.followerPrefab)}. " +
                     $"(There are ItemDisplayRuleType.ParentedPrefab rules)," +
                     $"Logging invalid rules... (For full details, check the Log file)");
-                R2API.Logger.LogDebug(log.ToString());
+                ItemsPlugin.Logger.LogDebug(log.ToString());
             }
         }
 
@@ -128,7 +128,7 @@ public static partial class ItemAPI
         }
         catch
         {
-            R2API.Logger.LogError($"Custom item '{item.ItemDef.name}' is not XMLsafe. Item not added.");
+            ItemsPlugin.Logger.LogError($"Custom item '{item.ItemDef.name}' is not XMLsafe. Item not added.");
         }
         if (xmlSafe)
         {
@@ -158,22 +158,22 @@ public static partial class ItemAPI
     {
         if (!CatalogBlockers.GetAvailability<EquipmentDef>())
         {
-            R2API.Logger.LogError($"Too late ! Tried to add equipment item: {equip.EquipmentDef.nameToken} after the EquipmentCatalog has initialized!");
+            ItemsPlugin.Logger.LogError($"Too late ! Tried to add equipment item: {equip.EquipmentDef.nameToken} after the EquipmentCatalog has initialized!");
         }
 
         if (equip.EquipmentDef == null)
         {
-            R2API.Logger.LogError("EquipmentDef is null ! Can't add the custom Equipment.");
+            ItemsPlugin.Logger.LogError("EquipmentDef is null ! Can't add the custom Equipment.");
         }
 
         if (string.IsNullOrEmpty(equip.EquipmentDef.name))
         {
-            R2API.Logger.LogError("EquipmentDef.name is null or empty ! Can't add the custom Equipment.");
+            ItemsPlugin.Logger.LogError("EquipmentDef.name is null or empty ! Can't add the custom Equipment.");
         }
 
         if (!equip.EquipmentDef.pickupModelPrefab)
         {
-            R2API.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab ({equip.EquipmentDef.name}), the game will show nothing when the equipment is on the ground.");
+            ItemsPlugin.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab ({equip.EquipmentDef.name}), the game will show nothing when the equipment is on the ground.");
         }
 
         if (equip.ItemDisplayRules != null &&
@@ -181,10 +181,10 @@ public static partial class ItemAPI
         {
             if (equip.ItemDisplayRules.HasInvalidDisplays(out var log))
             {
-                R2API.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomEquipment ({equip.EquipmentDef}) have an invalid {nameof(ItemDisplayRule.followerPrefab)}. " +
+                ItemsPlugin.Logger.LogWarning($"Some of the ItemDisplayRules in the dictionary for CustomEquipment ({equip.EquipmentDef}) have an invalid {nameof(ItemDisplayRule.followerPrefab)}. " +
                     $"(There are ItemDisplayRuleType.ParentedPrefab rules)," +
                     $"Logging invalid rules... (For full details, check the Log file)");
-                R2API.Logger.LogDebug(log.ToString());
+                ItemsPlugin.Logger.LogDebug(log.ToString());
             }
         }
 
@@ -196,7 +196,7 @@ public static partial class ItemAPI
         }
         catch
         {
-            R2API.Logger.LogError($"Custom equipment '{equip.EquipmentDef.name}' is not XMLsafe. Equipment not added.");
+            ItemsPlugin.Logger.LogError($"Custom equipment '{equip.EquipmentDef.name}' is not XMLsafe. Equipment not added.");
         }
         if (xmlSafe)
         {
@@ -222,7 +222,7 @@ public static partial class ItemAPI
 
         if (!CatalogBlockers.GetAvailability<ItemDef>())
         {
-            R2API.Logger.LogError($"Too late ! Tried to add itemTag: {name} after the ItemCatalog has Initialized!");
+            ItemsPlugin.Logger.LogError($"Too late ! Tried to add itemTag: {name} after the ItemCatalog has Initialized!");
             return (ItemTag)(-1);
         }
         int result = (int)FindItemTagByName(name);
@@ -353,7 +353,7 @@ public static partial class ItemAPI
         }
         catch (Exception e)
         {
-            R2API.Logger.LogError($"Exception in {nameof(MaterialFixForItemDisplayOnCharacter)} : Item mods without the {nameof(ItemDisplay)} component may not work correctly.\n{e}");
+            ItemsPlugin.Logger.LogError($"Exception in {nameof(MaterialFixForItemDisplayOnCharacter)} : Item mods without the {nameof(ItemDisplay)} component may not work correctly.\n{e}");
         }
     }
 

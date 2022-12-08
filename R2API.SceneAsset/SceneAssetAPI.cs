@@ -61,7 +61,7 @@ public static partial class SceneAssetAPI
             }
             catch (Exception e)
             {
-                R2API.Logger.LogError($"Exception in ExecuteRequests : {e}");
+                SceneAssetPlugin.Logger.LogError($"Exception in ExecuteRequests : {e}");
             }
         }
     }

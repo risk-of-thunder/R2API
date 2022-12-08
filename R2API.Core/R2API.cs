@@ -16,6 +16,30 @@ using UnityEngine;
 
 namespace R2API;
 
+// This is for R2API.Legacy
+[BepInDependency(PluginGUID + ".artifactcode", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".commandhelper", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".content_management", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".damagetype", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".deployable", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".difficulty", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".director", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".dot", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".elites", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".items", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".language", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".loadout", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".lobbyconfig", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".networking", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".orb", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".prefab", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".lobbyconfig", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".recalculatestats", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".sceneasset", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".sound", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".tempvisualeffect", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".unlockable", BepInDependency.DependencyFlags.SoftDependency)]
+
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 [AutoVersion]
 // ReSharper disable once InconsistentNaming

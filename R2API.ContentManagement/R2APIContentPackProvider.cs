@@ -74,7 +74,7 @@ internal class R2APIGenericContentPack : IContentPackProvider
         log.AddRange(contentPack.expansionDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
         log.AddRange(contentPack.entitlementDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
         log.AddRange(contentPack.miscPickupDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
-        R2API.Logger.LogDebug(string.Join("\n", log));
+        ContentManagementPlugin.Logger.LogDebug(string.Join("\n", log));
     }
 }
 internal class R2APIContentPackProvider
@@ -98,7 +98,7 @@ internal class R2APIContentPackProvider
                 }
                 catch (Exception e)
                 {
-                    R2API.Logger.LogError(e);
+                    ContentManagementPlugin.Logger.LogError(e);
                 }
             }
         }

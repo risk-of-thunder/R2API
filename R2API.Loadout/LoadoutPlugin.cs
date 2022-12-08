@@ -1,4 +1,5 @@
 using BepInEx;
+using BepInEx.Logging;
 using System;
 
 namespace R2API;
@@ -7,5 +8,10 @@ namespace R2API;
 [Obsolete(LoadoutAPI.ObsoleteMessage)]
 public sealed class LoadoutPlugin : BaseUnityPlugin
 {
+    internal static new ManualLogSource Logger { get; set; }
 
+    private void Awake()
+    {
+        Logger = base.Logger;
+    }
 }

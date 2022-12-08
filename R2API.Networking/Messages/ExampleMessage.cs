@@ -21,5 +21,5 @@ internal struct ExampleMessage : INetMessage
     }
 
     public void OnReceived() =>
-        R2API.Logger.LogWarning("int : " + Integer + " str : " + Str);
+        NetworkingPlugin.Logger.LogWarning("int : " + Integer + " str : " + Str);
 }

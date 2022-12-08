@@ -1,6 +1,6 @@
-using System;
 using System.Runtime.CompilerServices;
 using BepInEx;
+using BepInEx.Logging;
 
 [assembly: InternalsVisibleTo("R2API.Items")]
 [assembly: InternalsVisibleTo("R2API.Elites")]
@@ -15,6 +15,15 @@ namespace R2API.ContentManagement;
 [BepInPlugin(R2APIContentManager.PluginGUID, R2APIContentManager.PluginName, R2APIContentManager.PluginVersion)]
 internal sealed class ContentManagementPlugin : BaseUnityPlugin
 {
+    internal static new ManualLogSource Logger { get; set; }
+
+    private void Awake()
+    {
+        Logger = base.Logger;
+
+        R2APIContentPackProvider.Init();
+    }
+
     private void OnDestroy()
     {
         R2APIContentManager.UnsetHooks();

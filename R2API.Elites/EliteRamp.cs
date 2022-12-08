@@ -1,12 +1,10 @@
-﻿using Mono.Cecil.Cil;
+﻿using System;
+using System.Collections.Generic;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using R2API.Utils;
 
 namespace R2API;
 
@@ -60,7 +58,7 @@ public static class EliteRamp
         }
         else
         {
-            R2API.Logger.LogError($"Elite Ramp ILHook failed");
+            ElitesPlugin.Logger.LogError($"Elite Ramp ILHook failed");
         }
 
         static void UpdateRampProperly(CharacterModel charModel)
@@ -96,7 +94,7 @@ public static class EliteRamp
         }
         catch (Exception ex)
         {
-            R2API.Logger.LogError(ex);
+            ElitesPlugin.Logger.LogError(ex);
         }
     }
 

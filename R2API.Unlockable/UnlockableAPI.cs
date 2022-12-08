@@ -141,7 +141,7 @@ public static partial class UnlockableAPI
         }
         catch (Exception e)
         {
-            R2API.Logger.LogError($"An error has occured while trying to add a new AchievementDef: {e}");
+            UnlockablePlugin.Logger.LogError($"An error has occured while trying to add a new AchievementDef: {e}");
             return false;
         }
     }

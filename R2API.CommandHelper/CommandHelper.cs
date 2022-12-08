@@ -105,7 +105,7 @@ public partial class CommandHelper
             {
                 if (!methodInfo.IsStatic)
                 {
-                    R2API.Logger.LogError($"ConCommand defined as {methodInfo.Name} in {assembly.FullName} could not be registered. " +
+                    CommandHelperPlugin.Logger.LogError($"ConCommand defined as {methodInfo.Name} in {assembly.FullName} could not be registered. " +
                         "ConCommands must be static methods.");
                     continue;
                 }
@@ -127,7 +127,7 @@ public partial class CommandHelper
         }
         catch (Exception e)
         {
-            R2API.Logger.LogError($"{nameof(CommandHelper)} failed to scan the assembly called {assembly.FullName}. Exception : {e}");
+            CommandHelperPlugin.Logger.LogError($"{nameof(CommandHelper)} failed to scan the assembly called {assembly.FullName}. Exception : {e}");
         }
     }
 
@@ -155,7 +155,7 @@ public partial class CommandHelper
                         }
                         else if (type.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
                         {
-                            R2API.Logger.LogError(
+                            CommandHelperPlugin.Logger.LogError(
                                 $"ConVar defined as {type.Name} in {assembly.FullName}. {field.Name} could not be registered. ConVars must be static fields.");
                         }
                     }
@@ -175,7 +175,7 @@ public partial class CommandHelper
         }
         catch (Exception e)
         {
-            R2API.Logger.LogError($"{nameof(CommandHelper)} failed to scan the assembly called {assembly.FullName}. Exception : {e}");
+            CommandHelperPlugin.Logger.LogError($"{nameof(CommandHelper)} failed to scan the assembly called {assembly.FullName}. Exception : {e}");
         }
     }
 }
