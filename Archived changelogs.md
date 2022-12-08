@@ -1,4 +1,4 @@
-All changelogs before 5.0.0 version
+All changelogs before the current major version are listed below.
 
 **4.4.1**
 * [Fix LanguageAPI being case dependent, add support for ChainGunOrb in DamageAPI by @KingEnderBrine](https://github.com/risk-of-thunder/R2API/pull/402)

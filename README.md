@@ -1,16 +1,28 @@
-
 # R2API – a modding API for Risk of Rain 2
-[![Build Status - DEPRECATED](https://raegous.visualstudio.com/Risk%20of%20Rain%202%20Modding/_apis/build/status/Risk%20of%20Rain%202%20Modding-.NET%20Desktop-CI?branchName=master)](https://raegous.visualstudio.com/Risk%20of%20Rain%202%20Modding/_build/latest?definitionId=1&branchName=master)
+
 ![GitHub Actions Build](https://github.com/risk-of-thunder/R2API/workflows/CI%20Build/badge.svg)
 
 ## About
 
 R2API is a modding framework for other mods to work in, providing centralized and simplified APIs for Risk of Rain 2.
-This helps keeping mods compatible with each other.
 
-At it's core, R2API should not change how the game behaves without any other mod installed.
+This helps keep mods compatible with each other.
+
+At its core, R2API should not change how the game behaves without any other mod installed.
 
 The only change is to keep mods out of quickplay and prismatic trials by request of the **Hopoo Games** team.
+
+## Installation
+
+The usage of a mod manager is heavily recommended, you can use r2modman or the thunderstore mod manager.
+
+If you want to manually install still:
+
+-  Install [BepInEx](https://thunderstore.io/package/bbepis/BepInExPack/).
+
+-  Install [HookGenPatcher](https://thunderstore.io/package/RiskofThunder/HookGenPatcher/).
+
+-  Copy the files inside the `plugins` folder from the zip into the `BepInEx/plugins`.
 
 ## Developing mods using R2API
 
@@ -18,12 +30,16 @@ A lot of documentation is in the included *xmldocs*, and further information may
 
 Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
+## Bleeding Edge / Artifacts
+
+Artifacts builds are available under the Action tab, they are built after each commit / pull requests.
+
 ## Contributing to R2API
-TODO
+
+We welcome any contributions, please read the [CONTRIBUTING.md file](https://github.com/risk-of-thunder/R2API/blob/master/CONTRIBUTING.md)
 
 ## Changelog
 
-The most recent changelog can always be found on the [GitHub](https://github.com/risk-of-thunder/R2API/blob/master/Archived%20changelogs.md). In this readme, only the most recent *minor* version will have a changelog.
+The changelog for all previous major versions can always be found on [GitHub](https://github.com/risk-of-thunder/R2API/blob/master/Archived%20changelogs.md).
 
-**Current**
-TODO
+If you want the changelog for the current major version, please check the corresponding R2API modules READMEs.
