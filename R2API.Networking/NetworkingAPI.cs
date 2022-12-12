@@ -15,7 +15,9 @@ namespace R2API.Networking;
 /// <see href="https://github.com/risk-of-thunder/R2Wiki/wiki/Networking-with-R2API.NetworkingAPI-(INetMessage)">
 /// the tutorial for example usage.</see>
 /// </summary>
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class NetworkingAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".networking";

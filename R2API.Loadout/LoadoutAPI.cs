@@ -17,7 +17,9 @@ using UnityEngine;
 namespace R2API;
 
 [Obsolete(LoadoutAPI.ObsoleteMessage)]
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class LoadoutAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".loadout";

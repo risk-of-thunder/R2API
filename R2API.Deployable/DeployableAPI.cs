@@ -12,7 +12,9 @@ namespace R2API;
 /// <summary>
 /// API for handling deployables added by mods
 /// </summary>
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class DeployableAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".deployable";

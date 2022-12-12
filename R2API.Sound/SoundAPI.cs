@@ -19,7 +19,9 @@ namespace R2API;
 /// <summary>
 /// API for adding sounds with Wwise
 /// </summary>
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class SoundAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".sound";

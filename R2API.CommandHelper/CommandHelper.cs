@@ -14,7 +14,9 @@ namespace R2API.Utils;
 /// so that they are registered as console commands for the in-game console.
 /// </summary>
 [Obsolete($"Add [assembly: HG.Reflection.SearchableAttribute.OptInAttribute] to your assembly instead")]
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public partial class CommandHelper
 {
     public const string PluginGUID = R2API.PluginGUID + ".commandhelper";

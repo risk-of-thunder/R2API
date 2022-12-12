@@ -14,7 +14,9 @@ namespace R2API;
 /// <summary>
 /// API for adding damage over time effects to the game.
 /// </summary>
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class DotAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".dot";

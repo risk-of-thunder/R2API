@@ -14,7 +14,9 @@ using UnityEngine.Events;
 namespace R2API;
 
 // ReSharper disable once InconsistentNaming
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class ArtifactCodeAPI
 {
     /// <summary>

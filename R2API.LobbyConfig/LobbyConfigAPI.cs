@@ -10,7 +10,9 @@ using UnityEngine;
 namespace R2API;
 
 // ReSharper disable once InconsistentNaming
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class LobbyConfigAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".lobbyconfig";

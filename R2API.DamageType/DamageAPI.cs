@@ -18,7 +18,9 @@ namespace R2API;
 /// API for handling DamageTypes added by mods
 /// </summary>
 
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class DamageAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".damagetype";

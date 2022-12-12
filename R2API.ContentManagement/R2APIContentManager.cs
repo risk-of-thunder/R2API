@@ -97,7 +97,9 @@ public struct ManagedReadOnlyContentPack
 /// <summary>
 /// A class that's used for managing ContentPacks created by R2API
 /// </summary>
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class R2APIContentManager
 {
     public const string PluginGUID = R2API.PluginGUID + ".content_management";
