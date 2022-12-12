@@ -46,6 +46,9 @@ namespace {containingNamespace};
 
 public partial class {type.Name}
 {{
+    /// <summary>
+    /// Version of the plugin, should be matching with the thunderstore package.
+    /// </summary>
     public const string {versionLine};
 }}
 ";

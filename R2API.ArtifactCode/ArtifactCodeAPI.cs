@@ -17,7 +17,14 @@ namespace R2API;
 [AutoVersion]
 public static partial class ArtifactCodeAPI
 {
+    /// <summary>
+    /// GUID of the plugin, usually used for the <see cref="BepInEx.BepInDependency"/> Attribute.
+    /// </summary>
     public const string PluginGUID = R2API.PluginGUID + ".artifactcode";
+
+    /// <summary>
+    ///
+    /// </summary>
     public const string PluginName = R2API.PluginName + ".ArtifactCode";
 
     private static readonly List<(ArtifactDef, Sha256HashAsset)> artifactCodes = new List<(ArtifactDef, Sha256HashAsset)>();
