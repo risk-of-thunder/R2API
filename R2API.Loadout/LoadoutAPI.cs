@@ -30,7 +30,9 @@ public static partial class LoadoutAPI
     /// Return true if the submodule is loaded.
     /// </summary>
     // ReSharper disable once ConvertToAutoProperty
-    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+#pragma warning disable CS0618 // Type or member is obsolete
+    [Obsolete(R2APISubmoduleDependency.PropertyObsolete)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
     private static readonly HashSet<SkinDef> AddedSkins = new HashSet<SkinDef>();

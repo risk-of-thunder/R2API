@@ -21,7 +21,9 @@ public static partial class DeployableAPI
     /// <summary>
     /// Return true if the submodule is loaded.
     /// </summary>
-    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+#pragma warning disable CS0618 // Type or member is obsolete
+    [Obsolete(R2APISubmoduleDependency.PropertyObsolete)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
     private static readonly Dictionary<DeployableSlot, GetDeployableSameSlotLimit> moddedDeployables = new Dictionary<DeployableSlot, GetDeployableSameSlotLimit>();

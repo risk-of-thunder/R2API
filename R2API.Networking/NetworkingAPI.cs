@@ -24,7 +24,9 @@ public static partial class NetworkingAPI
     /// <summary>
     /// Return true if the submodule is loaded.
     /// </summary>
-    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+#pragma warning disable CS0618 // Type or member is obsolete
+    [Obsolete(R2APISubmoduleDependency.PropertyObsolete)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
     internal static short MessageIndex => 2048;

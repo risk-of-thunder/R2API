@@ -30,7 +30,9 @@ public static partial class ArtifactCodeAPI
     private static readonly List<(ArtifactDef, Sha256HashAsset)> artifactCodes = new List<(ArtifactDef, Sha256HashAsset)>();
     private static readonly List<ArtifactCompoundDef> artifactCompounds = new List<ArtifactCompoundDef>();
 
-    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+#pragma warning disable CS0618 // Type or member is obsolete
+    [Obsolete(R2APISubmoduleDependency.PropertyObsolete)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
     private static bool _hooksEnabled = false;
@@ -178,8 +180,13 @@ public static partial class ArtifactCodeAPI
     public static void AddCode(ArtifactDef? artifactDef, IEnumerable<int> CompoundValues)
     {
         ArtifactCodeAPI.SetHooks();
+
         ArtifactCode artifactCode = ScriptableObject.CreateInstance<ArtifactCode>();
+
+#pragma warning disable CS0618 // Type or member is obsolete
         artifactCode.ArtifactCompounds = (List<int>)CompoundValues;
+#pragma warning restore CS0618 // Type or member is obsolete
+
         AddCode(artifactDef, artifactCode);
     }
     #endregion

@@ -30,10 +30,10 @@ public static partial class PrefabAPI
     /// </summary>
     // ReSharper disable once MemberCanBePrivate.Global
     // ReSharper disable once ConvertToAutoProperty
-    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+#pragma warning disable CS0618 // Type or member is obsolete
+    [Obsolete(R2APISubmoduleDependency.PropertyObsolete)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
-
-    private static bool _needToRegister = true;
 
     private static GameObject _parent;
     private static readonly List<HashStruct> _thingsToHash = new();

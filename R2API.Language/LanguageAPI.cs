@@ -20,7 +20,9 @@ public static partial class LanguageAPI
     public const string PluginGUID = R2API.PluginGUID + ".language";
     public const string PluginName = R2API.PluginName + ".Language";
 
-    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+#pragma warning disable CS0618 // Type or member is obsolete
+    [Obsolete(R2APISubmoduleDependency.PropertyObsolete)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
     private static readonly Dictionary<string, Dictionary<string, string>> CustomLanguage = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
