@@ -10,6 +10,9 @@ internal class AutoThunderstoreVerison : ISourceGenerator
     private const string AttributeSource = @"
 namespace R2API.AutoVersionGen;
 
+/// <summary>
+/// Add a PluginVersion field to the attribut-ed class filled from the thunderstore.toml versionNumber field
+/// </summary>
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 internal class AutoVersionAttribute : System.Attribute {}
 ";
