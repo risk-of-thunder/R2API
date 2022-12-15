@@ -9,7 +9,7 @@ To be able to maintain the project without breaking too much of a sweat, we try 
 - No implementation of any in-game functionality, unless deemed absolutely necessary for mod compatibility purposes,
 note that this does not apply to the R2API.Test package, as this package is purely for debugging / testing R2API functionalities.
 
-- Duplicating code from Assembly-CSharp should be avoided whenever possible.
+- Duplicating code from the game assemblies should be avoided whenever possible.
 
 - Non exposed code should be cleaned up each commit.
 There's no point in keeping it around as comments - that's what Version Control is for.
