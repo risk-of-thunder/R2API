@@ -14,7 +14,7 @@ The addition of Elites is handled via the CustomElite class, which contains the 
     EliteRamp: A Texture2D that's going to be the Elite's Ramp, this is what makes elites such as blazing elites have a different color palette
     EliteTierDefs: The Elite being added will be added to the specified EliteTierDefs.
 
-The EliteRamp implementation is handled inside the EliteRamp class, you can use the method ``AddRamp`` for tying a Ramp to an eliteDef, this can be useful in scenarios where you dont want to add Elites via the main EliteAPÏ
+The EliteRamp implementation is handled inside the EliteRamp class, you can use the method ``AddRamp`` for tying a Ramp to an eliteDef, this can be useful in scenarios where you dont want to add Elites via the main EliteAPI
 
 ## Related Pages
 
