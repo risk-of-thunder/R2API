@@ -24,7 +24,6 @@ using TF = System.Runtime.CompilerServices.TypeForwardedToAttribute;
 [assembly: TF(typeof(R2API.SceneAssetAPI))]
 [assembly: TF(typeof(R2API.SoundAPI))]
 [assembly: TF(typeof(R2API.TempVisualEffectAPI))]
-[assembly: TF(typeof(R2API.R2APITVEController))]
 [assembly: TF(typeof(R2API.IModdedUnlockableDataProvider))]
 [assembly: TF(typeof(R2API.ModdedUnlockable))]
 [assembly: TF(typeof(R2API.UnlockableAPI))]

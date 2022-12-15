@@ -1,4 +1,4 @@
-# R2API.TempVisualEffect - Custom temproary visual effects for characters.
+# R2API.TempVisualEffect - Custom temporary visual effects for characters.
 
 ## About
 
@@ -11,6 +11,8 @@ R2API.TempVisualEffect works via the method AddTemporaryVisualEffect, which allo
 For the condition you use the EffectCondition delegate, which returns true if the visual effect should appear for the body.
 
 You can also specify if the effect should be scaled using the body's best fit radius, or if the effect should spawn in a specific ChildLocator entry.
+
+A separate overload for AddTemporaryVisualEffect takes an EffectRadius delegate, which returns a specific radius for the visual effect. 
 
 ## Related Pages
 
