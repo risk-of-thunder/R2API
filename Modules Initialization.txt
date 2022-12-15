@@ -1,0 +1,26 @@
+This is important due to the legacy package being used by a lot of mods,
+meaning that most if not all modules are "loaded" by default.
+
+Most of them only do things when they are used by other mods,
+but some modules due to timing issues, performance reasons and back compat have to act as soon as they can without having to scan other assemblies.
+
+List of modules that do specific things as soon as they are loaded:
+
+ContentManagementPlugin: Content provider subscription.
+
+R2API Core: Bunch of things.
+
+DirectorPlugin: The hooks have to be enabled before a run start even though the mods may only use it after,
+this is due to timing issues and making sure we have the original game data before other mods may modify it,
+something we can't guarantee.
+
+ElitesPlugin: Elite ramp.
+
+LanguagePlugin: Scans the plugin folder for language files.
+
+NetworkingPlugin: Compat mod list.
+Note: Make sure to not enable the networking api hooks if no one use them,
+we don't want to modify the network stack for nothing,
+same thing goes for DamageTypeAPI and others which may interact with it.
+
+SoundPlugin: Scans the plugin folder for audio bank files.
