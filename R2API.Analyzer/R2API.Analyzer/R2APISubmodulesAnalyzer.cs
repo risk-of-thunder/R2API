@@ -51,7 +51,14 @@ public class R2APISubmodulesAnalyzer : DiagnosticAnalyzer
 
         IMethodSymbol method = (IMethodSymbol)codeBlockContext.OwningSymbol;
 
+        // Not a public api method, we don't care
         if (method.DeclaredAccessibility != Accessibility.Public)
+        {
+            return;
+        }
+
+        // We unsubscribe from an api event, don't enforce setting hooks for this case.
+        if (method.MethodKind == MethodKind.EventRemove)
         {
             return;
         }
