@@ -11,7 +11,9 @@ namespace R2API;
 /// <summary>
 /// API for adding difficulties like Drizzle, Rainstorm, and Monsoon to the game. Does not cover "very easy, easy, ..., HAHAHAHA".
 /// </summary>
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public partial class DifficultyAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".difficulty";
@@ -22,7 +24,9 @@ public partial class DifficultyAPI
     /// <summary>
     /// Return true if the submodule is loaded.
     /// </summary>
-    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+#pragma warning disable CS0618 // Type or member is obsolete
+    [Obsolete(R2APISubmoduleDependency.PropertyObsolete)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
     /// <summary>

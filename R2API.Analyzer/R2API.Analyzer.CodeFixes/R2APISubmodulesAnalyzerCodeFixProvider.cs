@@ -53,7 +53,9 @@ public class R2APISubmodulesAnalyzerCodeFixProvider : CodeFixProvider
         );
     }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
     private async Task<Document> AddTheSetHooksCall(SyntaxNode root, Document document,
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         MethodDeclarationSyntax methodDeclaration, CancellationToken _,
         string setHookMethodSymbolExpression, string setHookMethodSymbolName)
     {

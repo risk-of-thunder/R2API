@@ -14,7 +14,9 @@ namespace R2API.Utils;
 /// so that they are registered as console commands for the in-game console.
 /// </summary>
 [Obsolete($"Add [assembly: HG.Reflection.SearchableAttribute.OptInAttribute] to your assembly instead")]
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public partial class CommandHelper
 {
     public const string PluginGUID = R2API.PluginGUID + ".commandhelper";
@@ -26,7 +28,9 @@ public partial class CommandHelper
     /// <summary>
     /// Return true if the submodule is loaded.
     /// </summary>
-    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+#pragma warning disable CS0618 // Type or member is obsolete
+    [Obsolete(R2APISubmoduleDependency.PropertyObsolete)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
     /// <summary>

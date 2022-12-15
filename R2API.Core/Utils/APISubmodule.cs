@@ -2,9 +2,6 @@ using BepInEx.Logging;
 using JetBrains.Annotations;
 using Mono.Cecil;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -17,11 +14,14 @@ namespace R2API.Utils;
 /// e.g: [R2APISubmoduleDependency("SurvivorAPI", "ItemAPI")]
 /// </summary>
 [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
-[Obsolete(attributeObsolete, false)]
+#pragma warning disable CS0618 // Type or member is obsolete
+[Obsolete(AttributeObsolete, false)]
+#pragma warning restore CS0618 // Type or member is obsolete
 public class R2APISubmoduleDependency : Attribute
 {
-    public const string attributeObsolete = "All submodules are automatically loaded and this attribute is now unused.";
-    public const string propertyObsolete = "All submodules are automatically loaded and this property is now unused";
+    public const string AttributeObsolete = "All submodules are automatically loaded and this attribute is now unused.";
+    public const string PropertyObsolete = "All submodules are automatically loaded and this property is now unused";
+
     public string?[]? SubmoduleNames { get; }
 
     public R2APISubmoduleDependency(params string[] submoduleName)

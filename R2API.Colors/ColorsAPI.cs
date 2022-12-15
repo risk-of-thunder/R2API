@@ -10,7 +10,9 @@ using UnityEngine;
 
 namespace R2API;
 
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class ColorsAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".colors";
@@ -19,7 +21,9 @@ public static partial class ColorsAPI
     private static List<SerializableDamageColor> addedSerializableDamageColors = new List<SerializableDamageColor>();
     private static List<SerializableColorCatalogEntry> addedSerializableColors = new List<SerializableColorCatalogEntry>();
 
-    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+#pragma warning disable CS0618 // Type or member is obsolete
+    [Obsolete(R2APISubmoduleDependency.PropertyObsolete)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
     private static bool _hookEnabled = false;

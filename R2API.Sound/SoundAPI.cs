@@ -19,7 +19,9 @@ namespace R2API;
 /// <summary>
 /// API for adding sounds with Wwise
 /// </summary>
+#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class SoundAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".sound";
@@ -28,7 +30,9 @@ public static partial class SoundAPI
     /// <summary>
     /// Return true if the submodule is loaded.
     /// </summary>
-    [Obsolete(R2APISubmoduleDependency.propertyObsolete)]
+#pragma warning disable CS0618 // Type or member is obsolete
+    [Obsolete(R2APISubmoduleDependency.PropertyObsolete)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
     private static Hook AddBanksAfterEngineInitHook;
