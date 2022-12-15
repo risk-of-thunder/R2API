@@ -159,7 +159,8 @@ public static partial class RecalculateStatsAPI
         {
             _getStatCoefficients -= value;
 
-            if (_getStatCoefficients.GetInvocationList().Length == 0)
+            if (_getStatCoefficients == null ||
+                _getStatCoefficients.GetInvocationList()?.Length == 0)
             {
                 UnsetHooks();
             }
