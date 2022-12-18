@@ -57,7 +57,7 @@ jobs:
             find . -name '*.nupkg' -type f -delete
           fi
 
-          existing_version_number=$(curl --compressed -s "https://thunderstore.io/api/v1/package/" | jq '.[]? | select(.full_name|startswith("${namespace}-${name_underscore_separator}")) | .versions[0]?.version_number' | grep "${version}\"" || true)
+          existing_version_number=$(curl --compressed -s "https://thunderstore.io/api/v1/package/" | jq --arg package_name "$namespace-$name_underscore_separator" '.[]? | select(.full_name|startswith($package_name)) | .versions[0]?.version_number' | grep "${version}\"" || true)
           if [ -z $existing_version_number ]
           then
             if [ "$is_project_built" = false ] ; then
