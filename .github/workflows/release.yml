@@ -27,6 +27,7 @@ jobs:
     - name: Build and Publish
       
       run: |
+        set -x
         cd BuildCI
 
         for line in $(dotnet run Program.cs); do
