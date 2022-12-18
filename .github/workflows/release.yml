@@ -25,8 +25,8 @@ jobs:
         dotnet-version: 7.0.x
 
     - name: Build and Publish
+      
       run: |
-        set -x
         cd BuildCI
 
         for line in $(dotnet run Program.cs); do
@@ -41,7 +41,7 @@ jobs:
 
           is_project_built=false
 
-          existing_version_number=$(curl --compressed -s "https://api-v2v3search-0.nuget.org/query?q=packageid:${name_dot_separator}&prerelease=true&semVerLevel=2.0.0" | jq '.data[0]?.versions[]?.version' | grep "${version}\"")
+          existing_version_number=$(curl --compressed -s "https://api-v2v3search-0.nuget.org/query?q=packageid:${name_dot_separator}&prerelease=true&semVerLevel=2.0.0" | jq '.data[0]?.versions[]?.version' | grep "${version}\"" || true)
           if [ -z $existing_version_number ]
           then
             dotnet pack --configuration Release --output ./ReleaseOutput /p:OutputPath=./ReleaseOutput -p:Version=$version
@@ -58,7 +58,7 @@ jobs:
             find . -name '*.nupkg' -type f -delete
           fi
 
-          existing_version_number=$(curl --compressed -s "https://thunderstore.io/api/v1/package/" | jq '.[]? | select(.full_name|startswith("${namespace}-${name_underscore_separator}")) | .versions[0]?.version_number' | grep "${version}\"")
+          existing_version_number=$(curl --compressed -s "https://thunderstore.io/api/v1/package/" | jq '.[]? | select(.full_name|startswith("${namespace}-${name_underscore_separator}")) | .versions[0]?.version_number' | grep "${version}\"" || true)
           if [ -z $existing_version_number ]
           then
             if [ "is_project_built" = false ] ; then
