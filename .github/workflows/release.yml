@@ -77,7 +77,7 @@ jobs:
             rm -rf ./build
           fi
 
-          if [ "is_project_built" = true ] ; then
+          if [ "$is_project_built" = true ] ; then
             rm -rf ./ReleaseOutput
           fi
         done
