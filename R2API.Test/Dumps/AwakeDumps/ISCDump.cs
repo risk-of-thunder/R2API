@@ -4,19 +4,23 @@ using System.Text;
 using UnityEngine.AddressableAssets;
 using Xunit;
 
-namespace R2API.Test.Dumps.AwakeDumps {
+namespace R2API.Test.Dumps.AwakeDumps;
 
-    // Create dump for DirectorAPIhelpers.cs
+/// <summary>
+/// Create dump for DirectorAPIhelpers.cs
+/// </summary>
+public class ISCDump
+{
 
-    public class ISCDump {
+    [Fact]
+    public void Awake()
+    {
+        RoR2Application.onLoad += Dump;
+    }
 
-        [Fact]
-        public void Awake() {
-            RoR2Application.onLoad += Dump;
-        }
-
-        private void Dump() {
-            var paths = @"RoR2/Base/Drones/iscBrokenDrone1.asset
+    private void Dump()
+    {
+        var paths = @"RoR2/Base/Drones/iscBrokenDrone1.asset
 RoR2/Base/Drones/iscBrokenDrone2.asset
 RoR2/Base/Drones/iscBrokenEmergencyDrone.asset
 RoR2/Base/Drones/iscBrokenEquipmentDrone.asset
@@ -93,17 +97,19 @@ RoR2/DLC1/TreasureCacheVoid/iscLockboxVoid.asset
 RoR2/DLC1/gauntlets/iscGauntletEntrance.asset
 RoR2/Junk/SquidTurret/iscSquidTurret.asset
 RoR2/Junk/TreasureCache/iscLockbox.asset";
-            var sb = new StringBuilder();
-            foreach (var path in paths.Split('\n')) {
-                var asset = Addressables.LoadAssetAsync<RoR2.InteractableSpawnCard>(path.Trim()).WaitForCompletion();
-                try {
-                    sb.AppendLine($"public static readonly string {Language.GetString(asset.prefab.GetComponent<IDisplayNameProvider>().GetDisplayName()).Replace(" ", "")} = \"{asset.name.ToLowerInvariant()}\";");
-                }
-                catch (Exception) {
-                    sb.AppendLine($"public static readonly string {asset.prefab.name.Replace(" ", "")} = \"{asset.name.ToLowerInvariant()}\";");
-                }
+        var sb = new StringBuilder();
+        foreach (var path in paths.Split('\n'))
+        {
+            var asset = Addressables.LoadAssetAsync<RoR2.InteractableSpawnCard>(path.Trim()).WaitForCompletion();
+            try
+            {
+                sb.AppendLine($"public static readonly string {Language.GetString(asset.prefab.GetComponent<IDisplayNameProvider>().GetDisplayName()).Replace(" ", "")} = \"{asset.name.ToLowerInvariant()}\";");
             }
-            R2APITest.Logger.LogError(sb.ToString());
+            catch (Exception)
+            {
+                sb.AppendLine($"public static readonly string {asset.prefab.name.Replace(" ", "")} = \"{asset.name.ToLowerInvariant()}\";");
+            }
         }
+        R2APITest.Logger.LogError(sb.ToString());
     }
 }

@@ -1,0 +1,29 @@
+
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "RiskofThunder"
+name = "R2API_Core"
+versionNumber = "5.0.0"
+description = "Core R2API module"
+websiteUrl = "https://github.com/risk-of-thunder/R2API"
+containsNsfwContent = false
+
+[package.dependencies]
+bbepis-BepInExPack = "5.4.2103"
+RiskofThunder-HookGenPatcher = "1.2.3"
+
+[build]
+icon = "../icon.png"
+readme = "./README.md"
+outdir = "./build"
+
+[[build.copy]]
+source = "./ReleaseOutput"
+target = "./plugins/R2API.Core"
+
+[publish]
+repository = "https://thunderstore.io"
+communities = ["riskofrain2"]
+categories = ["libraries"]

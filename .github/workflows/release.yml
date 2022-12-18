@@ -9,45 +9,74 @@ jobs:
   build:
     runs-on: ubuntu-latest  
     steps:
-          
+
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1
+
+    - name: Setup TCLI
+      run: dotnet tool install --global tcli
+
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v3
       with:
-        fetch-depth: 0
+        dotnet-version: 7.0.x
 
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
-      with:
-        versionSpec: '5.x'
-
-    - name: Determine Version
-      uses: gittools/actions/gitversion/execute@v0.9.7
-
-    - name: Setup NuGet.exe for use with actions
-      uses: NuGet/setup-nuget@v1.0.5
-      with:
-        nuget-api-key: ${{ secrets.NUGET_API_KEY }}
-
-    - name: Update versions
+    - name: Build and Publish
       run: |
-        sed -i -E "s/(PluginVersion\s*=\s*)\"0.0.1\"/\1\"$GitVersion_MajorMinorPatch\"/" R2API/R2API.cs
-    - uses: actions/setup-dotnet@v1.7.2
-    - run: dotnet build . --configuration Release --output ./ReleaseOutput -p:Version=$GitVersion_MajorMinorPatch
+        cd BuildCI
 
-    - name: Cleanup Release Output
-      run: |
-        find ./ReleaseOutput ! -name R2API.dll ! -name R2API.xml ! -name R2API*.nupkg -type f -delete
+        for line in $(dotnet run Program.cs); do
+          IFS='|' read -ra parts <<< "$line"
+          namespace=${parts[0]}
+          name_underscore_separator=${parts[1]}
+          version=${parts[2]}
+          csproj_folder=${parts[3]}
+          name_dot_separator=${name_underscore_separator//_/.}
 
-    - name: Publish to NuGet
-      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json'
+          cd $csproj_folder
 
-    - name: Install TCLI
-      run: dotnet tool install --global tcli --version 0.1.4
+          is_project_built=false
 
-    - name: Cleanup Release Output for TS Release
-      run: rm ReleaseOutput/*.nupkg
+          existing_version_number=$(curl --compressed -s "https://api-v2v3search-0.nuget.org/query?q=packageid:${name_dot_separator}&prerelease=true&semVerLevel=2.0.0" | jq '.data[0].versions[].version' 2> /dev/null | grep "${version}\"")
+          if [ -z $existing_version_number ]
+          then
+            dotnet pack --configuration Release --output ./ReleaseOutput /p:OutputPath=./ReleaseOutput -p:Version=$version
+            is_project_built=true
 
-    - name: Publish to thunderstore.io
-      run: tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN }} --package-version ${{ env.GitVersion_MajorMinorPatch }} --config-path ./thunderstore.toml
+            if [ "$namespace" == "RiskofThunder" ]; then
+              nuget setapikey "${{ secrets.NUGET_API_KEY_RISK_OF_THUNDER }}"
+            else
+              nuget setapikey "${{ secrets.NUGET_API_KEY }}"
+            fi
+            
+            nuget push ./ReleaseOutput/*.nupkg -Source 'https://api.nuget.org/v3/index.json'
+            find . -name '*.nupkg' -type f -delete
+          fi
 
+          existing_version_number=$(curl --compressed -s "https://thunderstore.io/api/v1/package/" | jq '.[] | select(.full_name|startswith("${name_underscore_separator}")) | .versions[0].version_number' | grep "${version}\"")
+          if [ -z $existing_version_number ]
+          then
+            if [ "is_project_built" = false ] ; then
+              dotnet pack --configuration Release --output ./ReleaseOutput /p:OutputPath=./ReleaseOutput -p:Version=$version
+              is_project_built=true
+            fi
 
+            find . -name '*.pdb' -type f -delete
+            find . -name '*.deps.json' -type f -delete
+
+            if [ "$namespace" == "RiskofThunder" ]; then
+              tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN_RISK_OF_THUNDER }}
+            else
+              tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN }}
+            fi
+
+            rm -rf ./build
+          fi
+
+          if [ "is_project_built" = true ] ; then
+            rm -rf ./ReleaseOutput
+          fi
+        done

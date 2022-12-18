@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../R2API.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\R2API.Core\R2API.Core.csproj" Private="false"/>
+    <ProjectReference Include="../R2API.ContentManagement/R2API.ContentManagement.csproj" Private="false"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="bbepis-BepInExPack" Version="5.4.1905" GeneratePathProperty="true" PrivateAssets="all" ExcludeAssets="all" IncludeAssets="none" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="RoR2BepInExPack">
+      <HintPath>$(Pkgbbepis-BepInExPack)\lib\$(TargetFramework)\RoR2BepInExPack.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

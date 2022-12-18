@@ -1,0 +1,30 @@
+
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "RiskofThunder"
+name = "R2API_DamageType"
+versionNumber = "1.0.0"
+description = "API for registering damage types"
+websiteUrl = "https://github.com/risk-of-thunder/R2API"
+containsNsfwContent = false
+
+[package.dependencies]
+bbepis-BepInExPack = "5.4.2103"
+RiskofThunder-HookGenPatcher = "1.2.3"
+RiskofThunder-R2API_Core = "1.0.0"
+
+[build]
+icon = "../icon.png"
+readme = "./README.md"
+outdir = "./build"
+
+[[build.copy]]
+source = "./ReleaseOutput"
+target = "./plugins/R2API.DamageType"
+
+[publish]
+repository = "https://thunderstore.io"
+communities = ["riskofrain2"]
+categories = ["libraries"]

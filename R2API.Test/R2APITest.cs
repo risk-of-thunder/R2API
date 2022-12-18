@@ -6,25 +6,28 @@ using System;
 
 [assembly: SearchableAttribute.OptIn]
 
-namespace R2API.Test {
-    [BepInDependency(R2API.PluginGUID)]
-    [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-    public class R2APITest : BaseUnityPlugin {
-        public const string PluginGUID = "com.bepis.r2apitest";
-        public const string PluginName = "R2APITest";
-        public const string PluginVersion = "0.0.1";
+namespace R2API.Test;
 
-        internal new static ManualLogSource Logger { get; set; }
+[BepInDependency(R2API.PluginGUID)]
+[BepInPlugin(PluginGUID, PluginName, PluginVersion)]
+public class R2APITest : BaseUnityPlugin
+{
+    public const string PluginGUID = "com.bepis.r2apitest";
+    public const string PluginName = "R2APITest";
+    public const string PluginVersion = "0.0.1";
 
-        private void Awake() {
-            Logger = base.Logger;
+    internal new static ManualLogSource Logger { get; set; }
 
-            if (!R2API.DebugMode) {
-                throw new Exception("R2API.DebugMode is not enabled");
-            }
+    private void Awake()
+    {
+        Logger = base.Logger;
 
-            var awakeRunner = new AwakeRunner();
-            awakeRunner.DiscoverAndRun();
+        if (!R2API.DebugMode)
+        {
+            throw new Exception("R2API.DebugMode is not enabled");
         }
+
+        var awakeRunner = new AwakeRunner();
+        awakeRunner.DiscoverAndRun();
     }
 }

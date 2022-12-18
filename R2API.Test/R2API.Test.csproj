@@ -1,31 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../R2API.props" />
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<LangVersion>preview</LangVersion>
-		<Nullable>annotations</Nullable>
-		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\R2API\R2API.csproj" />
-
-		<PackageReference Include="BepInEx.Analyzers" Version="1.0.8">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		
-		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.13.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<ProjectReference Include="..\R2API.Core\R2API.Core.csproj" />
+      <ProjectReference Include="../R2API.Items/R2API.Items.csproj" />
+    <ProjectReference Include="../R2API.Items/R2API.Items.csproj" />
+    <ProjectReference Include="../R2API.Language/R2API.Language.csproj" />
+    <ProjectReference Include="../R2API.Director/R2API.Director.csproj" />
+    <ProjectReference Include="../R2API.Elites/R2API.Elites.csproj" />
 
 		<PackageReference Include="xunit" Version="2.4.1" />
-		
+
 		<PackageReference Include="xunit.extensibility.execution" Version="2.4.1" />
-		
+
 		<PackageReference Include="xunit.runner.utility" Version="2.4.1" />
 	</ItemGroup>
 

@@ -1,4 +1,59 @@
-All changelogs before 4.0.0 version
+All changelogs before the current major version are listed below.
+
+**4.4.1**
+* [Fix LanguageAPI being case dependent, add support for ChainGunOrb in DamageAPI by @KingEnderBrine](https://github.com/risk-of-thunder/R2API/pull/402)
+* [UnlockableAPI: Fix custom achievements not working for current patch by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/391)
+* [UnlockableAPI: Marked as Obsolete by @Nebby1999](https://github.com/risk-of-thunder/R2API/pull/390)
+* [DirectorAPI: Add AddNewMonsterToStagesWhere & AddSelectedNewMonsters, and publicize base AddNewMonster by @bb010g](https://github.com/risk-of-thunder/R2API/pull/382)
+* [ItemAPI: Specify IDRS log is in the log file by @Nebby1999](https://github.com/risk-of-thunder/R2API/pull/387)
+* [ItemAPI: Tier error fix by @Nebby1999](https://github.com/risk-of-thunder/R2API/pull/394)
+* [Fix R2API erroring in the Epic Games version of the game by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/392)
+
+* [Reflection: Improve speed by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/378)
+* [Reflection: Fix MethodInfo/ConstructorInfo not cache properly by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/380)
+* [Reflection: Fix CombineHashCode returning the same result on arrays of different order by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/381)
+* [Reflection: Fix different generic parameters returning the same delegate by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/384)
+* [Reflection: Fix delegate not box value by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/385)
+* [Reflection: Support reading constant field by @DemoJameson](https://github.com/risk-of-thunder/R2API/pull/386)
+* [Reflection: Use normal dictionaries instead of Concurrent ones by @Windows10CE](https://github.com/risk-of-thunder/R2API/pull/383)
+
+**4.3.x**
+* [Update DirectorAPI by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/368)
+* [Fix ItemDisplay issues by @KomradeSpectre](https://github.com/risk-of-thunder/R2API/pull/369)
+* [ItemAPI ItemDisplay fixes by @Nebby1999](https://github.com/risk-of-thunder/R2API/pull/371)
+* [Fix EliteAPI and bug fix DirectorAPI by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/372)
+* [Friendlier internal stage names by @bb010g](https://github.com/risk-of-thunder/R2API/pull/373)
+* [Fix DirectorApi spawning by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/374)
+
+**4.2.x**
+* [NuGet package is now available!](https://www.nuget.org/packages/R2API/)
+
+**4.1.x**
+
+* [Fix ItemDisplay addition for Items and Equipment](https://github.com/risk-of-thunder/R2API/pull/369)
+* [Fix contentpacks that did not have the correct name in some cases](https://github.com/risk-of-thunder/R2API/pull/366)
+* [Crit damage multiplier is now a float](https://github.com/risk-of-thunder/R2API/pull/365)
+* [ArtifactCode fix, ContentLogging fix](https://github.com/risk-of-thunder/R2API/pull/361)
+
+**4.0.11**
+
+* Updated for the game `Survivors of The Void`
+* [Added SOTVSerializableContentPack](https://github.com/risk-of-thunder/R2API/commit/423a6b3de16da31e42ef57d6aaf7bc2b781eab2a)
+* [Complete Refractoring of Content Addition Systems, now uses the R2APIContentManager](https://github.com/risk-of-thunder/R2API/pull/338)
+* [Each mod now has it's own ContentPack managed by R2API](https://github.com/risk-of-thunder/R2API/pull/338#issue-1137783592)
+* [A Mod can add a PreExisting content pack to the R2APIContentManager](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1040337885)
+* [A PreExisting ContentPack can opt out from being loaded by R2API's Systems](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1040337885)
+* [Each mod can now add a valid content piece via ContentAdditionHelpers](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1041783985)
+* [Assets added by R2API will always have unique names](https://github.com/risk-of-thunder/R2API/pull/338#issue-1137783592)
+* [Made LoadRoR2ContentEarly public, mods can now access a readonly version of RoR2's ContentPack](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1040337885)
+* [UnlockableAPI's Overload Methods now point to a single private method](https://github.com/risk-of-thunder/R2API/pull/338/commits/82d6edb8933af7974683f411c65a256378a45ae1)
+* [Marked the following APIs As Obsolete: ArtifactAPI, BuffAPI, EffectAPI, ProjectileAPI and SurvivorAPI](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1041484037)
+* [Marked the following methods in LoadoutAPI as Obsolete: AddSkill, StateTypeOf, AddSkillDef, AddSkillFamily](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1041484037)
+* [Marked the AddNetworkedSoundEvent method in SoundAPI  as Obsolete](https://github.com/risk-of-thunder/R2API/pull/338#issuecomment-1041484037)
+* [NetworkingAPI now has Send overloads for sending to specific network connections. Also have some documentation now](https://github.com/risk-of-thunder/R2API/pull/333)
+* [Allow character mods to opt out from default item display rules](https://github.com/risk-of-thunder/R2API/pull/330)
+* [Make dotAPI parts accessible for modders](https://github.com/risk-of-thunder/R2API/pull/339)
+* [RecalculateStatsAPI can now modify Critical Hit Damage](https://github.com/risk-of-thunder/R2API/pull/346)
 
 **3.0.71**
 
