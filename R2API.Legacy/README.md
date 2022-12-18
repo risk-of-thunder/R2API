@@ -1,4 +1,4 @@
-# R2API – a modding API for Risk of Rain 2
+# R2API â€“ a modding API for Risk of Rain 2
 
 ## About
 
