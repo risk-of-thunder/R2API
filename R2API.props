@@ -21,7 +21,7 @@
         <PackageReference Include="BepInEx.Core" Version="5.4.19" />
         <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.13.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
         <PackageReference Include="MMHOOK.RoR2" Version="2022.4.19" NoWarn="NU1701" />
-        <PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+        <PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
         <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.4-r.0" NoWarn="NU5104" />
         <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
     </ItemGroup>
