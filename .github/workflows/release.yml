@@ -60,7 +60,7 @@ jobs:
           existing_version_number=$(curl --compressed -s "https://thunderstore.io/api/v1/package/" | jq '.[]? | select(.full_name|startswith("${namespace}-${name_underscore_separator}")) | .versions[0]?.version_number' | grep "${version}\"" || true)
           if [ -z $existing_version_number ]
           then
-            if [ "is_project_built" = false ] ; then
+            if [ "$is_project_built" = false ] ; then
               dotnet pack --configuration Release --output ./ReleaseOutput /p:OutputPath=./ReleaseOutput -p:Version=$version
               is_project_built=true
             fi
