@@ -13,7 +13,12 @@ public sealed class DifficultyPlugin : BaseUnityPlugin
         Logger = base.Logger;
     }
 
-    private void OnDestroy()
+    private void OnEnable()
+    {
+        DifficultyAPI.SetHooks();
+    }
+
+    private void OnDisable()
     {
         DifficultyAPI.UnsetHooks();
     }

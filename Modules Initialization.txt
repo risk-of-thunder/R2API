@@ -10,6 +10,8 @@ ContentManagementPlugin: Content provider subscription.
 
 R2API Core: Bunch of things.
 
+DifficultyPlugin: public fields are accessed by mods, no way of lazy init without expansive search / breaking change
+
 DirectorPlugin: The hooks have to be enabled before a run start even though the mods may only use it after,
 this is due to timing issues and making sure we have the original game data before other mods may modify it,
 something we can't guarantee.

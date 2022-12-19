@@ -16,5 +16,8 @@ DifficultyAPI also comes bundled with the SerializableDifficultyDef, a Scriptabl
 
 ## Changelog
 
+### '1.0.1'
+* Fix hooks not being properly enabled.
+
 ### '1.0.0'
 * Split from the main R2API.dll into its own submodule.
