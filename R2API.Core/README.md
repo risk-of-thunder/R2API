@@ -18,5 +18,8 @@ Do not hestiate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
 
-### '1.0.0'
+### '5.0.1'
+* Add back an utility class that was removed by mistake.
+
+### '5.0.0'
 * Split from the main R2API.dll into its own submodule.
