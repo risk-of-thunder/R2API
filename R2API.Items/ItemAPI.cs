@@ -137,6 +137,7 @@ public static partial class ItemAPI
         if (xmlSafe)
         {
             R2APIContentManager.HandleContentAddition(addingAssembly, item.ItemDef);
+            ItemDefinitions.Add(item);
             return true;
         }
 

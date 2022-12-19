@@ -1,18 +1,8 @@
-using EntityStates;
-using R2API.ContentManagement;
-using RoR2;
-using RoR2.EntitlementManagement;
-using RoR2.ExpansionManagement;
-using RoR2.Projectile;
-using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 using R2API.MiscHelpers;
-using UnityEngine;
-using UnityEngine.Networking;
+using RoR2;
 
 namespace R2API;
 
@@ -107,7 +97,7 @@ public class ItemDisplayRuleDict
                     continue;
                 }
 
-                if (itemDisplay.rendererInfos != null && itemDisplay.rendererInfos.Length != 0)
+                if (itemDisplay.rendererInfos == null || itemDisplay.rendererInfos.Length == 0)
                 {
                     logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) has an ItemDisplay component, but no RendererInfos assigned. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)" +
                         $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");

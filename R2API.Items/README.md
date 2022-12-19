@@ -20,5 +20,8 @@ A detailed tutorial on how to make custom items using ItewmAPI can be found [her
 
 ## Changelog
 
+### '1.0.1'
+* Fix invalid IDRS checker telling IDRS are not correct when they actually are.
+
 ### '1.0.0'
 * Split from the main R2API.dll into its own submodule.
