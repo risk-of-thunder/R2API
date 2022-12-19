@@ -38,14 +38,14 @@ public static partial class PrefabAPI
     public static bool Loaded => true;
 
     private static GameObject _parent;
-    private static readonly List<HashStruct> _thingsToHash = new();
+    private static readonly List<HashStruct> _networkedPrefabs = new();
 
     /// <summary>
     /// Is the prefab network registered
     /// </summary>
     /// <param name="prefabToCheck"></param>
     /// <returns></returns>
-    public static bool IsPrefabHashed(GameObject prefabToCheck) => _thingsToHash.Select(hash => hash.Prefab).Contains(prefabToCheck);
+    public static bool IsPrefabHashed(GameObject prefabToCheck) => _networkedPrefabs.Select(hash => hash.Prefab).Contains(prefabToCheck);
 
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
@@ -162,21 +162,65 @@ public static partial class PrefabAPI
             MethodName = method.Name,
             Assembly = method.DeclaringType.Assembly
         };
-        _thingsToHash.Add(h);
+        _networkedPrefabs.Add(h);
 
-        var networkIdentity = h.Prefab.GetComponent<NetworkIdentity>();
-        if (networkIdentity)
+        static void AddToNetworkedObjectPrefabs(HashStruct h)
         {
-            networkIdentity.SetFieldValue("m_AssetId", NetworkHash128.Parse(MakeHash(h.GoName + h.TypeName + h.MethodName)));
             var contentPack = R2APIContentManager.GetOrCreateSerializableContentPack(h.Assembly);
             var networkedObjectPrefabs = contentPack.networkedObjectPrefabs.ToList();
             networkedObjectPrefabs.Add(h.Prefab);
             contentPack.networkedObjectPrefabs = networkedObjectPrefabs.ToArray();
         }
+
+        AddToNetworkedObjectPrefabs(h);
+
+        var networkIdentity = h.Prefab.GetComponent<NetworkIdentity>();
+        if (networkIdentity)
+        {
+            networkIdentity.SetFieldValue("m_AssetId", NetworkHash128.Parse(MakeHash(h.GoName + h.TypeName + h.MethodName)));
+        }
         else
         {
-            PrefabPlugin.Logger.LogError($"{h.Prefab} don't have a NetworkIdentity Component. Can't register.");
+            // some mod creators are adding the NetworkIdentity component after the call to InstantiateClone,
+            // and are not calling PrefabAPI.RegisterNetworkPrefab after that.
+            // we need to do this else its a breaking change compared to the old behavior.
+
+            _prefabsWithDelayedAddedNetworkIdentities.Add(h);
+
+            if (!_delayedPrefabsHookEnabled)
+            {
+                On.RoR2.Networking.NetworkManagerSystem.OnStartClient += SetProperAssetIdForDelayedPrefabs;
+
+                _delayedPrefabsHookEnabled = true;
+            }
         }
+    }
+
+    private static bool _delayedPrefabsHookEnabled = false;
+    private static List<HashStruct> _prefabsWithDelayedAddedNetworkIdentities = new();
+    private static void SetProperAssetIdForDelayedPrefabs(On.RoR2.Networking.NetworkManagerSystem.orig_OnStartClient orig, RoR2.Networking.NetworkManagerSystem self, NetworkClient newClient)
+    {
+        try
+        {
+            foreach (var h in _prefabsWithDelayedAddedNetworkIdentities)
+            {
+                var networkIdentity = h.Prefab.GetComponent<NetworkIdentity>();
+                if (networkIdentity)
+                {
+                    networkIdentity.SetFieldValue("m_AssetId", NetworkHash128.Parse(MakeHash(h.GoName + h.TypeName + h.MethodName)));
+                }
+                else
+                {
+                    PrefabPlugin.Logger.LogError($"{h.Prefab} don't have a NetworkIdentity Component but was marked for network registration.");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            PrefabPlugin.Logger.LogError(e);
+        }
+
+        orig(self, newClient);
     }
 
     private static string MakeHash(string s)
