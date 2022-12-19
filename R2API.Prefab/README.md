@@ -20,5 +20,8 @@ by using the `RegisterNetworkPrefab` method.
 
 ## Changelog
 
+### '1.0.1'
+* Fix some rare cases of prefabs not being correctly network registered.
+
 ### '1.0.0'
 * Split from the main R2API.dll into its own submodule.
