@@ -32,6 +32,7 @@ using TF = System.Runtime.CompilerServices.TypeForwardedToAttribute;
 [assembly: TF(typeof(R2API.Utils.ChatMessage))]
 [assembly: TF(typeof(R2API.Utils.CommandHelper))]
 [assembly: TF(typeof(R2API.Utils.DirectMessage))]
+[assembly: TF(typeof(R2API.Utils.EnumerableExtensions))]
 [assembly: TF(typeof(R2API.Utils.EmbeddedResources))]
 [assembly: TF(typeof(R2API.Utils.ManualLogSourceExtension))]
 [assembly: TF(typeof(R2API.Utils.CompatibilityLevel))]
