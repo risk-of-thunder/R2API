@@ -3,6 +3,7 @@
 //   so that its always matching with the versionNumber from the referenced local toml package.
 // - Constructs a dependency tree so that we know which packages to upload first to the website.
 
+using System.Xml.Linq;
 using Nett;
 
 const string ThunderstoreTomlFileName = "thunderstore.toml";
@@ -52,7 +53,7 @@ foreach (var (_, package) in packages)
     package.InitFullDependencyReferences(packages);
 }
 
-// Update the package.dependencies array versioNumbers of the toml files
+// Update the package.dependencies array versionNumbers of the toml files
 foreach (var tomlFile in tomlFiles)
 {
     var parsedToml = Toml.ReadFile(tomlFile);
@@ -86,6 +87,28 @@ foreach (var tomlFile in tomlFiles)
         packageTomlTable[DependencyTomlKey] = dependencyTomlArray;
         parsedToml[PackageTomlKey] = packageTomlTable;
         Toml.WriteFile(parsedToml, tomlFile);
+    }
+}
+
+// Update the Version xml node of the csprojs
+foreach (var tomlFile in tomlFiles)
+{
+    var parsedToml = Toml.ReadFile(tomlFile);
+    var packageTomlTable = parsedToml.Get<TomlTable>(PackageTomlKey);
+
+    var dictKey = packageTomlTable.Get<string>(NamespaceTomlKey) + packageTomlTable.Get<string>(NameTomlKey);
+    var package = packages[dictKey];
+
+    var csProjFiles = Directory.GetFiles(Directory.GetParent(tomlFile)!.FullName, "*.csproj", SearchOption.TopDirectoryOnly);
+    if (csProjFiles.Length == 1)
+    {
+        var csProjFile = csProjFiles[0];
+
+        var csProj = XElement.Load(csProjFile);
+
+        csProj.Add(new XElement("PropertyGroup", new XElement("Version", package.Version.ToString())));
+
+        csProj.Save(csProjFile);
     }
 }
 
