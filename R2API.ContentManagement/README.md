@@ -23,5 +23,8 @@ R2API.ContentManaged is used for mods that would like to have R2API handle the c
 
 ## Changelog
 
+### '1.0.1'
+* Fix some R2API nuget packages that had their dependencies version numbers set incorrectly.
+
 ### '1.0.0'
 * Split from the main R2API.dll into its own submodule.
