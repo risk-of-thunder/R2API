@@ -8,5 +8,8 @@ An example tutorial on how to use this api can be found [here](https://risk-of-t
 
 ## Changelog
 
+### '1.0.1'
+* Move NetworkCompatibility back to the Core module for back compatibility reasons.
+
 ### '1.0.0'
 * Split from the main R2API.dll into its own submodule.
