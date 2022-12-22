@@ -63,11 +63,16 @@ public partial class R2API : BaseUnityPlugin
 
     internal static R2API Instance { get; private set; }
 
+    private NetworkCompatibilityHandler _networkCompatibilityHandler;
+
     public void Awake()
     {
         Instance = this;
 
         Logger = base.Logger;
+
+        _networkCompatibilityHandler = new NetworkCompatibilityHandler();
+        _networkCompatibilityHandler.BuildModList();
 
         ModManager = new DetourModManager();
         AddHookLogging();
@@ -76,6 +81,11 @@ public partial class R2API : BaseUnityPlugin
         CheckForIncompatibleAssemblies();
 
         On.RoR2.RoR2Application.Awake += CheckIfUsedOnRightGameVersion;
+    }
+
+    public void OnDestroy()
+    {
+        _networkCompatibilityHandler.CleanupModList();
     }
 
     private static void DebugUpdate()
