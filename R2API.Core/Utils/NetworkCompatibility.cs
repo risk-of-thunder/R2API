@@ -1,6 +1,4 @@
-﻿using HarmonyLib;
-using R2API.MiscHelpers;
-using R2API.Networking;
+﻿using R2API.MiscHelpers;
 using RoR2;
 using System;
 using System.Collections.Generic;
@@ -95,7 +93,7 @@ internal class NetworkCompatibilityHandler
                     continue;
                 }
 
-                if (pluginInfo.Dependencies.All(dependency => dependency.DependencyGUID != R2API.PluginGUID ||
+                if (pluginInfo.Dependencies.All(dependency => !dependency.DependencyGUID.StartsWith(R2API.PluginGUID) ||
                     dependency.Flags == BepInEx.BepInDependency.DependencyFlags.SoftDependency))
                 {
                     continue;
@@ -111,8 +109,8 @@ internal class NetworkCompatibilityHandler
             }
             catch (Exception e)
             {
-                NetworkingPlugin.Logger.LogError($"Exception in ScanPluginsForNetworkCompat while scanning plugin {pluginInfo.Metadata.GUID}");
-                NetworkingPlugin.Logger.LogError("R2API Failed to properly scan the assembly." + Environment.NewLine +
+                R2API.Logger.LogError($"Exception in ScanPluginsForNetworkCompat while scanning plugin {pluginInfo.Metadata.GUID}");
+                R2API.Logger.LogError("R2API Failed to properly scan the assembly." + Environment.NewLine +
                     "Please make sure you are compiling against net standard 2.0 " +
                     "and not anything else when making a plugin for Risk of Rain 2 !" +
                     Environment.NewLine + e);
@@ -134,7 +132,6 @@ internal class NetworkCompatibilityHandler
             if (assemblyAttribute.AttributeType == typeof(NetworkCompatibility))
             {
                 networkCompatibility.CompatibilityLevel = (CompatibilityLevel)assemblyAttribute.ConstructorArguments[0].Value;
-
                 networkCompatibility.VersionStrictness = (VersionStrictness)assemblyAttribute.ConstructorArguments[1].Value;
 
                 return;
@@ -147,6 +144,8 @@ internal class NetworkCompatibilityHandler
             {
                 networkCompatibility.CompatibilityLevel = (CompatibilityLevel)attribute.ConstructorArguments[0].Value;
                 networkCompatibility.VersionStrictness = (VersionStrictness)attribute.ConstructorArguments[1].Value;
+
+                return;
             }
         }
     }
@@ -157,10 +156,10 @@ internal class NetworkCompatibilityHandler
         {
             var sortedModList = ModList.ToList();
             sortedModList.Sort(StringComparer.InvariantCulture);
-            NetworkingPlugin.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
+            R2API.Logger.LogInfo("[NetworkCompatibility] Adding to the networkModList : ");
             foreach (var mod in sortedModList)
             {
-                NetworkingPlugin.Logger.LogInfo(mod);
+                R2API.Logger.LogInfo(mod);
                 NetworkModCompatibilityHelper.networkModList = NetworkModCompatibilityHelper.networkModList.Append(mod);
             }
         }

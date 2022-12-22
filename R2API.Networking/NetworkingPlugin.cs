@@ -1,6 +1,11 @@
 using BepInEx;
 using BepInEx.Logging;
 using R2API.Utils;
+using TF = System.Runtime.CompilerServices.TypeForwardedToAttribute;
+
+[assembly: TF(typeof(CompatibilityLevel))]
+[assembly: TF(typeof(VersionStrictness))]
+[assembly: TF(typeof(NetworkCompatibility))]
 
 namespace R2API.Networking;
 
