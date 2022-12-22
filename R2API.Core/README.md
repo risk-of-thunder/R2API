@@ -18,6 +18,9 @@ Do not hestiate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
 
+### '5.0.3'
+* Also move NetworkCompatibility initialization back to the Core module.
+
 ### '5.0.2'
 * Move NetworkCompatibility back to the Core module for back compatibility reasons.
 
