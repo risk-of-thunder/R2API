@@ -16,6 +16,9 @@ DifficultyAPI also comes bundled with the SerializableDifficultyDef, a Scriptabl
 
 ## Changelog
 
+### '1.0.2'
+* Fix multiplayer lobby being empty (including if you selected to show incompatible games).
+
 ### '1.0.1'
 * Fix hooks not being properly enabled.
 
