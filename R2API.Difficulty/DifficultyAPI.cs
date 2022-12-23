@@ -144,7 +144,7 @@ public partial class DifficultyAPI
     private static DifficultyDef GetExtendedDifficultyDef(On.RoR2.DifficultyCatalog.orig_GetDifficultyDef orig, DifficultyIndex difficultyIndex)
     {
         if (difficultyAlreadyAdded)
-            return difficultyDefinitions[difficultyIndex];
+            return difficultyDefinitions.TryGetValue(difficultyIndex, out var difficultyDef) ? difficultyDef : null;
         return orig(difficultyIndex);
     }
 
