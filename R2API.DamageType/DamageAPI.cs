@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
@@ -28,7 +27,7 @@ public static partial class DamageAPI
 
     public enum ModdedDamageType { };
 
-    private static readonly ConditionalWeakTable<object, ModdedDamageTypeHolder> damageTypeHolders = new();
+    private static readonly FixedConditionalWeakTable<object, ModdedDamageTypeHolder> damageTypeHolders = new();
 
     private static ModdedDamageTypeHolder TempHolder { get; set; }
 
