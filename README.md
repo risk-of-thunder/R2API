@@ -30,22 +30,26 @@ Since the R2API `5.0.0` version update, mod creators should ideally only referen
 
 In the dependency array of their thunderstore manifest, they should reference the R2API packages from the `RiskofThunder` team, for example: `RiskofThunder-R2API_LobbyConfig-1.0.0`
 
-In their C# projects, they should only get the corresponding R2API submodules dll they need.
+In their C# projects, they should only get the corresponding R2API submodules dll they need.  
+You can do that in a multitude of ways, depending on your workflow:
 
-You can do that in a multitude of ways, depending on your workflow: 
-
--  By directly editing by hand the .csproj file of your C# project, add such a line under an `ItemGroup`:
+- Nuget Package Manager:
+   -  You can access this in Visual Studio by right clicking your project within the Solution Explorer, and installing packages through that manager directly:
+      -  The packages are available under the `RiskofThunder` nuget account, and you can find them through the search bar by typing `R2API`.
+      
+- Manually adding nuget: 
+  - [We have a wiki page that also explains it](https://risk-of-thunder.github.io/R2Wiki/Mod-Creation/C%23-Programming/Assembly-References/)
+  - Edit your .csproj file, and in your ItemGroup ([something like this](https://github.com/xiaoxiao921/R2Boilerplate/blob/master/ExamplePlugin/ExamplePlugin.csproj#L15-L27)), add PackageReference lines for each R2API module you depend on:  
    ```xml
    <PackageReference Include="R2API.Networking" Version="1.0.2" />
    ```
-
--  Doing it through the NuGet Package Manager, that you can access by right clicking your project within the Solution Explorer when using Visual Studio, and installing it through that manager directly:
-
-   The packages are available under the `RiskofThunder` nuget account, and you can find them through the search bar by typing `R2API`.
-
--  You can also download the dlls directly from thunderstore, depending on your workflow, and add them through the Solution Explorer, right clicking your project, Add -> Project Reference, and selecting the wanted .dll files.
-
--  If you use Unity, you can download the dlls, and drag and drop the modules dll directly into your Unity Project under any folders that are under the root Assets/ folder.
+   - You can find these lines for each package on the [Risk of Thunder nuget account](https://www.nuget.org/profiles/RiskofThunder).
+   
+-  Download the dlls directly from thunderstore: 
+   -  Add them through the Solution Explorer, right clicking your project, Add -> Project Reference, and selecting the wanted .dll files.
+   
+-  If you use Unity: 
+   -  You can download the dlls, and drag and drop the modules' dll directly into your Unity Project under any folders that are under the root Assets/ folder.
 
 A lot of documentation is in the included *xmldocs*, and further information may be on the dedicated [R2API wiki](https://github.com/risk-of-thunder/R2API/wiki).
 
