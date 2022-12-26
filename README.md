@@ -38,7 +38,7 @@ You can do that in a multitude of ways, depending on your workflow:
       -  The packages are available under the `RiskofThunder` nuget account, and you can find them through the search bar by typing `R2API`.
       
 - Manually adding nuget: 
-  - Use the !publicize command in the modding discord for info about setting this up, if you haven't already.
+  - [We have a wiki page that also explains it](https://risk-of-thunder.github.io/R2Wiki/Mod-Creation/C%23-Programming/Assembly-References/)
   - Edit your .csproj file, and in your ItemGroup ([something like this](https://github.com/xiaoxiao921/R2Boilerplate/blob/master/ExamplePlugin/ExamplePlugin.csproj#L15-L27)), add PackageReference lines for each R2API module you depend on:  
    ```xml
    <PackageReference Include="R2API.Networking" Version="1.0.2" />
