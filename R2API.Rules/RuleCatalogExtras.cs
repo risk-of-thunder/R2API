@@ -38,32 +38,37 @@ public static partial class RuleCatalogExtras
     /// <summary>
     /// An index that represents the Difficulty RuleCategoryDef Index
     /// </summary>
-    public const int DifficultyCategoryIndex = 0;
+    public static int DifficultyCategoryIndex => 0;
 
     /// <summary>
     /// An index that represents the Expansions RuleCategoryDef Index
     /// </summary>
-    public const int ExpansionsCategoryIndex = 1;
+    public static int ExpansionsCategoryIndex => 1;
 
     /// <summary>
     /// An index that represents the Artifacts RuleCategoryDef Index
     /// </summary>
-    public const int ArtifactsCategoryIndex = 2;
+    public static int ArtifactsCategoryIndex => 2;
 
     /// <summary>
     /// An index that represents the Items RuleCategoryDef index, hidden by default
     /// </summary>
-    public const int ItemsCategoryIndex = 3;
+    public static int ItemsCategoryIndex => 3;
 
     /// <summary>
     /// An index that represents the Equipments RuleCategoryDef index, hidden by default
     /// </summary>
-    public const int EquipmentsCategoryIndex = 4;
+    public static int EquipmentsCategoryIndex => 4;
 
     /// <summary>
     /// An index that represents the Misc RuleCategoryDef index, hidden by default
     /// </summary>
-    public const int MiscCategoryIndex = 5;
+    public static int MiscCategoryIndex => 5;
+
+    /// <summary>
+    /// Note for developers/maintainers, this number represents the total vanilla categories in the game, this is used to giveproper indices to new rules added by the submodule 
+    /// </summary>
+    private static int TotalVanillaCategories => 5;
 
     private static bool _hooksEnabled = false;
     private static Dictionary<int, List<RuleDef>> categoryToCustomRules = new Dictionary<int, List<RuleDef>>();
@@ -73,7 +78,7 @@ public static partial class RuleCatalogExtras
     /// Adds a new category to the RuleCatalog
     /// </summary>
     /// <param name="category">The category to add</param>
-    /// <returns>An index that represents this category's index in the catalog, -1 if the custom entries where already added.</returns>
+    /// <returns>An index that represents this category's index in the catalog.</returns>
     public static int AddCategory(RuleCategoryDef category)
     {
         SetHooks();
@@ -95,7 +100,7 @@ public static partial class RuleCatalogExtras
         static int AddCategoryInternal(RuleCategoryDef categoryDef)
         {
             ruleCategoryDefs.Add(categoryDef);
-            return 5 + ruleCategoryDefs.Count;
+            return TotalVanillaCategories + ruleCategoryDefs.Count;
         }
     }
 
@@ -103,7 +108,7 @@ public static partial class RuleCatalogExtras
     /// Adds a new Rule to the RuleCatalog
     /// </summary>
     /// <param name="ruleDef">The RuleDef to add</param>
-    /// <param name="ruleCategoryDefIndex">An index that represents which Category to add the <paramref name="ruleDef"/>, this can be either the interger returned by <see cref="AddCategory(RuleCategoryDef)"/>, or one of the constant intergers, such as <see cref="DifficultyCategoryIndex"/></param>
+    /// <param name="ruleCategoryDefIndex">An index that represents which Category to add the <paramref name="ruleDef"/>, this can be either the interger returned by <see cref="AddCategory(RuleCategoryDef)"/>, or one of the static interger properties, such as <see cref="DifficultyCategoryIndex"/></param>
     public static void AddRuleToCatalog(RuleDef ruleDef, int ruleCategoryDefIndex)
     {
         SetHooks();
@@ -166,7 +171,7 @@ public static partial class RuleCatalogExtras
     /// Finds a custom RuleChoiceDef by comparing the ruleChoiceDef's global name with <paramref name="ruleChoiceDefGlobalName"/>
     /// </summary>
     /// <param name="ruleChoiceDefGlobalName">The global name of the rule choice def to find</param>
-    /// <returns></returns>
+    /// <returns>The rule choice def, null if it wasnt found</returns>
     public static RuleChoiceDef FindCustomChoiceDef(string ruleChoiceDefGlobalName)
     {
         SetHooks();
@@ -190,6 +195,7 @@ public static partial class RuleCatalogExtras
             return null;
         }
     }
+
     #region hooks
     internal static void SetHooks()
     {
@@ -198,6 +204,7 @@ public static partial class RuleCatalogExtras
             return;
         }
 
+        //Due to the way how ResourceAvailability's onAvailable subscription works, we dont want to subscribe if the catalog has alreaddy finished initializing, otherwise it'll call immediatly and the entries will be added again.
         if (!RuleCatalog.availability.available)
         {
             RuleCatalog.availability.onAvailable += FinishRulebookSetup;
@@ -224,7 +231,7 @@ public static partial class RuleCatalogExtras
         label = c.MarkLabel();
         if(label == null)
         {
-            R2API.Logger.LogError("ILHook on PreGameController.RecalculateModifierAvilability failed, could not find ILLabel");
+            R2API.Logger.LogError($"ILHook on {nameof(PreGameController)}.{nameof(PreGameController.RecalculateModifierAvailability)} failed, could not find ILLabel");
             return;
         }
 
@@ -239,7 +246,7 @@ public static partial class RuleCatalogExtras
 
         if(!ILFound)
         {
-            R2API.Logger.LogError("ILHook on PreGameController.RecalculateModifierAvilability failed, could not get into position for calling the delegate.");
+            R2API.Logger.LogError($"ILHook on {nameof(PreGameController)}.{nameof(PreGameController.RecalculateModifierAvailability)} failed, could not get into position for calling the delegate.");
             return;
         }
 
