@@ -8,6 +8,14 @@ using R2API.AutoVersionGen;
 using R2API.MiscHelpers;
 using RoR2;
 
+/*
+ * For Future Devs:
+ * Most public methods contain 2 local static methods, with the suffix DirectlyToCatalog & Internal
+ * DirectlyToCatalog is ran after the RuleCatalog gets initialized, and as the name implies, adds the new RuleDef or RuleCategory to the catalog instead of our collections.
+ * Internal is run before the RuleCatalog gets initialized, and as the name implies, it adds the new RuleDef or RuleCategory to our internal collections, which will be added later once the RuleCatalog gets initialized.
+ * 
+ * This is done for a number of reasons, the main one being that people can create new rules before the catalog gets initialized, so trying to add the rules to the nonexistent catalogs can cause issues, while some might want to add rules after the catalog initializes.
+ */
 namespace R2API;
 
 /// <summary>
@@ -57,25 +65,7 @@ public static partial class RuleCatalogExtras
     /// </summary>
     public const int MiscCategoryIndex = 5;
 
-    /// <summary>
-    /// An event which is fired right before the custom categories are added, this is the last chance for adding custom rules.
-    /// </summary>
-    public static event EventHandler? RuleCatalogReady
-    {
-        add
-        {
-            SetHooks();
-            _ruleCatalogReady += value;
-        }
-        remove
-        {
-            _ruleCatalogReady -= value;
-        }
-    }
-    private static event EventHandler? _ruleCatalogReady;
-
     private static bool _hooksEnabled = false;
-    private static bool _addedCustomEntries = false;
     private static Dictionary<int, List<RuleDef>> categoryToCustomRules = new Dictionary<int, List<RuleDef>>();
     private static List<RuleCategoryDef> ruleCategoryDefs = new List<RuleCategoryDef>();
 
@@ -88,11 +78,25 @@ public static partial class RuleCatalogExtras
     {
         SetHooks();
 
-        if (_addedCustomEntries)
-            return -1;
+        if(RuleCatalog.availability.available)
+        {
+            return AddCategoryDirectlyToCatalog(category);
+        }
 
-        ruleCategoryDefs.Add(category);
-        return 5 + ruleCategoryDefs.Count - 1;
+        return AddCategoryInternal(category);
+
+        static int AddCategoryDirectlyToCatalog(RuleCategoryDef categoryDef)
+        {
+            RuleCatalog.allCategoryDefs.Add(categoryDef);
+            ruleCategoryDefs.Add(categoryDef);
+            return RuleCatalog.allCategoryDefs.Count - 1;
+        }
+
+        static int AddCategoryInternal(RuleCategoryDef categoryDef)
+        {
+            ruleCategoryDefs.Add(categoryDef);
+            return 5 + ruleCategoryDefs.Count;
+        }
     }
 
     /// <summary>
@@ -104,14 +108,29 @@ public static partial class RuleCatalogExtras
     {
         SetHooks();
 
-        if (_addedCustomEntries)
-            return;
-
-        if (!categoryToCustomRules.ContainsKey(ruleCategoryDefIndex))
+        if(RuleCatalog.availability.available)
         {
-            categoryToCustomRules[ruleCategoryDefIndex] = new List<RuleDef>();
+            AddRuleDirectlyToCatalog(ruleDef, ruleCategoryDefIndex);
         }
-        categoryToCustomRules[ruleCategoryDefIndex].Add(ruleDef);
+        else
+        {
+            AddRuleInternal(ruleDef, ruleCategoryDefIndex);
+        }
+
+        static void AddRuleDirectlyToCatalog(RuleDef ruleDef, int ruleCategoryDefIndex)
+        {
+            RuleCategoryDef category = RuleCatalog.GetCategoryDef(ruleCategoryDefIndex);
+            AddRuleToCategoryInternal(category, ruleCategoryDefIndex, ruleDef);
+        }
+
+        static void AddRuleInternal(RuleDef ruleDef, int ruleCategoryDefIndex)
+        {
+            if (!categoryToCustomRules.ContainsKey(ruleCategoryDefIndex))
+            {
+                categoryToCustomRules[ruleCategoryDefIndex] = new List<RuleDef>();
+            }
+            categoryToCustomRules[ruleCategoryDefIndex].Add(ruleDef);
+        }
     }
 
     /// <summary>
@@ -123,17 +142,24 @@ public static partial class RuleCatalogExtras
     {
         SetHooks();
 
-        if (_addedCustomEntries)
-            return RuleCatalog.FindRuleDef(ruleDefGlobalName);
-
-        foreach (RuleDef ruleDef in categoryToCustomRules.Values.SelectMany(x => x))
+        if(RuleCatalog.availability.available)
         {
-            if(string.Equals(ruleDefGlobalName, ruleDef.globalName, StringComparison.OrdinalIgnoreCase))
-            {
-                return ruleDef;
-            }
+            return RuleCatalog.FindRuleDef(ruleDefGlobalName);
         }
-        return null;
+
+        return FindRuleDefInternal(ruleDefGlobalName);
+
+        static RuleDef FindRuleDefInternal(string ruleDefGlobalName)
+        {
+            foreach (RuleDef ruleDef in categoryToCustomRules.Values.SelectMany(x => x))
+            {
+                if (string.Equals(ruleDefGlobalName, ruleDef.globalName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return ruleDef;
+                }
+            }
+            return null;
+        }
     }
 
     /// <summary>
@@ -145,17 +171,24 @@ public static partial class RuleCatalogExtras
     {
         SetHooks();
 
-        if (_addedCustomEntries)
-            return RuleCatalog.FindChoiceDef(ruleChoiceDefGlobalName);
-
-        foreach (RuleChoiceDef choiceDef in categoryToCustomRules.Values.SelectMany(x => x).SelectMany(x => x.choices))
+        if(RuleCatalog.availability.available)
         {
-            if(string.Equals(ruleChoiceDefGlobalName, choiceDef.globalName, StringComparison.OrdinalIgnoreCase))
-            {
-                return choiceDef;
-            }
+            return RuleCatalog.FindChoiceDef(ruleChoiceDefGlobalName);
         }
-        return null;
+
+        return FindChoiceDefInternal(ruleChoiceDefGlobalName);
+
+        static RuleChoiceDef FindChoiceDefInternal(string ruleChoiceDefGlobalName)
+        {
+            foreach (RuleChoiceDef choiceDef in categoryToCustomRules.Values.SelectMany(x => x).SelectMany(x => x.choices))
+            {
+                if (string.Equals(ruleChoiceDefGlobalName, choiceDef.globalName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return choiceDef;
+                }
+            }
+            return null;
+        }
     }
     #region hooks
     internal static void SetHooks()
@@ -165,8 +198,11 @@ public static partial class RuleCatalogExtras
             return;
         }
 
-        RuleCatalog.availability.CallWhenAvailable(FinishRulebookSetup);
-        IL.RoR2.PreGameController.RecalculateModifierAvailability -= SupportCollectionRequirement;
+        if (!RuleCatalog.availability.available)
+        {
+            RuleCatalog.availability.onAvailable += FinishRulebookSetup;
+        }
+
         IL.RoR2.PreGameController.RecalculateModifierAvailability += SupportCollectionRequirement;
         _hooksEnabled = true;
     }
@@ -193,7 +229,7 @@ public static partial class RuleCatalogExtras
         }
 
         c.Index = 0;
-        bool ILFound = c.TryGotoNext(x => x.MatchRet(),
+        bool ILFound = c.TryGotoNext(MoveType.After, x => x.MatchRet(),
             x => x.MatchLdcI4(0),
             x => x.MatchStloc(0),
             x => x.MatchBr(out _),
@@ -208,8 +244,8 @@ public static partial class RuleCatalogExtras
         }
 
         c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Stloc_1);
-        c.Emit(OpCodes.Stloc_0);
+        c.Emit(OpCodes.Ldloc_1);
+        c.Emit(OpCodes.Ldloc_0);
         c.EmitDelegate<Func<PreGameController, RuleChoiceDef, int, bool>>(HandleCollectionRequirement);
         c.Emit(OpCodes.Brtrue, label);
 
@@ -232,11 +268,6 @@ public static partial class RuleCatalogExtras
 
     private static void FinishRulebookSetup()
     {
-        if (_addedCustomEntries)
-            return;
-
-        _ruleCatalogReady?.Invoke(null, null);
-
         RuleCatalog.allCategoryDefs.AddRange(ruleCategoryDefs);
 
         foreach(var (categoryIndex, ruleDef) in categoryToCustomRules)
@@ -259,43 +290,48 @@ public static partial class RuleCatalogExtras
         {
             try
             {
-                ruleDef.category = category;
-                ruleDef.globalIndex = RuleCatalog.allRuleDefs.Count;
-                category.children.Add(ruleDef);
-                RuleCatalog.allRuleDefs.Add(ruleDef);
-
-                if (RuleCatalog.highestLocalChoiceCount < ruleDef.choices.Count)
-                {
-                    RuleCatalog.highestLocalChoiceCount = ruleDef.choices.Count;
-                }
-
-                RuleCatalog.ruleDefsByGlobalName[ruleDef.globalName] = ruleDef;
-                for (int i = 0; i < ruleDef.choices.Count; i++)
-                {
-                    RuleChoiceDef choiceDef = ruleDef.choices[i];
-                    choiceDef.localIndex = i;
-                    choiceDef.globalIndex = RuleCatalog.allChoicesDefs.Count;
-                    RuleCatalog.allChoicesDefs.Add(choiceDef);
-
-                    RuleCatalog.ruleChoiceDefsByGlobalName[choiceDef.globalName] = choiceDef;
-
-                    if (choiceDef.requiredUnlockable)
-                    {
-                        HG.ArrayUtils.ArrayAppend(ref RuleCatalog._allChoiceDefsWithUnlocks, choiceDef);
-                    }
-
-                    if(choiceDef.TryCastToExtendedRuleChoiceDef(out var extended))
-                    {
-                        if(extended.requiredUnlockables.Count > 0)
-                        {
-                            HG.ArrayUtils.ArrayAppend(ref RuleCatalog._allChoiceDefsWithUnlocks, extended);
-                        }
-                    }
-                }
+                AddRuleToCategoryInternal(category, categoryIndex, ruleDef);
             }
             catch(Exception e)
             {
                 R2API.Logger.LogError(e);
+            }
+        }
+    }
+
+    private static void AddRuleToCategoryInternal(RuleCategoryDef category, int categoryIndex, RuleDef ruleDef)
+    {
+        ruleDef.category = category;
+        ruleDef.globalIndex = RuleCatalog.allRuleDefs.Count;
+        category.children.Add(ruleDef);
+        RuleCatalog.allRuleDefs.Add(ruleDef);
+
+        if (RuleCatalog.highestLocalChoiceCount < ruleDef.choices.Count)
+        {
+            RuleCatalog.highestLocalChoiceCount = ruleDef.choices.Count;
+        }
+
+        RuleCatalog.ruleDefsByGlobalName[ruleDef.globalName] = ruleDef;
+        for (int i = 0; i < ruleDef.choices.Count; i++)
+        {
+            RuleChoiceDef choiceDef = ruleDef.choices[i];
+            choiceDef.localIndex = i;
+            choiceDef.globalIndex = RuleCatalog.allChoicesDefs.Count;
+            RuleCatalog.allChoicesDefs.Add(choiceDef);
+
+            RuleCatalog.ruleChoiceDefsByGlobalName[choiceDef.globalName] = choiceDef;
+
+            if (choiceDef.requiredUnlockable)
+            {
+                HG.ArrayUtils.ArrayAppend(ref RuleCatalog._allChoiceDefsWithUnlocks, choiceDef);
+            }
+
+            if (choiceDef.TryCastToExtendedRuleChoiceDef(out var extended))
+            {
+                if (extended.requiredUnlockables.Count > 0)
+                {
+                    HG.ArrayUtils.ArrayAppend(ref RuleCatalog._allChoiceDefsWithUnlocks, extended);
+                }
             }
         }
     }
