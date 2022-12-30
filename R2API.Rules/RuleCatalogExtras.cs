@@ -108,7 +108,7 @@ public static partial class RuleCatalogExtras
     /// Adds a new Rule to the RuleCatalog
     /// </summary>
     /// <param name="ruleDef">The RuleDef to add</param>
-    /// <param name="ruleCategoryDefIndex">An index that represents which Category to add the <paramref name="ruleDef"/>, this can be either the interger returned by <see cref="AddCategory(RuleCategoryDef)"/>, or one of the static interger properties, such as <see cref="DifficultyCategoryIndex"/></param>
+    /// <param name="ruleCategoryDefIndex">An index that represents which Category to add the <paramref name="ruleDef"/>, this can be either the integer returned by <see cref="AddCategory(RuleCategoryDef)"/>, or one of the static integer properties, such as <see cref="DifficultyCategoryIndex"/></param>
     public static void AddRuleToCatalog(RuleDef ruleDef, int ruleCategoryDefIndex)
     {
         SetHooks();
