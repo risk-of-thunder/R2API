@@ -209,7 +209,6 @@ public static partial class RuleCatalogExtras
         {
             RuleCatalog.availability.onAvailable += FinishRulebookSetup;
         }
-
         IL.RoR2.PreGameController.RecalculateModifierAvailability += SupportCollectionRequirement;
         _hooksEnabled = true;
     }
