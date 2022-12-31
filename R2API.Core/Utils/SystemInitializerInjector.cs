@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using System.Linq;
 
 namespace R2API.Utils;
 
@@ -70,9 +71,12 @@ public static class SystemInitializerInjector
 
     private static void InjectDependencyInternal(Type typeToInject, Type dependency)
     {
+        if (dependency == null || typeToInject == null)
+            return;
+
         SystemInitializerAttribute attribute = GetSystemInitializerAttribute(typeToInject);
 
-        if(attribute != null)
+        if(attribute != null && !attribute.dependencies.Contains(dependency))
         {
             R2API.Logger.LogDebug($"Injecting {dependency.FullName} to {typeToInject.FullName}'s {nameof(SystemInitializerAttribute)}'s dependencies.");
             HG.ArrayUtils.ArrayAppend(ref attribute.dependencies, dependency);
