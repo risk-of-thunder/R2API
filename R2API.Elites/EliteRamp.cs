@@ -87,9 +87,7 @@ public static class EliteRamp
         EliteRamp.SetHooks();
         try
         {
-            if (eliteDef.shaderEliteRampIndex > 0)
-                eliteDef.shaderEliteRampIndex = 0;
-
+            eliteDef.shaderEliteRampIndex = 0;
             elitesAndRamps.Add((eliteDef, ramp));
         }
         catch (Exception ex)
