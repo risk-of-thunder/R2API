@@ -204,11 +204,8 @@ public static partial class RuleCatalogExtras
             return;
         }
 
-        //Due to the way how ResourceAvailability's onAvailable subscription works, we dont want to subscribe if the catalog has alreaddy finished initializing, otherwise it'll call immediatly and the entries will be added again.
-        if (!RuleCatalog.availability.available)
-        {
-            RuleCatalog.availability.CallWhenAvailable(FinishRulebookSetup);
-        }
+        
+        RuleCatalog.availability.CallWhenAvailable(FinishRulebookSetup);
         IL.RoR2.PreGameController.RecalculateModifierAvailability += SupportCollectionRequirement;
         _hooksEnabled = true;
     }
