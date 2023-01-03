@@ -204,13 +204,16 @@ public static partial class RuleCatalogExtras
             return;
         }
 
-        
-        RuleCatalog.availability.CallWhenAvailable(FinishRulebookSetup);
+        if(!RuleCatalog.availability.available)
+        {
+            RuleCatalog.availability.onAvailable += FinishRulebookSetup;
+        }
         IL.RoR2.PreGameController.RecalculateModifierAvailability += SupportCollectionRequirement;
         _hooksEnabled = true;
     }
     internal static void UnsetHooks()
     {
+        RuleCatalog.availability.onAvailable -= FinishRulebookSetup;
         IL.RoR2.PreGameController.RecalculateModifierAvailability -= SupportCollectionRequirement;
         _hooksEnabled = false;
     }

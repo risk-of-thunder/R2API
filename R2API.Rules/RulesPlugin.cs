@@ -13,7 +13,12 @@ public sealed class RulesPlugin : BaseUnityPlugin
         Logger = base.Logger;
     }
 
-    private void OnDestroy()
+    private void OnEnable()
+    {
+        RuleCatalogExtras.SetHooks();
+    }
+
+    private void OnDisable()
     {
         RuleCatalogExtras.UnsetHooks();
     }
