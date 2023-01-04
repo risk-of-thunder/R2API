@@ -21,5 +21,9 @@ public sealed class RulesPlugin : BaseUnityPlugin
     private void OnDisable()
     {
         RuleCatalogExtras.UnsetHooks();
+
+        // TODO: Disabling this module currently doesnt do much, as we don't rely on hooks for the custom categories and rules to be active.
+        // Ideally, we would have code that remove all custom rules and categories when it get disabled
+        // Note: This is very low priority.
     }
 }
