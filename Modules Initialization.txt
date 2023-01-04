@@ -16,7 +16,7 @@ DirectorPlugin: The hooks have to be enabled before a run start even though the 
 this is due to timing issues and making sure we have the original game data before other mods may modify it,
 something we can't guarantee.
 
-ElitesPlugin: Elite ramp.
+ElitesPlugin: Elite ramp. Some mods may actually be relying on EliteAPI to do its stuff first, I can't be bothered to check right now and i'm making it always enabled for a potential issue fix with Spikestrip.
 
 LanguagePlugin: Scans the plugin folder for language files.
 
