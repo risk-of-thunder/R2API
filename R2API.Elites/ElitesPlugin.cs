@@ -12,6 +12,7 @@ public sealed class ElitesPlugin : BaseUnityPlugin
     {
         Logger = base.Logger;
 
+        EliteAPI.SetHooks();
         EliteRamp.SetHooks();
     }
 
