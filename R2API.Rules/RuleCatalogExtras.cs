@@ -206,7 +206,7 @@ public static partial class RuleCatalogExtras
 
         if (!RuleCatalog.availability.available)
         {
-            RuleCatalog.availability.onAvailable += FinishRulebookSetup;
+            RuleCatalog.availability.onAvailable += AddCustomRulesAndCategoriesToCatalog;
         }
 
         IL.RoR2.PreGameController.RecalculateModifierAvailability += SupportCollectionRequirement;
@@ -215,7 +215,7 @@ public static partial class RuleCatalogExtras
     }
     internal static void UnsetHooks()
     {
-        RuleCatalog.availability.onAvailable -= FinishRulebookSetup;
+        RuleCatalog.availability.onAvailable -= AddCustomRulesAndCategoriesToCatalog;
         IL.RoR2.PreGameController.RecalculateModifierAvailability -= SupportCollectionRequirement;
         _hooksEnabled = false;
     }
@@ -274,7 +274,7 @@ public static partial class RuleCatalogExtras
         }
     }
 
-    private static void FinishRulebookSetup()
+    private static void AddCustomRulesAndCategoriesToCatalog()
     {
         RuleCatalog.allCategoryDefs.AddRange(ruleCategoryDefs);
 
