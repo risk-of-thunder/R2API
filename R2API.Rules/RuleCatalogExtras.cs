@@ -125,7 +125,7 @@ public static partial class RuleCatalogExtras
         static void AddRuleDirectlyToCatalog(RuleDef ruleDef, int ruleCategoryDefIndex)
         {
             RuleCategoryDef category = RuleCatalog.GetCategoryDef(ruleCategoryDefIndex);
-            AddRuleToCategoryInternal(category, ruleCategoryDefIndex, ruleDef);
+            AddRuleToCategoryInternal(category, ruleDef);
         }
 
         static void AddRuleInternal(RuleDef ruleDef, int ruleCategoryDefIndex)
@@ -298,7 +298,7 @@ public static partial class RuleCatalogExtras
         {
             try
             {
-                AddRuleToCategoryInternal(category, categoryIndex, ruleDef);
+                AddRuleToCategoryInternal(category, ruleDef);
             }
             catch (Exception e)
             {
@@ -307,7 +307,7 @@ public static partial class RuleCatalogExtras
         }
     }
 
-    private static void AddRuleToCategoryInternal(RuleCategoryDef category, int categoryIndex, RuleDef ruleDef)
+    private static void AddRuleToCategoryInternal(RuleCategoryDef category, RuleDef ruleDef)
     {
         ruleDef.category = category;
         ruleDef.globalIndex = RuleCatalog.allRuleDefs.Count;
