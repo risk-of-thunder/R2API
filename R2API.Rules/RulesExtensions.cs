@@ -42,7 +42,7 @@ public static class RulesExtensions
     {
         RuleCatalogExtras.SetHooks();
 
-        if(choice is ExtendedRuleChoiceDef ercd)
+        if (choice is ExtendedRuleChoiceDef ercd)
         {
             extendedRuleChoiceDef = ercd;
             return true;

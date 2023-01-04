@@ -36,7 +36,7 @@ internal static class PreGameControllerHelper
             return requirementsMet;
 
         var ruleBookInstance = controllerInstance.readOnlyRuleBook;
-        foreach(RuleChoiceDef choiceDef in ruleChoices)
+        foreach (RuleChoiceDef choiceDef in ruleChoices)
         {
             requirementsMet = ruleBookInstance.IsChoiceActive(choiceDef);
         }
@@ -47,7 +47,7 @@ internal static class PreGameControllerHelper
     {
         bool requirementsMet = false;
 
-        foreach(EntitlementDef entitlementDef in entitlementDefs)
+        foreach (EntitlementDef entitlementDef in entitlementDefs)
         {
             requirementsMet = checkNetworkInsteadOfLocal ? EntitlementManager.networkUserEntitlementTracker.AnyUserHasEntitlement(entitlementDef) : EntitlementManager.localUserEntitlementTracker.AnyUserHasEntitlement(entitlementDef);
         }

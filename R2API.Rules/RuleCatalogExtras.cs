@@ -13,7 +13,7 @@ using RoR2;
  * Most public methods contain 2 local static methods, with the suffix DirectlyToCatalog & Internal
  * DirectlyToCatalog is ran after the RuleCatalog gets initialized, and as the name implies, adds the new RuleDef or RuleCategory to the catalog instead of our collections.
  * Internal is run before the RuleCatalog gets initialized, and as the name implies, it adds the new RuleDef or RuleCategory to our internal collections, which will be added later once the RuleCatalog gets initialized.
- * 
+ *
  * This is done for a number of reasons, the main one being that people can create new rules before the catalog gets initialized, so trying to add the rules to the nonexistent catalogs can cause issues, while some might want to add rules after the catalog initializes.
  */
 namespace R2API;
@@ -66,7 +66,7 @@ public static partial class RuleCatalogExtras
     public static int MiscCategoryIndex => 5;
 
     /// <summary>
-    /// Note for developers/maintainers, this number represents the total vanilla categories in the game, this is used to giveproper indices to new rules added by the submodule 
+    /// Note for developers/maintainers, this number represents the total vanilla categories in the game, this is used to giveproper indices to new rules added by the submodule
     /// </summary>
     private static int TotalVanillaCategories => 5;
 
@@ -83,7 +83,7 @@ public static partial class RuleCatalogExtras
     {
         SetHooks();
 
-        if(RuleCatalog.availability.available)
+        if (RuleCatalog.availability.available)
         {
             return AddCategoryDirectlyToCatalog(category);
         }
@@ -113,7 +113,7 @@ public static partial class RuleCatalogExtras
     {
         SetHooks();
 
-        if(RuleCatalog.availability.available)
+        if (RuleCatalog.availability.available)
         {
             AddRuleDirectlyToCatalog(ruleDef, ruleCategoryDefIndex);
         }
@@ -147,7 +147,7 @@ public static partial class RuleCatalogExtras
     {
         SetHooks();
 
-        if(RuleCatalog.availability.available)
+        if (RuleCatalog.availability.available)
         {
             return RuleCatalog.FindRuleDef(ruleDefGlobalName);
         }
@@ -176,7 +176,7 @@ public static partial class RuleCatalogExtras
     {
         SetHooks();
 
-        if(RuleCatalog.availability.available)
+        if (RuleCatalog.availability.available)
         {
             return RuleCatalog.FindChoiceDef(ruleChoiceDefGlobalName);
         }
@@ -199,16 +199,18 @@ public static partial class RuleCatalogExtras
     #region hooks
     internal static void SetHooks()
     {
-        if(_hooksEnabled)
+        if (_hooksEnabled)
         {
             return;
         }
 
-        if(!RuleCatalog.availability.available)
+        if (!RuleCatalog.availability.available)
         {
             RuleCatalog.availability.onAvailable += FinishRulebookSetup;
         }
+
         IL.RoR2.PreGameController.RecalculateModifierAvailability += SupportCollectionRequirement;
+
         _hooksEnabled = true;
     }
     internal static void UnsetHooks()
@@ -228,7 +230,7 @@ public static partial class RuleCatalogExtras
                 x => x.MatchCallOrCallvirt<SerializableBitArray>("set_Item"));
 
         label = c.MarkLabel();
-        if(label == null)
+        if (label == null)
         {
             R2API.Logger.LogError($"ILHook on {nameof(PreGameController)}.{nameof(PreGameController.RecalculateModifierAvailability)} failed, could not find ILLabel");
             return;
@@ -243,7 +245,7 @@ public static partial class RuleCatalogExtras
             x => x.MatchCallOrCallvirt(typeof(RuleCatalog), nameof(RuleCatalog.GetChoiceDef)),
             x => x.MatchStloc(1));
 
-        if(!ILFound)
+        if (!ILFound)
         {
             R2API.Logger.LogError($"ILHook on {nameof(PreGameController)}.{nameof(PreGameController.RecalculateModifierAvailability)} failed, could not get into position for calling the delegate.");
             return;
@@ -257,7 +259,7 @@ public static partial class RuleCatalogExtras
 
         static bool HandleCollectionRequirement(PreGameController preGameController, RuleChoiceDef currentRule, int choiceIndex)
         {
-            if(currentRule.TryCastToExtendedRuleChoiceDef(out ExtendedRuleChoiceDef extendedChoice))
+            if (currentRule.TryCastToExtendedRuleChoiceDef(out ExtendedRuleChoiceDef extendedChoice))
             {
                 preGameController.unlockedChoiceMask[choiceIndex] = extendedChoice.requiredUnlockables.Count == 0 || PreGameControllerHelper.AnyUserHasAllUnlockables(extendedChoice.requiredUnlockables);
                 preGameController.dependencyChoiceMask[choiceIndex] = extendedChoice.requiredChoiceDefs.Count == 0 || PreGameControllerHelper.AreAllChoicesActive(preGameController, extendedChoice.requiredChoiceDefs);
@@ -276,13 +278,13 @@ public static partial class RuleCatalogExtras
     {
         RuleCatalog.allCategoryDefs.AddRange(ruleCategoryDefs);
 
-        foreach(var (categoryIndex, ruleDef) in categoryToCustomRules)
+        foreach (var (categoryIndex, ruleDef) in categoryToCustomRules)
         {
             try
             {
                 AddRulesToCategory(categoryIndex, ruleDef);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 R2API.Logger.LogError(e);
             }
@@ -292,13 +294,13 @@ public static partial class RuleCatalogExtras
     private static void AddRulesToCategory(int categoryIndex, List<RuleDef> ruleDefs)
     {
         RuleCategoryDef category = RuleCatalog.GetCategoryDef(categoryIndex);
-        foreach(RuleDef ruleDef in ruleDefs)
+        foreach (RuleDef ruleDef in ruleDefs)
         {
             try
             {
                 AddRuleToCategoryInternal(category, categoryIndex, ruleDef);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 R2API.Logger.LogError(e);
             }
