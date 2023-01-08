@@ -39,13 +39,45 @@ foreach (var tomlFile in tomlFiles)
     var parsedToml = Toml.ReadFile(tomlFile);
     var packageTomlTable = parsedToml.Get<TomlTable>(PackageTomlKey);
 
-    var package = new R2APIPackage(packageTomlTable.Get<string>(NamespaceTomlKey), packageTomlTable.Get<string>(NameTomlKey),
-        packageTomlTable.Get<string>(VersionNumberTomlKey),
-        Directory.GetParent(tomlFile)!.FullName,
-        packageTomlTable.ContainsKey(DependencyTomlKey) ? packageTomlTable.Get<TomlTable>(DependencyTomlKey) : null);
+    // Retrieve the AssemblyName of the csproj
+    // The Assembly name is used for naming the nuget package
+    // The nuget package name may differ from the thunderstore package name
+    // If the AssemblyName node is not in the csproj xml, the csproj file name is used instead.
 
-    var dictKey = packageTomlTable.Get<string>(NamespaceTomlKey) + packageTomlTable.Get<string>(NameTomlKey);
-    packages.Add(dictKey, package);
+    var csProjFiles = Directory.GetFiles(Directory.GetParent(tomlFile)!.FullName, "*.csproj", SearchOption.TopDirectoryOnly);
+    if (csProjFiles.Length == 1)
+    {
+        string? nugetPackageName = null;
+
+        var csProjFile = csProjFiles[0];
+
+        var csProj = XElement.Load(csProjFile);
+
+        foreach (var propertyGroup in csProj.Elements("PropertyGroup"))
+        {
+            var assemblyNameElement = propertyGroup.Element("AssemblyName");
+            if (assemblyNameElement != null)
+            {
+                nugetPackageName = assemblyNameElement.Value;
+                break;
+            }
+        }
+
+        // Otherwise, we use the csproj file name
+        nugetPackageName ??= Path.GetFileNameWithoutExtension(csProjFile);
+
+        var package = new R2APIPackage
+            (
+                packageTomlTable.Get<string>(NamespaceTomlKey), packageTomlTable.Get<string>(NameTomlKey),
+                packageTomlTable.Get<string>(VersionNumberTomlKey),
+                Directory.GetParent(tomlFile)!.FullName,
+                packageTomlTable.ContainsKey(DependencyTomlKey) ? packageTomlTable.Get<TomlTable>(DependencyTomlKey) : null,
+                nugetPackageName
+            );
+
+        var dictKey = packageTomlTable.Get<string>(NamespaceTomlKey) + packageTomlTable.Get<string>(NameTomlKey);
+        packages.Add(dictKey, package);
+    }
 }
 
 foreach (var (_, package) in packages)
@@ -149,7 +181,8 @@ foreach (var dependency in packageTree.
         dependency.Value.Namespace.ToString() + separator +
         dependency.Value.Name.ToString() + separator +
         dependency.Value.Version.ToString() + separator +
-        dependency.Value.CsProjDirectoryFullPath;
+        dependency.Value.CsProjDirectoryFullPath + separator +
+        dependency.Value.NugetPackageName;
     Console.WriteLine(output);
 }
 
@@ -173,6 +206,8 @@ internal class R2APIPackage
 
     internal string CsProjDirectoryFullPath { get; }
 
+    internal string NugetPackageName { get; }
+
     const string RootNamespace = "RiskofThunder";
     const string PackageNamePrefix = "R2API_";
 
@@ -187,13 +222,14 @@ internal class R2APIPackage
     /// </summary>
     internal TomlTable? DependenciesTomlFormat;
 
-    internal R2APIPackage(string @namespace, string name, string versionNumber, string csProjDirectory, TomlTable? dependenciesTomlFormat)
+    internal R2APIPackage(string @namespace, string name, string versionNumber, string csProjDirectory, TomlTable? dependenciesTomlFormat, string nugetPackageName)
     {
         Namespace = @namespace;
         Name = name;
         Version = Version.Parse(versionNumber);
         CsProjDirectoryFullPath = csProjDirectory;
         DependenciesTomlFormat = dependenciesTomlFormat;
+        NugetPackageName = nugetPackageName;
     }
 
     internal void InitFullDependencyReferences(Dictionary<string, R2APIPackage> packages)
