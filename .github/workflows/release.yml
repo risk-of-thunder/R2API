@@ -35,13 +35,13 @@ jobs:
           name_underscore_separator=${parts[1]}
           version=${parts[2]}
           csproj_folder=${parts[3]}
-          name_dot_separator=${name_underscore_separator//_/.}
+          nuget_package_name=${parts[4]}
 
           cd $csproj_folder
 
           is_project_built=false
 
-          existing_version_number=$(curl --compressed -s "https://api-v2v3search-0.nuget.org/query?q=packageid:${name_dot_separator}&prerelease=true&semVerLevel=2.0.0" | jq '.data[0]?.versions[]?.version' | grep "${version}\"" || true)
+          existing_version_number=$(curl --compressed -s "https://api-v2v3search-0.nuget.org/query?q=packageid:${nuget_package_name}&prerelease=true&semVerLevel=2.0.0" | jq '.data[0]?.versions[]?.version' | grep "${version}\"" || true)
           if [ -z $existing_version_number ]
           then
             dotnet pack --configuration Release --output ./ReleaseOutput /p:OutputPath=./ReleaseOutput
