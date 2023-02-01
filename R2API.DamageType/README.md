@@ -22,5 +22,8 @@ This is done via the DamageAPI class, which is used for reserving DamageTypes an
 
 ## Changelog
 
+### '1.0.1'
+* Made IL hooks more robust to stop API failing because of other mods
+
 ### '1.0.0'
 * Split from the main R2API.dll into its own submodule.
