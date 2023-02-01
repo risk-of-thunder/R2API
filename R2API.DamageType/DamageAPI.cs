@@ -188,17 +188,7 @@ public static partial class DamageAPI
     #endregion
 
     #region BulletAttack
-    private static void BulletAttackDefaultHitCallbackIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        var damageInfoIndex = GotoDamageInfo(c);
-
-        c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldloc, damageInfoIndex);
-
-        EmitCopyCall(c);
-    }
+    private static void BulletAttackDefaultHitCallbackIL(ILContext il) => GotoAndEmitCopyCallForNewDamageInfo(new ILCursor(il));
     #endregion
 
     #region Orbs
@@ -206,68 +196,34 @@ public static partial class DamageAPI
     {
         var c = new ILCursor(il);
 
-        var damageInfoIndex = GotoDamageInfo(c);
-
-        c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldloc, damageInfoIndex);
-
-        EmitCopyCall(c);
-
-        var bouncingLightningOrbIndex = -1;
-        c.GotoNext(
-            x => x.MatchNewobj<LightningOrb>(),
-            x => x.MatchStloc(out bouncingLightningOrbIndex));
+        GotoAndEmitCopyCallForNewDamageInfo(c);
 
         c.GotoNext(
             MoveType.After,
-            x => x.MatchLdfld<LightningOrb>(nameof(LightningOrb.damageType)),
-            x => x.MatchStfld(out _));
+            x => x.MatchNewobj<LightningOrb>());
 
+        c.Emit(OpCodes.Dup);
         c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldloc, bouncingLightningOrbIndex);
-        EmitCopyCall(c);
-    }
-
-    private static void GenericDamageOrbOnArrivalIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        var damageInfoIndex = GotoDamageInfo(c);
-
-        c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldloc, damageInfoIndex);
 
         EmitCopyCall(c);
     }
 
-    private static void DamageOrbOnArrivalIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-        var damageInfoIndex = GotoDamageInfo(c);
+    private static void GenericDamageOrbOnArrivalIL(ILContext il) => GotoAndEmitCopyCallForNewDamageInfo(new ILCursor(il));
 
-        c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldloc, damageInfoIndex);
-
-        EmitCopyCall(c);
-    }
+    private static void DamageOrbOnArrivalIL(ILContext il) => GotoAndEmitCopyCallForNewDamageInfo(new ILCursor(il));
 
     private static void ChainGunOrbOnArrivalIL(ILContext il)
     {
         var c = new ILCursor(il);
-        var damageInfoIndex = GotoDamageInfo(c);
 
-        c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldloc, damageInfoIndex);
+        GotoAndEmitCopyCallForNewDamageInfo(c);
 
-        EmitCopyCall(c);
-
-        var chainGunOrbIndex = -1;
         c.GotoNext(
-            x => x.MatchNewobj<ChainGunOrb>(),
-            x => x.MatchStloc(out chainGunOrbIndex));
+            MoveType.After,
+            x => x.MatchNewobj<ChainGunOrb>());
 
+        c.Emit(OpCodes.Dup);
         c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldloc, chainGunOrbIndex);
 
         EmitCopyCall(c);
     }
@@ -278,18 +234,13 @@ public static partial class DamageAPI
     {
         var c = new ILCursor(il);
 
-        var lightningOrbIndex = -1;
-        c.GotoNext(
-            x => x.MatchNewobj<LightningOrb>(),
-            x => x.MatchStloc(out lightningOrbIndex));
-
         c.GotoNext(
             MoveType.After,
-            x => x.MatchLdfld<ProjectileDamage>(nameof(ProjectileDamage.damageType)),
-            x => x.MatchStfld(out _));
+            x => x.MatchNewobj<LightningOrb>());
 
+        c.Emit(OpCodes.Dup);
         c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldloc, lightningOrbIndex);
+
         EmitCopyFromComponentCall(c);
     }
 
@@ -298,8 +249,8 @@ public static partial class DamageAPI
         var c = new ILCursor(il);
 
         c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldarg_0);
         c.Emit<ProjectileOverlapAttack>(OpCodes.Ldfld, nameof(ProjectileOverlapAttack.attack));
+        c.Emit(OpCodes.Ldarg_0);
         EmitCopyFromComponentCall(c);
     }
 
@@ -309,12 +260,11 @@ public static partial class DamageAPI
 
         c.GotoNext(
             MoveType.After,
-            x => x.MatchNewobj<OverlapAttack>(),
-            x => x.MatchStfld(out _));
+            x => x.MatchNewobj<OverlapAttack>());
 
         c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldarg_0);
         c.Emit<ProjectileOverlapAttack>(OpCodes.Ldfld, nameof(ProjectileOverlapAttack.attack));
+        c.Emit(OpCodes.Ldarg_0);
         EmitCopyFromComponentCall(c);
     }
 
@@ -328,7 +278,7 @@ public static partial class DamageAPI
 
         c.Emit(OpCodes.Dup);
         c.Emit(OpCodes.Ldarg_0);
-        EmitCopyFromComponentInversedCall(c);
+        EmitCopyFromComponentCall(c);
     }
 
     private static void ProjectileExplosionDetonateServerIL(ILContext il)
@@ -341,7 +291,7 @@ public static partial class DamageAPI
 
         c.Emit(OpCodes.Dup);
         c.Emit(OpCodes.Ldarg_0);
-        EmitCopyFromComponentInversedCall(c);
+        EmitCopyFromComponentCall(c);
     }
 
     private static void ProjectileDotZoneResetOverlapIL(ILContext il)
@@ -350,58 +300,19 @@ public static partial class DamageAPI
 
         c.GotoNext(
             MoveType.After,
-            x => x.MatchNewobj<OverlapAttack>(),
-            x => x.MatchStfld(out _));
+            x => x.MatchNewobj<OverlapAttack>());
 
-        c.Emit(OpCodes.Ldarg_0);
         c.Emit(OpCodes.Ldarg_0);
         c.Emit<ProjectileDotZone>(OpCodes.Ldfld, nameof(ProjectileDotZone.attack));
+        c.Emit(OpCodes.Ldarg_0);
         EmitCopyFromComponentCall(c);
     }
 
-    private static void ProjectileSingleTargetImpactOnProjectileImpactIL(ILContext il)
-    {
-        var c = new ILCursor(il);
+    private static void ProjectileSingleTargetImpactOnProjectileImpactIL(ILContext il) => GotoAndEmitCopyComponentCallForNewDamageInfo(new ILCursor(il));
 
-        var damageInfoIndex = GotoDamageInfo(c);
+    private static void ProjectileGrantOnKillOnDestroyOnDestroyIL(ILContext il) => GotoAndEmitCopyComponentCallForNewDamageInfo(new ILCursor(il));
 
-        c.GotoNext(
-            x => x.MatchLdloc(damageInfoIndex),
-            x => x.MatchLdarg(0));
-
-        c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldloc, damageInfoIndex);
-
-        EmitCopyFromComponentCall(c);
-    }
-
-    private static void ProjectileGrantOnKillOnDestroyOnDestroyIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<DamageInfo>());
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_0);
-
-        EmitCopyFromComponentInversedCall(c);
-    }
-
-    private static void DeathProjectileFixedUpdateIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<DamageInfo>());
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_0);
-
-        EmitCopyFromComponentInversedCall(c);
-    }
+    private static void DeathProjectileFixedUpdateIL(ILContext il) => GotoAndEmitCopyComponentCallForNewDamageInfo(new ILCursor(il));
     #endregion
 
     #region DotController
@@ -415,8 +326,8 @@ public static partial class DamageAPI
             x => x.MatchLdarg(3),
             x => x.MatchStfld(out _));
 
-        EmitGetTempHolder(c);
         c.Emit(OpCodes.Ldloc, pendingDamageIndex);
+        EmitGetTempHolder(c);
         EmitAssignHolderCall(c);
     }
 
@@ -435,16 +346,7 @@ public static partial class DamageAPI
         c.Emit(OpCodes.Ldloc, dotStackIndex);
         EmitSetTempHolder(c);
 
-        var damageInfoIndex = -1;
-        c.GotoNext(
-            x => x.MatchNewobj<DamageInfo>(),
-            x => x.MatchStloc(out damageInfoIndex));
-
-        c.GotoNext(x => x.MatchLdfld<DotController.PendingDamage>(nameof(DotController.PendingDamage.damageType)));
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldloc, damageInfoIndex);
-        EmitCopyCall(c);
+        GotoAndEmitCopyCallForNewDamageInfo(new ILCursor(il));
     }
     #endregion
 
@@ -478,10 +380,12 @@ public static partial class DamageAPI
     {
         var c = new ILCursor(il);
 
-        var damageInfoIndex = GotoDamageInfo(c);
+        c.GotoNext(
+            MoveType.After,
+            x => x.MatchNewobj<DamageInfo>());
 
+        c.Emit(OpCodes.Dup);
         EmitGetTempHolder(c);
-        c.Emit(OpCodes.Ldloc, damageInfoIndex);
         EmitAssignHolderCall(c);
     }
 
@@ -527,10 +431,12 @@ public static partial class DamageAPI
     {
         var c = new ILCursor(il);
 
-        var damageInfoIndex = GotoDamageInfo(c);
+        c.GotoNext(
+            MoveType.After,
+            x => x.MatchNewobj<DamageInfo>());
 
+        c.Emit(OpCodes.Dup);
         EmitGetTempHolder(c);
-        c.Emit(OpCodes.Ldloc, damageInfoIndex);
         EmitAssignHolderCall(c);
     }
 
@@ -559,7 +465,7 @@ public static partial class DamageAPI
         c.Emit(OpCodes.Dup);
         c.Emit(OpCodes.Ldarg_1);
 
-        EmitCopyInversedCall(c);
+        EmitCopyCall(c);
     }
     #endregion
 
@@ -592,15 +498,13 @@ public static partial class DamageAPI
     {
         var c = new ILCursor(il);
 
-        var damageDealtMessageIndex = -1;
         c.GotoNext(
             MoveType.After,
-            x => x.MatchNewobj<DamageDealtMessage>(),
-            x => x.MatchStloc(out damageDealtMessageIndex));
+            x => x.MatchNewobj<DamageDealtMessage>());
 
+        c.Emit(OpCodes.Dup);
         c.Emit(OpCodes.Ldarg_0);
         c.Emit<DamageReport>(OpCodes.Ldfld, nameof(DamageReport.damageInfo));
-        c.Emit(OpCodes.Ldloc, damageDealtMessageIndex);
         EmitCopyCall(c);
     }
     #endregion
@@ -616,7 +520,7 @@ public static partial class DamageAPI
 
         c.Emit(OpCodes.Dup);
         c.Emit(OpCodes.Ldarg_0);
-        EmitCopyFromComponentInversedCall(c);
+        EmitCopyFromComponentCall(c);
     }
     #endregion
 
@@ -630,8 +534,8 @@ public static partial class DamageAPI
             x => x.MatchLdfld<ContactDamage>(nameof(ContactDamage.damageType)));
 
         c.Emit(OpCodes.Ldarg_0);
-        c.Emit(OpCodes.Ldarg_0);
         c.Emit<ContactDamage>(OpCodes.Ldfld, nameof(ContactDamage.overlapAttack));
+        c.Emit(OpCodes.Ldarg_0);
         EmitCopyFromComponentCall(c);
     }
     #endregion
@@ -645,22 +549,33 @@ public static partial class DamageAPI
         c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(TempHolder)).GetSetMethod(true));
     }
 
-    private static int GotoDamageInfo(ILCursor c)
+    private static void GotoAndEmitCopyCallForNewDamageInfo(ILCursor c)
     {
-        int damageInfoIndex = -1;
         c.GotoNext(
             MoveType.After,
-            x => x.MatchNewobj<DamageInfo>(),
-            x => x.MatchStloc(out damageInfoIndex));
+            x => x.MatchNewobj<DamageInfo>());
 
-        return damageInfoIndex;
+        c.Emit(OpCodes.Dup);
+        c.Emit(OpCodes.Ldarg_0);
+
+        EmitCopyCall(c);
+    }
+
+    private static void GotoAndEmitCopyComponentCallForNewDamageInfo(ILCursor c)
+    {
+        c.GotoNext(
+            MoveType.After,
+            x => x.MatchNewobj<DamageInfo>());
+
+        c.Emit(OpCodes.Dup);
+        c.Emit(OpCodes.Ldarg_0);
+
+        EmitCopyFromComponentCall(c);
     }
 
     private static void EmitCopyCall(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(CopyModdedDamageType)));
-    private static void EmitCopyInversedCall(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(CopyModdedDamageTypeInversed)));
 
-    private static void CopyModdedDamageTypeInversed(object to, object from) => CopyModdedDamageType(from, to);
-    private static void CopyModdedDamageType(object from, object to)
+    private static void CopyModdedDamageType(object to, object from)
     {
         if (from == null || to == null)
         {
@@ -673,10 +588,8 @@ public static partial class DamageAPI
     }
 
     private static void EmitCopyFromComponentCall(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(CopyModdedDamageTypeFromComponent)));
-    private static void EmitCopyFromComponentInversedCall(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(CopyModdedDamageTypeFromComponentInversed)));
 
-    private static void CopyModdedDamageTypeFromComponentInversed(object to, Component from) => CopyModdedDamageTypeFromComponent(from, to);
-    private static void CopyModdedDamageTypeFromComponent(Component from, object to)
+    private static void CopyModdedDamageTypeFromComponent(object to, Component from)
     {
         if (!from || to == null)
         {
@@ -693,7 +606,7 @@ public static partial class DamageAPI
     }
 
     private static void EmitAssignHolderCall(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(AssignHolderToObject)));
-    private static void AssignHolderToObject(ModdedDamageTypeHolder holder, object obj)
+    private static void AssignHolderToObject(object obj, ModdedDamageTypeHolder holder)
     {
         if (holder == null || obj == null)
         {
