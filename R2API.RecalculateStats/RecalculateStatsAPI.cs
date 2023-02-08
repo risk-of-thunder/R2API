@@ -394,7 +394,7 @@ public static partial class RecalculateStatsAPI
                 return origSpeedMult + StatMods.attackSpeedMultAdd;
             });
             c.GotoNext(x => x.MatchDiv(), x => x.MatchStloc(locAttackSpeedMultIndex));
-            c.EmitDelegate<Func<float, float>>((origSpeedReductionMult) => origSpeedReductionMult + StatMods.attackSpeedReductionMultAdd);
+            c.EmitDelegate<Func<float, float>>((origSpeedReductionMult) => UnityEngine.Mathf.Max(UnityEngine.Mathf.Epsilon, origSpeedReductionMult + StatMods.attackSpeedReductionMultAdd));
         }
         else
         {
