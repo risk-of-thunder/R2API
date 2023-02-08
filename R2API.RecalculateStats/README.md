@@ -29,5 +29,8 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 
 ## Changelog
 
+### '1.0.1'
+* Added `attackSpeedReductionMultAdd` stat for reducing attack speed.
+
 ### '1.0.0'
 * Split from the main R2API.dll into its own submodule.
