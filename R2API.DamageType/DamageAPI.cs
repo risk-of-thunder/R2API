@@ -260,7 +260,7 @@ public static partial class DamageAPI
 
         c.GotoNext(
             MoveType.After,
-            x => x.MatchNewobj<OverlapAttack>());
+            x => x.MatchStfld<ProjectileOverlapAttack>(nameof(ProjectileOverlapAttack.attack)));
 
         c.Emit(OpCodes.Ldarg_0);
         c.Emit<ProjectileOverlapAttack>(OpCodes.Ldfld, nameof(ProjectileOverlapAttack.attack));
@@ -300,7 +300,7 @@ public static partial class DamageAPI
 
         c.GotoNext(
             MoveType.After,
-            x => x.MatchNewobj<OverlapAttack>());
+            x => x.MatchStfld<ProjectileDotZone>(nameof(ProjectileDotZone.attack)));
 
         c.Emit(OpCodes.Ldarg_0);
         c.Emit<ProjectileDotZone>(OpCodes.Ldfld, nameof(ProjectileDotZone.attack));
