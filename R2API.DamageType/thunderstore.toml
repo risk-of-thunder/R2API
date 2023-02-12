@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_DamageType"
-versionNumber = "1.0.1"
+versionNumber = "1.0.2"
 description = "API for registering damage types"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
