@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using UnityEngine.Networking;
 
@@ -7,14 +7,16 @@ namespace R2API.Utils;
 
 internal static class CompressedFlagArrayUtilities
 {
+    private static readonly byte[] tempBlockValues = new byte[valuesPerBlock];
+    private static readonly int[] tempBlockPartValuesCounts = new int[blockPartsCount];
+
     public const byte flagsPerValue = 8;
     public const byte valuesPerBlock = 18;
     public const byte flagsPerSection = flagsPerValue * valuesPerBlock;
     public const byte sectionsCount = 8;
     public const byte blockPartsCount = 4;
 
-    private const uint blockValuesMask = 0b_00111111_00011111_00001111_00000111;
-    private const uint fullBlockHeader = 0b_00000000_01000000_01100000_01110000;
+    private const uint fullBlockHeader = block1HeaderXor << 24 | block2HeaderXor << 16 | block3HeaderXor << 8 | block4HeaderXor;
 
     private const uint block1HeaderMask = 0b_01000000;
     private const uint block2HeaderMask = 0b_01100000;
@@ -26,65 +28,124 @@ internal static class CompressedFlagArrayUtilities
     private const uint block3HeaderXor = 0b_01100000;
     private const uint block4HeaderXor = 0b_01110000;
 
-    private const uint highestBitInInt = 0b_10000000_00000000_00000000_00000000;
+    private const int block1HeaderSkip = 2;
+    private const int block2HeaderSkip = 3;
+    private const int block3HeaderSkip = 4;
+    private const int block4HeaderSkip = 5;
+
+    private const int block1HeaderValuesCount = 8 - block1HeaderSkip;
+    private const int block2HeaderValuesCount = 8 - block2HeaderSkip;
+    private const int block3HeaderValuesCount = 8 - block3HeaderSkip;
+    private const int block4HeaderValuesCount = 8 - block4HeaderSkip;
+
+    private const int block1HeaderOffset = block1HeaderValuesCount - 8;
+    private const int block2HeaderOffset = block1HeaderOffset + block2HeaderValuesCount;
+    private const int block3HeaderOffset = block2HeaderOffset + block3HeaderValuesCount;
+    private const int block4HeaderOffset = block3HeaderOffset + block4HeaderValuesCount;
+
     private const uint highestBitInByte = 0b_10000000;
 
     public static void Add(ref byte[] values, int index)
     {
-        var valueIndex = index / flagsPerValue;
-        var flagIndex = index % flagsPerValue;
+        if (index < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index));
+        }
 
-        ResizeOrInitIfNeeded(ref values, valueIndex);
+        var valueIndex = index / flagsPerValue;
+        var flagIndex = index - (valueIndex * flagsPerValue);
+
+        ResizeIfNeeded(ref values, valueIndex);
         values[valueIndex] = (byte)(values[valueIndex] | highestBitInByte >> flagIndex);
     }
 
     public static bool Remove(ref byte[] values, int index)
     {
-        var valueIndex = index / flagsPerValue;
-        var flagIndex = index % flagsPerValue;
-
-        if (values == null || valueIndex >= values.Length || valueIndex < 0)
+        if (index < 0)
         {
             return false;
         }
 
+        var valueIndex = index / flagsPerValue;
+        if (valueIndex >= values.Length)
+        {
+            return false;
+        }
+
+        var flagIndex = index - (valueIndex * flagsPerValue);
         values[valueIndex] = (byte)(values[valueIndex] & ~(highestBitInByte >> flagIndex));
-        DownsizeOrNullIfNeeded(ref values);
+        DownsizeIfNeeded(ref values);
 
         return true;
     }
 
     public static bool Has(byte[] values, int index)
     {
-        var valueIndex = index / flagsPerValue;
-        var flagIndex = index % flagsPerValue;
-
-        if (values == null || valueIndex >= values.Length)
+        if (index < 0)
         {
             return false;
         }
 
-        return (values[valueIndex] & (highestBitInByte >> flagIndex)) != 0;
+        var valueIndex = index / flagsPerValue;
+        if (valueIndex >= values.Length)
+        {
+            return false;
+        }
+
+        var flagIndex = index - (valueIndex * flagsPerValue);
+
+        return (values[valueIndex] & highestBitInByte >> flagIndex) != 0;
     }
 
     /// <summary>
-    /// Reads compressed value from the NerworkReader. More info about that can be found in the PR: https://github.com/risk-of-thunder/R2API/pull/284
+    /// Reads compressed value from the NerworkReader.
+    /// More info about that can be found in the PRs:
+    /// https://github.com/risk-of-thunder/R2API/pull/284
+    /// https://github.com/risk-of-thunder/R2API/pull/464
     /// </summary>
     /// <param name="reader"></param>
+    /// <param name="maxValue"></param>
     /// <returns></returns>
-    public static byte[] ReadFromNetworkReader(NetworkReader reader)
+    public static byte[] ReadFromNetworkReader(NetworkReader reader, int maxValue)
     {
+        var values = Array.Empty<byte>();
+
         var sectionByte = reader.ReadByte();
         if (sectionByte == 0)
         {
-            return null;
+            return values;
         }
 
-        var values = new byte[0];
-
-        for (var i = 0; i < 8; i++)
+        if (maxValue <= 8)
         {
-            if ((sectionByte & 1 << i) != 0)
+            return new[] { sectionByte };
+        }
+
+        if (maxValue <= 64)
+        {
+            var lastValueIndex = 0;
+            for (var i = 0; i < sectionsCount; i++)
+            {
+                if ((sectionByte & (1 << i)) != 0)
+                {
+                    lastValueIndex = i;
+                    tempBlockValues[i] = reader.ReadByte();
+                }
+                else
+                {
+                    tempBlockValues[i] = 0;
+                }
+            }
+
+            values = new byte[lastValueIndex + 1];
+            Array.Copy(tempBlockValues, 0, values, 0, lastValueIndex + 1);
+
+            return values;
+        }
+
+        for (var i = 0; i < sectionsCount; i++)
+        {
+            if ((sectionByte & (1 << i)) != 0)
             {
                 ReadBlock(ref values, reader, i);
             }
@@ -94,91 +155,115 @@ internal static class CompressedFlagArrayUtilities
     }
 
     /// <summary>
-    /// Reads compressed value from the NerworkReader. More info about that can be found in the PR: https://github.com/risk-of-thunder/R2API/pull/284
-    /// </summary>
+    /// Reads compressed value from the NerworkReader.
+    /// More info about that can be found in the PRs:
+    /// https://github.com/risk-of-thunder/R2API/pull/284
+    /// https://github.com/risk-of-thunder/R2API/pull/464
     /// <param name="values"></param>
     /// <param name="writer"></param>
-    public static void WriteToNetworkWriter(byte[] values, NetworkWriter writer)
+    /// <param name="maxValue"></param>
+    public static void WriteToNetworkWriter(byte[] values, NetworkWriter writer, int maxValue)
     {
-        int section = 0;
+        var section = 0;
+
+        if (maxValue <= 8)
+        {
+            writer.Write(values.Length == 0 ? 0 : values[0]);
+            return;
+        }
+
+        if (maxValue <= 64)
+        {
+            for (var i = Math.Min(sectionsCount, values.Length) - 1; i >= 0; i--)
+            {
+                if (values[i] != 0)
+                {
+                    section |= 1;
+                }
+                section <<= 1;
+            }
+            for (var i = 0; i < sectionsCount; i++)
+            {
+                if (i < values.Length)
+                {
+                    writer.Write(values[i]);
+                }
+            }
+            return;
+        }
+
         for (var i = 0; i < sectionsCount; i++)
         {
-            if (!IsBlockEmpty(values, i))
+            if (!IsBlockEmpty(values, i, out var end))
             {
                 section |= 1 << i;
             }
+            if (end)
+            {
+                break;
+            }
         }
+
         writer.Write((byte)section);
 
         for (var i = 0; i < sectionsCount; i++)
         {
-            if (!IsBlockEmpty(values, i))
+            if ((section & (1 << i)) > 0)
             {
                 WriteBlock(values, writer, i);
             }
         }
     }
 
-
     private static void ReadBlock(ref byte[] values, NetworkReader reader, int blockIndex)
     {
-        var fullBlockMask = new FullBlockMask();
-
+        Array.Clear(tempBlockValues, 0, valuesPerBlock);
         var maskIndex = 0;
+        var lastValueIndex = 0;
         while (true)
         {
-            var blockBytes = reader.ReadByte();
-            uint mask, xor;
-            do
+            var blockByte = reader.ReadByte();
+            var (mask, xor, skip, offset) = GetMaskValues(maskIndex);
+            while ((blockByte & mask ^ xor) != 0)
             {
-                (mask, xor) = GetMask(maskIndex++);
+                (mask, xor, skip, offset) = GetMaskValues(++maskIndex);
             }
-            while ((blockBytes & mask ^ xor) != 0);
 
-            fullBlockMask[maskIndex - 1] = blockBytes;
+            ReadBlockValues(ref lastValueIndex, offset, skip, 8, reader, blockByte);
 
-            if ((blockBytes & highestBitInByte) != 0)
+            if ((blockByte & highestBitInByte) != 0)
             {
                 break;
             }
         }
 
-        var bitesSkipped = 0;
-        for (var i = 0; i < 32; i++)
+        ResizeIfNeeded(ref values, blockIndex * valuesPerBlock + lastValueIndex);
+        Array.Copy(tempBlockValues, 0, values, blockIndex * valuesPerBlock, lastValueIndex + 1);
+    }
+
+    private static void ReadBlockValues(ref int lastValueIndex, int valueBitesOffset, int fromIndex, int toIndex, NetworkReader reader, byte blockByte)
+    {
+        for (var i = fromIndex; i < toIndex; i++)
         {
-            if ((blockValuesMask & highestBitInInt >> i) == 0)
+            if ((blockByte & highestBitInByte >> i) != 0)
             {
-                bitesSkipped++;
-                continue;
-            }
-            if ((fullBlockMask.integer & highestBitInInt >> i) != 0)
-            {
-                var valueIndex = (blockIndex * valuesPerBlock) + i - bitesSkipped;
-                ResizeOrInitIfNeeded(ref values, valueIndex);
-                values[valueIndex] = reader.ReadByte();
+                lastValueIndex = i + valueBitesOffset;
+                tempBlockValues[lastValueIndex] = reader.ReadByte();
             }
         }
     }
 
-    private static void ResizeOrInitIfNeeded(ref byte[] values, int valueIndex)
+    private static void ResizeIfNeeded(ref byte[] values, int valueIndex)
     {
-        if (values == null)
-        {
-            values = new byte[valueIndex + 1];
-        }
         if (valueIndex >= values.Length)
         {
             Array.Resize(ref values, valueIndex + 1);
         }
     }
 
-    private static void DownsizeOrNullIfNeeded(ref byte[] value)
+    private static void DownsizeIfNeeded(ref byte[] value)
     {
-        if (value == null || value.Length == 0)
-        {
-            return;
-        }
-        if (value[value.Length - 1] != 0)
+        if (value.Length == 0 || value[value.Length - 1] != 0)
         {
             return;
         }
@@ -190,23 +275,61 @@ internal static class CompressedFlagArrayUtilities
                 return;
             }
         }
-        value = null;
+        value = Array.Empty<byte>();
     }
 
     private static void WriteBlock(byte[] values, NetworkWriter writer, int blockIndex)
     {
-        var bitesSkipped = 0;
+        var blockValuesCount = 0;
         var fullBlockMask = new FullBlockMask();
-        var orderedValues = new List<byte>();
-        for (var i = 0; i < 32; i++)
+
+        PrepareBlockValues(values, blockIndex, 0, 6, ref blockValuesCount, ref fullBlockMask);
+        tempBlockPartValuesCounts[0] = blockValuesCount;
+        fullBlockMask.integer <<= block2HeaderSkip;
+        PrepareBlockValues(values, blockIndex, 6, 11, ref blockValuesCount, ref fullBlockMask);
+        tempBlockPartValuesCounts[1] = blockValuesCount;
+        fullBlockMask.integer <<= block3HeaderSkip;
+        PrepareBlockValues(values, blockIndex, 11, 15, ref blockValuesCount, ref fullBlockMask);
+        tempBlockPartValuesCounts[2] = blockValuesCount;
+        fullBlockMask.integer <<= block4HeaderSkip;
+        PrepareBlockValues(values, blockIndex, 15, 18, ref blockValuesCount, ref fullBlockMask);
+        tempBlockPartValuesCounts[3] = blockValuesCount;
+
+        var lastIndex = 0;
+        for (var i = blockPartsCount - 1; i > 0; i--)
         {
-            fullBlockMask.integer <<= 1;
-            if ((blockValuesMask & highestBitInInt >> i) == 0)
+            if (fullBlockMask[i] != 0)
             {
-                bitesSkipped++;
+                lastIndex = i;
+                break;
+            }
+        }
+
+        fullBlockMask.integer |= fullBlockHeader;
+        fullBlockMask[lastIndex] |= (byte)highestBitInByte;
+
+        var valueIndex = 0;
+        for (var i = 0; i <= lastIndex; i++)
+        {
+            if (valueIndex == tempBlockPartValuesCounts[i])
+            {
                 continue;
             }
-            var valueIndex = blockIndex * valuesPerBlock + (i - bitesSkipped);
+
+            writer.Write(fullBlockMask[i]);
+            for (; valueIndex < tempBlockPartValuesCounts[i]; valueIndex++)
+            {
+                writer.Write(tempBlockValues[valueIndex]);
+            }
+        }
+    }
+
+    private static void PrepareBlockValues(byte[] values, int blockIndex, int fromIndex, int toIndex, ref int blockValuesCount, ref FullBlockMask fullBlockMask)
+    {
+        for (var i = fromIndex; i < toIndex; i++)
+        {
+            fullBlockMask.integer <<= 1;
+            var valueIndex = blockIndex * valuesPerBlock + i;
             if (valueIndex >= values.Length)
             {
                 continue;
@@ -214,43 +337,22 @@ internal static class CompressedFlagArrayUtilities
             if (values[valueIndex] != 0)
             {
                 fullBlockMask.integer |= 1;
-                orderedValues.Add(values[valueIndex]);
+                tempBlockValues[blockValuesCount++] = values[valueIndex];
             }
-        }
-        var lastIndex = 0;
-        for (var i = 0; i < blockPartsCount; i++)
-        {
-            if (fullBlockMask[i] != 0)
-            {
-                lastIndex = i;
-            }
-        }
-
-        fullBlockMask.integer |= fullBlockHeader;
-        fullBlockMask[lastIndex] = (byte)(fullBlockMask[lastIndex] | highestBitInByte);
-
-        for (var i = 0; i <= lastIndex; i++)
-        {
-            var (headerMask, _) = GetMask(i);
-            if ((fullBlockMask[i] & (~headerMask)) != 0)
-            {
-                writer.Write(fullBlockMask[i]);
-            }
-        }
-        foreach (var value in orderedValues)
-        {
-            writer.Write(value);
         }
     }
 
-    private static bool IsBlockEmpty(byte[] values, int blockIndex)
+    private static bool IsBlockEmpty(byte[] values, int blockIndex, out bool end)
     {
-        if (values == null || values.Length == 0 || values.Length / valuesPerBlock < blockIndex)
+        if (values.Length == 0 || values.Length / valuesPerBlock < blockIndex)
         {
+            end = true;
             return true;
         }
+        end = false;
 
-        for (var i = blockIndex * valuesPerBlock; i < Math.Min((blockIndex + 1) * valuesPerBlock, values.Length); i++)
+        var lastIndex = Math.Min((blockIndex + 1) * valuesPerBlock, values.Length);
+        for (var i = blockIndex * valuesPerBlock; i < lastIndex; i++)
         {
             if (values[i] != 0)
             {
@@ -261,29 +363,30 @@ internal static class CompressedFlagArrayUtilities
         return true;
     }
 
-    private static (uint mask, uint xor) GetMask(int i)
+    private static (uint mask, uint xor, int skip, int offset) GetMaskValues(int i)
     {
         return i switch
         {
-            0 => (block1HeaderMask, block1HeaderXor),
-            1 => (block2HeaderMask, block2HeaderXor),
-            2 => (block3HeaderMask, block3HeaderXor),
-            3 => (block4HeaderMask, block4HeaderXor),
+            0 => (block1HeaderMask, block1HeaderXor, block1HeaderSkip, block1HeaderOffset),
+            1 => (block2HeaderMask, block2HeaderXor, block2HeaderSkip, block2HeaderOffset),
+            2 => (block3HeaderMask, block3HeaderXor, block3HeaderSkip, block3HeaderOffset),
+            3 => (block4HeaderMask, block4HeaderXor, block4HeaderSkip, block4HeaderOffset),
             _ => throw new IndexOutOfRangeException()
         };
     }
 
     [StructLayout(LayoutKind.Explicit)]
+    [DebuggerDisplay("{ToString()}")]
     private struct FullBlockMask
     {
         [FieldOffset(3)]
-        public byte byte0;
+        private byte byte0;
         [FieldOffset(2)]
-        public byte byte1;
+        private byte byte1;
         [FieldOffset(1)]
-        public byte byte2;
+        private byte byte2;
         [FieldOffset(0)]
-        public byte byte3;
+        private byte byte3;
 
         [FieldOffset(0)]
         public uint integer;
@@ -292,36 +395,77 @@ internal static class CompressedFlagArrayUtilities
         {
             get
             {
-                return i switch
+                if (BitConverter.IsLittleEndian)
                 {
-                    0 => byte0,
-                    1 => byte1,
-                    2 => byte2,
-                    3 => byte3,
-                    _ => throw new IndexOutOfRangeException(),
-                };
+                    return i switch
+                    {
+                        0 => byte0,
+                        1 => byte1,
+                        2 => byte2,
+                        3 => byte3,
+                        _ => throw new IndexOutOfRangeException(),
+                    };
+                }
+                else
+                {
+                    return i switch
+                    {
+                        0 => byte3,
+                        1 => byte2,
+                        2 => byte1,
+                        3 => byte0,
+                        _ => throw new IndexOutOfRangeException(),
+                    };
+                }
             }
             set
             {
-                switch (i)
+                if (BitConverter.IsLittleEndian)
                 {
-                    case 0:
-                        byte0 = value;
-                        break;
-                    case 1:
-                        byte1 = value;
-                        break;
-                    case 2:
-                        byte2 = value;
-                        break;
-                    case 3:
-                        byte3 = value;
-                        break;
-                    default:
-                        throw new IndexOutOfRangeException();
+                    switch (i)
+                    {
+                        case 0:
+                            byte0 = value;
+                            break;
+                        case 1:
+                            byte1 = value;
+                            break;
+                        case 2:
+                            byte2 = value;
+                            break;
+                        case 3:
+                            byte3 = value;
+                            break;
+                        default:
+                            throw new IndexOutOfRangeException();
+                    }
+                }
+                else
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            byte3 = value;
+                            break;
+                        case 1:
+                            byte2 = value;
+                            break;
+                        case 2:
+                            byte1 = value;
+                            break;
+                        case 3:
+                            byte0 = value;
+                            break;
+                        default:
+                            throw new IndexOutOfRangeException();
+                    }
                 }
             }
         }
-    }
 
+        public override string ToString()
+        {
+            return Convert.ToString(integer, 2).PadLeft(32, '0');
+        }
+    }
 }

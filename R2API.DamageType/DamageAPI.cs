@@ -961,7 +961,7 @@ public static partial class DamageAPI
     /// </summary>
     public class ModdedDamageTypeHolder
     {
-        private byte[] values;
+        private byte[] values = Array.Empty<byte>();
 
         public ModdedDamageTypeHolder() { SetHooks(); }
 
@@ -969,7 +969,10 @@ public static partial class DamageAPI
         {
             SetHooks();
 
-            this.values = values?.ToArray();
+            if (values.Length > 0)
+            {
+                this.values = values.ToArray();
+            }
         }
 
         /// <summary>
@@ -1057,21 +1060,23 @@ public static partial class DamageAPI
             DamageAPI.SetHooks();
             var holder = new ModdedDamageTypeHolder
             {
-                values = values?.ToArray()
+                values = values.Length == 0 ? values : values.ToArray()
             };
             return holder;
         }
 
         /// <summary>
-        /// Reads compressed value from the NerworkReader. More info about that can be found in the PR: https://github.com/risk-of-thunder/R2API/pull/284
+        /// Reads compressed value from the NerworkReader. More info about that can be found in the PRs:
+        /// https://github.com/risk-of-thunder/R2API/pull/284
+        /// https://github.com/risk-of-thunder/R2API/pull/464
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
         public static ModdedDamageTypeHolder ReadFromNetworkReader(NetworkReader reader)
         {
             DamageAPI.SetHooks();
-            var values = CompressedFlagArrayUtilities.ReadFromNetworkReader(reader);
-            if (values == null)
+            var values = CompressedFlagArrayUtilities.ReadFromNetworkReader(reader, ModdedDamageTypeCount);
+            if (values.Length == 0)
             {
                 return null;
             }
@@ -1083,10 +1088,12 @@ public static partial class DamageAPI
         }
 
         /// <summary>
-        /// Writes compressed value to the NerworkWriter. More info about that can be found in the PR: https://github.com/risk-of-thunder/R2API/pull/284
+        /// Writes compressed value to the NerworkWriter. More info about that can be found in the PRs:
+        /// https://github.com/risk-of-thunder/R2API/pull/284
+        /// https://github.com/risk-of-thunder/R2API/pull/464
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteToNetworkWriter(NetworkWriter writer) => CompressedFlagArrayUtilities.WriteToNetworkWriter(values, writer);
+        public void WriteToNetworkWriter(NetworkWriter writer) => CompressedFlagArrayUtilities.WriteToNetworkWriter(values, writer, ModdedDamageTypeCount);
     }
 
     /// <summary>
@@ -1099,7 +1106,7 @@ public static partial class DamageAPI
         //I can't just use ModdedDamageTypeHolder instead of byte[] because Unity can't serialize classes that come from assemblies
         //that are not present at startup (basically every mod) even if they use [Serializable] attribute.
         //Though Unity can serialize class if it inherit from MonoBehaviour or ScriptableObject.
-        private byte[] values;
+        private byte[] values = Array.Empty<byte>();
 
         /// <summary>
         /// Enable ModdedDamageType for this instance
