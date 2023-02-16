@@ -44,7 +44,7 @@ jobs:
           existing_version_number=$(curl --compressed -s "https://api-v2v3search-0.nuget.org/query?q=packageid:${nuget_package_name}&prerelease=true&semVerLevel=2.0.0" | jq '.data[0]?.versions[]?.version' | grep "${version}\"" || true)
           if [ -z $existing_version_number ]
           then
-            dotnet pack --configuration Release --output ./ReleaseOutput /p:OutputPath=./ReleaseOutput
+            dotnet pack --configuration Release /p:PackageOutputPath=./ReleaseOutput /p:OutputPath=./ReleaseOutput
             is_project_built=true
 
             if [ "$namespace" == "RiskofThunder" ]; then
@@ -61,7 +61,7 @@ jobs:
           if [ -z $existing_version_number ]
           then
             if [ "$is_project_built" = false ] ; then
-              dotnet pack --configuration Release --output ./ReleaseOutput /p:OutputPath=./ReleaseOutput
+              dotnet pack --configuration Release /p:PackageOutputPath=./ReleaseOutput /p:OutputPath=./ReleaseOutput
               is_project_built=true
             fi
 
