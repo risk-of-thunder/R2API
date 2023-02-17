@@ -168,26 +168,27 @@ internal static class CompressedFlagArrayUtilities
 
         if (maxValue <= 8)
         {
-            writer.Write(values.Length == 0 ? 0 : values[0]);
+            writer.Write(values.Length == 0 ? (byte)0 : values[0]);
             return;
         }
 
         if (maxValue <= 64)
         {
+            var valueCount = 0;
             for (var i = Math.Min(sectionsCount, values.Length) - 1; i >= 0; i--)
             {
+                section <<= 1;
                 if (values[i] != 0)
                 {
+                    tempBlockValues[valueCount++] = values[i];
                     section |= 1;
                 }
-                section <<= 1;
             }
-            for (var i = 0; i < sectionsCount; i++)
+
+            writer.Write((byte)section);
+            for (var i = valueCount - 1; i >= 0; i--)
             {
-                if (i < values.Length)
-                {
-                    writer.Write(values[i]);
-                }
+                writer.Write(tempBlockValues[i]);
             }
             return;
         }

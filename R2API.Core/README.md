@@ -18,6 +18,9 @@ Do not hestiate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
 
+### '5.0.6'
+* CompressedFlagArrayUtilities fixes after optimization
+
 ### '5.0.5'
 * CompressedFlagArrayUtilities optimization
 
