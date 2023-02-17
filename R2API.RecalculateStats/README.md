@@ -29,6 +29,10 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 
 ## Changelog
 
+### '1.2.0'
+* Added `levelFlatAdd` stat for changing effective level additively.
+* Added `sprintSpeedAdd` stat for changing sprint speed multiplier.
+
 ### '1.1.0'
 * Added `attackSpeedReductionMultAdd` stat for reducing attack speed.
 
