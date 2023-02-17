@@ -127,7 +127,7 @@ public static partial class RecalculateStatsAPI
         /// <summary>Added to base jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd)* (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
         public float baseJumpPowerAdd = 0f;
 
-        /// <summary>Added to the direct multiplier to level scaling. EFFECTIVE LEVEL ~ (BASE LEVEL * (BASE_LEVEL_SCALING + levelMultAdd)</summary>
+        /// <summary>Added to the direct multiplier to level scaling. EFFECTIVE LEVEL ~ (BASE LEVEL + levelFlatAdd * (BASE_LEVEL_SCALING + levelMultAdd)</summary>
         public float levelMultAdd = 0f;
 
         /// <summary>Amount of Root effects currently applied. MOVE_SPEED ~ (moveSpeedRootCount > 0) ? 0 : MOVE_SPEED </summary>
@@ -135,6 +135,13 @@ public static partial class RecalculateStatsAPI
 
         /// <summary>Added to the direct multiplier to crit damage. CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd) </summary>
         public float critDamageMultAdd = 0;
+
+        /// <summary>Added to the body's current level. EFFECTIVE LEVEL ~ (BASE LEVEL + levelFlatAdd * (BASE_LEVEL_SCALING + levelMultAdd) </summary>
+        public float levelFlatAdd = 0f;
+
+        /// <summary>Added to the direct multiplier to sprinting speed. SPRINT SPEED ~ MOVE_SPEED * (BASE_SPRINT_MULT + sprintSpeedAdd) </summary>
+        public float sprintSpeedAdd = 0f;
+
     }
 
     /// <summary>
@@ -333,7 +340,7 @@ public static partial class RecalculateStatsAPI
         {
             c.EmitDelegate<Func<float, float>>((oldScaling) =>
             {
-                return oldScaling * (1 + StatMods.levelMultAdd);
+                return (oldScaling + StatMods.levelFlatAdd) * (1 + StatMods.levelMultAdd);
             });
         }
         else
@@ -641,6 +648,14 @@ public static partial class RecalculateStatsAPI
             {
                 return origMoveSpeedMult + StatMods.moveSpeedMultAdd;
             });
+            while(c.TryGotoNext(MoveType.After,x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.sprintingSpeedMultiplier)))){
+                c.EmitDelegate<Func<float,float>>((origSprintSpeedMult) =>{
+                    return origSprintSpeedMult + StatMods.sprintSpeedAdd;
+                });
+            }
+            c.GotoPrev(MoveType.After,x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertyGetter(nameof(CharacterBody.isSprinting))));
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate<Func<bool,CharacterBody,bool>>((isSprinting,sender) =>{ return isSprinting && ((sender.sprintingSpeedMultiplier + StatMods.sprintSpeedAdd) != 0); }); 
             c.GotoNext(x => x.MatchStloc(locSpeedDivIndex));
             c.EmitDelegate<Func<float, float>>((origMoveSpeedReductionMult) =>
             {
