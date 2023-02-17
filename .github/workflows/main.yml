@@ -16,7 +16,7 @@ jobs:
         dotnet-version: 7.0.x
 
     - name: Build projects
-      run: dotnet build --configuration Debug /p:OutputPath=./DebugOutput
+      run: dotnet build --configuration Debug /p:OutputPath=${PWD}/DebugOutput
 
     - name: Prepare Artifact
       run: |
