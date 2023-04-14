@@ -4,9 +4,9 @@ schemaVersion = "0.0.1"
 
 [package]
 namespace = "RiskofThunder"
-name = "R2API_Loadout"
-versionNumber = "1.0.1"
-description = "API for registering skills, skins and entity states"
+name = "R2API_Skins"
+versionNumber = "1.0.0"
+description = "R2API Submodule for adding custom Skins and Skin-related utilities to the game"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
 
@@ -14,8 +14,6 @@ containsNsfwContent = false
 bbepis-BepInExPack = "5.4.2103"
 RiskofThunder-HookGenPatcher = "1.2.3"
 RiskofThunder-R2API_Core = "1.0.0"
-RiskofThunder-R2API_ContentManagement = "1.0.0"
-RiskofThunder-R2API_Skins = "1.0.0"
 
 [build]
 icon = "../icon.png"
@@ -24,7 +22,7 @@ outdir = "./build"
 
 [[build.copy]]
 source = "./ReleaseOutput"
-target = "./plugins/R2API.Loadout"
+target = "./plugins/R2API.Skins"
 
 [publish]
 repository = "https://thunderstore.io"
