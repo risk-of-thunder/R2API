@@ -16,6 +16,9 @@ DifficultyAPI also comes bundled with the SerializableDifficultyDef, a Scriptabl
 
 ## Changelog
 
+### '1.1.0'
+* Added the ability to hide new difficulties from the lobby screen
+
 ### '1.0.2'
 * Fix multiplayer lobby being empty (including if you selected to show incompatible games).
 

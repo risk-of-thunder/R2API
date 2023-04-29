@@ -89,6 +89,16 @@ public partial class DifficultyAPI
         return AddDifficultyInternal(difficulty, preferPositive, false);
     }
 
+    /// <summary>
+    /// Add a DifficultyDef to the list of available difficulties.
+    /// This must be called before the DifficultyCatalog inits, so before plugin.Start()
+    /// You'll get your new index returned that you can work with for comparing to Run.Instance.selectedDifficulty.
+    /// If this is called after the DifficultyCatalog inits then this will return -1/DifficultyIndex.Invalid and ignore the difficulty
+    /// </summary>
+    /// <param name="difficulty">The difficulty definition to add.</param>
+    /// <param name="preferPositive">If you prefer to be appended to the array. In game version 1.0.0.X this means you will get all Eclipse modifiers as well when your difficulty is selected. </param>
+    /// <param name="hidden">If set to true, the difficulty def will be hidden from the lobby</param>
+    /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
     public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty, bool preferPositive = false, bool hidden = false)
     {
         DifficultyAPI.SetHooks();
