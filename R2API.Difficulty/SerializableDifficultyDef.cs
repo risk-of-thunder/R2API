@@ -16,6 +16,8 @@ public class SerializableDifficultyDef : ScriptableObject
     public bool countsAsHardMode;
     [Tooltip("If set to true, the difficulty index will be a possitive number, this causes the difficulty to have all the Eclipse modifiers (From 1 to 8)")]
     public bool preferPositiveIndex = false;
+    [Tooltip("If set to true, the Difficulty will not be selectable on the lobby, and will be hidden.")]
+    public bool hideFromDifficultySelection = false;
     public Color difficultyColor;
     public Sprite iconSprite;
 

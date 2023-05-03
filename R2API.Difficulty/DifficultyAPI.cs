@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using R2API.AutoVersionGen;
 using R2API.ScriptableObjects;
 using R2API.Utils;
@@ -40,6 +41,7 @@ public partial class DifficultyAPI
     /// A dictionairy with ALL difficulty definitions. Post start, this includes both the vanilla ones and the ones added by R2API. Not all indexes are promised to be populated. Iterate over the keyset instead.
     /// </summary>
     public static ConcurrentDictionary<DifficultyIndex, DifficultyDef?>? difficultyDefinitions = new ConcurrentDictionary<DifficultyIndex, DifficultyDef?>();
+    private static HashSet<DifficultyDef> hiddenDifficulties = new HashSet<DifficultyDef>();
 
     /// <summary>
     /// Add a DifficultyDef to the list of available difficulties.
@@ -52,7 +54,7 @@ public partial class DifficultyAPI
     public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty)
     {
         DifficultyAPI.SetHooks();
-        return AddDifficulty(difficulty, false);
+        return AddDifficultyInternal(difficulty, false, false);
     }
 
     /// <summary>
@@ -69,7 +71,7 @@ public partial class DifficultyAPI
         DifficultyAPI.SetHooks();
         difficulty.foundIconSprite = true;
         difficulty.iconSprite = difficultyIcon;
-        return AddDifficulty(difficulty, false);
+        return AddDifficultyInternal(difficulty, false, false);
     }
 
     /// <summary>
@@ -84,6 +86,41 @@ public partial class DifficultyAPI
     public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty, bool preferPositive = false)
     {
         DifficultyAPI.SetHooks();
+        return AddDifficultyInternal(difficulty, preferPositive, false);
+    }
+
+    /// <summary>
+    /// Add a DifficultyDef to the list of available difficulties.
+    /// This must be called before the DifficultyCatalog inits, so before plugin.Start()
+    /// You'll get your new index returned that you can work with for comparing to Run.Instance.selectedDifficulty.
+    /// If this is called after the DifficultyCatalog inits then this will return -1/DifficultyIndex.Invalid and ignore the difficulty
+    /// </summary>
+    /// <param name="difficulty">The difficulty definition to add.</param>
+    /// <param name="preferPositive">If you prefer to be appended to the array. In game version 1.0.0.X this means you will get all Eclipse modifiers as well when your difficulty is selected. </param>
+    /// <param name="hidden">If set to true, the difficulty def will be hidden from the lobby</param>
+    /// <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
+    public static DifficultyIndex AddDifficulty(DifficultyDef? difficulty, bool preferPositive = false, bool hidden = false)
+    {
+        DifficultyAPI.SetHooks();
+        return AddDifficultyInternal(difficulty, preferPositive, hidden);
+    }
+
+    /// <summary>
+    /// Add a DifficultyDef to the list of available difficulties using a SerializableDifficultyDef
+    /// This must be called before the DifficultyCatalog inits, so before plugin.Start()
+    /// You can get the DifficultyIndex from the SerializableDifficultyDef's DifficultyIndex property
+    /// If this is called after the DifficultyCatalog inits, then the DifficultyIndex will return -1/DifficultyIndex.Invalid and ignore the difficulty
+    /// </summary>
+    /// <param name="serializableDifficultyDef">The SerializableDifficultyDef from which to create the DifficultyDef</param>
+    public static void AddDifficulty(SerializableDifficultyDef serializableDifficultyDef)
+    {
+        DifficultyAPI.SetHooks();
+        serializableDifficultyDef.CreateDifficultyDef();
+        serializableDifficultyDef.DifficultyIndex = AddDifficultyInternal(serializableDifficultyDef.DifficultyDef, serializableDifficultyDef.preferPositiveIndex, serializableDifficultyDef.hideFromDifficultySelection);
+    }
+
+    private static DifficultyIndex AddDifficultyInternal(DifficultyDef? difficulty, bool preferPositive, bool hidden)
+    {
         if (difficultyAlreadyAdded)
         {
             DifficultyPlugin.Logger.LogError($"Tried to add difficulty: {difficulty.nameToken} after difficulty list was created");
@@ -99,22 +136,12 @@ public partial class DifficultyAPI
         {
             pendingIndex = MinimumIndex - 1 - difficultyDefinitions.Count;
         }
+
+        if (hidden)
+            hiddenDifficulties.Add(difficulty);
+
         difficultyDefinitions[pendingIndex] = difficulty;
         return pendingIndex;
-    }
-
-    /// <summary>
-    /// Add a DifficultyDef to the list of available difficulties using a SerializableDifficultyDef
-    /// This must be called before the DifficultyCatalog inits, so before plugin.Start()
-    /// You can get the DifficultyIndex from the SerializableDifficultyDef's DifficultyIndex property
-    /// If this is called after the DifficultyCatalog inits, then the DifficultyIndex will return -1/DifficultyIndex.Invalid and ignore the difficulty
-    /// </summary>
-    /// <param name="serializableDifficultyDef">The SerializableDifficultyDef from which to create the DifficultyDef</param>
-    public static void AddDifficulty(SerializableDifficultyDef serializableDifficultyDef)
-    {
-        DifficultyAPI.SetHooks();
-        serializableDifficultyDef.CreateDifficultyDef();
-        serializableDifficultyDef.DifficultyIndex = AddDifficulty(serializableDifficultyDef.DifficultyDef, serializableDifficultyDef.preferPositiveIndex);
     }
 
     private static bool _hooksEnabled = false;
@@ -190,7 +217,7 @@ public partial class DifficultyAPI
                 choice.tooltipNameColor = difficultyDef.color;
                 choice.tooltipBodyToken = difficultyDef.descriptionToken;
                 choice.serverTag = difficultyDef.serverTag;
-                choice.excludeByDefault = false;
+                choice.excludeByDefault = hiddenDifficulties.Contains(difficultyDef);
                 choice.difficultyIndex = kv.Key;
             }
             catch { }
