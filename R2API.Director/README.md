@@ -18,5 +18,8 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '1.0.1'
+* Tentative fix a bug where family events could occur unannounced, and earlier than expected (for the Void & Lunar family). Usually, this would only become apparent if multiple runs are completed in a single game session. Thanks to 6thmoon for helping finding the root cause of the bug. If the bug is still not fixed do not hesitate to tell us in the modding discord!
+
 ### '1.0.0'
 * Split from the main R2API.dll into its own submodule.
