@@ -186,6 +186,24 @@ foreach (var dependency in packageTree.
     Console.WriteLine(output);
 }
 
+// Util method for local debugging / building
+#pragma warning disable CS8321 // Local function is declared but never used
+void CopyAllR2APIDllsToUniqueFolder()
+{
+    var r2apiSolutionFolder = new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.Parent;
+    var allR2apiModulesDirectoryPath = Path.Join(r2apiSolutionFolder.FullName, "All R2API Modules");
+    Directory.CreateDirectory(allR2apiModulesDirectoryPath);
+    foreach (var dll in Directory.GetFiles(r2apiSolutionFolder.FullName, "R2API*.dll", SearchOption.AllDirectories).Concat(Directory.GetFiles(r2apiSolutionFolder.FullName, "R2API*.pdb", SearchOption.AllDirectories)))
+        if (dll.Contains("\\bin\\Debug\\netstandard2.0\\"))
+        {
+            var outputPath = Path.Combine(allR2apiModulesDirectoryPath, Path.GetFileName(dll));
+            Console.WriteLine(dll);
+            if (!File.Exists(outputPath))
+                File.Copy(dll, outputPath);
+        }
+}
+#pragma warning restore CS8321 // Local function is declared but never used
+
 internal class Node<T>
 {
     internal T Value;
@@ -259,4 +277,3 @@ internal class R2APIPackage
     public override string ToString() =>
         $"{Namespace}-{Name} | Directory: {CsProjDirectoryFullPath}";
 }
-

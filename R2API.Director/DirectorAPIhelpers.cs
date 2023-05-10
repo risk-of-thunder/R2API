@@ -1,4 +1,3 @@
-using R2API.MiscHelpers;
 using R2API.Utils;
 using RoR2;
 using System;
@@ -320,16 +319,14 @@ public static partial class DirectorAPI
         public static void AddNewMonster(DirectorCard? monsterCard, MonsterCategory monsterCategory)
         {
             DirectorAPI.SetHooks();
+
             var monsterCardHolder = new DirectorCardHolder
             {
                 Card = monsterCard,
                 MonsterCategory = monsterCategory
             };
 
-            MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
-            {
-                AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCardHolder, false);
-            };
+            AddNewMonster(monsterCardHolder, false);
         }
 
         /// <summary>
@@ -341,9 +338,25 @@ public static partial class DirectorAPI
         public static void AddNewMonster(DirectorCardHolder? monsterCard, bool addToFamilies)
         {
             DirectorAPI.SetHooks();
+
+            AddNewMonster(monsterCard, addToFamilies, null);
+        }
+
+        /// <summary>
+        /// Adds a new monster to all stages.
+        /// Also add to each existing monster families if second parameter is true.
+        /// If a valid predicate is provided the monster will only be added to the given DirectorCardCategorySelection if the predicate return true.
+        /// </summary>
+        /// <param name="monsterCard"></param>
+        /// <param name="addToFamilies"></param>
+        /// <param name="predicate"></param>
+        public static void AddNewMonster(DirectorCardHolder? monsterCard, bool addToFamilies, Predicate<DirectorCardCategorySelection> predicate)
+        {
+            DirectorAPI.SetHooks();
+
             MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
             {
-                AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
+                AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies, predicate);
             };
         }
 
@@ -362,6 +375,29 @@ public static partial class DirectorAPI
         )
         {
             DirectorAPI.SetHooks();
+
+            AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCardHolder, addToFamilies, null);
+        }
+
+        /// <summary>
+        /// Adds a new monster to a pool of monsters that can spawn in a given stage (see <see cref="MonsterActions"/>).
+        /// If a valid (non null) predicate is provided the monster will only be added to the given DirectorCardCategorySelection if the predicate return true.
+        /// </summary>
+        /// <param name="dccsPool"></param>
+        /// <param name="mixEnemyArtifactMonsters"></param>
+        /// <param name="monsterCardHolder"></param>
+        /// <param name="addToFamilies">Whether to also add to each existing monster family</param>
+        /// <param name="predicate"></param>
+        public static void AddNewMonster(
+            DccsPool dccsPool,
+            List<DirectorCardHolder> mixEnemyArtifactMonsters,
+            DirectorCardHolder monsterCardHolder,
+            bool addToFamilies,
+            Predicate<DirectorCardCategorySelection> predicate
+        )
+        {
+            DirectorAPI.SetHooks();
+
             if (dccsPool)
             {
                 ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) =>
@@ -373,18 +409,19 @@ public static partial class DirectorAPI
                     {
                         ForEachPoolEntryInDccsPoolCategory(poolCategory, (poolEntry) =>
                         {
-                            AddMonsterToPoolEntry(monsterCardHolder, poolEntry);
+                            AddMonsterToPoolEntry(monsterCardHolder, poolEntry, predicate);
                         });
                     }
                 });
             }
 
-            mixEnemyArtifactMonsters.Add(monsterCardHolder);
+            mixEnemyArtifactMonsters?.Add(monsterCardHolder);
         }
 
-        private static void AddMonsterToPoolEntry(DirectorCardHolder monsterCardHolder, DccsPool.PoolEntry poolEntry)
+        private static void AddMonsterToPoolEntry(DirectorCardHolder monsterCardHolder, DccsPool.PoolEntry poolEntry, Predicate<DirectorCardCategorySelection> predicate)
         {
-            poolEntry.dccs.AddCard(monsterCardHolder);
+            if ((predicate != null && predicate(poolEntry.dccs)) || predicate == null)
+                poolEntry.dccs.AddCard(monsterCardHolder);
         }
 
         /// <summary>
@@ -399,22 +436,14 @@ public static partial class DirectorAPI
         public static void AddNewMonsterToStage(DirectorCard? monsterCard, MonsterCategory monsterCategory, Stage stage, string? customStageName = "")
         {
             DirectorAPI.SetHooks();
+
             var monsterCardHolder = new DirectorCardHolder
             {
                 Card = monsterCard,
                 MonsterCategory = monsterCategory
             };
 
-            MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
-            {
-                if (currentStage.stage == stage)
-                {
-                    if (currentStage.CheckStage(stage, customStageName))
-                    {
-                        AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCardHolder, false);
-                    }
-                }
-            };
+            AddNewMonsterToStage(monsterCardHolder, false, stage, customStageName);
         }
 
         /// <summary>
@@ -429,13 +458,32 @@ public static partial class DirectorAPI
         public static void AddNewMonsterToStage(DirectorCardHolder monsterCard, bool addToFamilies, Stage stage, string? customStageName = "")
         {
             DirectorAPI.SetHooks();
+
+            AddNewMonsterToStage(monsterCard, addToFamilies, null, stage, customStageName);
+        }
+
+        /// <summary>
+        /// Adds a new monster to a specific stage.
+        /// Also add to each existing monster families if second parameter is true.
+        /// For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+        /// If a valid (non null) predicate is provided the monster will only be added to the given DirectorCardCategorySelection if the predicate return true.
+        /// </summary>
+        /// <param name="monsterCard"></param>
+        /// <param name="addToFamilies"></param>
+        /// <param name="predicate"></param>
+        /// <param name="stage"></param>
+        /// <param name="customStageName"></param>
+        public static void AddNewMonsterToStage(DirectorCardHolder monsterCard, bool addToFamilies, Predicate<DirectorCardCategorySelection> predicate, Stage stage, string? customStageName = "")
+        {
+            DirectorAPI.SetHooks();
+
             MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
             {
                 if (currentStage.stage == stage)
                 {
                     if (currentStage.CheckStage(stage, customStageName))
                     {
-                        AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
+                        AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies, predicate);
                     }
                 }
             };
@@ -452,11 +500,31 @@ public static partial class DirectorAPI
         public static void AddNewMonsterToStagesWhere(DirectorCardHolder monsterCard, bool addToFamilies, Predicate<StageInfo> matchStage)
         {
             DirectorAPI.SetHooks();
+
+            AddNewMonsterToStagesWhere(monsterCard, addToFamilies, matchStage, null);
+        }
+
+        /// <summary>
+        /// Adds a new monster to matching stages.
+        /// Also add to each existing monster families if second parameter is true.
+        /// For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+        /// If a valid (non null) predicate is provided the monster will only be added to the given DirectorCardCategorySelection if the predicate return true.
+        /// </summary>
+        /// <param name="monsterCard"></param>
+        /// <param name="addToFamilies"></param>
+        /// <param name="matchStage"></param>
+        /// <param name="predicate"></param>
+        public static void AddNewMonsterToStagesWhere(DirectorCardHolder monsterCard,
+            bool addToFamilies,
+            Predicate<StageInfo> matchStage,
+            Predicate<DirectorCardCategorySelection> predicate)
+        {
+            DirectorAPI.SetHooks();
             MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
             {
                 if (matchStage(currentStage))
                 {
-                    AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies);
+                    AddNewMonster(dccsPool, mixEnemyArtifactMonsters, monsterCard, addToFamilies, predicate);
                 }
             };
         }
@@ -470,16 +538,14 @@ public static partial class DirectorAPI
         public static void AddNewInteractable(DirectorCard? interactableCard, InteractableCategory interactableCategory)
         {
             DirectorAPI.SetHooks();
+
             var interactableCardHolder = new DirectorCardHolder
             {
                 Card = interactableCard,
                 InteractableCategory = interactableCategory,
             };
 
-            InteractableActions += (interactablesDccsPool, currentStage) =>
-            {
-                AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder);
-            };
+            AddNewInteractable(interactableCardHolder);
         }
 
         /// <summary>
@@ -489,15 +555,24 @@ public static partial class DirectorAPI
         public static void AddNewInteractable(DirectorCardHolder? interactableCardHolder)
         {
             DirectorAPI.SetHooks();
-            InteractableActions += (interactablesDccsPool, currentStage) =>
-            {
-                AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder);
-            };
+
+            AddNewInteractable(interactableCardHolder, null);
         }
 
-        private static void AddInteractableToPoolEntry(DirectorCardHolder interactableCardHolder, DccsPool.PoolEntry poolEntry)
+        /// <summary>
+        /// Adds a new interactable to all stages.
+        /// If a valid (non null) predicate is provided the interactable will only be added to the given DirectorCardCategorySelection if the predicate return true.
+        /// </summary>
+        /// <param name="interactableCardHolder"></param>
+        /// <param name="predicate"></param>
+        public static void AddNewInteractable(DirectorCardHolder? interactableCardHolder, Predicate<DirectorCardCategorySelection> predicate)
         {
-            poolEntry.dccs.AddCard(interactableCardHolder);
+            DirectorAPI.SetHooks();
+
+            InteractableActions += (interactablesDccsPool, currentStage) =>
+            {
+                AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder, predicate);
+            };
         }
 
         /// <summary>
@@ -512,22 +587,14 @@ public static partial class DirectorAPI
         public static void AddNewInteractableToStage(DirectorCard? interactableCard, InteractableCategory interactableCategory, Stage stage, string? customStageName = "")
         {
             DirectorAPI.SetHooks();
+
             var interactableCardHolder = new DirectorCardHolder
             {
                 Card = interactableCard,
                 InteractableCategory = interactableCategory
             };
 
-            InteractableActions += (interactablesDccsPool, currentStage) =>
-            {
-                if (currentStage.stage == stage)
-                {
-                    if (currentStage.CheckStage(stage, customStageName))
-                    {
-                        AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder);
-                    }
-                }
-            };
+            AddNewInteractableToStage(interactableCardHolder, stage, customStageName);
         }
 
         /// <summary>
@@ -541,13 +608,31 @@ public static partial class DirectorAPI
         {
             DirectorAPI.SetHooks();
 
+            AddNewInteractableToStage(interactableCardHolder, null, stage, customStageName);
+        }
+
+        /// <summary>
+        /// Adds a new interactable to a specific stage.
+        /// For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+        /// If a valid (non null) predicate is provided the interactable will only be added to the given DirectorCardCategorySelection if the predicate return true.
+        /// </summary>
+        /// <param name="interactableCardHolder">The DirectorCardHolder, should have its Card and InteractableCategory members correctly filled</param>
+        /// <param name="predicate"></param>
+        /// <param name="stage">The stage to add the interactable to</param>
+        /// <param name="customStageName">The name of the custom stage</param>
+        public static void AddNewInteractableToStage(DirectorCardHolder interactableCardHolder,
+            Predicate<DirectorCardCategorySelection> predicate,
+            Stage stage, string customStageName = "")
+        {
+            DirectorAPI.SetHooks();
+
             InteractableActions += (interactablesDccsPool, currentStage) =>
             {
                 if (currentStage.stage == stage)
                 {
                     if (currentStage.CheckStage(stage, customStageName))
                     {
-                        AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder);
+                        AddNewInteractableToStage(interactablesDccsPool, interactableCardHolder, predicate);
                     }
                 }
             };
@@ -555,15 +640,22 @@ public static partial class DirectorAPI
 
         private static void AddNewInteractableToStage(
             DccsPool interactablesDccsPool,
-            DirectorCardHolder interactableCardHolder)
+            DirectorCardHolder interactableCardHolder,
+            Predicate<DirectorCardCategorySelection> predicate)
         {
             if (interactablesDccsPool)
             {
                 ForEachPoolEntryInDccsPool(interactablesDccsPool, (poolEntry) =>
                 {
-                    AddInteractableToPoolEntry(interactableCardHolder, poolEntry);
+                    AddInteractableToPoolEntry(interactableCardHolder, poolEntry, predicate);
                 });
             }
+        }
+
+        private static void AddInteractableToPoolEntry(DirectorCardHolder interactableCardHolder, DccsPool.PoolEntry poolEntry, Predicate<DirectorCardCategorySelection> predicate)
+        {
+            if ((predicate != null && predicate(poolEntry.dccs)) || predicate == null)
+                poolEntry.dccs.AddCard(interactableCardHolder);
         }
 
         /// <summary>
@@ -573,39 +665,67 @@ public static partial class DirectorAPI
         public static void RemoveExistingMonster(string? monsterName)
         {
             DirectorAPI.SetHooks();
-            StringUtils.ThrowIfStringIsNullOrWhiteSpace(monsterName, nameof(monsterName));
 
+            RemoveExistingMonster(monsterName, true, null);
+        }
+
+        /// <summary>
+        /// Removes a monster from spawns on all stages.
+        /// If a valid (non null) predicate is provided the monster will only be added to the given DirectorCardCategorySelection if the predicate return true.
+        /// </summary>
+        /// <param name="monsterName">The name of the monster card to remove</param>
+        /// <param name="removeFromFamilies">Whether or not it the monster should be removed from familiy DCCSs</param>
+        /// <param name="predicate">If a valid (non null) predicate is provided the monster will only be added to the given DirectorCardCategorySelection if the predicate return true.</param>
+        public static void RemoveExistingMonster(string? monsterName, bool removeFromFamilies, Predicate<DirectorCardCategorySelection> predicate)
+        {
+            DirectorAPI.SetHooks();
+
+            StringUtils.ThrowIfStringIsNullOrWhiteSpace(monsterName, nameof(monsterName));
             var monsterNameLowered = monsterName.ToLowerInvariant();
 
             MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
             {
-                RemoveExistingMonster(dccsPool, mixEnemyArtifactMonsters, monsterNameLowered);
+                RemoveExistingMonster(dccsPool, mixEnemyArtifactMonsters, monsterNameLowered, removeFromFamilies, predicate);
             };
         }
 
         private static void RemoveExistingMonster(
             DccsPool dccsPool,
             List<DirectorCardHolder> mixEnemyArtifactMonsters,
-            string monsterNameLowered)
+            string monsterNameLowered,
+            bool removeFromFamilies,
+            Predicate<DirectorCardCategorySelection> predicate)
         {
             if (dccsPool)
             {
-                ForEachPoolEntryInDccsPool(dccsPool, (poolEntry) =>
+                ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) =>
                 {
-                    RemoveMonsterFromPoolEntry(monsterNameLowered, poolEntry);
+                    var isNotAFamilyCategory = poolCategory.name == MonsterPoolCategories.Standard;
+                    var isAFamilyCategory = !isNotAFamilyCategory;
+                    var isAFamilyCategoryAndShouldRemoveFromIt = removeFromFamilies && isAFamilyCategory;
+                    if (isNotAFamilyCategory || isAFamilyCategoryAndShouldRemoveFromIt)
+                    {
+                        ForEachPoolEntryInDccsPoolCategory(poolCategory, (poolEntry) =>
+                        {
+                            RemoveMonsterFromPoolEntry(monsterNameLowered, poolEntry, predicate);
+                        });
+                    }
                 });
             }
 
             mixEnemyArtifactMonsters.RemoveAll((card) => card.Card.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
         }
 
-        private static void RemoveMonsterFromPoolEntry(string monsterNameLowered, DccsPool.PoolEntry poolEntry)
+        private static void RemoveMonsterFromPoolEntry(string monsterNameLowered, DccsPool.PoolEntry poolEntry, Predicate<DirectorCardCategorySelection> predicate)
         {
-            for (int i = 0; i < poolEntry.dccs.categories.Length; i++)
+            if ((predicate != null && predicate(poolEntry.dccs)) || predicate == null)
             {
-                var cards = poolEntry.dccs.categories[i].cards.ToList();
-                cards.RemoveAll((card) => card.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
-                poolEntry.dccs.categories[i].cards = cards.ToArray();
+                for (int i = 0; i < poolEntry.dccs.categories.Length; i++)
+                {
+                    var cards = poolEntry.dccs.categories[i].cards.ToList();
+                    cards.RemoveAll((card) => card.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
+                    poolEntry.dccs.categories[i].cards = cards.ToArray();
+                }
             }
         }
 
@@ -619,8 +739,28 @@ public static partial class DirectorAPI
         public static void RemoveExistingMonsterFromStage(string? monsterName, Stage stage, string? customStageName = "")
         {
             DirectorAPI.SetHooks();
-            StringUtils.ThrowIfStringIsNullOrWhiteSpace(monsterName, nameof(monsterName));
 
+            RemoveExistingMonsterFromStage(monsterName, true, null, stage, customStageName);
+        }
+
+        /// <summary>
+        /// Removes a monster from spawns on a specific stage.
+        /// For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+        /// If a valid (non null) predicate is provided the monster will only be removed from the given DirectorCardCategorySelection if the predicate return true.
+        /// </summary>
+        /// <param name="monsterName">The name of the monster card to remove</param>
+        /// <param name="removeFromFamilies">Whether or not it the monster should be removed from familiy DCCSs</param>
+        /// <param name="predicate">If a valid (non null) predicate is provided the monster will only be removed from the given DirectorCardCategorySelection if the predicate return true.</param>
+        /// <param name="stage">The stage to remove on</param>
+        /// <param name="customStageName">The name of the custom stage</param>
+        public static void RemoveExistingMonsterFromStage(string? monsterName,
+            bool removeFromFamilies,
+            Predicate<DirectorCardCategorySelection> predicate,
+            Stage stage, string? customStageName = "")
+        {
+            DirectorAPI.SetHooks();
+
+            StringUtils.ThrowIfStringIsNullOrWhiteSpace(monsterName, nameof(monsterName));
             var monsterNameLowered = monsterName.ToLowerInvariant();
 
             MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
@@ -629,7 +769,7 @@ public static partial class DirectorAPI
                 {
                     if (currentStage.CheckStage(stage, customStageName))
                     {
-                        RemoveExistingMonster(dccsPool, mixEnemyArtifactMonsters, monsterNameLowered);
+                        RemoveExistingMonster(dccsPool, mixEnemyArtifactMonsters, monsterNameLowered, removeFromFamilies, predicate);
                     }
                 }
             };
@@ -642,25 +782,27 @@ public static partial class DirectorAPI
         public static void RemoveExistingInteractable(string? interactableName)
         {
             DirectorAPI.SetHooks();
-            StringUtils.ThrowIfStringIsNullOrWhiteSpace(interactableName, nameof(interactableName));
 
+            RemoveExistingInteractable(interactableName, null);
+        }
+
+        /// <summary>
+        /// Remove an interactable from spawns on all stages.
+        /// If a valid (non null) predicate is provided the interactable will only be removed from the given DirectorCardCategorySelection if the predicate return true.
+        /// </summary>
+        /// <param name="interactableName">Name of the interactable to remove</param>
+        /// <param name="predicate">If a valid (non null) predicate is provided the interactable will only be removed from the given DirectorCardCategorySelection if the predicate return true.</param>
+        public static void RemoveExistingInteractable(string? interactableName, Predicate<DirectorCardCategorySelection> predicate)
+        {
+            DirectorAPI.SetHooks();
+
+            StringUtils.ThrowIfStringIsNullOrWhiteSpace(interactableName, nameof(interactableName));
             var interactableNameLowered = interactableName.ToLowerInvariant();
 
             InteractableActions += (interactablesDccsPool, currentStage) =>
             {
-                RemoveExistingInteractable(interactablesDccsPool, interactableNameLowered);
+                RemoveExistingInteractable(interactablesDccsPool, interactableNameLowered, predicate);
             };
-        }
-
-        private static void RemoveExistingInteractable(DccsPool interactablesDccsPool, string interactableNameLowered)
-        {
-            if (interactablesDccsPool)
-            {
-                ForEachPoolEntryInDccsPool(interactablesDccsPool, (poolEntry) =>
-                {
-                    RemoveInteractableFromPoolEntry(interactableNameLowered, poolEntry);
-                });
-            }
         }
 
         /// <summary>
@@ -673,8 +815,24 @@ public static partial class DirectorAPI
         public static void RemoveExistingInteractableFromStage(string? interactableName, Stage stage, string? customStageName = "")
         {
             DirectorAPI.SetHooks();
-            StringUtils.ThrowIfStringIsNullOrWhiteSpace(interactableName, nameof(interactableName));
 
+            RemoveExistingInteractableFromStage(interactableName, null, stage, customStageName);
+        }
+
+        /// <summary>
+        /// Remove an interactable from spawns on a specific stage.
+        /// For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+        /// If a valid (non null) predicate is provided the interactable will only be removed from the given DirectorCardCategorySelection if the predicate return true.
+        /// </summary>
+        /// <param name="interactableName">The name of the interactable to remove</param>
+        /// <param name="predicate"></param>
+        /// <param name="stage">The stage to remove on</param>
+        /// <param name="customStageName">The name of the custom stage</param>
+        public static void RemoveExistingInteractableFromStage(string? interactableName, Predicate<DirectorCardCategorySelection> predicate, Stage stage, string? customStageName = "")
+        {
+            DirectorAPI.SetHooks();
+
+            StringUtils.ThrowIfStringIsNullOrWhiteSpace(interactableName, nameof(interactableName));
             var interactableNameLowered = interactableName.ToLowerInvariant();
 
             InteractableActions += (interactablesDccsPool, currentStage) =>
@@ -683,19 +841,33 @@ public static partial class DirectorAPI
                 {
                     if (currentStage.CheckStage(stage, customStageName))
                     {
-                        RemoveExistingInteractable(interactablesDccsPool, interactableNameLowered);
+                        RemoveExistingInteractable(interactablesDccsPool, interactableNameLowered, predicate);
                     }
                 }
             };
         }
 
-        private static void RemoveInteractableFromPoolEntry(string interactableNameLowered, DccsPool.PoolEntry poolEntry)
+        private static void RemoveExistingInteractable(DccsPool interactablesDccsPool, string interactableNameLowered, Predicate<DirectorCardCategorySelection> predicate)
         {
-            for (int i = 0; i < poolEntry.dccs.categories.Length; i++)
+            if (interactablesDccsPool)
             {
-                var cards = poolEntry.dccs.categories[i].cards.ToList();
-                cards.RemoveAll((card) => card.spawnCard.name.ToLowerInvariant() == interactableNameLowered);
-                poolEntry.dccs.categories[i].cards = cards.ToArray();
+                ForEachPoolEntryInDccsPool(interactablesDccsPool, (poolEntry) =>
+                {
+                    RemoveInteractableFromPoolEntry(interactableNameLowered, poolEntry, predicate);
+                });
+            }
+        }
+
+        private static void RemoveInteractableFromPoolEntry(string interactableNameLowered, DccsPool.PoolEntry poolEntry, Predicate<DirectorCardCategorySelection> predicate)
+        {
+            if ((predicate != null && predicate(poolEntry.dccs)) || predicate == null)
+            {
+                for (int i = 0; i < poolEntry.dccs.categories.Length; i++)
+                {
+                    var cards = poolEntry.dccs.categories[i].cards.ToList();
+                    cards.RemoveAll((card) => card.spawnCard.name.ToLowerInvariant() == interactableNameLowered);
+                    poolEntry.dccs.categories[i].cards = cards.ToArray();
+                }
             }
         }
 

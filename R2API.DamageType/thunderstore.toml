@@ -5,13 +5,13 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_DamageType"
-versionNumber = "1.0.3"
+versionNumber = "1.0.4"
 description = "API for registering damage types"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
 
 [package.dependencies]
-bbepis-BepInExPack = "5.4.2103"
+bbepis-BepInExPack = "5.4.2109"
 RiskofThunder-HookGenPatcher = "1.2.3"
 RiskofThunder-R2API_Core = "1.0.0"
 

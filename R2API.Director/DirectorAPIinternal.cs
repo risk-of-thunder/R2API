@@ -278,8 +278,8 @@ public static partial class DirectorAPI
         }
         if (classicStageInfo.monsterCategories)
         {
-            originalClassicStageInfo.monsterCategories = (DirectorCardCategorySelection)ScriptableObject.CreateInstance(classicStageInfo.monsterCategories.GetType());
-            originalClassicStageInfo.monsterCategories.CopyFrom(classicStageInfo.monsterCategories);
+            originalClassicStageInfo.monsterCategories = ScriptableObject.Instantiate(classicStageInfo.monsterCategories);
+            originalClassicStageInfo.monsterCategories.name = classicStageInfo.monsterCategories.name;
         }
         if (classicStageInfo.possibleMonsterFamilies != null)
         {
@@ -292,8 +292,8 @@ public static partial class DirectorAPI
         }
         if (classicStageInfo.interactableCategories)
         {
-            originalClassicStageInfo.interactableCategories = (DirectorCardCategorySelection)ScriptableObject.CreateInstance(classicStageInfo.interactableCategories.GetType());
-            originalClassicStageInfo.interactableCategories.CopyFrom(classicStageInfo.interactableCategories);
+            originalClassicStageInfo.interactableCategories = ScriptableObject.Instantiate(classicStageInfo.interactableCategories);
+            originalClassicStageInfo.interactableCategories.name = classicStageInfo.interactableCategories.name;
         }
 
         _classicStageInfoNameToOriginalClassicStageInfos[key] = originalClassicStageInfo;
@@ -307,7 +307,8 @@ public static partial class DirectorAPI
         }
         if (originalClassicStageInfo.monsterCategories)
         {
-            classicStageInfo.monsterCategories.CopyFrom(originalClassicStageInfo.monsterCategories);
+            classicStageInfo.monsterCategories = ScriptableObject.Instantiate(originalClassicStageInfo.monsterCategories);
+            classicStageInfo.monsterCategories.name = originalClassicStageInfo.monsterCategories.name;
         }
         if (originalClassicStageInfo.possibleMonsterFamilies != null)
         {
@@ -320,7 +321,8 @@ public static partial class DirectorAPI
         }
         if (originalClassicStageInfo.interactableCategories)
         {
-            classicStageInfo.interactableCategories.CopyFrom(originalClassicStageInfo.interactableCategories);
+            classicStageInfo.interactableCategories = ScriptableObject.Instantiate(originalClassicStageInfo.interactableCategories);
+            classicStageInfo.interactableCategories.name = originalClassicStageInfo.interactableCategories.name;
         }
     }
 
@@ -358,8 +360,7 @@ public static partial class DirectorAPI
 
             poolEntryBackup.weight = poolEntry.weight;
 
-            poolEntryBackup.dccs = (DirectorCardCategorySelection)ScriptableObject.CreateInstance(poolEntry.dccs.GetType());
-            poolEntryBackup.dccs.CopyFrom(poolEntry.dccs);
+            poolEntryBackup.dccs = ScriptableObject.Instantiate(poolEntry.dccs);
             poolEntryBackup.dccs.name = poolEntry.dccs.name;
 
             backup.Add(poolEntryBackup);
@@ -378,8 +379,7 @@ public static partial class DirectorAPI
 
             poolEntryBackup.weight = poolEntry.weight;
 
-            poolEntryBackup.dccs = (DirectorCardCategorySelection)ScriptableObject.CreateInstance(poolEntry.dccs.GetType());
-            poolEntryBackup.dccs.CopyFrom(poolEntry.dccs);
+            poolEntryBackup.dccs = ScriptableObject.Instantiate(poolEntry.dccs);
             poolEntryBackup.dccs.name = poolEntry.dccs.name;
 
             backup.Add(poolEntryBackup);
@@ -492,9 +492,8 @@ public static partial class DirectorAPI
 
     private static void InitCustomMixEnemyArtifactDccs()
     {
-        _dccsMixEnemyArtifact = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+        _dccsMixEnemyArtifact = ScriptableObject.Instantiate(RoR2Content.mixEnemyMonsterCards);
         _dccsMixEnemyArtifact.name = "dccsR2APIMixEnemyArtifact";
-        _dccsMixEnemyArtifact.CopyFrom(RoR2Content.mixEnemyMonsterCards);
     }
 
     private static void GetMonsterCategoryWeightsPerDccs(ClassicStageInfo classicStageInfo, StageSettings stageSettings)
