@@ -22,6 +22,9 @@ This is done via the DamageAPI class, which is used for reserving DamageTypes an
 
 ## Changelog
 
+### '1.0.4'
+* Memory optimization
+
 ### '1.0.3'
 * Optimization
 
