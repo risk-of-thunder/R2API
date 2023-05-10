@@ -196,7 +196,7 @@ public partial class DifficultyAPI
             try
             {
                 //Skip vanilla rules.
-                if (kv.Key >= DifficultyIndex.Invalid && kv.Key <= DifficultyIndex.Count)
+                if (kv.Key >= DifficultyIndex.Invalid && kv.Key < DifficultyIndex.Count)
                 {
                     continue;
                 }
