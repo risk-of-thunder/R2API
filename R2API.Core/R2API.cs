@@ -1,14 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Logging;
-using MonoMod.RuntimeDetour;
-using MonoMod.RuntimeDetour.HookGen;
 using R2API.AutoVersionGen;
 using R2API.Utils;
 using RoR2;
@@ -55,8 +49,6 @@ public partial class R2API : BaseUnityPlugin
     internal static new ManualLogSource Logger { get; set; }
     public static bool DebugMode { get; private set; } = false;
 
-    internal static DetourModManager ModManager;
-
     internal static event EventHandler R2APIStart;
 
     internal static HashSet<string> LoadedSubmodules;
@@ -73,12 +65,6 @@ public partial class R2API : BaseUnityPlugin
 
         _networkCompatibilityHandler = new NetworkCompatibilityHandler();
         _networkCompatibilityHandler.BuildModList();
-
-        ModManager = new DetourModManager();
-        AddHookLogging();
-
-
-        CheckForIncompatibleAssemblies();
 
         On.RoR2.RoR2Application.Awake += CheckIfUsedOnRightGameVersion;
     }
@@ -143,40 +129,6 @@ public partial class R2API : BaseUnityPlugin
             return false;
         }
         return LoadedSubmodules.Contains(submodule);
-    }
-
-    private static void AddHookLogging()
-    {
-        ModManager.OnHook += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
-        ModManager.OnDetour += (hookOwner, @base, _) => LogMethod(@base, hookOwner);
-        ModManager.OnNativeDetour += (hookOwner, @base, _, __) => LogMethod(@base, hookOwner);
-        ModManager.OnILHook += (hookOwner, @base, _) => LogMethod(@base, hookOwner);
-
-        HookEndpointManager.OnAdd += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
-        HookEndpointManager.OnModify += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly);
-        HookEndpointManager.OnRemove += (@base, @delegate) => LogMethod(@base, @delegate.Method.Module.Assembly, false);
-    }
-
-    private static bool LogMethod(MemberInfo @base, Assembly hookOwnerAssembly, bool added = true)
-    {
-        if (@base == null)
-        {
-            return true;
-        }
-
-        var hookOwnerDllName = "Not Found";
-        if (hookOwnerAssembly != null)
-        {
-            // Get the dll name instead of assembly manifest name as this one one could be not correctly set by mod maker.
-            hookOwnerDllName = System.IO.Path.GetFileName(hookOwnerAssembly.Location);
-        }
-
-        var declaringType = @base.DeclaringType;
-        var name = @base.Name;
-        var identifier = declaringType != null ? $"{declaringType}.{name}" : name;
-
-        Logger.LogDebug($"Hook {(added ? "added" : "removed")} by assembly: {hookOwnerDllName} for: {identifier}");
-        return true;
     }
 
     public static bool SupportsVersion(string? version)
