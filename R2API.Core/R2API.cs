@@ -57,7 +57,7 @@ public partial class R2API : BaseUnityPlugin
 
     private NetworkCompatibilityHandler _networkCompatibilityHandler;
 
-    public void Awake()
+    private void Awake()
     {
         Instance = this;
 
@@ -69,7 +69,20 @@ public partial class R2API : BaseUnityPlugin
         On.RoR2.RoR2Application.Awake += CheckIfUsedOnRightGameVersion;
     }
 
-    public void OnDestroy()
+    private void Start()
+    {
+        R2APIStart?.Invoke(this, null);
+    }
+
+    private void Update()
+    {
+        if (DebugMode)
+        {
+            DebugUpdate();
+        }
+    }
+
+    private void OnDestroy()
     {
         _networkCompatibilityHandler.CleanupModList();
     }
@@ -102,19 +115,6 @@ public partial class R2API : BaseUnityPlugin
 
         Logger.LogWarning($"This version of R2API was built for build id \"{GameBuildId}\", you are running \"{buildId}\".");
         Logger.LogWarning("Should any problems arise, please check for a new version before reporting issues.");
-    }
-
-    public void Start()
-    {
-        R2APIStart?.Invoke(this, null);
-    }
-
-    public void Update()
-    {
-        if (DebugMode)
-        {
-            DebugUpdate();
-        }
     }
 
     /// <summary>
