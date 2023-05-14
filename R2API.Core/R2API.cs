@@ -186,32 +186,4 @@ public partial class R2API : BaseUnityPlugin
 
         return own.Major == v.Major && own.Minor <= v.Minor;
     }
-
-    private static void CheckForIncompatibleAssemblies()
-    {
-        var dirName = Directory.GetCurrentDirectory();
-        var managed = System.IO.Path.Combine(dirName, "Risk of Rain 2_Data", "Managed");
-        var dlls = Directory.GetFiles(managed, "*.dll");
-
-        var info = new List<string> {
-            "You have incompatible assemblies",
-            "Please delete the following files from your managed folder:",
-            ""
-        };
-        var countEmpty = info.Count;
-
-        info.AddRange(dlls
-            .Select(x => new FileInfo(x))
-            .Where(x => Regex.IsMatch(x.Name
-                , @"(MonoMod*)|(Mono\.Cecil)"
-                , RegexOptions.Compiled | RegexOptions.IgnoreCase))
-            .Select(x => x.Name));
-
-        if (info.Count == countEmpty)
-        {
-            return;
-        }
-
-        Logger.LogBlockError(info);
-    }
 }
