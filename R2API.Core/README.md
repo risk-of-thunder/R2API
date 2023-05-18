@@ -4,7 +4,7 @@
 
 R2API.Core is the main module of R2API, and contains the backbone and framework for all the other submodule assemblies of R2API, providing utilities and tools for developing new API's.
 
-By itself it doesnt change how the game behaves in any way shape or form.
+By itself it doesn't change how the game behaves in any way shape or form.
 
 ## Use Cases / Features
 
@@ -14,9 +14,13 @@ R2API.Core is used in all the submodule assemblies of R2API, as such, it is nece
 
 A lot of documentation is in the included xmldocs, and further information may be on the dedicated [R2API wiki](https://github.com/risk-of-thunder/R2API/wiki).
 
-Do not hestiate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
+Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
+
+### '5.0.7'
+* Make private some methods that were not supposed to be public
+* Move the Hook logger to RoR2BepInExPack
 
 ### '5.0.6'
 * CompressedFlagArrayUtilities fixes after optimization
