@@ -18,6 +18,9 @@ Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
 
+### '5.0.8'
+* Fix NuGet Package
+
 ### '5.0.7'
 * Make private some methods that were not supposed to be public
 * Move the Hook logger to RoR2BepInExPack
