@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_Language"
-versionNumber = "1.0.0"
+versionNumber = "1.0.1"
 description = "API for modifying the language localisation of the game"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false

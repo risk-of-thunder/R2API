@@ -19,5 +19,8 @@ A guide on how to add your own music can be found [here](https://risk-of-thunder
 
 ## Changelog
 
+### '1.0.1'
+* Fix the NuGet package which had a dependency on a non-existent version of `R2API.Core`.
+
 ### '1.0.0'
 * Split from the main R2API.dll into its own submodule.
