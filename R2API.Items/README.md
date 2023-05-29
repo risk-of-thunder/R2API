@@ -20,6 +20,9 @@ A detailed tutorial on how to make custom items using ItewmAPI can be found [her
 
 ## Changelog
 
+### '1.0.2'
+* Fix the NuGet package which had a dependency on a non-existent version of `R2API.Core`.
+
 ### '1.0.1'
 * Fix invalid IDRS checker telling IDRS are not correct when they actually are.
 

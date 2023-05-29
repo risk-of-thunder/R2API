@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_Deployable"
-versionNumber = "1.0.0"
+versionNumber = "1.0.1"
 description = "API for adding custom deployables"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
