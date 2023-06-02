@@ -400,8 +400,8 @@ public static partial class DirectorAPI
         "itskymeadow" => Stage.SkyMeadowSimulacrum,
         "snowyforest" => Stage.SiphonedForest,
         "sulfurpools" => Stage.SulfurPools,
-        "voidraid" => Stage.VoidLocus,
-        "voidstage" => Stage.ThePlanetarium,
+        "voidraid" => Stage.ThePlanetarium,
+        "voidstage" => Stage.VoidLocus,
         _ => Stage.Custom,
     };
 
@@ -448,8 +448,8 @@ public static partial class DirectorAPI
         Stage.SkyMeadowSimulacrum => "itskymeadow",
         Stage.SiphonedForest => "snowyforest",
         Stage.SulfurPools => "sulfurpools",
-        Stage.VoidLocus => "voidraid",
-        Stage.ThePlanetarium => "voidstage",
+        Stage.VoidLocus => "voidstage",
+        Stage.ThePlanetarium => "voidraid",
         _ => "", // Stage.Custom
     };
 
