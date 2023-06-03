@@ -198,8 +198,9 @@ void CopyAllR2APIDllsToUniqueFolder()
         {
             var outputPath = Path.Combine(allR2apiModulesDirectoryPath, Path.GetFileName(dll));
             Console.WriteLine(dll);
-            if (!File.Exists(outputPath))
-                File.Copy(dll, outputPath);
+            if (File.Exists(outputPath))
+                File.Delete(outputPath);
+            File.Copy(dll, outputPath);
         }
 }
 #pragma warning restore CS8321 // Local function is declared but never used
