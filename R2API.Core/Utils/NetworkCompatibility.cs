@@ -88,7 +88,7 @@ internal class NetworkCompatibilityHandler
                 var modGuid = pluginInfo.Metadata.GUID;
                 var modVer = pluginInfo.Metadata.Version;
 
-                if (modGuid == R2API.PluginGUID)
+                if (modGuid.StartsWith(R2API.PluginGUID))
                 {
                     continue;
                 }
