@@ -14,7 +14,7 @@ public class SceneAssetAPITests
         SceneAssetAPI.AddAssetRequest("moon", (objs) =>
         {
             Assert.True(objs != null, "obj null");
-            Assert.True(objs.Length > 0, "obj count 0");
+            Assert.True(objs.Length > 3, $"obj count {objs.Length}");
 
             foreach (var item in objs)
             {

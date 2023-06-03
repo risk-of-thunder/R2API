@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using R2API.AutoVersionGen;
 using R2API.MiscHelpers;
@@ -32,10 +31,10 @@ public static partial class SceneAssetAPI
 #pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
-    private static readonly Dictionary<string, List<Action<GameObject[]>>> SceneNameToAssetRequests =
-        new Dictionary<string, List<Action<GameObject[]>>>();
+    private static readonly Dictionary<string, Action<GameObject[]>> SceneNameToAssetRequests = new();
 
     private static bool _hooksEnabled = false;
+    private static bool _requestsDone = false;
 
     internal static void SetHooks()
     {
@@ -44,50 +43,63 @@ public static partial class SceneAssetAPI
             return;
         }
 
-        On.RoR2.SplashScreenController.Finish += PrepareRequests;
+        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
 
         _hooksEnabled = true;
     }
 
+    private static void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        if (_requestsDone)
+            return;
+
+        if (arg0.name != "loadingbasic" &&
+            arg0.name != "splash" &&
+            arg0.name != "intro")
+        {
+            PrepareRequests();
+            _requestsDone = true;
+        }
+    }
+
     internal static void UnsetHooks()
     {
-        On.RoR2.SplashScreenController.Finish -= PrepareRequests;
-
         _hooksEnabled = false;
     }
 
-    private static void PrepareRequests(On.RoR2.SplashScreenController.orig_Finish orig, RoR2.SplashScreenController self)
+    private static void PrepareRequests()
     {
-        orig(self);
-
         foreach (var (sceneName, actionList) in SceneNameToAssetRequests)
         {
             try
             {
                 var sceneDef = SceneCatalog.FindSceneDef(sceneName);
-                OptionalSceneInstance optionalSceneInstance = new() { HasValue = false };
                 if (sceneDef)
                 {
-                    AssetReferenceScene sceneAddress = sceneDef.sceneAddress;
+                    var sceneAddress = sceneDef.sceneAddress;
                     string addressableKey = (sceneAddress != null) ? sceneAddress.AssetGUID : null;
+
                     var isAStageThatHasAnAddressableKey = !string.IsNullOrEmpty(addressableKey);
                     if (isAStageThatHasAnAddressableKey)
                     {
                         if (NetworkManagerSystem.IsAddressablesKeyValid(addressableKey, typeof(SceneInstance)))
                         {
-                            optionalSceneInstance.Value = Addressables.LoadSceneAsync(addressableKey, LoadSceneMode.Additive, false).WaitForCompletion();
-                            optionalSceneInstance.HasValue = true;
+                            var asyncOperationHandle = Addressables.LoadSceneAsync(addressableKey, LoadSceneMode.Additive, true);
+                            asyncOperationHandle.Completed += (handle) =>
+                                ExecuteAddressableRequest(sceneName, actionList, handle.Result);
+
                             SceneAssetPlugin.Logger.LogInfo($"Loaded the scene {sceneName} through Addressables.LoadSceneAsync");
                         }
                         else
                         {
                             SceneAssetPlugin.Logger.LogError($"Addressable key Scene address is invalid for sceneName {sceneName} | {sceneAddress}");
-                            continue;
                         }
                     }
                     else
                     {
-                        SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+                        var scene = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+                        scene.completed += (_) => ExecuteRequest(sceneName, actionList);
+
                         SceneAssetPlugin.Logger.LogInfo($"Loaded the scene {sceneName} through SceneManager.LoadScene");
                     }
                 }
@@ -98,10 +110,7 @@ public static partial class SceneAssetAPI
                     {
                         SceneAssetPlugin.Logger.LogError($"{kvp.Key}");
                     }
-                    continue;
                 }
-
-                R2API.Instance.StartCoroutine(ExecuteRequest(sceneName, actionList, optionalSceneInstance));
             }
             catch (Exception e)
             {
@@ -110,44 +119,38 @@ public static partial class SceneAssetAPI
         }
     }
 
-    struct OptionalSceneInstance
+    private static void ExecuteAddressableRequest(string sceneName, Action<GameObject[]> actionList, SceneInstance sceneInstance)
     {
-        public SceneInstance Value;
-        public bool HasValue;
+        var scene = sceneInstance.Scene;
+
+        ExecuteRequestInternal(actionList, scene);
+
+        Addressables.UnloadSceneAsync(sceneInstance);
     }
 
-    private static IEnumerator ExecuteRequest(string sceneName, List<Action<GameObject[]>> actionList, OptionalSceneInstance optionalSceneInstance)
+    private static void ExecuteRequest(string sceneName, Action<GameObject[]> actionList)
     {
-        // Wait for next frame so that the scene is loaded
-        yield return 0;
-        yield return 0;
+        var scene = SceneManager.GetSceneByName(sceneName);
 
-        Scene scene;
-        if (optionalSceneInstance.HasValue)
-        {
-            scene = optionalSceneInstance.Value.Scene;
-        }
-        else
-        {
-            scene = SceneManager.GetSceneByName(sceneName);
-        }
+        ExecuteRequestInternal(actionList, scene);
 
+        SceneManager.UnloadSceneAsync(sceneName);
+    }
+
+    private static void ExecuteRequestInternal(Action<GameObject[]> actionList, Scene scene)
+    {
         var rootObjects = scene.GetRootGameObjects();
-        foreach (var action in actionList)
+        foreach (Action<GameObject[]> action in actionList.GetInvocationList())
         {
-            action(rootObjects);
+            try
+            {
+                action(rootObjects);
+            }
+            catch (Exception e)
+            {
+                SceneAssetPlugin.Logger.LogError(e);
+            }
         }
-
-        if (optionalSceneInstance.HasValue)
-        {
-            Addressables.UnloadSceneAsync(optionalSceneInstance.Value);
-        }
-        else
-        {
-            SceneManager.UnloadSceneAsync(sceneName);
-        }
-
-        yield return null;
     }
 
     /// <summary>
@@ -161,13 +164,13 @@ public static partial class SceneAssetAPI
     public static void AddAssetRequest(string? sceneName, Action<GameObject[]>? onSceneObjectsLoaded)
     {
         SceneAssetAPI.SetHooks();
-        if (SceneNameToAssetRequests.TryGetValue(sceneName, out var actionList))
+        if (SceneNameToAssetRequests.TryGetValue(sceneName, out var _))
         {
-            actionList.Add(onSceneObjectsLoaded);
+            SceneNameToAssetRequests[sceneName] += onSceneObjectsLoaded;
         }
         else
         {
-            SceneNameToAssetRequests[sceneName] = new List<Action<GameObject[]>> { onSceneObjectsLoaded };
+            SceneNameToAssetRequests[sceneName] = onSceneObjectsLoaded;
         }
     }
 }
