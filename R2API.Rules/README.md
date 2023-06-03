@@ -16,6 +16,10 @@ A Wiki page explaining how the Rule system works and how to create new rules wil
 
 ## Changelog
 
+### '1.0.1'
+
+Fix wrong logger being used
+
 ### '1.0.0'
 
 Initial Release
