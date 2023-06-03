@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_Rulebook"
-versionNumber = "1.0.0"
+versionNumber = "1.0.1"
 description = "API for registering rules to the Rule Catalog"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false

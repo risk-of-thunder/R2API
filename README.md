@@ -14,15 +14,7 @@ The only change is to keep mods out of quickplay and prismatic trials by request
 
 ## Installation
 
-The usage of a mod manager is heavily recommended, you can use r2modman or the thunderstore mod manager.
-
-If you want to manually install still:
-
--  Install [BepInEx](https://thunderstore.io/package/bbepis/BepInExPack/).
-
--  Install [HookGenPatcher](https://thunderstore.io/package/RiskofThunder/HookGenPatcher/).
-
--  Copy the files inside the `plugins` folder from the zip into the `BepInEx/plugins`.
+[Check out this page from the R2Wiki on how to install mods](https://risk-of-thunder.github.io/R2Wiki/Playing/Getting-Started/)
 
 ## Developing mods using R2API
 
@@ -30,8 +22,11 @@ Since the R2API `5.0.0` version update, mod creators should ideally only referen
 
 In the dependency array of their thunderstore manifest, they should reference the R2API packages from the `RiskofThunder` team, for example: `RiskofThunder-R2API_LobbyConfig-1.0.0`
 
-In their C# projects, they should only get the corresponding R2API submodules dll they need.  
-You can do that in a multitude of ways, depending on your workflow:
+In their C# projects, they should only get the corresponding R2API submodules dll they need.
+
+On top of the `BaseUnityPlugin`, you should add a `BepInDependency`, for example `[BepInDependency(DirectorAPI.PluginGUID)]`
+
+For then adding the dependency on the C# Project level, you can do that in a multitude of ways, depending on your workflow:
 
 - Nuget Package Manager:
    -  You can access this in Visual Studio by right clicking your project within the Solution Explorer, and installing packages through that manager directly:

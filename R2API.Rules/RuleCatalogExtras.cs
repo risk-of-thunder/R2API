@@ -232,7 +232,7 @@ public static partial class RuleCatalogExtras
         label = c.MarkLabel();
         if (label == null)
         {
-            R2API.Logger.LogError($"ILHook on {nameof(PreGameController)}.{nameof(PreGameController.RecalculateModifierAvailability)} failed, could not find ILLabel");
+            RulesPlugin.Logger.LogError($"ILHook on {nameof(PreGameController)}.{nameof(PreGameController.RecalculateModifierAvailability)} failed, could not find ILLabel");
             return;
         }
 
@@ -247,7 +247,7 @@ public static partial class RuleCatalogExtras
 
         if (!ILFound)
         {
-            R2API.Logger.LogError($"ILHook on {nameof(PreGameController)}.{nameof(PreGameController.RecalculateModifierAvailability)} failed, could not get into position for calling the delegate.");
+            RulesPlugin.Logger.LogError($"ILHook on {nameof(PreGameController)}.{nameof(PreGameController.RecalculateModifierAvailability)} failed, could not get into position for calling the delegate.");
             return;
         }
 
@@ -286,7 +286,7 @@ public static partial class RuleCatalogExtras
             }
             catch (Exception e)
             {
-                R2API.Logger.LogError(e);
+                RulesPlugin.Logger.LogError(e);
             }
         }
     }
@@ -302,7 +302,7 @@ public static partial class RuleCatalogExtras
             }
             catch (Exception e)
             {
-                R2API.Logger.LogError(e);
+                RulesPlugin.Logger.LogError(e);
             }
         }
     }

@@ -6,12 +6,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\R2API.Core\R2API.Core.csproj" />
-      <ProjectReference Include="../R2API.Items/R2API.Items.csproj" />
+		<ProjectReference Include="../R2API.Core/R2API.Core.csproj" />
     <ProjectReference Include="../R2API.Items/R2API.Items.csproj" />
     <ProjectReference Include="../R2API.Language/R2API.Language.csproj" />
     <ProjectReference Include="../R2API.Director/R2API.Director.csproj" />
     <ProjectReference Include="../R2API.Elites/R2API.Elites.csproj" />
+    <ProjectReference Include="../R2API.SceneAsset/R2API.SceneAsset.csproj" />
 
 		<PackageReference Include="xunit" Version="2.4.1" />
 

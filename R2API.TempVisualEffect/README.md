@@ -18,6 +18,9 @@ A separate overload for AddTemporaryVisualEffect takes an EffectRadius delegate,
 
 ## Changelog
 
+### '1.0.2'
+* Add missing `BepInDependency` to `R2API.ContentManagement`
+
 ### '1.0.1'
 * Fix the NuGet package which had a dependency on a non-existent version of `R2API.Core`.
 
