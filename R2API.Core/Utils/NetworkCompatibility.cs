@@ -93,8 +93,10 @@ internal class NetworkCompatibilityHandler
                     continue;
                 }
 
-                if (pluginInfo.Dependencies.All(dependency => !dependency.DependencyGUID.StartsWith(R2API.PluginGUID) ||
-                    dependency.Flags == BepInEx.BepInDependency.DependencyFlags.SoftDependency))
+                var hasZeroHardDependencyOnAnyR2APIModules =
+                    pluginInfo.Dependencies.All(dependency => !dependency.DependencyGUID.StartsWith(R2API.PluginGUID) ||
+                    dependency.Flags == BepInEx.BepInDependency.DependencyFlags.SoftDependency);
+                if (hasZeroHardDependencyOnAnyR2APIModules)
                 {
                     continue;
                 }
