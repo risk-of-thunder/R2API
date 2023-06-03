@@ -12,6 +12,9 @@ R2API.SceneAsset works via the AddAssetRequest method, which allows you to run a
 
 ## Changelog
 
+### '1.1.0'
+* Fix the API not working since SOTV patch.
+
 ### '1.0.1'
 * Fix the NuGet package which had a dependency on a non-existent version of `R2API.Core`.
 

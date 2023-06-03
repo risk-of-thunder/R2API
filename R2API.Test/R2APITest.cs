@@ -8,7 +8,11 @@ using System;
 
 namespace R2API.Test;
 
-[BepInDependency(R2API.PluginGUID)]
+[BepInDependency(ItemAPI.PluginGUID)]
+[BepInDependency(LanguageAPI.PluginGUID)]
+[BepInDependency(DirectorAPI.PluginGUID)]
+[BepInDependency(EliteAPI.PluginGUID)]
+[BepInDependency(SceneAssetAPI.PluginGUID)]
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 public class R2APITest : BaseUnityPlugin
 {

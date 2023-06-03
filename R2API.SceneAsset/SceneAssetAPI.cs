@@ -4,7 +4,11 @@ using System.Collections.Generic;
 using R2API.AutoVersionGen;
 using R2API.MiscHelpers;
 using R2API.Utils;
+using RoR2;
+using RoR2.Networking;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
 namespace R2API;
@@ -60,8 +64,44 @@ public static partial class SceneAssetAPI
         {
             try
             {
-                SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
-                R2API.Instance.StartCoroutine(ExecuteRequest(sceneName, actionList));
+                var sceneDef = SceneCatalog.FindSceneDef(sceneName);
+                OptionalSceneInstance optionalSceneInstance = new() { HasValue = false };
+                if (sceneDef)
+                {
+                    AssetReferenceScene sceneAddress = sceneDef.sceneAddress;
+                    string addressableKey = (sceneAddress != null) ? sceneAddress.AssetGUID : null;
+                    var isAStageThatHasAnAddressableKey = !string.IsNullOrEmpty(addressableKey);
+                    if (isAStageThatHasAnAddressableKey)
+                    {
+                        if (NetworkManagerSystem.IsAddressablesKeyValid(addressableKey, typeof(SceneInstance)))
+                        {
+                            optionalSceneInstance.Value = Addressables.LoadSceneAsync(addressableKey, LoadSceneMode.Additive, false).WaitForCompletion();
+                            optionalSceneInstance.HasValue = true;
+                            SceneAssetPlugin.Logger.LogInfo($"Loaded the scene {sceneName} through Addressables.LoadSceneAsync");
+                        }
+                        else
+                        {
+                            SceneAssetPlugin.Logger.LogError($"Addressable key Scene address is invalid for sceneName {sceneName} | {sceneAddress}");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+                        SceneAssetPlugin.Logger.LogInfo($"Loaded the scene {sceneName} through SceneManager.LoadScene");
+                    }
+                }
+                else
+                {
+                    SceneAssetPlugin.Logger.LogError($"{sceneName} doesnt exist, available scene names:");
+                    foreach (var kvp in SceneCatalog.nameToIndex)
+                    {
+                        SceneAssetPlugin.Logger.LogError($"{kvp.Key}");
+                    }
+                    continue;
+                }
+
+                R2API.Instance.StartCoroutine(ExecuteRequest(sceneName, actionList, optionalSceneInstance));
             }
             catch (Exception e)
             {
@@ -70,12 +110,27 @@ public static partial class SceneAssetAPI
         }
     }
 
-    private static IEnumerator ExecuteRequest(string sceneName, List<Action<GameObject[]>> actionList)
+    struct OptionalSceneInstance
+    {
+        public SceneInstance Value;
+        public bool HasValue;
+    }
+
+    private static IEnumerator ExecuteRequest(string sceneName, List<Action<GameObject[]>> actionList, OptionalSceneInstance optionalSceneInstance)
     {
         // Wait for next frame so that the scene is loaded
         yield return 0;
+        yield return 0;
 
-        var scene = SceneManager.GetSceneByName(sceneName);
+        Scene scene;
+        if (optionalSceneInstance.HasValue)
+        {
+            scene = optionalSceneInstance.Value.Scene;
+        }
+        else
+        {
+            scene = SceneManager.GetSceneByName(sceneName);
+        }
 
         var rootObjects = scene.GetRootGameObjects();
         foreach (var action in actionList)
@@ -83,7 +138,14 @@ public static partial class SceneAssetAPI
             action(rootObjects);
         }
 
-        SceneManager.UnloadSceneAsync(sceneName);
+        if (optionalSceneInstance.HasValue)
+        {
+            Addressables.UnloadSceneAsync(optionalSceneInstance.Value);
+        }
+        else
+        {
+            SceneManager.UnloadSceneAsync(sceneName);
+        }
 
         yield return null;
     }
