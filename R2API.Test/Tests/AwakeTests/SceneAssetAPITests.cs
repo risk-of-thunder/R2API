@@ -1,7 +1,3 @@
-using RoR2;
-using System;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
 using Xunit;
 
 namespace R2API.Test.Tests.AwakeTests;
@@ -17,17 +13,14 @@ public class SceneAssetAPITests
     {
         SceneAssetAPI.AddAssetRequest("moon", (objs) =>
         {
-            if (objs != null)
-                R2APITest.Logger.LogWarning("hello there: " + objs.Length);
-            else
-                R2APITest.Logger.LogWarning("hello there: objs are null");
+            Assert.True(objs != null, "obj null");
+            Assert.True(objs.Length > 0, "obj count 0");
+
             foreach (var item in objs)
             {
                 if (item)
                     R2APITest.Logger.LogWarning("hello there: " + item.name);
             }
         });
-
-        //Assert.True(Application.isPlaying);
     }
 }
