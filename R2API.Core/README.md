@@ -18,6 +18,9 @@ Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
 
+### '5.0.9'
+* Some R2API submodules were incorrectly marked as required by everyone in a multiplayer lobby
+
 ### '5.0.8'
 * Fix NuGet Package
 
