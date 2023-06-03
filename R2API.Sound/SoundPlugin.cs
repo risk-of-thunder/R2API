@@ -1,8 +1,10 @@
 using BepInEx;
 using BepInEx.Logging;
+using R2API.ContentManagement;
 
 namespace R2API;
 
+[BepInDependency(R2APIContentManager.PluginGUID)]
 [BepInPlugin(SoundAPI.PluginGUID, SoundAPI.PluginName, SoundAPI.PluginVersion)]
 public sealed class SoundPlugin : BaseUnityPlugin
 {

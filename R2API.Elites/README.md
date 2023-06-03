@@ -20,6 +20,9 @@ The EliteRamp implementation is handled inside the EliteRamp class, you can use 
 
 ## Changelog
 
+### '1.0.2'
+* Add missing `BepInDependency` to `R2API.ContentManagement`
+
 ### '1.0.1'
 * Fix some non working custom ramps (ramp index not properly set)
 * Always enable EliteAPI hooks (potential fix for a Spikestrip elite color bug)

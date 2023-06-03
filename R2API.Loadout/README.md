@@ -10,5 +10,8 @@ For the skins features, they'll eventually be moved to a Skin submodule.
 
 ## Changelog
 
+### '1.0.2'
+* Add missing `BepInDependency` to `R2API.ContentManagement` and `R2API.Skins`
+
 ### '1.0.0'
 * Split from the main R2API.dll into its own submodule.
