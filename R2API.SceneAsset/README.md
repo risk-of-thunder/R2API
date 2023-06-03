@@ -12,6 +12,9 @@ R2API.SceneAsset works via the AddAssetRequest method, which allows you to run a
 
 ## Changelog
 
+### '1.1.1'
+* Fix the game potentially not going past the splash / intro.
+
 ### '1.1.0'
 * Fix the API not working since SOTV patch.
 
