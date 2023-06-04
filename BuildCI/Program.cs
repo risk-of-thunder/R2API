@@ -14,6 +14,11 @@ const string NameTomlKey = "name";
 const string VersionNumberTomlKey = "versionNumber";
 const string DependencyTomlKey = "dependencies";
 
+#if DEBUG
+CopyAllR2APIDllsToUniqueFolder();
+return;
+#endif
+
 var packages = new Dictionary<string, R2APIPackage>();
 
 var currentFolder = Directory.GetCurrentDirectory();

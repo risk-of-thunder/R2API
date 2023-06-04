@@ -47,7 +47,13 @@ public partial class R2API : BaseUnityPlugin
     private const string GameBuildId = "1.2.4.1";
 
     internal static new ManualLogSource Logger { get; set; }
-    public static bool DebugMode { get; private set; } = false;
+
+    public static bool DebugMode { get; private set; } =
+#if DEBUG
+        true;
+#else
+        false;
+#endif
 
     internal static event EventHandler R2APIStart;
 
@@ -74,13 +80,12 @@ public partial class R2API : BaseUnityPlugin
         R2APIStart?.Invoke(this, null);
     }
 
+#if DEBUG
     private void Update()
     {
-        if (DebugMode)
-        {
-            DebugUpdate();
-        }
+        DebugUpdate();
     }
+#endif
 
     private void OnDestroy()
     {
