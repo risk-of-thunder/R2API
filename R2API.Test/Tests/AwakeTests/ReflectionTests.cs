@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using MonoMod.Utils;
 using Xunit;
+using BepInEx.Configuration;
 
 namespace R2API.Test.Tests.AwakeTests;
 
@@ -357,7 +358,15 @@ public class ReflectionTests
     public void TestGetFieldValueException()
     {
         var cm = new CharacterMaster();
-        Assert.Throws<Exception>(() => cm.GetFieldValue<Inventory>("inventory"));
+        Assert.Throws<ArgumentException>(() => cm.GetFieldValue<Inventory>("inventory"));
+    }
+
+    [Fact]
+    public void TestRetrieveInheritedMember()
+    {
+        var qsdqsd2 = typeof(TestInheritB);
+        var val2 = qsdqsd2.GetFieldValue<int>(nameof(TestInheritB.A));
+        Assert.Equal(8, val2);
     }
 }
 
@@ -464,6 +473,17 @@ public static class StaticReflectionTestObject
         PrivateValue = privateValue;
     }
 }
+
+public class TestInheritA
+{
+    public static int A = 4;
+}
+
+public class TestInheritB : TestInheritA
+{
+    public static new int A = 8;
+}
+
 
 public class RunMock
 {
