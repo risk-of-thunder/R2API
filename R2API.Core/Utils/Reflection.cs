@@ -13,8 +13,9 @@ namespace R2API.Utils;
 public static class Reflection
 {
 
-    private const BindingFlags AllFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static |
-        BindingFlags.Instance | BindingFlags.DeclaredOnly;
+    private const BindingFlags AllFlags =
+        BindingFlags.Public | BindingFlags.NonPublic |
+        BindingFlags.Static | BindingFlags.Instance;
 
     public delegate T GetDelegate<out T>(object? instance);
 
