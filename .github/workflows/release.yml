@@ -29,7 +29,7 @@ jobs:
         set -x
         cd BuildCI
 
-        for line in $(dotnet run Program.cs); do
+        for line in $(dotnet run --configuration Release Program.cs); do
           IFS='|' read -ra parts <<< "$line"
           namespace=${parts[0]}
           name_underscore_separator=${parts[1]}
