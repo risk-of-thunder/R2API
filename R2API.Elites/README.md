@@ -20,6 +20,9 @@ The EliteRamp implementation is handled inside the EliteRamp class, you can use 
 
 ## Changelog
 
+### '1.0.3'
+* Fix some incorrect internal code.
+
 ### '1.0.2'
 * Add missing `BepInDependency` to `R2API.ContentManagement`
 

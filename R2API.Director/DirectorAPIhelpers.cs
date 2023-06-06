@@ -671,11 +671,11 @@ public static partial class DirectorAPI
 
         /// <summary>
         /// Removes a monster from spawns on all stages.
-        /// If a valid (non null) predicate is provided the monster will only be added to the given DirectorCardCategorySelection if the predicate return true.
+        /// If a valid (non null) predicate is provided the monster will only be removed from the given DirectorCardCategorySelection if the predicate return true.
         /// </summary>
         /// <param name="monsterName">The name of the monster card to remove</param>
         /// <param name="removeFromFamilies">Whether or not it the monster should be removed from familiy DCCSs</param>
-        /// <param name="predicate">If a valid (non null) predicate is provided the monster will only be added to the given DirectorCardCategorySelection if the predicate return true.</param>
+        /// <param name="predicate">If a valid (non null) predicate is provided the monster will only be removed from the given DirectorCardCategorySelection if the predicate return true.</param>
         public static void RemoveExistingMonster(string? monsterName, bool removeFromFamilies, Predicate<DirectorCardCategorySelection> predicate)
         {
             DirectorAPI.SetHooks();
@@ -1027,7 +1027,14 @@ public static partial class DirectorAPI
             DirectorAPI.SetHooks();
             foreach (var poolCategory in dccsPool.poolCategories)
             {
-                action(poolCategory);
+                try
+                {
+                    action(poolCategory);
+                }
+                catch (Exception e)
+                {
+                    DirectorPlugin.Logger.LogError(e);
+                }
             }
         }
 
@@ -1039,20 +1046,25 @@ public static partial class DirectorAPI
         public static void ForEachPoolEntryInDccsPoolCategory(DccsPool.Category dccsPoolCategory, Action<DccsPool.PoolEntry> action)
         {
             DirectorAPI.SetHooks();
-            foreach (var poolEntry in dccsPoolCategory.alwaysIncluded)
+
+            void CallAction(DccsPool.PoolEntry[] poolEntries)
             {
-                action(poolEntry);
+                foreach (var poolEntry in poolEntries)
+                {
+                    try
+                    {
+                        action(poolEntry);
+                    }
+                    catch (Exception e)
+                    {
+                        DirectorPlugin.Logger.LogError(e);
+                    }
+                }
             }
 
-            foreach (var poolEntry in dccsPoolCategory.includedIfConditionsMet)
-            {
-                action(poolEntry);
-            }
-
-            foreach (var poolEntry in dccsPoolCategory.includedIfNoConditionsMet)
-            {
-                action(poolEntry);
-            }
+            CallAction(dccsPoolCategory.alwaysIncluded);
+            CallAction(dccsPoolCategory.includedIfConditionsMet);
+            CallAction(dccsPoolCategory.includedIfNoConditionsMet);
         }
 
         /// <summary>

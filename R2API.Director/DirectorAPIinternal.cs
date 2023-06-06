@@ -121,7 +121,22 @@ public static partial class DirectorAPI
     private static void ApplySettingsChanges(ClassicStageInfo classicStageInfo, StageInfo stageInfo)
     {
         var stageSettings = GetStageSettings(classicStageInfo);
-        StageSettingsActions?.Invoke(stageSettings, stageInfo);
+
+        if (StageSettingsActions != null)
+        {
+            foreach (Action<StageSettings, StageInfo> item in StageSettingsActions.GetInvocationList())
+            {
+                try
+                {
+                    item(stageSettings, stageInfo);
+                }
+                catch (Exception e)
+                {
+                    DirectorPlugin.Logger.LogError(e);
+                }
+            }
+        }
+
         SetStageSettings(classicStageInfo, stageSettings);
     }
 
@@ -235,7 +250,20 @@ public static partial class DirectorAPI
         InitCustomMixEnemyArtifactDccs();
         var cardHoldersMixEnemyArtifact = GetDirectorCardHoldersFromDCCS(_dccsMixEnemyArtifact);
 
-        MonsterActions?.Invoke(classicStageInfo.monsterDccsPool, cardHoldersMixEnemyArtifact, stageInfo);
+        if (MonsterActions != null)
+        {
+            foreach (Action<DccsPool, List<DirectorCardHolder>, StageInfo> item in MonsterActions.GetInvocationList())
+            {
+                try
+                {
+                    item(classicStageInfo.monsterDccsPool, cardHoldersMixEnemyArtifact, stageInfo);
+                }
+                catch (Exception e)
+                {
+                    DirectorPlugin.Logger.LogError(e);
+                }
+            }
+        }
 
         ApplyNewCardHoldersToDCCS(_dccsMixEnemyArtifact, cardHoldersMixEnemyArtifact);
     }
@@ -463,7 +491,20 @@ public static partial class DirectorAPI
 
     private static void ApplyInteractableChanges(ClassicStageInfo classicStageInfo, StageInfo stageInfo)
     {
-        InteractableActions?.Invoke(classicStageInfo.interactableDccsPool, stageInfo);
+        if (InteractableActions != null)
+        {
+            foreach (Action<DccsPool, StageInfo> item in InteractableActions.GetInvocationList())
+            {
+                try
+                {
+                    item(classicStageInfo.interactableDccsPool, stageInfo);
+                }
+                catch (Exception e)
+                {
+                    DirectorPlugin.Logger.LogError(e);
+                }
+            }
+        }
     }
 
     private static StageSettings GetStageSettings(ClassicStageInfo classicStageInfo)

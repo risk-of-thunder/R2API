@@ -16,6 +16,9 @@ DifficultyAPI also comes bundled with the SerializableDifficultyDef, a Scriptabl
 
 ## Changelog
 
+### '1.1.2'
+* Make the API safer.
+
 ### '1.1.1'
 * First added custom difficulty would be incorrectly skipped from the rule catalog system init.
 

@@ -153,7 +153,21 @@ public partial class DifficultyAPI
             return;
         }
 
-        DifficultyCatalogReady?.Invoke(null, null);
+        if (DifficultyCatalogReady != null)
+        {
+            foreach (EventHandler item in DifficultyCatalogReady.GetInvocationList())
+            {
+                try
+                {
+                    item(null, null);
+                }
+                catch (Exception e)
+                {
+                    DifficultyPlugin.Logger.LogError(e);
+                }
+            }
+        }
+
         On.RoR2.DifficultyCatalog.GetDifficultyDef += GetExtendedDifficultyDef;
         On.RoR2.RuleDef.FromDifficulty += InitialiseRuleBookAndFinalizeList;
 
