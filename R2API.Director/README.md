@@ -18,6 +18,9 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '1.1.2'
+* Make the API safer.
+
 ### '1.1.1'
 * Fix issue where the ``Stage ParseToInternalStageName(string)`` and ``string ToInternalStageName(Stage stage)`` would return invalid values for The Planetarium and Void Locus respectively.
 

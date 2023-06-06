@@ -448,7 +448,22 @@ public static partial class R2APIContentManager
             }
             _contentPacksCreated = true;
             _managedContentPacks = new ReadOnlyArray<ManagedReadOnlyContentPack>(managedReadOnlyContentPacks.ToArray());
-            OnContentPacksCreated?.Invoke();
+
+
+            if (OnContentPacksCreated != null)
+            {
+                foreach (Action item in OnContentPacksCreated.GetInvocationList())
+                {
+                    try
+                    {
+                        item();
+                    }
+                    catch (Exception e)
+                    {
+                        ContentManagementPlugin.Logger.LogError(e);
+                    }
+                }
+            }
         }
         else
         {

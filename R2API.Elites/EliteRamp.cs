@@ -18,7 +18,7 @@ public static class EliteRamp
     private static bool _hooksEnabled = false;
 
     #region Hooks
-    internal static async void SetHooks()
+    internal static void SetHooks()
     {
         if (_hooksEnabled)
         {
@@ -27,10 +27,11 @@ public static class EliteRamp
 
         IL.RoR2.CharacterModel.UpdateMaterials += UpdateRampProperly;
         RoR2Application.onLoad += SetupDictionary;
-        vanillaEliteRamp = await Addressables.LoadAssetAsync<Texture2D>("RoR2/Base/Common/ColorRamps/texRampElites.psd").Task;
+        vanillaEliteRamp = Addressables.LoadAssetAsync<Texture2D>("RoR2/Base/Common/ColorRamps/texRampElites.psd").WaitForCompletion();
 
         _hooksEnabled = true;
     }
+
     internal static void UnsetHooks()
     {
         IL.RoR2.CharacterModel.UpdateMaterials -= UpdateRampProperly;
@@ -40,7 +41,7 @@ public static class EliteRamp
         _hooksEnabled = false;
     }
 
-    private static void UpdateRampProperly(MonoMod.Cil.ILContext il)
+    private static void UpdateRampProperly(ILContext il)
     {
         ILCursor c = new ILCursor(il);
         var firstMatchSuccesful = c.TryGotoNext(MoveType.After,
