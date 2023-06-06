@@ -20,6 +20,7 @@
       <ProjectReference Include="../R2API.SceneAsset/R2API.SceneAsset.csproj" Private="false"/>
       <ProjectReference Include="../R2API.Orb/R2API.Orb.csproj" Private="false"/>
       <ProjectReference Include="../R2API.Loadout/R2API.Loadout.csproj" Private="false"/>
+      <ProjectReference Include="../R2API.Skins/R2API.Skins.csproj" Private="false"/>
       <ProjectReference Include="../R2API.DamageType/R2API.DamageType.csproj" Private="false"/>
       <ProjectReference Include="../R2API.Deployable/R2API.Deployable.csproj" Private="false"/>
       <ProjectReference Include="../R2API.Dot/R2API.Dot.csproj" Private="false"/>
