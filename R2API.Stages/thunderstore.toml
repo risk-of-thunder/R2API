@@ -1,0 +1,30 @@
+
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "RiskofThunder"
+name = "R2API_Colors"
+versionNumber = "1.0.1"
+description = "API for registering Colors to the game"
+websiteUrl = "https://github.com/risk-of-thunder/R2API"
+containsNsfwContent = false
+
+[package.dependencies]
+bbepis-BepInExPack = "5.4.2109"
+RiskofThunder-HookGenPatcher = "1.2.3"
+RiskofThunder-R2API_Core = "1.0.0"
+
+[build]
+icon = "../icon.png"
+readme = "./README.md"
+outdir = "./build"
+
+[[build.copy]]
+source = "./ReleaseOutput"
+target = "./plugins/R2API.Colors"
+
+[publish]
+repository = "https://thunderstore.io"
+communities = ["riskofrain2"]
+categories = ["libraries"]
