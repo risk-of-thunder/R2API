@@ -21,6 +21,4 @@ public static partial class StagesAPI
     [Obsolete(R2APISubmoduleDependency.PropertyObsolete)]
 #pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
-
-    private static bool _hookEnabled = false;
 }
