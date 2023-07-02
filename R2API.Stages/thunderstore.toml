@@ -4,9 +4,9 @@ schemaVersion = "0.0.1"
 
 [package]
 namespace = "RiskofThunder"
-name = "R2API_Colors"
-versionNumber = "1.0.1"
-description = "API for registering Colors to the game"
+name = "R2API_Stages"
+versionNumber = "1.0.0"
+description = "API for Stage creation"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
 
@@ -22,7 +22,7 @@ outdir = "./build"
 
 [[build.copy]]
 source = "./ReleaseOutput"
-target = "./plugins/R2API.Colors"
+target = "./plugins/R2API.Stages"
 
 [publish]
 repository = "https://thunderstore.io"

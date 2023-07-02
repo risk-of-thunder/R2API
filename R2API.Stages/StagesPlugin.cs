@@ -3,7 +3,7 @@ using BepInEx.Logging;
 
 namespace R2API;
 
-[BepInPlugin(StagesAPI.PluginGUID, StagesAPI.PluginName, StagesAPI.PluginVersion)]
+[BepInPlugin(StageRegistration.PluginGUID, StageRegistration.PluginName, StageRegistration.PluginVersion)]
 public sealed class StagesPlugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger { get; set; }

@@ -4,16 +4,26 @@ using RoR2;
 using UnityEngine;
 using System;
 using System.Linq;
+using R2API.AutoVersionGen;
 using System.Text;
 using UnityEngine.AddressableAssets;
+using R2API.ContentManagement;
+using System.Reflection;
 
 namespace R2API;
 
 /// <summary>
 /// Class for registering SceneDefs into the loop of stages 1-5. Do not use this class for stages that aren't in the loop.
 /// </summary>
-public static class StageRegistration
+
+#pragma warning disable CS0436 // Type conflicts with imported type
+[AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
+public static partial class StageRegistration
 {
+    public const string PluginGUID = R2API.PluginGUID + ".stages";
+    public const string PluginName = R2API.PluginName + ".Stages";
+
     private static Dictionary<string, List<SceneDef>> privateStageVariantDictionary = new Dictionary<string,List<SceneDef>>();
     public static ReadOnlyDictionary<string, List<SceneDef>> stageVariantDictionary;
     private static List<SceneCollection> sceneCollections = new List<SceneCollection>();
@@ -42,6 +52,16 @@ public static class StageRegistration
     }
 
     #endregion
+
+    public static void AddSceneDef(SceneDef sceneDef)
+    {
+        StageRegistration.SetHooks();
+        AddSceneDefInternal(Assembly.GetCallingAssembly(), sceneDef);
+    }
+    internal static void AddSceneDefInternal(Assembly addingAssembly, SceneDef sceneDef)
+    {
+        R2APIContentManager.HandleContentAddition(addingAssembly, sceneDef);
+    }
 
     public static void RegisterSceneDef(SceneDef sceneDef)
     {
