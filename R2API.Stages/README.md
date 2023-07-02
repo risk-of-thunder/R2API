@@ -1,29 +1,21 @@
-# R2API.Colors - Easy Addition of Colors and Damage Colors
+# R2API.Stages - Easy Registration of Stages and Stage Variants + Stage Utils
 
 ## About
 
-R2API.Colors is a submodule for R2API that adds a single unified method for adding both Colors and Damage Colors to the game.
+R2API.Stages is a submodule for R2API that adds a single unified method to register both new stages and variants of stages. 
 
-These new colors can be used on Attacks for adding unique coloration to the damage numbers, and add unique colors to ItemTiers, and more miscellaneous color usages.
+R2API.Stages also hosts an abundant amount of utils to assist in stage making.
 
 ## Use Cases / Features
 
-R2API.Colors can be used for mods to add their own ColorIndex and DamageColorIndex to the game, which then can be used in a plethora of scenarios.
+You can use `StageRegistration.RegisterSceneDef` quickly register a SceneDef to its proper place in a loop (Stages 1-5). This method can add both variants and new custom stages. To add a variant, make sure the `baseSceneNameOverride` in your SceneDef is set to the same string as the stage you want to make a variant of. The method will automatically adjust the weights of any variants you add so each locale (ie: Titanic Plains, Distant Roost, and Siphoned Forest) has an equal probability. You can also add variants to modded stages.
 
-This is done via code by methods that return the ColorCatalog.ColorIndex or DamageColorIndex that will represent said color.
+The StageRegistration class also hosts `stageVariantDictionary`, which is a readonly dictionary to grab all the variants of a stage by inputting the `baseSceneNameOverride`. For example, if you input "golemplains" you will get a list of SceneDefs with atleast `golemplains` and `golemplains2`.
 
-Alongsided this, R2API.Colors also adds two new Scriptable Objects, which can be used to pre-serialize Color Indices.
-
-These are the SerializableColorCatalogEntry and the SerializableDamageColor.
-
-These scriptable objects can later be used for example, in EntityStateConfigurations for serializing the DamageColorIndex of a certain attack in an entity state.
+`Insert features about Addressable Scripts and DCCS/DCCSPool Scriptable Object here`
 
 ## Related Pages
 
 ## Changelog
 
-### '1.0.1'
-* Fix the NuGet package which had a dependency on a non-existent version of `R2API.Core`.
-
 ### '1.0.0'
-* Split from the main R2API.dll into its own submodule.
