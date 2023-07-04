@@ -18,7 +18,7 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
-### '1.1.3'
+### '2.0.0'
 * Fixed issue where DirectorCardHolder's custom category selection weights where integers instead of floats.
 
 ### '1.1.2'
