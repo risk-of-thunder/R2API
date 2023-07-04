@@ -51,6 +51,7 @@ public static partial class StageRegistration
     internal static void UnsetHooks()
     {
         sceneCollections.Clear();
+        _hooksEnabled = false;
     }
 
     #endregion
@@ -120,8 +121,8 @@ public static partial class StageRegistration
     private static void AppendSceneCollections(SceneDef sceneDef, float weight)
     {
         int stageOrderIndex = sceneDef.stageOrder - 1;
-        var sceneCollection = sceneCollections[stageOrderIndex]._sceneEntries.ToList();
-        sceneCollection.Add(new SceneCollection.SceneEntry { sceneDef = sceneDef, weightMinusOne = weight - 1 });
+        ref var sceneEntries = ref sceneCollections[stageOrderIndex]._sceneEntries;
+        HG.ArrayUtils.ArrayAppend(ref sceneEntries, new SceneCollection.SceneEntry { sceneDef = sceneDef, weightMinusOne = weight - 1 });
 
         sceneDef.destinationsGroup = sceneCollections[(stageOrderIndex + 1) % numStageCollections];
     }
