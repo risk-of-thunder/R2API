@@ -29,6 +29,8 @@ public static partial class StageRegistration
     private static List<SceneCollection> sceneCollections = new List<SceneCollection>();
     private static int numStageCollections = 5;
 
+    private static Material baseBazaarSeerMaterial;
+
     private static bool _hooksEnabled = false;
 
     #region Hooks
@@ -44,6 +46,8 @@ public static partial class StageRegistration
             SceneCollection stageSceneCollectionRequest = Addressables.LoadAssetAsync<SceneCollection>("RoR2/Base/SceneGroups/sgStage" + i + ".asset").WaitForCompletion();
             sceneCollections.Add(stageSceneCollectionRequest);
         }
+
+        baseBazaarSeerMaterial = Addressables.LoadAssetAsync<Material>("RoR2/Base/bazaar/matBazaarSeerWispgraveyard.mat").WaitForCompletion();
 
         _hooksEnabled = true;
     }
@@ -74,7 +78,7 @@ public static partial class StageRegistration
             StagesPlugin.Logger.LogDebug($"Stage {i}");
             foreach(SceneCollection.SceneEntry sceneEntry in sceneCollections[i - 1].sceneEntries)
             {
-                StagesPlugin.Logger.LogDebug($"{sceneEntry.sceneDef.cachedName}");
+                StagesPlugin.Logger.LogDebug($"{sceneEntry.sceneDef.cachedName}, Weight Minus One: {sceneEntry.weightMinusOne}");
             }
         }
     }
@@ -87,6 +91,26 @@ public static partial class StageRegistration
         AppendSceneCollections(sceneDef, weight);
         RefreshPublicDictionary();
         PrintSceneCollections();
+    }
+
+    public static Material MakeBazaarSeerMaterial(Texture2D texture)
+    {
+        StageRegistration.SetHooks();
+        Material bazaarMaterial = UnityEngine.Object.Instantiate(baseBazaarSeerMaterial);
+        bazaarMaterial.mainTexture = texture;
+        return bazaarMaterial;
+    }
+    public static Material MakeBazaarSeerMaterial(SceneDef sceneDef)
+    {
+        StageRegistration.SetHooks();
+        Material bazaarMaterial = UnityEngine.Object.Instantiate(baseBazaarSeerMaterial);
+        if(sceneDef.previewTexture == null)
+        {
+            StagesPlugin.Logger.LogError($"SceneDef {sceneDef.cachedName} does not have a preview texture.");
+            return null;
+        }
+        bazaarMaterial.mainTexture = sceneDef.previewTexture;
+        return bazaarMaterial;
     }
 
     private static float AddSceneOrVariant(SceneDef sceneDef, float weight)
