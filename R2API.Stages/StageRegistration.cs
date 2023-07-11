@@ -37,6 +37,9 @@ public static partial class StageRegistration
 
     private static bool _hooksEnabled = false;
 
+
+    //moon, ambry, vields, gilded, locus
+
     [SystemInitializer(typeof(SceneCatalog))]
     private static void SystemInit()
     {
@@ -107,7 +110,7 @@ public static partial class StageRegistration
             StagesPlugin.Logger.LogDebug($"Stage {i}");
             foreach(SceneCollection.SceneEntry sceneEntry in sceneCollections[i - 1].sceneEntries)
             {
-                StagesPlugin.Logger.LogDebug($"{sceneEntry.sceneDef.cachedName}, baseSceneName: {sceneEntry.sceneDef.baseSceneName}, Weight: {sceneEntry.weightMinusOne + 1}");
+                StagesPlugin.Logger.LogDebug($"{sceneEntry.sceneDef.cachedName}, baseSceneName: {sceneEntry.sceneDef.baseSceneName}, Weight: {sceneEntry.weight}");
             }
         }
     }
@@ -121,7 +124,7 @@ public static partial class StageRegistration
         StagesPlugin.Logger.LogDebug($"Stage {stageNumber}");
         foreach (SceneCollection.SceneEntry sceneEntry in sceneCollections[stageNumber - 1].sceneEntries)
         {
-            StagesPlugin.Logger.LogDebug($"{sceneEntry.sceneDef.cachedName}, baseSceneName: {sceneEntry.sceneDef.baseSceneName}, Weight: {sceneEntry.weightMinusOne + 1}");
+            StagesPlugin.Logger.LogDebug($"{sceneEntry.sceneDef.cachedName}, baseSceneName: {sceneEntry.sceneDef.baseSceneName}, Weight: {sceneEntry.weight}");
         }
     }
 
