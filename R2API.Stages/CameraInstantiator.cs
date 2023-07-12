@@ -14,7 +14,7 @@ public class CameraInstantiator : MonoBehaviour
     public GameObject CameraInstance { get => _cameraInstance; private set => _cameraInstance = value; }
     [NonSerialized] private GameObject _cameraInstance;
     private void OnEnable() => Refresh();
-    private void OnDisable() => DestroyImmediateSafe(CameraInstance, true);
+    private void OnDisable() => InstantiateAddressablePrefab.DestroyImmediateSafe(CameraInstance, true);
 
     /// <summary>
     /// Instantiates the camera or destroys the attached game object if the component is instantiated at runtime and not in the editor.

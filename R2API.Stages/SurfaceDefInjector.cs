@@ -33,9 +33,8 @@ public class SurfaceDefInjector : MonoBehaviour
 
         if (!loadedSurfaceDef)
             return;
-#if UNITY_EDITOR
-        loadedSurfaceDef = Instantiate(loadedSurfaceDef);
-#endif
+        if (Application.isEditor)
+            loadedSurfaceDef = Instantiate(loadedSurfaceDef);
         loadedSurfaceDef.hideFlags |= HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable;
         foreach (var provider in GetComponentsInChildren<SurfaceDefProvider>())
         {

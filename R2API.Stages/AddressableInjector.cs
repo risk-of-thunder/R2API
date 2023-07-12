@@ -67,9 +67,10 @@ public class AddressableInjector : MonoBehaviour
         var _asset = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<Object>(address).WaitForCompletion();
         if (!_asset)
             return;
-#if UNITY_EDITOR
-        Asset = Instantiate(_asset);
-#endif
+
+        if (Application.isEditor)
+            Asset = Instantiate(_asset);
+
         Asset.hideFlags = HideFlags.DontSaveInEditor | HideFlags.NotEditable | HideFlags.DontSaveInBuild;
 
         Inject(memberInfo);
@@ -94,11 +95,12 @@ public class AddressableInjector : MonoBehaviour
                 Log.Error(e);
             }
 
-#if UNITY_EDITOR
-            MSULog.Info($"injected {Asset} onto {targetComponent}'s propertyInfo, setting propertyInfo value to null to avoid broken scenes/objects");
-            propertyInfo.SetValue(targetComponent, null);
-            DestroyImmediate(Asset);
-#endif
+            if (Application.isEditor)
+            {
+                Log.Info($"injected {Asset} onto {targetComponent}'s propertyInfo, setting propertyInfo value to null to avoid broken scenes/objects");
+                propertyInfo.SetValue(targetComponent, null);
+                DestroyImmediate(Asset);
+            }
         }
 
         void InjectFieldInfo(FieldInfo fieldInfo)
@@ -112,11 +114,12 @@ public class AddressableInjector : MonoBehaviour
                 Log.Error(e);
             }
 
-#if UNITY_EDITOR
-            MSULog.Info($"injected {Asset} onto {targetComponent}'s fieldInfo, setting fieldInfo value to null to avoid broken scenes/objects");
-            fieldInfo.SetValue(targetComponent, null);
-            DestroyImmediate(Asset);
-#endif
+            if (Application.isEditor)
+            {
+                Log.Info($"injected {Asset} onto {targetComponent}'s fieldInfo, setting fieldInfo value to null to avoid broken scenes/objects");
+                fieldInfo.SetValue(targetComponent, null);
+                DestroyImmediate(Asset);
+            }
         }
     }
 
@@ -136,11 +139,12 @@ public class AddressableInjector : MonoBehaviour
 
         return cachedMemberInfo;
     }
-
-#if UNITY_EDITOR
     private void OnDisable() => RemoveReferencesEditor();
     private void RemoveReferencesEditor()
     {
+        if (!Application.isEditor)
+            return;
+
         var memberInfo = GetMemberInfo();
 
         switch (memberInfo)
@@ -153,5 +157,4 @@ public class AddressableInjector : MonoBehaviour
                 break;
         }
     }
-#endif
 }

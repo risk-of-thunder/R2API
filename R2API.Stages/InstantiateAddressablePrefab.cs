@@ -92,10 +92,9 @@ public class InstantiateAddressablePrefab : MonoBehaviour
 
     public static void DestroyImmediateSafe(UnityEngine.Object obj, bool allowDestroyingAssets = false)
     {
-#if UNITY_EDITOR
-        GameObject.DestroyImmediate(obj, allowDestroyingAssets);
-#else
-        GameObject.Destroy(obj);
-#endif
+        if (Application.isEditor)
+            GameObject.DestroyImmediate(obj, allowDestroyingAssets);
+        else
+            GameObject.Destroy(obj);
     }
 }
