@@ -37,7 +37,6 @@ public static partial class StageRegistration
 
     private static bool _hooksEnabled = false;
 
-
     //moon, ambry, vields, gilded, locus
 
     [SystemInitializer(typeof(SceneCatalog))]

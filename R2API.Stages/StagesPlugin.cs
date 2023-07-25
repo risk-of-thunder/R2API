@@ -11,7 +11,6 @@ public sealed class StagesPlugin : BaseUnityPlugin
     private void Awake()
     {
         Logger = base.Logger;
-        new Log(Logger);
 
         StageRegistration.SetHooks();
     }
