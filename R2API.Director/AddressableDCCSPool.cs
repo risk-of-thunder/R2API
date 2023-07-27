@@ -12,6 +12,7 @@ namespace R2API;
 /// A <see cref="AddressableDCCSPool"/> is a version of a <see cref="DccsPool"/> that can be created from the editor itself, it allows you to create complex DccsPools using R2API's <see cref="AddressReferencedAsset"/> system and your own existing spawn cards
 /// <br>You should also see <see cref="AddressableDirectorCardCategorySelection"/></br>
 /// </summary>
+[CreateAssetMenu(fileName = "New AddressableDCCSPool", menuName = "R2API/DirectorAPI/AddressableDCCSPool")]
 public class AddressableDCCSPool : ScriptableObject
 {
     private static HashSet<AddressableDCCSPool> instances = new HashSet<AddressableDCCSPool>();

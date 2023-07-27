@@ -13,6 +13,8 @@ namespace R2API;
 /// <para>All the values from this category selection will be added to the <see cref="DirectorCardCategorySelection"/> specified in <see cref="targetCardCategorySelection"/></para>
 /// <br>You should also see <see cref="AddressableDCCSPool"/></br>
 /// </summary>
+
+[CreateAssetMenu(fileName = "New AddressableDirectorCardCategorySelection", menuName = "R2API/DirectorAPI/AddressableDirectorCardCategorySelection")]
 public class AddressableDirectorCardCategorySelection : ScriptableObject
 {
     private static HashSet<AddressableDirectorCardCategorySelection> instances;
