@@ -88,6 +88,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Rules", "R2API.Rules\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Skins", "R2API.Skins\R2API.Skins.csproj", "{C712F6B5-1E08-4FB5-90EE-2D2C7F2DFF55}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Addressables", "R2API.Addressables\R2API.Addressables.csproj", "{3AB66A0A-4905-41B2-A397-7C7D92CDDA8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -218,6 +220,10 @@ Global
 		{C712F6B5-1E08-4FB5-90EE-2D2C7F2DFF55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C712F6B5-1E08-4FB5-90EE-2D2C7F2DFF55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C712F6B5-1E08-4FB5-90EE-2D2C7F2DFF55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AB66A0A-4905-41B2-A397-7C7D92CDDA8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AB66A0A-4905-41B2-A397-7C7D92CDDA8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AB66A0A-4905-41B2-A397-7C7D92CDDA8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AB66A0A-4905-41B2-A397-7C7D92CDDA8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
