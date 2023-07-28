@@ -30,14 +30,18 @@ public static partial class StageRegistration
 
     private static Dictionary<string, List<SceneDef>> privateStageVariantDictionary = new Dictionary<string,List<SceneDef>>();
     public static ReadOnlyDictionary<string, List<SceneDef>> stageVariantDictionary;
+
+    private static Dictionary<string, List<SceneDef>> blacklistedStages = new Dictionary<string, List<SceneDef>>();
+
     private static List<SceneCollection> sceneCollections = new List<SceneCollection>();
+
     private static int numStageCollections = 5;
 
     private static Material baseBazaarSeerMaterial;
 
     private static bool _hooksEnabled = false;
+    private static bool _sceneCatalogInitialized = false;
 
-    //moon, ambry, vields, gilded, locus
 
     [SystemInitializer(typeof(SceneCatalog))]
     private static void SystemInit()
@@ -49,12 +53,17 @@ public static partial class StageRegistration
             foreach (SceneCollection.SceneEntry sceneEntry in sceneCollection.sceneEntries)
             {
                 SceneDef sceneDef = sceneEntry.sceneDef;
-                if (privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName) && privateStageVariantDictionary[sceneDef.baseSceneName].Contains(sceneDef))
+                if ((privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName) &&
+                    privateStageVariantDictionary[sceneDef.baseSceneName].Contains(sceneDef)) ||
+                    InBlackList(sceneDef)) {
                     continue;
+                }  
                 AddSceneOrVariant(sceneDef, 1);
             }
         }
         RefreshPublicDictionary();
+
+        _sceneCatalogInitialized = true;
     }
 
     #region Hooks
@@ -104,6 +113,12 @@ public static partial class StageRegistration
     public static void PrintSceneCollections()
     {
         StageRegistration.SetHooks();
+
+        if (!_sceneCatalogInitialized)
+        {
+            StagesPlugin.Logger.LogDebug($"This log is printed before the SceneCatalog is initialized. Some results may not be accurate.");
+        }
+
         for (int i = 1; i <= numStageCollections; i++)
         {
             StagesPlugin.Logger.LogDebug($"Stage {i}");
@@ -120,11 +135,17 @@ public static partial class StageRegistration
     public static void PrintSceneCollections(int stageNumber)
     {
         StageRegistration.SetHooks();
+
+        if (!_sceneCatalogInitialized)
+        {
+            StagesPlugin.Logger.LogDebug($"This log is printed before the SceneCatalog is initialized. Some results may not be accurate.");
+        }
+
         StagesPlugin.Logger.LogDebug($"Stage {stageNumber}");
         foreach (SceneCollection.SceneEntry sceneEntry in sceneCollections[stageNumber - 1].sceneEntries)
         {
             StagesPlugin.Logger.LogDebug($"{sceneEntry.sceneDef.cachedName}, baseSceneName: {sceneEntry.sceneDef.baseSceneName}, Weight: {sceneEntry.weight}");
-        }
+        } 
     }
 
     /// <summary>
@@ -137,6 +158,11 @@ public static partial class StageRegistration
         {
             StagesPlugin.Logger.LogError($"Entry {key} doesn't exist or isn't populated yet in the dictionary.");
             return;
+        }
+
+        if (!_sceneCatalogInitialized)
+        {
+            StagesPlugin.Logger.LogDebug($"This log is printed before the SceneCatalog is initialized. Some results may not be accurate.");
         }
 
         StageRegistration.SetHooks();
@@ -169,9 +195,49 @@ public static partial class StageRegistration
         }
 
         float weight = 1;
-        weight = AddSceneOrVariant(sceneDef, weight);
-        AppendSceneCollections(sceneDef, weight);
-        RefreshPublicDictionary();
+        if (!InBlackList(sceneDef)){
+            weight = AddSceneOrVariant(sceneDef, weight);
+            AppendSceneCollections(sceneDef, weight);
+            RefreshPublicDictionary();
+        }
+        else
+        {
+            StagesPlugin.Logger.LogInfo($"Intercepted SceneDef {sceneDef.cachedName} from entering the loop pool.");
+        }
+    }
+
+    //There is probably a much better way to do this.
+    /// <summary>
+    /// Blacklists SceneDefs from entering the loop. If the Scene is already in the loop it removes it.
+    /// </summary>
+    /// <param name="sceneDef">The SceneDef being blacklisted</param>
+    public static void BlacklistSceneDef(SceneDef sceneDef)
+    {
+        StageRegistration.SetHooks();
+        CommitBlacklist(sceneDef, Assembly.GetCallingAssembly());
+    }
+    /// <summary>
+    /// Blacklists SceneDefs from entering the loop. If the SceneDef is already in the loop, it removes it.
+    /// </summary>
+    /// <param name="address">The addressable address of the SceneDef being blacklisted</param>
+    public static void BlacklistSceneDef(string address)
+    {
+        StageRegistration.SetHooks();
+        CommitBlacklist(Addressables.LoadAssetAsync<SceneDef>(address).WaitForCompletion(), Assembly.GetCallingAssembly());
+    }
+
+    /// <summary>
+    /// Returns true if the SceneDef is in the blacklist.
+    /// </summary>
+    /// <param name="sceneDef">The SceneDef in question</param>
+    /// <returns></returns>
+    public static bool InBlackList(SceneDef sceneDef)
+    {
+        StageRegistration.SetHooks();
+        if (blacklistedStages.ContainsKey(sceneDef.baseSceneName) && blacklistedStages[sceneDef.baseSceneName].Contains(sceneDef))
+            return true;
+
+        return false;
     }
 
     /// <summary>
@@ -224,6 +290,21 @@ public static partial class StageRegistration
         }
         return weight;
     }
+    //There is probably a better way to do this
+    private static void RemoveSceneDefFromCollection(SceneDef sceneDef)
+    {
+        int stageOrderIndex = sceneDef.stageOrder - 1;
+        ref var sceneEntries = ref sceneCollections[stageOrderIndex]._sceneEntries;
+        for (int i = 0; i < sceneEntries.Length; i++)
+        {
+            if (sceneDef == sceneEntries[i].sceneDef)
+            {
+                HG.ArrayUtils.ArrayRemoveAtAndResize<SceneCollection.SceneEntry>(ref sceneEntries, i);
+                StagesPlugin.Logger.LogInfo($"SceneDef {sceneDef.cachedName} successfully removed from collection");
+                return;
+            }
+        }
+    }
 
     //This method also equalizes all vanilla variants since they are already in the SceneCollection, hence why AppendSceneCollections isn't called on SystemInit.
     private static void EqualizeVariantWeights(string key, int stageOrderIndex, float weight)
@@ -235,6 +316,51 @@ public static partial class StageRegistration
                 sceneCollections[stageOrderIndex]._sceneEntries[i].weightMinusOne = weight - 1;
             }
         }
+    }
+
+    private static void CommitBlacklist(SceneDef sceneDef, Assembly assembly)
+    {
+        if (InBlackList(sceneDef))
+        {
+            StagesPlugin.Logger.LogInfo($"SceneDef {sceneDef.cachedName} already blacklisted. Blacklister: {assembly}");
+            return;
+        }
+
+        int stageOrderIndex = sceneDef.stageOrder - 1;
+        if (privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName))
+        {
+            foreach (SceneDef grabbedSceneDef in privateStageVariantDictionary[sceneDef.baseSceneName])
+            {
+                if (grabbedSceneDef == sceneDef)
+                {
+                    privateStageVariantDictionary[sceneDef.baseSceneName].Remove(sceneDef);
+                    if (privateStageVariantDictionary[sceneDef.baseSceneName].Count <= 0)
+                    {
+                        privateStageVariantDictionary.Remove(sceneDef.baseSceneName);
+                    }
+                    else
+                    {
+                        float weight = 1f / privateStageVariantDictionary[sceneDef.baseSceneName].Count;
+                        EqualizeVariantWeights(sceneDef.baseSceneName, stageOrderIndex, weight);
+                    }
+                    break;
+                }
+            }
+        }
+
+        RemoveSceneDefFromCollection(sceneDef);
+
+        if (blacklistedStages.ContainsKey(sceneDef.baseSceneName))
+        {
+            blacklistedStages[sceneDef.baseSceneName].Add(sceneDef);
+        }
+        else
+        {
+            List<SceneDef> list = new List<SceneDef>();
+            list.Add(sceneDef);
+            blacklistedStages.Add(sceneDef.baseSceneName, list);
+        }
+        StagesPlugin.Logger.LogInfo($"Successfully blacklisted SceneDef {sceneDef.cachedName}. Blacklister: {assembly}");
     }
 
     private static void AppendSceneCollections(SceneDef sceneDef, float weight)
