@@ -11,6 +11,7 @@ using R2API.ContentManagement;
 using System.Reflection;
 using BepInEx.Logging;
 using HG.Reflection;
+using BepInEx;
 
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
 
@@ -46,7 +47,9 @@ public static partial class StageRegistration
     [SystemInitializer(typeof(SceneCatalog))]
     private static void SystemInit()
     {
+#if DEBUG
         StagesPlugin.Logger.LogDebug($"Variant dictionary intializing...");
+#endif
 
         foreach (SceneCollection sceneCollection in sceneCollections)
         {
@@ -64,6 +67,10 @@ public static partial class StageRegistration
         RefreshPublicDictionary();
 
         _sceneCatalogInitialized = true;
+
+#if DEBUG
+        PrintSceneCollections();
+#endif
     }
 
     #region Hooks
@@ -97,7 +104,8 @@ public static partial class StageRegistration
     /// Adds a SceneDef to your Mod's ContentPack
     /// </summary>
     /// <param name="sceneDef">The SceneDef to add</param>
-    public static void AddSceneDef(SceneDef sceneDef)
+    /// <param name="plugin">Your mod plugin</param>
+    public static void AddSceneDef(SceneDef sceneDef, BepInPlugin plugin)
     {
         StageRegistration.SetHooks();
         AddSceneDefInternal(Assembly.GetCallingAssembly(), sceneDef);
@@ -180,7 +188,9 @@ public static partial class StageRegistration
     public static void RegisterSceneDefToLoop(SceneDef sceneDef)
     {
         StageRegistration.SetHooks();
-        StagesPlugin.Logger.LogDebug($"RegisterSceneDef called from {Assembly.GetCallingAssembly()}");
+#if DEBUG
+        StagesPlugin.Logger.LogDebug($"Registering {sceneDef.cachedName}.");
+#endif
 
         if (privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName) && privateStageVariantDictionary[sceneDef.baseSceneName].Contains(sceneDef))
         {
@@ -202,7 +212,9 @@ public static partial class StageRegistration
         }
         else
         {
-            StagesPlugin.Logger.LogInfo($"Intercepted SceneDef {sceneDef.cachedName} from entering the loop pool.");
+#if DEBUG
+            StagesPlugin.Logger.LogDebug($"Intercepted SceneDef {sceneDef.cachedName} from entering the loop pool.");
+#endif
         }
     }
 
@@ -211,19 +223,21 @@ public static partial class StageRegistration
     /// Blacklists SceneDefs from entering the loop. If the Scene is already in the loop it removes it.
     /// </summary>
     /// <param name="sceneDef">The SceneDef being blacklisted</param>
-    public static void BlacklistSceneDef(SceneDef sceneDef)
+    /// <param name="plugin">Your mod plugin. Your mod will be printed to prevent malicious blacklisting.</param>
+    public static void BlacklistSceneDef(SceneDef sceneDef, BepInPlugin plugin)
     {
         StageRegistration.SetHooks();
-        CommitBlacklist(sceneDef, Assembly.GetCallingAssembly());
+        CommitBlacklist(sceneDef, plugin);
     }
     /// <summary>
-    /// Blacklists SceneDefs from entering the loop. If the SceneDef is already in the loop, it removes it.
+    /// Blacklists SceneDefs from entering the loop. If the Scene is already in the loop it removes it.
     /// </summary>
-    /// <param name="address">The addressable address of the SceneDef being blacklisted</param>
-    public static void BlacklistSceneDef(string address)
+    /// <param name="address">The address of the SceneDef being blacklisted</param>
+    /// <param name="plugin">Your mod plugin. Your mod will be printed to prevent malicious blacklisting.</param>
+    public static void BlacklistSceneDef(string address, BepInPlugin plugin)
     {
         StageRegistration.SetHooks();
-        CommitBlacklist(Addressables.LoadAssetAsync<SceneDef>(address).WaitForCompletion(), Assembly.GetCallingAssembly());
+        CommitBlacklist(Addressables.LoadAssetAsync<SceneDef>(address).WaitForCompletion(), plugin);
     }
 
     /// <summary>
@@ -300,7 +314,9 @@ public static partial class StageRegistration
             if (sceneDef == sceneEntries[i].sceneDef)
             {
                 HG.ArrayUtils.ArrayRemoveAtAndResize<SceneCollection.SceneEntry>(ref sceneEntries, i);
-                StagesPlugin.Logger.LogInfo($"SceneDef {sceneDef.cachedName} successfully removed from collection");
+#if DEBUG
+                StagesPlugin.Logger.LogDebug($"SceneDef {sceneDef.cachedName} successfully removed from collection");
+#endif
                 return;
             }
         }
@@ -318,11 +334,11 @@ public static partial class StageRegistration
         }
     }
 
-    private static void CommitBlacklist(SceneDef sceneDef, Assembly assembly)
+    private static void CommitBlacklist(SceneDef sceneDef, BepInPlugin plugin)
     {
         if (InBlackList(sceneDef))
         {
-            StagesPlugin.Logger.LogInfo($"SceneDef {sceneDef.cachedName} already blacklisted. Blacklister: {assembly}");
+            StagesPlugin.Logger.LogWarning($"SceneDef {sceneDef.cachedName} already blacklisted.");
             return;
         }
 
@@ -360,7 +376,8 @@ public static partial class StageRegistration
             list.Add(sceneDef);
             blacklistedStages.Add(sceneDef.baseSceneName, list);
         }
-        StagesPlugin.Logger.LogInfo($"Successfully blacklisted SceneDef {sceneDef.cachedName}. Blacklister: {assembly}");
+
+        StagesPlugin.Logger.LogInfo($"Successfully blacklisted SceneDef {sceneDef.cachedName}. Blacklister: {plugin.Name}");
     }
 
     private static void AppendSceneCollections(SceneDef sceneDef, float weight)
