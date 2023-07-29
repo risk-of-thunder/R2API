@@ -49,7 +49,7 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
                     $"\n Consider using AddressReferencedAssets.OnAddressReferencedAssetsLoaded for running code that depends on AddressableAssets! (Method: {method.DeclaringType.FullName}.{method.Name}()");
                 Load();
             }
-            else if(!_asset)
+            else if(IsValidForLoadingWithAddress())
             {
                 LoadFromAddress();
             }
@@ -90,7 +90,7 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     /// <br>Mainly used for Editor related scripts</br>
     /// </summary>
     public bool UseDirectReference => _useDirectReference;
-    [SerializeField] private bool _useDirectReference;
+    [SerializeField,HideInInspector] private bool _useDirectReference;
 
     /// <summary>
     /// Wether this AddressReferencedAsset can load an Asset using the game's catalogues.
@@ -98,13 +98,17 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     /// </summary>
     public virtual bool CanLoadFromCatalog { get; } = false;
 
+    private bool IsValidForLoadingWithAddress()
+    {
+        return !_asset && !string.IsNullOrEmpty(_address);
+    }
     /// <summary>
     /// Loads the asset asynchronously if <see cref="Asset"/> is not null and <see cref="Address"/> is not null or empty.
     /// <br>This is automatically called by the AddressReferencedAsset system and should not be called manually.</br>
     /// </summary>
     protected sealed override async Task LoadAssetAsync()
     {
-        if(!_asset && string.IsNullOrEmpty(_address))
+        if(IsValidForLoadingWithAddress())
         {
             await LoadAsync();
         }
@@ -251,6 +255,7 @@ public abstract class AddressReferencedAsset
             LoadReferencesAsync();
             return;
         }
+        RoR2Application.onLoad -= LoadReferencesAsync;
         RoR2Application.onLoad += LoadReferencesAsync;
     }
 

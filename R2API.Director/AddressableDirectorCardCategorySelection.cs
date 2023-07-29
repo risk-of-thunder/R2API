@@ -17,7 +17,7 @@ namespace R2API;
 [CreateAssetMenu(fileName = "New AddressableDirectorCardCategorySelection", menuName = "R2API/DirectorAPI/AddressableDirectorCardCategorySelection")]
 public class AddressableDirectorCardCategorySelection : ScriptableObject
 {
-    private static HashSet<AddressableDirectorCardCategorySelection> instances;
+    private static HashSet<AddressableDirectorCardCategorySelection> instances = new();
 
     [Tooltip("The DirectorCardCategorySelection that will be overridedn with the values stored in this AddressableDirectorCardCategorySelection")]
     public DirectorCardCategorySelection targetCardCategorySelection;
@@ -50,6 +50,7 @@ public class AddressableDirectorCardCategorySelection : ScriptableObject
     /// <summary>
     /// Represents a category of spawn cards
     /// </summary>
+    [Serializable]
     public struct Category
     {
         [Tooltip("The name of this category")]

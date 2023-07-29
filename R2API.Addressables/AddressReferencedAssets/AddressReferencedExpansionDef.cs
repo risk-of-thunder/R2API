@@ -12,6 +12,7 @@ namespace R2API.AddressReferencedAssets;
 /// <br>T is <see cref="ExpansionDef"/></br>
 /// <br>The <see cref="ExpansionDef"/> can also be loaded via the <see cref="ExpansionCatalog"/>, as such, you should wait until <see cref="AddressReferencedAsset.OnAddressReferencedAssetsLoaded"/> gets raised.</br>
 /// </summary>
+[Serializable]
 public class AddressReferencedExpansionDef : AddressReferencedAsset<ExpansionDef>
 {
     public override bool CanLoadFromCatalog => true;

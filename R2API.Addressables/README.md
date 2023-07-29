@@ -1,10 +1,10 @@
-# R2API.Skins - Adding new Skins and Skin-Specific IDRS
+# R2API.Addressables - Addressable related utility for modding
 
 ## About
 
-R2API.Skins is a submodule for R2API that takes the Skin related methods and utilities from ``R2API.Loadout`` and implements them in this new submodule
+R2API.Addressables is a submodule for R2API that implements systems for working with the AddressablesAPI from Unity.
 
-Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also contains utilities for improving the skin experience, such as having Skin-Specific ItemDisplayRuleSets.
+Currently it adds the AddressReferencedAsset system, which allows you on the Editor or on Code to easily refer to either an explicit Asset, or an Address to said asset.
 
 ## Changelog
 

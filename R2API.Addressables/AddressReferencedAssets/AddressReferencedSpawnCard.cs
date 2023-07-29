@@ -7,7 +7,7 @@ namespace R2API.AddressReferencedAssets;
 
 /// <summary>
 /// <inheritdoc cref="AddressReferencedAsset{T}"/>
-/// <br>T is <see cref="GameObject"/></br>
+/// <br>T is <see cref="SpawnCard"/></br>
 /// </summary>
 [Serializable]
 public class AddressReferencedSpawnCard : AddressReferencedAsset<SpawnCard>
