@@ -12,10 +12,9 @@ You can use `StageRegistration.RegisterSceneDef` quickly register a SceneDef to 
 
 The StageRegistration class also hosts `stageVariantDictionary`, which is a readonly dictionary to grab all the variants of a stage by inputting the `baseSceneNameOverride`. For example, if you input "golemplains" you will get a list of SceneDefs with atleast `golemplains` and `golemplains2`.
 
-`Insert features about Addressable Scripts and DCCS/DCCSPool Scriptable Object here`
-
 ## Related Pages
 
 ## Changelog
 
 ### '1.0.0'
+- Initial Release
