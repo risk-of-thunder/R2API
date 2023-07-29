@@ -67,7 +67,6 @@ public static partial class StageRegistration
         RefreshPublicDictionary();
 
         _sceneCatalogInitialized = true;
-
 #if DEBUG
         PrintSceneCollections();
 #endif
