@@ -104,12 +104,12 @@ public static partial class StageRegistration
     /// </summary>
     /// <param name="sceneDef">The SceneDef to add</param>
     /// <param name="plugin">Your mod plugin</param>
-    public static void AddSceneDef(SceneDef sceneDef, BepInPlugin plugin)
+    public static void AddSceneDef(SceneDef sceneDef, PluginInfo plugin)
     {
         StageRegistration.SetHooks();
-        AddSceneDefInternal(Assembly.GetCallingAssembly(), sceneDef);
+        AddSceneDefInternal(sceneDef, plugin.Instance.GetType().Assembly);
     }
-    internal static void AddSceneDefInternal(Assembly addingAssembly, SceneDef sceneDef)
+    internal static void AddSceneDefInternal(SceneDef sceneDef, Assembly addingAssembly)
     {
         R2APIContentManager.HandleContentAddition(addingAssembly, sceneDef);
     }
@@ -223,7 +223,7 @@ public static partial class StageRegistration
     /// </summary>
     /// <param name="sceneDef">The SceneDef being blacklisted</param>
     /// <param name="plugin">Your mod plugin. Your mod will be printed to prevent malicious blacklisting.</param>
-    public static void BlacklistSceneDef(SceneDef sceneDef, BepInPlugin plugin)
+    public static void BlacklistSceneDef(SceneDef sceneDef, PluginInfo plugin)
     {
         StageRegistration.SetHooks();
         CommitBlacklist(sceneDef, plugin);
@@ -233,7 +233,7 @@ public static partial class StageRegistration
     /// </summary>
     /// <param name="address">The address of the SceneDef being blacklisted</param>
     /// <param name="plugin">Your mod plugin. Your mod will be printed to prevent malicious blacklisting.</param>
-    public static void BlacklistSceneDef(string address, BepInPlugin plugin)
+    public static void BlacklistSceneDef(string address, PluginInfo plugin)
     {
         StageRegistration.SetHooks();
         CommitBlacklist(Addressables.LoadAssetAsync<SceneDef>(address).WaitForCompletion(), plugin);
@@ -333,7 +333,7 @@ public static partial class StageRegistration
         }
     }
 
-    private static void CommitBlacklist(SceneDef sceneDef, BepInPlugin plugin)
+    private static void CommitBlacklist(SceneDef sceneDef, PluginInfo plugin)
     {
         if (InBlackList(sceneDef))
         {
@@ -376,7 +376,7 @@ public static partial class StageRegistration
             blacklistedStages.Add(sceneDef.baseSceneName, list);
         }
 
-        StagesPlugin.Logger.LogInfo($"Successfully blacklisted SceneDef {sceneDef.cachedName}. Blacklister: {plugin.Name}");
+        StagesPlugin.Logger.LogInfo($"Successfully blacklisted SceneDef {sceneDef.cachedName}. Blacklister: {plugin.Instance.name}");
     }
 
     private static void AppendSceneCollections(SceneDef sceneDef, float weight)
