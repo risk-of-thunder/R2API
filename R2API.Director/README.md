@@ -18,6 +18,10 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.1.0'
+* Added Dependency for the Addressables Submodule
+* Added AddressableDCCSPool and AddressableDirectorCardCategorySelection, both intended for usage in the Unity Editor.
+
 ### '2.0.0'
 * Fixed issue where DirectorCardHolder's custom category selection weights where integers instead of floats.
 
