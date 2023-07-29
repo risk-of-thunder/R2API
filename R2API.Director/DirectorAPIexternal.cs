@@ -571,7 +571,7 @@ public static partial class DirectorAPI
         /// <summary>
         /// This is only used in case the category didnt exist in the first place in the targeted DCCS.
         /// </summary>
-        public int MonsterCategorySelectionWeight = 1;
+        public float MonsterCategorySelectionWeight = 1;
 
         /// <summary>
         /// The interactable category the card belongs to. Will be set to <see cref="InteractableCategory.Invalid"/> for monsters,
@@ -587,7 +587,7 @@ public static partial class DirectorAPI
         /// <summary>
         /// This is only used in case the category didnt exist in the first place in the targeted DCCS.
         /// </summary>
-        public int InteractableCategorySelectionWeight = 1;
+        public float InteractableCategorySelectionWeight = 1;
 
         public bool IsMonster => MonsterCategory != MonsterCategory.Invalid;
 
