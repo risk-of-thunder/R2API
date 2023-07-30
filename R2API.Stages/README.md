@@ -16,5 +16,10 @@ The StageRegistration class also hosts `stageVariantDictionary`, which is a read
 
 ## Changelog
 
+### '1.0.1'
+- Fix r2api content management DLL being shipped in that package
+
 ### '1.0.0'
 - Initial Release
+
+

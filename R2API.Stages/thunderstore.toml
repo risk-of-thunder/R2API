@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_Stages"
-versionNumber = "1.0.0"
+versionNumber = "1.0.1"
 description = "API for Stage creation"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
