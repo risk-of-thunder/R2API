@@ -10,10 +10,10 @@ public static class DirectMessage
 {
 
     /// <summary>
-    /// returns NetworkUsers associated  to a NetworkConnection
+    /// returns NetworkUsers associated to a NetworkConnection
     /// </summary>
     /// <param name="conn"></param>
-    /// <returns>returns NetworkUsers associated  to a NetworkConnection</returns>
+    /// <returns>returns NetworkUsers associated to a NetworkConnection</returns>
     private static RoR2.NetworkUser[] GetConnectionNetworkUsers(UnityEngine.Networking.NetworkConnection conn)
     {
         System.Collections.Generic.List<UnityEngine.Networking.PlayerController> playerControllers = conn.playerControllers;
