@@ -36,4 +36,54 @@ public class AddressReferencedItemDef : AddressReferencedAsset<ItemDef>
         }
         LoadFromAddress();
     }
+    /// <summary>
+    /// Operator for casting <see cref="AddressReferencedItemDef"/> to a boolean value
+    /// <br>Allows you to keep using the unity Syntax for checking if an object exists.</br>
+    /// </summary>
+    public static implicit operator bool(AddressReferencedItemDef addressReferencedAsset)
+    {
+        return addressReferencedAsset?.Asset;
+    }
+
+    /// <summary>
+    /// Operator for casting <see cref="AddressReferencedItemDef"/> to it's currently loaded <see cref="Asset"/> value
+    /// </summary>
+    public static implicit operator ItemDef(AddressReferencedItemDef addressReferencedAsset)
+    {
+        return addressReferencedAsset?.Asset;
+    }
+
+    /// <summary>
+    /// Operator for encapsulating a <see cref="string"/> inside an <see cref="AddressReferencedItemDef"/>
+    /// </summary>
+    public static implicit operator AddressReferencedItemDef(string address)
+    {
+        return new AddressReferencedItemDef(address);
+    }
+
+    /// <summary>
+    /// Operator for encapsulating an <see cref="ItemDef"/> inside an <see cref="AddressReferencedItemDef"/>
+    /// </summary>
+    public static implicit operator AddressReferencedItemDef(ItemDef asset)
+    {
+        return new AddressReferencedItemDef(asset);
+    }
+
+    /// <summary>
+    /// <inheritdoc cref="AddressReferencedAsset{T}.AddressReferencedAsset()"/>
+    /// <br>T is <see cref="ItemDef"/></br>
+    /// </summary>
+    public AddressReferencedItemDef() : base() { }
+
+    /// <summary>
+    /// <inheritdoc cref="AddressReferencedAsset{T}.AddressReferencedAsset(T)"/>
+    /// <br>T is <see cref="ItemDef"/></br>
+    /// </summary>
+    public AddressReferencedItemDef(ItemDef def) : base(def) { }
+
+    /// <summary>
+    /// <inheritdoc cref="AddressReferencedAsset{T}.AddressReferencedAsset(string)"/>
+    /// <br>T is <see cref="ItemDef"/></br>
+    /// </summary>
+    public AddressReferencedItemDef(string addressOrName) : base(addressOrName) { }
 }

@@ -36,4 +36,55 @@ public class AddressReferencedUnlockableDef : AddressReferencedAsset<UnlockableD
         }
         LoadFromAddress();
     }
+
+    /// <summary>
+    /// Operator for casting <see cref="AddressReferencedUnlockableDef"/> to a boolean value
+    /// <br>Allows you to keep using the unity Syntax for checking if an object exists.</br>
+    /// </summary>
+    public static implicit operator bool(AddressReferencedUnlockableDef addressReferencedAsset)
+    {
+        return addressReferencedAsset?.Asset;
+    }
+
+    /// <summary>
+    /// Operator for casting <see cref="AddressReferencedUnlockableDef"/> to it's currently loaded <see cref="Asset"/> value
+    /// </summary>
+    public static implicit operator UnlockableDef(AddressReferencedUnlockableDef addressReferencedAsset)
+    {
+        return addressReferencedAsset?.Asset;
+    }
+
+    /// <summary>
+    /// Operator for encapsulating a <see cref="string"/> inside an <see cref="AddressReferencedUnlockableDef"/>
+    /// </summary>
+    public static implicit operator AddressReferencedUnlockableDef(string address)
+    {
+        return new AddressReferencedUnlockableDef(address);
+    }
+
+    /// <summary>
+    /// Operator for encapsulating an <see cref="UnlockableDef"/> inside an <see cref="AddressReferencedUnlockableDef"/>
+    /// </summary>
+    public static implicit operator AddressReferencedUnlockableDef(UnlockableDef asset)
+    {
+        return new AddressReferencedUnlockableDef(asset);
+    }
+
+    /// <summary>
+    /// <inheritdoc cref="AddressReferencedAsset{T}.AddressReferencedAsset()"/>
+    /// <br>T is <see cref="UnlockableDef"/></br>
+    /// </summary>
+    public AddressReferencedUnlockableDef() : base() { }
+
+    /// <summary>
+    /// <inheritdoc cref="AddressReferencedAsset{T}.AddressReferencedAsset(T)"/>
+    /// <br>T is <see cref="UnlockableDef"/></br>
+    /// </summary>
+    public AddressReferencedUnlockableDef(UnlockableDef def) : base(def) { }
+
+    /// <summary>
+    /// <inheritdoc cref="AddressReferencedAsset{T}.AddressReferencedAsset(string)"/>
+    /// <br>T is <see cref="UnlockableDef"/></br>
+    /// </summary>
+    public AddressReferencedUnlockableDef(string addressOrName) : base(addressOrName) { }
 }

@@ -8,6 +8,10 @@ Currently it adds the AddressReferencedAsset system, which allows you on the Edi
 
 ## Changelog
 
+### '1.0.1'
+
+* Added missing casting operators and constructors for the bundled in, derived classes of ``AddressReferencedAsset<T>``
+
 ### '1.0.0'
 
 * Initial Release
