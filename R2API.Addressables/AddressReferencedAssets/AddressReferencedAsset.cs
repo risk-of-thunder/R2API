@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using BepInEx;
+using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -63,6 +64,17 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
             _useDirectReference = _asset;
         }
     }
+
+    /// <summary>
+    /// Determines wether <see cref="Asset"/>'s backing field has a value.
+    /// </summary>
+    public bool AssetExists
+    {
+        get
+        {
+            return _asset;
+        }
+    }
     [SerializeField] private T _asset;
 
     /// <summary>
@@ -84,6 +96,20 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
         }
     }
     [SerializeField] private string _address;
+
+    /// <summary>
+    /// Whether the AddressReferencedAsset is considered Invalid.
+    /// <para>For an AddressReferencedAsset to be invalid it must have the following characteristics:</para>
+    /// <br>A: <see cref="Asset"/>'s backing field value is null</br>
+    /// <br>B: <see cref="Address"/>'s backing field value is null, empty or whitespace</br>
+    /// </summary>
+    public bool IsInvalid
+    {
+        get
+        {
+            return !_asset && (string.IsNullOrEmpty(_address) || string.IsNullOrWhiteSpace(_address));
+        }
+    }
 
     /// <summary>
     /// Wether this AddressReferencedAsset is using a DirectReference (<see cref="Asset"/> is not null) or an Address Reference (<see cref="Asset"/> is null)
