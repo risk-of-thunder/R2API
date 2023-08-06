@@ -8,6 +8,10 @@ Currently it adds the AddressReferencedAsset system, which allows you on the Edi
 
 ## Changelog
 
+### '1.0.3'
+
+* Fixed a typo on ``AddressReferencedAsset(UnityEngine.Object)`` constructor which would incorrectly set ``UseDirectReference`` to ``false``
+
 ### '1.0.2'
 
 * Added utility property to check wether an ``AddressReferencedAsset`` is "Invalid". Invalid in this instance means that no direct reference to an asset exists, and the string address is null, empty or whitespace.
