@@ -12,6 +12,7 @@ namespace R2API.AddressReferencedAssets;
 /// <br>T is <see cref="EquipmentDef"/></br>
 /// <br>The <see cref="EquipmentDef"/> can also be loaded via the <see cref="EquipmentCatalog"/>, as such, you should wait until <see cref="AddressReferencedAsset.OnAddressReferencedAssetsLoaded"/> gets raised.</br>
 /// </summary>
+[Serializable]
 public class AddressReferencedEquipmentDef : AddressReferencedAsset<EquipmentDef>
 {
     public override bool CanLoadFromCatalog => true;

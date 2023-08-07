@@ -11,6 +11,7 @@ Currently it adds the AddressReferencedAsset system, which allows you on the Edi
 ### '1.0.3'
 
 * Fixed a typo on ``AddressReferencedAsset(UnityEngine.Object)`` constructor which would incorrectly set ``UseDirectReference`` to ``false``
+* Fixed issue where ``AddressReferencedEquipmentDef`` wasnt marked as "Serializable"
 
 ### '1.0.2'
 
