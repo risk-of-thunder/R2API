@@ -214,7 +214,7 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     {
         SetHooks();
         _asset = asset;
-        _useDirectReference = false;
+        _useDirectReference = true;
         instances.Add(this);
     }
 
