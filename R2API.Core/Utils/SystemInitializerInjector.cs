@@ -34,6 +34,8 @@ public static class SystemInitializerInjector
                     if (instance.target is MethodInfo initializerMethod && _dependenciesToInject.TryGetValue(initializerMethod, out HashSet<Type> newDependencies))
                     {
                         newDependencies.RemoveWhere(t => instance.dependencies.Contains(t));
+                        if (newDependencies.Count == 0)
+                            return;
 
                         int originalDependenciesLength = instance.dependencies.Length;
                         Array.Resize(ref instance.dependencies, originalDependenciesLength + newDependencies.Count);
