@@ -22,7 +22,7 @@ outdir = "./build"
 
 [[build.copy]]
 source = "./ReleaseOutput"
-target = "./plugins/R2API.SceneAsset"
+target = "./plugins/R2API.StringSerializerExtensions"
 
 [publish]
 repository = "https://thunderstore.io"

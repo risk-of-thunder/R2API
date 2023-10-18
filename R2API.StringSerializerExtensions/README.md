@@ -2,7 +2,7 @@
 
 ## About
 
-R2API.SceneAsset is a submodule assembly for R2API that adds new serialization handlers to the HG.GeneralSerializer.StringSerializer class
+R2API.StringSerializerExtensions is a submodule assembly for R2API that adds new serialization handlers to the HG.GeneralSerializer.StringSerializer class
 
 ## Use Cases / Features
 
