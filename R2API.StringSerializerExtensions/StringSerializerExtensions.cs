@@ -1,19 +1,23 @@
 ﻿using HG.GeneralSerializer;
 using MonoMod.RuntimeDetour;
-using MonoMod.Utils;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 using SerializationHandler = HG.GeneralSerializer.StringSerializer.SerializationHandler;
 using HGSerializer = HG.GeneralSerializer.StringSerializer;
+using R2API.AutoVersionGen;
 
-namespace R2API.Utils;
+namespace R2API;
 
-internal static class ExtendedStringSerializer
+#pragma warning disable CS0436 // Type conflicts with imported type
+[AutoVersion]
+#pragma warning restore CS0436 // Type conflicts with imported type
+public static partial class StringSerializerExtensions
 {
+    internal const string PluginGUID = R2API.PluginGUID + ".extendedStringSerializer";
+    internal const string PluginName = R2API.PluginName + ".ExtendedStringSerializer";
+
     private static readonly SerializationHandler _enumTypeHandler;
 
     private static CultureInfo Invariant => CultureInfo.InvariantCulture;
@@ -55,7 +59,7 @@ internal static class ExtendedStringSerializer
         _serializeHook.Free();
     }
 
-    static ExtendedStringSerializer()
+    static StringSerializerExtensions()
     {
         HGSerializer.serializationHandlers.Add(typeof(LayerMask), new SerializationHandler
         {

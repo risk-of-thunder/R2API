@@ -4,15 +4,16 @@ schemaVersion = "0.0.1"
 
 [package]
 namespace = "RiskofThunder"
-name = "R2API_Core"
-versionNumber = "5.0.11"
-description = "Core R2API module"
+name = "R2API_StringSerializerExtensions"
+versionNumber = "1.0.0"
+description = "Increased string serializer support"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
 
 [package.dependencies]
 bbepis-BepInExPack = "5.4.2109"
 RiskofThunder-HookGenPatcher = "1.2.3"
+RiskofThunder-R2API_Core = "1.0.0"
 
 [build]
 icon = "../icon.png"
@@ -21,7 +22,7 @@ outdir = "./build"
 
 [[build.copy]]
 source = "./ReleaseOutput"
-target = "./plugins/R2API.Core"
+target = "./plugins/R2API.SceneAsset"
 
 [publish]
 repository = "https://thunderstore.io"

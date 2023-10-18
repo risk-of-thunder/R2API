@@ -18,10 +18,6 @@ Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
 
-### '5.1.0'
-
-- Add new serialization handlers to HG.GeneralSerializer.StringSerializer
-
 ### '5.0.11'
 
 - Fix SystemInitializerInjector.

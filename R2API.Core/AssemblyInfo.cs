@@ -44,3 +44,4 @@ using IVT = System.Runtime.CompilerServices.InternalsVisibleToAttribute;
 [assembly: IVT("R2API.Colors")]
 [assembly: IVT("R2API.Rules")]
 [assembly: IVT("R2API.Skins")]
+[assembly: IVT("R2API.StringSerializerExtensions")]
