@@ -87,20 +87,10 @@ public partial class R2API : BaseUnityPlugin
     }
 #endif
 
-    private void OnEnable()
-    {
-        ExtendedStringSerializer.ApplyHooks();
-    }
-
-    private void OnDisable()
-    {
-        ExtendedStringSerializer.UndoHooks();
-    }
 
     private void OnDestroy()
     {
         _networkCompatibilityHandler.CleanupModList();
-        ExtendedStringSerializer.FreeHooks();
     }
 
     private static void DebugUpdate()
