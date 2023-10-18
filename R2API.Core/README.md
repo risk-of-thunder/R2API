@@ -18,6 +18,10 @@ Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
 
+### '5.0.11'
+
+- Fix SystemInitializerInjector.
+
 ### '5.0.10'
 * Make R2API Reflection methods return / take into account inherited members.
 
