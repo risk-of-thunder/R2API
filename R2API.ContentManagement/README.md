@@ -23,6 +23,9 @@ R2API.ContentManaged is used for mods that would like to have R2API handle the c
 
 ## Changelog
 
+### '1.0.3'
+* Re-opt-in to system-initializers,fixing behavior related to late-registration of content.
+
 ### '1.0.2'
 * Make the API safer.
 
