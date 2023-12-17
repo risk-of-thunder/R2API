@@ -38,6 +38,8 @@ public static partial class SkinVFX {
         On.RoR2.EffectComponent.Start += ApplyModifier;
         On.RoR2.EffectManager.SpawnEffect_GameObject_EffectData_bool += ApplyReplacement;
         IL.RoR2.BulletAttack.FireSingle += ModifyBulletAttack;
+        IL.RoR2.EffectManager.SimpleMuzzleFlash += ModifyMuzzleFlash;
+        On.EntityStates.BasicMeleeAttack.BeginMeleeAttackEffect += ModifyGenericMelee;
 
         IL.RoR2.Orbs.GenericDamageOrb.Begin += ModifyGenericOrb;
     }
@@ -47,6 +49,8 @@ public static partial class SkinVFX {
         On.RoR2.EffectComponent.Start -= ApplyModifier;
         On.RoR2.EffectManager.SpawnEffect_GameObject_EffectData_bool -= ApplyReplacement;
         IL.RoR2.BulletAttack.FireSingle -= ModifyBulletAttack;
+        IL.RoR2.EffectManager.SimpleMuzzleFlash -= ModifyMuzzleFlash;
+        On.EntityStates.BasicMeleeAttack.BeginMeleeAttackEffect -= ModifyGenericMelee;
 
         IL.RoR2.Orbs.GenericDamageOrb.Begin -= ModifyGenericOrb;
     }
@@ -91,6 +95,23 @@ public static partial class SkinVFX {
         return skinVFXInfos.FirstOrDefault(skinVFXInfo => skinVFXInfo.RequiredSkin == skinDef && skinVFXInfo.TargetEffect == index);
     }
 
+    private static void ModifyGenericMelee(On.EntityStates.BasicMeleeAttack.orig_BeginMeleeAttackEffect orig, EntityStates.BasicMeleeAttack self)
+    {
+        SkinVFXInfo info = FindSkinVFXInfo(self.gameObject, self.swingEffectPrefab);
+
+        if (info != null && info.ReplacementEffectPrefab)
+        {
+            self.swingEffectPrefab = info.ReplacementEffectPrefab;
+        }
+
+        orig(self);
+
+        if (info != null && info.OnEffectSpawned != null)
+        {
+            info.OnEffectSpawned(self.swingEffectInstance);
+        }
+    }
+
     private static void ApplyReplacement(On.RoR2.EffectManager.orig_SpawnEffect_GameObject_EffectData_bool orig, GameObject effectPrefab, EffectData effectData, bool transmit)
     {
         if (effectData == null) {
@@ -129,6 +150,31 @@ public static partial class SkinVFX {
         if (skinVFXInfo == null) return;
 
         skinVFXInfo.OnEffectSpawned?.Invoke(self.gameObject);
+    }
+    private static void ModifyMuzzleFlash(ILContext il) {
+        ILCursor c = new ILCursor(il);
+
+        bool found = c.TryGotoNext(MoveType.After,
+            x => x.MatchCallOrCallvirt<EffectData>(nameof(EffectData.SetChildLocatorTransformReference))
+        );
+
+        if (!found) {
+            SkinsPlugin.Logger.LogError($"Failed to apply SkinVFX IL hook on EffectManager.SimpleMuzzleFlash");
+            return;
+        }
+
+        c.Emit(OpCodes.Ldarg_0);
+        c.Emit(OpCodes.Ldarg_1);
+        c.Emit(OpCodes.Ldloc, 4);
+        c.EmitDelegate<Action<GameObject, GameObject, EffectData>>((effectPrefab, owner, data) => {
+            SkinVFXInfo skinVFXInfo = FindSkinVFXInfo(owner, effectPrefab);
+
+            if (skinVFXInfo == null) {
+                return;
+            }
+
+            data.genericUInt = skinVFXInfo.Identifier;
+        });
     }
 
     private static void ModifyGenericOrb(ILContext il) {
