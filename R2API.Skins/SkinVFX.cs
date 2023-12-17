@@ -46,6 +46,7 @@ public static partial class SkinVFX {
         hooksSet = false;
         On.RoR2.EffectComponent.Start -= ApplyModifier;
         On.RoR2.EffectManager.SpawnEffect_GameObject_EffectData_bool -= ApplyReplacement;
+        IL.RoR2.BulletAttack.FireSingle -= ModifyBulletAttack;
 
         IL.RoR2.Orbs.GenericDamageOrb.Begin -= ModifyGenericOrb;
     }
