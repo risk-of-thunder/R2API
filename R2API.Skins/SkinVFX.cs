@@ -12,7 +12,7 @@ namespace R2API;
 /// <summary>
 /// Class for adding skin-specific effect replacements for SkinDefs.
 /// </summary>
-public static class SkinVFX {
+public static partial class SkinVFX {
     private static List<SkinVFXInfo> skinVFXInfos = new List<SkinVFXInfo>();
     private static bool hooksSet = false;
     private const uint BaseIdentifier = 24000; // arbitrary, but we shouldn't hit 24,000 unique items for a substantial amount of time.
@@ -25,76 +25,8 @@ public static class SkinVFX {
     /// <param name="spawnedEffect">The effect that was spawned.</param>
     public delegate void OnEffectSpawnedDelegate(GameObject spawnedEffect);
 
-    /// <summary>
-    /// Adds a skin-specific effect replacement.
-    /// </summary>
-    /// <param name="skinDef">The SkinDef that should be required for the replacement to occur.</param>
-    /// <param name="targetEffect">The EffectIndex of the effect that should be replaced.</param>
-    /// <param name="replacementPrefab">A replacement prefab to spawn instead of the effect. To modify the normal prefab, see the overload with OnEffectSpawnedDelegate.</param>
-    /// <returns>The SkinVFXInfo created from the input.</returns>
-    public static SkinVFXInfo AddSkinVFX(SkinDef skinDef, EffectIndex targetEffect, GameObject replacementPrefab) {
-        SetHooks();
+    private static bool hasCatalogInitOccured = false;
 
-        SkinVFXInfo skinVFXInfo = new SkinVFXInfo {
-            RequiredSkin = skinDef,
-            TargetEffect = targetEffect,
-            ReplacementEffectPrefab = replacementPrefab,
-        };
-
-        AddSkinVFX(ref skinVFXInfo);
-
-        return skinVFXInfo;
-    }
-
-    /// <summary>
-    /// Adds a skin-specific effect replacement.
-    /// </summary>
-    /// <param name="skinDef">The SkinDef that should be required for the replacement to occur.</param>
-    /// <param name="targetEffect">The EffectIndex of the effect that should be replaced.</param>
-    /// <param name="onEffectSpawned">A delegate that will be called when the effect is spawned by a character with a matching SkinDef.</param>
-    /// <returns>The SkinVFXInfo created from the input.</returns>
-    public static SkinVFXInfo AddSkinVFX(SkinDef skinDef, EffectIndex targetEffect, OnEffectSpawnedDelegate onEffectSpawned) {
-        SetHooks();
-
-        SkinVFXInfo skinVFXInfo = new SkinVFXInfo {
-            RequiredSkin = skinDef,
-            TargetEffect = targetEffect,
-            OnEffectSpawned = onEffectSpawned,
-        };
-
-        AddSkinVFX(ref skinVFXInfo);
-
-        return skinVFXInfo;
-    }
-
-    /// <summary>
-    /// Adds a skin-specific effect replacement.
-    /// </summary>
-    /// <param name="skinVFXInfo">The SkinVFXInfo to register. Its Identifier field will be automatically assigned by this method.</param>
-    /// <returns>True on success, false otherwise.</returns>
-    public static bool AddSkinVFX(ref SkinVFXInfo skinVFXInfo) {
-        SetHooks();
-
-        if (skinVFXInfo.RequiredSkin == null) {
-            SkinsPlugin.Logger.LogError($"Cannot add a SkinVFXInfo with no assigned SkinDef.");
-            return false;
-        }
-
-        if (skinVFXInfo.TargetEffect == EffectIndex.Invalid) {
-            SkinsPlugin.Logger.LogError($"SkinVFXInfo may not have a TargetEffect of EffectIndex.Invalid");
-            return false;
-        }
-
-        if (skinVFXInfo.ReplacementEffectPrefab == null && skinVFXInfo.OnEffectSpawned == null) {
-            SkinsPlugin.Logger.LogError($"SkinVFXInfo must have either a ReplacementEffectPrefab or an OnEffectSpawnedDelegate assigned.");
-            return false;
-        }
-
-        skinVFXInfo.Identifier = nextIdentifier;
-        skinVFXInfos.Add(skinVFXInfo);
-
-        return true;
-    }
 
     internal static void SetHooks() {
         if (hooksSet) {
@@ -118,13 +50,38 @@ public static class SkinVFX {
         IL.RoR2.Orbs.GenericDamageOrb.Begin -= ModifyGenericOrb;
     }
 
+    [SystemInitializer(typeof(EffectCatalog))]
+    private static void FindEffectIndexes() {
+        hasCatalogInitOccured = true;
+
+        for (int i = 0; i < skinVFXInfos.Count; i++) {
+            SkinVFXInfo skinVFXInfo = skinVFXInfos[i];
+
+            if (skinVFXInfo.EffectPrefab) {
+                skinVFXInfo.TargetEffect = EffectCatalog.FindEffectIndexFromPrefab(skinVFXInfo.EffectPrefab);
+                continue;
+            }
+
+            if (!String.IsNullOrEmpty(skinVFXInfo.EffectString)) {
+                EffectDef def = EffectCatalog.entries.FirstOrDefault(effectDef => effectDef.prefabName == skinVFXInfo.EffectString);
+
+                if (def == null) {
+                    SkinsPlugin.Logger.LogError($"Failed to find effect {skinVFXInfo.EffectString} for SkinVFXInfo!");
+                    continue;
+                }
+
+                skinVFXInfo.TargetEffect = def.index;
+            }
+        }
+    }
+
     private static SkinVFXInfo FindSkinVFXInfo(uint identifier) {
         return skinVFXInfos.FirstOrDefault(skinVFXInfo => skinVFXInfo.Identifier == identifier);
     }
 
     private static SkinVFXInfo FindSkinVFXInfo(GameObject attacker, GameObject effectPrefab) {
         if (!attacker || !effectPrefab) {
-            return default(SkinVFXInfo);
+            return null;
         }
 
         SkinDef skinDef = SkinCatalog.FindCurrentSkinDefForBodyInstance(attacker);
@@ -147,7 +104,7 @@ public static class SkinVFX {
 
         SkinVFXInfo skinVFXInfo = FindSkinVFXInfo(effectData.genericUInt);
 
-        if (skinVFXInfo.Identifier == uint.MaxValue) {
+        if (skinVFXInfo == null) {
             orig(effectPrefab, effectData, transmit);
             return;
         }
@@ -168,7 +125,7 @@ public static class SkinVFX {
 
         SkinVFXInfo skinVFXInfo = FindSkinVFXInfo(self.effectData.genericUInt);
 
-        if (skinVFXInfo.Identifier == uint.MaxValue) return;
+        if (skinVFXInfo == null) return;
 
         skinVFXInfo.OnEffectSpawned?.Invoke(self.gameObject);
     }
@@ -194,7 +151,7 @@ public static class SkinVFX {
 
             SkinVFXInfo info = FindSkinVFXInfo(orb.attacker, orb.GetOrbEffect());
 
-            if (info.Identifier == uint.MaxValue) return;
+            if (info == null) return;
 
             data.genericUInt = info.Identifier;
         });
@@ -217,7 +174,7 @@ public static class SkinVFX {
         c.EmitDelegate<Action<EffectData, BulletAttack>>((effectData, bulletAttack) => {
             SkinVFXInfo skinVFXInfo = FindSkinVFXInfo(bulletAttack.owner, bulletAttack.tracerEffectPrefab);
 
-            if (skinVFXInfo.Identifier == uint.MaxValue) return;
+            if (skinVFXInfo == null) return;
 
             effectData.genericUInt = skinVFXInfo.Identifier;
         });

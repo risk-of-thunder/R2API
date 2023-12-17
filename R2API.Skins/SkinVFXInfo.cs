@@ -8,7 +8,7 @@ namespace R2API;
 /// When the specified VFX would be spawned and the spawner's SkinDef matches, it will be modified by the values here.
 /// Call AddSkinVFX() to register this. 
 /// </summary>
-public struct SkinVFXInfo {
+public class SkinVFXInfo {
     /// <summary>
     /// SkinDef required before this replacement is applied.
     /// </summary>
@@ -30,7 +30,12 @@ public struct SkinVFXInfo {
     /// </summary>
     public uint Identifier = uint.MaxValue;
 
-    public SkinVFXInfo() {
-
-    }
+    /// <summary>
+    /// The prefab of the effect that should be replaced. This will automatically fill out TargetEffect on EffectCatalog.Init
+    /// </summary>
+    public GameObject EffectPrefab;
+    /// <summary>
+    /// The name of the effect that should be replaced. This will automatically fill out TargetEffect on EffectCatalog.Init
+    /// </summary>
+    public string EffectString;
 }
