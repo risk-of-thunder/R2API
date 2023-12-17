@@ -8,6 +8,10 @@ Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also
 
 ## Changelog
 
+### '1.1.0'
+
+* Added the SkinVFX class for adding skin-specific effect replacements.
+
 ### '1.0.0'
 
 * Initial Release
