@@ -81,6 +81,9 @@ public static partial class SkinVFX {
     }
 
     private static SkinVFXInfo FindSkinVFXInfo(uint identifier) {
+        if (identifier < BaseIdentifier || identifier >= (skinVFXInfos.Count + BaseIdentifier)) {
+            return null;
+        }
         return skinVFXInfos[(int)(identifier - BaseIdentifier)];
     }
 
