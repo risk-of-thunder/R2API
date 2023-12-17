@@ -81,7 +81,7 @@ public static partial class SkinVFX {
     }
 
     private static SkinVFXInfo FindSkinVFXInfo(uint identifier) {
-        return skinVFXInfos.FirstOrDefault(skinVFXInfo => skinVFXInfo.Identifier == identifier);
+        return skinVFXInfos[(int)(identifier - BaseIdentifier)];
     }
 
     private static SkinVFXInfo FindSkinVFXInfo(GameObject attacker, GameObject effectPrefab) {
