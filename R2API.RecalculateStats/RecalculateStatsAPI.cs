@@ -52,123 +52,147 @@ public static partial class RecalculateStatsAPI
     /// </summary>
     public class StatHookEventArgs : EventArgs
     {
-        /// <summary>Added to the direct multiplier to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd) / (BASE_CURSE_PENALTY + baseCurseAdd).</summary>
-        public float healthMultAdd = 0f;
-
-        /// <summary>Added to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd).</summary>
+        #region health
+        /// <summary>Added to base health.</summary> <remarks>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd)</remarks>
         public float baseHealthAdd = 0f;
 
-        /// <summary>Added to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd).</summary>
+        /// <summary>Multiplied by character level and added to base health.</summary> <inheritdoc cref="baseHealthAdd"/>
         public float levelHealthAdd = 0f;
 
-        /// <summary>Added to base shield. MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd) * (SHIELD_MULT + shieldMultAdd).</summary>
+        /// <summary>Added to the direct multiplier to base health.</summary> <inheritdoc cref="baseHealthAdd"/>
+        public float healthMultAdd = 0f;
+        #endregion
+
+        #region shield
+        /// <summary>Added to base shield.</summary> <remarks>MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd) * (SHIELD_MULT + shieldMultAdd)</remarks>remarks>
         public float baseShieldAdd = 0f;
 
-        /// <summary>Added to base shield. MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd) * (SHIELD_MULT + shieldMultAdd).</summary>
+        /// <summary>Multiplied by level and added to base shield.</summary> <inheritdoc cref="baseShieldAdd"/>
         public float levelShieldAdd = 0f;
 
-        /// <summary>Added to the direct multiplier to base health regen. HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd) * (REGEN_MULT + regenMultAdd).</summary>
-        public float regenMultAdd = 0f;
+        /// <summary>Added to the direct multiplier to shields.</summary> <inheritdoc cref="baseShieldAdd"/>
+        public float shieldMultAdd = 0f;
+        #endregion
 
-        /// <summary>Added to base health regen. HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd) * (REGEN_MULT + regenMultAdd).</summary>
+        #region regen
+
+        /// <summary>Added to base health regen.</summary> <remarks>HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd) * (REGEN_MULT + regenMultAdd)</remarks>
         public float baseRegenAdd = 0f;
 
-        /// <summary>Added to base health regen. HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd) * (REGEN_MULT + regenMultAdd).</summary>
+        /// <summary>Multiplied by level and added to base health regen.</summary> <inheritdoc cref="baseRegenAdd"/>
         public float levelRegenAdd = 0f;
 
-        /// <summary>Added to base move speed. MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd) / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</summary>
+        /// <summary>Added to the direct multiplier to base health regen.</summary> <inheritdoc cref="baseRegenAdd"/>
+        public float regenMultAdd = 0f;
+        #endregion
+
+        #region moveSpeed
+        /// <summary>Added to base move speed.</summary> <remarks>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd) / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</remarks>
         public float baseMoveSpeedAdd = 0f;
 
-        /// <summary>Added to base move speed. MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd) / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</summary>
+        /// <summary>Multiplied by level and added to base move speed.</summary> <inheritdoc cref="baseMoveSpeedAdd"/>
         public float levelMoveSpeedAdd = 0f;
 
-        /// <summary>Added to the direct multiplier to move speed. MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd) / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</summary>
+        /// <summary>Added to the direct multiplier to move speed.</summary> <inheritdoc cref="baseMoveSpeedAdd"/>
         public float moveSpeedMultAdd = 0f;
 
-        /// <summary>Added reduction multiplier to move speed. MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd) * (MOVE_SPEED_MULT + moveSpeedMultAdd) / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</summary>
+        /// <summary>Added reduction multiplier to move speed.</summary> <inheritdoc cref="baseMoveSpeedAdd"/>
         public float moveSpeedReductionMultAdd = 0f;
 
-        /// <summary>Added to the direct multiplier to jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd) * (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
-        public float jumpPowerMultAdd = 0f;
-
-        /// <summary>Added to the direct multiplier to base damage. DAMAGE ~ (BASE_DAMAGE + baseDamageAdd) * (DAMAGE_MULT + damageMultAdd).</summary>
-        public float damageMultAdd = 0f;
-
-        /// <summary>Added to base damage. DAMAGE ~ (BASE_DAMAGE + baseDamageAdd) * (DAMAGE_MULT + damageMultAdd).</summary>
-        public float baseDamageAdd = 0f;
-
-        /// <summary>Added to base damage. DAMAGE ~ (BASE_DAMAGE + baseDamageAdd) * (DAMAGE_MULT + damageMultAdd).</summary>
-        public float levelDamageAdd = 0f;
-
-        /// <summary>Added to attack speed. ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd).</summary>
-        public float baseAttackSpeedAdd = 0f;
-
-        /// <summary>Added to attack speed. ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd).</summary>
-        public float levelAttackSpeedAdd = 0f;
-
-        /// <summary>Added to the direct multiplier to attack speed. ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd).</summary>
-        public float attackSpeedMultAdd = 0f;
-
-        /// <summary>Added reduction multiplier to attack speed. ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd).</summary>
-        public float attackSpeedReductionMultAdd = 0f;
-
-        /// <summary>Added to crit chance. CRIT_CHANCE ~ BASE_CRIT_CHANCE + critAdd.</summary>
-        public float critAdd = 0f;
-
-        /// <summary>Added to crit chance. CRIT_CHANCE ~ BASE_CRIT_CHANCE + critAdd.</summary>
-        public float levelCritAdd = 0f;
-
-        /// <summary>Added to armor. ARMOR ~ BASE_ARMOR + armorAdd.</summary>
-        public float armorAdd = 0f;
-
-        /// <summary>Added to armor. ARMOR ~ BASE_ARMOR + armorAdd.</summary>
-        public float levelArmorAdd = 0f;
-
-        /// <summary> Added to Curse Penalty.MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd) / (BASE_CURSE_PENALTY + baseCurseAdd)</summary>
-        public float baseCurseAdd = 0f;
-
-        /// <summary>Added to flat cooldown reduction. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd) </summary>
-        public float cooldownReductionAdd = 0f;
-
-        /// <summary>Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
-        public float cooldownMultAdd = 0f;
-
-        /// <summary> (Primary) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + primaryCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
-        public float primaryCooldownMultAdd = 0f;
-
-        /// <summary> (Secondary) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd+ secondaryCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
-        public float secondaryCooldownMultAdd = 0f;
-
-        /// <summary> (Utility) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + utilityCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
-        public float utilityCooldownMultAdd = 0f;
-
-        /// <summary> (Special) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + specialCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
-        public float specialCooldownMultAdd = 0f;
-
-        /// <summary>Added to the direct multiplier to shields MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd) * (SHIELD_MULT + shieldMultAdd).</summary>
-        public float shieldMultAdd = 0f;
-
-        /// <summary>Added to base jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd)* (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
-        public float baseJumpPowerAdd = 0f;
-
-        /// <summary>Added to base jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd)* (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
-        public float levelJumpPowerAdd = 0f;
-
-        /// <summary>Added to the direct multiplier to level scaling. EFFECTIVE LEVEL ~ (BASE LEVEL + levelFlatAdd * (BASE_LEVEL_SCALING + levelMultAdd)</summary>
-        public float levelMultAdd = 0f;
-
-        /// <summary>Amount of Root effects currently applied. MOVE_SPEED ~ (moveSpeedRootCount > 0) ? 0 : MOVE_SPEED </summary>
-        public int moveSpeedRootCount = 0;
-
-        /// <summary>Added to the direct multiplier to crit damage. CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd) </summary>
-        public float critDamageMultAdd = 0;
-
-        /// <summary>Added to the body's current level. EFFECTIVE LEVEL ~ (BASE LEVEL + levelFlatAdd * (BASE_LEVEL_SCALING + levelMultAdd) </summary>
-        public float levelFlatAdd = 0f;
-
-        /// <summary>Added to the direct multiplier to sprinting speed. SPRINT SPEED ~ MOVE_SPEED * (BASE_SPRINT_MULT + sprintSpeedAdd) </summary>
+        /// <summary>Added to the direct multiplier to sprinting speed.</summary> <remarks>SPRINT SPEED ~ MOVE_SPEED * (BASE_SPRINT_MULT + sprintSpeedAdd) </remarks>
         public float sprintSpeedAdd = 0f;
 
+        /// <summary>Amount of Root effects currently applied.</summary> <remarks>MOVE_SPEED ~ (moveSpeedRootCount > 0) ? 0 : MOVE_SPEED</remarks>
+        public int moveSpeedRootCount = 0;
+        #endregion
+
+        #region jumpPower
+        /// <summary>Added to base jump power.</summary> <remarks>JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd)* (JUMP_POWER_MULT + jumpPowerMultAdd)</remarks>
+        public float baseJumpPowerAdd = 0f;
+
+        /// <summary>Multiplied by level and added to base jump power.</summary> <inheritdoc cref="baseJumpPowerAdd"/>
+        public float levelJumpPowerAdd = 0f;
+
+        /// <summary>Added to the direct multiplier to jump power.</summary> <inheritdoc cref="baseJumpPowerAdd"/>
+        public float jumpPowerMultAdd = 0f;
+        #endregion
+
+        #region damage
+        /// <summary>Added to base damage.</summary> <remarks>DAMAGE ~ (BASE_DAMAGE + baseDamageAdd) * (DAMAGE_MULT + damageMultAdd)</remarks>
+        public float baseDamageAdd = 0f;
+
+        /// <summary>Multiplied by level and added to base damage.</summary> <inheritdoc cref="baseDamageAdd"/>
+        public float levelDamageAdd = 0f;
+
+        /// <summary>Added to the direct multiplier to base damage.</summary> <inheritdoc cref="baseDamageAdd"/>
+        public float damageMultAdd = 0f;
+        #endregion
+
+        #region attackSpeed
+        /// <summary>Added to attack speed.</summary> <remarks>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</remarks>
+        public float baseAttackSpeedAdd = 0f;
+
+        /// <summary>Multiplied by level and added to attack speed.</summary> <inheritdoc cref="baseAttackSpeedAdd"/>
+        public float levelAttackSpeedAdd = 0f;
+
+        /// <summary>Added to the direct multiplier to attack speed.</summary> <inheritdoc cref="baseAttackSpeedAdd"/>
+        public float attackSpeedMultAdd = 0f;
+
+        /// <summary>Added reduction multiplier to attack speed.</summary> <inheritdoc cref="baseAttackSpeedAdd"/>
+        public float attackSpeedReductionMultAdd = 0f;
+        #endregion
+
+        #region crit
+        /// <summary>Added to crit chance.</summary> <remarks>CRIT_CHANCE ~ BASE_CRIT_CHANCE + critAdd</remarks>
+        public float critAdd = 0f;
+
+        /// <summary>Multiplied by level and added to crit chance.</summary> <inheritdoc cref="critAdd"/>
+        public float levelCritAdd = 0f;
+
+        /// <summary>Added to the direct multiplier to crit damage.</summary> <remarks>CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd) </remarks>
+        public float critDamageMultAdd = 0;
+        #endregion
+
+        #region armor
+        /// <summary>Added to armor.</summary> <remarks>ARMOR ~ BASE_ARMOR + armorAdd</remarks>
+        public float armorAdd = 0f;
+
+        /// <summary>Multiplied by level and added to armor.</summary> <inheritdoc cref="armorAdd"/>
+        public float levelArmorAdd = 0f;
+        #endregion
+
+        #region curse
+        /// <summary> Added to Curse Penalty.</summary> <remarks><inheritdoc cref="baseHealthAdd"/> / (BASE_CURSE_PENALTY + baseCurseAdd)</remarks>
+        public float baseCurseAdd = 0f;
+        #endregion
+
+        #region cooldowns
+        /// <summary>Added to flat cooldown reduction.</summary> <remarks>COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</remarks>
+        public float cooldownReductionAdd = 0f;
+
+        /// <summary>Added to the direct multiplier to cooldown timers.</summary> <inheritdoc cref="cooldownReductionAdd"/>
+        public float cooldownMultAdd = 0f;
+
+        /// <summary>(Primary) Added to the direct multiplier to cooldown timers.</summary> <inheritdoc cref="cooldownReductionAdd"/>
+        public float primaryCooldownMultAdd = 0f;
+
+        /// <summary>(Secondary) Added to the direct multiplier to cooldown timers.</summary> <inheritdoc cref="cooldownReductionAdd"/>
+        public float secondaryCooldownMultAdd = 0f;
+
+        /// <summary>(Utility) Added to the direct multiplier to cooldown timers.</summary> <inheritdoc cref="cooldownReductionAdd"/>
+        public float utilityCooldownMultAdd = 0f;
+
+        /// <summary>(Special) Added to the direct multiplier to cooldown timers.</summary> <inheritdoc cref="cooldownReductionAdd"/>
+        public float specialCooldownMultAdd = 0f;
+        #endregion
+
+        #region level
+        /// <summary>Added to the body's current level.</summary> <remarks>EFFECTIVE LEVEL ~ (BASE LEVEL + levelFlatAdd * (BASE_LEVEL_SCALING + levelMultAdd) </remarks>
+        public float levelFlatAdd = 0f;
+
+        /// <summary>Added to the direct multiplier to level scaling.</summary> <inheritdoc cref="levelFlatAdd"/>
+        public float levelMultAdd = 0f;
+        #endregion
     }
 
     /// <summary>
