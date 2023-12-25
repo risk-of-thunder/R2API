@@ -435,6 +435,8 @@ public static partial class RecalculateStatsAPI
 
         bool ILFound = c.TryGotoNext(
             x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.baseArmor))
+        ) && c.TryGotoNext(
+            x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertyGetter(nameof(CharacterBody.armor)))
         ) && c.TryGotoNext(MoveType.After,
             x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertyGetter(nameof(CharacterBody.armor)))
         );
