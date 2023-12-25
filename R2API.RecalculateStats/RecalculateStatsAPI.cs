@@ -58,7 +58,7 @@ public static partial class RecalculateStatsAPI
         public const string _levelMultiplier = "Used for internal documentation";
 
         #region health
-        /// <summary>Added to base health.</summary> <remarks>MAX_HEALTH ~ (BASE_HEALTH + <see cref="baseHealthAdd">baseHealthAdd</see> + levelHealthAdd * <inheritdoc cref="_levelMultiplier"/>) * (HEALTH_MULT + healthMultAdd)</remarks>
+        /// <summary>Added to base health.</summary> <remarks>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * <inheritdoc cref="_levelMultiplier"/>) * (HEALTH_MULT + healthMultAdd)</remarks>
         public float baseHealthAdd = 0f;
 
         /// <summary>Multiplied by character level and added to base health.</summary> <inheritdoc cref="baseHealthAdd"/>
