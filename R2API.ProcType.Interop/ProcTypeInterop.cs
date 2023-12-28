@@ -1,8 +1,11 @@
 using RoR2;
+using System.Runtime.CompilerServices;
+
+[assembly:InternalsVisibleTo("R2API.ProcType")]
 
 namespace R2API;
 
-public static class ProcTypeInterop
+internal static class ProcTypeInterop
 {
     public static bool[] GetModdedMask(ProcChainMask procChainMask) => procChainMask.r2api_moddedMask;
 
