@@ -9,6 +9,7 @@ using R2API.AutoVersionGen;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UIElements;
 
 namespace R2API;
 
@@ -20,19 +21,49 @@ public static partial class ProcTypeAPI
     public const string PluginGUID = R2API.PluginGUID + ".proctype";
     public const string PluginName = R2API.PluginName + ".ProcType";
 
-    public static int ModdedProcTypeCount { get; private set; }
+    public static int ModdedProcTypeCount
+    {
+        get => _moddedProcTypeCount;
+        private set
+        {
+            if (_moddedProcTypeCount != value)
+            {
+                _moddedProcTypeCount = value;
+                totalByteCount = value + 7 >> 3;
+                filledByteCount = totalByteCount - 1;
+                remainingBitCount = value - (filledByteCount << 3);
+                if (buffer != null)
+                {
+                    Array.Resize(ref buffer, value);
+                }
+            }
+        }
+    }
 
     private static bool _hookEnabled = false;
-    private static BitArrayNetworkInfo _networkInfo;
+    private static int _moddedProcTypeCount;
 
-    private struct BitArrayNetworkInfo
+    #region NetworkSettings
+    private static int totalByteCount;
+    private static int filledByteCount;
+    private static int remainingBitCount;
+    private static bool[] buffer;
+    #endregion
+    private static NetworkSettings _networkSettings;
+
+    internal struct NetworkSettings
     {
-        internal readonly int totalByteCount;
-        internal readonly int filledByteCount;
-        internal readonly int remainingBitCount;
+        internal int totalByteCount;
+        internal int filledByteCount;
+        internal int remainingBitCount;
         internal bool[] buffer;
 
-        internal BitArrayNetworkInfo(int length)
+        internal void Update()
+        {
+
+        }
+
+        internal NetworkSettings(int length)
         {
             totalByteCount = length + 7 >> 3;
             filledByteCount = totalByteCount - 1;
@@ -40,96 +71,6 @@ public static partial class ProcTypeAPI
             buffer = new bool[length];
         }
     }
-
-    #region Hooks
-    internal static void SetHooks()
-    {
-        if (_hookEnabled)
-        {
-            return;
-        }
-        IL.RoR2.ProcChainMask.AppendToStringBuilder += ProcChainMask_AppendToStringBuilder;
-        On.RoR2.NetworkExtensions.Write_NetworkWriter_ProcChainMask += NetworkExtensions_Write_NetworkWriter_ProcChainMask;
-        On.RoR2.NetworkExtensions.ReadProcChainMask += NetworkExtensions_ReadProcChainMask;
-        On.RoR2.ProcChainMask.GetHashCode += ProcChainMask_GetHashCode;
-        On.RoR2.ProcChainMask.Equals_ProcChainMask += ProcChainMask_Equals_ProcChainMask;
-        _hookEnabled = true;
-    }
-
-    internal static void UnsetHooks()
-    {
-        IL.RoR2.ProcChainMask.AppendToStringBuilder -= ProcChainMask_AppendToStringBuilder;
-        On.RoR2.NetworkExtensions.Write_NetworkWriter_ProcChainMask -= NetworkExtensions_Write_NetworkWriter_ProcChainMask;
-        On.RoR2.NetworkExtensions.ReadProcChainMask -= NetworkExtensions_ReadProcChainMask;
-        On.RoR2.ProcChainMask.GetHashCode -= ProcChainMask_GetHashCode;
-        On.RoR2.ProcChainMask.Equals_ProcChainMask -= ProcChainMask_Equals_ProcChainMask;
-        _hookEnabled = false;
-    }
-
-    private static void ProcChainMask_AppendToStringBuilder(ILContext il)
-    {
-        int locFlagIndex = -1;
-        ILCursor c = new ILCursor(il);
-        if (c.TryGotoNext(MoveType.After,
-            x => x.MatchLdcI4(0),
-            x => x.MatchStloc(out locFlagIndex))
-            && c.TryGotoNext(MoveType.AfterLabel,
-            x => x.MatchLdarg(1),
-            x => x.MatchLdstr(")"),
-            x => x.MatchCallOrCallvirt<StringBuilder>(nameof(StringBuilder.Append)))
-            )
-        {
-            c.Emit(OpCodes.Ldarg, 0);
-            c.Emit(OpCodes.Ldarg, 1);
-            c.Emit(OpCodes.Ldloc, locFlagIndex);
-            c.EmitDelegate<Func<ProcChainMask, StringBuilder, bool, bool>>((procChainMask, stringBuilder, flag) =>
-            {
-                bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
-                if (mask != null)
-                {
-                    for (int i = 0; i < mask.Length; i++)
-                    {
-                        if (mask[i])
-                        {
-                            if (flag)
-                            {
-                                stringBuilder.Append("|");
-                            }
-                            stringBuilder.Append($"({nameof(ModdedProcType)}){i}");
-                            flag = true;
-                        }
-                    }
-                }
-                return flag;
-            });
-            c.Emit(OpCodes.Stloc, locFlagIndex);
-        }
-        else ProcTypePlugin.Logger.LogError($"{nameof(ProcTypeAPI)}.{nameof(ProcChainMask_AppendToStringBuilder)} IL match failed.");
-    }
-
-    private static void NetworkExtensions_Write_NetworkWriter_ProcChainMask(On.RoR2.NetworkExtensions.orig_Write_NetworkWriter_ProcChainMask orig, NetworkWriter writer, ProcChainMask procChainMask)
-    {
-        orig(writer, procChainMask);
-        writer.WriteVariableBitArray(ProcTypeInterop.GetModdedMask(procChainMask), _networkInfo);
-    }
-
-    private static ProcChainMask NetworkExtensions_ReadProcChainMask(On.RoR2.NetworkExtensions.orig_ReadProcChainMask orig, NetworkReader reader)
-    {
-        ProcChainMask result = orig(reader);
-        ProcTypeInterop.SetModdedMask(ref result, reader.ReadVariableBitArray(_networkInfo));
-        return result;
-    }
-
-    private static int ProcChainMask_GetHashCode(On.RoR2.ProcChainMask.orig_GetHashCode orig, ref ProcChainMask self)
-    {
-        return orig(ref self) * 397 ^ ProcTypeInterop.GetModdedMask(self).GetHashCode();
-    }
-
-    private static bool ProcChainMask_Equals_ProcChainMask(On.RoR2.ProcChainMask.orig_Equals_ProcChainMask orig, ref ProcChainMask self, ProcChainMask other)
-    {
-        return orig(ref self, other) && BitArrayEquals(ProcTypeInterop.GetModdedMask(self), ProcTypeInterop.GetModdedMask(other));
-    }
-    #endregion
 
     #region API
     public static ModdedProcType ReserveProcType()
@@ -142,18 +83,34 @@ public static partial class ProcTypeAPI
         return (ModdedProcType)ModdedProcTypeCount++;
     }
 
-    public static void AddModdedProcType(ref this ProcChainMask procChainMask, ModdedProcType procType)
+    public static void AddModdedProc(ref this ProcChainMask procChainMask, ModdedProcType procType)
     {
+        if (procType <= ModdedProcType.Invalid || (int)procType >= ModdedProcTypeCount)
+        {
+            throw new ArgumentOutOfRangeException(nameof(procType));
+        }
         SetHooks();
         bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
-        bool[] value = new bool[Math.Max(mask.Length, (int)procType + 1)];
-        Array.Copy(mask, value, mask.Length);
+        bool[] value;
+        if (mask != null)
+        {
+            value = new bool[Math.Max(mask.Length, (int)procType + 1)];
+            Array.Copy(mask, value, mask.Length);
+        }
+        else
+        {
+            value = new bool[(int)procType + 1];
+        }
         value[(int)procType] = true;
         ProcTypeInterop.SetModdedMask(ref procChainMask, value);
     }
 
-    public static void RemoveModdedProcType(ref this ProcChainMask procChainMask, ModdedProcType procType)
+    public static void RemoveModdedProc(ref this ProcChainMask procChainMask, ModdedProcType procType)
     {
+        if (procType <= ModdedProcType.Invalid || (int)procType >= ModdedProcTypeCount)
+        {
+            throw new ArgumentOutOfRangeException(nameof(procType));
+        }
         SetHooks();
         bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         if (mask != null && ArrayUtils.IsInBounds(mask, (int)procType))
@@ -161,19 +118,17 @@ public static partial class ProcTypeAPI
             mask = ArrayUtils.Clone(mask);
             mask[(int)procType] = false;
             ProcTypeInterop.SetModdedMask(ref procChainMask, mask);
-            /*Array.Copy(moddedMask, value, procTypeIndex);
-            int nextIndex = procTypeIndex + 1;
-            if (nextIndex < moddedMask.Length)
-            {
-                Array.Copy(moddedMask, nextIndex, value, nextIndex, moddedMask.Length - nextIndex);
-            }*/
         }
     }
 
 #pragma warning disable R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
-    public static bool HasModdedProcType(this ProcChainMask procChainMask, ModdedProcType procType)
+    public static bool HasModdedProc(this ProcChainMask procChainMask, ModdedProcType procType)
 #pragma warning restore R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
     {
+        if (procType <= ModdedProcType.Invalid || (int)procType >= ModdedProcTypeCount)
+        {
+            throw new ArgumentOutOfRangeException(nameof(procType));
+        }
         bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         return mask != null && ArrayUtils.GetSafe(mask, (int)procType);
     }
@@ -213,8 +168,171 @@ public static partial class ProcTypeAPI
     }
     #endregion
 
+    #region Hooks
+    internal static void SetHooks()
+    {
+        if (_hookEnabled)
+        {
+            return;
+        }
+        IL.RoR2.ProcChainMask.AppendToStringBuilder += ProcChainMask_AppendToStringBuilder;
+        On.RoR2.NetworkExtensions.Write_NetworkWriter_ProcChainMask += NetworkExtensions_Write_NetworkWriter_ProcChainMask;
+        On.RoR2.NetworkExtensions.ReadProcChainMask += NetworkExtensions_ReadProcChainMask;
+        On.RoR2.ProcChainMask.GetHashCode += ProcChainMask_GetHashCode;
+        On.RoR2.ProcChainMask.Equals_ProcChainMask += ProcChainMask_Equals_ProcChainMask;
+        _hookEnabled = true;
+    }
+
+    internal static void UnsetHooks()
+    {
+        IL.RoR2.ProcChainMask.AppendToStringBuilder -= ProcChainMask_AppendToStringBuilder;
+        On.RoR2.NetworkExtensions.Write_NetworkWriter_ProcChainMask -= NetworkExtensions_Write_NetworkWriter_ProcChainMask;
+        On.RoR2.NetworkExtensions.ReadProcChainMask -= NetworkExtensions_ReadProcChainMask;
+        On.RoR2.ProcChainMask.GetHashCode -= ProcChainMask_GetHashCode;
+        On.RoR2.ProcChainMask.Equals_ProcChainMask -= ProcChainMask_Equals_ProcChainMask;
+        _hookEnabled = false;
+    }
+
+    private delegate bool ProcChainMask_AppendToStringBuilder_Delegate(ref ProcChainMask procChainMask, StringBuilder stringBuilder, bool flag);
+
+    private static void ProcChainMask_AppendToStringBuilder(ILContext il)
+    {
+        int locFlagIndex = -1;
+        ILCursor c = new ILCursor(il);
+        if (c.TryGotoNext(MoveType.After,
+            x => x.MatchLdcI4(0),
+            x => x.MatchStloc(out locFlagIndex))
+            && c.TryGotoNext(MoveType.AfterLabel,
+            x => x.MatchLdarg(1),
+            x => x.MatchLdstr(")"),
+            x => x.MatchCallOrCallvirt<StringBuilder>(nameof(StringBuilder.Append)))
+            )
+        {
+            c.Emit(OpCodes.Ldarg, 0);
+            c.Emit(OpCodes.Ldarg, 1);
+            c.Emit(OpCodes.Ldloc, locFlagIndex);
+            c.EmitDelegate<ProcChainMask_AppendToStringBuilder_Delegate>((ref ProcChainMask procChainMask, StringBuilder stringBuilder, bool flag) =>
+            {
+                bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
+                if (mask != null)
+                {
+                    for (int i = 0; i < mask.Length; i++)
+                    {
+                        if (mask[i])
+                        {
+                            if (flag)
+                            {
+                                stringBuilder.Append("|");
+                            }
+                            stringBuilder.Append($"({nameof(ModdedProcType)}){i}");
+                            flag = true;
+                        }
+                    }
+                }
+                return flag;
+            });
+            c.Emit(OpCodes.Stloc, locFlagIndex);
+        }
+        else ProcTypePlugin.Logger.LogError($"{nameof(ProcTypeAPI)}.{nameof(ProcChainMask_AppendToStringBuilder)} IL match failed.");
+    }
+
+    private static void NetworkExtensions_Write_NetworkWriter_ProcChainMask(On.RoR2.NetworkExtensions.orig_Write_NetworkWriter_ProcChainMask orig, NetworkWriter writer, ProcChainMask procChainMask)
+    {
+        orig(writer, procChainMask);
+        NetworkWriteModdedMask(writer, ProcTypeInterop.GetModdedMask(procChainMask));
+    }
+
+    private static ProcChainMask NetworkExtensions_ReadProcChainMask(On.RoR2.NetworkExtensions.orig_ReadProcChainMask orig, NetworkReader reader)
+    {
+        ProcChainMask result = orig(reader);
+        ProcTypeInterop.SetModdedMask(ref result, NetworkReadModdedMask(reader));
+        return result;
+    }
+
+    private static int ProcChainMask_GetHashCode(On.RoR2.ProcChainMask.orig_GetHashCode orig, ref ProcChainMask self)
+    {
+        bool[] mask = ProcTypeInterop.GetModdedMask(self);
+
+        return orig(ref self) * 397 ^ ProcTypeInterop.GetModdedMask(self).GetHashCode();
+    }
+
+    private static bool ProcChainMask_Equals_ProcChainMask(On.RoR2.ProcChainMask.orig_Equals_ProcChainMask orig, ref ProcChainMask self, ProcChainMask other)
+    {
+        return orig(ref self, other) && ModdedMaskEquals(ProcTypeInterop.GetModdedMask(self), ProcTypeInterop.GetModdedMask(other));
+    }
+    #endregion
+
     #region Internal
-    private static bool BitArrayEquals(bool[] a, bool[] b)
+    [SystemInitializer]
+    private static void Init()
+    {
+        buffer = new bool[ModdedProcTypeCount];
+    }
+
+    private static void UpdateNetworkSettings()
+    {
+        totalByteCount = ModdedProcTypeCount + 7 >> 3;
+        filledByteCount = totalByteCount - 1;
+        remainingBitCount = ModdedProcTypeCount - (filledByteCount << 3);
+        if (buffer != null)
+        {
+            Array.Resize(ref buffer, ModdedProcTypeCount);
+        }
+    }
+
+    private static void NetworkWriteModdedMask(this NetworkWriter writer, bool[] values)
+    {
+        int valuesIndex = 0;
+        for (int i = 0; i < totalByteCount; i++)
+        {
+            byte b = 0;
+            if (values == null || valuesIndex < values.Length)
+            {
+                int validBitCount = (i < filledByteCount) ? 8 : remainingBitCount;
+                int bitIndex = 0;
+                while (bitIndex < validBitCount)
+                {
+                    if (ArrayUtils.GetSafe(values, valuesIndex))
+                    {
+                        b |= (byte)(1 << bitIndex);
+                    }
+                    bitIndex++;
+                    valuesIndex++;
+                }
+            }
+            writer.Write(b);
+        }
+    }
+
+    private static bool[] NetworkReadModdedMask(NetworkReader reader)
+    {
+        int finalLength = 0;
+        int bufferIndex = 0;
+        for (int i = 0; i < totalByteCount; i++)
+        {
+            int validBitCount = (i < filledByteCount) ? 8 : remainingBitCount;
+            byte b = reader.ReadByte();
+            int j = 0;
+            while (j < validBitCount)
+            {
+                if (buffer[bufferIndex] = (b & (byte)(1 << j)) > 0)
+                {
+                    finalLength = bufferIndex + 1;
+                }
+                j++;
+                bufferIndex++;
+            }
+        }
+        if (finalLength <= 0)
+        {
+            return null;
+        }
+        bool[] result = new bool[finalLength];
+        Array.Copy(buffer, result, finalLength);
+        return result;
+    }
+
+    private static bool ModdedMaskEquals(bool[] a, bool[] b)
     {
         if (a == null)
         {
@@ -237,58 +355,6 @@ public static partial class ProcTypeAPI
             }
         }
         return true;
-    }
-
-    private static void WriteVariableBitArray(this NetworkWriter writer, bool[] values, BitArrayNetworkInfo networkInfo)
-    {
-        int valuesIndex = 0;
-        for (int i = 0; i < networkInfo.totalByteCount; i++)
-        {
-            byte b = 0;
-            if (values == null || valuesIndex < values.Length)
-            {
-                int validBitCount = (i < networkInfo.filledByteCount) ? 8 : networkInfo.remainingBitCount;
-                int bitIndex = 0;
-                while (bitIndex < validBitCount)
-                {
-                    if (ArrayUtils.GetSafe(values, valuesIndex))
-                    {
-                        b |= (byte)(1 << bitIndex);
-                    }
-                    bitIndex++;
-                    valuesIndex++;
-                }
-            }
-            writer.Write(b);
-        }
-    }
-
-    private static bool[] ReadVariableBitArray(this NetworkReader reader, BitArrayNetworkInfo networkInfo)
-    {
-        int finalLength = 0;
-        int bufferIndex = 0;
-        for (int i = 0; i < networkInfo.totalByteCount; i++)
-        {
-            int validBitCount = (i < networkInfo.filledByteCount) ? 8 : networkInfo.remainingBitCount;
-            byte b = reader.ReadByte();
-            int j = 0;
-            while (j < validBitCount)
-            {
-                if (networkInfo.buffer[bufferIndex] = (b & (byte)(1 << j)) > 0)
-                {
-                    finalLength = bufferIndex + 1;
-                }
-                j++;
-                bufferIndex++;
-            }
-        }
-        if (finalLength <= 0)
-        {
-            return null;
-        }
-        bool[] result = new bool[finalLength];
-        Array.Copy(networkInfo.buffer, result, finalLength);
-        return result;
     }
     #endregion
 }
