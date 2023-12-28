@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>$(NoWarn);NU5104</NoWarn>
+    <RootNamespace>R2API</RootNamespace>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Reference Include="RoR2">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\BepInEx\DumpedAssemblies\Risk of Rain 2\RoR2.Patched.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
