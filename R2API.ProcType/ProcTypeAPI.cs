@@ -19,6 +19,9 @@ public static partial class ProcTypeAPI
     public const string PluginGUID = R2API.PluginGUID + ".proctype";
     public const string PluginName = R2API.PluginName + ".ProcType";
 
+    /// <summary>
+    /// The number of Proc Types currently reserved by <see cref="ReserveProcType"/>.
+    /// </summary>
     public static int ModdedProcTypeCount
     {
         get => _moddedProcTypeCount;
@@ -49,6 +52,13 @@ public static partial class ProcTypeAPI
     #endregion
 
     #region API
+    /// <summary>
+    /// Reserve a <see cref="ModdedProcType"/> for use with
+    /// <see cref="AddModdedProc(ref ProcChainMask, ModdedProcType)"/>,
+    /// <see cref="RemoveModdedProc(ref ProcChainMask, ModdedProcType)"/> and
+    /// <see cref="HasModdedProc(ProcChainMask, ModdedProcType)"/>.
+    /// </summary>
+    /// <returns>A valid <see cref="ModdedProcType"/> to store</returns>
     public static ModdedProcType ReserveProcType()
     {
         SetHooks();
@@ -59,6 +69,10 @@ public static partial class ProcTypeAPI
         return (ModdedProcType)ModdedProcTypeCount++;
     }
 
+    /// <summary>
+    /// Enable a <see cref="ModdedProcType"/> on this <see cref="ProcChainMask"/>.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="procType"/> is invalid</exception>
     public static void AddModdedProc(ref this ProcChainMask procChainMask, ModdedProcType procType)
     {
         if (procType <= ModdedProcType.Invalid || (int)procType >= ModdedProcTypeCount)
@@ -85,6 +99,10 @@ public static partial class ProcTypeAPI
         ProcTypeInterop.SetModdedMask(ref procChainMask, value);
     }
 
+    /// <summary>
+    /// Disable a <see cref="ModdedProcType"/> on this <see cref="ProcChainMask"/>.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="procType"/> is invalid</exception>
     public static void RemoveModdedProc(ref this ProcChainMask procChainMask, ModdedProcType procType)
     {
         if (procType <= ModdedProcType.Invalid || (int)procType >= ModdedProcTypeCount)
@@ -101,6 +119,11 @@ public static partial class ProcTypeAPI
         }
     }
 
+    /// <summary>
+    /// Check if a <see cref="ModdedProcType"/> is enabled on this <see cref="ProcChainMask"/>
+    /// </summary>
+    /// <returns>true if the <see cref="ModdedProcType"/> is enabled; otherwise, false.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="procType"/> is invalid</exception>
 #pragma warning disable R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
     public static bool HasModdedProc(this ProcChainMask procChainMask, ModdedProcType procType)
 #pragma warning restore R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
@@ -113,6 +136,10 @@ public static partial class ProcTypeAPI
         return mask != null && ArrayUtils.GetSafe(mask, (int)procType);
     }
 
+    /// <summary>
+    /// Access a <see cref="BitArray"/> that represents the <see cref="ProcTypeAPI"/> equivalent of <see cref="ProcChainMask.mask"/>. 
+    /// </summary>
+    /// <returns>A <see cref="BitArray"/> with length equal to <see cref="ModdedProcTypeCount"/> that is equivalent to the underlying modded procs mask.</returns>
     public static BitArray GetModdedMask(ProcChainMask procChainMask)
     {
         SetHooks();
@@ -126,11 +153,43 @@ public static partial class ProcTypeAPI
         return result;
     }
 
-    public static void SetModdedMask(ref ProcChainMask procChainMask, BitArray moddedMask)
+    /// <inheritdoc cref="GetModdedMask(ProcChainMask)"/>
+    /// <remarks>This overload allows reuse of a single <see cref="BitArray"/>.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="dest"/> is null.</exception>
+    public static void GetModdedMask(ProcChainMask procChainMask, BitArray dest)
     {
+        if (dest == null)
+        {
+            throw new ArgumentNullException(nameof(dest));
+        }
         SetHooks();
-        int finalIndex = moddedMask.Length - 1;
-        while (finalIndex >= 0 && !moddedMask[finalIndex])
+        dest.Length = ModdedProcTypeCount;
+        dest.SetAll(false);
+        bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
+        if (mask != null)
+        {
+            for (int i = 0; i < mask.Length; i++)
+            {
+                dest[i] = mask[i];
+            }
+        }
+    }
+
+    /// <summary>
+    /// Assign the <see cref="ProcTypeAPI"/> equivalent of <see cref="ProcChainMask.mask"/>. 
+    /// </summary>
+    /// <param name="procChainMask"></param>
+    /// <param name="value">A <see cref="BitArray"/> repesenting a modded procs mask.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="value"/> is null.</exception>
+    public static void SetModdedMask(ref ProcChainMask procChainMask, BitArray value)
+    {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+        SetHooks();
+        int finalIndex = value.Length - 1;
+        while (finalIndex >= 0 && !value[finalIndex])
         {
             finalIndex--;
         }
@@ -139,12 +198,12 @@ public static partial class ProcTypeAPI
             ProcTypeInterop.SetModdedMask(ref procChainMask, null);
             return;
         }
-        bool[] value = new bool[finalIndex + 1];
+        bool[] _value = new bool[finalIndex + 1];
         for (int i = 0; i <= finalIndex; i++)
         {
-            value[i] = moddedMask[i];
+            _value[i] = value[i];
         }
-        ProcTypeInterop.SetModdedMask(ref procChainMask, value);
+        ProcTypeInterop.SetModdedMask(ref procChainMask, _value);
     }
     #endregion
 
