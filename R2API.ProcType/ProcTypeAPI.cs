@@ -361,21 +361,21 @@ public static partial class ProcTypeAPI
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static byte ModdedMaskHashCode(bool[] mask)
+    private static int ModdedMaskHashCode(bool[] mask)
     {
-        byte b = 0;
+        int result = 0;
         if (mask != null)
         {
-            int length = Math.Min(mask.Length, 8);
+            int length = Math.Min(mask.Length, 32);
             for (int i = 0; i < length; i++)
             {
                 if (mask[i])
                 {
-                    b |= (byte)(1 << i);
+                    result |= 1 << i;
                 }
             }
         }
-        return b;
+        return result;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
