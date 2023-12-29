@@ -70,6 +70,10 @@ public static partial class ProcTypeAPI
         bool[] value;
         if (mask != null)
         {
+            if (ArrayUtils.GetSafe(mask, (int)procType))
+            {
+                return;
+            }
             value = new bool[Math.Max(mask.Length, (int)procType + 1)];
             Array.Copy(mask, value, mask.Length);
         }
@@ -89,7 +93,7 @@ public static partial class ProcTypeAPI
         }
         SetHooks();
         bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
-        if (mask != null && ArrayUtils.IsInBounds(mask, (int)procType))
+        if (mask != null && ArrayUtils.GetSafe(mask, (int)procType))
         {
             mask = ArrayUtils.Clone(mask);
             mask[(int)procType] = false;
