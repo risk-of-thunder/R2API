@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using HG;
 using Mono.Cecil.Cil;
@@ -9,13 +10,10 @@ using R2API.AutoVersionGen;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UIElements;
 
 namespace R2API;
 
-#pragma warning disable CS0436 // Type conflicts with imported type
 [AutoVersion]
-#pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class ProcTypeAPI
 {
     public const string PluginGUID = R2API.PluginGUID + ".proctype";
@@ -49,28 +47,6 @@ public static partial class ProcTypeAPI
     private static int remainingBitCount;
     private static bool[] buffer;
     #endregion
-    private static NetworkSettings _networkSettings;
-
-    internal struct NetworkSettings
-    {
-        internal int totalByteCount;
-        internal int filledByteCount;
-        internal int remainingBitCount;
-        internal bool[] buffer;
-
-        internal void Update()
-        {
-
-        }
-
-        internal NetworkSettings(int length)
-        {
-            totalByteCount = length + 7 >> 3;
-            filledByteCount = totalByteCount - 1;
-            remainingBitCount = length - (filledByteCount << 3);
-            buffer = new bool[length];
-        }
-    }
 
     #region API
     public static ModdedProcType ReserveProcType()
@@ -251,9 +227,7 @@ public static partial class ProcTypeAPI
 
     private static int ProcChainMask_GetHashCode(On.RoR2.ProcChainMask.orig_GetHashCode orig, ref ProcChainMask self)
     {
-        bool[] mask = ProcTypeInterop.GetModdedMask(self);
-
-        return orig(ref self) * 397 ^ ProcTypeInterop.GetModdedMask(self).GetHashCode();
+        return orig(ref self) * 397 ^ ModdedMaskHashCode(ProcTypeInterop.GetModdedMask(self));
     }
 
     private static bool ProcChainMask_Equals_ProcChainMask(On.RoR2.ProcChainMask.orig_Equals_ProcChainMask orig, ref ProcChainMask self, ProcChainMask other)
@@ -269,41 +243,32 @@ public static partial class ProcTypeAPI
         buffer = new bool[ModdedProcTypeCount];
     }
 
-    private static void UpdateNetworkSettings()
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void NetworkWriteModdedMask(this NetworkWriter writer, bool[] mask)
     {
-        totalByteCount = ModdedProcTypeCount + 7 >> 3;
-        filledByteCount = totalByteCount - 1;
-        remainingBitCount = ModdedProcTypeCount - (filledByteCount << 3);
-        if (buffer != null)
-        {
-            Array.Resize(ref buffer, ModdedProcTypeCount);
-        }
-    }
-
-    private static void NetworkWriteModdedMask(this NetworkWriter writer, bool[] values)
-    {
-        int valuesIndex = 0;
+        int maskIndex = 0;
         for (int i = 0; i < totalByteCount; i++)
         {
             byte b = 0;
-            if (values == null || valuesIndex < values.Length)
+            if (mask == null || maskIndex < mask.Length)
             {
                 int validBitCount = (i < filledByteCount) ? 8 : remainingBitCount;
                 int bitIndex = 0;
                 while (bitIndex < validBitCount)
                 {
-                    if (ArrayUtils.GetSafe(values, valuesIndex))
+                    if (ArrayUtils.GetSafe(mask, maskIndex))
                     {
                         b |= (byte)(1 << bitIndex);
                     }
                     bitIndex++;
-                    valuesIndex++;
+                    maskIndex++;
                 }
             }
             writer.Write(b);
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool[] NetworkReadModdedMask(NetworkReader reader)
     {
         int finalLength = 0;
@@ -332,6 +297,25 @@ public static partial class ProcTypeAPI
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static byte ModdedMaskHashCode(bool[] mask)
+    {
+        byte b = 0;
+        if (mask != null)
+        {
+            int length = Math.Min(mask.Length, 8);
+            for (int i = 0; i < length; i++)
+            {
+                if (mask[i])
+                {
+                    b |= (byte)(1 << i);
+                }
+            }
+        }
+        return b;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool ModdedMaskEquals(bool[] a, bool[] b)
     {
         if (a == null)
