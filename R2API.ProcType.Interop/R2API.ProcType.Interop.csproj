@@ -10,7 +10,7 @@
   
   <ItemGroup>
     <Reference Include="RoR2">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\BepInEx\DumpedAssemblies\Risk of Rain 2\RoR2.Patched.dll</HintPath>
+      <HintPath>libs\RoR2.Patched.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
