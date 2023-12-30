@@ -1,8 +1,6 @@
 using BepInEx;
 using BepInEx.Logging;
 
-[assembly: HG.Reflection.SearchableAttribute.OptIn]
-
 namespace R2API;
 
 [BepInPlugin(ProcTypeAPI.PluginGUID, ProcTypeAPI.PluginName, ProcTypeAPI.PluginVersion)]

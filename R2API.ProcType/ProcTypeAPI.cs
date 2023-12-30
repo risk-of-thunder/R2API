@@ -30,12 +30,9 @@ public static partial class ProcTypeAPI
             if (_moddedProcTypeCount != value)
             {
                 _moddedProcTypeCount = value;
-                totalByteCount = value + 7 >> 3;
-                filledByteCount = totalByteCount - 1;
-                remainingBitCount = value - (filledByteCount << 3);
-                if (buffer != null)
+                if (byteCount != (byteCount = value + 7 >> 3))
                 {
-                    Array.Resize(ref buffer, value);
+                    buffer = new byte[byteCount];
                 }
             }
         }
@@ -45,10 +42,8 @@ public static partial class ProcTypeAPI
     private static int _moddedProcTypeCount;
 
     #region NetworkSettings
-    private static int totalByteCount;
-    private static int filledByteCount;
-    private static int remainingBitCount;
-    private static bool[] buffer;
+    private static int byteCount;
+    private static byte[] buffer;
     #endregion
 
     #region API
@@ -80,22 +75,28 @@ public static partial class ProcTypeAPI
             throw new ArgumentOutOfRangeException(nameof(procType));
         }
         SetHooks();
-        bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
-        bool[] value;
-        if (mask != null)
+        byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
+        byte[] value;
+        int i = (int)procType >> 3;
+        if (mask?.Length > i)
         {
-            if (ArrayUtils.GetSafe(mask, (int)procType))
+            byte b = (byte)(mask[i] | GetMaskingBit(i, procType));
+            if (b == mask[i])
             {
                 return;
             }
-            value = new bool[Math.Max(mask.Length, (int)procType + 1)];
-            Array.Copy(mask, value, mask.Length);
+            value = ArrayUtils.Clone(mask);
+            value[i] = b;
         }
         else
         {
-            value = new bool[(int)procType + 1];
+            value = new byte[i + 1];
+            if (mask != null)
+            {
+                Array.Copy(mask, value, mask.Length);
+            }
+            value[i] = GetMaskingBit(i, procType);
         }
-        value[(int)procType] = true;
         ProcTypeInterop.SetModdedMask(ref procChainMask, value);
     }
 
@@ -110,13 +111,38 @@ public static partial class ProcTypeAPI
             throw new ArgumentOutOfRangeException(nameof(procType));
         }
         SetHooks();
-        bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
-        if (mask != null && ArrayUtils.GetSafe(mask, (int)procType))
+        byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
+        if (mask == null)
+        {
+            return;
+        }
+        int i = (int)procType >> 3;
+        if (mask.Length <= i)
+        {
+            return;
+        }
+        byte b = (byte)(mask[i] & ~GetMaskingBit(i, procType));
+        if (b == mask[i])
+        {
+            return;
+        }
+        if (b == 0 && mask.Length == i + 1)
+        {
+            if (i == 0)
+            {
+                mask = null;
+            }
+            else
+            {
+                Array.Resize(ref mask, i);
+            }
+        }
+        else
         {
             mask = ArrayUtils.Clone(mask);
-            mask[(int)procType] = false;
-            ProcTypeInterop.SetModdedMask(ref procChainMask, mask);
+            mask[i] = b;
         }
+        ProcTypeInterop.SetModdedMask(ref procChainMask, mask);
     }
 
     /// <summary>
@@ -132,23 +158,24 @@ public static partial class ProcTypeAPI
         {
             throw new ArgumentOutOfRangeException(nameof(procType));
         }
-        bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
-        return mask != null && ArrayUtils.GetSafe(mask, (int)procType);
+        byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
+        if (mask == null)
+        {
+            return false;
+        }
+        int i = (int)procType >> 3;
+        return mask.Length > i && (mask[i] & GetMaskingBit(i, procType)) > 0;
     }
 
     /// <summary>
     /// Access a <see cref="BitArray"/> that represents the <see cref="ProcTypeAPI"/> equivalent of <see cref="ProcChainMask.mask"/>. 
     /// </summary>
     /// <returns>A <see cref="BitArray"/> with length equal to <see cref="ModdedProcTypeCount"/> that is equivalent to the underlying modded procs mask.</returns>
+#pragma warning disable R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
     public static BitArray GetModdedMask(ProcChainMask procChainMask)
+#pragma warning restore R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
     {
-        SetHooks();
-        bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
-        if (mask == null)
-        {
-            return new BitArray(ModdedProcTypeCount);
-        }
-        BitArray result = new BitArray(mask);
+        BitArray result = GetModdedMaskRaw(procChainMask);
         result.Length = ModdedProcTypeCount;
         return result;
     }
@@ -156,22 +183,60 @@ public static partial class ProcTypeAPI
     /// <inheritdoc cref="GetModdedMask(ProcChainMask)"/>
     /// <remarks>This overload allows reuse of a single <see cref="BitArray"/>.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="dest"/> is null.</exception>
+#pragma warning disable R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
     public static void GetModdedMask(ProcChainMask procChainMask, BitArray dest)
+#pragma warning restore R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
+    {
+        GetModdedMaskRaw(procChainMask, dest);
+        dest.Length = ModdedProcTypeCount;
+    }
+
+    /// <summary>
+    /// Access a <see cref="BitArray"/> of that represents the <see cref="ProcTypeAPI"/> equivalent of <see cref="ProcChainMask.mask"/>; this variant does not normalize <see cref="BitArray.Length"/>.
+    /// </summary>
+    /// <returns>A <see cref="BitArray"/> of arbitrary length that is equivalent to the underlying modded procs mask.</returns>
+    public static BitArray GetModdedMaskRaw(ProcChainMask procChainMask)
+    {
+        SetHooks();
+        byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
+        if (mask == null)
+        {
+            return new BitArray(0);
+        }
+        return new BitArray(mask);
+    }
+
+    /// <inheritdoc cref="GetModdedMaskRaw(ProcChainMask)"/>
+    /// <remarks>This overload allows reuse of a single <see cref="BitArray"/>.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="dest"/> is null.</exception>
+    public static void GetModdedMaskRaw(ProcChainMask procChainMask, BitArray dest)
     {
         if (dest == null)
         {
             throw new ArgumentNullException(nameof(dest));
         }
         SetHooks();
-        dest.Length = ModdedProcTypeCount;
-        dest.SetAll(false);
-        bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
+        byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         if (mask != null)
         {
-            for (int i = 0; i < mask.Length; i++)
+            dest.Length = mask.Length << 3;
+            for (int maskIndex = 0; maskIndex < mask.Length; maskIndex++)
             {
-                dest[i] = mask[i];
+                byte b = mask[maskIndex];
+                int i = maskIndex << 3;
+                dest[i]     = (b & 1) > 0;
+                dest[i + 1] = (b & (1 << 1)) > 0;
+                dest[i + 2] = (b & (1 << 2)) > 0;
+                dest[i + 3] = (b & (1 << 3)) > 0;
+                dest[i + 4] = (b & (1 << 4)) > 0;
+                dest[i + 5] = (b & (1 << 5)) > 0;
+                dest[i + 6] = (b & (1 << 6)) > 0;
+                dest[i + 7] = (b & (1 << 7)) > 0;
             }
+        }
+        else
+        {
+            dest.Length = 0;
         }
     }
 
@@ -188,22 +253,16 @@ public static partial class ProcTypeAPI
             throw new ArgumentNullException(nameof(value));
         }
         SetHooks();
-        int finalIndex = value.Length - 1;
-        while (finalIndex >= 0 && !value[finalIndex])
+        if (value.Length > 0)
         {
-            finalIndex--;
+            byte[] array = new byte[value.Length + 7 >> 3];
+            value.CopyTo(array, 0);
+            ProcTypeInterop.SetModdedMask(ref procChainMask, array);
         }
-        if (finalIndex < 0)
+        else
         {
             ProcTypeInterop.SetModdedMask(ref procChainMask, null);
-            return;
         }
-        bool[] _value = new bool[finalIndex + 1];
-        for (int i = 0; i <= finalIndex; i++)
-        {
-            _value[i] = value[i];
-        }
-        ProcTypeInterop.SetModdedMask(ref procChainMask, _value);
     }
     #endregion
 
@@ -252,19 +311,22 @@ public static partial class ProcTypeAPI
             c.Emit(OpCodes.Ldloc, locFlagIndex);
             c.EmitDelegate<ProcChainMask_AppendToStringBuilder_Delegate>((ref ProcChainMask procChainMask, StringBuilder stringBuilder, bool flag) =>
             {
-                bool[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
+                byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
                 if (mask != null)
                 {
                     for (int i = 0; i < mask.Length; i++)
                     {
-                        if (mask[i])
+                        for (int j = 0; j < 8; j++)
                         {
-                            if (flag)
+                            if ((mask[i] & (1 << j)) > 0)
                             {
-                                stringBuilder.Append("|");
+                                if (flag)
+                                {
+                                    stringBuilder.Append("|");
+                                }
+                                stringBuilder.Append($"({nameof(ModdedProcType)}){(i << 3) + j}");
+                                flag = true;
                             }
-                            stringBuilder.Append($"({nameof(ModdedProcType)}){i}");
-                            flag = true;
                         }
                     }
                 }
@@ -300,94 +362,80 @@ public static partial class ProcTypeAPI
     #endregion
 
     #region Internal
-    [SystemInitializer]
-    private static void Init()
-    {
-        buffer = new bool[ModdedProcTypeCount];
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static byte GetMaskingBit(int maskIndex, ModdedProcType procType) => (byte)(1 << ((int)procType - (maskIndex << 3)));
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void NetworkWriteModdedMask(this NetworkWriter writer, bool[] mask)
+    private static void NetworkWriteModdedMask(this NetworkWriter writer, byte[] mask)
     {
-        int maskIndex = 0;
-        for (int i = 0; i < totalByteCount; i++)
+        for (int i = 0; i < byteCount; i++)
         {
-            byte b = 0;
-            if (mask == null || maskIndex < mask.Length)
-            {
-                int validBitCount = (i < filledByteCount) ? 8 : remainingBitCount;
-                int bitIndex = 0;
-                while (bitIndex < validBitCount)
-                {
-                    if (ArrayUtils.GetSafe(mask, maskIndex))
-                    {
-                        b |= (byte)(1 << bitIndex);
-                    }
-                    bitIndex++;
-                    maskIndex++;
-                }
-            }
-            writer.Write(b);
+            writer.Write(ArrayUtils.GetSafe(mask, i));
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool[] NetworkReadModdedMask(NetworkReader reader)
+    private static byte[] NetworkReadModdedMask(NetworkReader reader)
     {
-        int finalLength = 0;
-        int bufferIndex = 0;
-        for (int i = 0; i < totalByteCount; i++)
+        int length = 0;
+        for (int i = 0; i < byteCount; i++)
         {
-            int validBitCount = (i < filledByteCount) ? 8 : remainingBitCount;
-            byte b = reader.ReadByte();
-            int j = 0;
-            while (j < validBitCount)
+            if ((buffer[i] = reader.ReadByte()) > 0)
             {
-                if (buffer[bufferIndex] = (b & (byte)(1 << j)) > 0)
-                {
-                    finalLength = bufferIndex + 1;
-                }
-                j++;
-                bufferIndex++;
+                length = i + 1;
             }
         }
-        if (finalLength <= 0)
+        if (length <= 0)
         {
             return null;
         }
-        bool[] result = new bool[finalLength];
-        Array.Copy(buffer, result, finalLength);
+        byte[] result = new byte[length];
+        Array.Copy(buffer, result, length);
         return result;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static int ModdedMaskHashCode(bool[] mask)
+    private static int ModdedMaskHashCode(byte[] mask) => mask == null ? 0 : mask.Length switch
     {
-        int result = 0;
-        if (mask != null)
-        {
-            int length = Math.Min(mask.Length, 32);
-            for (int i = 0; i < length; i++)
-            {
-                if (mask[i])
-                {
-                    result |= 1 << i;
-                }
-            }
-        }
-        return result;
-    }
+        <= 0 => 0,
+        1 =>    mask[0],
+        2 =>    mask[0] | (mask[1] << 8),
+        3 =>    mask[0] | (mask[1] << 8) | (mask[2] << 16),
+        >= 4 => mask[0] | (mask[1] << 8) | (mask[2] << 16) | (mask[3] << 24),
+    };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool ModdedMaskEquals(bool[] a, bool[] b)
+    private static bool ModdedMaskEquals(byte[] a, byte[] b)
     {
         if (a == null)
         {
-            return b == null || b.Length == 0;
+            if (b == null)
+            {
+                return true;
+            }
+            for (int i = 0; i < b.Length; i++)
+            {
+                if (b[i] > 0)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
         if (b == null)
         {
-            return a == null || a.Length == 0;
+            if (a == null)
+            {
+                return true;
+            }
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (a[i] > 0)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
         if (a.Length == b.Length)
         {

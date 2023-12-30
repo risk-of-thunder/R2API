@@ -7,7 +7,7 @@ namespace R2API;
 
 internal static class ProcTypeInterop
 {
-    public static bool[] GetModdedMask(ProcChainMask procChainMask) => procChainMask.r2api_moddedMask;
+    public static byte[] GetModdedMask(ProcChainMask procChainMask) => procChainMask.r2api_moddedMask;
 
-    public static void SetModdedMask(ref ProcChainMask procChainMask, bool[] value) => procChainMask.r2api_moddedMask = value;
+    public static void SetModdedMask(ref ProcChainMask procChainMask, byte[] value) => procChainMask.r2api_moddedMask = value;
 }
