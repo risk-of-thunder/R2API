@@ -13,6 +13,9 @@ using UnityEngine.Networking;
 
 namespace R2API;
 
+/// <summary>
+/// API for reserving custom ProcTypes and interacting with <see cref="ProcChainMask"/>.
+/// </summary>
 [AutoVersion]
 public static partial class ProcTypeAPI
 {
@@ -20,7 +23,7 @@ public static partial class ProcTypeAPI
     public const string PluginName = R2API.PluginName + ".ProcType";
 
     /// <summary>
-    /// The number of Proc Types currently reserved by <see cref="ReserveProcType"/>.
+    /// The number of modded Proc Types currently reserved by <see cref="ReserveProcType"/>.
     /// </summary>
     public static int ModdedProcTypeCount
     {
@@ -53,7 +56,7 @@ public static partial class ProcTypeAPI
     /// <see cref="RemoveModdedProc(ref ProcChainMask, ModdedProcType)"/> and
     /// <see cref="HasModdedProc(ProcChainMask, ModdedProcType)"/>.
     /// </summary>
-    /// <returns>A valid <see cref="ModdedProcType"/> to store</returns>
+    /// <returns>A valid <see cref="ModdedProcType"/>.</returns>
     public static ModdedProcType ReserveProcType()
     {
         SetHooks();
