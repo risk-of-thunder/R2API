@@ -78,19 +78,19 @@ public static partial class ProcTypeAPI
         byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         byte[] value;
         int i = (int)procType >> 3;
-        if (mask?.Length > i)
+        if (mask?.Length > i) // current mask is large enough to set procType
         {
-            byte b = (byte)(mask[i] | GetMaskingBit(i, procType));
+            byte b = (byte)(mask[i] | GetMaskingBit(i, procType)); // relevant byte with procType enabled
             if (b == mask[i])
             {
-                return;
+                return; // procType was already enabled, no need to create a new array
             }
-            value = ArrayUtils.Clone(mask);
+            value = ArrayUtils.Clone(mask); // ensure mask is treated as immutable
             value[i] = b;
         }
         else
         {
-            value = new byte[i + 1];
+            value = new byte[i + 1]; // extend mask to fit procType
             if (mask != null)
             {
                 Array.Copy(mask, value, mask.Length);
@@ -114,32 +114,32 @@ public static partial class ProcTypeAPI
         byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         if (mask == null)
         {
-            return;
+            return; // mask is 0
         }
         int i = (int)procType >> 3;
         if (mask.Length <= i)
         {
-            return;
+            return; // mask is not long enough for procType to be enabled
         }
-        byte b = (byte)(mask[i] & ~GetMaskingBit(i, procType));
+        byte b = (byte)(mask[i] & ~GetMaskingBit(i, procType)); // relevant byte with procType disabled
         if (b == mask[i])
         {
-            return;
+            return; // procType was already disabled, no need to make a new array
         }
-        if (b == 0 && mask.Length == i + 1)
+        if (b == 0 && mask.Length == i + 1) // new byte is empty trailing data
         {
             if (i == 0)
             {
-                mask = null;
+                mask = null; // mask no longer holds any information
             }
             else
             {
-                Array.Resize(ref mask, i);
+                Array.Resize(ref mask, i); // disable procType by resizing to removing relevant byte
             }
         }
         else
         {
-            mask = ArrayUtils.Clone(mask);
+            mask = ArrayUtils.Clone(mask); // ensure mask is treated as immutable
             mask[i] = b;
         }
         ProcTypeInterop.SetModdedMask(ref procChainMask, mask);
@@ -219,10 +219,10 @@ public static partial class ProcTypeAPI
         byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         if (mask != null)
         {
-            dest.Length = mask.Length << 3;
+            dest.Length = mask.Length << 3; // eight times mask length
             for (int maskIndex = 0; maskIndex < mask.Length; maskIndex++)
             {
-                byte b = mask[maskIndex];
+                byte b = mask[maskIndex]; // read one byte
                 int i = maskIndex << 3;
                 dest[i]     = (b & 1) > 0;
                 dest[i + 1] = (b & (1 << 1)) > 0;
@@ -255,7 +255,7 @@ public static partial class ProcTypeAPI
         SetHooks();
         if (value.Length > 0)
         {
-            byte[] array = new byte[value.Length + 7 >> 3];
+            byte[] array = new byte[value.Length + 7 >> 3]; // minimum bytes to store data
             value.CopyTo(array, 0);
             ProcTypeInterop.SetModdedMask(ref procChainMask, array);
         }
@@ -362,6 +362,12 @@ public static partial class ProcTypeAPI
     #endregion
 
     #region Internal
+    /// <summary>
+    /// Util used by <see cref="AddModdedProc(ref ProcChainMask, ModdedProcType)"/>, <see cref="RemoveModdedProc(ref ProcChainMask, ModdedProcType)"/>, and <see cref="HasModdedProc(ProcChainMask, ModdedProcType)"/> to find the masking bit for a <see cref="ModdedProcType"/> given a byte index.
+    /// </summary>
+    /// <param name="maskIndex">Relevant byte index in a modded mask.</param>
+    /// <param name="procType"></param>
+    /// <returns>A byte with one bit flagged.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static byte GetMaskingBit(int maskIndex, ModdedProcType procType) => (byte)(1 << ((int)procType - (maskIndex << 3)));
 
@@ -374,6 +380,7 @@ public static partial class ProcTypeAPI
         }
     }
 
+    /// <returns>A mask trimmed to remove irrelevant trailing bytes, or null for a mask of 0.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static byte[] NetworkReadModdedMask(NetworkReader reader)
     {
@@ -404,6 +411,9 @@ public static partial class ProcTypeAPI
         >= 4 => mask[0] | (mask[1] << 8) | (mask[2] << 16) | (mask[3] << 24),
     };
 
+    /// <summary>
+    /// Compare two masks while ignoring length, null is treated as 0.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool ModdedMaskEquals(byte[] a, byte[] b)
     {
