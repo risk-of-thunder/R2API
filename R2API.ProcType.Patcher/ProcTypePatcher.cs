@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace R2API;
 
-public static class ProcTypePatcher
+internal static class ProcTypePatcher
 {
     public static IEnumerable<string> TargetDLLs
     {
