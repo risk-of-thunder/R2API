@@ -674,7 +674,7 @@ public static class ContentAddition
     private static Assembly GetNonAPICaller(){
         var R2ASM = Assembly.GetExecutingAssembly();
         for(int i = 0; i < 99 ; i++){//Empty frame will stop loop early when the stack runs out.
-          var asm = new System.Diagnostics.StackFrame(i).GetMethod()?.DeclaringType.Assembly;
+          var asm = new System.Diagnostics.StackFrame(i,false).GetMethod()?.DeclaringType.Assembly;
           if(asm != R2ASM){
             return asm;
           }
