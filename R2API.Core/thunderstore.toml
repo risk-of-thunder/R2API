@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_Core"
-versionNumber = "5.0.11"
+versionNumber = "5.1.0"
 description = "Core R2API module"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false

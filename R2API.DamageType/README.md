@@ -17,10 +17,14 @@ This is done via the DamageAPI class, which is used for reserving DamageTypes an
 * BlastAttack
 * OverlapAttack
 * DotController.DotStack
+* CrocoDamageTypeController
 
 ## Related Pages
 
 ## Changelog
+
+### '1.1.0'
+* CrocoDamageTypeController support added,allowing better implementations of alt passives for Acrid.
 
 ### '1.0.4'
 * Memory optimization
