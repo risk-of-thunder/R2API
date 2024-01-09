@@ -30,7 +30,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddBody(GameObject bodyPrefab)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<CharacterBody>())
         {
             if (!HasComponent<CharacterBody>(bodyPrefab))
@@ -52,7 +52,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddMaster(GameObject masterPrefab)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<CharacterMaster>())
         {
             if (!HasComponent<CharacterMaster>(masterPrefab))
@@ -75,7 +75,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddProjectile(GameObject projectilePrefab)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<ProjectileController>())
         {
             if (!HasComponent<ProjectileController>(projectilePrefab))
@@ -102,7 +102,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddGameMode(GameObject gameModePrefab)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<Run>())
         {
             if (!HasComponent<Run>(gameModePrefab))
@@ -125,7 +125,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddNetworkedObject(GameObject networkedObject)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<NetworkIdentity>())
         {
             if (!HasComponent<NetworkIdentity>(networkedObject))
@@ -148,7 +148,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met.</returns>
     public static bool AddEffect(GameObject effectPrefab)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<EffectComponent>())
         {
             if (!HasComponent<EffectComponent>(effectPrefab))
@@ -178,7 +178,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddSkillDef(SkillDef skillDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<SkillDef>())
         {
             if (skillDef.activationState.stateType == null)
@@ -205,7 +205,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddSkillFamily(SkillFamily skillFamily)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<SkillFamily>())
         {
             if (skillFamily.variants.Any(v => v.skillDef == null))
@@ -228,7 +228,7 @@ public static class ContentAddition
     public static bool AddSceneDef(SceneDef sceneDef)
     {
         //Add stuff here, i dont know what qualifies as a "valid" sceneDef, then again, people should just use ROS for handling sceneDefs, r2api just lets you add them this way for the sake of completion
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<SceneDef>())
         {
             ContentManagementPlugin.Logger.LogInfo($"Assembly {asm.GetName().Name} is trying to add a SceneDef, R2API does not support weaving of Scenes, Use RainOfStages instead for weaving SceneDefs.");
@@ -247,7 +247,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddItemDef(ItemDef itemDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<ItemDef>())
         {
             ContentManagementPlugin.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {itemDef} via {nameof(ContentAddition)}.{nameof(AddItemDef)}()" +
@@ -267,7 +267,7 @@ public static class ContentAddition
     public static bool AddItemTierDef(ItemTierDef itemTierDef)
     {
         //Todo: finds what makes an itemTierDef invalid
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<ItemTierDef>())
         {
             R2APIContentManager.HandleContentAddition(asm, itemTierDef);
@@ -285,7 +285,7 @@ public static class ContentAddition
     public static bool AddItemRelationshipProvider(ItemRelationshipProvider itemRelationshipProvider)
     {
         //Todo: Find what makes an ItemRelationshipProvider invalid
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<ItemRelationshipProvider>())
         {
             R2APIContentManager.HandleContentAddition(asm, itemRelationshipProvider);
@@ -303,7 +303,7 @@ public static class ContentAddition
     public static bool AddItemRelationshipType(ItemRelationshipType itemRelationshipType)
     {
         //Todo: Find what makes an ItemRelationshipType invalid
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<ItemRelationshipType>())
         {
             R2APIContentManager.HandleContentAddition(asm, itemRelationshipType);
@@ -322,7 +322,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddEquipmentDef(EquipmentDef equipmentDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<EquipmentDef>())
         {
             ContentManagementPlugin.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {equipmentDef} via {nameof(ContentAddition)}.{nameof(AddEquipmentDef)}()" +
@@ -343,7 +343,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddBuffDef(BuffDef buffDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<BuffDef>())
         {
             if (buffDef.eliteDef && buffDef.eliteDef.eliteEquipmentDef && buffDef.eliteDef.eliteEquipmentDef.passiveBuffDef != buffDef)
@@ -369,7 +369,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddEliteDef(EliteDef eliteDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<EliteDef>())
         {
             ContentManagementPlugin.Logger.LogInfo($"Assembly {asm.GetName().Name} is adding an {eliteDef} via {nameof(ContentAddition)}.{nameof(AddEliteDef)}()" +
@@ -389,7 +389,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddUnlockableDef(UnlockableDef unlockableDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<UnlockableDef>())
         {
             R2APIContentManager.HandleContentAddition(asm, unlockableDef);
@@ -408,7 +408,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddSurvivorDef(SurvivorDef survivorDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<SurvivorDef>())
         {
             if (!survivorDef.bodyPrefab)
@@ -439,7 +439,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddArtifactDef(ArtifactDef artifactDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<ArtifactDef>())
         {
             if (artifactDef.smallIconDeselectedSprite == null || artifactDef.smallIconSelectedSprite == null)
@@ -461,7 +461,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddSurfaceDef(SurfaceDef surfaceDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<SurfaceDef>())
         {
             if (surfaceDef.impactEffectPrefab == null || surfaceDef.footstepEffectPrefab == null)
@@ -483,7 +483,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddNetworkSoundEventDef(NetworkSoundEventDef networkSoundEventDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<NetworkSoundEventDef>())
         {
             if (string.IsNullOrEmpty(networkSoundEventDef.eventName) || string.IsNullOrWhiteSpace(networkSoundEventDef.eventName))
@@ -505,7 +505,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddMusicTrackDef(MusicTrackDef musicTrackDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<MusicTrackDef>())
         {
             R2APIContentManager.HandleContentAddition(asm, musicTrackDef);
@@ -521,7 +521,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddGameEndingDef(GameEndingDef gameEndingDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<GameEndingDef>())
         {
             R2APIContentManager.HandleContentAddition(asm, gameEndingDef);
@@ -539,7 +539,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddEntityStateConfiguration(EntityStateConfiguration entityStateConfiguration)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<EntityStateConfiguration>())
         {
             Type type = Type.GetType(entityStateConfiguration.targetType.assemblyQualifiedName);
@@ -569,7 +569,7 @@ public static class ContentAddition
     public static bool AddExpansionDef(ExpansionDef expansionDef)
     {
         //Todo: Find what makes an ExpansionDef invalid
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<ExpansionDef>())
         {
             R2APIContentManager.HandleContentAddition(asm, expansionDef);
@@ -587,7 +587,7 @@ public static class ContentAddition
     public static bool AddEntitlementDef(EntitlementDef entitlementDef)
     {
         //Todo: Find what makes an EntitlementDef invalid
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<EntitlementDef>())
         {
             R2APIContentManager.HandleContentAddition(asm, entitlementDef);
@@ -604,7 +604,7 @@ public static class ContentAddition
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
     public static bool AddMiscPickupDef(MiscPickupDef miscPickupDef)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<MiscPickupDef>())
         {
             R2APIContentManager.HandleContentAddition(asm, miscPickupDef);
@@ -635,7 +635,7 @@ public static class ContentAddition
     /// <returns>A SerializableEntityStateType, the StateType will be null if wasAdded is false.</returns>
     public static SerializableEntityStateType AddEntityState(Type entityStateType, out bool wasAdded)
     {
-        var asm = Assembly.GetCallingAssembly();
+        var asm = GetNonAPICaller();
 
         if(CatalogBlockers.GetAvailability<EntityState>())
         {
@@ -671,5 +671,15 @@ public static class ContentAddition
         catch (Exception e) { ContentManagementPlugin.Logger.LogError(e); }
     }
     private static bool HasComponent<T>(GameObject obj) where T : Component => obj.GetComponent<T>();
+    private static Assembly GetNonAPICaller(){
+        var R2ASM = Assembly.GetExecutingAssembly();
+        for(int i = 0; i < 99 ; i++){//Empty frame will stop loop early when the stack runs out.
+          var asm = new System.Diagnostics.StackFrame(i).GetMethod()?.DeclaringType.Assembly;
+          if(asm != R2ASM){
+            return asm;
+          }
+        }
+        return null;
+    }
     #endregion
 }
