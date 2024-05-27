@@ -59,6 +59,13 @@ internal static class CompressedFlagArrayUtilities
         values[valueIndex] = (byte)(values[valueIndex] | highestBitInByte >> flagIndex);
     }
 
+    public static void Add(ref byte[] values, byte[] operand){
+        ResizeIfNeeded(ref values,operand.Length);
+        for(int i = 0 ; i < operand.Length ; i++){
+          values[i] |= operand[i];
+        }
+    }
+
     public static bool Remove(ref byte[] values, int index)
     {
         if (index < 0)
@@ -77,6 +84,17 @@ internal static class CompressedFlagArrayUtilities
         DownsizeIfNeeded(ref values);
 
         return true;
+    }
+
+    public static bool Remove(ref byte[] values, byte[] operand){
+        bool result = false;
+        int length = Math.Min(values.Length,operand.Length);
+        for(int i = 0 ; i < length ; i++){
+           result |= ((values[i] & operand[i]) != Byte.MinValue);
+           values[i] &= (byte)(~operand[i]);
+        }
+        DownsizeIfNeeded(ref values);
+        return result;
     }
 
     public static bool Has(byte[] values, int index)
