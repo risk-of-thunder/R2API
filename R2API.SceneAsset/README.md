@@ -12,6 +12,9 @@ R2API.SceneAsset works via the AddAssetRequest method, which allows you to run a
 
 ## Changelog
 
+### '1.1.2'
+* Fix the api not working with mods that would load scene very early.
+
 ### '1.1.1'
 * Fix the game potentially not going past the splash / intro.
 
