@@ -8,6 +8,10 @@ Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also
 
 ## Changelog
 
+### '1.1.1
+
+* Added the ability to override `DisplayGroupRule` per item for a skin. Which allows to add skin-specic item display without requiring to create IDRS with all items. See `SkinIDRS.AddGroupOverride()`.
+
 ### '1.1.0'
 
 * Added the SkinVFX class for adding skin-specific effect replacements.
