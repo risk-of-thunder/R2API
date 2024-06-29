@@ -341,6 +341,7 @@ public static partial class DotAPI
                     {
                         var customDotIndex = (int)dotStack.dotIndex - VanillaDotCount;
                         _customDotBehaviours[customDotIndex]?.Invoke(self, dotStack);
+                        ActiveCustomDots[self][customDotIndex] = true;
                     }
                 });
             }
