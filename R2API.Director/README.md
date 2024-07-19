@@ -18,6 +18,10 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.1.1'
+
+* Fix `AddNewMonster` / `RemoveExistingMonster` helper methods not properly handling `arena` stage.
+
 ### '2.1.0'
 * Added Dependency for the Addressables Submodule
 * Added AddressableDCCSPool and AddressableDirectorCardCategorySelection, both intended for usage in the Unity Editor.
