@@ -363,6 +363,14 @@ public static partial class DirectorAPI
         /// External / Internal Name : The Planetarium / voidstage
         /// </summary>
         ThePlanetarium = 1 << 29,
+
+        // New entries for Devotion Update below
+
+        /// <summary>
+        /// External / Internal Name : Verdant Falls / lakes
+        /// </summary>
+        VerdantFalls = 1 << 30,
+
     }
 
     /// <summary>
@@ -402,6 +410,7 @@ public static partial class DirectorAPI
         "sulfurpools" => Stage.SulfurPools,
         "voidraid" => Stage.ThePlanetarium,
         "voidstage" => Stage.VoidLocus,
+        "lakes" => Stage.VerdantFalls,
         _ => Stage.Custom,
     };
 
@@ -450,6 +459,7 @@ public static partial class DirectorAPI
         Stage.SulfurPools => "sulfurpools",
         Stage.VoidLocus => "voidstage",
         Stage.ThePlanetarium => "voidraid",
+        Stage.VerdantFalls => "lakes",
         _ => "", // Stage.Custom
     };
 

@@ -18,6 +18,10 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.1.2'
+
+* Addded support for 'lakes'/'Verdant Falls' from Devotion update.
+
 ### '2.1.1'
 
 * Fix `AddNewMonster` / `RemoveExistingMonster` helper methods not properly handling `arena` stage.
