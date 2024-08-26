@@ -26,5 +26,6 @@ public sealed class SkinsPlugin : BaseUnityPlugin
     {
         SkinIDRS.UnsetHooks();
         SkinVFX.UnsetHooks();
+        SkinLightReplacement.UnsetHooks();
     }
 }
