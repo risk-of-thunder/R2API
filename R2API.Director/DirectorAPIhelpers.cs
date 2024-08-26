@@ -402,7 +402,7 @@ public static partial class DirectorAPI
             {
                 ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) =>
                 {
-                    var isNotAFamilyCategory = poolCategory.name == MonsterPoolCategories.Standard;
+                    var isNotAFamilyCategory = IsNotAFamilyCategory(poolCategory, dccsPool.poolCategories.Length);
                     var isAFamilyCategory = !isNotAFamilyCategory;
                     var isAFamilyCategoryAndShouldAddToIt = addToFamilies && isAFamilyCategory;
                     if (isNotAFamilyCategory || isAFamilyCategoryAndShouldAddToIt)
@@ -418,10 +418,24 @@ public static partial class DirectorAPI
             mixEnemyArtifactMonsters?.Add(monsterCardHolder);
         }
 
+        private static bool IsNotAFamilyCategory(DccsPool.Category poolCategory, int poolCategoryCount)
+        {
+            // As of July 2024, we are considering a "normal" stage a stage that has more than 1 poolCategory and that the category is properly named.
+            var isNormalStage = poolCategoryCount > 1 && !string.IsNullOrWhiteSpace(poolCategory.name);
+            if (isNormalStage)
+            {
+                return poolCategory.name == MonsterPoolCategories.Standard;
+            }
+
+            return true;
+        }
+
         private static void AddMonsterToPoolEntry(DirectorCardHolder monsterCardHolder, DccsPool.PoolEntry poolEntry, Predicate<DirectorCardCategorySelection> predicate)
         {
             if ((predicate != null && predicate(poolEntry.dccs)) || predicate == null)
+            {
                 poolEntry.dccs.AddCard(monsterCardHolder);
+            }
         }
 
         /// <summary>
@@ -700,7 +714,7 @@ public static partial class DirectorAPI
             {
                 ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) =>
                 {
-                    var isNotAFamilyCategory = poolCategory.name == MonsterPoolCategories.Standard;
+                    var isNotAFamilyCategory = IsNotAFamilyCategory(poolCategory, dccsPool.poolCategories.Length);
                     var isAFamilyCategory = !isNotAFamilyCategory;
                     var isAFamilyCategoryAndShouldRemoveFromIt = removeFromFamilies && isAFamilyCategory;
                     if (isNotAFamilyCategory || isAFamilyCategoryAndShouldRemoveFromIt)

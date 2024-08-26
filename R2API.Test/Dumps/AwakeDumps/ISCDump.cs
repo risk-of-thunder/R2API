@@ -1,8 +1,8 @@
-﻿using RoR2;
+﻿using R2API.TestingLibrary;
+using RoR2;
 using System;
 using System.Text;
 using UnityEngine.AddressableAssets;
-using Xunit;
 
 namespace R2API.Test.Dumps.AwakeDumps;
 

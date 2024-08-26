@@ -47,6 +47,8 @@ public static partial class DamageAPI
 
     private static bool _hooksEnabled = false;
 
+    private static DamageType signalDamageType = ((DamageType)0x80000000u);
+
     #region Hooks
     internal static void SetHooks()
     {
@@ -103,6 +105,9 @@ public static partial class DamageAPI
 
         IL.RoR2.DelayBlast.Detonate += DelayBlastDetonateIL;
 
+        On.RoR2.CrocoDamageTypeController.GetDamageType += CrocoDamageTypeControllerGetDamageType;
+        On.RoR2.Projectile.ProjectileManager.InitializeProjectile += ProjectileManagerInitializeProjectile;
+
         _hooksEnabled = true;
     }
 
@@ -155,6 +160,9 @@ public static partial class DamageAPI
         IL.RoR2.ContactDamage.FireOverlaps -= ContactDamageFireOverlapsIL;
 
         IL.RoR2.DelayBlast.Detonate -= DelayBlastDetonateIL;
+
+        On.RoR2.CrocoDamageTypeController.GetDamageType -= CrocoDamageTypeControllerGetDamageType;
+        On.RoR2.Projectile.ProjectileManager.InitializeProjectile -= ProjectileManagerInitializeProjectile;
 
         _hooksEnabled = false;
     }
@@ -306,6 +314,28 @@ public static partial class DamageAPI
         c.Emit<ProjectileDotZone>(OpCodes.Ldfld, nameof(ProjectileDotZone.attack));
         c.Emit(OpCodes.Ldarg_0);
         EmitCopyFromComponentCall(c);
+    }
+
+    private static void ProjectileManagerInitializeProjectile(On.RoR2.Projectile.ProjectileManager.orig_InitializeProjectile orig,ProjectileController projectileController,FireProjectileInfo fireProjectileInfo)
+    {
+        orig(projectileController,fireProjectileInfo);
+        var damageComponent = projectileController.GetComponent<ProjectileDamage>();
+        if(!damageComponent || (damageComponent.damageType & signalDamageType) == 0){
+          return;
+        }
+        var targetHolder = projectileController.GetComponent<ModdedDamageTypeHolderComponent>();
+        var crocDamageType = projectileController.owner.GetComponent<CrocoDamageTypeController>();
+        ModdedDamageTypeHolder fromHolder;
+        if(damageTypeHolders.TryGetValue(crocDamageType,out fromHolder)){
+          if(targetHolder){
+            targetHolder.Add(fromHolder);
+          }
+          else
+          {
+            projectileController.gameObject.AddComponent<ModdedDamageTypeHolderComponent>().Add(fromHolder);
+          }
+          damageComponent.damageType &= ~signalDamageType;
+        }
     }
 
     private static void ProjectileSingleTargetImpactOnProjectileImpactIL(ILContext il) => GotoAndEmitCopyComponentCallForNewDamageInfo(new ILCursor(il));
@@ -540,6 +570,17 @@ public static partial class DamageAPI
     }
     #endregion
 
+    #region Croco
+    private static DamageType CrocoDamageTypeControllerGetDamageType(On.RoR2.CrocoDamageTypeController.orig_GetDamageType orig,CrocoDamageTypeController self){
+       var returnValue = orig(self);
+       if(damageTypeHolders.TryGetValue(self,out _)){
+           returnValue |= signalDamageType;
+       }
+       return returnValue;
+    }
+
+    #endregion
+
     #region Helpers
     private static void EmitGetTempHolder(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(TempHolder)).GetGetMethod(true));
 
@@ -709,6 +750,13 @@ public static partial class DamageAPI
     /// <param name="moddedDamageType"></param>
     public static void AddModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(dotStack, moddedDamageType);
 
+    /// <summary>
+    /// Adding ModdedDamageType to CrocoDamageTypeController instance. You can add more than one damage type to one CrocoDamageTypeController
+    /// </summary>
+    /// <param name="croco"></param>
+    /// <param name="moddedDamageType"></param>
+    public static void AddModdedDamageType(this CrocoDamageTypeController croco, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(croco, moddedDamageType);
+
     private static void AddModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType)
     {
         SetHooks();
@@ -784,6 +832,13 @@ public static partial class DamageAPI
     /// <param name="moddedDamageType"></param>
     public static bool RemoveModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(dotStack, moddedDamageType);
 
+    /// <summary>
+    /// Removing ModdedDamageType from CrocoDamageTypeController instance.
+    /// </summary>
+    /// <param name="croco"></param>
+    /// <param name="moddedDamageType"></param>
+    public static bool RemoveModdedDamageType(this CrocoDamageTypeController croco, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(croco, moddedDamageType);
+
     private static bool RemoveModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType)
     {
         SetHooks();
@@ -809,7 +864,7 @@ public static partial class DamageAPI
     /// <param name="damageInfo"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(damageInfo, moddedDamageType);
+    public static bool HasModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(damageInfo, moddedDamageType, ref damageInfo.damageType,damageInfo.attacker);
 
     /// <summary>
     /// Checks if BulletAttack instance has ModdedDamageType assigned. One BulletAttack can have more than one damage type.
@@ -817,7 +872,7 @@ public static partial class DamageAPI
     /// <param name="bulletAttack"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this BulletAttack bulletAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(bulletAttack, moddedDamageType);
+    public static bool HasModdedDamageType(this BulletAttack bulletAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(bulletAttack, moddedDamageType, ref bulletAttack.damageType,bulletAttack.owner);
 
     /// <summary>
     /// Checks if DamageOrb instance has ModdedDamageType assigned. One DamageOrb can have more than one damage type.
@@ -825,7 +880,7 @@ public static partial class DamageAPI
     /// <param name="damageOrb"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this DamageOrb damageOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(damageOrb, moddedDamageType);
+    public static bool HasModdedDamageType(this DamageOrb damageOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(damageOrb, moddedDamageType, ref damageOrb.orbDamageType,damageOrb.attacker);
 
     /// <summary>
     /// Checks if GenericDamageOrb instance has ModdedDamageType assigned. One GenericDamageOrb can have more than one damage type.
@@ -833,7 +888,7 @@ public static partial class DamageAPI
     /// <param name="genericDamageOrb"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this GenericDamageOrb genericDamageOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(genericDamageOrb, moddedDamageType);
+    public static bool HasModdedDamageType(this GenericDamageOrb genericDamageOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(genericDamageOrb, moddedDamageType, ref genericDamageOrb.damageType,genericDamageOrb.attacker);
 
     /// <summary>
     /// Checks if LightningOrb instance has ModdedDamageType assigned. One LightningOrb can have more than one damage type.
@@ -841,7 +896,7 @@ public static partial class DamageAPI
     /// <param name="lightningOrb"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this LightningOrb lightningOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(lightningOrb, moddedDamageType);
+    public static bool HasModdedDamageType(this LightningOrb lightningOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(lightningOrb, moddedDamageType, ref lightningOrb.damageType,lightningOrb.attacker);
 
     /// <summary>
     /// Checks if BlastAttack instance has ModdedDamageType assigned. One BlastAttack can have more than one damage type.
@@ -849,7 +904,7 @@ public static partial class DamageAPI
     /// <param name="blastAttack"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(blastAttack, moddedDamageType);
+    public static bool HasModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(blastAttack, moddedDamageType, ref blastAttack.damageType,blastAttack.attacker);
 
     /// <summary>
     /// Checks if OverlapAttack instance has ModdedDamageType assigned. One OverlapAttack can have more than one damage type.
@@ -857,7 +912,7 @@ public static partial class DamageAPI
     /// <param name="overlapAttack"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(overlapAttack, moddedDamageType);
+    public static bool HasModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(overlapAttack, moddedDamageType, ref overlapAttack.damageType,overlapAttack.attacker);
 
     /// <summary>
     /// Checks if DotController.DotStack instance has ModdedDamageType assigned. One DotController.DotStack can have more than one damage type.
@@ -865,9 +920,23 @@ public static partial class DamageAPI
     /// <param name="dotStack"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(dotStack, moddedDamageType);
+    public static bool HasModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(dotStack, moddedDamageType, ref dotStack.damageType,dotStack.attackerObject);
 
-    private static bool HasModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType)
+    /// <summary>
+    /// Checks if CrocoDamageTypeController instance has ModdedDamageType assigned. One CrocoDamageTypeController can have more than one damage type.
+    /// </summary>
+    /// <param name="croco"></param>
+    /// <param name="moddedDamageType"></param>
+    /// <returns></returns>
+    public static bool HasModdedDamageType(this CrocoDamageTypeController croco, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(croco, moddedDamageType);
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    private static bool HasModdedDamageTypeInternal(object obj,ModdedDamageType moddedDamageType,GameObject owner = null)
+    {
+        DamageType dummy = default(DamageType);
+        return HasModdedDamageTypeInternal(obj,moddedDamageType,ref dummy);
+    }
+    private static bool HasModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType,ref DamageType vanillaDamageType,GameObject owner = null)
     {
         SetHooks();
 
@@ -876,12 +945,23 @@ public static partial class DamageAPI
             throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
         }
 
-        if (!damageTypeHolders.TryGetValue(obj, out var holder))
+        bool signal = (vanillaDamageType & signalDamageType) != 0;
+        if (!damageTypeHolders.TryGetValue(obj, out var holder) && (!signal || !owner))
         {
             return false;
         }
+        if(signal && owner)
+        {
+            var crocoComp = owner.GetComponent<CrocoDamageTypeController>();
+            ModdedDamageTypeHolder crocHolder;
+            if(crocoComp && damageTypeHolders.TryGetValue(crocoComp,out crocHolder))
+            {
+                damageTypeHolders.GetOrCreateValue(obj).Add(crocHolder);
+                vanillaDamageType &= ~signalDamageType;
+            }
+        }
 
-        return holder.Has(moddedDamageType);
+        return (holder != null) ? holder.Has(moddedDamageType) : false;
     }
     #endregion
 
@@ -942,6 +1022,13 @@ public static partial class DamageAPI
     /// <returns></returns>
     public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this DotController.DotStack dotStack) => GetModdedDamageTypeHolderInternal(dotStack);
 
+    /// <summary>
+    /// Returns ModdedDamageTypeHolder for CrocoDamageTypeController instance.
+    /// </summary>
+    /// <param name="croco"></param>
+    /// <returns></returns>
+    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this CrocoDamageTypeController croco) => GetModdedDamageTypeHolderInternal(croco);
+
     private static ModdedDamageTypeHolder GetModdedDamageTypeHolderInternal(object obj)
     {
         SetHooks();
@@ -961,7 +1048,7 @@ public static partial class DamageAPI
     /// </summary>
     public class ModdedDamageTypeHolder
     {
-        private byte[] values = Array.Empty<byte>();
+        internal byte[] values = Array.Empty<byte>();
 
         public ModdedDamageTypeHolder() { SetHooks(); }
 
@@ -982,11 +1069,24 @@ public static partial class DamageAPI
         public void Add(ModdedDamageType moddedDamageType) => CompressedFlagArrayUtilities.Add(ref values, (int)moddedDamageType);
 
         /// <summary>
+        /// Enable ModdedDamageTypes from argument for this instance
+        /// </summary>
+        /// <param name="moddedDamageTypeHolder"></param>
+        public void Add(ModdedDamageTypeHolder moddedDamageTypeHolder) => CompressedFlagArrayUtilities.Add(ref values, moddedDamageTypeHolder.values);
+
+        /// <summary>
         /// Disable ModdedDamageType for this instance
         /// </summary>
         /// <param name="moddedDamageType"></param>
         /// <returns></returns>
         public bool Remove(ModdedDamageType moddedDamageType) => CompressedFlagArrayUtilities.Remove(ref values, (int)moddedDamageType);
+
+        /// <summary>
+        /// Disable ModdedDamageTypes from argument for this instance
+        /// </summary>
+        /// <param name="moddedDamageTypeHolder"></param>
+        /// <returns></returns>
+        public bool Remove(ModdedDamageTypeHolder moddedDamageTypeHolder) => CompressedFlagArrayUtilities.Remove(ref values, moddedDamageTypeHolder.values);
 
         /// <summary>
         /// Checks if ModdedDamageType is enabled
@@ -1043,6 +1143,12 @@ public static partial class DamageAPI
         /// </summary>
         /// <param name="dotStack"></param>
         public void CopyTo(DotController.DotStack dotStack) => CopyToInternal(dotStack);
+
+        /// <summary>
+        /// Copies enabled ModdedDamageTypes to the CrocoDamageTypeController instance (completely replacing already set values)
+        /// </summary>
+        /// <param name="croco"></param>
+        public void CopyTo(CrocoDamageTypeController croco) => CopyToInternal(croco);
 
         internal void CopyToInternal(object obj)
         {
@@ -1106,7 +1212,7 @@ public static partial class DamageAPI
         //I can't just use ModdedDamageTypeHolder instead of byte[] because Unity can't serialize classes that come from assemblies
         //that are not present at startup (basically every mod) even if they use [Serializable] attribute.
         //Though Unity can serialize class if it inherit from MonoBehaviour or ScriptableObject.
-        private byte[] values = Array.Empty<byte>();
+        internal byte[] values = Array.Empty<byte>();
 
         /// <summary>
         /// Enable ModdedDamageType for this instance
@@ -1115,11 +1221,24 @@ public static partial class DamageAPI
         public void Add(ModdedDamageType moddedDamageType) => CompressedFlagArrayUtilities.Add(ref values, (int)moddedDamageType);
 
         /// <summary>
+        /// Enable ModdedDamageTypes from argument for this instance
+        /// </summary>
+        /// <param name="moddedDamageTypeHolder"></param>
+        public void Add(ModdedDamageTypeHolder moddedDamageTypeHolder) => CompressedFlagArrayUtilities.Add(ref values, moddedDamageTypeHolder.values);
+
+        /// <summary>
         /// Disable ModdedDamageType for this instance
         /// </summary>
         /// <param name="moddedDamageType"></param>
         /// <returns></returns>
         public bool Remove(ModdedDamageType moddedDamageType) => CompressedFlagArrayUtilities.Remove(ref values, (int)moddedDamageType);
+
+        /// <summary>
+        /// Disable ModdedDamageTypes from argument for this instance
+        /// </summary>
+        /// <param name="moddedDamageTypeHolder"></param>
+        /// <returns></returns>
+        public bool Remove(ModdedDamageTypeHolder moddedDamageTypeHolder) => CompressedFlagArrayUtilities.Remove(ref values, moddedDamageTypeHolder.values);
 
         /// <summary>
         /// Checks if ModdedDamageType is enabled
@@ -1176,6 +1295,12 @@ public static partial class DamageAPI
         /// </summary>
         /// <param name="dotStack"></param>
         public void CopyTo(DotController.DotStack dotStack) => CopyToInternal(dotStack);
+
+        /// <summary>
+        /// Copies enabled ModdedDamageTypes to the CrocoDamageTypeController instance (completely replacing already set values)
+        /// </summary>
+        /// <param name="croco"></param>
+        public void CopyTo(CrocoDamageTypeController croco) => CopyToInternal(croco);
 
         internal void CopyToInternal(object obj)
         {
