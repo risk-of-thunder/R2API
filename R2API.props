@@ -1,34 +1,34 @@
 <Project>
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>preview</LangVersion>
-        <Nullable>annotations</Nullable>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <NoWarn>$(NoWarn);NU5104</NoWarn>
-        <RootNamespace>R2API</RootNamespace>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<LangVersion>preview</LangVersion>
+		<Nullable>annotations</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<NoWarn>$(NoWarn);NU5104</NoWarn>
+		<RootNamespace>R2API</RootNamespace>
+	</PropertyGroup>
 
-    <PropertyGroup>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    </PropertyGroup>
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="../R2API.Analyzer/R2API.Analyzer/R2API.Analyzer.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
-        <ProjectReference Include="../R2API.Analyzer/R2API.Analyzer.CodeFixes/R2API.Analyzer.CodeFixes.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
-        <ProjectReference Include="../R2API.AutoVersionGen/R2API.AutoVersionGen.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
+	<ItemGroup>
+		<ProjectReference Include="../R2API.Analyzer/R2API.Analyzer/R2API.Analyzer.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="../R2API.Analyzer/R2API.Analyzer.CodeFixes/R2API.Analyzer.CodeFixes.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="../R2API.AutoVersionGen/R2API.AutoVersionGen.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
 
-        <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
-        <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.13.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
-        
-        <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
-        
-        <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.4-r.0" NoWarn="NU5104" />
-        
-        <PackageReference Include="BepInEx.Core" Version="5.4.19" />
-        <PackageReference Include="RoR2BepInExPack" Version="*" />
-        
-        <PackageReference Include="MMHOOK.RoR2" Version="2022.4.19" NoWarn="NU1701" />
-        
-        <PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
-    </ItemGroup>
+		<PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.13.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+
+		<PackageReference Include="UnityEngine.Modules" Version="2021.3.33" />
+
+		<PackageReference Include="RiskOfRain2.GameLibs" Version="1.3.1.274-r.0" NoWarn="NU5104" />
+
+		<PackageReference Include="BepInEx.Core" Version="5.4.19" />
+		<PackageReference Include="RoR2BepInExPack" Version="*" />
+
+		<PackageReference Include="MMHOOK.RoR2" Version="2024.8.28" NoWarn="NU1701" />
+
+		<PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+	</ItemGroup>
 </Project>
