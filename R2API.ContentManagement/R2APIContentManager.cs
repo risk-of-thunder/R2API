@@ -388,8 +388,15 @@ public static partial class R2APIContentManager
             List<ManagedReadOnlyContentPack> managedReadOnlyContentPacks = new List<ManagedReadOnlyContentPack>();
             foreach (var (modName, managedSCP) in BepInModNameToSerializableContentPack)
             {
-                managedReadOnlyContentPacks.Add(new ManagedReadOnlyContentPack(managedSCP.serializableContentPack, managedSCP.AutoCreateIContentPackProvider, managedSCP.AssemblyThatCreatedContentPack));
-                ContentPackToAssembly.Add(managedSCP.serializableContentPack.GetOrCreateContentPack(), managedSCP.AssemblyThatCreatedContentPack);
+                try
+                {
+                    managedReadOnlyContentPacks.Add(new ManagedReadOnlyContentPack(managedSCP.serializableContentPack, managedSCP.AutoCreateIContentPackProvider, managedSCP.AssemblyThatCreatedContentPack));
+                    ContentPackToAssembly.Add(managedSCP.serializableContentPack.GetOrCreateContentPack(), managedSCP.AssemblyThatCreatedContentPack);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[R2API CreateContentPacks] {modName} {e}");
+                }
             }
             _contentPacksCreated = true;
             _managedContentPacks = new ReadOnlyArray<ManagedReadOnlyContentPack>(managedReadOnlyContentPacks.ToArray());
