@@ -436,9 +436,7 @@ public static partial class RecalculateStatsAPI
         bool ILFound = c.TryGotoNext(
             x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.baseArmor))
         ) && c.TryGotoNext(
-            x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertyGetter(nameof(CharacterBody.armor)))
-        ) && c.TryGotoNext(MoveType.After,
-            x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertyGetter(nameof(CharacterBody.armor)))
+            x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.armor)))
         );
 
         if (ILFound)
@@ -743,7 +741,7 @@ public static partial class RecalculateStatsAPI
 
             c.GotoPrev(MoveType.After,x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertyGetter(nameof(CharacterBody.isSprinting))));
             c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Func<bool,CharacterBody,bool>>((isSprinting,sender) =>{ return isSprinting && ((sender.sprintingSpeedMultiplier + StatMods.sprintSpeedAdd) != 0); }); 
+            c.EmitDelegate<Func<bool,CharacterBody,bool>>((isSprinting,sender) =>{ return isSprinting && ((sender.sprintingSpeedMultiplier + StatMods.sprintSpeedAdd) != 0); });
             c.GotoNext(x => x.MatchStloc(locSpeedDivIndex));
             c.EmitDelegate<Func<float>>(() => StatMods.moveSpeedReductionMultAdd);
             c.Emit(OpCodes.Add);
