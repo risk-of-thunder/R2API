@@ -12,11 +12,12 @@ namespace R2API;
 /// <summary>
 /// Class for adding skin-specific effect replacements for SkinDefs.
 /// </summary>
-public static partial class SkinVFX {
+public static partial class SkinVFX
+{
     private static List<SkinVFXInfo> skinVFXInfos = new List<SkinVFXInfo>();
     private static bool hooksSet = false;
     private const uint BaseIdentifier = 24000; // arbitrary, but we shouldn't hit 24,000 unique items for a substantial amount of time.
-    private static uint currentIdentifier = BaseIdentifier; 
+    private static uint currentIdentifier = BaseIdentifier;
     private static uint nextIdentifier => currentIdentifier++;
 
     /// <summary>
@@ -28,8 +29,10 @@ public static partial class SkinVFX {
     private static bool hasCatalogInitOccured = false;
 
 
-    internal static void SetHooks() {
-        if (hooksSet) {
+    internal static void SetHooks()
+    {
+        if (hooksSet)
+        {
             return;
         }
 
@@ -44,7 +47,8 @@ public static partial class SkinVFX {
         IL.RoR2.Orbs.GenericDamageOrb.Begin += ModifyGenericOrb;
     }
 
-    internal static void UnsetHooks() {
+    internal static void UnsetHooks()
+    {
         hooksSet = false;
         On.RoR2.EffectComponent.Start -= ApplyModifier;
         On.RoR2.EffectManager.SpawnEffect_GameObject_EffectData_bool -= ApplyReplacement;
@@ -56,21 +60,26 @@ public static partial class SkinVFX {
     }
 
     [SystemInitializer(typeof(EffectCatalog))]
-    private static void FindEffectIndexes() {
+    private static void FindEffectIndexes()
+    {
         hasCatalogInitOccured = true;
 
-        for (int i = 0; i < skinVFXInfos.Count; i++) {
+        for (int i = 0; i < skinVFXInfos.Count; i++)
+        {
             SkinVFXInfo skinVFXInfo = skinVFXInfos[i];
 
-            if (skinVFXInfo.EffectPrefab) {
+            if (skinVFXInfo.EffectPrefab)
+            {
                 skinVFXInfo.TargetEffect = EffectCatalog.FindEffectIndexFromPrefab(skinVFXInfo.EffectPrefab);
                 continue;
             }
 
-            if (!String.IsNullOrEmpty(skinVFXInfo.EffectString)) {
+            if (!String.IsNullOrEmpty(skinVFXInfo.EffectString))
+            {
                 EffectDef def = EffectCatalog.entries.FirstOrDefault(effectDef => effectDef.prefabName == skinVFXInfo.EffectString);
 
-                if (def == null) {
+                if (def == null)
+                {
                     SkinsPlugin.Logger.LogError($"Failed to find effect {skinVFXInfo.EffectString} for SkinVFXInfo!");
                     continue;
                 }
@@ -80,15 +89,19 @@ public static partial class SkinVFX {
         }
     }
 
-    private static SkinVFXInfo FindSkinVFXInfo(uint identifier) {
-        if (identifier < BaseIdentifier || identifier >= (skinVFXInfos.Count + BaseIdentifier)) {
+    private static SkinVFXInfo FindSkinVFXInfo(uint identifier)
+    {
+        if (identifier < BaseIdentifier || identifier >= (skinVFXInfos.Count + BaseIdentifier))
+        {
             return null;
         }
         return skinVFXInfos[(int)(identifier - BaseIdentifier)];
     }
 
-    private static SkinVFXInfo FindSkinVFXInfo(GameObject attacker, GameObject effectPrefab) {
-        if (!attacker || !effectPrefab) {
+    private static SkinVFXInfo FindSkinVFXInfo(GameObject attacker, GameObject effectPrefab)
+    {
+        if (!attacker || !effectPrefab)
+        {
             return null;
         }
 
@@ -117,24 +130,28 @@ public static partial class SkinVFX {
 
     private static void ApplyReplacement(On.RoR2.EffectManager.orig_SpawnEffect_GameObject_EffectData_bool orig, GameObject effectPrefab, EffectData effectData, bool transmit)
     {
-        if (effectData == null) {
+        if (effectData == null)
+        {
             orig(effectPrefab, effectData, transmit);
             return;
         }
 
-        if (effectData.genericUInt < BaseIdentifier) {
+        if (effectData.genericUInt < BaseIdentifier)
+        {
             orig(effectPrefab, effectData, transmit);
             return;
         }
 
         SkinVFXInfo skinVFXInfo = FindSkinVFXInfo(effectData.genericUInt);
 
-        if (skinVFXInfo == null) {
+        if (skinVFXInfo == null)
+        {
             orig(effectPrefab, effectData, transmit);
             return;
         }
 
-        if (skinVFXInfo.ReplacementEffectPrefab != null) {
+        if (skinVFXInfo.ReplacementEffectPrefab != null)
+        {
             orig(skinVFXInfo.ReplacementEffectPrefab, effectData, transmit);
             return;
         }
@@ -142,7 +159,8 @@ public static partial class SkinVFX {
         orig(effectPrefab, effectData, transmit);
     }
 
-    private static void ApplyModifier(On.RoR2.EffectComponent.orig_Start orig, EffectComponent self) {
+    private static void ApplyModifier(On.RoR2.EffectComponent.orig_Start orig, EffectComponent self)
+    {
         orig(self);
 
         if (self.effectData == null) return;
@@ -154,14 +172,16 @@ public static partial class SkinVFX {
 
         skinVFXInfo.OnEffectSpawned?.Invoke(self.gameObject);
     }
-    private static void ModifyMuzzleFlash(ILContext il) {
+    private static void ModifyMuzzleFlash(ILContext il)
+    {
         ILCursor c = new ILCursor(il);
 
         bool found = c.TryGotoNext(MoveType.After,
             x => x.MatchCallOrCallvirt<EffectData>(nameof(EffectData.SetChildLocatorTransformReference))
         );
 
-        if (!found) {
+        if (!found)
+        {
             SkinsPlugin.Logger.LogError($"Failed to apply SkinVFX IL hook on EffectManager.SimpleMuzzleFlash");
             return;
         }
@@ -169,10 +189,12 @@ public static partial class SkinVFX {
         c.Emit(OpCodes.Ldarg_0);
         c.Emit(OpCodes.Ldarg_1);
         c.Emit(OpCodes.Ldloc, 4);
-        c.EmitDelegate<Action<GameObject, GameObject, EffectData>>((effectPrefab, owner, data) => {
+        c.EmitDelegate<Action<GameObject, GameObject, EffectData>>((effectPrefab, owner, data) =>
+        {
             SkinVFXInfo skinVFXInfo = FindSkinVFXInfo(owner, effectPrefab);
 
-            if (skinVFXInfo == null) {
+            if (skinVFXInfo == null)
+            {
                 return;
             }
 
@@ -180,14 +202,16 @@ public static partial class SkinVFX {
         });
     }
 
-    private static void ModifyGenericOrb(ILContext il) {
+    private static void ModifyGenericOrb(ILContext il)
+    {
         ILCursor c = new ILCursor(il);
 
         bool found = c.TryGotoNext(MoveType.After,
             x => x.MatchCallOrCallvirt<EffectData>(nameof(EffectData.SetHurtBoxReference))
         );
 
-        if (!found) {
+        if (!found)
+        {
             SkinsPlugin.Logger.LogError($"Failed to apply SkinVFX IL hook on {il.Method.DeclaringType}.{il.Method.Name}");
             return;
         }
@@ -195,7 +219,8 @@ public static partial class SkinVFX {
         c.Emit(OpCodes.Ldloc_0);
         c.Emit(OpCodes.Ldarg_0);
 
-        c.EmitDelegate<Action<EffectData, GenericDamageOrb>>((data, orb) => {
+        c.EmitDelegate<Action<EffectData, GenericDamageOrb>>((data, orb) =>
+        {
             if (data == null) return;
             if (!orb.attacker) return;
 
@@ -207,26 +232,28 @@ public static partial class SkinVFX {
         });
     }
 
-    private static void ModifyBulletAttack(ILContext il) {
+    private static void ModifyBulletAttack(ILContext il)
+    {
         ILCursor c = new ILCursor(il);
 
         bool found = c.TryGotoNext(MoveType.After,
             x => x.MatchCallOrCallvirt<EffectData>(nameof(EffectData.SetChildLocatorTransformReference))
         );
 
-        if (!found) {
+        if (!found)
+        {
             SkinsPlugin.Logger.LogError($"Failed to apply SkinVFX IL hook on BulletAttack.FireSingle");
             return;
         }
 
-        c.Emit(OpCodes.Ldloc_S, (byte)14);
         c.Emit(OpCodes.Ldarg_0);
-        c.EmitDelegate<Action<EffectData, BulletAttack>>((effectData, bulletAttack) => {
+        c.EmitDelegate<Action<BulletAttack>>((bulletAttack) =>
+        {
             SkinVFXInfo skinVFXInfo = FindSkinVFXInfo(bulletAttack.owner, bulletAttack.tracerEffectPrefab);
 
             if (skinVFXInfo == null) return;
 
-            effectData.genericUInt = skinVFXInfo.Identifier;
+            BulletAttack._effectData.genericUInt = skinVFXInfo.Identifier;
         });
     }
 }
