@@ -67,7 +67,7 @@ public static partial class SoundAPI
         _hooksEnabled = false;
 
         AddBanksAfterEngineInitHook = new Hook(
-            typeof(AkWwiseInitializationSettings).GetMethodCached(nameof(AkSoundEngineInitialization.InitializeSoundEngine)),
+            typeof(AkSoundEngineInitialization).GetMethodCached(nameof(AkSoundEngineInitialization.InitializeSoundEngine)),
             typeof(SoundAPI).GetMethodCached(nameof(AddBanksAfterEngineInit)));
 
         Music.SetHooks();
@@ -593,7 +593,7 @@ public static partial class SoundAPI
             }
 
             AddCustomMusicDatasHook = new Hook(
-                typeof(AkWwiseInitializationSettings).GetMethodCached(nameof(AkSoundEngineInitialization.InitializeSoundEngine)),
+                typeof(AkSoundEngineInitialization).GetMethodCached(nameof(AkSoundEngineInitialization.InitializeSoundEngine)),
                 typeof(Music).GetMethodCached(nameof(AddCustomMusicDatas)));
 
             On.RoR2.MusicController.StartIntroMusic += EnableCustomMusicSystems;
