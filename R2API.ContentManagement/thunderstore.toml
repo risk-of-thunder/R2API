@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_ContentManagement"
-versionNumber = "1.0.4"
+versionNumber = "1.0.5"
 description = "API for adding content to the game"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
