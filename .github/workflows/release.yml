@@ -4,6 +4,12 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      release_legacy_package:
+        description: 'Release legacy package'
+        required: true
+        default: 'false'
+        type: boolean
 
 jobs:
   build:
@@ -50,7 +56,9 @@ jobs:
             if [ "$namespace" == "RiskofThunder" ]; then
               nuget setapikey "${{ secrets.NUGET_API_KEY_RISK_OF_THUNDER }}"
             else
-              nuget setapikey "${{ secrets.NUGET_API_KEY }}"
+              if [ "${{ github.event.inputs.release_legacy_package }}" == 'true' ]; then
+                nuget setapikey "${{ secrets.NUGET_API_KEY }}"
+              fi
             fi
             
             nuget push ./ReleaseOutput/*.nupkg -Source 'https://api.nuget.org/v3/index.json'
@@ -71,7 +79,9 @@ jobs:
             if [ "$namespace" == "RiskofThunder" ]; then
               tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN_RISK_OF_THUNDER }}
             else
-              tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN }}
+              if [ "${{ github.event.inputs.release_legacy_package }}" == 'true' ]; then
+                tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN }}
+              fi
             fi
 
             rm -rf ./build
