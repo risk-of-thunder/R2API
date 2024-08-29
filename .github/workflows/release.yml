@@ -53,15 +53,20 @@ jobs:
             dotnet pack --configuration Release /p:PackageOutputPath=./ReleaseOutput /p:OutputPath=./ReleaseOutput
             is_project_built=true
 
+            can_nuget_push=false
             if [ "$namespace" == "RiskofThunder" ]; then
               nuget setapikey "${{ secrets.NUGET_API_KEY_RISK_OF_THUNDER }}"
+              can_nuget_push=true
             else
               if [ "${{ github.event.inputs.release_legacy_package }}" == 'true' ]; then
                 nuget setapikey "${{ secrets.NUGET_API_KEY }}"
+                can_nuget_push=true
               fi
             fi
             
-            nuget push ./ReleaseOutput/*.nupkg -Source 'https://api.nuget.org/v3/index.json'
+            if [ "$can_nuget_push" = true ] ; then
+              nuget push ./ReleaseOutput/*.nupkg -Source 'https://api.nuget.org/v3/index.json'
+            fi
             find . -name '*.nupkg' -type f -delete
           fi
 
