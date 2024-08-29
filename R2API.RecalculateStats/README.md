@@ -29,6 +29,9 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 
 ## Changelog
 
+### '1.4.0'
+* Initial fixes for SOTS DLC2 Release.
+
 ### '1.3.0'
 * Added stats: `levelHealthAdd`, `levelShieldAdd`, `levelRegenAdd`, `levelMoveSpeedAdd`, `levelJumpPowerAdd`, `levelDamageAdd`, `levelAttackSpeedAdd`, `levelCritAdd`, and `levelArmorAdd` to scale stat bonuses with character level.
 
