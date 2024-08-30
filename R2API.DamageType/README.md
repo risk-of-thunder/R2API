@@ -23,6 +23,9 @@ This is done via the DamageAPI class, which is used for reserving DamageTypes an
 
 ## Changelog
 
+### '1.1.1'
+* Initial fixes for SOTS DLC2 Release.
+
 ### '1.1.0'
 * CrocoDamageTypeController support added,allowing better implementations of alt passives for Acrid.
 

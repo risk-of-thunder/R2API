@@ -47,8 +47,10 @@ public static partial class DamageAPI
 
     private static bool _hooksEnabled = false;
 
-    // TODO: Need to be swapped to DamageTypeExtended most likely.
-    private static DamageType signalDamageType = ((DamageType)0x80000000u);
+    // 1 << 11 taken arbitrarily, unused in the enum,
+    // also, for unknown reasons,
+    // the DamageTypeExtended enumeration starts using bits on the 18th
+    private static DamageTypeExtended signalDamageType = (DamageTypeExtended)(1 << 11);
 
     #region Hooks
     internal static void SetHooks()
@@ -96,7 +98,7 @@ public static partial class DamageAPI
         On.RoR2.OverlapAttack.OverlapAttackMessage.Serialize += OverlapAttackMessageSerialize;
         On.RoR2.OverlapAttack.OverlapAttackMessage.Deserialize += OverlapAttackMessageDeserialize;
 
-        IL.RoR2.GlobalEventManager.OnHitAll += GlobalEventManagerOnHitAllIL;
+        IL.RoR2.GlobalEventManager.OnHitAllProcess += GlobalEventManagerOnHitAllIL;
 
         IL.RoR2.HealthComponent.SendDamageDealt += HealthComponentSendDamageDealtIL;
         On.RoR2.DamageDealtMessage.Serialize += DamageDealtMessageSerialize;
