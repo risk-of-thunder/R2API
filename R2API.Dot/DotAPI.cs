@@ -159,7 +159,7 @@ public static partial class DotAPI
         On.RoR2.DotController.HasDotActive += OnHasDotActive;
         IL.RoR2.DotController.EvaluateDotStacksForType += EvaluateDotStacksForType;
 
-        IL.RoR2.GlobalEventManager.OnHitEnemy += FixDeathMark;
+        IL.RoR2.GlobalEventManager.ProcessHitEnemy += FixDeathMark;
 
         _hooksEnabled = true;
     }
@@ -177,7 +177,7 @@ public static partial class DotAPI
         On.RoR2.DotController.HasDotActive -= OnHasDotActive;
         IL.RoR2.DotController.EvaluateDotStacksForType -= EvaluateDotStacksForType;
 
-        IL.RoR2.GlobalEventManager.OnHitEnemy -= FixDeathMark;
+        IL.RoR2.GlobalEventManager.ProcessHitEnemy -= FixDeathMark;
 
         _hooksEnabled = false;
     }
@@ -404,7 +404,6 @@ public static partial class DotAPI
 
             static int CountCustomDots(DotController dotController, int numberOfDebuffAndDotLoc)
             {
-
                 if (dotController)
                 {
                     for (var i = VanillaDotCount; i < VanillaDotCount + CustomDotCount; i++)
@@ -422,7 +421,7 @@ public static partial class DotAPI
 
             c.Emit(OpCodes.Ldloc, dotControllerLoc);
             c.Emit(OpCodes.Ldloc, numberOfDebuffAndDotLoc);
-            c.EmitDelegate<Func<DotController, int, int>>(CountCustomDots);
+            c.EmitDelegate(CountCustomDots);
             c.Emit(OpCodes.Stloc, numberOfDebuffAndDotLoc);
         }
         else
