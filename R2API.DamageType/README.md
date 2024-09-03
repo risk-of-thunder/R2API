@@ -23,6 +23,9 @@ This is done via the DamageAPI class, which is used for reserving DamageTypes an
 
 ## Changelog
 
+### '1.1.2'
+* More fixes for SOTS DLC2 Release.
+
 ### '1.1.1'
 * Initial fixes for SOTS DLC2 Release.
 
