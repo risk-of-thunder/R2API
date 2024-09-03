@@ -9,6 +9,9 @@ by simply using the `[assembly: HG.Reflection.SearchableAttribute.OptInAttribute
 
 ## Changelog
 
+### '1.0.2'
+* Initial fixes for SOTS DLC2 Release.
+
 ### '1.0.1'
 * Fix the NuGet package which had a dependency on a non-existent version of `R2API.Core`.
 
