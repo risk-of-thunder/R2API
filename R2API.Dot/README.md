@@ -17,6 +17,9 @@ Alongside adding new DotIndices and DotDefs, One can also provide CustomDotBehav
 
 ## Changelog
 
+### '1.0.3'
+* Initial fixes for SOTS DLC2 Release.
+
 ### '1.0.2'
 * Fix custom DOTs counting as active upon infliction and not only after having ticked once.
 

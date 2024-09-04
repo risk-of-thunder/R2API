@@ -55,21 +55,21 @@ public partial class CommandHelper
             return;
         }
 
-        On.RoR2.Console.InitConVars += ConsoleReady;
+        On.RoR2.Console.InitConVarsCoroutine += ConsoleReady;
 
         _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
-        On.RoR2.Console.InitConVars -= ConsoleReady;
+        On.RoR2.Console.InitConVarsCoroutine -= ConsoleReady;
 
         _hooksEnabled = false;
     }
 
-    private static void ConsoleReady(On.RoR2.Console.orig_InitConVars orig, RoR2.Console self)
+    private static System.Collections.IEnumerator ConsoleReady(On.RoR2.Console.orig_InitConVarsCoroutine orig, RoR2.Console self)
     {
-        orig(self);
+        yield return orig(self);
 
         _console = self;
         HandleCommandsConvars();
@@ -173,7 +173,7 @@ public partial class CommandHelper
                 }
                 else if (baseConVar.defaultValue != null)
                 {
-                    baseConVar.SetString(baseConVar.defaultValue);
+                    baseConVar.AttemptSetString(baseConVar.defaultValue);
                 }
             }
         }

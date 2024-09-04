@@ -11,6 +11,10 @@ public sealed class DamageTypePlugin : BaseUnityPlugin
     private void Awake()
     {
         Logger = base.Logger;
+
+#if DEBUG
+        DamageAPI.SetHooks();
+#endif
     }
 
     private void OnDestroy()

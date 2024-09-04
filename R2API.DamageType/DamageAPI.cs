@@ -154,7 +154,7 @@ public static partial class DamageAPI
         On.RoR2.OverlapAttack.OverlapAttackMessage.Serialize -= OverlapAttackMessageSerialize;
         On.RoR2.OverlapAttack.OverlapAttackMessage.Deserialize -= OverlapAttackMessageDeserialize;
 
-        IL.RoR2.GlobalEventManager.OnHitAll -= GlobalEventManagerOnHitAllIL;
+        IL.RoR2.GlobalEventManager.OnHitAllProcess -= GlobalEventManagerOnHitAllIL;
 
         IL.RoR2.HealthComponent.SendDamageDealt -= HealthComponentSendDamageDealtIL;
         On.RoR2.DamageDealtMessage.Serialize -= DamageDealtMessageSerialize;
