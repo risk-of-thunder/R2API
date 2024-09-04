@@ -300,7 +300,7 @@ public static partial class DotAPI
         if (c.TryGotoNext(MoveType.After,
                 x => x.MatchLdarg(0),
                 x => x.MatchLdfld(typeof(InflictDotInfo), nameof(InflictDotInfo.dotIndex)),
-                x => x.MatchLdcI4((int)DotController.DotIndex.Count)
+                x => x.MatchLdcI4(VanillaDotCount)
             ))
         {
             c.Prev.OpCode = OpCodes.Ldc_I4;
