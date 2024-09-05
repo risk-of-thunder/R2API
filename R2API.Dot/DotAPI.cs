@@ -152,8 +152,8 @@ public static partial class DotAPI
         On.RoR2.DotController.InitDotCatalog += AddCustomDots;
         On.RoR2.DotController.Awake += TrackActiveCustomDots;
         On.RoR2.DotController.OnDestroy += TrackActiveCustomDots2;
-        On.RoR2.DotController.GetDotDef += GetDotDef;
-        On.RoR2.DotController.FixedUpdate += FixedUpdate;
+        On.RoR2.DotController.GetDotDef += GetDotDefSupportCustomDefs;
+        On.RoR2.DotController.FixedUpdate += FixedUpdateEvaluateCustomDotStacksAndVisuals;
         IL.RoR2.DotController.InflictDot_refInflictDotInfo += FixInflictDotReturnCheck;
         IL.RoR2.DotController.AddDot += CallCustomDotBehaviours;
         On.RoR2.DotController.HasDotActive += OnHasDotActive;
@@ -170,8 +170,8 @@ public static partial class DotAPI
         IL.RoR2.DotController.Awake -= ResizeTimerArray;
         On.RoR2.DotController.Awake -= TrackActiveCustomDots;
         On.RoR2.DotController.OnDestroy -= TrackActiveCustomDots2;
-        On.RoR2.DotController.GetDotDef -= GetDotDef;
-        On.RoR2.DotController.FixedUpdate -= FixedUpdate;
+        On.RoR2.DotController.GetDotDef -= GetDotDefSupportCustomDefs;
+        On.RoR2.DotController.FixedUpdate -= FixedUpdateEvaluateCustomDotStacksAndVisuals;
         IL.RoR2.DotController.InflictDot_refInflictDotInfo -= FixInflictDotReturnCheck;
         IL.RoR2.DotController.AddDot -= CallCustomDotBehaviours;
         On.RoR2.DotController.HasDotActive -= OnHasDotActive;
@@ -246,12 +246,12 @@ public static partial class DotAPI
         ActiveCustomDots.Remove(self);
     }
 
-    private static DotController.DotDef GetDotDef(On.RoR2.DotController.orig_GetDotDef orig, DotController.DotIndex dotIndex)
+    private static DotController.DotDef GetDotDefSupportCustomDefs(On.RoR2.DotController.orig_GetDotDef orig, DotController.DotIndex dotIndex)
     {
         return DotDefs[(int)dotIndex];
     }
 
-    private static void FixedUpdate(On.RoR2.DotController.orig_FixedUpdate orig, DotController self)
+    private static void FixedUpdateEvaluateCustomDotStacksAndVisuals(On.RoR2.DotController.orig_FixedUpdate orig, DotController self)
     {
         orig(self);
 
@@ -278,9 +278,16 @@ public static partial class DotAPI
 
         for (var i = 0; i < CustomDotCount; i++)
         {
-            if (ActiveCustomDots[self][i])
+            try
             {
-                _customDotVisuals[i]?.Invoke(self);
+                if (ActiveCustomDots[self][i])
+                {
+                    _customDotVisuals[i]?.Invoke(self);
+                }
+            }
+            catch (Exception e)
+            {
+                DotPlugin.Logger.LogError(e);
             }
         }
     }
@@ -325,7 +332,7 @@ public static partial class DotAPI
         }
 
         if (c.TryGotoNext(MoveType.After,
-                i => i.MatchLdsfld<DotController>("dotStackPool"),
+                i => i.MatchLdsfld<DotController>(nameof(DotController.dotStackPool)),
                 i => i.MatchCallOrCallvirt(out _),
                 i => i.MatchStloc(out dotStackLoc)))
         {
@@ -344,6 +351,10 @@ public static partial class DotAPI
                         ActiveCustomDots[self][customDotIndex] = true;
                     }
                 });
+            }
+            else
+            {
+                ILFailMessage(2);
             }
         }
         else
