@@ -128,8 +128,6 @@ public static class SkinIDRS
     private static void SetCustomIDRS(On.RoR2.ModelSkinController.orig_ApplySkin orig, ModelSkinController self, int skinIndex)
     {
         orig(self, skinIndex);
-        if (!self.characterModel)
-            return;
 
         SkinDef skin = HG.ArrayUtils.GetSafe(self.skins, skinIndex);
         if (!skin)
