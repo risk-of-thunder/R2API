@@ -19,6 +19,9 @@ A guide on how to add your own music can be found [here](https://risk-of-thunder
 
 ## Changelog
 
+### '1.0.3'
+* Initial fixes for SOTS DLC2 Release.
+
 ### '1.0.2'
 * Add missing `BepInDependency` to `R2API.ContentManagement`
 

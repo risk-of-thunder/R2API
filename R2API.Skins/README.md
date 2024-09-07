@@ -8,11 +8,16 @@ Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also
 
 ## Changelog
 
+
 ### '1.2.0
 
 * Added the ability to replace the color LightInfos for a skin
 
-### '1.1.1'
+### '1.1.2'
+
+* Initial fixes for SOTS DLC2 Release.
+
+### '1.1.1
 
 * Added the ability to override `DisplayGroupRule` per item for a skin. Which allows to add skin-specic item display without requiring to create IDRS with all items. See `SkinIDRS.AddGroupOverride()`.
 

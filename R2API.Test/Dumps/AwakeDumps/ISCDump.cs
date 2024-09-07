@@ -15,7 +15,7 @@ public class ISCDump
     [Fact]
     public void Awake()
     {
-        RoR2Application.onLoad += Dump;
+        //RoR2Application.onLoad += Dump;
     }
 
     private void Dump()

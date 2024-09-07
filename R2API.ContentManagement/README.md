@@ -23,6 +23,12 @@ R2API.ContentManaged is used for mods that would like to have R2API handle the c
 
 ## Changelog
 
+### '1.0.6'
+* Fix SystemInitializer infinite loop.
+
+### '1.0.5'
+* Initial fixes for SOTS DLC2 Release.
+
 ### '1.0.4'
 * Fix content getting erroneously attributed to R2API's contentpack.
 

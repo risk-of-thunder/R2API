@@ -139,10 +139,26 @@ public static partial class EliteAPI
 
         eliteTierDef = new CombatDirector.EliteTierDef
         {
+            costMultiplier = Mathf.LerpUnclamped(1f, CombatDirector.baseEliteCostMultiplier, 0.5f),
+            eliteTypes = new EliteDef[] {
+                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteLightning/edLightning.asset").WaitForCompletion(),
+                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteIce/edIce.asset").WaitForCompletion(),
+                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteFire/edFire.asset").WaitForCompletion(),
+                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC1/EliteEarth/edEarth.asset").WaitForCompletion(),
+                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC2/Elites/EliteAurelionite/edAurelionite.asset").WaitForCompletion(),
+            },
+            isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.NotEliteOnlyArtifactActive() && rules == SpawnCard.EliteRules.Default && Run.instance.stageClearCount >= 2,
+            canSelectWithoutAvailableEliteDef = false
+        };
+        eliteTiersDef.Add(eliteTierDef);
+
+        eliteTierDef = new CombatDirector.EliteTierDef
+        {
             costMultiplier = CombatDirector.baseEliteCostMultiplier * 6f,
             eliteTypes = new EliteDef[] {
                 Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/ElitePoison/edPoison.asset").WaitForCompletion(),
                 Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteHaunted/edHaunted.asset").WaitForCompletion(),
+                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC2/Elites/EliteBead/edBead.asset").WaitForCompletion(),
             },
             isAvailable = (SpawnCard.EliteRules rules) => Run.instance.loopClearCount > 0 && rules == SpawnCard.EliteRules.Default,
             canSelectWithoutAvailableEliteDef = false

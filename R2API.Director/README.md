@@ -18,6 +18,9 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.1.3'
+* Initial fixes for SOTS DLC2 Release.
+
 ### '2.1.2'
 
 * Addded support for 'lakes'/'Verdant Falls' from Devotion update.
