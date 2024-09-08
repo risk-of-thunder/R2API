@@ -18,6 +18,9 @@ A separate overload for AddTemporaryVisualEffect takes an EffectRadius delegate,
 
 ## Changelog
 
+### '1.0.3'
+* Initial fixes for SOTS DLC2 Release.
+
 ### '1.0.2'
 * Add missing `BepInDependency` to `R2API.ContentManagement`
 
