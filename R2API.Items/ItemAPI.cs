@@ -90,6 +90,7 @@ public static partial class ItemAPI
         ItemAPI.SetHooks();
         return AddItemInternal(item, Assembly.GetCallingAssembly());
     }
+
     internal static bool AddItemInternal(CustomItem item, Assembly addingAssembly)
     {
         if (!CatalogBlockers.GetAvailability<ItemDef>())
@@ -139,6 +140,12 @@ public static partial class ItemAPI
             R2APIContentManager.HandleContentAddition(addingAssembly, item.ItemDef);
             ItemDefinitions.Add(item);
             return true;
+        }
+
+        if (item.ItemDef.tags == null)
+        {
+            ItemsPlugin.Logger.LogInfo($"Adding empty tags array to custom item '{item.ItemDef.name}'");
+            item.ItemDef.tags = [];
         }
 
         return false;
@@ -230,12 +237,14 @@ public static partial class ItemAPI
             ItemsPlugin.Logger.LogError($"Too late ! Tried to add itemTag: {name} after the ItemCatalog has Initialized!");
             return (ItemTag)(-1);
         }
+
         int result = (int)FindItemTagByName(name);
         if (result == -1)
         {
             customItemTags.Add(name);
             result = customItemTags.Count + (int)ItemTag.Count;
         }
+
         return (ItemTag)result;
     }
 
