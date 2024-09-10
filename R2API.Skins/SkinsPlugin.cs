@@ -19,10 +19,13 @@ public sealed class SkinsPlugin : BaseUnityPlugin
     private void OnEnable()
     {
         SkinIDRS.SetHooks();
+        SkinVFX.SetHooks();
     }
 
     private void OnDisable()
     {
         SkinIDRS.UnsetHooks();
+        SkinVFX.UnsetHooks();
+        SkinLightReplacement.UnsetHooks();
     }
 }

@@ -27,7 +27,7 @@ public static class EliteRamp
 
         IL.RoR2.CharacterModel.UpdateMaterials += UpdateRampProperly;
         RoR2Application.onLoad += SetupDictionary;
-        vanillaEliteRamp = Addressables.LoadAssetAsync<Texture2D>("RoR2/Base/Common/ColorRamps/texRampElites.psd").WaitForCompletion();
+        vanillaEliteRamp = Addressables.LoadAssetAsync<Texture2D>("RoR2/Base/Common/GlobalTextures/texRampElites.psd").WaitForCompletion();
 
         _hooksEnabled = true;
     }

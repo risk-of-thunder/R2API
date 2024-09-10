@@ -18,6 +18,17 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.1.3'
+* Initial fixes for SOTS DLC2 Release.
+
+### '2.1.2'
+
+* Addded support for 'lakes'/'Verdant Falls' from Devotion update.
+
+### '2.1.1'
+
+* Fix `AddNewMonster` / `RemoveExistingMonster` helper methods not properly handling `arena` stage.
+
 ### '2.1.0'
 * Added Dependency for the Addressables Submodule
 * Added AddressableDCCSPool and AddressableDirectorCardCategorySelection, both intended for usage in the Unity Editor.

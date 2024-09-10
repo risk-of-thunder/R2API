@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_TempVisualEffect"
-versionNumber = "1.0.2"
+versionNumber = "1.0.3"
 description = "API for adding custom temporary visual effects for characters."
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false

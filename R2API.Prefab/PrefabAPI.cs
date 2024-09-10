@@ -130,6 +130,7 @@ public static partial class PrefabAPI
 
             _parent = new GameObject(ModdedPrefabsGameObjectHolderName);
             UnityObject.DontDestroyOnLoad(_parent);
+            _parent.hideFlags = HideFlags.HideAndDontSave;
             _parent.SetActive(false);
 
             On.RoR2.Util.IsPrefab += (orig, obj) =>

@@ -18,6 +18,20 @@ Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
 
+### '5.1.1'
+* Initial fixes for SOTS DLC2 Release.
+
+### '5.1.0'
+* Add Array to Array operations to CompressedFlagArrayUtilities
+
+### '5.0.12'
+
+* Bump GameBuildId version.
+
+### '5.0.11'
+
+* Fix SystemInitializerInjector.
+
 ### '5.0.10'
 * Make R2API Reflection methods return / take into account inherited members.
 

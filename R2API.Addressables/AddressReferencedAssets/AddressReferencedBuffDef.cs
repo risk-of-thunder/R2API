@@ -36,4 +36,55 @@ public class AddressReferencedBuffDef : AddressReferencedAsset<BuffDef>
         }
         LoadFromAddress();
     }
+
+    /// <summary>
+    /// Operator for casting <see cref="AddressReferencedBuffDef"/> to a boolean value
+    /// <br>Allows you to keep using the unity Syntax for checking if an object exists.</br>
+    /// </summary>
+    public static implicit operator bool(AddressReferencedBuffDef addressReferencedAsset)
+    {
+        return addressReferencedAsset?.Asset;
+    }
+
+    /// <summary>
+    /// Operator for casting <see cref="AddressReferencedBuffDef"/> to it's currently loaded <see cref="Asset"/> value
+    /// </summary>
+    public static implicit operator BuffDef(AddressReferencedBuffDef addressReferencedAsset)
+    {
+        return addressReferencedAsset?.Asset;
+    }
+
+    /// <summary>
+    /// Operator for encapsulating a <see cref="string"/> inside an <see cref="AddressReferencedBuffDef"/>
+    /// </summary>
+    public static implicit operator AddressReferencedBuffDef(string address)
+    {
+        return new AddressReferencedBuffDef(address);
+    }
+
+    /// <summary>
+    /// Operator for encapsulating an <see cref="BuffDef"/> inside an <see cref="AddressReferencedBuffDef"/>
+    /// </summary>
+    public static implicit operator AddressReferencedBuffDef(BuffDef asset)
+    {
+        return new AddressReferencedBuffDef(asset);
+    }
+
+    /// <summary>
+    /// <inheritdoc cref="AddressReferencedAsset{T}.AddressReferencedAsset()"/>
+    /// <br>T is <see cref="BuffDef"/></br>
+    /// </summary>
+    public AddressReferencedBuffDef() : base() { }
+
+    /// <summary>
+    /// <inheritdoc cref="AddressReferencedAsset{T}.AddressReferencedAsset(T)"/>
+    /// <br>T is <see cref="BuffDef"/></br>
+    /// </summary>
+    public AddressReferencedBuffDef(BuffDef def) : base(def) { }
+
+    /// <summary>
+    /// <inheritdoc cref="AddressReferencedAsset{T}.AddressReferencedAsset(string)"/>
+    /// <br>T is <see cref="BuffDef"/></br>
+    /// </summary>
+    public AddressReferencedBuffDef(string addressOrName) : base(addressOrName) { }
 }

@@ -20,8 +20,11 @@ A detailed tutorial on how to make custom items using ItewmAPI can be found [her
 
 ## Changelog
 
+### '1.0.4'
+* Make sure `ItemDef` never have a null `tags` array.
+
 ### '1.0.3'
-* Add missing `BepInDependency` to `R2API.ContentManagement`
+* Add missing `BepInDependency` to `R2API.ContentManagement`.
 
 ### '1.0.2'
 * Fix the NuGet package which had a dependency on a non-existent version of `R2API.Core`.
