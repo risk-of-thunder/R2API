@@ -10,7 +10,7 @@ R2API.Director is used for adding new Enemies and Interactables to the Director'
 
 * StageSettingsActions (Modify the the stage settings such as the stage's monster and interactable credits.)
 * MonsterActions (Modify the stage's Monsters's DCCSPool)
-* IntreractableActions (Modify the stage's Interactable's DCCSPool)
+* InteractableActions (Modify the stage's Interactable's DCCSPool)
 
 Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which contains helper methods which greatly simplify interacting with the Events described above.
 
@@ -18,12 +18,15 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.2.0'
+* Add SOTS stages and support Storm Stuff interactable category.
+
 ### '2.1.3'
 * Initial fixes for SOTS DLC2 Release.
 
 ### '2.1.2'
 
-* Addded support for 'lakes'/'Verdant Falls' from Devotion update.
+* Add support for 'lakes'/'Verdant Falls' from Devotion update.
 
 ### '2.1.1'
 

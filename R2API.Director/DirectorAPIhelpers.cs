@@ -1151,6 +1151,12 @@ public static partial class DirectorAPI
                 throw new ArgumentException(nameof(categoryString));
             }
 
+            // Vanilla has the same category named differently for some reason (Storm Stuff suffix is shared though)
+            if (categoryString.Contains("Storm Stuff"))
+            {
+                return InteractableCategory.StormStuff;
+            }
+
             return categoryString switch
             {
                 "Chests" => InteractableCategory.Chests,
@@ -1185,6 +1191,7 @@ public static partial class DirectorAPI
                 InteractableCategory.Rare => "Rare",
                 InteractableCategory.Duplicator => "Duplicator",
                 InteractableCategory.VoidStuff => "Void Stuff",
+                InteractableCategory.StormStuff => "Storm Stuff",
                 _ => throw new ArgumentException(((int)interactableCategory).ToString())
             };
         }
