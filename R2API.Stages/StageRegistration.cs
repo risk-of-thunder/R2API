@@ -86,11 +86,6 @@ public static partial class StageRegistration
 #endif
     }
 
-    private static void LoopThroughCollection(SceneCollection sc)
-    {
-
-    }
-
     #region Hooks
     internal static void SetHooks()
     {
