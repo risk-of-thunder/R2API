@@ -202,7 +202,6 @@ public static partial class StageRegistration
 
     /// <summary>
     /// Registers the SceneDef into the loop. Any SceneDef registered with the same baseSceneName as another SceneDef will be counted as a variant.
-    /// Variants will have their weights split equally amongst each other. Don't use this method for scenes that aren't part of the loop (Stages 1-5).
     /// </summary>
     /// <param name="sceneDef">The SceneDef being registered</param>
     /// <param name="weight">The weight of the SceneDef being rolled in the SceneCollection</param>
@@ -293,7 +292,7 @@ public static partial class StageRegistration
         }
 
         sceneDef.destinationsGroup = preLoopSceneCollections[(stageOrderIndex + 1) % numStageCollections];
-        sceneDef.destinationsGroup = postLoopSceneCollections[(stageOrderIndex + 1) % numStageCollections];
+        sceneDef.loopedDestinationsGroup = postLoopSceneCollections[(stageOrderIndex + 1) % numStageCollections];
     }
 
     private static void RefreshPublicDictionary()
