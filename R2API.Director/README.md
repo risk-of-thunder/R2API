@@ -18,6 +18,9 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.2.1'
+* Add StageSerde struct, which acts as a workaround for Unity's inability to correctly serialize the Stage enum now that it is 64 bits long.
+
 ### '2.2.0'
 * Add SOTS stages and support Storm Stuff interactable category.
 
