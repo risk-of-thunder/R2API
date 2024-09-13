@@ -431,6 +431,51 @@ public static partial class DirectorAPI
         PrimeMeridian = 1L << 41,
     }
 
+#pragma warning disable R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
+    /// <summary>
+    /// A structure that acts as a workaround for Unity's inability to properly serialize enums with underlying types other than <see cref="int"/>.
+    /// It stores the enum value as an Int64 for serialization purposes.
+    /// </summary>
+    [Serializable]
+    public struct StageSerde
+    {
+        /// <summary>
+        /// The serialized value of the stage, stored as an <see cref="Int64"/>.
+        /// </summary>
+        public Int64 Value;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StageSerde"/> struct with a specified value.
+        /// </summary>
+        /// <param name="value">The stage value as an <see cref="Int64"/>.</param>
+        public StageSerde(Int64 value)
+        {
+            Value = value;
+        }
+
+        /// <summary>
+        /// Implicitly converts a <see cref="Stage"/> enum value to a <see cref="StageSerde"/> struct.
+        /// </summary>
+        /// <param name="enumValue">The <see cref="Stage"/> enum value to convert.</param>
+        /// <returns>A <see cref="StageSerde"/> instance with the corresponding <see cref="Int64"/> value.</returns>
+        public static implicit operator StageSerde(Stage enumValue)
+        {
+            return new StageSerde((Int64)enumValue);
+        }
+
+        /// <summary>
+        /// Implicitly converts a <see cref="StageSerde"/> struct to a <see cref="Stage"/> enum value.
+        /// </summary>
+        /// <param name="stageSerde">The <see cref="StageSerde"/> instance to convert.</param>
+        /// <returns>The corresponding <see cref="Stage"/> enum value.</returns>
+        public static implicit operator Stage(StageSerde stageSerde)
+        {
+            return (Stage)stageSerde.Value;
+        }
+    }
+
+#pragma warning restore R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
+
     /// <summary>
     /// Returns the <see cref="Stage"/> based on the internal name (<see cref="SceneDef.baseSceneName"/>) of the stage.
     /// Returns <see cref="Stage.Custom"/> if the name is not vanilla.
