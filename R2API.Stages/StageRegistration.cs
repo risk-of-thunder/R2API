@@ -196,13 +196,11 @@ public static partial class StageRegistration
     }
 
     /// <summary>
-    /// Registers the SceneDef into the loop. Any SceneDef registered with the same baseSceneName as another SceneDef will be counted as a variant.
+    /// Registers the SceneDef into the loop. This method doesn't support extra parameters, use RegisterSceneDefToNormalProgression instead.
     /// </summary>
     /// <param name="sceneDef">The SceneDef being registered</param>
-    /// <param name="weight">The weight of the SceneDef being rolled in the SceneCollection</param>
-    /// <param name="preLoop">If the stage will roll pre-loop: 1 <= current stage <= 5 </param>
-    /// <param name="postLoop">If the stage will roll post-loop: current stage > 5 </param>
-    public static void RegisterSceneDefToLoop(SceneDef sceneDef, float weight = defaultWeight, bool preLoop = true, bool postLoop = true)
+    [Obsolete]
+    public static void RegisterSceneDefToLoop(SceneDef sceneDef)
     {
         StageRegistration.SetHooks();
 #if DEBUG
@@ -217,7 +215,38 @@ public static partial class StageRegistration
 
         if (sceneDef.stageOrder < 1 || sceneDef.stageOrder > numStageCollections)
         {
-            StagesPlugin.Logger.LogError($"SceneDef {sceneDef.cachedName} has a stage order not within 1-5. Please use this method only for stages within the loop.");
+            StagesPlugin.Logger.LogError($"SceneDef {sceneDef.cachedName} has a stage order not within 1-{numStageCollections}. Please use this method only for stages within the loop.");
+            return;
+        }
+
+        AddSceneOrVariant(sceneDef);
+        AppendSceneCollections(sceneDef, defaultWeight, true, true);
+        RefreshPublicDictionary();
+    }
+
+    /// <summary>
+    /// Registers the SceneDef into the normal stage progression (not Path of the Colossus). Any SceneDef registered with the same baseSceneName as another SceneDef will be counted as a variant.
+    /// </summary>
+    /// <param name="sceneDef">The SceneDef being registered</param>
+    /// <param name="weight">The weight of the SceneDef being rolled in the SceneCollection</param>
+    /// <param name="preLoop">If the stage will roll pre-loop: if the current stage is between 1-5 </param>
+    /// <param name="postLoop">If the stage will roll post-loop: if the current stage is greater than 5 </param>
+    public static void RegisterSceneDefToNormalProgression(SceneDef sceneDef, float weight = defaultWeight, bool preLoop = true, bool postLoop = true)
+    {
+        StageRegistration.SetHooks();
+#if DEBUG
+        StagesPlugin.Logger.LogDebug($"Registering {sceneDef.cachedName}.");
+#endif
+
+        if (privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName) && privateStageVariantDictionary[sceneDef.baseSceneName].Contains(sceneDef))
+        {
+            StagesPlugin.Logger.LogError($"SceneDef {sceneDef.cachedName} is already registered into the Scene Pool");
+            return;
+        }
+
+        if (sceneDef.stageOrder < 1 || sceneDef.stageOrder > numStageCollections)
+        {
+            StagesPlugin.Logger.LogError($"SceneDef {sceneDef.cachedName} has a stage order not within 1-{numStageCollections}. Please use this method only for stages within the loop.");
             return;
         }
 
