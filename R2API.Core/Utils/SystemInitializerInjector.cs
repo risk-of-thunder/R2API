@@ -1,7 +1,4 @@
-﻿using HarmonyLib;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using RoR2;
+﻿using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,38 +19,37 @@ public static class SystemInitializerInjector
         if (_appliedHooks)
             return;
 
-        IL.RoR2.SystemInitializerAttribute.Execute += il =>
+        _appliedHooks = true;
+
+        On.RoR2.SystemInitializerAttribute.ExecuteStatic += SystemInitializerInjectDependencies;
+    }
+
+    static void SystemInitializerInjectDependencies(On.RoR2.SystemInitializerAttribute.orig_ExecuteStatic orig)
+    {
+        orig();
+
+        foreach (SystemInitializerAttribute systemInitializer in SystemInitializerAttribute.initializerAttributes)
         {
-            ILCursor c = new ILCursor(il);
+            injectDependencies(systemInitializer);
+        }
+    }
 
-            if (c.TryGotoNext(x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Queue<SystemInitializerAttribute>>(_ => _.Enqueue(default)))))
-            {
-                c.Emit(OpCodes.Dup);
-                c.EmitDelegate((SystemInitializerAttribute instance) =>
-                {
-                    if (instance.target is MethodInfo initializerMethod && _dependenciesToInject.TryGetValue(initializerMethod, out HashSet<Type> newDependencies))
-                    {
-                        newDependencies.RemoveWhere(t => instance.dependencies.Contains(t));
-                        if (newDependencies.Count == 0)
-                            return;
+    static void injectDependencies(SystemInitializerAttribute attribute)
+    {
+        if (attribute.target is MethodInfo initializerMethod && _dependenciesToInject.TryGetValue(initializerMethod, out HashSet<Type> newDependencies))
+        {
+            newDependencies.RemoveWhere(t => attribute.dependencies.Contains(t));
+            if (newDependencies.Count == 0)
+                return;
 
-                        int originalDependenciesLength = instance.dependencies.Length;
-                        Array.Resize(ref instance.dependencies, originalDependenciesLength + newDependencies.Count);
-                        newDependencies.CopyTo(instance.dependencies, originalDependenciesLength);
+            int originalDependenciesLength = attribute.dependencies.Length;
+            Array.Resize(ref attribute.dependencies, originalDependenciesLength + newDependencies.Count);
+            newDependencies.CopyTo(attribute.dependencies, originalDependenciesLength);
 
 #if DEBUG
-                        R2API.Logger.LogDebug($"SystemInitializerInjector: Injected {newDependencies.Count} dependencies into {initializerMethod.DeclaringType.FullName}.{initializerMethod.Name}");
+            R2API.Logger.LogDebug($"SystemInitializerInjector: Injected {newDependencies.Count} dependencies into {initializerMethod.DeclaringType.FullName}.{initializerMethod.Name}");
 #endif
-                    }
-                });
-            }
-            else
-            {
-                R2API.Logger.LogError("SystemInitializerInjector: Failed to find IL patch location");
-            }
-        };
-
-        _appliedHooks = true;
+        }
     }
 
     /// <summary>
@@ -66,7 +62,7 @@ public static class SystemInitializerInjector
         ThrowIfSystemInitializerExecuted();
 
         Type typeToInject = typeof(T);
-        foreach(Type type in dependenciesToInject)
+        foreach (Type type in dependenciesToInject)
         {
             InjectDependencyInternal(typeToInject, type);
         }
@@ -184,7 +180,7 @@ public static class SystemInitializerInjector
 
     private static void ThrowIfSystemInitializerExecuted()
     {
-        if(RoR2.SystemInitializerAttribute.hasExecuted)
+        if (RoR2.SystemInitializerAttribute.hasExecuted)
         {
             throw new InvalidOperationException("Cannot inject dependencies when SystemInitializer has already been executed");
         }
