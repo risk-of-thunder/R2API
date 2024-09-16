@@ -18,6 +18,9 @@ Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
 
+### '5.1.2'
+* Fix SystemInitializerInjector
+
 ### '5.1.1'
 * Initial fixes for SOTS DLC2 Release.
 
