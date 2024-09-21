@@ -29,12 +29,13 @@ public static partial class StageRegistration
     public const string PluginGUID = R2API.PluginGUID + ".stages";
     public const string PluginName = R2API.PluginName + ".Stages";
 
-    private static Dictionary<string, List<SceneDef>> privateStageVariantDictionary = new Dictionary<string,List<SceneDef>>();
+    public const float defaultWeight = 1;
+
+    private static Dictionary<string, List<SceneDef>> privateStageVariantDictionary = new Dictionary<string, List<SceneDef>>();
     public static ReadOnlyDictionary<string, List<SceneDef>> stageVariantDictionary;
 
-    private static Dictionary<string, List<SceneDef>> blacklistedStages = new Dictionary<string, List<SceneDef>>();
-
-    private static List<SceneCollection> sceneCollections = new List<SceneCollection>();
+    private static List<SceneCollection> preLoopSceneCollections = new List<SceneCollection>();
+    private static List<SceneCollection> postLoopSceneCollections = new List<SceneCollection>();
 
     private static int numStageCollections = 5;
 
@@ -50,20 +51,33 @@ public static partial class StageRegistration
 #if DEBUG
         StagesPlugin.Logger.LogDebug($"Variant dictionary intializing...");
 #endif
-
-        foreach (SceneCollection sceneCollection in sceneCollections)
+        foreach (SceneCollection sceneCollection in preLoopSceneCollections)
         {
             foreach (SceneCollection.SceneEntry sceneEntry in sceneCollection.sceneEntries)
             {
                 SceneDef sceneDef = sceneEntry.sceneDef;
-                if ((privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName) &&
-                    privateStageVariantDictionary[sceneDef.baseSceneName].Contains(sceneDef)) ||
-                    InBlackList(sceneDef)) {
+                if (privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName) && privateStageVariantDictionary[sceneDef.baseSceneName].Contains(sceneDef)){
                     continue;
-                }  
-                AddSceneOrVariant(sceneDef, 1);
+                }
+
+                AddSceneOrVariant(sceneDef);
             }
         }
+
+        foreach (SceneCollection sceneCollection in postLoopSceneCollections)
+        {
+            foreach (SceneCollection.SceneEntry sceneEntry in sceneCollection.sceneEntries)
+            {
+                SceneDef sceneDef = sceneEntry.sceneDef;
+                if (privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName) && privateStageVariantDictionary[sceneDef.baseSceneName].Contains(sceneDef))
+                {
+                    continue;
+                }
+
+                AddSceneOrVariant(sceneDef);
+            }
+        }
+
         RefreshPublicDictionary();
 
         _sceneCatalogInitialized = true;
@@ -83,7 +97,9 @@ public static partial class StageRegistration
         for (int i = 1; i <= numStageCollections; i++)
         {
             SceneCollection stageSceneCollectionRequest = Addressables.LoadAssetAsync<SceneCollection>("RoR2/Base/SceneGroups/sgStage" + i + ".asset").WaitForCompletion();
-            sceneCollections.Add(stageSceneCollectionRequest);
+            preLoopSceneCollections.Add(stageSceneCollectionRequest);
+            stageSceneCollectionRequest = Addressables.LoadAssetAsync<SceneCollection>("RoR2/Base/SceneGroups/loopSgStage" + i + ".asset").WaitForCompletion();
+            postLoopSceneCollections.Add(stageSceneCollectionRequest);
         }
 
         baseBazaarSeerMaterial = Addressables.LoadAssetAsync<Material>("RoR2/Base/bazaar/matBazaarSeerWispgraveyard.mat").WaitForCompletion();
@@ -93,7 +109,7 @@ public static partial class StageRegistration
 
     internal static void UnsetHooks()
     {
-        sceneCollections.Clear();
+        preLoopSceneCollections.Clear();
         _hooksEnabled = false;
     }
 
@@ -115,7 +131,7 @@ public static partial class StageRegistration
     }
 
     /// <summary>
-    /// A debug util to print each SceneDef in a loop and their respective Weights. All variants of a locale should add up to 1.
+    /// A debug util to print each SceneDef in a loop and their respective Weights.
     /// </summary>
     public static void PrintSceneCollections()
     {
@@ -129,14 +145,14 @@ public static partial class StageRegistration
         for (int i = 1; i <= numStageCollections; i++)
         {
             StagesPlugin.Logger.LogDebug($"Stage {i}");
-            foreach(SceneCollection.SceneEntry sceneEntry in sceneCollections[i - 1].sceneEntries)
+            foreach (SceneCollection.SceneEntry sceneEntry in preLoopSceneCollections[i - 1].sceneEntries)
             {
                 StagesPlugin.Logger.LogDebug($"{sceneEntry.sceneDef.cachedName}, baseSceneName: {sceneEntry.sceneDef.baseSceneName}, Weight: {sceneEntry.weight}");
             }
         }
     }
     /// <summary>
-    /// A debug util to print each SceneDef in a loop and their respective Weights. All variants of a locale should add up to 1.
+    /// A debug util to print each SceneDef in a loop and their respective Weights.
     /// </summary>
     /// <param name="stageNumber">The stages in that stage position</param>
     public static void PrintSceneCollections(int stageNumber)
@@ -149,10 +165,10 @@ public static partial class StageRegistration
         }
 
         StagesPlugin.Logger.LogDebug($"Stage {stageNumber}");
-        foreach (SceneCollection.SceneEntry sceneEntry in sceneCollections[stageNumber - 1].sceneEntries)
+        foreach (SceneCollection.SceneEntry sceneEntry in preLoopSceneCollections[stageNumber - 1].sceneEntries)
         {
             StagesPlugin.Logger.LogDebug($"{sceneEntry.sceneDef.cachedName}, baseSceneName: {sceneEntry.sceneDef.baseSceneName}, Weight: {sceneEntry.weight}");
-        } 
+        }
     }
 
     /// <summary>
@@ -173,17 +189,17 @@ public static partial class StageRegistration
         }
 
         StageRegistration.SetHooks();
-        foreach(SceneDef sceneDef in stageVariantDictionary[key])
+        foreach (SceneDef sceneDef in stageVariantDictionary[key])
         {
             StagesPlugin.Logger.LogDebug($"{sceneDef.cachedName}, baseSceneName: {sceneDef.baseSceneName}");
         }
     }
 
     /// <summary>
-    /// Registers the SceneDef into the loop. Any SceneDef registered with the same baseSceneName as another SceneDef will be counted as a variant.
-    /// Variants will have their weights split equally amongst each other. Don't use this method for scenes that aren't part of the loop (Stages 1-5).
+    /// Registers the SceneDef into the loop. This method doesn't support extra parameters, use RegisterSceneDefToNormalProgression instead.
     /// </summary>
     /// <param name="sceneDef">The SceneDef being registered</param>
+    [Obsolete]
     public static void RegisterSceneDefToLoop(SceneDef sceneDef)
     {
         StageRegistration.SetHooks();
@@ -197,60 +213,46 @@ public static partial class StageRegistration
             return;
         }
 
-        if(sceneDef.stageOrder < 1 || sceneDef.stageOrder > numStageCollections)
+        if (sceneDef.stageOrder < 1 || sceneDef.stageOrder > numStageCollections)
         {
-            StagesPlugin.Logger.LogError($"SceneDef {sceneDef.cachedName} has a stage order not within 1-5. Please use this method only for stages within the loop.");
+            StagesPlugin.Logger.LogError($"SceneDef {sceneDef.cachedName} has a stage order not within 1-{numStageCollections}. Please use this method only for stages within the loop.");
             return;
         }
 
-        float weight = 1;
-        if (!InBlackList(sceneDef)){
-            weight = AddSceneOrVariant(sceneDef, weight);
-            AppendSceneCollections(sceneDef, weight);
-            RefreshPublicDictionary();
-        }
-        else
-        {
+        AddSceneOrVariant(sceneDef);
+        AppendSceneCollections(sceneDef, defaultWeight, true, true);
+        RefreshPublicDictionary();
+    }
+
+    /// <summary>
+    /// Registers the SceneDef into the normal stage progression (not Path of the Colossus). Any SceneDef registered with the same baseSceneName as another SceneDef will be counted as a variant.
+    /// </summary>
+    /// <param name="sceneDef">The SceneDef being registered</param>
+    /// <param name="weight">The weight of the SceneDef being rolled in the SceneCollection</param>
+    /// <param name="preLoop">If the stage will roll pre-loop: if the current stage is between 1-5 </param>
+    /// <param name="postLoop">If the stage will roll post-loop: if the current stage is greater than 5 </param>
+    public static void RegisterSceneDefToNormalProgression(SceneDef sceneDef, float weight = defaultWeight, bool preLoop = true, bool postLoop = true)
+    {
+        StageRegistration.SetHooks();
 #if DEBUG
-            StagesPlugin.Logger.LogDebug($"Intercepted SceneDef {sceneDef.cachedName} from entering the loop pool.");
+        StagesPlugin.Logger.LogDebug($"Registering {sceneDef.cachedName}.");
 #endif
+
+        if (privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName) && privateStageVariantDictionary[sceneDef.baseSceneName].Contains(sceneDef))
+        {
+            StagesPlugin.Logger.LogError($"SceneDef {sceneDef.cachedName} is already registered into the Scene Pool");
+            return;
         }
-    }
 
-    //There is probably a much better way to do this.
-    /// <summary>
-    /// Blacklists SceneDefs from entering the loop. If the Scene is already in the loop it removes it.
-    /// </summary>
-    /// <param name="sceneDef">The SceneDef being blacklisted</param>
-    /// <param name="plugin">Your mod plugin. Your mod will be printed to prevent malicious blacklisting.</param>
-    public static void BlacklistSceneDef(SceneDef sceneDef, PluginInfo plugin)
-    {
-        StageRegistration.SetHooks();
-        CommitBlacklist(sceneDef, plugin);
-    }
-    /// <summary>
-    /// Blacklists SceneDefs from entering the loop. If the Scene is already in the loop it removes it.
-    /// </summary>
-    /// <param name="address">The address of the SceneDef being blacklisted</param>
-    /// <param name="plugin">Your mod plugin. Your mod will be printed to prevent malicious blacklisting.</param>
-    public static void BlacklistSceneDef(string address, PluginInfo plugin)
-    {
-        StageRegistration.SetHooks();
-        CommitBlacklist(Addressables.LoadAssetAsync<SceneDef>(address).WaitForCompletion(), plugin);
-    }
+        if (sceneDef.stageOrder < 1 || sceneDef.stageOrder > numStageCollections)
+        {
+            StagesPlugin.Logger.LogError($"SceneDef {sceneDef.cachedName} has a stage order not within 1-{numStageCollections}. Please use this method only for stages within the loop.");
+            return;
+        }
 
-    /// <summary>
-    /// Returns true if the SceneDef is in the blacklist.
-    /// </summary>
-    /// <param name="sceneDef">The SceneDef in question</param>
-    /// <returns></returns>
-    public static bool InBlackList(SceneDef sceneDef)
-    {
-        StageRegistration.SetHooks();
-        if (blacklistedStages.ContainsKey(sceneDef.baseSceneName) && blacklistedStages[sceneDef.baseSceneName].Contains(sceneDef))
-            return true;
-
-        return false;
+        AddSceneOrVariant(sceneDef);
+        AppendSceneCollections(sceneDef, weight, preLoop, postLoop);
+        RefreshPublicDictionary();
     }
 
     /// <summary>
@@ -284,16 +286,12 @@ public static partial class StageRegistration
         return bazaarMaterial;
     }
 
-    private static float AddSceneOrVariant(SceneDef sceneDef, float weight)
+    private static void AddSceneOrVariant(SceneDef sceneDef)
     {
-        int stageOrderIndex = sceneDef.stageOrder - 1;
 
         if (privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName))
         {
             privateStageVariantDictionary[sceneDef.baseSceneName].Add(sceneDef);
-            weight = 1f / privateStageVariantDictionary[sceneDef.baseSceneName].Count;
-
-            EqualizeVariantWeights(sceneDef.baseSceneName, stageOrderIndex, weight);
         }
         else
         {
@@ -301,97 +299,29 @@ public static partial class StageRegistration
             list.Add(sceneDef);
             privateStageVariantDictionary.Add(sceneDef.baseSceneName, list);
         }
-        return weight;
     }
-    //There is probably a better way to do this
-    private static void RemoveSceneDefFromCollection(SceneDef sceneDef)
+
+    private static void AppendSceneCollections(SceneDef sceneDef, float weight, bool preLoop, bool postLoop)
     {
         int stageOrderIndex = sceneDef.stageOrder - 1;
-        ref var sceneEntries = ref sceneCollections[stageOrderIndex]._sceneEntries;
-        for (int i = 0; i < sceneEntries.Length; i++)
-        {
-            if (sceneDef == sceneEntries[i].sceneDef)
-            {
-                HG.ArrayUtils.ArrayRemoveAtAndResize<SceneCollection.SceneEntry>(ref sceneEntries, i);
-#if DEBUG
-                StagesPlugin.Logger.LogDebug($"SceneDef {sceneDef.cachedName} successfully removed from collection");
-#endif
-                return;
-            }
-        }
-    }
-
-    //This method also equalizes all vanilla variants since they are already in the SceneCollection, hence why AppendSceneCollections isn't called on SystemInit.
-    private static void EqualizeVariantWeights(string key, int stageOrderIndex, float weight)
-    {
-        for (int i = 0; i < sceneCollections[stageOrderIndex]._sceneEntries.Length; i++)
-        {
-            if (sceneCollections[stageOrderIndex]._sceneEntries[i].sceneDef.baseSceneName.Equals(key))
-            {
-                sceneCollections[stageOrderIndex]._sceneEntries[i].weightMinusOne = weight - 1;
-            }
-        }
-    }
-
-    private static void CommitBlacklist(SceneDef sceneDef, PluginInfo plugin)
-    {
-        if (InBlackList(sceneDef))
-        {
-            StagesPlugin.Logger.LogWarning($"SceneDef {sceneDef.cachedName} already blacklisted.");
-            return;
+        if (preLoop) {
+            ref var sceneEntries = ref preLoopSceneCollections[stageOrderIndex]._sceneEntries;
+            HG.ArrayUtils.ArrayAppend(ref sceneEntries, new SceneCollection.SceneEntry { sceneDef = sceneDef, weightMinusOne = weight - 1 });
         }
 
-        int stageOrderIndex = sceneDef.stageOrder - 1;
-        if (privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName))
+        if (postLoop)
         {
-            foreach (SceneDef grabbedSceneDef in privateStageVariantDictionary[sceneDef.baseSceneName])
-            {
-                if (grabbedSceneDef == sceneDef)
-                {
-                    privateStageVariantDictionary[sceneDef.baseSceneName].Remove(sceneDef);
-                    if (privateStageVariantDictionary[sceneDef.baseSceneName].Count <= 0)
-                    {
-                        privateStageVariantDictionary.Remove(sceneDef.baseSceneName);
-                    }
-                    else
-                    {
-                        float weight = 1f / privateStageVariantDictionary[sceneDef.baseSceneName].Count;
-                        EqualizeVariantWeights(sceneDef.baseSceneName, stageOrderIndex, weight);
-                    }
-                    break;
-                }
-            }
+            ref var sceneEntries = ref postLoopSceneCollections[stageOrderIndex]._sceneEntries;
+            HG.ArrayUtils.ArrayAppend(ref sceneEntries, new SceneCollection.SceneEntry { sceneDef = sceneDef, weightMinusOne = weight - 1 });
         }
 
-        RemoveSceneDefFromCollection(sceneDef);
-
-        if (blacklistedStages.ContainsKey(sceneDef.baseSceneName))
-        {
-            blacklistedStages[sceneDef.baseSceneName].Add(sceneDef);
-        }
-        else
-        {
-            List<SceneDef> list = new List<SceneDef>();
-            list.Add(sceneDef);
-            blacklistedStages.Add(sceneDef.baseSceneName, list);
-        }
-
-        StagesPlugin.Logger.LogInfo($"Successfully blacklisted SceneDef {sceneDef.cachedName}. Blacklister: {plugin.Instance.name}");
-    }
-
-    private static void AppendSceneCollections(SceneDef sceneDef, float weight)
-    {
-        int stageOrderIndex = sceneDef.stageOrder - 1;
-        ref var sceneEntries = ref sceneCollections[stageOrderIndex]._sceneEntries;
-        HG.ArrayUtils.ArrayAppend(ref sceneEntries, new SceneCollection.SceneEntry { sceneDef = sceneDef, weightMinusOne = weight - 1 });
-
-        sceneDef.destinationsGroup = sceneCollections[(stageOrderIndex + 1) % numStageCollections];
+        sceneDef.destinationsGroup = preLoopSceneCollections[(stageOrderIndex + 1) % numStageCollections];
+        sceneDef.loopedDestinationsGroup = postLoopSceneCollections[(stageOrderIndex + 1) % numStageCollections];
     }
 
     private static void RefreshPublicDictionary()
     {
         stageVariantDictionary = new ReadOnlyDictionary<string, List<SceneDef>>(privateStageVariantDictionary);
     }
-
     
 }
