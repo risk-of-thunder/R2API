@@ -47,13 +47,15 @@ public class AddressableDCCSPool : ScriptableObject
     private void OnDestroy() => instances.Remove(this);
 
     /// <summary>
-    /// Represents a version of <see cref="DccsPool.PoolEntry"/> that uses <see cref="AddressableDirectorCardCategorySelection"/> for representing a pool entry
+    /// Represents a version of <see cref="DccsPool.PoolEntry"/> that can use either a <see cref="AddressableDirectorCardCategorySelection"/> for representing a pool entry, or a <see cref="AddressReferencedFamilyDirectorCardCategorySelection"/> for representing a family entr.
     /// </summary>
     [Serializable]
     public class PoolEntry
     {
         [Tooltip("The DCCS for this pool entry")]
         public AddressableDirectorCardCategorySelection dccs;
+        [Tooltip("An address or a Direct reference to an existing Family Director Card Category Selection")]
+        public AddressReferencedFamilyDirectorCardCategorySelection familyDccs;
         [Tooltip("The weight of this pool entry relative to the others")]
         public float weight;
 
@@ -61,7 +63,7 @@ public class AddressableDCCSPool : ScriptableObject
         {
             return new DccsPool.PoolEntry
             {
-                dccs = dccs.targetCardCategorySelection,
+                dccs = familyDccs.AssetExists ? familyDccs.Asset : dccs.targetCardCategorySelection,
                 weight = weight
             };
         }

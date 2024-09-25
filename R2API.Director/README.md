@@ -18,6 +18,11 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.3.0'
+
+* Added an "AddressReferencedFamilyDirectorCardCategorySelection" class, which is used to reference the FamilyDCCS from the base game
+* AddressableDCCSPool's "PoolEntry" can now reference a FamilyDCCS, this FamilyDCCS takes precedence over the AddressableDirectorCardCategorySelection field.
+
 ### '2.2.1'
 * Add StageSerde struct, which acts as a workaround for Unity's inability to correctly serialize the Stage enum now that it is 64 bits long.
 
