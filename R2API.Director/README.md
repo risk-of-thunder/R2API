@@ -18,6 +18,10 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.3.1'
+
+* Fixed the AddressableDCCSPool's ConditionalPool class not upgrading properly when it was using the new FamilyDCCSOption
+
 ### '2.3.0'
 
 * Added an "AddressReferencedFamilyDirectorCardCategorySelection" class, which is used to reference the FamilyDCCS from the base game

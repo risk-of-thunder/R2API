@@ -83,7 +83,7 @@ public class AddressableDCCSPool : ScriptableObject
         {
             return new DccsPool.ConditionalPoolEntry
             {
-                dccs = dccs.targetCardCategorySelection,
+                dccs = familyDccs.AssetExists ? familyDccs.Asset : dccs.targetCardCategorySelection,
                 requiredExpansions = requiredExpansions.Select(x => x.Asset).ToArray(),
                 weight = weight
             };
