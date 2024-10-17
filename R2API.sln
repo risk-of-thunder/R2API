@@ -93,6 +93,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Addressables", "R2API
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.StringSerializerExtensions", "R2API.StringSerializerExtensions\R2API.StringSerializerExtensions.csproj", "{93F45245-4CE0-488E-835E-477155F65773}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.Animations", "R2API.Animations\R2API.Animations.csproj", "{1043B8B6-1120-4B18-A3F4-8F03053E6D44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -235,6 +237,10 @@ Global
 		{93F45245-4CE0-488E-835E-477155F65773}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93F45245-4CE0-488E-835E-477155F65773}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93F45245-4CE0-488E-835E-477155F65773}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1043B8B6-1120-4B18-A3F4-8F03053E6D44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1043B8B6-1120-4B18-A3F4-8F03053E6D44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1043B8B6-1120-4B18-A3F4-8F03053E6D44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1043B8B6-1120-4B18-A3F4-8F03053E6D44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
