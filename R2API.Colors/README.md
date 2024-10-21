@@ -22,6 +22,9 @@ These scriptable objects can later be used for example, in EntityStateConfigurat
 
 ## Changelog
 
+### '1.0.3'
+* Fix compatibility with other mods that modify ColorCatalog.
+
 ### '1.0.2'
 * Fix for `SOTS` update.
 
