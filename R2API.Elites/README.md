@@ -20,6 +20,9 @@ The EliteRamp implementation is handled inside the EliteRamp class, you can use 
 
 ## Changelog
 
+### '1.0.5'
+* Fixes for 1.3.5 Game Update.
+
 ### '1.0.4'
 * Initial fixes for SOTS DLC2 Release.
 
