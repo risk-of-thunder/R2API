@@ -199,7 +199,7 @@ void CopyAllR2APIDllsToUniqueFolder()
     var allR2apiModulesDirectoryPath = Path.Join(r2apiSolutionFolder.FullName, "All R2API Modules");
     Directory.CreateDirectory(allR2apiModulesDirectoryPath);
     foreach (var dll in Directory.GetFiles(r2apiSolutionFolder.FullName, "R2API*.dll", SearchOption.AllDirectories).Concat(Directory.GetFiles(r2apiSolutionFolder.FullName, "R2API*.pdb", SearchOption.AllDirectories)))
-        if (dll.Contains("\\bin\\Debug\\netstandard2.0\\"))
+        if (dll.Contains("\\bin\\Debug\\netstandard2.1\\"))
         {
             var outputPath = Path.Combine(allR2apiModulesDirectoryPath, Path.GetFileName(dll));
             Console.WriteLine(dll);

@@ -1,9 +1,9 @@
 ﻿global using UnityObject = UnityEngine.Object;
 using BepInEx;
 using BepInEx.Logging;
-using HG.Reflection;
 
-[assembly: SearchableAttribute.OptIn]
+
+[assembly: HG.Reflection.SearchableAttribute.OptIn]
 
 namespace R2API.Test;
 

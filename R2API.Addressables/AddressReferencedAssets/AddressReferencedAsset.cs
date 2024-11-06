@@ -3,6 +3,7 @@ using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,7 +53,14 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
             }
             else if(IsValidForLoadingWithAddress())
             {
-                LoadFromAddress();
+                if(_AddressFailedToLoad)
+                {
+                    AddressablesPlugin.Logger.LogWarning($"Not trying to load {this} because it's address has already failed to load beforehand. Null will be returned.");
+                }
+                else
+                {
+                    LoadFromAddress();
+                }
             }
 
             return _asset;
@@ -89,6 +97,7 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
             _address = value;
             _asset = null;
             _useDirectReference = false;
+            _AddressFailedToLoad = false;
             if(RoR2Application.loadFinished)
             {
                 Load();
@@ -123,6 +132,8 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     /// <br>If this is true, you're encouraged to wait for AddressReferencedAsset to initialize fully using <see cref="AddressReferencedAsset.OnAddressReferencedAssetsLoaded"/></br>
     /// </summary>
     public virtual bool CanLoadFromCatalog { get; } = false;
+
+    private bool _AddressFailedToLoad;
 
     private bool IsValidForLoadingWithAddress()
     {
@@ -161,6 +172,13 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     /// </summary>
     protected async Task LoadFromAddressAsync()
     {
+        if (!await IsAddressValidAsync())
+        {
+            AddressablesPlugin.Logger.LogWarning($"{this} failed to load from it's address because the address is either invalid, or malformed.");
+            _AddressFailedToLoad = true;
+            return;
+        }
+
         var task = Addressables.LoadAssetAsync<T>(_address).Task;
         _asset = await task;
     }
@@ -170,7 +188,33 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     /// </summary>
     protected void LoadFromAddress()
     {
+        if(!IsAddressValid())
+        {
+            AddressablesPlugin.Logger.LogWarning($"{this} failed to load from it's address because the address is either invalid, or malformed.");
+            _AddressFailedToLoad = true;
+            return;
+        }
         _asset = Addressables.LoadAssetAsync<T>(_address).WaitForCompletion();
+    }
+
+    private bool IsAddressValid()
+    {
+        var location = Addressables.LoadResourceLocationsAsync(_address).WaitForCompletion();
+
+        AddressablesPlugin.Logger.LogFatal($"Location for address {Address} exists?: {location.Any()}");
+        return location.Any();
+    }
+
+    private async Task<bool> IsAddressValidAsync()
+    {
+        var locationTask = Addressables.LoadResourceLocationsAsync(_address);
+        var result = await locationTask.Task;
+        return result.Any();
+    }
+
+    public override string ToString()
+    {
+        return $"{GetType().Name}(Asset={(_asset ? _asset : "null")}.Address={Address}";
     }
 
     /// <summary>
