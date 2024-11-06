@@ -101,6 +101,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.ProcType.Patcher", "R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.ProcType.Interop", "R2API.ProcType.Interop\R2API.ProcType.Interop.csproj", "{807391A7-05DE-4FFC-A997-B577D8BECCBD}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoR2.Patched", "RoR2.Patched\RoR2.Patched.csproj", "{77CAE85A-E1FA-44C4-9E78-404A12DF2CCE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -259,6 +261,10 @@ Global
 		{807391A7-05DE-4FFC-A997-B577D8BECCBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{807391A7-05DE-4FFC-A997-B577D8BECCBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{807391A7-05DE-4FFC-A997-B577D8BECCBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77CAE85A-E1FA-44C4-9E78-404A12DF2CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77CAE85A-E1FA-44C4-9E78-404A12DF2CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77CAE85A-E1FA-44C4-9E78-404A12DF2CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77CAE85A-E1FA-44C4-9E78-404A12DF2CCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

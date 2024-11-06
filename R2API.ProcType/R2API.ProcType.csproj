@@ -3,5 +3,6 @@
   <ItemGroup>
     <ProjectReference Include="..\R2API.Core\R2API.Core.csproj" Private="false" />
     <ProjectReference Include="..\R2API.ProcType.Interop\R2API.ProcType.Interop.csproj" Private="false" />
+    <ProjectReference Include="..\R2API.ProcType.Patcher\R2API.ProcType.Patcher.csproj" Private="false" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>
