@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_Elites"
-versionNumber = "1.0.5"
+versionNumber = "1.0.6"
 description = "API for adding custom elite types"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
