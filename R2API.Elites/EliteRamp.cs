@@ -97,6 +97,13 @@ public static class EliteRamp
         }
     }
 
+    public static bool TryGetRamp(EliteIndex eliteIndex, out Texture2D ramp)
+    {
+        EliteRamp.SetHooks();
+        ramp = null;
+        return eliteIndex != EliteIndex.None && eliteIndexToTexture.TryGetValue(eliteIndex, out ramp);
+    }
+
     public static void AddRampToMultipleElites(IEnumerable<EliteDef> eliteDefs, Texture2D ramp)
     {
         EliteRamp.SetHooks();

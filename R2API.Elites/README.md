@@ -14,11 +14,14 @@ The addition of Elites is handled via the CustomElite class, which contains the 
     EliteRamp: A Texture2D that's going to be the Elite's Ramp, this is what makes elites such as blazing elites have a different color palette
     EliteTierDefs: The Elite being added will be added to the specified EliteTierDefs.
 
-The EliteRamp implementation is handled inside the EliteRamp class, you can use the method ``AddRamp`` for tying a Ramp to an eliteDef, this can be useful in scenarios where you dont want to add Elites via the main EliteAPI
+The EliteRamp implementation is handled inside the EliteRamp class, you can use the method ``AddRamp`` for tying a Ramp to an eliteDef, this can be useful in scenarios where you dont want to add Elites via the main EliteAPI. It also contains ``TryGetRamp`` method so you can get elite ramp texture for custom elites added via ``AddRamp`` method.
 
 ## Related Pages
 
 ## Changelog
+
+### '1.0.6'
+* Add EliteRamp.TryGetRamp method.
 
 ### '1.0.5'
 * Fixes for 1.3.5 Game Update.
