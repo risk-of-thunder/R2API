@@ -81,9 +81,6 @@ internal static class CatalogBlockers
     [SystemInitializer(typeof(GameModeCatalog))]
     private static void BlockGameModes() => SetAvailability<Run>(false);
 
-    [SystemInitializer(typeof(RoR2.Networking.NetworkManagerSystem))]
-    private static void BlockNetworkedPrefabs() => SetAvailability<NetworkIdentity>(false);
-
     [SystemInitializer(typeof(SkillCatalog))]
     private static void BlockSkills() => SetAvailability<SkillDef>(false);
 
@@ -138,9 +135,6 @@ internal static class CatalogBlockers
     [SystemInitializer(typeof(GameEndingCatalog))]
     private static void BlockGameEndings() => SetAvailability<GameEndingDef>(false);
 
-    [SystemInitializer(typeof(EntityStateCatalog))]
-    private static void BlockEntityStateConfigurations() => SetAvailability<EntityStateConfiguration>(false);
-
     [SystemInitializer(typeof(ExpansionCatalog))]
     private static void BlockExpansionDefs() => SetAvailability<ExpansionDef>(false);
 
@@ -149,9 +143,6 @@ internal static class CatalogBlockers
 
     [SystemInitializer(typeof(MiscPickupCatalog))]
     private static void BlockMiscPickupDefs() => SetAvailability<MiscPickupDef>(false);
-
-    [SystemInitializer(typeof(EntityStateCatalog))]
-    private static void BlockEntityStates() => SetAvailability<EntityState>(false);
 
     #endregion
 }

@@ -8,6 +8,10 @@ Currently it adds the AddressReferencedAsset system, which allows you on the Edi
 
 ## Changelog
 
+### '1.0.4'
+
+* Added Safeguards for the loading process to avoid loading assets with addresses that are invalid or malformed.
+
 ### '1.0.3'
 
 * Fixed a typo on ``AddressReferencedAsset(UnityEngine.Object)`` constructor which would incorrectly set ``UseDirectReference`` to ``false``

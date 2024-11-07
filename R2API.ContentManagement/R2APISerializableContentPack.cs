@@ -191,14 +191,13 @@ public class R2APISerializableContentPack : ScriptableObject
         RemoveNullFields(ref miscPickupDefs);
 
         RemoveNullFields(ref entityStateConfigurations);
-        RemoveNullFields(ref entityStateTypes);
 
         RemoveNullFields(ref expansionDefs);
         RemoveNullFields(ref entitlementDefs);
 
-        void RemoveNullFields<T>(ref T[] array)
+        void RemoveNullFields<T>(ref T[] array) where T : UnityEngine.Object
         {
-            IEnumerable<T> nonNullValues = array.Where(obj => obj != null);
+            IEnumerable<T> nonNullValues = array.Where(obj => obj);
             array = nonNullValues.ToArray();
         }
     }

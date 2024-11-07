@@ -21,8 +21,20 @@ readme = "./README.md"
 outdir = "./build"
 
 [[build.copy]]
-source = "./ReleaseOutput"
-target = "./plugins/R2API.ProcType"
+source = "./ReleaseOutput/R2API.ProcType.dll"
+target = "./plugins/R2API.ProcType/R2API.ProcType.dll"
+
+[[build.copy]]
+source = "./ReleaseOutput/R2API.ProcType.xml"
+target = "./plugins/R2API.ProcType/R2API.ProcType.xml"
+
+[[build.copy]]
+source = "../R2API.ProcType.Interop/ReleaseOutput/R2API.ProcType.Interop.dll"
+target = "./plugins/R2API.ProcType/R2API.ProcType.Interop.dll"
+
+[[build.copy]]
+source = "../R2API.ProcType.Patcher/ReleaseOutput/R2API.ProcType.Patcher.dll"
+target = "./patchers/R2API.ProcType/R2API.ProcType.Patcher.dll"
 
 [publish]
 repository = "https://thunderstore.io"

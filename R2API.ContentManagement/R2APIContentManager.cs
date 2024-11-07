@@ -221,67 +221,12 @@ public static partial class R2APIContentManager
             return;
         }
 
-        On.RoR2.ContentManagement.ContentManager.SetContentPacks += EnsureUniqueNames;
-
         _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
-        On.RoR2.ContentManagement.ContentManager.SetContentPacks -= EnsureUniqueNames;
-
         _hooksEnabled = false;
-    }
-
-    private static void EnsureUniqueNames(On.RoR2.ContentManagement.ContentManager.orig_SetContentPacks orig, List<ReadOnlyContentPack> newContentPacks)
-    {
-        if (newContentPacks.Count > 1)
-        {
-            IEnumerable<PropertyInfo> allReadOnlyNamedAssetCollectionProperty = GetAllAssetCollectionPropertiesOfAReadOnlyContentPack();
-
-            // Compare each content pack with each others for any potential duplicate asset names
-            for (int i = 0; i < newContentPacks.Count - 1; i++)
-            {
-                for (int j = i + 1; j < newContentPacks.Count; j++)
-                {
-
-                    var firstContentPack = newContentPacks[i];
-                    var secondContentPack = newContentPacks[j];
-
-                    var isFirstContentPackVanilla = firstContentPack.IsVanillaContentPack();
-                    var isSecondContentPackVanilla = secondContentPack.IsVanillaContentPack();
-
-                    foreach (var assetCollectionProperty in allReadOnlyNamedAssetCollectionProperty)
-                    {
-                        var firstAssetCollection = ((IEnumerable)assetCollectionProperty.GetValue(firstContentPack)).Cast<UnityObject>();
-                        var secondAssetCollection = ((IEnumerable)assetCollectionProperty.GetValue(secondContentPack)).Cast<UnityObject>();
-
-                        var firstAssetIndex = 0;
-                        foreach (var firstAsset in firstAssetCollection)
-                        {
-                            var secondAssetIndex = 0;
-                            foreach (var secondAsset in secondAssetCollection)
-                            {
-                                var differentReferences = firstAsset != secondAsset;
-                                if (differentReferences)
-                                {
-                                    ChangeAssetNameIfNeeded(firstContentPack, firstAsset, ref firstAssetIndex,
-                                        secondContentPack, secondAsset, ref secondAssetIndex,
-                                        isFirstContentPackVanilla, isSecondContentPackVanilla);
-                                }
-                                else
-                                {
-                                    ContentManagementPlugin.Logger.LogError($"The exact same asset {firstAsset} is being added by two different content packs : {firstContentPack.identifier} and {secondContentPack.identifier}");
-                                    // Todo, try removing it from the non-vanilla contentPack, lot of annoying code to write that I cant bother writing right now
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        orig(newContentPacks);
     }
 
     private static void ChangeAssetNameIfNeeded(ReadOnlyContentPack firstContentPack, UnityObject firstAsset, ref int firstAssetIndex,
@@ -443,8 +388,15 @@ public static partial class R2APIContentManager
             List<ManagedReadOnlyContentPack> managedReadOnlyContentPacks = new List<ManagedReadOnlyContentPack>();
             foreach (var (modName, managedSCP) in BepInModNameToSerializableContentPack)
             {
-                managedReadOnlyContentPacks.Add(new ManagedReadOnlyContentPack(managedSCP.serializableContentPack, managedSCP.AutoCreateIContentPackProvider, managedSCP.AssemblyThatCreatedContentPack));
-                ContentPackToAssembly.Add(managedSCP.serializableContentPack.GetOrCreateContentPack(), managedSCP.AssemblyThatCreatedContentPack);
+                try
+                {
+                    managedReadOnlyContentPacks.Add(new ManagedReadOnlyContentPack(managedSCP.serializableContentPack, managedSCP.AutoCreateIContentPackProvider, managedSCP.AssemblyThatCreatedContentPack));
+                    ContentPackToAssembly.Add(managedSCP.serializableContentPack.GetOrCreateContentPack(), managedSCP.AssemblyThatCreatedContentPack);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[R2API CreateContentPacks] {modName} {e}");
+                }
             }
             _contentPacksCreated = true;
             _managedContentPacks = new ReadOnlyArray<ManagedReadOnlyContentPack>(managedReadOnlyContentPacks.ToArray());

@@ -67,7 +67,7 @@ public static partial class SoundAPI
         _hooksEnabled = false;
 
         AddBanksAfterEngineInitHook = new Hook(
-            typeof(AkWwiseInitializationSettings).GetMethodCached(nameof(AkWwiseInitializationSettings.InitializeSoundEngine)),
+            typeof(AkSoundEngineInitialization).GetMethodCached(nameof(AkSoundEngineInitialization.InitializeSoundEngine)),
             typeof(SoundAPI).GetMethodCached(nameof(AddBanksAfterEngineInit)));
 
         Music.SetHooks();
@@ -84,9 +84,9 @@ public static partial class SoundAPI
         _hooksEnabled = false;
     }
 
-    private static bool AddBanksAfterEngineInit(Func<bool> orig)
+    private static bool AddBanksAfterEngineInit(Func<AkSoundEngineInitialization, bool> orig, AkSoundEngineInitialization self)
     {
-        var res = orig();
+        var res = orig(self);
 
         LoadBanks();
 
@@ -593,10 +593,10 @@ public static partial class SoundAPI
             }
 
             AddCustomMusicDatasHook = new Hook(
-                typeof(AkWwiseInitializationSettings).GetMethodCached(nameof(AkWwiseInitializationSettings.InitializeSoundEngine)),
+                typeof(AkSoundEngineInitialization).GetMethodCached(nameof(AkSoundEngineInitialization.InitializeSoundEngine)),
                 typeof(Music).GetMethodCached(nameof(AddCustomMusicDatas)));
 
-            On.RoR2.MusicController.Start += EnableCustomMusicSystems;
+            On.RoR2.MusicController.StartIntroMusic += EnableCustomMusicSystems;
             SceneCatalog.onMostRecentSceneDefChanged += OnSceneChangeReplaceMusic;
 
             On.RoR2.MusicController.UpdateState += IsGameMusicBankInUse;
@@ -610,7 +610,7 @@ public static partial class SoundAPI
         {
             AddCustomMusicDatasHook.Dispose();
 
-            On.RoR2.MusicController.Start -= EnableCustomMusicSystems;
+            On.RoR2.MusicController.StartIntroMusic -= EnableCustomMusicSystems;
             SceneCatalog.onMostRecentSceneDefChanged -= OnSceneChangeReplaceMusic;
 
             On.RoR2.MusicController.UpdateState -= IsGameMusicBankInUse;
@@ -628,9 +628,9 @@ public static partial class SoundAPI
                 GameMusicBankInUse = IsVanillaMusicTrack(self.currentTrack);
         }
 
-        private static bool AddCustomMusicDatas(Func<bool> orig)
+        private static bool AddCustomMusicDatas(Func<AkSoundEngineInitialization, bool> orig, AkSoundEngineInitialization self)
         {
-            var res = orig();
+            var res = orig(self);
 
             foreach (var data in CustomMusicDatas)
             {
@@ -687,7 +687,7 @@ public static partial class SoundAPI
             }
         }
 
-        private static void EnableCustomMusicSystems(On.RoR2.MusicController.orig_Start orig, MusicController self)
+        private static void EnableCustomMusicSystems(On.RoR2.MusicController.orig_StartIntroMusic orig, MusicController self)
         {
             orig(self);
 

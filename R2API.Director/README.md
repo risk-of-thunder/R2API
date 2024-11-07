@@ -10,13 +10,39 @@ R2API.Director is used for adding new Enemies and Interactables to the Director'
 
 * StageSettingsActions (Modify the the stage settings such as the stage's monster and interactable credits.)
 * MonsterActions (Modify the stage's Monsters's DCCSPool)
-* IntreractableActions (Modify the stage's Interactable's DCCSPool)
+* InteractableActions (Modify the stage's Interactable's DCCSPool)
 
 Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which contains helper methods which greatly simplify interacting with the Events described above.
 
 ## Related Pages
 
 ## Changelog
+
+### '2.3.1'
+
+* Fixed the AddressableDCCSPool's ConditionalPool class not upgrading properly when it was using the new FamilyDCCSOption
+
+### '2.3.0'
+
+* Added an "AddressReferencedFamilyDirectorCardCategorySelection" class, which is used to reference the FamilyDCCS from the base game
+* AddressableDCCSPool's "PoolEntry" can now reference a FamilyDCCS, this FamilyDCCS takes precedence over the AddressableDirectorCardCategorySelection field.
+
+### '2.2.1'
+* Add StageSerde struct, which acts as a workaround for Unity's inability to correctly serialize the Stage enum now that it is 64 bits long.
+
+### '2.2.0'
+* Add SOTS stages and support Storm Stuff interactable category.
+
+### '2.1.3'
+* Initial fixes for SOTS DLC2 Release.
+
+### '2.1.2'
+
+* Add support for 'lakes'/'Verdant Falls' from Devotion update.
+
+### '2.1.1'
+
+* Fix `AddNewMonster` / `RemoveExistingMonster` helper methods not properly handling `arena` stage.
 
 ### '2.1.0'
 * Added Dependency for the Addressables Submodule

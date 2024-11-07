@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API.AutoVersionGen;
@@ -37,8 +39,8 @@ public static partial class ColorsAPI
         }
 
         //Color Catalog
-        IL.RoR2.ColorCatalog.GetColor += GetColorIL;
-        IL.RoR2.ColorCatalog.GetColorHexString += GetColorIL;
+        IL.RoR2.ColorCatalog.GetColor += ColorCatalogGetColorIL;
+        IL.RoR2.ColorCatalog.GetColorHexString += ColorCatalogGetColorHexStringIL;
 
         //DamageColor
         IL.RoR2.DamageColor.FindColor += GetColorIL;
@@ -49,8 +51,8 @@ public static partial class ColorsAPI
     internal static void UnsetHooks()
     {
         //Color Catalog
-        IL.RoR2.ColorCatalog.GetColor -= GetColorIL;
-        IL.RoR2.ColorCatalog.GetColorHexString -= GetColorIL;
+        IL.RoR2.ColorCatalog.GetColor -= ColorCatalogGetColorIL;
+        IL.RoR2.ColorCatalog.GetColorHexString -= ColorCatalogGetColorHexStringIL;
 
         //DamageColor
         IL.RoR2.DamageColor.FindColor -= GetColorIL;
@@ -76,6 +78,45 @@ public static partial class ColorsAPI
         c.Index++;
         c.Emit(OpCodes.Pop);
     }
+
+    private static void ColorCatalogGetColorIL(ILContext il)
+    {
+        var c = new ILCursor(il);
+        c.Emit(OpCodes.Ldarg_0);
+        c.EmitDelegate(ColorCatalogGetColor);
+        c.Emit(OpCodes.Ret);
+    }
+
+    private static Color32 ColorCatalogGetColor(ColorCatalog.ColorIndex colorIndex)
+    {
+        var index = (int)colorIndex;
+        if (index < 0 || index > GetLength(ref ColorCatalog.indexToColor32))
+        {
+            index = (int)ColorCatalog.ColorIndex.Error;
+        }
+
+        return GetItem(ref ColorCatalog.indexToColor32, index);
+    }
+
+    private static void ColorCatalogGetColorHexStringIL(ILContext il)
+    {
+        var c = new ILCursor(il);
+        c.Emit(OpCodes.Ldarg_0);
+        c.EmitDelegate(ColorCatalogGetColorHexString);
+        c.Emit(OpCodes.Ret);
+    }
+
+    private static string ColorCatalogGetColorHexString(ColorCatalog.ColorIndex colorIndex)
+    {
+        var index = (int)colorIndex;
+        if (index < 0 || index > GetLength(ref ColorCatalog.indexToHexString))
+        {
+            index = (int)ColorCatalog.ColorIndex.Error;
+        }
+
+        return GetItem(ref ColorCatalog.indexToHexString, index);
+    }
+
     #endregion
 
     #region Damage Color Public Methods
@@ -122,7 +163,10 @@ public static partial class ColorsAPI
     public static ColorCatalog.ColorIndex RegisterColor(Color color)
     {
         ColorsAPI.SetHooks();
-        int nextColorIndex = ColorCatalog.indexToColor32.Length;
+        //Just doing ColorCatalog.indexToColor.Length always returns 28
+        //Most likely some kind of JIT optimization because it's a static readonly array
+        //resulting in using old array(that's why we use ref)/length even though it actually changed
+        int nextColorIndex = GetLength(ref ColorCatalog.indexToColor32);
         ColorCatalog.ColorIndex newIndex = (ColorCatalog.ColorIndex)nextColorIndex;
         HG.ArrayUtils.ArrayAppend(ref ColorCatalog.indexToColor32, color);
         HG.ArrayUtils.ArrayAppend(ref ColorCatalog.indexToHexString, Util.RGBToHex(color));
@@ -145,5 +189,12 @@ public static partial class ColorsAPI
 
         serializableColor.ColorIndex = RegisterColor(serializableColor.color32);
     }
+
     #endregion
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int GetLength<T>(ref T[] array) => array.Length;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static T GetItem<T>(ref T[] array, int i) => array[i];
 }

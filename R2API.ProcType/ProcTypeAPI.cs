@@ -77,11 +77,19 @@ public static partial class ProcTypeAPI
         {
             throw new ArgumentOutOfRangeException(nameof(procType));
         }
+
         SetHooks();
+
         byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         byte[] value;
         int i = (int)procType >> 3;
-        if (mask?.Length > i) // current mask is large enough to set procType
+
+        if (mask is null)
+        {
+            value = new byte[i + 1];
+            value[i] = GetMaskingBit(i, procType);
+        }
+        else if (mask.Length > i) // current mask is large enough to set procType
         {
             byte b = (byte)(mask[i] | GetMaskingBit(i, procType)); // relevant byte with procType enabled
             if (b == mask[i])
@@ -93,13 +101,11 @@ public static partial class ProcTypeAPI
         }
         else
         {
-            value = new byte[i + 1]; // extend mask to fit procType
-            if (mask != null)
-            {
-                Array.Copy(mask, value, mask.Length);
-            }
+            value = mask;
+            Array.Resize(ref value, i + 1);
             value[i] = GetMaskingBit(i, procType);
         }
+
         ProcTypeInterop.SetModdedMask(ref procChainMask, value);
     }
 
@@ -113,31 +119,45 @@ public static partial class ProcTypeAPI
         {
             throw new ArgumentOutOfRangeException(nameof(procType));
         }
+
         SetHooks();
         byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         if (mask == null)
         {
             return; // mask is 0
         }
+
         int i = (int)procType >> 3;
         if (mask.Length <= i)
         {
             return; // mask is not long enough for procType to be enabled
         }
+
         byte b = (byte)(mask[i] & ~GetMaskingBit(i, procType)); // relevant byte with procType disabled
         if (b == mask[i])
         {
             return; // procType was already disabled, no need to make a new array
         }
+
         if (b == 0 && mask.Length == i + 1) // new byte is empty trailing data
         {
-            if (i == 0)
+            var newLength = 0;
+            for (var j = mask.Length - 2; j >= 0; j--)
+            {
+                if (mask[j] != 0)
+                {
+                    newLength = j + 1;
+                    break;
+                }
+            }
+
+            if (newLength == 0)
             {
                 mask = null; // mask no longer holds any information
             }
             else
             {
-                Array.Resize(ref mask, i); // disable procType by resizing to removing relevant byte
+                Array.Resize(ref mask, newLength); // disable procType by resizing to removing relevant byte
             }
         }
         else
@@ -145,6 +165,7 @@ public static partial class ProcTypeAPI
             mask = ArrayUtils.Clone(mask); // ensure mask is treated as immutable
             mask[i] = b;
         }
+
         ProcTypeInterop.SetModdedMask(ref procChainMask, mask);
     }
 
@@ -161,11 +182,13 @@ public static partial class ProcTypeAPI
         {
             throw new ArgumentOutOfRangeException(nameof(procType));
         }
+
         byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         if (mask == null)
         {
             return false;
         }
+
         int i = (int)procType >> 3;
         return mask.Length > i && (mask[i] & GetMaskingBit(i, procType)) > 0;
     }
@@ -218,6 +241,7 @@ public static partial class ProcTypeAPI
         {
             throw new ArgumentNullException(nameof(dest));
         }
+
         SetHooks();
         byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         if (mask != null)
@@ -247,7 +271,7 @@ public static partial class ProcTypeAPI
     /// Assign the <see cref="ProcTypeAPI"/> equivalent of <see cref="ProcChainMask.mask"/>. 
     /// </summary>
     /// <param name="procChainMask"></param>
-    /// <param name="value">A <see cref="BitArray"/> repesenting a modded procs mask.</param>
+    /// <param name="value">A <see cref="BitArray"/> representing a modded procs mask.</param>
     /// <exception cref="ArgumentNullException"><paramref name="value"/> is null.</exception>
     public static void SetModdedMask(ref ProcChainMask procChainMask, BitArray value)
     {
@@ -256,10 +280,22 @@ public static partial class ProcTypeAPI
             throw new ArgumentNullException(nameof(value));
         }
         SetHooks();
-        if (value.Length > 0)
+
+        var length = 0;
+        for (var i = value.Length - 1; i >= 0; i--)
         {
-            byte[] array = new byte[value.Length + 7 >> 3]; // minimum bytes to store data
-            value.CopyTo(array, 0);
+            if (value[i])
+            {
+                length = (i + 7) >> 3;
+                break;
+            }
+        }
+
+        if (length > 0)
+        {
+            byte[] array = new byte[length]; // minimum bytes to store data
+            value.CopyTo(buffer, 0);
+            Array.Copy(buffer, 0, array, 0, length);
             ProcTypeInterop.SetModdedMask(ref procChainMask, array);
         }
         else
@@ -377,9 +413,23 @@ public static partial class ProcTypeAPI
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void NetworkWriteModdedMask(this NetworkWriter writer, byte[] mask)
     {
-        for (int i = 0; i < byteCount; i++)
+        var length = mask?.Length ?? 0;
+        if (ModdedProcTypeCount <= byte.MaxValue)
         {
-            writer.Write(ArrayUtils.GetSafe(mask, i));
+            writer.Write((byte)length);
+        }
+        else if (ModdedProcTypeCount <= ushort.MaxValue)
+        {
+            writer.Write((ushort)length);
+        }
+        else
+        {
+            writer.Write(length);
+        }
+
+        if (length != 0)
+        {
+            writer.Write(mask, length);
         }
     }
 
@@ -387,32 +437,35 @@ public static partial class ProcTypeAPI
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static byte[] NetworkReadModdedMask(NetworkReader reader)
     {
-        int length = 0;
-        for (int i = 0; i < byteCount; i++)
+        var length = ModdedProcTypeCount switch
         {
-            if ((buffer[i] = reader.ReadByte()) > 0)
-            {
-                length = i + 1;
-            }
-        }
+            <= byte.MaxValue => reader.ReadByte(),
+            <= ushort.MaxValue => reader.ReadUInt16(),
+            _ => reader.ReadInt32()
+        };
+
         if (length <= 0)
         {
             return null;
         }
-        byte[] result = new byte[length];
-        Array.Copy(buffer, result, length);
-        return result;
+
+        return reader.ReadBytes(length);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static int ModdedMaskHashCode(byte[] mask) => mask == null ? 0 : mask.Length switch
+    private static int ModdedMaskHashCode(byte[] mask)
     {
-        <= 0 => 0,
-        1 =>    mask[0],
-        2 =>    mask[0] | (mask[1] << 8),
-        3 =>    mask[0] | (mask[1] << 8) | (mask[2] << 16),
-        >= 4 => mask[0] | (mask[1] << 8) | (mask[2] << 16) | (mask[3] << 24),
-    };
+        var hash = 0;
+        if (mask is not null)
+        {
+            for (var i = 0; i < mask.Length; i++)
+            {
+                hash = HashCode.Combine(hash, mask[i]);
+            }
+        }
+
+        return hash;
+    }
 
     /// <summary>
     /// Compare two masks while ignoring length, null is treated as 0.
@@ -420,49 +473,8 @@ public static partial class ProcTypeAPI
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool ModdedMaskEquals(byte[] a, byte[] b)
     {
-        if (a == null)
-        {
-            if (b == null)
-            {
-                return true;
-            }
-            for (int i = 0; i < b.Length; i++)
-            {
-                if (b[i] > 0)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        if (b == null)
-        {
-            if (a == null)
-            {
-                return true;
-            }
-            for (int i = 0; i < a.Length; i++)
-            {
-                if (a[i] > 0)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        if (a.Length == b.Length)
-        {
-            return ArrayUtils.SequenceEquals(a, b);
-        }
-        int max = Math.Max(a.Length, b.Length);
-        for (int i = 0; i < max; i++)
-        {
-            if (!(ArrayUtils.GetSafe(a, i) == ArrayUtils.GetSafe(b, i)))
-            {
-                return false;
-            }
-        }
-        return true;
+        return ArrayUtils.SequenceEquals(a ?? [], b ?? []);
     }
+
     #endregion
 }

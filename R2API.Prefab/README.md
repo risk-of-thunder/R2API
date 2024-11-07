@@ -20,6 +20,9 @@ by using the `RegisterNetworkPrefab` method.
 
 ## Changelog
 
+### '1.0.4'
+* Initial fixes for SOTS DLC2 Release.
+
 ### '1.0.3'
 * Add missing `BepInDependency` to `R2API.ContentManagement`
 

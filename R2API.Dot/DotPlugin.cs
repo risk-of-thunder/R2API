@@ -11,6 +11,10 @@ public sealed class DotPlugin : BaseUnityPlugin
     private void Awake()
     {
         Logger = base.Logger;
+
+#if DEBUG
+        DotAPI.SetHooks();
+#endif
     }
 
     private void OnDestroy()

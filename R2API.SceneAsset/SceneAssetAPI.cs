@@ -53,7 +53,8 @@ public static partial class SceneAssetAPI
         if (_requestsDone)
             return;
 
-        if (arg0.name != "loadingbasic" &&
+        if (SceneCatalog.availability.available &&
+            arg0.name != "loadingbasic" &&
             arg0.name != "splash" &&
             arg0.name != "intro")
         {

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace R2API;
 
@@ -11,11 +12,12 @@ namespace R2API;
 /// </summary>
 public static class SkinIDRS
 {
-    private static List<(SkinDef, ItemDisplayRuleSet)> tuples = new List<(SkinDef, ItemDisplayRuleSet)>();
-    private static Dictionary<SkinIndex, ItemDisplayRuleSet> skinIndexToCustomIDRS = new Dictionary<SkinIndex, ItemDisplayRuleSet>();
+    private static readonly Dictionary<SkinDef, ItemDisplayRuleSet> skinToIDRS = new();
+    private static readonly Dictionary<SkinDef, Dictionary<UnityEngine.Object, DisplayRuleGroup>> skinIDRSOverrides = new();
 
     private static bool hooksSet = false;
-    private static bool catalogInitialized = false;
+    private static bool initialized = false;
+
     /// <summary>
     /// Adds a pair of SkinDef and ItemDisplayRuleSet
     /// <para>Ingame, once the Skin is applied to the model, the default IDRS will be swapped for the one specified in <paramref name="ruleSet"/></para>
@@ -27,31 +29,90 @@ public static class SkinIDRS
     {
         SetHooks();
 
-        if (catalogInitialized)
+        if (initialized)
         {
-            SkinsPlugin.Logger.LogInfo($"Cannot add pair {skinDef} && {ruleSet} as the SkinCatalog has already initialized.");
+            SkinsPlugin.Logger.LogInfo($"Cannot add pair {skinDef} && {ruleSet} as the SkinIDRS has already initialized.");
             return false;
         }
 
-        if (tuples.Any(t => t.Item1 == skinDef))
+        if (skinToIDRS.ContainsKey(skinDef))
         {
             SkinsPlugin.Logger.LogInfo($"Cannot add pair {skinDef} && {ruleSet}, the skin {skinDef} already has an entry associated to it.");
             return false;
         }
 
-        tuples.Add((skinDef, ruleSet));
+        skinToIDRS[skinDef] = ruleSet;
         return true;
     }
 
-    [SystemInitializer(typeof(SkinCatalog))]
+    /// <summary>
+    /// Adds a displayRuleGroup override for ItemDef/EquipmentDef. If there was no IDRS for the skin, a clone of the IDRS from CharacterModel from a body prefab will be taken as base.
+    /// </summary>
+    /// <param name="skinDef"></param>
+    /// <param name="keyAsset">ItemDef/EquipmentDef</param>
+    /// <param name="displayRuleGroup"></param>
+    /// <returns></returns>
+    public static bool AddGroupOverride(SkinDef skinDef, UnityEngine.Object keyAsset, DisplayRuleGroup displayRuleGroup)
+    {
+        SetHooks();
+
+        if (initialized)
+        {
+            SkinsPlugin.Logger.LogInfo($"Cannot add group SkinIDRS has already initialized.");
+            return false;
+        }
+
+        if (!skinIDRSOverrides.TryGetValue(skinDef, out var overrides))
+        {
+            skinIDRSOverrides[skinDef] = overrides = new();
+        }
+
+        overrides[keyAsset] = displayRuleGroup;
+
+        return true;
+    }
+
     private static void SystemInit()
     {
-        catalogInitialized = true;
-        foreach(var (skinDef, idrs) in tuples)
+        initialized = true;
+
+        foreach (var body in BodyCatalog.allBodyPrefabBodyBodyComponents)
         {
-            skinIndexToCustomIDRS.Add(skinDef.skinIndex, idrs);
+            if (!body
+                || !body.TryGetComponent<ModelLocator>(out var modelLocator)
+                || !modelLocator.modelTransform
+                || !modelLocator.modelTransform.TryGetComponent<CharacterModel>(out var characterModel))
+            {
+                continue;
+            }
+
+            var baseIDRS = characterModel.itemDisplayRuleSet;
+            foreach (var skin in BodyCatalog.GetBodySkins(body.bodyIndex))
+            {
+                if (!skinIDRSOverrides.TryGetValue(skin, out var overrides))
+                {
+                    if (!skinToIDRS.ContainsKey(skin))
+                    {
+                        skinToIDRS[skin] = baseIDRS;
+                    }
+                    continue;
+                }
+
+                if (!skinToIDRS.TryGetValue(skin, out var idrs))
+                {
+                    skinToIDRS[skin] = idrs = baseIDRS ? UnityEngine.Object.Instantiate(baseIDRS) : ScriptableObject.CreateInstance<ItemDisplayRuleSet>();
+                }
+
+                foreach (var kvp in overrides)
+                {
+                    idrs.SetDisplayRuleGroup(kvp.Key, kvp.Value);
+                }
+
+                idrs.GenerateRuntimeValues();
+            }
         }
-        tuples.Clear();
+
+        skinIDRSOverrides.Clear();
     }
 
     internal static void SetHooks()
@@ -61,27 +122,29 @@ public static class SkinIDRS
         hooksSet = true;
 
         On.RoR2.ModelSkinController.ApplySkin += SetCustomIDRS;
+        RoR2Application.onLoad += SystemInit;
     }
 
     private static void SetCustomIDRS(On.RoR2.ModelSkinController.orig_ApplySkin orig, ModelSkinController self, int skinIndex)
     {
         orig(self, skinIndex);
-        if (!self.characterModel)
-            return;
 
         SkinDef skin = HG.ArrayUtils.GetSafe(self.skins, skinIndex);
         if (!skin)
             return;
 
-        if(skinIndexToCustomIDRS.TryGetValue(skin.skinIndex, out var idrs))
+        if (!skinToIDRS.TryGetValue(skin, out var idrs))
         {
-            self.characterModel.itemDisplayRuleSet = idrs;
+            return;
         }
+
+        self.characterModel.itemDisplayRuleSet = idrs;
     }
 
     internal static void UnsetHooks()
     {
         hooksSet = false;
         On.RoR2.ModelSkinController.ApplySkin -= SetCustomIDRS;
+        RoR2Application.onLoad -= SystemInit;
     }
 }

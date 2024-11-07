@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HG;
@@ -66,9 +67,9 @@ public static partial class DirectorAPI
         }
     }
 
-    private static void InitStageEnumToSceneDefs(On.RoR2.SceneCatalog.orig_Init orig)
+    private static IEnumerator InitStageEnumToSceneDefs(On.RoR2.SceneCatalog.orig_Init orig)
     {
-        orig();
+        yield return orig();
 
         var groups = SceneCatalog.allStageSceneDefs.GroupBy(sceneDef => GetStageEnumFromSceneDef(sceneDef), sceneDef => sceneDef);
 

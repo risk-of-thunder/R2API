@@ -402,7 +402,7 @@ public static partial class DirectorAPI
             {
                 ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) =>
                 {
-                    var isNotAFamilyCategory = poolCategory.name == MonsterPoolCategories.Standard;
+                    var isNotAFamilyCategory = IsNotAFamilyCategory(poolCategory, dccsPool.poolCategories.Length);
                     var isAFamilyCategory = !isNotAFamilyCategory;
                     var isAFamilyCategoryAndShouldAddToIt = addToFamilies && isAFamilyCategory;
                     if (isNotAFamilyCategory || isAFamilyCategoryAndShouldAddToIt)
@@ -418,10 +418,24 @@ public static partial class DirectorAPI
             mixEnemyArtifactMonsters?.Add(monsterCardHolder);
         }
 
+        private static bool IsNotAFamilyCategory(DccsPool.Category poolCategory, int poolCategoryCount)
+        {
+            // As of July 2024, we are considering a "normal" stage a stage that has more than 1 poolCategory and that the category is properly named.
+            var isNormalStage = poolCategoryCount > 1 && !string.IsNullOrWhiteSpace(poolCategory.name);
+            if (isNormalStage)
+            {
+                return poolCategory.name == MonsterPoolCategories.Standard;
+            }
+
+            return true;
+        }
+
         private static void AddMonsterToPoolEntry(DirectorCardHolder monsterCardHolder, DccsPool.PoolEntry poolEntry, Predicate<DirectorCardCategorySelection> predicate)
         {
             if ((predicate != null && predicate(poolEntry.dccs)) || predicate == null)
+            {
                 poolEntry.dccs.AddCard(monsterCardHolder);
+            }
         }
 
         /// <summary>
@@ -700,7 +714,7 @@ public static partial class DirectorAPI
             {
                 ForEachPoolCategoryInDccsPool(dccsPool, (poolCategory) =>
                 {
-                    var isNotAFamilyCategory = poolCategory.name == MonsterPoolCategories.Standard;
+                    var isNotAFamilyCategory = IsNotAFamilyCategory(poolCategory, dccsPool.poolCategories.Length);
                     var isAFamilyCategory = !isNotAFamilyCategory;
                     var isAFamilyCategoryAndShouldRemoveFromIt = removeFromFamilies && isAFamilyCategory;
                     if (isNotAFamilyCategory || isAFamilyCategoryAndShouldRemoveFromIt)
@@ -1137,6 +1151,12 @@ public static partial class DirectorAPI
                 throw new ArgumentException(nameof(categoryString));
             }
 
+            // Vanilla has the same category named differently for some reason (Storm Stuff suffix is shared though)
+            if (categoryString.Contains("Storm Stuff"))
+            {
+                return InteractableCategory.StormStuff;
+            }
+
             return categoryString switch
             {
                 "Chests" => InteractableCategory.Chests,
@@ -1171,6 +1191,7 @@ public static partial class DirectorAPI
                 InteractableCategory.Rare => "Rare",
                 InteractableCategory.Duplicator => "Duplicator",
                 InteractableCategory.VoidStuff => "Void Stuff",
+                InteractableCategory.StormStuff => "Storm Stuff",
                 _ => throw new ArgumentException(((int)interactableCategory).ToString())
             };
         }
