@@ -12,7 +12,7 @@ namespace R2API.Networking;
 // ReSharper disable once InconsistentNaming
 /// <summary>
 /// Allow easy sending of custom networked messages, check
-/// <see href="https://github.com/risk-of-thunder/R2Wiki/wiki/Networking-with-R2API.NetworkingAPI-(INetMessage)">
+/// <see href="https://risk-of-thunder.github.io/R2Wiki/Mod-Creation/C%23-Programming/Networking/R2API.NetworkingAPI/">
 /// the tutorial for example usage.</see>
 /// </summary>
 #pragma warning disable CS0436 // Type conflicts with imported type
