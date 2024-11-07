@@ -10,7 +10,10 @@
           "exclude": [
             "**/obj/**",
             "**/bin/**",
-            "_site/**"
+            "_site/**",
+            "BuildCI/**",
+            "R2API.AutoVersionGen/**",
+            "R2API.Analyzer/**"
           ]
         }
       ],
