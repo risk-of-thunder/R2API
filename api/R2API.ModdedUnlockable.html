@@ -1,0 +1,751 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class ModdedUnlockable </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class ModdedUnlockable ">
+    
+    <meta name="description" content="Class used to provide the metadata needed to register an achievement + unlockable">
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="R2API.ModdedUnlockable">
+
+
+
+  <h1 id="R2API_ModdedUnlockable" data-uid="R2API.ModdedUnlockable" class="text-break">Class ModdedUnlockable</h1>
+  <div class="markdown level0 summary"><p>Class used to provide the metadata needed to register an achievement + unlockable</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">BaseAchievement</span></div>
+    <div class="level2"><span class="xref">ModdedUnlockable</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="R2API.IModdedUnlockableDataProvider.html">IModdedUnlockableDataProvider</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">BaseAchievement.owner</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.&lt;localUser&gt;k__BackingField</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.&lt;userProfile&gt;k__BackingField</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.shouldGrant</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.shouldUpdateProgress</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.achievementDef</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.&lt;requiredBodyIndex&gt;k__BackingField</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement._meetsBodyRequirement</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.&lt;wantsBodyCallbacks&gt;k__BackingField</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.IsProgressiveAchievement()</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.GetCurrentProgress()</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.GetProgressRequirement()</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.Grant()</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.UpdateProgress()</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.TryToCompleteActivity()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">BaseAchievement.SetServerTracked(bool)</a>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.HandleBodyChangedForBodyRequirement()</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.SetBodyRequirementBrokenOnRunEnd(Run)</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.localUser</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.userProfile</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.isUserAlive</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.requiredBodyIndex</span>
+    </div>
+    <div>
+      <span class="xref">BaseAchievement.meetsBodyRequirement</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="R2API.html">R2API</a></h6>
+  <h6><strong>Assembly</strong>: R2API.Unlockable.dll</h6>
+  <h5 id="R2API_ModdedUnlockable_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;The patch 1.2.3 for RoR2 has made UnlockableAPI&#39;s methods and implementations redundant.\nFrom now on use The game&#39;s \&quot;RegisterAchievement\&quot; attribute on top of baseAchievement inheriting classes to register AchievementDefs and tie AchievementDefs to their respective UnlockableDefs.\nUnlockableAPI will be removed on the next major RoR2 release.&quot;)]
+public abstract class ModdedUnlockable : BaseAchievement, IModdedUnlockableDataProvider</code></pre>
+  </div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_AchievementDescToken.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.AchievementDescToken%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L21">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_AchievementDescToken_" data-uid="R2API.ModdedUnlockable.AchievementDescToken*"></a>
+  <h4 id="R2API_ModdedUnlockable_AchievementDescToken" data-uid="R2API.ModdedUnlockable.AchievementDescToken">AchievementDescToken</h4>
+  <div class="markdown level1 summary"><p>The language token for the description to be shown in logbook for this achievement.
+Also used to create the 'How to unlock' text.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract string AchievementDescToken { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_AchievementIdentifier.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.AchievementIdentifier%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L16">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_AchievementIdentifier_" data-uid="R2API.ModdedUnlockable.AchievementIdentifier*"></a>
+  <h4 id="R2API_ModdedUnlockable_AchievementIdentifier" data-uid="R2API.ModdedUnlockable.AchievementIdentifier">AchievementIdentifier</h4>
+  <div class="markdown level1 summary"><p>The identifier of the achievement being added.
+Should be unique</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract string AchievementIdentifier { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_AchievementNameToken.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.AchievementNameToken%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L18">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_AchievementNameToken_" data-uid="R2API.ModdedUnlockable.AchievementNameToken*"></a>
+  <h4 id="R2API_ModdedUnlockable_AchievementNameToken" data-uid="R2API.ModdedUnlockable.AchievementNameToken">AchievementNameToken</h4>
+  <div class="markdown level1 summary"><p>The unlockableIdentifier of a prerequisite.
+Should be used for skill unlocks for a custom character if the character has an unlock condition.
+Multiple prereqs are not supported (as far as I can tell)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract string AchievementNameToken { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_GetHowToUnlock.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.GetHowToUnlock%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L23">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_GetHowToUnlock_" data-uid="R2API.ModdedUnlockable.GetHowToUnlock*"></a>
+  <h4 id="R2API_ModdedUnlockable_GetHowToUnlock" data-uid="R2API.ModdedUnlockable.GetHowToUnlock">GetHowToUnlock</h4>
+  <div class="markdown level1 summary"><p>Delegate that return a string that will be shown to the user on how to unlock the achievement.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract Func&lt;string&gt; GetHowToUnlock { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-1">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_GetUnlocked.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.GetUnlocked%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L24">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_GetUnlocked_" data-uid="R2API.ModdedUnlockable.GetUnlocked*"></a>
+  <h4 id="R2API_ModdedUnlockable_GetUnlocked" data-uid="R2API.ModdedUnlockable.GetUnlocked">GetUnlocked</h4>
+  <div class="markdown level1 summary"><p>Delegate that return a string that will be shown to the user when the achievement is unlocked.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract Func&lt;string&gt; GetUnlocked { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-1">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_PrerequisiteUnlockableIdentifier.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.PrerequisiteUnlockableIdentifier%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L19">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_PrerequisiteUnlockableIdentifier_" data-uid="R2API.ModdedUnlockable.PrerequisiteUnlockableIdentifier*"></a>
+  <h4 id="R2API_ModdedUnlockable_PrerequisiteUnlockableIdentifier" data-uid="R2API.ModdedUnlockable.PrerequisiteUnlockableIdentifier">PrerequisiteUnlockableIdentifier</h4>
+  <div class="markdown level1 summary"><p>The language token for the name to be shown in logbook for this achievement.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract string PrerequisiteUnlockableIdentifier { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_Sprite.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.Sprite%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L22">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_Sprite_" data-uid="R2API.ModdedUnlockable.Sprite*"></a>
+  <h4 id="R2API_ModdedUnlockable_Sprite" data-uid="R2API.ModdedUnlockable.Sprite">Sprite</h4>
+  <div class="markdown level1 summary"><p>Sprite that is used for this achievement.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract Sprite Sprite { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Sprite</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_UnlockableIdentifier.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.UnlockableIdentifier%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L17">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_UnlockableIdentifier_" data-uid="R2API.ModdedUnlockable.UnlockableIdentifier*"></a>
+  <h4 id="R2API_ModdedUnlockable_UnlockableIdentifier" data-uid="R2API.ModdedUnlockable.UnlockableIdentifier">UnlockableIdentifier</h4>
+  <div class="markdown level1 summary"><p>The identifier of the unlockable granted when the achievement is completed.
+Should be unique.
+This is what is used when specifying an unlock condition for various things in the game</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract string UnlockableIdentifier { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_UnlockableNameToken.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.UnlockableNameToken%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L20">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_UnlockableNameToken_" data-uid="R2API.ModdedUnlockable.UnlockableNameToken*"></a>
+  <h4 id="R2API_ModdedUnlockable_UnlockableNameToken" data-uid="R2API.ModdedUnlockable.UnlockableNameToken">UnlockableNameToken</h4>
+  <div class="markdown level1 summary"><p>The language token for the unlockable.
+Not 100% sure where this is shown in game.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract string UnlockableNameToken { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_wantsBodyCallbacks.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.wantsBodyCallbacks%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L57">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_wantsBodyCallbacks_" data-uid="R2API.ModdedUnlockable.wantsBodyCallbacks*"></a>
+  <h4 id="R2API_ModdedUnlockable_wantsBodyCallbacks" data-uid="R2API.ModdedUnlockable.wantsBodyCallbacks">wantsBodyCallbacks</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool wantsBodyCallbacks { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">RoR2.Achievements.BaseAchievement.wantsBodyCallbacks</span></div>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_LookUpRequiredBodyIndex.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.LookUpRequiredBodyIndex%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L50">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_LookUpRequiredBodyIndex_" data-uid="R2API.ModdedUnlockable.LookUpRequiredBodyIndex*"></a>
+  <h4 id="R2API_ModdedUnlockable_LookUpRequiredBodyIndex" data-uid="R2API.ModdedUnlockable.LookUpRequiredBodyIndex">LookUpRequiredBodyIndex()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override BodyIndex LookUpRequiredBodyIndex()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">BodyIndex</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">RoR2.Achievements.BaseAchievement.LookUpRequiredBodyIndex()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_OnBodyRequirementBroken.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.OnBodyRequirementBroken%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L55">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_OnBodyRequirementBroken_" data-uid="R2API.ModdedUnlockable.OnBodyRequirementBroken*"></a>
+  <h4 id="R2API_ModdedUnlockable_OnBodyRequirementBroken" data-uid="R2API.ModdedUnlockable.OnBodyRequirementBroken">OnBodyRequirementBroken()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void OnBodyRequirementBroken()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">RoR2.Achievements.BaseAchievement.OnBodyRequirementBroken()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_OnBodyRequirementMet.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.OnBodyRequirementMet%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L56">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_OnBodyRequirementMet_" data-uid="R2API.ModdedUnlockable.OnBodyRequirementMet*"></a>
+  <h4 id="R2API_ModdedUnlockable_OnBodyRequirementMet" data-uid="R2API.ModdedUnlockable.OnBodyRequirementMet">OnBodyRequirementMet()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void OnBodyRequirementMet()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">RoR2.Achievements.BaseAchievement.OnBodyRequirementMet()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_OnGranted.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.OnGranted%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L26">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_OnGranted_" data-uid="R2API.ModdedUnlockable.OnGranted*"></a>
+  <h4 id="R2API_ModdedUnlockable_OnGranted" data-uid="R2API.ModdedUnlockable.OnGranted">OnGranted()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void OnGranted()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">RoR2.Achievements.BaseAchievement.OnGranted()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_OnInstall.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.OnInstall%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L28">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_OnInstall_" data-uid="R2API.ModdedUnlockable.OnInstall*"></a>
+  <h4 id="R2API_ModdedUnlockable_OnInstall" data-uid="R2API.ModdedUnlockable.OnInstall">OnInstall()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void OnInstall()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">RoR2.Achievements.BaseAchievement.OnInstall()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_OnUninstall.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.OnUninstall%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L33">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_OnUninstall_" data-uid="R2API.ModdedUnlockable.OnUninstall*"></a>
+  <h4 id="R2API_ModdedUnlockable_OnUninstall" data-uid="R2API.ModdedUnlockable.OnUninstall">OnUninstall()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void OnUninstall()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">RoR2.Achievements.BaseAchievement.OnUninstall()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_ProgressForAchievement.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.ProgressForAchievement%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L48">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_ProgressForAchievement_" data-uid="R2API.ModdedUnlockable.ProgressForAchievement*"></a>
+  <h4 id="R2API_ModdedUnlockable_ProgressForAchievement" data-uid="R2API.ModdedUnlockable.ProgressForAchievement">ProgressForAchievement()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override float ProgressForAchievement()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">RoR2.Achievements.BaseAchievement.ProgressForAchievement()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable_Revoke.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable.Revoke%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L38">View Source</a>
+  </span>
+  <a id="R2API_ModdedUnlockable_Revoke_" data-uid="R2API.ModdedUnlockable.Revoke*"></a>
+  <h4 id="R2API_ModdedUnlockable_Revoke" data-uid="R2API.ModdedUnlockable.Revoke">Revoke()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Revoke()</code></pre>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="R2API.IModdedUnlockableDataProvider.html">IModdedUnlockableDataProvider</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_UnityEngine_Networking_NetworkConnection_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkConnection)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_GetFieldValue__1_System_Object_System_String_">Reflection.GetFieldValue&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_GetPropertyValue__1_System_Object_System_String_">Reflection.GetPropertyValue&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod_System_Object_System_String_">Reflection.InvokeMethod(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod_System_Object_System_String_System_Object___">Reflection.InvokeMethod(object?, string?, params object?[]?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod__1_System_Object_System_String_">Reflection.InvokeMethod&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod__1_System_Object_System_String_System_Object___">Reflection.InvokeMethod&lt;TReturn&gt;(object?, string?, params object?[]?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetFieldValue__1_System_Object_System_String___0_">Reflection.SetFieldValue&lt;TValue&gt;(object?, string?, TValue)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetPropertyValue__1_System_Object_System_String___0_">Reflection.SetPropertyValue&lt;TValue&gt;(object?, string?, TValue)</a>
+  </div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_ModdedUnlockable.md&amp;value=---%0Auid%3A%20R2API.ModdedUnlockable%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/ModdedUnlockable.cs/#L13" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

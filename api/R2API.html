@@ -1,0 +1,451 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Namespace R2API </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Namespace R2API ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="R2API">
+
+  <h1 id="R2API" data-uid="R2API" class="text-break">Namespace R2API</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+    <h3 id="classes">
+Classes
+</h3>
+      <h4><a class="xref" href="R2API.AddressableDCCSPool.html">AddressableDCCSPool</a></h4>
+      <section><p>A <a class="xref" href="R2API.AddressableDCCSPool.html">AddressableDCCSPool</a> is a version of a <span class="xref">RoR2.DccsPool</span> that can be created from the editor itself, it allows you to create complex DccsPools using R2API's <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset.html">AddressReferencedAsset</a> system and your own existing spawn cards
+<br>You should also see <a class="xref" href="R2API.AddressableDirectorCardCategorySelection.html">AddressableDirectorCardCategorySelection</a><br></p>
+</section>
+      <h4><a class="xref" href="R2API.AddressableDCCSPool.Category.html">AddressableDCCSPool.Category</a></h4>
+      <section><p>Represents a category of DirectorCardCategorySelections for this pool</p>
+</section>
+      <h4><a class="xref" href="R2API.AddressableDCCSPool.ConditionalPoolEntry.html">AddressableDCCSPool.ConditionalPoolEntry</a></h4>
+      <section><p>Represents a conditional version of a <a class="xref" href="R2API.AddressableDCCSPool.PoolEntry.html">AddressableDCCSPool.PoolEntry</a><br>Contains a <a class="xref" href="R2API.AddressableDCCSPool.ConditionalPoolEntry.html#R2API_AddressableDCCSPool_ConditionalPoolEntry_requiredExpansions">requiredExpansions</a> array that's populated using <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedExpansionDef.html">AddressReferencedExpansionDef</a><br></p>
+</section>
+      <h4><a class="xref" href="R2API.AddressableDCCSPool.PoolEntry.html">AddressableDCCSPool.PoolEntry</a></h4>
+      <section><p>Represents a version of <span class="xref">RoR2.DccsPool.PoolEntry</span> that can use either a <a class="xref" href="R2API.AddressableDirectorCardCategorySelection.html">AddressableDirectorCardCategorySelection</a> for representing a pool entry, or a <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedFamilyDirectorCardCategorySelection.html">AddressReferencedFamilyDirectorCardCategorySelection</a> for representing a family entr.</p>
+</section>
+      <h4><a class="xref" href="R2API.AddressableDirectorCard.html">AddressableDirectorCard</a></h4>
+      <section><p>Represents a <span class="xref">RoR2.DirectorCard</span> that can be created from using</p>
+</section>
+      <h4><a class="xref" href="R2API.AddressableDirectorCardCategorySelection.html">AddressableDirectorCardCategorySelection</a></h4>
+      <section><p>A <a class="xref" href="R2API.AddressableDirectorCardCategorySelection.html">AddressableDirectorCardCategorySelection</a> is a version of a <span class="xref">RoR2.DirectorCardCategorySelection</span> that can be used for creating a custom and complex <span class="xref">RoR2.DirectorCardCategorySelection</span> for stages, using R2API's <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset.html">AddressReferencedAsset</a> system and your own existing spawn cards</p>
+<p>All the values from this category selection will be added to the <span class="xref">RoR2.DirectorCardCategorySelection</span> specified in <a class="xref" href="R2API.AddressableDirectorCardCategorySelection.html#R2API_AddressableDirectorCardCategorySelection_targetCardCategorySelection">targetCardCategorySelection</a></p><br>You should also see <a class="xref" href="R2API.AddressableDCCSPool.html">AddressableDCCSPool</a><br>
+</section>
+      <h4><a class="xref" href="R2API.AddressablesPlugin.html">AddressablesPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.AnimationsAPI.html">AnimationsAPI</a></h4>
+      <section><p>API for modifying <span class="xref">UnityEngine.RuntimeAnimatorController</span></p>
+</section>
+      <h4><a class="xref" href="R2API.AnimationsPlugin.html">AnimationsPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.AnimatorModifications.html">AnimatorModifications</a></h4>
+      <section><p>Modifications for a <span class="xref">UnityEngine.RuntimeAnimatorController</span></p>
+</section>
+      <h4><a class="xref" href="R2API.ArtifactCodeAPI.html">ArtifactCodeAPI</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.ArtifactCodeAPI.CompoundValues.html">ArtifactCodeAPI.CompoundValues</a></h4>
+      <section><p>Contains the values of Vanilla risk of rain 2 Artifact Compounds.</p>
+</section>
+      <h4><a class="xref" href="R2API.ArtifactCodePlugin.html">ArtifactCodePlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.ColorsAPI.html">ColorsAPI</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.ColorsPlugin.html">ColorsPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.ContentAddition.html">ContentAddition</a></h4>
+      <section><p>Class for adding Content Assets to your Mod's ContentPack.</p>
+</section>
+      <h4><a class="xref" href="R2API.CustomElite.html">CustomElite</a></h4>
+      <section><p>Class that defines a custom Elite type for use in the game
+All Elites consist of an <span class="xref">RoR2.EliteDef</span>, an <span class="xref">RoR2.EquipmentDef</span>
+and a <span class="xref">RoR2.BuffDef</span>.
+An Elite can only spawn if its in one of the available <span class="xref">RoR2.CombatDirector.eliteTiers</span> (vanilla or custom).
+Please check the constructors docs for more information.</p>
+</section>
+      <h4><a class="xref" href="R2API.CustomEquipment.html">CustomEquipment</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.CustomItem.html">CustomItem</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.DamageAPI.html">DamageAPI</a></h4>
+      <section><p>API for handling DamageTypes added by mods</p>
+</section>
+      <h4><a class="xref" href="R2API.DamageAPI.ModdedDamageTypeHolder.html">DamageAPI.ModdedDamageTypeHolder</a></h4>
+      <section><p>Holds flag values of ModdedDamageType.</p>
+</section>
+      <h4><a class="xref" href="R2API.DamageAPI.ModdedDamageTypeHolderComponent.html">DamageAPI.ModdedDamageTypeHolderComponent</a></h4>
+      <section><p>Holds flag values of ModdedDamageType. The main usage is for projectiles. Add this component to your prefab.</p>
+</section>
+      <h4><a class="xref" href="R2API.DamageTypePlugin.html">DamageTypePlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.DeployableAPI.html">DeployableAPI</a></h4>
+      <section><p>API for handling deployables added by mods</p>
+</section>
+      <h4><a class="xref" href="R2API.DeployablePlugin.html">DeployablePlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.DifficultyAPI.html">DifficultyAPI</a></h4>
+      <section><p>API for adding difficulties like Drizzle, Rainstorm, and Monsoon to the game. Does not cover &quot;very easy, easy, ..., HAHAHAHA&quot;.</p>
+</section>
+      <h4><a class="xref" href="R2API.DifficultyPlugin.html">DifficultyPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.DirectorAPI.html">DirectorAPI</a></h4>
+      <section><p>API for modifying the monster and scene directors.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.DirectorCardHolder.html">DirectorAPI.DirectorCardHolder</a></h4>
+      <section><p>A wrapper class for DirectorCards.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.Helpers.html">DirectorAPI.Helpers</a></h4>
+      <section><p>This subclass contains helper methods for use with DirectorAPI.
+Note that there is much more flexibility by working with the API directly through its event system.
+The primary purpose of these helpers is to serve as example code, and to assist with very simple tasks.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.Helpers.InteractableNames.html">DirectorAPI.Helpers.InteractableNames</a></h4>
+      <section><p>This class contains static strings for each <span class="xref">RoR2.InteractableSpawnCard</span> in the base game.
+These can be used for matching names.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.Helpers.InteractablePoolCategories.html">DirectorAPI.Helpers.InteractablePoolCategories</a></h4>
+      <section><p>Most vanilla <span class="xref">RoR2.ClassicStageInfo.interactableDccsPool</span> have (right now) 1 <span class="xref">RoR2.DccsPool.Category</span> in them,
+their name are inside this class.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.Helpers.MonsterNames.html">DirectorAPI.Helpers.MonsterNames</a></h4>
+      <section><p>This class contains static strings for each <span class="xref">RoR2.CharacterSpawnCard</span> in the base game.
+These can be used for matching names.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.Helpers.MonsterPoolCategories.html">DirectorAPI.Helpers.MonsterPoolCategories</a></h4>
+      <section><p>Most vanilla <span class="xref">RoR2.ClassicStageInfo.monsterDccsPool</span> have (right now) 3 <span class="xref">RoR2.DccsPool.Category</span> in them,
+their name are inside this class.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.MonsterFamilyHolder.html">DirectorAPI.MonsterFamilyHolder</a></h4>
+      <section><p>A wrapper class for Monster Families.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.OriginalClassicStageInfo.html">DirectorAPI.OriginalClassicStageInfo</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.DirectorAPI.StageSettings.html">DirectorAPI.StageSettings</a></h4>
+      <section><p>A class passed to everything subscribed to <a class="xref" href="R2API.DirectorAPI.html#R2API_DirectorAPI_StageSettingsActions">StageSettingsActions</a> that contains various settings for a stage.
+All mods will be working off the same settings, so operators like *=, +=, -=, and /= are preferred over directly setting values.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorPlugin.html">DirectorPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.DotAPI.html">DotAPI</a></h4>
+      <section><p>API for adding damage over time effects to the game.</p>
+</section>
+      <h4><a class="xref" href="R2API.DotPlugin.html">DotPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.EliteAPI.html">EliteAPI</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.EliteRamp.html">EliteRamp</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.ElitesPlugin.html">ElitesPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.ExtendedRuleChoiceDef.html">ExtendedRuleChoiceDef</a></h4>
+      <section><p>Represents an Extended version of a RuleChoiceDef
+Unlike regular RuleChoiceDefs, an ExtendedRulechoiceDef can have multiple requirements, such as multiple expansions or multiple unlockables required.</p>
+<p>Utilize these collections instead of the singular requirements</p>
+</section>
+      <h4><a class="xref" href="R2API.ItemAPI.html">ItemAPI</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.ItemDisplayRuleDict.html">ItemDisplayRuleDict</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.ItemsPlugin.html">ItemsPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.LanguageAPI.html">LanguageAPI</a></h4>
+      <section><p>class for language files to load</p>
+</section>
+      <h4><a class="xref" href="R2API.LanguageAPI.LanguageOverlay.html">LanguageAPI.LanguageOverlay</a></h4>
+      <section><p>Manages temporary language token changes.</p>
+</section>
+      <h4><a class="xref" href="R2API.LanguagePlugin.html">LanguagePlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.LoadoutAPI.html">LoadoutAPI</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.LoadoutPlugin.html">LoadoutPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.LobbyConfigAPI.html">LobbyConfigAPI</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.LobbyConfigAPI.LobbyCategory.html">LobbyConfigAPI.LobbyCategory</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.LobbyConfigAPI.LobbyRule-1.html">LobbyConfigAPI.LobbyRule&lt;T&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.LobbyConfigPlugin.html">LobbyConfigPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.ModdedUnlockable.html">ModdedUnlockable</a></h4>
+      <section><p>Class used to provide the metadata needed to register an achievement + unlockable</p>
+</section>
+      <h4><a class="xref" href="R2API.Notification.html">Notification</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.OrbAPI.html">OrbAPI</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.OrbPlugin.html">OrbPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.PrefabAPI.html">PrefabAPI</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.PrefabPlugin.html">PrefabPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.R2API.html">R2API</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.RecalculateStatsAPI.html">RecalculateStatsAPI</a></h4>
+      <section><p>API for computing bonuses granted by factors inside RecalculateStats.</p>
+</section>
+      <h4><a class="xref" href="R2API.RecalculateStatsAPI.StatHookEventArgs.html">RecalculateStatsAPI.StatHookEventArgs</a></h4>
+      <section><p>A collection of modifiers for various stats. It will be passed down the event chain of GetStatCoefficients; add to the contained values to modify stats.</p>
+</section>
+      <h4><a class="xref" href="R2API.RecalculateStatsPlugin.html">RecalculateStatsPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.RuleCatalogExtras.html">RuleCatalogExtras</a></h4>
+      <section><p>A class for adding new RuleDefs and RuleCategories to the game's RuleCatalog</p>
+</section>
+      <h4><a class="xref" href="R2API.RulesExtensions.html">RulesExtensions</a></h4>
+      <section><p>Extensions that the Rules submodule uses</p>
+</section>
+      <h4><a class="xref" href="R2API.RulesPlugin.html">RulesPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.SceneAssetAPI.html">SceneAssetAPI</a></h4>
+      <section><p>API for retrieving assets from the game scenes.</p>
+</section>
+      <h4><a class="xref" href="R2API.SceneAssetPlugin.html">SceneAssetPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.SkinIDRS.html">SkinIDRS</a></h4>
+      <section><p>Class for adding Skin Specific ItemDisplayRuleSets for skin defs.</p>
+</section>
+      <h4><a class="xref" href="R2API.SkinLightReplacement.html">SkinLightReplacement</a></h4>
+      <section><p>Static class utilized for implementing Light Replacements for a Model</p>
+</section>
+      <h4><a class="xref" href="R2API.SkinVFX.html">SkinVFX</a></h4>
+      <section><p>Class for adding skin-specific effect replacements for SkinDefs.</p>
+</section>
+      <h4><a class="xref" href="R2API.SkinVFXInfo.html">SkinVFXInfo</a></h4>
+      <section><p>A container struct for a skin-specific VFX.
+When the specified VFX would be spawned and the spawner's SkinDef matches, it will be modified by the values here.
+Call AddSkinVFX() to register this.</p>
+</section>
+      <h4><a class="xref" href="R2API.Skins.html">Skins</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.SkinsPlugin.html">SkinsPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.SoundAPI.html">SoundAPI</a></h4>
+      <section><p>API for adding sounds with Wwise</p>
+</section>
+      <h4><a class="xref" href="R2API.SoundAPI.Music.html">SoundAPI.Music</a></h4>
+      <section><p>Class for adding music to the game music system.
+<a href="https://github.com/risk-of-thunder/R2Wiki/wiki/Custom-Music---WWise">Tutorial available here</a></p>
+</section>
+      <h4><a class="xref" href="R2API.SoundAPI.Music.CustomMusicData.html">SoundAPI.Music.CustomMusicData</a></h4>
+      <section><p>Class that contains all the needed information
+for the api to process your custom tracks into
+the game music system.</p>
+</section>
+      <h4><a class="xref" href="R2API.SoundAPI.Music.CustomMusicTrackDef.html">SoundAPI.Music.CustomMusicTrackDef</a></h4>
+      <section><p>Extended <span class="xref">RoR2.MusicTrackDef</span> for a more code based project.
+This can also be used to an extent by unity editor users as a baseline for whats needed.</p>
+</section>
+      <h4><a class="xref" href="R2API.SoundAPI.SoundBanks.html">SoundAPI.SoundBanks</a></h4>
+      <section><p>class for SoundBanks to load</p>
+</section>
+      <h4><a class="xref" href="R2API.SoundPlugin.html">SoundPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.StageRegistration.html">StageRegistration</a></h4>
+      <section><p>Class for adding and registering SceneDefs</p>
+</section>
+      <h4><a class="xref" href="R2API.StagesPlugin.html">StagesPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.StandardLevelScaling.html">StandardLevelScaling</a></h4>
+      <section><p>A collection of standard level scaling values, for use with <a class="xref" href="R2API.RecalculateStatsAPI.html">RecalculateStatsAPI</a>.</p>
+</section>
+      <h4><a class="xref" href="R2API.StringSerializerExtensions.html">StringSerializerExtensions</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.TempVisualEffectAPI.html">TempVisualEffectAPI</a></h4>
+      <section><p>API for adding custom TemporaryVisualEffects to CharacterBody components.</p>
+</section>
+      <h4><a class="xref" href="R2API.TempVisualEffectPlugin.html">TempVisualEffectPlugin</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.UnlockableAPI.html">UnlockableAPI</a></h4>
+      <section><p>API for adding custom unlockables to the game.</p>
+</section>
+      <h4><a class="xref" href="R2API.UnlockablePlugin.html">UnlockablePlugin</a></h4>
+      <section></section>
+    <h3 id="structs">
+Structs
+</h3>
+      <h4><a class="xref" href="R2API.AddressableDirectorCardCategorySelection.Category.html">AddressableDirectorCardCategorySelection.Category</a></h4>
+      <section><p>Represents a category of spawn cards</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.StageInfo.html">DirectorAPI.StageInfo</a></h4>
+      <section><p>Struct for holding information about the stage.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.StageSerde.html">DirectorAPI.StageSerde</a></h4>
+      <section><p>A structure that acts as a workaround for Unity's inability to properly serialize enums with underlying types other than <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>.
+It stores the enum value as an Int64 for serialization purposes.</p>
+</section>
+      <h4><a class="xref" href="R2API.LanguageAPI.OverlayTokenData.html">LanguageAPI.OverlayTokenData</a></h4>
+      <section><p>Contains information about a single temporary language token change.</p>
+</section>
+      <h4><a class="xref" href="R2API.LightReplacement.html">LightReplacement</a></h4>
+      <section><p>Struct that represents a LightReplacement for a Skin</p>
+</section>
+      <h4><a class="xref" href="R2API.LoadoutAPI.SkinDefInfo.html">LoadoutAPI.SkinDefInfo</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.SkinDefInfo.html">SkinDefInfo</a></h4>
+      <section><p>A container struct for all SkinDef parameters.
+Use this to set skinDef values, then call CreateNewSkinDef().</p>
+</section>
+      <h4><a class="xref" href="R2API.SoundAPI.Music.CustomMusicTrackDef.CustomState.html">SoundAPI.Music.CustomMusicTrackDef.CustomState</a></h4>
+      <section><p>Struct for storing the wwise state data
+that will be posted to the wwise engine
+through <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">SetState(uint, uint)</a></p>
+</section>
+      <h4><a class="xref" href="R2API.SoundAPI.Music.MainAndBossTracks.html">SoundAPI.Music.MainAndBossTracks</a></h4>
+      <section><p>Contains the two MusicTrackDef that are fired by the game music system depending on the game current state.
+<span class="xref">RoR2.MusicTrackDef.states</span> usually have only two states.
+One <span class="xref">AK.Wwise.State</span> should serve a similar purpose as the game one called gameplaySongChoice,
+which is normally used for telling Wwise which track to play.
+That gameplaySongChoice <span class="xref">AK.Wwise.State</span> should have a custom group id associated with it which
+should be different than the game one called gameplaySongChoice.
+The other <span class="xref">AK.Wwise.State</span> should have the same group id as the game one which
+is currently called Music_system and is used for telling the game if
+its either a Gameplay, a Bossfight, or a Menu track.</p>
+</section>
+    <h3 id="interfaces">
+Interfaces
+</h3>
+      <h4><a class="xref" href="R2API.IModdedUnlockableDataProvider.html">IModdedUnlockableDataProvider</a></h4>
+      <section><p>Interface used to provide the metadata needed to register an achievement + unlockable</p>
+</section>
+    <h3 id="enums">
+Enums
+</h3>
+      <h4><a class="xref" href="R2API.DamageAPI.ModdedDamageType.html">DamageAPI.ModdedDamageType</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.DirectorAPI.InteractableCategory.html">DirectorAPI.InteractableCategory</a></h4>
+      <section><p>The categories for interactables.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.MonsterCategory.html">DirectorAPI.MonsterCategory</a></h4>
+      <section><p>The categories for monsters.</p>
+</section>
+      <h4><a class="xref" href="R2API.DirectorAPI.Stage.html">DirectorAPI.Stage</a></h4>
+      <section><p>A flags enum for the vanilla stages. Custom stages are handled with a string in StageInfo.</p>
+</section>
+    <h3 id="delegates">
+Delegates
+</h3>
+      <h4><a class="xref" href="R2API.DeployableAPI.GetDeployableSameSlotLimit.html">DeployableAPI.GetDeployableSameSlotLimit</a></h4>
+      <section></section>
+      <h4><a class="xref" href="R2API.DotAPI.CustomDotBehaviour.html">DotAPI.CustomDotBehaviour</a></h4>
+      <section><p>Allows for custom behaviours when applying the dot. EG, percentburn. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">AddDot(GameObject, float, DotIndex, float, uint?, float?, DotIndex?)</a></p>
+</section>
+      <h4><a class="xref" href="R2API.DotAPI.CustomDotVisual.html">DotAPI.CustomDotVisual</a></h4>
+      <section><p>Allows custom visuals for your buff. think bleeding etc. <span class="xref">RoR2.DotController.FixedUpdate()</span></p>
+</section>
+      <h4><a class="xref" href="R2API.RecalculateStatsAPI.StatHookEventHandler.html">RecalculateStatsAPI.StatHookEventHandler</a></h4>
+      <section><p>Used as the delegate type for the GetStatCoefficients event.</p>
+</section>
+      <h4><a class="xref" href="R2API.SkinVFX.OnEffectSpawnedDelegate.html">SkinVFX.OnEffectSpawnedDelegate</a></h4>
+      <section><p>Called when a skin-specific effect is ready to be modified.</p>
+</section>
+      <h4><a class="xref" href="R2API.TempVisualEffectAPI.EffectCondition.html">TempVisualEffectAPI.EffectCondition</a></h4>
+      <section><p>Delegate used for checking if TemporaryVisualEffect should be active (bool active). <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">UpdateSingleTemporaryVisualEffect(ref TemporaryVisualEffect, string, float, bool, string)</a></p>
+</section>
+      <h4><a class="xref" href="R2API.TempVisualEffectAPI.EffectRadius.html">TempVisualEffectAPI.EffectRadius</a></h4>
+      <section><p>Delegate used for calculating the radius of a TemporaryVisualEffect (float radius). <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">UpdateSingleTemporaryVisualEffect(ref TemporaryVisualEffect, string, float, bool, string)</a></p>
+</section>
+
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

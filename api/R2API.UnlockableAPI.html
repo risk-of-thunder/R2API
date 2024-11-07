@@ -1,0 +1,775 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class UnlockableAPI </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class UnlockableAPI ">
+    
+    <meta name="description" content="API for adding custom unlockables to the game.">
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="R2API.UnlockableAPI">
+
+
+
+  <h1 id="R2API_UnlockableAPI" data-uid="R2API.UnlockableAPI" class="text-break">Class UnlockableAPI</h1>
+  <div class="markdown level0 summary"><p>API for adding custom unlockables to the game.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">UnlockableAPI</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="R2API.html">R2API</a></h6>
+  <h6><strong>Assembly</strong>: R2API.Unlockable.dll</h6>
+  <h5 id="R2API_UnlockableAPI_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;The patch 1.2.3 for RoR2 has made UnlockableAPI&#39;s methods and implementations redundant.\nFrom now on use The game&#39;s \&quot;RegisterAchievement\&quot; attribute on top of baseAchievement inheriting classes to register AchievementDefs and tie AchievementDefs to their respective UnlockableDefs.\nUnlockableAPI will be removed on the next major RoR2 release.&quot;)]
+public static class UnlockableAPI</code></pre>
+  </div>
+  <h3 id="fields">Fields
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_ObsoleteMessage.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.ObsoleteMessage%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L28">View Source</a>
+  </span>
+  <h4 id="R2API_UnlockableAPI_ObsoleteMessage" data-uid="R2API.UnlockableAPI.ObsoleteMessage">ObsoleteMessage</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ObsoleteMessage = &quot;The patch 1.2.3 for RoR2 has made UnlockableAPI&#39;s methods and implementations redundant.\nFrom now on use The game&#39;s \&quot;RegisterAchievement\&quot; attribute on top of baseAchievement inheriting classes to register AchievementDefs and tie AchievementDefs to their respective UnlockableDefs.\nUnlockableAPI will be removed on the next major RoR2 release.&quot;</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_PluginGUID.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.PluginGUID%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L25">View Source</a>
+  </span>
+  <h4 id="R2API_UnlockableAPI_PluginGUID" data-uid="R2API.UnlockableAPI.PluginGUID">PluginGUID</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PluginGUID = &quot;com.bepis.r2api.unlockable&quot;</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_PluginName.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.PluginName%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L26">View Source</a>
+  </span>
+  <h4 id="R2API_UnlockableAPI_PluginName" data-uid="R2API.UnlockableAPI.PluginName">PluginName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PluginName = &quot;R2API.Unlockable&quot;</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <h4 id="R2API_UnlockableAPI_PluginVersion" data-uid="R2API.UnlockableAPI.PluginVersion">PluginVersion</h4>
+  <div class="markdown level1 summary"><p>Version of the plugin, should be matching with the thunderstore package.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PluginVersion = &quot;1.0.2&quot;</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_Loaded.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.Loaded%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L38">View Source</a>
+  </span>
+  <a id="R2API_UnlockableAPI_Loaded_" data-uid="R2API.UnlockableAPI.Loaded*"></a>
+  <h4 id="R2API_UnlockableAPI_Loaded" data-uid="R2API.UnlockableAPI.Loaded">Loaded</h4>
+  <div class="markdown level1 summary"><p>Return true if the submodule is loaded.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;All submodules are automatically loaded and this property is now unused&quot;)]
+public static bool Loaded { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_AddAchievement_RoR2_AchievementDef_.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.AddAchievement(RoR2.AchievementDef)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L130">View Source</a>
+  </span>
+  <a id="R2API_UnlockableAPI_AddAchievement_" data-uid="R2API.UnlockableAPI.AddAchievement*"></a>
+  <h4 id="R2API_UnlockableAPI_AddAchievement_RoR2_AchievementDef_" data-uid="R2API.UnlockableAPI.AddAchievement(RoR2.AchievementDef)">AddAchievement(AchievementDef)</h4>
+  <div class="markdown level1 summary"><p>Adds an AchievementDef to the list of achievements to add to the game</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool AddAchievement(AchievementDef achievementDef)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">AchievementDef</span></td>
+        <td><span class="parametername">achievementDef</span></td>
+        <td><p>The achievementDef to add</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p>True if succesful, false otherwise</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_AddUnlockable_System_Type_RoR2_UnlockableDef_.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.AddUnlockable(System.Type%2CRoR2.UnlockableDef)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L119">View Source</a>
+  </span>
+  <a id="R2API_UnlockableAPI_AddUnlockable_" data-uid="R2API.UnlockableAPI.AddUnlockable*"></a>
+  <h4 id="R2API_UnlockableAPI_AddUnlockable_System_Type_RoR2_UnlockableDef_" data-uid="R2API.UnlockableAPI.AddUnlockable(System.Type,RoR2.UnlockableDef)">AddUnlockable(Type, UnlockableDef)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static UnlockableDef AddUnlockable(Type unlockableType, UnlockableDef unlockableDef)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">unlockableType</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">UnlockableDef</span></td>
+        <td><span class="parametername">unlockableDef</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">UnlockableDef</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_AddUnlockable_System_Type_System_Type_.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.AddUnlockable(System.Type%2CSystem.Type)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L114">View Source</a>
+  </span>
+  <a id="R2API_UnlockableAPI_AddUnlockable_" data-uid="R2API.UnlockableAPI.AddUnlockable*"></a>
+  <h4 id="R2API_UnlockableAPI_AddUnlockable_System_Type_System_Type_" data-uid="R2API.UnlockableAPI.AddUnlockable(System.Type,System.Type)">AddUnlockable(Type, Type)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static UnlockableDef AddUnlockable(Type unlockableType, Type serverTrackerType)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">unlockableType</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">serverTrackerType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">UnlockableDef</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_AddUnlockable_System_Type_System_Type_RoR2_UnlockableDef_.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.AddUnlockable(System.Type%2CSystem.Type%2CRoR2.UnlockableDef)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L175">View Source</a>
+  </span>
+  <a id="R2API_UnlockableAPI_AddUnlockable_" data-uid="R2API.UnlockableAPI.AddUnlockable*"></a>
+  <h4 id="R2API_UnlockableAPI_AddUnlockable_System_Type_System_Type_RoR2_UnlockableDef_" data-uid="R2API.UnlockableAPI.AddUnlockable(System.Type,System.Type,RoR2.UnlockableDef)">AddUnlockable(Type, Type, UnlockableDef)</h4>
+  <div class="markdown level1 summary"><p>Add an unlockable tied to an achievement.
+For an example usage check <a href="https://github.com/ArcPh1r3/HenryTutorial/blob/master/HenryMod/Modules/Achievements/HenryMasteryAchievement.cs">rob repository</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static UnlockableDef AddUnlockable(Type unlockableType, Type serverTrackerType = null, UnlockableDef unlockableDef = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">unlockableType</span></td>
+        <td><p>Class that inherits from BaseAchievement and implements <a class="xref" href="R2API.IModdedUnlockableDataProvider.html">IModdedUnlockableDataProvider</a></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">serverTrackerType</span></td>
+        <td><p>Type that inherits from <span class="xref">RoR2.Achievements.BaseServerAchievement</span> for achievements that the server needs to track</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">UnlockableDef</span></td>
+        <td><span class="parametername">unlockableDef</span></td>
+        <td><p>For <span class="xref">RoR2.UnlockableDef</span> created in advance. Leaving null will generate an <span class="xref">RoR2.UnlockableDef</span> instead.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">UnlockableDef</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_AddUnlockable__1_RoR2_UnlockableDef_.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.AddUnlockable%60%601(RoR2.UnlockableDef)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L109">View Source</a>
+  </span>
+  <a id="R2API_UnlockableAPI_AddUnlockable_" data-uid="R2API.UnlockableAPI.AddUnlockable*"></a>
+  <h4 id="R2API_UnlockableAPI_AddUnlockable__1_RoR2_UnlockableDef_" data-uid="R2API.UnlockableAPI.AddUnlockable``1(RoR2.UnlockableDef)">AddUnlockable&lt;TUnlockable&gt;(UnlockableDef)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static UnlockableDef AddUnlockable&lt;TUnlockable&gt;(UnlockableDef unlockableDef) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">UnlockableDef</span></td>
+        <td><span class="parametername">unlockableDef</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">UnlockableDef</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TUnlockable</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_AddUnlockable__1_System_Boolean_.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.AddUnlockable%60%601(System.Boolean)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L98">View Source</a>
+  </span>
+  <a id="R2API_UnlockableAPI_AddUnlockable_" data-uid="R2API.UnlockableAPI.AddUnlockable*"></a>
+  <h4 id="R2API_UnlockableAPI_AddUnlockable__1_System_Boolean_" data-uid="R2API.UnlockableAPI.AddUnlockable``1(System.Boolean)">AddUnlockable&lt;TUnlockable&gt;(bool)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;The bool parameter serverTracked is redundant. Instead, pass in a Type that inherits from BaseServerAchievement if it is server tracked, or nothing if it&#39;s not&quot;)]
+public static UnlockableDef AddUnlockable&lt;TUnlockable&gt;(bool serverTracked) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><span class="parametername">serverTracked</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">UnlockableDef</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TUnlockable</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_AddUnlockable__1_System_Type_.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.AddUnlockable%60%601(System.Type)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L104">View Source</a>
+  </span>
+  <a id="R2API_UnlockableAPI_AddUnlockable_" data-uid="R2API.UnlockableAPI.AddUnlockable*"></a>
+  <h4 id="R2API_UnlockableAPI_AddUnlockable__1_System_Type_" data-uid="R2API.UnlockableAPI.AddUnlockable``1(System.Type)">AddUnlockable&lt;TUnlockable&gt;(Type)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static UnlockableDef AddUnlockable&lt;TUnlockable&gt;(Type serverTrackerType) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">serverTrackerType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">UnlockableDef</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TUnlockable</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_UnlockableAPI_AddUnlockable__1_System_Type_RoR2_UnlockableDef_.md&amp;value=---%0Auid%3A%20R2API.UnlockableAPI.AddUnlockable%60%601(System.Type%2CRoR2.UnlockableDef)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Unlockable/UnlockableAPI.cs/#L161">View Source</a>
+  </span>
+  <a id="R2API_UnlockableAPI_AddUnlockable_" data-uid="R2API.UnlockableAPI.AddUnlockable*"></a>
+  <h4 id="R2API_UnlockableAPI_AddUnlockable__1_System_Type_RoR2_UnlockableDef_" data-uid="R2API.UnlockableAPI.AddUnlockable``1(System.Type,RoR2.UnlockableDef)">AddUnlockable&lt;TUnlockable&gt;(Type, UnlockableDef)</h4>
+  <div class="markdown level1 summary"><p>Add an unlockable tied to an achievement.
+For an example usage check <a href="https://github.com/ArcPh1r3/HenryTutorial/blob/master/HenryMod/Modules/Achievements/HenryMasteryAchievement.cs">rob repository</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static UnlockableDef AddUnlockable&lt;TUnlockable&gt;(Type serverTrackerType = null, UnlockableDef unlockableDef = null) where TUnlockable : BaseAchievement, IModdedUnlockableDataProvider, new()</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">serverTrackerType</span></td>
+        <td><p>Type that inherits from BaseServerAchievement for achievements that the server needs to track</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">UnlockableDef</span></td>
+        <td><span class="parametername">unlockableDef</span></td>
+        <td><p>For UnlockableDefs created in advance. Leaving null will generate an UnlockableDef instead.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">UnlockableDef</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TUnlockable</span></td>
+        <td><p>Class that inherits from BaseAchievement and implements <a class="xref" href="R2API.IModdedUnlockableDataProvider.html">IModdedUnlockableDataProvider</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

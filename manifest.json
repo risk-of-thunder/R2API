@@ -1,0 +1,2067 @@
+{
+  "source_base_path": "/github/workspace/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedAsset.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedAsset.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedBuffDef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedBuffDef.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedEliteDef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedEliteDef.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedExpansionDef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedExpansionDef.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedFamilyDirectorCardCategorySelection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedFamilyDirectorCardCategorySelection.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedItemDef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedItemDef.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedPrefab.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedPrefab.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedSpawnCard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedSpawnCard.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressableDCCSPool.Category.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressableDCCSPool.Category.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressableDCCSPool.ConditionalPoolEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressableDCCSPool.ConditionalPoolEntry.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressableDCCSPool.PoolEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressableDCCSPool.PoolEntry.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressableDCCSPool.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressableDCCSPool.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressableDirectorCard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressableDirectorCard.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressableDirectorCardCategorySelection.Category.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressableDirectorCardCategorySelection.Category.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressableDirectorCardCategorySelection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressableDirectorCardCategorySelection.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressablesPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressablesPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AnimationsAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AnimationsAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AnimationsPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AnimationsPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AnimatorModifications.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AnimatorModifications.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ArtifactCodeAPI.CompoundValues.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ArtifactCodeAPI.CompoundValues.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ArtifactCodeAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ArtifactCodeAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ArtifactCodePlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ArtifactCodePlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ColorsAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ColorsAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ColorsPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ColorsPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ContentAddition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ContentAddition.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ContentManagement.ManagedReadOnlyContentPack.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ContentManagement.ManagedReadOnlyContentPack.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ContentManagement.ManagedSerializableContentPack.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ContentManagement.ManagedSerializableContentPack.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ContentManagement.R2APIContentManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ContentManagement.R2APIContentManager.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ContentManagement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ContentManagement.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.CustomElite.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.CustomElite.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.CustomEquipment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.CustomEquipment.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.CustomItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.CustomItem.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DamageAPI.ModdedDamageType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DamageAPI.ModdedDamageType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DamageAPI.ModdedDamageTypeHolder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DamageAPI.ModdedDamageTypeHolder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DamageAPI.ModdedDamageTypeHolderComponent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DamageAPI.ModdedDamageTypeHolderComponent.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DamageAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DamageAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DamageTypePlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DamageTypePlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DeployableAPI.GetDeployableSameSlotLimit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DeployableAPI.GetDeployableSameSlotLimit.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DeployableAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DeployableAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DeployablePlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DeployablePlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DifficultyAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DifficultyAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DifficultyPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DifficultyPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.DirectorCardHolder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.DirectorCardHolder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.Helpers.InteractableNames.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.Helpers.InteractableNames.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.Helpers.InteractablePoolCategories.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.Helpers.InteractablePoolCategories.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.Helpers.MonsterNames.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.Helpers.MonsterNames.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.Helpers.MonsterPoolCategories.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.Helpers.MonsterPoolCategories.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.Helpers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.Helpers.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.InteractableCategory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.InteractableCategory.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.MonsterCategory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.MonsterCategory.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.MonsterFamilyHolder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.MonsterFamilyHolder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.OriginalClassicStageInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.OriginalClassicStageInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.Stage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.Stage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.StageInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.StageInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.StageSerde.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.StageSerde.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.StageSettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.StageSettings.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DirectorPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DirectorPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DotAPI.CustomDotBehaviour.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DotAPI.CustomDotBehaviour.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DotAPI.CustomDotVisual.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DotAPI.CustomDotVisual.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DotAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DotAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DotPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DotPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.EliteAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.EliteAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.EliteRamp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.EliteRamp.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ElitesPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ElitesPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ExtendedRuleChoiceDef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ExtendedRuleChoiceDef.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.IModdedUnlockableDataProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.IModdedUnlockableDataProvider.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ItemAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ItemAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ItemDisplayRuleDict.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ItemDisplayRuleDict.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ItemsPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ItemsPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LanguageAPI.LanguageOverlay.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LanguageAPI.LanguageOverlay.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LanguageAPI.OverlayTokenData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LanguageAPI.OverlayTokenData.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LanguageAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LanguageAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LanguagePlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LanguagePlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LightReplacement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LightReplacement.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LoadoutAPI.SkinDefInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LoadoutAPI.SkinDefInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LoadoutAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LoadoutAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LoadoutPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LoadoutPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LobbyConfigAPI.LobbyCategory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LobbyConfigAPI.LobbyCategory.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LobbyConfigAPI.LobbyRule-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LobbyConfigAPI.LobbyRule-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LobbyConfigAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LobbyConfigAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.LobbyConfigPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.LobbyConfigPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.MiscHelpers.KeyValuePairExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.MiscHelpers.KeyValuePairExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.MiscHelpers.Modifier-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.MiscHelpers.Modifier-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.MiscHelpers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.MiscHelpers.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ModdedUnlockable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ModdedUnlockable.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.Condition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.Condition.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.ConditionMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.ConditionMode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.Parameter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.Parameter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.ParameterType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.ParameterType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.ParameterValue.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.ParameterValue.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.State.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.State.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.Transition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.Transition.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.NativeStructs.PersistentManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.NativeStructs.PersistentManager.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.NativeStructs.SerializedObjectIdentifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.NativeStructs.SerializedObjectIdentifier.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.NativeStructs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.NativeStructs.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.INetCommand.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.INetCommand.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.INetMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.INetMessage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.INetRequest-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.INetRequest-2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.INetRequestReply-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.INetRequestReply-2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.ISerializableObject.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.ISerializableObject.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.ISerializer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.ISerializer-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.NetCommandExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.NetCommandExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.NetMessageExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.NetMessageExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.NetRequestExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.NetRequestExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.SerializableObjectExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.SerializableObjectExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.SerializerExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.SerializerExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.Interfaces.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.NetworkDestination.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.NetworkDestination.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.NetworkingAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.NetworkingAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.NetworkingHelpers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.NetworkingHelpers.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.NetworkingPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.NetworkingPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Networking.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Networking.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Notification.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Notification.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.OrbAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.OrbAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.OrbPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.OrbPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.PrefabAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.PrefabAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.PrefabPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.PrefabPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.R2API.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.R2API.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.RecalculateStatsAPI.StatHookEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.RecalculateStatsAPI.StatHookEventArgs.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.RecalculateStatsAPI.StatHookEventHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.RecalculateStatsAPI.StatHookEventHandler.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.RecalculateStatsAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.RecalculateStatsAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.RecalculateStatsPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.RecalculateStatsPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.RuleCatalogExtras.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.RuleCatalogExtras.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.RulesExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.RulesExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.RulesPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.RulesPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SceneAssetAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SceneAssetAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SceneAssetPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SceneAssetPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ScriptableObjects.ArtifactCode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ScriptableObjects.ArtifactCode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ScriptableObjects.R2APISerializableContentPack.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ScriptableObjects.R2APISerializableContentPack.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ScriptableObjects.SerializableColorCatalogEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ScriptableObjects.SerializableColorCatalogEntry.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ScriptableObjects.SerializableDamageColor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ScriptableObjects.SerializableDamageColor.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ScriptableObjects.SerializableDifficultyDef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ScriptableObjects.SerializableDifficultyDef.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ScriptableObjects.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ScriptableObjects.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SkinDefInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SkinDefInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SkinIDRS.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SkinIDRS.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SkinLightReplacement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SkinLightReplacement.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SkinVFX.OnEffectSpawnedDelegate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SkinVFX.OnEffectSpawnedDelegate.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SkinVFX.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SkinVFX.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SkinVFXInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SkinVFXInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Skins.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Skins.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SkinsPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SkinsPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SoundAPI.Music.CustomMusicData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SoundAPI.Music.CustomMusicData.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SoundAPI.Music.CustomMusicTrackDef.CustomState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SoundAPI.Music.CustomMusicTrackDef.CustomState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SoundAPI.Music.CustomMusicTrackDef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SoundAPI.Music.CustomMusicTrackDef.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SoundAPI.Music.MainAndBossTracks.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SoundAPI.Music.MainAndBossTracks.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SoundAPI.Music.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SoundAPI.Music.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SoundAPI.SoundBanks.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SoundAPI.SoundBanks.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SoundAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SoundAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SoundPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SoundPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.StageRegistration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.StageRegistration.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.StagesPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.StagesPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.StandardLevelScaling.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.StandardLevelScaling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.StringSerializerExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.StringSerializerExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TempVisualEffectAPI.EffectCondition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TempVisualEffectAPI.EffectCondition.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TempVisualEffectAPI.EffectRadius.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TempVisualEffectAPI.EffectRadius.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TempVisualEffectAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TempVisualEffectAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TempVisualEffectPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TempVisualEffectPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.Dumps.AwakeDumps.CSCDump.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.Dumps.AwakeDumps.CSCDump.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.Dumps.AwakeDumps.ISCDump.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.Dumps.AwakeDumps.ISCDump.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.Dumps.AwakeDumps.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.Dumps.AwakeDumps.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.R2APITest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.R2APITest.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.Tests.AwakeTests.DotAPITests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.Tests.AwakeTests.DotAPITests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.Tests.AwakeTests.EliteAPITests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.Tests.AwakeTests.EliteAPITests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.Tests.AwakeTests.SceneAssetAPITests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.Tests.AwakeTests.SceneAssetAPITests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.Tests.AwakeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.Tests.AwakeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.Tests.ConCommandTests.DeployableAPITests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.Tests.ConCommandTests.DeployableAPITests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.Tests.ConCommandTests.DirectorTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.Tests.ConCommandTests.DirectorTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.Tests.ConCommandTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.Tests.ConCommandTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Test.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Test.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TestingLibrary.Assert.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TestingLibrary.Assert.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TestingLibrary.AssertException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TestingLibrary.AssertException.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TestingLibrary.FactAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TestingLibrary.FactAttribute.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TestingLibrary.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TestingLibrary.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.UnlockableAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.UnlockableAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.UnlockablePlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.UnlockablePlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.CecilUtil.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.CecilUtil.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.ChatMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.ChatMessage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.CommandHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.CommandHelper.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.CommandHelperPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.CommandHelperPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.CompatibilityLevel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.CompatibilityLevel.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.DirectMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.DirectMessage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.EmbeddedResources.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.EmbeddedResources.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.EnumerableExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.EnumerableExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.ManualLogSourceExtension.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.ManualLogSourceExtension.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.NetworkCompatibility.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.NetworkCompatibility.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.R2APISubmoduleDependency.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.R2APISubmoduleDependency.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.Reflection.GetDelegate-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.Reflection.GetDelegate-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.Reflection.GetDelegateRef-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.Reflection.GetDelegateRef-2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.Reflection.SetDelegate-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.Reflection.SetDelegate-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.Reflection.SetDelegateRef-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.Reflection.SetDelegateRef-2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.Reflection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.Reflection.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.SystemInitializerInjector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.SystemInitializerInjector.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.VersionStrictness.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.VersionStrictness.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".json": {
+          "relative_path": "api/toc.json"
+        },
+        ".html": {
+          "relative_path": "api/toc.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".json": {
+          "relative_path": "toc.json"
+        },
+        ".html": {
+          "relative_path": "toc.html"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
