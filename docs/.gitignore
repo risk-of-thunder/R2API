@@ -1,0 +1,5 @@
+api/*.yml
+gh-pages
+dist_pdf
+api/R2API.*
+dist/

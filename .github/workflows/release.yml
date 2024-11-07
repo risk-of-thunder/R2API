@@ -8,7 +8,7 @@ on:
       release_legacy_package:
         description: 'Release legacy package'
         required: true
-        default: 'false'
+        default: false
         type: boolean
 
 jobs:

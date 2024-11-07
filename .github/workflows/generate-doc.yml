@@ -1,0 +1,27 @@
+name: C# API XML Documentation To Github Pages
+
+on: 
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  publish-docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.x
+
+    - name: Build Documentation
+      uses: nikeee/docfx-action@v1.0.0
+      with:
+        args: docs/docfx.json
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/_site
