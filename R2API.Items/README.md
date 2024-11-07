@@ -16,7 +16,7 @@ Finally, ItemAPI includes the ability to add new ItemTags to the game, which can
 
 ## Related Pages
 
-A detailed tutorial on how to make custom items using ItewmAPI can be found [here](https://risk-of-thunder.github.io/R2Wiki/Mod-Creation/Assets/Items/)
+A detailed tutorial on how to make custom items using ItemAPI can be found [here](https://risk-of-thunder.github.io/R2Wiki/Mod-Creation/Assets/Items/)
 
 ## Changelog
 
