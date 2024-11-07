@@ -11,6 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Build
+      run: dotnet build -c Release
   
     - name: Build Documentation
       uses: nunit/docfx-action@v3.4.2
