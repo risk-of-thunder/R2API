@@ -894,6 +894,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ModdedProcType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ModdedProcType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.ModdedUnlockable.yml",
       "output": {
         ".html": {
@@ -1228,6 +1238,26 @@
       "output": {
         ".html": {
           "relative_path": "api/R2API.PrefabPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ProcTypeAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ProcTypeAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ProcTypePlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ProcTypePlugin.html"
         }
       },
       "version": ""
@@ -2008,6 +2038,26 @@
       "output": {
         ".html": {
           "relative_path": "api/R2API.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/RoR2.ProcChainMask.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/RoR2.ProcChainMask.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/RoR2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/RoR2.html"
         }
       },
       "version": ""

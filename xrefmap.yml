@@ -7597,6 +7597,18 @@ references:
   fullName.vb: R2API.MiscHelpers.Modifier(Of T)
   nameWithType: Modifier<T>
   nameWithType.vb: Modifier(Of T)
+- uid: R2API.ModdedProcType
+  name: ModdedProcType
+  href: api/R2API.ModdedProcType.html
+  commentId: T:R2API.ModdedProcType
+  fullName: R2API.ModdedProcType
+  nameWithType: ModdedProcType
+- uid: R2API.ModdedProcType.Invalid
+  name: Invalid
+  href: api/R2API.ModdedProcType.html#R2API_ModdedProcType_Invalid
+  commentId: F:R2API.ModdedProcType.Invalid
+  fullName: R2API.ModdedProcType.Invalid
+  nameWithType: ModdedProcType.Invalid
 - uid: R2API.ModdedUnlockable
   name: ModdedUnlockable
   href: api/R2API.ModdedUnlockable.html
@@ -9336,6 +9348,161 @@ references:
   commentId: T:R2API.PrefabPlugin
   fullName: R2API.PrefabPlugin
   nameWithType: PrefabPlugin
+- uid: R2API.ProcTypeAPI
+  name: ProcTypeAPI
+  href: api/R2API.ProcTypeAPI.html
+  commentId: T:R2API.ProcTypeAPI
+  fullName: R2API.ProcTypeAPI
+  nameWithType: ProcTypeAPI
+- uid: R2API.ProcTypeAPI.AddModdedProc(RoR2.ProcChainMask@,R2API.ModdedProcType)
+  name: AddModdedProc(ref ProcChainMask, ModdedProcType)
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_AddModdedProc_RoR2_ProcChainMask__R2API_ModdedProcType_
+  commentId: M:R2API.ProcTypeAPI.AddModdedProc(RoR2.ProcChainMask@,R2API.ModdedProcType)
+  name.vb: AddModdedProc(ProcChainMask, ModdedProcType)
+  fullName: R2API.ProcTypeAPI.AddModdedProc(ref RoR2.ProcChainMask, R2API.ModdedProcType)
+  fullName.vb: R2API.ProcTypeAPI.AddModdedProc(RoR2.ProcChainMask, R2API.ModdedProcType)
+  nameWithType: ProcTypeAPI.AddModdedProc(ref ProcChainMask, ModdedProcType)
+  nameWithType.vb: ProcTypeAPI.AddModdedProc(ProcChainMask, ModdedProcType)
+- uid: R2API.ProcTypeAPI.AddModdedProc*
+  name: AddModdedProc
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_AddModdedProc_
+  commentId: Overload:R2API.ProcTypeAPI.AddModdedProc
+  isSpec: "True"
+  fullName: R2API.ProcTypeAPI.AddModdedProc
+  nameWithType: ProcTypeAPI.AddModdedProc
+- uid: R2API.ProcTypeAPI.GetModdedMask(RoR2.ProcChainMask)
+  name: GetModdedMask(ProcChainMask)
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_GetModdedMask_RoR2_ProcChainMask_
+  commentId: M:R2API.ProcTypeAPI.GetModdedMask(RoR2.ProcChainMask)
+  fullName: R2API.ProcTypeAPI.GetModdedMask(RoR2.ProcChainMask)
+  nameWithType: ProcTypeAPI.GetModdedMask(ProcChainMask)
+- uid: R2API.ProcTypeAPI.GetModdedMask(RoR2.ProcChainMask,System.Collections.BitArray)
+  name: GetModdedMask(ProcChainMask, BitArray)
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_GetModdedMask_RoR2_ProcChainMask_System_Collections_BitArray_
+  commentId: M:R2API.ProcTypeAPI.GetModdedMask(RoR2.ProcChainMask,System.Collections.BitArray)
+  fullName: R2API.ProcTypeAPI.GetModdedMask(RoR2.ProcChainMask, System.Collections.BitArray)
+  nameWithType: ProcTypeAPI.GetModdedMask(ProcChainMask, BitArray)
+- uid: R2API.ProcTypeAPI.GetModdedMask*
+  name: GetModdedMask
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_GetModdedMask_
+  commentId: Overload:R2API.ProcTypeAPI.GetModdedMask
+  isSpec: "True"
+  fullName: R2API.ProcTypeAPI.GetModdedMask
+  nameWithType: ProcTypeAPI.GetModdedMask
+- uid: R2API.ProcTypeAPI.GetModdedMaskRaw(RoR2.ProcChainMask)
+  name: GetModdedMaskRaw(ProcChainMask)
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_GetModdedMaskRaw_RoR2_ProcChainMask_
+  commentId: M:R2API.ProcTypeAPI.GetModdedMaskRaw(RoR2.ProcChainMask)
+  fullName: R2API.ProcTypeAPI.GetModdedMaskRaw(RoR2.ProcChainMask)
+  nameWithType: ProcTypeAPI.GetModdedMaskRaw(ProcChainMask)
+- uid: R2API.ProcTypeAPI.GetModdedMaskRaw(RoR2.ProcChainMask,System.Collections.BitArray)
+  name: GetModdedMaskRaw(ProcChainMask, BitArray)
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_GetModdedMaskRaw_RoR2_ProcChainMask_System_Collections_BitArray_
+  commentId: M:R2API.ProcTypeAPI.GetModdedMaskRaw(RoR2.ProcChainMask,System.Collections.BitArray)
+  fullName: R2API.ProcTypeAPI.GetModdedMaskRaw(RoR2.ProcChainMask, System.Collections.BitArray)
+  nameWithType: ProcTypeAPI.GetModdedMaskRaw(ProcChainMask, BitArray)
+- uid: R2API.ProcTypeAPI.GetModdedMaskRaw*
+  name: GetModdedMaskRaw
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_GetModdedMaskRaw_
+  commentId: Overload:R2API.ProcTypeAPI.GetModdedMaskRaw
+  isSpec: "True"
+  fullName: R2API.ProcTypeAPI.GetModdedMaskRaw
+  nameWithType: ProcTypeAPI.GetModdedMaskRaw
+- uid: R2API.ProcTypeAPI.HasModdedProc(RoR2.ProcChainMask,R2API.ModdedProcType)
+  name: HasModdedProc(ProcChainMask, ModdedProcType)
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_HasModdedProc_RoR2_ProcChainMask_R2API_ModdedProcType_
+  commentId: M:R2API.ProcTypeAPI.HasModdedProc(RoR2.ProcChainMask,R2API.ModdedProcType)
+  fullName: R2API.ProcTypeAPI.HasModdedProc(RoR2.ProcChainMask, R2API.ModdedProcType)
+  nameWithType: ProcTypeAPI.HasModdedProc(ProcChainMask, ModdedProcType)
+- uid: R2API.ProcTypeAPI.HasModdedProc*
+  name: HasModdedProc
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_HasModdedProc_
+  commentId: Overload:R2API.ProcTypeAPI.HasModdedProc
+  isSpec: "True"
+  fullName: R2API.ProcTypeAPI.HasModdedProc
+  nameWithType: ProcTypeAPI.HasModdedProc
+- uid: R2API.ProcTypeAPI.ModdedProcTypeCount
+  name: ModdedProcTypeCount
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_ModdedProcTypeCount
+  commentId: P:R2API.ProcTypeAPI.ModdedProcTypeCount
+  fullName: R2API.ProcTypeAPI.ModdedProcTypeCount
+  nameWithType: ProcTypeAPI.ModdedProcTypeCount
+- uid: R2API.ProcTypeAPI.ModdedProcTypeCount*
+  name: ModdedProcTypeCount
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_ModdedProcTypeCount_
+  commentId: Overload:R2API.ProcTypeAPI.ModdedProcTypeCount
+  isSpec: "True"
+  fullName: R2API.ProcTypeAPI.ModdedProcTypeCount
+  nameWithType: ProcTypeAPI.ModdedProcTypeCount
+- uid: R2API.ProcTypeAPI.PluginGUID
+  name: PluginGUID
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_PluginGUID
+  commentId: F:R2API.ProcTypeAPI.PluginGUID
+  fullName: R2API.ProcTypeAPI.PluginGUID
+  nameWithType: ProcTypeAPI.PluginGUID
+- uid: R2API.ProcTypeAPI.PluginName
+  name: PluginName
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_PluginName
+  commentId: F:R2API.ProcTypeAPI.PluginName
+  fullName: R2API.ProcTypeAPI.PluginName
+  nameWithType: ProcTypeAPI.PluginName
+- uid: R2API.ProcTypeAPI.PluginVersion
+  name: PluginVersion
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_PluginVersion
+  commentId: F:R2API.ProcTypeAPI.PluginVersion
+  fullName: R2API.ProcTypeAPI.PluginVersion
+  nameWithType: ProcTypeAPI.PluginVersion
+- uid: R2API.ProcTypeAPI.RemoveModdedProc(RoR2.ProcChainMask@,R2API.ModdedProcType)
+  name: RemoveModdedProc(ref ProcChainMask, ModdedProcType)
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_RemoveModdedProc_RoR2_ProcChainMask__R2API_ModdedProcType_
+  commentId: M:R2API.ProcTypeAPI.RemoveModdedProc(RoR2.ProcChainMask@,R2API.ModdedProcType)
+  name.vb: RemoveModdedProc(ProcChainMask, ModdedProcType)
+  fullName: R2API.ProcTypeAPI.RemoveModdedProc(ref RoR2.ProcChainMask, R2API.ModdedProcType)
+  fullName.vb: R2API.ProcTypeAPI.RemoveModdedProc(RoR2.ProcChainMask, R2API.ModdedProcType)
+  nameWithType: ProcTypeAPI.RemoveModdedProc(ref ProcChainMask, ModdedProcType)
+  nameWithType.vb: ProcTypeAPI.RemoveModdedProc(ProcChainMask, ModdedProcType)
+- uid: R2API.ProcTypeAPI.RemoveModdedProc*
+  name: RemoveModdedProc
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_RemoveModdedProc_
+  commentId: Overload:R2API.ProcTypeAPI.RemoveModdedProc
+  isSpec: "True"
+  fullName: R2API.ProcTypeAPI.RemoveModdedProc
+  nameWithType: ProcTypeAPI.RemoveModdedProc
+- uid: R2API.ProcTypeAPI.ReserveProcType
+  name: ReserveProcType()
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_ReserveProcType
+  commentId: M:R2API.ProcTypeAPI.ReserveProcType
+  fullName: R2API.ProcTypeAPI.ReserveProcType()
+  nameWithType: ProcTypeAPI.ReserveProcType()
+- uid: R2API.ProcTypeAPI.ReserveProcType*
+  name: ReserveProcType
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_ReserveProcType_
+  commentId: Overload:R2API.ProcTypeAPI.ReserveProcType
+  isSpec: "True"
+  fullName: R2API.ProcTypeAPI.ReserveProcType
+  nameWithType: ProcTypeAPI.ReserveProcType
+- uid: R2API.ProcTypeAPI.SetModdedMask(RoR2.ProcChainMask@,System.Collections.BitArray)
+  name: SetModdedMask(ref ProcChainMask, BitArray)
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_SetModdedMask_RoR2_ProcChainMask__System_Collections_BitArray_
+  commentId: M:R2API.ProcTypeAPI.SetModdedMask(RoR2.ProcChainMask@,System.Collections.BitArray)
+  name.vb: SetModdedMask(ProcChainMask, BitArray)
+  fullName: R2API.ProcTypeAPI.SetModdedMask(ref RoR2.ProcChainMask, System.Collections.BitArray)
+  fullName.vb: R2API.ProcTypeAPI.SetModdedMask(RoR2.ProcChainMask, System.Collections.BitArray)
+  nameWithType: ProcTypeAPI.SetModdedMask(ref ProcChainMask, BitArray)
+  nameWithType.vb: ProcTypeAPI.SetModdedMask(ProcChainMask, BitArray)
+- uid: R2API.ProcTypeAPI.SetModdedMask*
+  name: SetModdedMask
+  href: api/R2API.ProcTypeAPI.html#R2API_ProcTypeAPI_SetModdedMask_
+  commentId: Overload:R2API.ProcTypeAPI.SetModdedMask
+  isSpec: "True"
+  fullName: R2API.ProcTypeAPI.SetModdedMask
+  nameWithType: ProcTypeAPI.SetModdedMask
+- uid: R2API.ProcTypePlugin
+  name: ProcTypePlugin
+  href: api/R2API.ProcTypePlugin.html
+  commentId: T:R2API.ProcTypePlugin
+  fullName: R2API.ProcTypePlugin
+  nameWithType: ProcTypePlugin
 - uid: R2API.R2API
   name: R2API
   href: api/R2API.R2API.html
@@ -13102,3 +13269,21 @@ references:
   commentId: F:R2API.Utils.VersionStrictness.EveryoneNeedSameModVersion
   fullName: R2API.Utils.VersionStrictness.EveryoneNeedSameModVersion
   nameWithType: VersionStrictness.EveryoneNeedSameModVersion
+- uid: RoR2
+  name: RoR2
+  href: api/RoR2.html
+  commentId: N:RoR2
+  fullName: RoR2
+  nameWithType: RoR2
+- uid: RoR2.ProcChainMask
+  name: ProcChainMask
+  href: api/RoR2.ProcChainMask.html
+  commentId: T:RoR2.ProcChainMask
+  fullName: RoR2.ProcChainMask
+  nameWithType: ProcChainMask
+- uid: RoR2.ProcChainMask.r2api_moddedMask
+  name: r2api_moddedMask
+  href: api/RoR2.ProcChainMask.html#RoR2_ProcChainMask_r2api_moddedMask
+  commentId: F:RoR2.ProcChainMask.r2api_moddedMask
+  fullName: RoR2.ProcChainMask.r2api_moddedMask
+  nameWithType: ProcChainMask.r2api_moddedMask
