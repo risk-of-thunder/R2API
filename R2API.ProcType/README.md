@@ -14,5 +14,8 @@ R2API.ProcType patches RoR2.ProcChainMask to store additional data and this data
 
 ## Changelog
 
+### '1.0.1'
+* Fix NuGet package
+
 ### '1.0.0'
 * Initial Release
