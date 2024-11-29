@@ -18,6 +18,10 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.3.2'
+
+* Fixed `RemoveExistingMonsterFromStage`, which by default removed the given monster from family DCCSs, potentially affecting other scenes unintentionally since those are shared between stages.
+
 ### '2.3.1'
 
 * Fixed the AddressableDCCSPool's ConditionalPool class not upgrading properly when it was using the new FamilyDCCSOption
