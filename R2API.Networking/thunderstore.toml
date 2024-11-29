@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_Networking"
-versionNumber = "1.0.3"
+versionNumber = "1.0.2"
 description = "Networking API around the Unity UNet Low Level API (LLAPI)"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
