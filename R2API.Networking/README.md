@@ -8,6 +8,10 @@ An example tutorial on how to use this api can be found [here](https://risk-of-t
 
 ## Changelog
 
+### '1.0.3'
+* Add error messages in NetworkingHelpers methods are called without networking hooks being set.
+* Expose NetworkingAPI.SetHooks so users could register NetworkingHelpers messages without having to create cutsom INetMessages.
+
 ### '1.0.1'
 * Also move NetworkCompatibility initialization back to the Core module.
 

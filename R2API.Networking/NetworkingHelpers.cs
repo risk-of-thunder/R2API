@@ -15,6 +15,12 @@ public static class NetworkingHelpers
     public static void DealDamage(this DamageInfo? damage, HurtBox? target,
         bool callDamage, bool callHitEnemy, bool callHitWorld)
     {
+        if (!NetworkingAPI._hooksEnabled)
+        {
+            NetworkingPlugin.Logger.LogError("NetworkingAPI hooks are not set! Please call NetworkingAPI.SetHooks manually on plugin initialization.");
+            return;
+        }
+
         if (NetworkServer.active)
         {
             if (callDamage)
@@ -49,6 +55,12 @@ public static class NetworkingHelpers
     public static void ApplyBuff(this CharacterBody? body,
         BuffIndex buff, int stacks = 1, float duration = -1f)
     {
+        if (!NetworkingAPI._hooksEnabled)
+        {
+            NetworkingPlugin.Logger.LogError("NetworkingAPI hooks are not set! Please call NetworkingAPI.SetHooks manually on plugin initialization.");
+            return;
+        }
+
         if (NetworkServer.active)
         {
             if (duration < 0f)
@@ -79,6 +91,12 @@ public static class NetworkingHelpers
     public static void ApplyDot(this HealthComponent victim, GameObject attacker,
         DotController.DotIndex dotIndex, float duration = 8f, float damageMultiplier = 1f)
     {
+        if (!NetworkingAPI._hooksEnabled)
+        {
+            NetworkingPlugin.Logger.LogError("NetworkingAPI hooks are not set! Please call NetworkingAPI.SetHooks manually on plugin initialization.");
+            return;
+        }
+
         if (NetworkServer.active)
         {
             DotController.InflictDot(victim.gameObject, attacker, dotIndex, duration, damageMultiplier);

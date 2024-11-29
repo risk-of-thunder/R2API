@@ -144,9 +144,9 @@ public static partial class NetworkingAPI
         return true;
     }
 
-    private static bool _hooksEnabled = false;
+    internal static bool _hooksEnabled = false;
 
-    internal static void SetHooks()
+    public static void SetHooks()
     {
         if (_hooksEnabled)
         {
