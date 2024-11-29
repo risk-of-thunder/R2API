@@ -754,7 +754,7 @@ public static partial class DirectorAPI
         {
             DirectorAPI.SetHooks();
 
-            RemoveExistingMonsterFromStage(monsterName, true, null, stage, customStageName);
+            RemoveExistingMonsterFromStage(monsterName, false, null, stage, customStageName);
         }
 
         /// <summary>
@@ -763,7 +763,7 @@ public static partial class DirectorAPI
         /// If a valid (non null) predicate is provided the monster will only be removed from the given DirectorCardCategorySelection if the predicate return true.
         /// </summary>
         /// <param name="monsterName">The name of the monster card to remove</param>
-        /// <param name="removeFromFamilies">Whether or not it the monster should be removed from familiy DCCSs</param>
+        /// <param name="removeFromFamilies">Whether or not it the monster should be removed from family DCCSs</param>
         /// <param name="predicate">If a valid (non null) predicate is provided the monster will only be removed from the given DirectorCardCategorySelection if the predicate return true.</param>
         /// <param name="stage">The stage to remove on</param>
         /// <param name="customStageName">The name of the custom stage</param>
