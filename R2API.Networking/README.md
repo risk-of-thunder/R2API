@@ -8,6 +8,9 @@ An example tutorial on how to use this api can be found [here](https://risk-of-t
 
 ## Changelog
 
+### '1.0.3'
+* Add setting plugin hooks to plugin initialization. 
+
 ### '1.0.1'
 * Also move NetworkCompatibility initialization back to the Core module.
 

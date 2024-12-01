@@ -17,6 +17,7 @@ public sealed class NetworkingPlugin : BaseUnityPlugin
     private void Awake()
     {
         Logger = base.Logger;
+        NetworkingAPI.SetHooks();
     }
 
     private void OnDestroy()
