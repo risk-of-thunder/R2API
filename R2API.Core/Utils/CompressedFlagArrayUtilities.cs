@@ -59,6 +59,35 @@ internal static class CompressedFlagArrayUtilities
         values[valueIndex] = (byte)(values[valueIndex] | highestBitInByte >> flagIndex);
     }
 
+    public static void AddImmutable(ref byte[] values, int index)
+    {
+        if (index < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index));
+        }
+
+        var valueIndex = index / flagsPerValue;
+        var flagIndex = index - (valueIndex * flagsPerValue);
+
+        if (!ResizeIfNeeded(ref values, valueIndex))
+        {
+            var newValue = (byte)(values[valueIndex] | highestBitInByte >> flagIndex);
+            if (values[valueIndex] == newValue)
+            {
+                return;
+            }
+
+            var oldValues = values;
+            values = new byte[values.Length];
+            oldValues.CopyTo(values, 0);
+        }
+        else
+        {
+            var newValue = (byte)(highestBitInByte >> flagIndex);
+            values[valueIndex] = newValue;
+        }
+    }
+
     public static void Add(ref byte[] values, byte[] operand){
         ResizeIfNeeded(ref values,operand.Length);
         for(int i = 0 ; i < operand.Length ; i++){
@@ -86,6 +115,45 @@ internal static class CompressedFlagArrayUtilities
         return true;
     }
 
+    public static bool RemoveImmutable(ref byte[] values, int index)
+    {
+        if (index < 0 || values is null)
+        {
+            return false;
+        }
+
+        var valueIndex = index / flagsPerValue;
+        if (valueIndex >= values.Length)
+        {
+            return false;
+        }
+
+        var flagIndex = index - (valueIndex * flagsPerValue);
+        var newValue = (byte)(values[valueIndex] & ~(highestBitInByte >> flagIndex));
+        if (values[valueIndex] == newValue)
+        {
+            return true;
+        }
+
+        if (newValue == 0)
+        {
+            DownsizeIfNeeded(ref values);
+            if (values.Length == 0)
+            {
+                values = null;
+            }
+        }
+        else
+        {
+            var oldValues = values;
+            values = new byte[values.Length];
+            oldValues.CopyTo(values, 0);
+            values[valueIndex] = newValue;
+        }
+
+        return true;
+    }
+
     public static bool Remove(ref byte[] values, byte[] operand){
         bool result = false;
         int length = Math.Min(values.Length,operand.Length);
@@ -99,7 +167,7 @@ internal static class CompressedFlagArrayUtilities
 
     public static bool Has(byte[] values, int index)
     {
-        if (index < 0)
+        if (index < 0 || values is null)
         {
             return false;
         }
@@ -116,7 +184,7 @@ internal static class CompressedFlagArrayUtilities
     }
 
     /// <summary>
-    /// Reads compressed value from the NerworkReader.
+    /// Reads compressed value from the NetworkReader.
     /// More info about that can be found in the PRs:
     /// https://github.com/risk-of-thunder/R2API/pull/284
     /// https://github.com/risk-of-thunder/R2API/pull/464
@@ -173,7 +241,7 @@ internal static class CompressedFlagArrayUtilities
     }
 
     /// <summary>
-    /// Reads compressed value from the NerworkReader.
+    /// Reads compressed value from the NetworkReader.
     /// More info about that can be found in the PRs:
     /// https://github.com/risk-of-thunder/R2API/pull/284
     /// https://github.com/risk-of-thunder/R2API/pull/464
@@ -272,12 +340,20 @@ internal static class CompressedFlagArrayUtilities
         }
     }
 
-    private static void ResizeIfNeeded(ref byte[] values, int valueIndex)
+    private static bool ResizeIfNeeded(ref byte[] values, int valueIndex)
     {
-        if (valueIndex >= values.Length)
+        if (values is null)
+        {
+            values = new byte[valueIndex + 1];
+            return true;
+        }
+        else if (valueIndex >= values.Length)
         {
             Array.Resize(ref values, valueIndex + 1);
+            return true;
         }
+
+        return false;
     }
 
     private static void DownsizeIfNeeded(ref byte[] value)
@@ -396,7 +472,7 @@ internal static class CompressedFlagArrayUtilities
 
     [StructLayout(LayoutKind.Explicit)]
     [DebuggerDisplay("{ToString()}")]
-    private struct FullBlockMask
+    private ref struct FullBlockMask
     {
         [FieldOffset(3)]
         private byte byte0;

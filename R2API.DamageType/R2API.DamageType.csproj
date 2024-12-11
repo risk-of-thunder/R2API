@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../R2API.props" />
   <ItemGroup>
-    <ProjectReference Include="..\R2API.Core\R2API.Core.csproj" Private="false"/>
+    <ProjectReference Include="..\R2API.Core\R2API.Core.csproj" Private="false" />
+    <ProjectReference Include="..\R2API.DamageType.Interop\R2API.DamageType.Interop.csproj" Private="false" PrivateAssets="all"/>
+    <ProjectReference Include="..\R2API.DamageType.Patcher\R2API.DamageType.Patcher.csproj" Private="false" PrivateAssets="all" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>

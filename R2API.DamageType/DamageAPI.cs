@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Linq;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.AutoVersionGen;
 using R2API.Utils;
 using RoR2;
 using RoR2.Orbs;
 using RoR2.Projectile;
-using RoR2BepInExPack.Utilities;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -28,10 +24,6 @@ public static partial class DamageAPI
 
     public enum ModdedDamageType { };
 
-    private static readonly FixedConditionalWeakTable<object, ModdedDamageTypeHolder> damageTypeHolders = new();
-
-    private static ModdedDamageTypeHolder TempHolder { get; set; }
-
     /// <summary>
     /// Return true if the submodule is loaded.
     /// </summary>
@@ -47,11 +39,6 @@ public static partial class DamageAPI
 
     private static bool _hooksEnabled = false;
 
-    // 1 << 11 taken arbitrarily, unused in the enum,
-    // also, for unknown reasons,
-    // the DamageTypeExtended enumeration starts using bits on the 18th
-    private static DamageTypeExtended signalDamageType = (DamageTypeExtended)(1 << 11);
-
     #region Hooks
     internal static void SetHooks()
     {
@@ -63,53 +50,22 @@ public static partial class DamageAPI
         On.RoR2.NetworkExtensions.Write_NetworkWriter_DamageInfo += WriteDamageInfo;
         On.RoR2.NetworkExtensions.ReadDamageInfo += ReadDamageInfo;
 
-        IL.RoR2.BulletAttack.DefaultHitCallbackImplementation += BulletAttackDefaultHitCallbackIL;
+        On.RoR2.NetworkExtensions.WriteDamageType += WriteDamageType;
+        On.RoR2.NetworkExtensions.ReadDamageType += ReadDamageType;
 
-        IL.RoR2.Orbs.DamageOrb.OnArrival += DamageOrbOnArrivalIL;
-        IL.RoR2.Orbs.GenericDamageOrb.OnArrival += GenericDamageOrbOnArrivalIL;
-        IL.RoR2.Orbs.LightningOrb.OnArrival += LightningOrbOnArrivalIL;
-        IL.RoR2.Orbs.ChainGunOrb.OnArrival += ChainGunOrbOnArrivalIL;
-
-        IL.RoR2.Projectile.DeathProjectile.FixedUpdate += DeathProjectileFixedUpdateIL;
-        IL.RoR2.Projectile.ProjectileDotZone.ResetOverlap += ProjectileDotZoneResetOverlapIL;
-        IL.RoR2.Projectile.ProjectileExplosion.DetonateServer += ProjectileExplosionDetonateServerIL;
-        IL.RoR2.Projectile.ProjectileGrantOnKillOnDestroy.OnDestroy += ProjectileGrantOnKillOnDestroyOnDestroyIL;
-        IL.RoR2.Projectile.ProjectileIntervalOverlapAttack.FixedUpdate += ProjectileIntervalOverlapAttackFixedUpdateIL;
-        IL.RoR2.Projectile.ProjectileOverlapAttack.Start += ProjectileOverlapAttackStartIL;
-        IL.RoR2.Projectile.ProjectileOverlapAttack.ResetOverlapAttack += ProjectileOverlapAttackResetOverlapAttackIL;
-        IL.RoR2.Projectile.ProjectileProximityBeamController.UpdateServer += ProjectileProximityBeamControllerUpdateServerIL;
-        IL.RoR2.Projectile.ProjectileSingleTargetImpact.OnProjectileImpact += ProjectileSingleTargetImpactOnProjectileImpactIL;
-
-        IL.RoR2.DotController.EvaluateDotStacksForType += DotControllerEvaluateDotStacksForTypeIL;
-        IL.RoR2.DotController.AddPendingDamageEntry += DotControllerAddPendingDamageEntryIL;
-
-        IL.RoR2.BlastAttack.HandleHits += BlastAttackHandleHitsIL;
-        IL.RoR2.BlastAttack.PerformDamageServer += BlastAttackPerformDamageServerIL;
-        //MMHook can't handle private structs in parameters of On hooks
-        HookEndpointManager.Add(
-            typeof(BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Write)),
-            (BlastAttackDamageInfoWriteDelegate)BlastAttackDamageInfoWrite);
-        HookEndpointManager.Add(
-            typeof(BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Read)),
-            (BlastAttackDamageInfoReadDelegate)BlastAttackDamageInfoRead);
-
-        IL.RoR2.OverlapAttack.ProcessHits += OverlapAttackProcessHitsIL;
-        IL.RoR2.OverlapAttack.PerformDamage += OverlapAttackPerformDamageIL;
-        On.RoR2.OverlapAttack.OverlapAttackMessage.Serialize += OverlapAttackMessageSerialize;
-        On.RoR2.OverlapAttack.OverlapAttackMessage.Deserialize += OverlapAttackMessageDeserialize;
-
-        IL.RoR2.GlobalEventManager.OnHitAllProcess += GlobalEventManagerOnHitAllIL;
-
-        IL.RoR2.HealthComponent.SendDamageDealt += HealthComponentSendDamageDealtIL;
-        On.RoR2.DamageDealtMessage.Serialize += DamageDealtMessageSerialize;
-        On.RoR2.DamageDealtMessage.Deserialize += DamageDealtMessageDeserialize;
-
-        IL.RoR2.ContactDamage.FireOverlaps += ContactDamageFireOverlapsIL;
-
-        IL.RoR2.DelayBlast.Detonate += DelayBlastDetonateIL;
+        On.Unity.GeneratedNetworkCode._ReadDamageTypeCombo_None += ReadDamageTypeCombo;
+        On.Unity.GeneratedNetworkCode._WriteDamageTypeCombo_None += WriteDamageTypeCombo;
 
         On.RoR2.CrocoDamageTypeController.GetDamageType += CrocoDamageTypeControllerGetDamageType;
-        On.RoR2.Projectile.ProjectileManager.InitializeProjectile += ProjectileManagerInitializeProjectile;
+
+        //There are also 2 more bitwise operations (^ and ~) but they are never used in vanilla
+        //and are not really applicable to modded damage types, so we skip them
+        HookEndpointManager.Add(
+            typeof(DamageTypeCombo).GetMethodCached("op_BitwiseAnd"),
+            DamageTypeComboOpBitwiseAnd);
+        HookEndpointManager.Add(
+            typeof(DamageTypeCombo).GetMethodCached("op_BitwiseOr"),
+            DamageTypeComboOpBitwiseOr);
 
         _hooksEnabled = true;
     }
@@ -119,67 +75,31 @@ public static partial class DamageAPI
         On.RoR2.NetworkExtensions.Write_NetworkWriter_DamageInfo -= WriteDamageInfo;
         On.RoR2.NetworkExtensions.ReadDamageInfo -= ReadDamageInfo;
 
-        IL.RoR2.BulletAttack.DefaultHitCallbackImplementation -= BulletAttackDefaultHitCallbackIL;
+        On.RoR2.NetworkExtensions.WriteDamageType -= WriteDamageType;
+        On.RoR2.NetworkExtensions.ReadDamageType -= ReadDamageType;
 
-        IL.RoR2.Orbs.DamageOrb.OnArrival -= DamageOrbOnArrivalIL;
-        IL.RoR2.Orbs.GenericDamageOrb.OnArrival -= GenericDamageOrbOnArrivalIL;
-        IL.RoR2.Orbs.LightningOrb.OnArrival -= LightningOrbOnArrivalIL;
-        IL.RoR2.Orbs.ChainGunOrb.OnArrival -= ChainGunOrbOnArrivalIL;
-
-        IL.RoR2.Projectile.DeathProjectile.FixedUpdate -= DeathProjectileFixedUpdateIL;
-        IL.RoR2.Projectile.ProjectileDotZone.ResetOverlap -= ProjectileDotZoneResetOverlapIL;
-        IL.RoR2.Projectile.ProjectileExplosion.DetonateServer -= ProjectileExplosionDetonateServerIL;
-        IL.RoR2.Projectile.ProjectileGrantOnKillOnDestroy.OnDestroy -= ProjectileGrantOnKillOnDestroyOnDestroyIL;
-        IL.RoR2.Projectile.ProjectileIntervalOverlapAttack.FixedUpdate -= ProjectileIntervalOverlapAttackFixedUpdateIL;
-        IL.RoR2.Projectile.ProjectileOverlapAttack.Start -= ProjectileOverlapAttackStartIL;
-        IL.RoR2.Projectile.ProjectileOverlapAttack.ResetOverlapAttack -= ProjectileOverlapAttackResetOverlapAttackIL;
-        IL.RoR2.Projectile.ProjectileProximityBeamController.UpdateServer -= ProjectileProximityBeamControllerUpdateServerIL;
-        IL.RoR2.Projectile.ProjectileSingleTargetImpact.OnProjectileImpact -= ProjectileSingleTargetImpactOnProjectileImpactIL;
-
-        IL.RoR2.DotController.EvaluateDotStacksForType -= DotControllerEvaluateDotStacksForTypeIL;
-        IL.RoR2.DotController.AddPendingDamageEntry -= DotControllerAddPendingDamageEntryIL;
-
-        IL.RoR2.BlastAttack.HandleHits -= BlastAttackHandleHitsIL;
-        IL.RoR2.BlastAttack.PerformDamageServer -= BlastAttackPerformDamageServerIL;
-        //MMHook can't handle private structs in parameters of On hooks
-        HookEndpointManager.Remove(
-            typeof(RoR2.BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Write)),
-            (BlastAttackDamageInfoWriteDelegate)BlastAttackDamageInfoWrite);
-        HookEndpointManager.Remove(
-            typeof(RoR2.BlastAttack.BlastAttackDamageInfo).GetMethodCached(nameof(BlastAttack.BlastAttackDamageInfo.Read)),
-            (BlastAttackDamageInfoReadDelegate)BlastAttackDamageInfoRead);
-
-        IL.RoR2.OverlapAttack.ProcessHits -= OverlapAttackProcessHitsIL;
-        IL.RoR2.OverlapAttack.PerformDamage -= OverlapAttackPerformDamageIL;
-        On.RoR2.OverlapAttack.OverlapAttackMessage.Serialize -= OverlapAttackMessageSerialize;
-        On.RoR2.OverlapAttack.OverlapAttackMessage.Deserialize -= OverlapAttackMessageDeserialize;
-
-        IL.RoR2.GlobalEventManager.OnHitAllProcess -= GlobalEventManagerOnHitAllIL;
-
-        IL.RoR2.HealthComponent.SendDamageDealt -= HealthComponentSendDamageDealtIL;
-        On.RoR2.DamageDealtMessage.Serialize -= DamageDealtMessageSerialize;
-        On.RoR2.DamageDealtMessage.Deserialize -= DamageDealtMessageDeserialize;
-
-        IL.RoR2.ContactDamage.FireOverlaps -= ContactDamageFireOverlapsIL;
-
-        IL.RoR2.DelayBlast.Detonate -= DelayBlastDetonateIL;
+        On.Unity.GeneratedNetworkCode._ReadDamageTypeCombo_None -= ReadDamageTypeCombo;
+        On.Unity.GeneratedNetworkCode._WriteDamageTypeCombo_None -= WriteDamageTypeCombo;
 
         On.RoR2.CrocoDamageTypeController.GetDamageType -= CrocoDamageTypeControllerGetDamageType;
-        On.RoR2.Projectile.ProjectileManager.InitializeProjectile -= ProjectileManagerInitializeProjectile;
+
+        HookEndpointManager.Remove(
+            typeof(DamageTypeCombo).GetMethodCached("op_BitwiseAnd"),
+            DamageTypeComboOpBitwiseAnd);
+        HookEndpointManager.Remove(
+            typeof(DamageTypeCombo).GetMethodCached("op_BitwiseOr"),
+            DamageTypeComboOpBitwiseOr);
 
         _hooksEnabled = false;
     }
 
-    #region DamageInfo
+    #region Network
     private static DamageInfo ReadDamageInfo(On.RoR2.NetworkExtensions.orig_ReadDamageInfo orig, NetworkReader reader)
     {
         var damageInfo = orig(reader);
 
-        var holder = ModdedDamageTypeHolder.ReadFromNetworkReader(reader);
-        if (holder != null)
-        {
-            damageTypeHolders.Add(damageInfo, holder);
-        }
+        var values = CompressedFlagArrayUtilities.ReadFromNetworkReader(reader, ModdedDamageTypeCount);
+        DamageTypeComboInterop.SetModdedDamageTypes(ref damageInfo.damageType, values);
 
         return damageInfo;
     }
@@ -188,391 +108,44 @@ public static partial class DamageAPI
     {
         orig(writer, damageInfo);
 
-        if (!damageTypeHolders.TryGetValue(damageInfo, out var holder))
-        {
-            writer.Write((byte)0);
-            return;
-        }
-
-        holder.WriteToNetworkWriter(writer);
-    }
-    #endregion
-
-    #region BulletAttack
-    private static void BulletAttackDefaultHitCallbackIL(ILContext il) => GotoAndEmitCopyCallForNewDamageInfo(new ILCursor(il));
-    #endregion
-
-    #region Orbs
-    private static void LightningOrbOnArrivalIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        GotoAndEmitCopyCallForNewDamageInfo(c);
-
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<LightningOrb>());
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_0);
-
-        EmitCopyCall(c);
+        var values = DamageTypeComboInterop.GetModdedDamageTypes(damageInfo.damageType);
+        CompressedFlagArrayUtilities.WriteToNetworkWriter(values ?? [], writer, ModdedDamageTypeCount);
     }
 
-    private static void GenericDamageOrbOnArrivalIL(ILContext il) => GotoAndEmitCopyCallForNewDamageInfo(new ILCursor(il));
-
-    private static void DamageOrbOnArrivalIL(ILContext il) => GotoAndEmitCopyCallForNewDamageInfo(new ILCursor(il));
-
-    private static void ChainGunOrbOnArrivalIL(ILContext il)
+    private static DamageTypeCombo ReadDamageTypeCombo(On.Unity.GeneratedNetworkCode.orig__ReadDamageTypeCombo_None orig, NetworkReader reader)
     {
-        var c = new ILCursor(il);
+        var damageTypeCombo = orig(reader);
 
-        GotoAndEmitCopyCallForNewDamageInfo(c);
+        var values = CompressedFlagArrayUtilities.ReadFromNetworkReader(reader, ModdedDamageTypeCount);
+        DamageTypeComboInterop.SetModdedDamageTypes(ref damageTypeCombo, values);
 
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<ChainGunOrb>());
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_0);
-
-        EmitCopyCall(c);
-    }
-    #endregion
-
-    #region Projectiles
-    private static void ProjectileProximityBeamControllerUpdateServerIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<LightningOrb>());
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_0);
-
-        EmitCopyFromComponentCall(c);
+        return damageTypeCombo;
     }
 
-    private static void ProjectileOverlapAttackResetOverlapAttackIL(ILContext il)
+    private static void WriteDamageTypeCombo(On.Unity.GeneratedNetworkCode.orig__WriteDamageTypeCombo_None orig, NetworkWriter writer, DamageTypeCombo value)
     {
-        var c = new ILCursor(il);
+        orig(writer, value);
 
-        c.Emit(OpCodes.Ldarg_0);
-        c.Emit<ProjectileOverlapAttack>(OpCodes.Ldfld, nameof(ProjectileOverlapAttack.attack));
-        c.Emit(OpCodes.Ldarg_0);
-        EmitCopyFromComponentCall(c);
+        var values = DamageTypeComboInterop.GetModdedDamageTypes(value);
+        CompressedFlagArrayUtilities.WriteToNetworkWriter(values ?? [], writer, ModdedDamageTypeCount);
     }
 
-    private static void ProjectileOverlapAttackStartIL(ILContext il)
+    private static DamageTypeCombo ReadDamageType(On.RoR2.NetworkExtensions.orig_ReadDamageType orig, NetworkReader reader)
     {
-        var c = new ILCursor(il);
+        var damageTypeCombo = orig(reader);
 
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchStfld<ProjectileOverlapAttack>(nameof(ProjectileOverlapAttack.attack)));
+        var values = CompressedFlagArrayUtilities.ReadFromNetworkReader(reader, ModdedDamageTypeCount);
+        DamageTypeComboInterop.SetModdedDamageTypes(ref damageTypeCombo, values);
 
-        c.Emit(OpCodes.Ldarg_0);
-        c.Emit<ProjectileOverlapAttack>(OpCodes.Ldfld, nameof(ProjectileOverlapAttack.attack));
-        c.Emit(OpCodes.Ldarg_0);
-        EmitCopyFromComponentCall(c);
+        return damageTypeCombo;
     }
 
-    private static void ProjectileIntervalOverlapAttackFixedUpdateIL(ILContext il)
+    private static void WriteDamageType(On.RoR2.NetworkExtensions.orig_WriteDamageType orig, NetworkWriter writer, DamageTypeCombo damageType)
     {
-        var c = new ILCursor(il);
+        orig(writer, damageType);
 
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<OverlapAttack>());
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_0);
-        EmitCopyFromComponentCall(c);
-    }
-
-    private static void ProjectileExplosionDetonateServerIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<BlastAttack>());
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_0);
-        EmitCopyFromComponentCall(c);
-    }
-
-    private static void ProjectileDotZoneResetOverlapIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchStfld<ProjectileDotZone>(nameof(ProjectileDotZone.attack)));
-
-        c.Emit(OpCodes.Ldarg_0);
-        c.Emit<ProjectileDotZone>(OpCodes.Ldfld, nameof(ProjectileDotZone.attack));
-        c.Emit(OpCodes.Ldarg_0);
-        EmitCopyFromComponentCall(c);
-    }
-
-    private static void ProjectileManagerInitializeProjectile(On.RoR2.Projectile.ProjectileManager.orig_InitializeProjectile orig, ProjectileController projectileController, FireProjectileInfo fireProjectileInfo)
-    {
-        orig(projectileController, fireProjectileInfo);
-        var damageComponent = projectileController.GetComponent<ProjectileDamage>();
-        if (!damageComponent || (damageComponent.damageType & signalDamageType) == 0)
-        {
-            return;
-        }
-        var targetHolder = projectileController.GetComponent<ModdedDamageTypeHolderComponent>();
-        var crocDamageType = projectileController.owner.GetComponent<CrocoDamageTypeController>();
-        ModdedDamageTypeHolder fromHolder;
-        if (damageTypeHolders.TryGetValue(crocDamageType, out fromHolder))
-        {
-            if (targetHolder)
-            {
-                targetHolder.Add(fromHolder);
-            }
-            else
-            {
-                projectileController.gameObject.AddComponent<ModdedDamageTypeHolderComponent>().Add(fromHolder);
-            }
-            damageComponent.damageType &= ~signalDamageType;
-        }
-    }
-
-    private static void ProjectileSingleTargetImpactOnProjectileImpactIL(ILContext il) => GotoAndEmitCopyComponentCallForNewDamageInfo(new ILCursor(il));
-
-    private static void ProjectileGrantOnKillOnDestroyOnDestroyIL(ILContext il) => GotoAndEmitCopyComponentCallForNewDamageInfo(new ILCursor(il));
-
-    private static void DeathProjectileFixedUpdateIL(ILContext il) => GotoAndEmitCopyComponentCallForNewDamageInfo(new ILCursor(il));
-    #endregion
-
-    #region DotController
-    private static void DotControllerAddPendingDamageEntryIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        var pendingDamageIndex = -1;
-        c.GotoNext(
-            x => x.MatchLdloc(out pendingDamageIndex),
-            x => x.MatchLdarg(3),
-            x => x.MatchStfld(out _));
-
-        c.Emit(OpCodes.Ldloc, pendingDamageIndex);
-        EmitGetTempHolder(c);
-        EmitAssignHolderCall(c);
-    }
-
-    private static void DotControllerEvaluateDotStacksForTypeIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        var dotStackIndex = -1;
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchLdloc(out dotStackIndex),
-            x => x.MatchLdfld<DotController.DotStack>(nameof(DotController.DotStack.dotIndex)),
-            x => x.MatchLdarg(1),
-            x => x.MatchBneUn(out _));
-
-        c.Emit(OpCodes.Ldloc, dotStackIndex);
-        EmitSetTempHolder(c);
-
-        GotoAndEmitCopyCallForNewDamageInfo(new ILCursor(il));
-    }
-    #endregion
-
-    #region BlastAttack
-    private static void BlastAttackDamageInfoRead(BlastAttackDamageInfoReadOrig orig, ref BlastAttack.BlastAttackDamageInfo self, NetworkReader networkReader)
-    {
-        orig(ref self, networkReader);
-
-        var holder = ModdedDamageTypeHolder.ReadFromNetworkReader(networkReader);
-        if (holder != null)
-        {
-            TempHolder = holder;
-        }
-    }
-
-    private static void BlastAttackDamageInfoWrite(BlastAttackDamageInfoWriteOrig orig, ref BlastAttack.BlastAttackDamageInfo self, NetworkWriter networkWriter)
-    {
-        orig(ref self, networkWriter);
-
-        var holder = TempHolder;
-        if (holder == null)
-        {
-            networkWriter.Write((byte)0);
-            return;
-        }
-
-        holder.WriteToNetworkWriter(networkWriter);
-    }
-
-    private static void BlastAttackPerformDamageServerIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<DamageInfo>());
-
-        c.Emit(OpCodes.Dup);
-        EmitGetTempHolder(c);
-        EmitAssignHolderCall(c);
-    }
-
-    private static void BlastAttackHandleHitsIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(x => x.MatchCall<NetworkServer>("get_active"));
-
-        c.Emit(OpCodes.Ldarg_0);
-        EmitSetTempHolder(c);
-    }
-    #endregion
-
-    #region OverlapAttack
-    private static void OverlapAttackMessageDeserialize(On.RoR2.OverlapAttack.OverlapAttackMessage.orig_Deserialize orig, MessageBase self, NetworkReader reader)
-    {
-        orig(self, reader);
-
-        var holder = ModdedDamageTypeHolder.ReadFromNetworkReader(reader);
-        if (holder != null)
-        {
-            TempHolder = holder;
-        }
-    }
-
-    private static void OverlapAttackMessageSerialize(On.RoR2.OverlapAttack.OverlapAttackMessage.orig_Serialize orig, MessageBase self, NetworkWriter writer)
-    {
-        orig(self, writer);
-
-
-        var holder = TempHolder;
-        if (holder == null)
-        {
-            writer.Write((byte)0);
-            return;
-        }
-
-        holder.WriteToNetworkWriter(writer);
-    }
-
-    private static void OverlapAttackPerformDamageIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<DamageInfo>());
-
-        c.Emit(OpCodes.Dup);
-        EmitGetTempHolder(c);
-        EmitAssignHolderCall(c);
-    }
-
-    private static void OverlapAttackProcessHitsIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(x => x.MatchCall<NetworkServer>("get_active"));
-
-        c.Emit(OpCodes.Ldarg_0);
-        EmitSetTempHolder(c);
-    }
-    #endregion
-
-    #region GlobalEventManager
-    private static void GlobalEventManagerOnHitAllIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(x => x.MatchLdsfld(typeof(RoR2Content.Items), nameof(RoR2Content.Items.Behemoth)));
-
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<BlastAttack>());
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_1);
-
-        EmitCopyCall(c);
-    }
-    #endregion
-
-    #region HealthComponent
-    private static void DamageDealtMessageDeserialize(On.RoR2.DamageDealtMessage.orig_Deserialize orig, DamageDealtMessage self, NetworkReader reader)
-    {
-        orig(self, reader);
-
-        var holder = ModdedDamageTypeHolder.ReadFromNetworkReader(reader);
-        if (holder != null)
-        {
-            damageTypeHolders.Add(self, holder);
-        }
-    }
-
-    private static void DamageDealtMessageSerialize(On.RoR2.DamageDealtMessage.orig_Serialize orig, DamageDealtMessage self, NetworkWriter writer)
-    {
-        orig(self, writer);
-
-        if (!damageTypeHolders.TryGetValue(self, out var holder))
-        {
-            writer.Write((byte)0);
-            return;
-        }
-
-        holder.WriteToNetworkWriter(writer);
-    }
-
-    private static void HealthComponentSendDamageDealtIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<DamageDealtMessage>());
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_0);
-        c.Emit<DamageReport>(OpCodes.Ldfld, nameof(DamageReport.damageInfo));
-        EmitCopyCall(c);
-    }
-    #endregion
-
-    #region DelayBlast
-    private static void DelayBlastDetonateIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<BlastAttack>());
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_0);
-        EmitCopyFromComponentCall(c);
-    }
-    #endregion
-
-    #region ContactDamage
-    private static void ContactDamageFireOverlapsIL(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        c.GotoNext(
-            x => x.MatchLdarg(0),
-            x => x.MatchLdfld<ContactDamage>(nameof(ContactDamage.damageType)));
-
-        c.Emit(OpCodes.Ldarg_0);
-        c.Emit<ContactDamage>(OpCodes.Ldfld, nameof(ContactDamage.overlapAttack));
-        c.Emit(OpCodes.Ldarg_0);
-        EmitCopyFromComponentCall(c);
+        var values = DamageTypeComboInterop.GetModdedDamageTypes(damageType);
+        CompressedFlagArrayUtilities.WriteToNetworkWriter(values ?? [], writer, ModdedDamageTypeCount);
     }
     #endregion
 
@@ -580,103 +153,86 @@ public static partial class DamageAPI
     private static DamageTypeCombo CrocoDamageTypeControllerGetDamageType(On.RoR2.CrocoDamageTypeController.orig_GetDamageType orig, CrocoDamageTypeController self)
     {
         var returnValue = orig(self);
-        if (damageTypeHolders.TryGetValue(self, out _))
-        {
-            returnValue |= signalDamageType;
-        }
+
+        var damageTypes = CrocoDamageTypeControllerInterop.GetModdedDamageTypes(self);
+        DamageTypeComboInterop.SetModdedDamageTypes(ref returnValue, damageTypes);
+
         return returnValue;
     }
-
     #endregion
 
-    #region Helpers
-    private static void EmitGetTempHolder(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(TempHolder)).GetGetMethod(true));
-
-    private static void EmitSetTempHolder(ILCursor c)
+    #region DamageTypeCombo
+    private static DamageTypeCombo DamageTypeComboOpBitwiseAnd(Func<DamageTypeCombo, DamageTypeCombo, DamageTypeCombo> orig, DamageTypeCombo operand1, DamageTypeCombo operand2)
     {
-        c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(MakeCopyOfModdedDamageTypeFromObject)));
-        c.Emit(OpCodes.Call, typeof(DamageAPI).GetPropertyCached(nameof(TempHolder)).GetSetMethod(true));
+        var newDamageType = orig(operand1, operand2);
+
+        var moddedDamageTypes1 = DamageTypeComboInterop.GetModdedDamageTypes(operand1);
+        var moddedDamageTypes2 = DamageTypeComboInterop.GetModdedDamageTypes(operand2);
+
+        if (moddedDamageTypes1 is null || moddedDamageTypes2 is null)
+        {
+            return newDamageType;
+        }
+
+        var newModdedDamageTypes = new byte[Math.Min(moddedDamageTypes1.Length, moddedDamageTypes2.Length)];
+        for (var i = 0; i < newModdedDamageTypes.Length; i++)
+        {
+            newModdedDamageTypes[i] = (byte)(moddedDamageTypes1[i] & moddedDamageTypes2[i]);
+        }
+
+        DamageTypeComboInterop.SetModdedDamageTypes(ref newDamageType, newModdedDamageTypes);
+        return newDamageType;
     }
 
-    private static void GotoAndEmitCopyCallForNewDamageInfo(ILCursor c)
+    private static DamageTypeCombo DamageTypeComboOpBitwiseOr(Func<DamageTypeCombo, DamageTypeCombo, DamageTypeCombo> orig, DamageTypeCombo operand1, DamageTypeCombo operand2)
     {
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<DamageInfo>());
+        var newDamageType = orig(operand1, operand2);
 
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_0);
+        var moddedDamageTypes1 = DamageTypeComboInterop.GetModdedDamageTypes(operand1);
+        var moddedDamageTypes2 = DamageTypeComboInterop.GetModdedDamageTypes(operand2);
 
-        EmitCopyCall(c);
-    }
-
-    private static void GotoAndEmitCopyComponentCallForNewDamageInfo(ILCursor c)
-    {
-        c.GotoNext(
-            MoveType.After,
-            x => x.MatchNewobj<DamageInfo>());
-
-        c.Emit(OpCodes.Dup);
-        c.Emit(OpCodes.Ldarg_0);
-
-        EmitCopyFromComponentCall(c);
-    }
-
-    private static void EmitCopyCall(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(CopyModdedDamageType)));
-
-    private static void CopyModdedDamageType(object to, object from)
-    {
-        if (from == null || to == null)
+        if (moddedDamageTypes1 is null && moddedDamageTypes2 is null)
         {
-            return;
-        }
-        if (damageTypeHolders.TryGetValue(from, out var holder))
-        {
-            holder.CopyToInternal(to);
-        }
-    }
-
-    private static void EmitCopyFromComponentCall(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(CopyModdedDamageTypeFromComponent)));
-
-    private static void CopyModdedDamageTypeFromComponent(object to, Component from)
-    {
-        if (!from || to == null)
-        {
-            return;
+            return newDamageType;
         }
 
-        var holder = from.GetComponent<ModdedDamageTypeHolderComponent>();
-        if (!holder)
+        if (moddedDamageTypes1 is null)
         {
-            return;
+            DamageTypeComboInterop.SetModdedDamageTypes(ref newDamageType, moddedDamageTypes2);
+            return newDamageType;
         }
 
-        holder.CopyToInternal(to);
-    }
-
-    private static void EmitAssignHolderCall(ILCursor c) => c.Emit(OpCodes.Call, typeof(DamageAPI).GetMethodCached(nameof(AssignHolderToObject)));
-    private static void AssignHolderToObject(object obj, ModdedDamageTypeHolder holder)
-    {
-        if (holder == null || obj == null)
+        if (moddedDamageTypes2 is null)
         {
-            return;
-        }
-        holder.CopyToInternal(obj);
-    }
-
-    private static ModdedDamageTypeHolder MakeCopyOfModdedDamageTypeFromObject(object from)
-    {
-        if (from == null)
-        {
-            return null;
+            DamageTypeComboInterop.SetModdedDamageTypes(ref newDamageType, moddedDamageTypes1);
+            return newDamageType;
         }
 
-        if (damageTypeHolders.TryGetValue(from, out var holder))
+        byte[] minLengthArray;
+        byte[] maxLengthArray;
+        if (moddedDamageTypes1.Length < moddedDamageTypes2.Length)
         {
-            return holder.MakeCopy();
+            minLengthArray = moddedDamageTypes1;
+            maxLengthArray = moddedDamageTypes2;
+        }
+        else
+        {
+            minLengthArray = moddedDamageTypes2;
+            maxLengthArray = moddedDamageTypes1;
         }
 
-        return null;
+        var newModdedDamageTypes = new byte[maxLengthArray.Length];
+        for (var i = 0; i < minLengthArray.Length; i++)
+        {
+            newModdedDamageTypes[i] = (byte)(minLengthArray[i] | maxLengthArray[i]);
+        }
+        for (var i = minLengthArray.Length; i < maxLengthArray.Length; i++)
+        {
+            newModdedDamageTypes[i] = maxLengthArray[i];
+        }
+
+        DamageTypeComboInterop.SetModdedDamageTypes(ref newDamageType, newModdedDamageTypes);
+        return newDamageType;
     }
     #endregion
     #endregion
@@ -684,9 +240,9 @@ public static partial class DamageAPI
     #region Public
     /// <summary>
     /// Reserve ModdedDamageType to use it with
-    /// <see cref="DamageAPI.AddModdedDamageType(DamageInfo, ModdedDamageType)"/>,
-    /// <see cref="DamageAPI.RemoveModdedDamageType(DamageInfo, ModdedDamageType)"/> and
-    /// <see cref="DamageAPI.HasModdedDamageType(DamageInfo, ModdedDamageType)"/>
+    /// <see cref="DamageAPI.AddModdedDamageType(ref DamageTypeCombo, ModdedDamageType)"/>,
+    /// <see cref="DamageAPI.RemoveModdedDamageType(ref DamageTypeCombo, ModdedDamageType)"/> and
+    /// <see cref="DamageAPI.HasModdedDamageType(ref DamageTypeCombo, ModdedDamageType)"/>
     /// </summary>
     /// <returns></returns>
     public static ModdedDamageType ReserveDamageType()
@@ -703,69 +259,74 @@ public static partial class DamageAPI
 
     #region AddModdedDamageType
     /// <summary>
+    /// Adding ModdedDamageType to DamageTypeCombo. You can add more than one damage type to one DamageTypeCombo
+    /// </summary>
+    /// <param name="damageType"></param>
+    /// <param name="moddedDamageType"></param>
+    public static void AddModdedDamageType(this ref DamageTypeCombo damageType, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(ref damageType, moddedDamageType);
+
+    /// <summary>
     /// Adding ModdedDamageType to DamageInfo instance. You can add more than one damage type to one DamageInfo
     /// </summary>
     /// <param name="damageInfo"></param>
     /// <param name="moddedDamageType"></param>
-    public static void AddModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(damageInfo, moddedDamageType);
+    public static void AddModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(ref damageInfo.damageType, moddedDamageType);
 
     /// <summary>
     /// Adding ModdedDamageType to BulletAttack instance. You can add more than one damage type to one BulletAttack
     /// </summary>
     /// <param name="bulletAttack"></param>
     /// <param name="moddedDamageType"></param>
-    public static void AddModdedDamageType(this BulletAttack bulletAttack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(bulletAttack, moddedDamageType);
+    public static void AddModdedDamageType(this BulletAttack bulletAttack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(ref bulletAttack.damageType, moddedDamageType);
 
     /// <summary>
     /// Adding ModdedDamageType to DamageOrb instance. You can add more than one damage type to one DamageOrb
     /// </summary>
     /// <param name="damageOrb"></param>
     /// <param name="moddedDamageType"></param>
-    public static void AddModdedDamageType(this DamageOrb damageOrb, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(damageOrb, moddedDamageType);
+    public static void AddModdedDamageType(this DamageOrb damageOrb, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(ref damageOrb.orbDamageType, moddedDamageType);
 
     /// <summary>
     /// Adding ModdedDamageType to GenericDamageOrb instance. You can add more than one damage type to one GenericDamageOrb
     /// </summary>
     /// <param name="genericDamageOrb"></param>
     /// <param name="moddedDamageType"></param>
-    public static void AddModdedDamageType(this GenericDamageOrb genericDamageOrb, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(genericDamageOrb, moddedDamageType);
+    public static void AddModdedDamageType(this GenericDamageOrb genericDamageOrb, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(ref genericDamageOrb.damageType, moddedDamageType);
 
     /// <summary>
     /// Adding ModdedDamageType to LightningOrb instance. You can add more than one damage type to one LightningOrb
     /// </summary>
     /// <param name="lightningOrb"></param>
     /// <param name="moddedDamageType"></param>
-    public static void AddModdedDamageType(this LightningOrb lightningOrb, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(lightningOrb, moddedDamageType);
+    public static void AddModdedDamageType(this LightningOrb lightningOrb, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(ref lightningOrb.damageType, moddedDamageType);
 
     /// <summary>
     /// Adding ModdedDamageType to BlastAttack instance. You can add more than one damage type to one BlastAttack
     /// </summary>
     /// <param name="blastAttack"></param>
     /// <param name="moddedDamageType"></param>
-    public static void AddModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(blastAttack, moddedDamageType);
+    public static void AddModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(ref blastAttack.damageType, moddedDamageType);
 
     /// <summary>
     /// Adding ModdedDamageType to OverlapAttack instance. You can add more than one damage type to one OverlapAttack
     /// </summary>
     /// <param name="overlapAttack"></param>
     /// <param name="moddedDamageType"></param>
-    public static void AddModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(overlapAttack, moddedDamageType);
+    public static void AddModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(ref overlapAttack.damageType, moddedDamageType);
 
     /// <summary>
     /// Adding ModdedDamageType to DotController.DotStack instance. You can add more than one damage type to one DotController.DotStack
     /// </summary>
     /// <param name="dotStack"></param>
     /// <param name="moddedDamageType"></param>
-    public static void AddModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(dotStack, moddedDamageType);
+    public static void AddModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(ref dotStack.damageType, moddedDamageType);
 
     /// <summary>
     /// Adding ModdedDamageType to CrocoDamageTypeController instance. You can add more than one damage type to one CrocoDamageTypeController
     /// </summary>
     /// <param name="croco"></param>
     /// <param name="moddedDamageType"></param>
-    public static void AddModdedDamageType(this CrocoDamageTypeController croco, ModdedDamageType moddedDamageType) => AddModdedDamageTypeInternal(croco, moddedDamageType);
-
-    private static void AddModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType)
+    public static void AddModdedDamageType(this CrocoDamageTypeController croco, ModdedDamageType moddedDamageType)
     {
         SetHooks();
 
@@ -774,80 +335,96 @@ public static partial class DamageAPI
             throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
         }
 
-        if (!damageTypeHolders.TryGetValue(obj, out var holder))
+        var damageTypes = CrocoDamageTypeControllerInterop.GetModdedDamageTypes(croco);
+        CompressedFlagArrayUtilities.AddImmutable(ref damageTypes, (int)moddedDamageType);
+        CrocoDamageTypeControllerInterop.SetModdedDamageTypes(croco, damageTypes);
+    }
+
+    private static void AddModdedDamageTypeInternal(ref DamageTypeCombo damageType, ModdedDamageType moddedDamageType)
+    {
+        SetHooks();
+
+        if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
         {
-            damageTypeHolders.Add(obj, holder = new ModdedDamageTypeHolder());
+            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
         }
 
-        holder.Add(moddedDamageType);
+        var damageTypes = DamageTypeComboInterop.GetModdedDamageTypes(damageType);
+        CompressedFlagArrayUtilities.AddImmutable(ref damageTypes, (int)moddedDamageType);
+        DamageTypeComboInterop.SetModdedDamageTypes(ref damageType, damageTypes);
     }
     #endregion
 
     #region RemoveModdedDamageType
     /// <summary>
+    /// Removing ModdedDamageType from DamageTypeCombo instance.
+    /// </summary>
+    /// <param name="damageType"></param>
+    /// <param name="moddedDamageType"></param>
+    public static bool RemoveModdedDamageType(this ref DamageTypeCombo damageType, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(ref damageType, moddedDamageType);
+
+    /// <summary>
     /// Removing ModdedDamageType from DamageInfo instance.
     /// </summary>
     /// <param name="damageInfo"></param>
     /// <param name="moddedDamageType"></param>
-    public static bool RemoveModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(damageInfo, moddedDamageType);
+    public static bool RemoveModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(ref damageInfo.damageType, moddedDamageType);
 
     /// <summary>
     /// Removing ModdedDamageType from BulletAttack instance.
     /// </summary>
     /// <param name="bulletAttack"></param>
     /// <param name="moddedDamageType"></param>
-    public static bool RemoveModdedDamageType(this BulletAttack bulletAttack, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(bulletAttack, moddedDamageType);
+    public static bool RemoveModdedDamageType(this BulletAttack bulletAttack, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(ref bulletAttack.damageType, moddedDamageType);
 
     /// <summary>
     /// Removing ModdedDamageType from DamageOrb instance.
     /// </summary>
     /// <param name="damageOrb"></param>
     /// <param name="moddedDamageType"></param>
-    public static bool RemoveModdedDamageType(this DamageOrb damageOrb, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(damageOrb, moddedDamageType);
+    public static bool RemoveModdedDamageType(this DamageOrb damageOrb, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(ref damageOrb.orbDamageType, moddedDamageType);
 
     /// <summary>
     /// Removing ModdedDamageType from GenericDamageOrb instance.
     /// </summary>
     /// <param name="genericDamageOrb"></param>
     /// <param name="moddedDamageType"></param>
-    public static bool RemoveModdedDamageType(this GenericDamageOrb genericDamageOrb, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(genericDamageOrb, moddedDamageType);
+    public static bool RemoveModdedDamageType(this GenericDamageOrb genericDamageOrb, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(ref genericDamageOrb.damageType, moddedDamageType);
 
     /// <summary>
     /// Removing ModdedDamageType from LightningOrb instance.
     /// </summary>
     /// <param name="lightningOrb"></param>
     /// <param name="moddedDamageType"></param>
-    public static bool RemoveModdedDamageType(this LightningOrb lightningOrb, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(lightningOrb, moddedDamageType);
+    public static bool RemoveModdedDamageType(this LightningOrb lightningOrb, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(ref lightningOrb.damageType, moddedDamageType);
 
     /// <summary>
     /// Removing ModdedDamageType from BlastAttack instance.
     /// </summary>
     /// <param name="blastAttack"></param>
     /// <param name="moddedDamageType"></param>
-    public static bool RemoveModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(blastAttack, moddedDamageType);
+    public static bool RemoveModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(ref blastAttack.damageType, moddedDamageType);
 
     /// <summary>
     /// Removing ModdedDamageType from OverlapAttack instance.
     /// </summary>
     /// <param name="overlapAttack"></param>
     /// <param name="moddedDamageType"></param>
-    public static bool RemoveModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(overlapAttack, moddedDamageType);
+    public static bool RemoveModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(ref overlapAttack.damageType, moddedDamageType);
 
     /// <summary>
     /// Removing ModdedDamageType from DotController.DotStack instance.
     /// </summary>
     /// <param name="dotStack"></param>
     /// <param name="moddedDamageType"></param>
-    public static bool RemoveModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(dotStack, moddedDamageType);
+    public static bool RemoveModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(ref dotStack.damageType, moddedDamageType);
 
     /// <summary>
     /// Removing ModdedDamageType from CrocoDamageTypeController instance.
     /// </summary>
     /// <param name="croco"></param>
     /// <param name="moddedDamageType"></param>
-    public static bool RemoveModdedDamageType(this CrocoDamageTypeController croco, ModdedDamageType moddedDamageType) => RemoveModdedDamageTypeInternal(croco, moddedDamageType);
-
-    private static bool RemoveModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType)
+    public static bool RemoveModdedDamageType(this CrocoDamageTypeController croco, ModdedDamageType moddedDamageType)
     {
         SetHooks();
 
@@ -856,23 +433,46 @@ public static partial class DamageAPI
             throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
         }
 
-        if (!damageTypeHolders.TryGetValue(obj, out var holder))
+        var damageTypes = CrocoDamageTypeControllerInterop.GetModdedDamageTypes(croco);
+        var removed = CompressedFlagArrayUtilities.RemoveImmutable(ref damageTypes, (int)moddedDamageType);
+        CrocoDamageTypeControllerInterop.SetModdedDamageTypes(croco, damageTypes);
+
+        return removed;
+    }
+
+    private static bool RemoveModdedDamageTypeInternal(ref DamageTypeCombo damageType, ModdedDamageType moddedDamageType)
+    {
+        SetHooks();
+
+        if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
         {
-            return false;
+            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
         }
 
-        return holder.Remove(moddedDamageType);
+        var damageTypes = DamageTypeComboInterop.GetModdedDamageTypes(damageType);
+        var removed = CompressedFlagArrayUtilities.RemoveImmutable(ref damageTypes, (int)moddedDamageType);
+        DamageTypeComboInterop.SetModdedDamageTypes(ref damageType, damageTypes);
+
+        return removed;
     }
     #endregion
 
     #region HasModdedDamageType
+    /// <summary>
+    /// Checks if DamageTypeCombo instance has ModdedDamageType assigned. One DamageTypeCombo can have more than one damage type.
+    /// </summary>
+    /// <param name="damageType"></param>
+    /// <param name="moddedDamageType"></param>
+    /// <returns></returns>
+    public static bool HasModdedDamageType(this ref DamageTypeCombo damageType, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(ref damageType, moddedDamageType);
+
     /// <summary>
     /// Checks if DamageInfo instance has ModdedDamageType assigned. One DamageInfo can have more than one damage type.
     /// </summary>
     /// <param name="damageInfo"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(damageInfo, moddedDamageType, ref damageInfo.damageType, damageInfo.attacker);
+    public static bool HasModdedDamageType(this DamageInfo damageInfo, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(ref damageInfo.damageType, moddedDamageType);
 
     /// <summary>
     /// Checks if BulletAttack instance has ModdedDamageType assigned. One BulletAttack can have more than one damage type.
@@ -880,7 +480,7 @@ public static partial class DamageAPI
     /// <param name="bulletAttack"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this BulletAttack bulletAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(bulletAttack, moddedDamageType, ref bulletAttack.damageType, bulletAttack.owner);
+    public static bool HasModdedDamageType(this BulletAttack bulletAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(ref bulletAttack.damageType, moddedDamageType);
 
     /// <summary>
     /// Checks if DamageOrb instance has ModdedDamageType assigned. One DamageOrb can have more than one damage type.
@@ -888,7 +488,7 @@ public static partial class DamageAPI
     /// <param name="damageOrb"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this DamageOrb damageOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(damageOrb, moddedDamageType, ref damageOrb.orbDamageType, damageOrb.attacker);
+    public static bool HasModdedDamageType(this DamageOrb damageOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(ref damageOrb.orbDamageType, moddedDamageType);
 
     /// <summary>
     /// Checks if GenericDamageOrb instance has ModdedDamageType assigned. One GenericDamageOrb can have more than one damage type.
@@ -896,7 +496,7 @@ public static partial class DamageAPI
     /// <param name="genericDamageOrb"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this GenericDamageOrb genericDamageOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(genericDamageOrb, moddedDamageType, ref genericDamageOrb.damageType, genericDamageOrb.attacker);
+    public static bool HasModdedDamageType(this GenericDamageOrb genericDamageOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(ref genericDamageOrb.damageType, moddedDamageType);
 
     /// <summary>
     /// Checks if LightningOrb instance has ModdedDamageType assigned. One LightningOrb can have more than one damage type.
@@ -904,7 +504,7 @@ public static partial class DamageAPI
     /// <param name="lightningOrb"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this LightningOrb lightningOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(lightningOrb, moddedDamageType, ref lightningOrb.damageType, lightningOrb.attacker);
+    public static bool HasModdedDamageType(this LightningOrb lightningOrb, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(ref lightningOrb.damageType, moddedDamageType);
 
     /// <summary>
     /// Checks if BlastAttack instance has ModdedDamageType assigned. One BlastAttack can have more than one damage type.
@@ -912,7 +512,7 @@ public static partial class DamageAPI
     /// <param name="blastAttack"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(blastAttack, moddedDamageType, ref blastAttack.damageType, blastAttack.attacker);
+    public static bool HasModdedDamageType(this BlastAttack blastAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(ref blastAttack.damageType, moddedDamageType);
 
     /// <summary>
     /// Checks if OverlapAttack instance has ModdedDamageType assigned. One OverlapAttack can have more than one damage type.
@@ -920,7 +520,7 @@ public static partial class DamageAPI
     /// <param name="overlapAttack"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(overlapAttack, moddedDamageType, ref overlapAttack.damageType, overlapAttack.attacker);
+    public static bool HasModdedDamageType(this OverlapAttack overlapAttack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(ref overlapAttack.damageType, moddedDamageType);
 
     /// <summary>
     /// Checks if DotController.DotStack instance has ModdedDamageType assigned. One DotController.DotStack can have more than one damage type.
@@ -928,7 +528,7 @@ public static partial class DamageAPI
     /// <param name="dotStack"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(dotStack, moddedDamageType, ref dotStack.damageType, dotStack.attackerObject);
+    public static bool HasModdedDamageType(this DotController.DotStack dotStack, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(ref dotStack.damageType, moddedDamageType);
 
     /// <summary>
     /// Checks if CrocoDamageTypeController instance has ModdedDamageType assigned. One CrocoDamageTypeController can have more than one damage type.
@@ -936,15 +536,7 @@ public static partial class DamageAPI
     /// <param name="croco"></param>
     /// <param name="moddedDamageType"></param>
     /// <returns></returns>
-    public static bool HasModdedDamageType(this CrocoDamageTypeController croco, ModdedDamageType moddedDamageType) => HasModdedDamageTypeInternal(croco, moddedDamageType);
-
-    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private static bool HasModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType, GameObject owner = null)
-    {
-        DamageTypeCombo dummy = default(DamageTypeCombo);
-        return HasModdedDamageTypeInternal(obj, moddedDamageType, ref dummy);
-    }
-    private static bool HasModdedDamageTypeInternal(object obj, ModdedDamageType moddedDamageType, ref DamageTypeCombo vanillaDamageType, GameObject owner = null)
+    public static bool HasModdedDamageType(this CrocoDamageTypeController croco, ModdedDamageType moddedDamageType)
     {
         SetHooks();
 
@@ -953,388 +545,196 @@ public static partial class DamageAPI
             throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
         }
 
-        bool signal = (vanillaDamageType & signalDamageType) != 0;
-        if (!damageTypeHolders.TryGetValue(obj, out var holder) && (!signal || !owner))
-        {
-            return false;
-        }
-        if (signal && owner)
-        {
-            var crocoComp = owner.GetComponent<CrocoDamageTypeController>();
-            ModdedDamageTypeHolder crocHolder;
-            if (crocoComp && damageTypeHolders.TryGetValue(crocoComp, out crocHolder))
-            {
-                damageTypeHolders.GetOrCreateValue(obj).Add(crocHolder);
-                vanillaDamageType &= ~signalDamageType;
-            }
-        }
-
-        return (holder != null) ? holder.Has(moddedDamageType) : false;
+        var damageTypes = CrocoDamageTypeControllerInterop.GetModdedDamageTypes(croco);
+        return CompressedFlagArrayUtilities.Has(damageTypes, (int)moddedDamageType);
     }
-    #endregion
 
-    #region GetModdedDamageTypeHolder
-    /// <summary>
-    /// Returns ModdedDamageTypeHolder for DamageInfo instance.
-    /// </summary>
-    /// <param name="damageInfo"></param>
-    /// <returns></returns>
-    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this DamageInfo damageInfo) => GetModdedDamageTypeHolderInternal(damageInfo);
-
-    /// <summary>
-    /// Returns ModdedDamageTypeHolder for BulletAttack instance.
-    /// </summary>
-    /// <param name="bulletAttack"></param>
-    /// <returns></returns>
-    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this BulletAttack bulletAttack) => GetModdedDamageTypeHolderInternal(bulletAttack);
-
-    /// <summary>
-    /// Returns ModdedDamageTypeHolder for DamageOrb instance.
-    /// </summary>
-    /// <param name="damageOrb"></param>
-    /// <returns></returns>
-    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this DamageOrb damageOrb) => GetModdedDamageTypeHolderInternal(damageOrb);
-
-    /// <summary>
-    /// Returns ModdedDamageTypeHolder for GenericDamageOrb instance.
-    /// </summary>
-    /// <param name="genericDamageOrb"></param>
-    /// <returns></returns>
-    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this GenericDamageOrb genericDamageOrb) => GetModdedDamageTypeHolderInternal(genericDamageOrb);
-
-    /// <summary>
-    /// Returns ModdedDamageTypeHolder for LightningOrb instance.
-    /// </summary>
-    /// <param name="lightningOrb"></param>
-    /// <returns></returns>
-    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this LightningOrb lightningOrb) => GetModdedDamageTypeHolderInternal(lightningOrb);
-
-    /// <summary>
-    /// Returns ModdedDamageTypeHolder for BlastAttack instance.
-    /// </summary>
-    /// <param name="blastAttack"></param>
-    /// <returns></returns>
-    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this BlastAttack blastAttack) => GetModdedDamageTypeHolderInternal(blastAttack);
-
-    /// <summary>
-    /// Returns ModdedDamageTypeHolder for OverlapAttack instance.
-    /// </summary>
-    /// <param name="overlapAttack"></param>
-    /// <returns></returns>
-    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this OverlapAttack overlapAttack) => GetModdedDamageTypeHolderInternal(overlapAttack);
-
-    /// <summary>
-    /// Returns ModdedDamageTypeHolder for DotController.DotStack instance.
-    /// </summary>
-    /// <param name="dotStack"></param>
-    /// <returns></returns>
-    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this DotController.DotStack dotStack) => GetModdedDamageTypeHolderInternal(dotStack);
-
-    /// <summary>
-    /// Returns ModdedDamageTypeHolder for CrocoDamageTypeController instance.
-    /// </summary>
-    /// <param name="croco"></param>
-    /// <returns></returns>
-    public static ModdedDamageTypeHolder GetModdedDamageTypeHolder(this CrocoDamageTypeController croco) => GetModdedDamageTypeHolderInternal(croco);
-
-    private static ModdedDamageTypeHolder GetModdedDamageTypeHolderInternal(object obj)
+    private static bool HasModdedDamageTypeInternal(ref DamageTypeCombo damageType, ModdedDamageType moddedDamageType)
     {
         SetHooks();
 
-        if (!damageTypeHolders.TryGetValue(obj, out var holder))
+        if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
         {
-            return null;
+            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
         }
 
-        return holder;
+        var damageTypes = DamageTypeComboInterop.GetModdedDamageTypes(damageType);
+        return CompressedFlagArrayUtilities.Has(damageTypes, (int)moddedDamageType);
     }
     #endregion
 
     #region ExtraTypes
     /// <summary>
-    /// Holds flag values of ModdedDamageType.
-    /// </summary>
-    public class ModdedDamageTypeHolder
-    {
-        internal byte[] values = Array.Empty<byte>();
-
-        public ModdedDamageTypeHolder() { SetHooks(); }
-
-        public ModdedDamageTypeHolder(byte[] values)
-        {
-            SetHooks();
-
-            if (values.Length > 0)
-            {
-                this.values = values.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Enable ModdedDamageType for this instance
-        /// </summary>
-        /// <param name="moddedDamageType"></param>
-        public void Add(ModdedDamageType moddedDamageType) => CompressedFlagArrayUtilities.Add(ref values, (int)moddedDamageType);
-
-        /// <summary>
-        /// Enable ModdedDamageTypes from argument for this instance
-        /// </summary>
-        /// <param name="moddedDamageTypeHolder"></param>
-        public void Add(ModdedDamageTypeHolder moddedDamageTypeHolder) => CompressedFlagArrayUtilities.Add(ref values, moddedDamageTypeHolder.values);
-
-        /// <summary>
-        /// Disable ModdedDamageType for this instance
-        /// </summary>
-        /// <param name="moddedDamageType"></param>
-        /// <returns></returns>
-        public bool Remove(ModdedDamageType moddedDamageType) => CompressedFlagArrayUtilities.Remove(ref values, (int)moddedDamageType);
-
-        /// <summary>
-        /// Disable ModdedDamageTypes from argument for this instance
-        /// </summary>
-        /// <param name="moddedDamageTypeHolder"></param>
-        /// <returns></returns>
-        public bool Remove(ModdedDamageTypeHolder moddedDamageTypeHolder) => CompressedFlagArrayUtilities.Remove(ref values, moddedDamageTypeHolder.values);
-
-        /// <summary>
-        /// Checks if ModdedDamageType is enabled
-        /// </summary>
-        /// <param name="moddedDamageType"></param>
-        /// <returns></returns>
-        public bool Has(ModdedDamageType moddedDamageType) => CompressedFlagArrayUtilities.Has(values, (int)moddedDamageType);
-
-        #region CopyTo
-        /// <summary>
-        /// Copies enabled ModdedDamageTypes to the DamageInfo instance (completely replacing already set values)
-        /// </summary>
-        /// <param name="damageInfo"></param>
-        public void CopyTo(DamageInfo damageInfo) => CopyToInternal(damageInfo);
-
-        /// <summary>
-        /// Copies enabled ModdedDamageTypes to the BulletAttack instance (completely replacing already set values)
-        /// </summary>
-        /// <param name="bulletAttack"></param>
-        public void CopyTo(BulletAttack bulletAttack) => CopyToInternal(bulletAttack);
-
-        /// <summary>
-        /// Copies enabled ModdedDamageTypes to the DamageOrb instance (completely replacing already set values)
-        /// </summary>
-        /// <param name="damageOrb"></param>
-        public void CopyTo(DamageOrb damageOrb) => CopyToInternal(damageOrb);
-
-        /// <summary>
-        /// Copies enabled ModdedDamageTypes to the GenericDamageOrb instance (completely replacing already set values)
-        /// </summary>
-        /// <param name="genericDamageOrb"></param>
-        public void CopyTo(GenericDamageOrb genericDamageOrb) => CopyToInternal(genericDamageOrb);
-
-        /// <summary>
-        /// Copies enabled ModdedDamageTypes to the LightningOrb instance (completely replacing already set values)
-        /// </summary>
-        /// <param name="lightningOrb"></param>
-        public void CopyTo(LightningOrb lightningOrb) => CopyToInternal(lightningOrb);
-
-        /// <summary>
-        /// Copies enabled ModdedDamageTypes to the BlastAttack instance (completely replacing already set values)
-        /// </summary>
-        /// <param name="blastAttack"></param>
-        public void CopyTo(BlastAttack blastAttack) => CopyToInternal(blastAttack);
-
-        /// <summary>
-        /// Copies enabled ModdedDamageTypes to the OverlapAttack instance (completely replacing already set values)
-        /// </summary>
-        /// <param name="overlapAttack"></param>
-        public void CopyTo(OverlapAttack overlapAttack) => CopyToInternal(overlapAttack);
-
-        /// <summary>
-        /// Copies enabled ModdedDamageTypes to the DotController.DotStack instance (completely replacing already set values)
-        /// </summary>
-        /// <param name="dotStack"></param>
-        public void CopyTo(DotController.DotStack dotStack) => CopyToInternal(dotStack);
-
-        /// <summary>
-        /// Copies enabled ModdedDamageTypes to the CrocoDamageTypeController instance (completely replacing already set values)
-        /// </summary>
-        /// <param name="croco"></param>
-        public void CopyTo(CrocoDamageTypeController croco) => CopyToInternal(croco);
-
-        internal void CopyToInternal(object obj)
-        {
-            damageTypeHolders.Remove(obj);
-            damageTypeHolders.Add(obj, MakeCopy());
-        }
-        #endregion
-
-        /// <summary>
-        /// Makes a copy of this instance
-        /// </summary>
-        /// <returns></returns>
-        public ModdedDamageTypeHolder MakeCopy()
-        {
-            DamageAPI.SetHooks();
-            var holder = new ModdedDamageTypeHolder
-            {
-                values = values.Length == 0 ? values : values.ToArray()
-            };
-            return holder;
-        }
-
-        /// <summary>
-        /// Reads compressed value from the NerworkReader. More info about that can be found in the PRs:
-        /// https://github.com/risk-of-thunder/R2API/pull/284
-        /// https://github.com/risk-of-thunder/R2API/pull/464
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <returns></returns>
-        public static ModdedDamageTypeHolder ReadFromNetworkReader(NetworkReader reader)
-        {
-            DamageAPI.SetHooks();
-            var values = CompressedFlagArrayUtilities.ReadFromNetworkReader(reader, ModdedDamageTypeCount);
-            if (values.Length == 0)
-            {
-                return null;
-            }
-
-            return new ModdedDamageTypeHolder
-            {
-                values = values
-            };
-        }
-
-        /// <summary>
-        /// Writes compressed value to the NerworkWriter. More info about that can be found in the PRs:
-        /// https://github.com/risk-of-thunder/R2API/pull/284
-        /// https://github.com/risk-of-thunder/R2API/pull/464
-        /// </summary>
-        /// <param name="writer"></param>
-        public void WriteToNetworkWriter(NetworkWriter writer) => CompressedFlagArrayUtilities.WriteToNetworkWriter(values, writer, ModdedDamageTypeCount);
-    }
-
-    /// <summary>
     /// Holds flag values of ModdedDamageType. The main usage is for projectiles. Add this component to your prefab.
     /// </summary>
+    [Obsolete("Use ProjectileDamage component damageType field directly to work with ModdedDamageTypes")]
     public sealed class ModdedDamageTypeHolderComponent : MonoBehaviour
     {
         [HideInInspector]
         [SerializeField]
-        //I can't just use ModdedDamageTypeHolder instead of byte[] because Unity can't serialize classes that come from assemblies
-        //that are not present at startup (basically every mod) even if they use [Serializable] attribute.
-        //Though Unity can serialize class if it inherit from MonoBehaviour or ScriptableObject.
         internal byte[] values = Array.Empty<byte>();
+
+        [SerializeField]
+        private ProjectileDamage projectileDamage;
+
+        private void Awake()
+        {
+           SetHooks();
+
+            if (!projectileDamage)
+            {
+                projectileDamage = GetComponent<ProjectileDamage>();
+                if (projectileDamage && values.Length > 0)
+                {
+                    DamageTypeComboInterop.SetModdedDamageTypes(ref projectileDamage.damageType, [..values]);
+                }
+            }
+        }
 
         /// <summary>
         /// Enable ModdedDamageType for this instance
         /// </summary>
         /// <param name="moddedDamageType"></param>
-        public void Add(ModdedDamageType moddedDamageType) => CompressedFlagArrayUtilities.Add(ref values, (int)moddedDamageType);
+        [Obsolete("Add your ModdedDamageType directly to ProjectileDamage component damageType field")]
+        public void Add(ModdedDamageType moddedDamageType)
+        {
+            SetHooks();
 
-        /// <summary>
-        /// Enable ModdedDamageTypes from argument for this instance
-        /// </summary>
-        /// <param name="moddedDamageTypeHolder"></param>
-        public void Add(ModdedDamageTypeHolder moddedDamageTypeHolder) => CompressedFlagArrayUtilities.Add(ref values, moddedDamageTypeHolder.values);
+            if (!projectileDamage)
+            {
+                projectileDamage = GetComponent<ProjectileDamage>();
+            }
+
+            if (projectileDamage)
+            {
+                projectileDamage.damageType.AddModdedDamageType(moddedDamageType);
+            }
+
+            CompressedFlagArrayUtilities.AddImmutable(ref values, (int)moddedDamageType);
+        }
 
         /// <summary>
         /// Disable ModdedDamageType for this instance
         /// </summary>
         /// <param name="moddedDamageType"></param>
         /// <returns></returns>
-        public bool Remove(ModdedDamageType moddedDamageType) => CompressedFlagArrayUtilities.Remove(ref values, (int)moddedDamageType);
+        [Obsolete("Remove your ModdedDamageType directly from ProjectileDamage component damageType field")]
+        public bool Remove(ModdedDamageType moddedDamageType)
+        {
+            SetHooks();
 
-        /// <summary>
-        /// Disable ModdedDamageTypes from argument for this instance
-        /// </summary>
-        /// <param name="moddedDamageTypeHolder"></param>
-        /// <returns></returns>
-        public bool Remove(ModdedDamageTypeHolder moddedDamageTypeHolder) => CompressedFlagArrayUtilities.Remove(ref values, moddedDamageTypeHolder.values);
+            if (!projectileDamage)
+            {
+                projectileDamage = GetComponent<ProjectileDamage>();
+            }
+
+            if (projectileDamage)
+            {
+                return projectileDamage.damageType.RemoveModdedDamageType(moddedDamageType);
+            }
+
+            return CompressedFlagArrayUtilities.RemoveImmutable(ref values, (int)moddedDamageType);
+        }
 
         /// <summary>
         /// Checks if ModdedDamageType is enabled
         /// </summary>
         /// <param name="moddedDamageType"></param>
         /// <returns></returns>
-        public bool Has(ModdedDamageType moddedDamageType) => CompressedFlagArrayUtilities.Has(values, (int)moddedDamageType);
+        [Obsolete("Check your ModdedDamageType directly on ProjectileDamage component damageType field")]
+        public bool Has(ModdedDamageType moddedDamageType)
+        {
+            SetHooks();
+
+            if (!projectileDamage)
+            {
+                projectileDamage = GetComponent<ProjectileDamage>();
+            }
+
+            if (projectileDamage)
+            {
+                return projectileDamage.damageType.HasModdedDamageType(moddedDamageType);
+            }
+
+            return CompressedFlagArrayUtilities.Has(values, (int)moddedDamageType);
+        }
 
         #region CopyTo
         /// <summary>
         /// Copies enabled ModdedDamageTypes to the DamageInfo instance (completely replacing already set values)
         /// </summary>
         /// <param name="damageInfo"></param>
-        public void CopyTo(DamageInfo damageInfo) => CopyToInternal(damageInfo);
+        [Obsolete("Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component")]
+        public void CopyTo(DamageInfo damageInfo) => CopyToInternal(ref damageInfo.damageType, values);
 
         /// <summary>
         /// Copies enabled ModdedDamageTypes to the BulletAttack instance (completely replacing already set values)
         /// </summary>
         /// <param name="bulletAttack"></param>
-        public void CopyTo(BulletAttack bulletAttack) => CopyToInternal(bulletAttack);
+        [Obsolete("Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component")]
+        public void CopyTo(BulletAttack bulletAttack) => CopyToInternal(ref bulletAttack.damageType, values);
 
         /// <summary>
         /// Copies enabled ModdedDamageTypes to the DamageOrb instance (completely replacing already set values)
         /// </summary>
         /// <param name="damageOrb"></param>
-        public void CopyTo(DamageOrb damageOrb) => CopyToInternal(damageOrb);
+        [Obsolete("Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component")]
+        public void CopyTo(DamageOrb damageOrb) => CopyToInternal(ref damageOrb.orbDamageType, values);
 
         /// <summary>
         /// Copies enabled ModdedDamageTypes to the GenericDamageOrb instance (completely replacing already set values)
         /// </summary>
         /// <param name="genericDamageOrb"></param>
-        public void CopyTo(GenericDamageOrb genericDamageOrb) => CopyToInternal(genericDamageOrb);
+        [Obsolete("Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component")]
+        public void CopyTo(GenericDamageOrb genericDamageOrb) => CopyToInternal(ref genericDamageOrb.damageType, values);
 
         /// <summary>
         /// Copies enabled ModdedDamageTypes to the LightningOrb instance (completely replacing already set values)
         /// </summary>
         /// <param name="lightningOrb"></param>
-        public void CopyTo(LightningOrb lightningOrb) => CopyToInternal(lightningOrb);
+        [Obsolete("Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component")]
+        public void CopyTo(LightningOrb lightningOrb) => CopyToInternal(ref lightningOrb.damageType, values);
 
         /// <summary>
         /// Copies enabled ModdedDamageTypes to the BlastAttack instance (completely replacing already set values)
         /// </summary>
         /// <param name="blastAttack"></param>
-        public void CopyTo(BlastAttack blastAttack) => CopyToInternal(blastAttack);
+        [Obsolete("Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component")]
+        public void CopyTo(BlastAttack blastAttack) => CopyToInternal(ref blastAttack.damageType, values);
 
         /// <summary>
         /// Copies enabled ModdedDamageTypes to the OverlapAttack instance (completely replacing already set values)
         /// </summary>
         /// <param name="overlapAttack"></param>
-        public void CopyTo(OverlapAttack overlapAttack) => CopyToInternal(overlapAttack);
+        [Obsolete("Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component")]
+        public void CopyTo(OverlapAttack overlapAttack) => CopyToInternal(ref overlapAttack.damageType, values);
 
         /// <summary>
         /// Copies enabled ModdedDamageTypes to the DotController.DotStack instance (completely replacing already set values)
         /// </summary>
         /// <param name="dotStack"></param>
-        public void CopyTo(DotController.DotStack dotStack) => CopyToInternal(dotStack);
+        [Obsolete("Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component")]
+        public void CopyTo(DotController.DotStack dotStack) => CopyToInternal(ref dotStack.damageType, values);
 
         /// <summary>
         /// Copies enabled ModdedDamageTypes to the CrocoDamageTypeController instance (completely replacing already set values)
         /// </summary>
         /// <param name="croco"></param>
-        public void CopyTo(CrocoDamageTypeController croco) => CopyToInternal(croco);
-
-        internal void CopyToInternal(object obj)
+        [Obsolete("Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component")]
+        public void CopyTo(CrocoDamageTypeController croco)
         {
-            damageTypeHolders.Remove(obj);
-            damageTypeHolders.Add(obj, new ModdedDamageTypeHolder(values));
+            SetHooks();
+            CrocoDamageTypeControllerInterop.SetModdedDamageTypes(croco, values);
         }
+
+        private void CopyToInternal(ref DamageTypeCombo damageType, byte[] values)
+        {
+            SetHooks();
+            DamageTypeComboInterop.SetModdedDamageTypes(ref damageType, values);
+        }
+
         #endregion
-
-        /// <summary>
-        /// Create ModdedDamageTypeHolder using values of this instance
-        /// </summary>
-        /// <returns></returns>
-        public ModdedDamageTypeHolder MakeHolder()
-        {
-            DamageAPI.SetHooks();
-            return new ModdedDamageTypeHolder(values);
-        }
     }
     #endregion
-    #endregion
-
-    #region Private
-    private delegate void BlastAttackDamageInfoWriteDelegate(BlastAttackDamageInfoWriteOrig orig, ref BlastAttack.BlastAttackDamageInfo self, NetworkWriter networkWriter);
-    private delegate void BlastAttackDamageInfoWriteOrig(ref BlastAttack.BlastAttackDamageInfo self, NetworkWriter networkWriter);
-
-    private delegate void BlastAttackDamageInfoReadDelegate(BlastAttackDamageInfoReadOrig orig, ref BlastAttack.BlastAttackDamageInfo self, NetworkReader networkReader);
-    private delegate void BlastAttackDamageInfoReadOrig(ref BlastAttack.BlastAttackDamageInfo self, NetworkReader networkReader);
     #endregion
 }
