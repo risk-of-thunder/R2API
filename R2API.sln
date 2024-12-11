@@ -103,6 +103,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.ProcType.Interop", "R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoR2.Patched", "RoR2.Patched\RoR2.Patched.csproj", "{77CAE85A-E1FA-44C4-9E78-404A12DF2CCE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.DamageType.Patcher", "R2API.DamageType.Patcher\R2API.DamageType.Patcher.csproj", "{929EEC5C-61AA-4B96-97BC-8A95DA7DB036}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R2API.DamageType.Interop", "R2API.DamageType.Interop\R2API.DamageType.Interop.csproj", "{51B64907-065C-49D8-900F-26E9B54DD04F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -265,6 +269,14 @@ Global
 		{77CAE85A-E1FA-44C4-9E78-404A12DF2CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77CAE85A-E1FA-44C4-9E78-404A12DF2CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77CAE85A-E1FA-44C4-9E78-404A12DF2CCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{929EEC5C-61AA-4B96-97BC-8A95DA7DB036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{929EEC5C-61AA-4B96-97BC-8A95DA7DB036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{929EEC5C-61AA-4B96-97BC-8A95DA7DB036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{929EEC5C-61AA-4B96-97BC-8A95DA7DB036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51B64907-065C-49D8-900F-26E9B54DD04F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51B64907-065C-49D8-900F-26E9B54DD04F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51B64907-065C-49D8-900F-26E9B54DD04F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51B64907-065C-49D8-900F-26E9B54DD04F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
