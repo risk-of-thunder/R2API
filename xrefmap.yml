@@ -2837,6 +2837,15 @@ references:
   commentId: M:R2API.DamageAPI.AddModdedDamageType(RoR2.DamageInfo,R2API.DamageAPI.ModdedDamageType)
   fullName: R2API.DamageAPI.AddModdedDamageType(RoR2.DamageInfo, R2API.DamageAPI.ModdedDamageType)
   nameWithType: DamageAPI.AddModdedDamageType(DamageInfo, DamageAPI.ModdedDamageType)
+- uid: R2API.DamageAPI.AddModdedDamageType(RoR2.DamageTypeCombo@,R2API.DamageAPI.ModdedDamageType)
+  name: AddModdedDamageType(ref DamageTypeCombo, ModdedDamageType)
+  href: api/R2API.DamageAPI.html#R2API_DamageAPI_AddModdedDamageType_RoR2_DamageTypeCombo__R2API_DamageAPI_ModdedDamageType_
+  commentId: M:R2API.DamageAPI.AddModdedDamageType(RoR2.DamageTypeCombo@,R2API.DamageAPI.ModdedDamageType)
+  name.vb: AddModdedDamageType(DamageTypeCombo, ModdedDamageType)
+  fullName: R2API.DamageAPI.AddModdedDamageType(ref RoR2.DamageTypeCombo, R2API.DamageAPI.ModdedDamageType)
+  fullName.vb: R2API.DamageAPI.AddModdedDamageType(RoR2.DamageTypeCombo, R2API.DamageAPI.ModdedDamageType)
+  nameWithType: DamageAPI.AddModdedDamageType(ref DamageTypeCombo, DamageAPI.ModdedDamageType)
+  nameWithType.vb: DamageAPI.AddModdedDamageType(DamageTypeCombo, DamageAPI.ModdedDamageType)
 - uid: R2API.DamageAPI.AddModdedDamageType(RoR2.DotController.DotStack,R2API.DamageAPI.ModdedDamageType)
   name: AddModdedDamageType(DotStack, ModdedDamageType)
   href: api/R2API.DamageAPI.html#R2API_DamageAPI_AddModdedDamageType_RoR2_DotController_DotStack_R2API_DamageAPI_ModdedDamageType_
@@ -2874,67 +2883,6 @@ references:
   isSpec: "True"
   fullName: R2API.DamageAPI.AddModdedDamageType
   nameWithType: DamageAPI.AddModdedDamageType
-- uid: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.BlastAttack)
-  name: GetModdedDamageTypeHolder(BlastAttack)
-  href: api/R2API.DamageAPI.html#R2API_DamageAPI_GetModdedDamageTypeHolder_RoR2_BlastAttack_
-  commentId: M:R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.BlastAttack)
-  fullName: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.BlastAttack)
-  nameWithType: DamageAPI.GetModdedDamageTypeHolder(BlastAttack)
-- uid: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.BulletAttack)
-  name: GetModdedDamageTypeHolder(BulletAttack)
-  href: api/R2API.DamageAPI.html#R2API_DamageAPI_GetModdedDamageTypeHolder_RoR2_BulletAttack_
-  commentId: M:R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.BulletAttack)
-  fullName: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.BulletAttack)
-  nameWithType: DamageAPI.GetModdedDamageTypeHolder(BulletAttack)
-- uid: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.CrocoDamageTypeController)
-  name: GetModdedDamageTypeHolder(CrocoDamageTypeController)
-  href: api/R2API.DamageAPI.html#R2API_DamageAPI_GetModdedDamageTypeHolder_RoR2_CrocoDamageTypeController_
-  commentId: M:R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.CrocoDamageTypeController)
-  fullName: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.CrocoDamageTypeController)
-  nameWithType: DamageAPI.GetModdedDamageTypeHolder(CrocoDamageTypeController)
-- uid: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.DamageInfo)
-  name: GetModdedDamageTypeHolder(DamageInfo)
-  href: api/R2API.DamageAPI.html#R2API_DamageAPI_GetModdedDamageTypeHolder_RoR2_DamageInfo_
-  commentId: M:R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.DamageInfo)
-  fullName: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.DamageInfo)
-  nameWithType: DamageAPI.GetModdedDamageTypeHolder(DamageInfo)
-- uid: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.DotController.DotStack)
-  name: GetModdedDamageTypeHolder(DotStack)
-  href: api/R2API.DamageAPI.html#R2API_DamageAPI_GetModdedDamageTypeHolder_RoR2_DotController_DotStack_
-  commentId: M:R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.DotController.DotStack)
-  fullName: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.DotController.DotStack)
-  nameWithType: DamageAPI.GetModdedDamageTypeHolder(DotController.DotStack)
-- uid: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.Orbs.DamageOrb)
-  name: GetModdedDamageTypeHolder(DamageOrb)
-  href: api/R2API.DamageAPI.html#R2API_DamageAPI_GetModdedDamageTypeHolder_RoR2_Orbs_DamageOrb_
-  commentId: M:R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.Orbs.DamageOrb)
-  fullName: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.Orbs.DamageOrb)
-  nameWithType: DamageAPI.GetModdedDamageTypeHolder(DamageOrb)
-- uid: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.Orbs.GenericDamageOrb)
-  name: GetModdedDamageTypeHolder(GenericDamageOrb)
-  href: api/R2API.DamageAPI.html#R2API_DamageAPI_GetModdedDamageTypeHolder_RoR2_Orbs_GenericDamageOrb_
-  commentId: M:R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.Orbs.GenericDamageOrb)
-  fullName: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.Orbs.GenericDamageOrb)
-  nameWithType: DamageAPI.GetModdedDamageTypeHolder(GenericDamageOrb)
-- uid: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.Orbs.LightningOrb)
-  name: GetModdedDamageTypeHolder(LightningOrb)
-  href: api/R2API.DamageAPI.html#R2API_DamageAPI_GetModdedDamageTypeHolder_RoR2_Orbs_LightningOrb_
-  commentId: M:R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.Orbs.LightningOrb)
-  fullName: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.Orbs.LightningOrb)
-  nameWithType: DamageAPI.GetModdedDamageTypeHolder(LightningOrb)
-- uid: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.OverlapAttack)
-  name: GetModdedDamageTypeHolder(OverlapAttack)
-  href: api/R2API.DamageAPI.html#R2API_DamageAPI_GetModdedDamageTypeHolder_RoR2_OverlapAttack_
-  commentId: M:R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.OverlapAttack)
-  fullName: R2API.DamageAPI.GetModdedDamageTypeHolder(RoR2.OverlapAttack)
-  nameWithType: DamageAPI.GetModdedDamageTypeHolder(OverlapAttack)
-- uid: R2API.DamageAPI.GetModdedDamageTypeHolder*
-  name: GetModdedDamageTypeHolder
-  href: api/R2API.DamageAPI.html#R2API_DamageAPI_GetModdedDamageTypeHolder_
-  commentId: Overload:R2API.DamageAPI.GetModdedDamageTypeHolder
-  isSpec: "True"
-  fullName: R2API.DamageAPI.GetModdedDamageTypeHolder
-  nameWithType: DamageAPI.GetModdedDamageTypeHolder
 - uid: R2API.DamageAPI.HasModdedDamageType(RoR2.BlastAttack,R2API.DamageAPI.ModdedDamageType)
   name: HasModdedDamageType(BlastAttack, ModdedDamageType)
   href: api/R2API.DamageAPI.html#R2API_DamageAPI_HasModdedDamageType_RoR2_BlastAttack_R2API_DamageAPI_ModdedDamageType_
@@ -2959,6 +2907,15 @@ references:
   commentId: M:R2API.DamageAPI.HasModdedDamageType(RoR2.DamageInfo,R2API.DamageAPI.ModdedDamageType)
   fullName: R2API.DamageAPI.HasModdedDamageType(RoR2.DamageInfo, R2API.DamageAPI.ModdedDamageType)
   nameWithType: DamageAPI.HasModdedDamageType(DamageInfo, DamageAPI.ModdedDamageType)
+- uid: R2API.DamageAPI.HasModdedDamageType(RoR2.DamageTypeCombo@,R2API.DamageAPI.ModdedDamageType)
+  name: HasModdedDamageType(ref DamageTypeCombo, ModdedDamageType)
+  href: api/R2API.DamageAPI.html#R2API_DamageAPI_HasModdedDamageType_RoR2_DamageTypeCombo__R2API_DamageAPI_ModdedDamageType_
+  commentId: M:R2API.DamageAPI.HasModdedDamageType(RoR2.DamageTypeCombo@,R2API.DamageAPI.ModdedDamageType)
+  name.vb: HasModdedDamageType(DamageTypeCombo, ModdedDamageType)
+  fullName: R2API.DamageAPI.HasModdedDamageType(ref RoR2.DamageTypeCombo, R2API.DamageAPI.ModdedDamageType)
+  fullName.vb: R2API.DamageAPI.HasModdedDamageType(RoR2.DamageTypeCombo, R2API.DamageAPI.ModdedDamageType)
+  nameWithType: DamageAPI.HasModdedDamageType(ref DamageTypeCombo, DamageAPI.ModdedDamageType)
+  nameWithType.vb: DamageAPI.HasModdedDamageType(DamageTypeCombo, DamageAPI.ModdedDamageType)
 - uid: R2API.DamageAPI.HasModdedDamageType(RoR2.DotController.DotStack,R2API.DamageAPI.ModdedDamageType)
   name: HasModdedDamageType(DotStack, ModdedDamageType)
   href: api/R2API.DamageAPI.html#R2API_DamageAPI_HasModdedDamageType_RoR2_DotController_DotStack_R2API_DamageAPI_ModdedDamageType_
@@ -3028,191 +2985,6 @@ references:
   isSpec: "True"
   fullName: R2API.DamageAPI.ModdedDamageTypeCount
   nameWithType: DamageAPI.ModdedDamageTypeCount
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder
-  name: DamageAPI.ModdedDamageTypeHolder
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html
-  commentId: T:R2API.DamageAPI.ModdedDamageTypeHolder
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder
-  nameWithType: DamageAPI.ModdedDamageTypeHolder
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.#ctor
-  name: ModdedDamageTypeHolder()
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder__ctor
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.#ctor
-  name.vb: New()
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.ModdedDamageTypeHolder()
-  fullName.vb: R2API.DamageAPI.ModdedDamageTypeHolder.New()
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.ModdedDamageTypeHolder()
-  nameWithType.vb: DamageAPI.ModdedDamageTypeHolder.New()
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.#ctor(System.Byte[])
-  name: ModdedDamageTypeHolder(byte[])
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder__ctor_System_Byte___
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.#ctor(System.Byte[])
-  name.vb: New(Byte())
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.ModdedDamageTypeHolder(byte[])
-  fullName.vb: R2API.DamageAPI.ModdedDamageTypeHolder.New(Byte())
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.ModdedDamageTypeHolder(byte[])
-  nameWithType.vb: DamageAPI.ModdedDamageTypeHolder.New(Byte())
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.#ctor*
-  name: ModdedDamageTypeHolder
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder__ctor_
-  commentId: Overload:R2API.DamageAPI.ModdedDamageTypeHolder.#ctor
-  isSpec: "True"
-  name.vb: New
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.ModdedDamageTypeHolder
-  fullName.vb: R2API.DamageAPI.ModdedDamageTypeHolder.New
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.ModdedDamageTypeHolder
-  nameWithType.vb: DamageAPI.ModdedDamageTypeHolder.New
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.Add(R2API.DamageAPI.ModdedDamageType)
-  name: Add(ModdedDamageType)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_Add_R2API_DamageAPI_ModdedDamageType_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.Add(R2API.DamageAPI.ModdedDamageType)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.Add(R2API.DamageAPI.ModdedDamageType)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.Add(DamageAPI.ModdedDamageType)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.Add(R2API.DamageAPI.ModdedDamageTypeHolder)
-  name: Add(ModdedDamageTypeHolder)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_Add_R2API_DamageAPI_ModdedDamageTypeHolder_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.Add(R2API.DamageAPI.ModdedDamageTypeHolder)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.Add(R2API.DamageAPI.ModdedDamageTypeHolder)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.Add(DamageAPI.ModdedDamageTypeHolder)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.Add*
-  name: Add
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_Add_
-  commentId: Overload:R2API.DamageAPI.ModdedDamageTypeHolder.Add
-  isSpec: "True"
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.Add
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.Add
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.BlastAttack)
-  name: CopyTo(BlastAttack)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_CopyTo_RoR2_BlastAttack_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.BlastAttack)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.BlastAttack)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.CopyTo(BlastAttack)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.BulletAttack)
-  name: CopyTo(BulletAttack)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_CopyTo_RoR2_BulletAttack_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.BulletAttack)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.BulletAttack)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.CopyTo(BulletAttack)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.CrocoDamageTypeController)
-  name: CopyTo(CrocoDamageTypeController)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_CopyTo_RoR2_CrocoDamageTypeController_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.CrocoDamageTypeController)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.CrocoDamageTypeController)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.CopyTo(CrocoDamageTypeController)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.DamageInfo)
-  name: CopyTo(DamageInfo)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_CopyTo_RoR2_DamageInfo_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.DamageInfo)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.DamageInfo)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.CopyTo(DamageInfo)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.DotController.DotStack)
-  name: CopyTo(DotStack)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_CopyTo_RoR2_DotController_DotStack_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.DotController.DotStack)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.DotController.DotStack)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.CopyTo(DotController.DotStack)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.Orbs.DamageOrb)
-  name: CopyTo(DamageOrb)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_CopyTo_RoR2_Orbs_DamageOrb_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.Orbs.DamageOrb)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.Orbs.DamageOrb)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.CopyTo(DamageOrb)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.Orbs.GenericDamageOrb)
-  name: CopyTo(GenericDamageOrb)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_CopyTo_RoR2_Orbs_GenericDamageOrb_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.Orbs.GenericDamageOrb)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.Orbs.GenericDamageOrb)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.CopyTo(GenericDamageOrb)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.Orbs.LightningOrb)
-  name: CopyTo(LightningOrb)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_CopyTo_RoR2_Orbs_LightningOrb_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.Orbs.LightningOrb)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.Orbs.LightningOrb)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.CopyTo(LightningOrb)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.OverlapAttack)
-  name: CopyTo(OverlapAttack)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_CopyTo_RoR2_OverlapAttack_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.OverlapAttack)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo(RoR2.OverlapAttack)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.CopyTo(OverlapAttack)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo*
-  name: CopyTo
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_CopyTo_
-  commentId: Overload:R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo
-  isSpec: "True"
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.CopyTo
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.CopyTo
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.Has(R2API.DamageAPI.ModdedDamageType)
-  name: Has(ModdedDamageType)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_Has_R2API_DamageAPI_ModdedDamageType_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.Has(R2API.DamageAPI.ModdedDamageType)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.Has(R2API.DamageAPI.ModdedDamageType)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.Has(DamageAPI.ModdedDamageType)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.Has*
-  name: Has
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_Has_
-  commentId: Overload:R2API.DamageAPI.ModdedDamageTypeHolder.Has
-  isSpec: "True"
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.Has
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.Has
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.MakeCopy
-  name: MakeCopy()
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_MakeCopy
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.MakeCopy
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.MakeCopy()
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.MakeCopy()
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.MakeCopy*
-  name: MakeCopy
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_MakeCopy_
-  commentId: Overload:R2API.DamageAPI.ModdedDamageTypeHolder.MakeCopy
-  isSpec: "True"
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.MakeCopy
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.MakeCopy
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.ReadFromNetworkReader(UnityEngine.Networking.NetworkReader)
-  name: ReadFromNetworkReader(NetworkReader)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_ReadFromNetworkReader_UnityEngine_Networking_NetworkReader_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.ReadFromNetworkReader(UnityEngine.Networking.NetworkReader)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.ReadFromNetworkReader(UnityEngine.Networking.NetworkReader)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.ReadFromNetworkReader(NetworkReader)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.ReadFromNetworkReader*
-  name: ReadFromNetworkReader
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_ReadFromNetworkReader_
-  commentId: Overload:R2API.DamageAPI.ModdedDamageTypeHolder.ReadFromNetworkReader
-  isSpec: "True"
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.ReadFromNetworkReader
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.ReadFromNetworkReader
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.Remove(R2API.DamageAPI.ModdedDamageType)
-  name: Remove(ModdedDamageType)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_Remove_R2API_DamageAPI_ModdedDamageType_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.Remove(R2API.DamageAPI.ModdedDamageType)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.Remove(R2API.DamageAPI.ModdedDamageType)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.Remove(DamageAPI.ModdedDamageType)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.Remove(R2API.DamageAPI.ModdedDamageTypeHolder)
-  name: Remove(ModdedDamageTypeHolder)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_Remove_R2API_DamageAPI_ModdedDamageTypeHolder_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.Remove(R2API.DamageAPI.ModdedDamageTypeHolder)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.Remove(R2API.DamageAPI.ModdedDamageTypeHolder)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.Remove(DamageAPI.ModdedDamageTypeHolder)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.Remove*
-  name: Remove
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_Remove_
-  commentId: Overload:R2API.DamageAPI.ModdedDamageTypeHolder.Remove
-  isSpec: "True"
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.Remove
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.Remove
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.WriteToNetworkWriter(UnityEngine.Networking.NetworkWriter)
-  name: WriteToNetworkWriter(NetworkWriter)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_WriteToNetworkWriter_UnityEngine_Networking_NetworkWriter_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolder.WriteToNetworkWriter(UnityEngine.Networking.NetworkWriter)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.WriteToNetworkWriter(UnityEngine.Networking.NetworkWriter)
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.WriteToNetworkWriter(NetworkWriter)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolder.WriteToNetworkWriter*
-  name: WriteToNetworkWriter
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolder.html#R2API_DamageAPI_ModdedDamageTypeHolder_WriteToNetworkWriter_
-  commentId: Overload:R2API.DamageAPI.ModdedDamageTypeHolder.WriteToNetworkWriter
-  isSpec: "True"
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolder.WriteToNetworkWriter
-  nameWithType: DamageAPI.ModdedDamageTypeHolder.WriteToNetworkWriter
 - uid: R2API.DamageAPI.ModdedDamageTypeHolderComponent
   name: DamageAPI.ModdedDamageTypeHolderComponent
   href: api/R2API.DamageAPI.ModdedDamageTypeHolderComponent.html
@@ -3225,12 +2997,6 @@ references:
   commentId: M:R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add(R2API.DamageAPI.ModdedDamageType)
   fullName: R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add(R2API.DamageAPI.ModdedDamageType)
   nameWithType: DamageAPI.ModdedDamageTypeHolderComponent.Add(DamageAPI.ModdedDamageType)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add(R2API.DamageAPI.ModdedDamageTypeHolder)
-  name: Add(ModdedDamageTypeHolder)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolderComponent.html#R2API_DamageAPI_ModdedDamageTypeHolderComponent_Add_R2API_DamageAPI_ModdedDamageTypeHolder_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add(R2API.DamageAPI.ModdedDamageTypeHolder)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add(R2API.DamageAPI.ModdedDamageTypeHolder)
-  nameWithType: DamageAPI.ModdedDamageTypeHolderComponent.Add(DamageAPI.ModdedDamageTypeHolder)
 - uid: R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add*
   name: Add
   href: api/R2API.DamageAPI.ModdedDamageTypeHolderComponent.html#R2API_DamageAPI_ModdedDamageTypeHolderComponent_Add_
@@ -3312,31 +3078,12 @@ references:
   isSpec: "True"
   fullName: R2API.DamageAPI.ModdedDamageTypeHolderComponent.Has
   nameWithType: DamageAPI.ModdedDamageTypeHolderComponent.Has
-- uid: R2API.DamageAPI.ModdedDamageTypeHolderComponent.MakeHolder
-  name: MakeHolder()
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolderComponent.html#R2API_DamageAPI_ModdedDamageTypeHolderComponent_MakeHolder
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolderComponent.MakeHolder
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolderComponent.MakeHolder()
-  nameWithType: DamageAPI.ModdedDamageTypeHolderComponent.MakeHolder()
-- uid: R2API.DamageAPI.ModdedDamageTypeHolderComponent.MakeHolder*
-  name: MakeHolder
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolderComponent.html#R2API_DamageAPI_ModdedDamageTypeHolderComponent_MakeHolder_
-  commentId: Overload:R2API.DamageAPI.ModdedDamageTypeHolderComponent.MakeHolder
-  isSpec: "True"
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolderComponent.MakeHolder
-  nameWithType: DamageAPI.ModdedDamageTypeHolderComponent.MakeHolder
 - uid: R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove(R2API.DamageAPI.ModdedDamageType)
   name: Remove(ModdedDamageType)
   href: api/R2API.DamageAPI.ModdedDamageTypeHolderComponent.html#R2API_DamageAPI_ModdedDamageTypeHolderComponent_Remove_R2API_DamageAPI_ModdedDamageType_
   commentId: M:R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove(R2API.DamageAPI.ModdedDamageType)
   fullName: R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove(R2API.DamageAPI.ModdedDamageType)
   nameWithType: DamageAPI.ModdedDamageTypeHolderComponent.Remove(DamageAPI.ModdedDamageType)
-- uid: R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove(R2API.DamageAPI.ModdedDamageTypeHolder)
-  name: Remove(ModdedDamageTypeHolder)
-  href: api/R2API.DamageAPI.ModdedDamageTypeHolderComponent.html#R2API_DamageAPI_ModdedDamageTypeHolderComponent_Remove_R2API_DamageAPI_ModdedDamageTypeHolder_
-  commentId: M:R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove(R2API.DamageAPI.ModdedDamageTypeHolder)
-  fullName: R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove(R2API.DamageAPI.ModdedDamageTypeHolder)
-  nameWithType: DamageAPI.ModdedDamageTypeHolderComponent.Remove(DamageAPI.ModdedDamageTypeHolder)
 - uid: R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove*
   name: Remove
   href: api/R2API.DamageAPI.ModdedDamageTypeHolderComponent.html#R2API_DamageAPI_ModdedDamageTypeHolderComponent_Remove_
@@ -3386,6 +3133,15 @@ references:
   commentId: M:R2API.DamageAPI.RemoveModdedDamageType(RoR2.DamageInfo,R2API.DamageAPI.ModdedDamageType)
   fullName: R2API.DamageAPI.RemoveModdedDamageType(RoR2.DamageInfo, R2API.DamageAPI.ModdedDamageType)
   nameWithType: DamageAPI.RemoveModdedDamageType(DamageInfo, DamageAPI.ModdedDamageType)
+- uid: R2API.DamageAPI.RemoveModdedDamageType(RoR2.DamageTypeCombo@,R2API.DamageAPI.ModdedDamageType)
+  name: RemoveModdedDamageType(ref DamageTypeCombo, ModdedDamageType)
+  href: api/R2API.DamageAPI.html#R2API_DamageAPI_RemoveModdedDamageType_RoR2_DamageTypeCombo__R2API_DamageAPI_ModdedDamageType_
+  commentId: M:R2API.DamageAPI.RemoveModdedDamageType(RoR2.DamageTypeCombo@,R2API.DamageAPI.ModdedDamageType)
+  name.vb: RemoveModdedDamageType(DamageTypeCombo, ModdedDamageType)
+  fullName: R2API.DamageAPI.RemoveModdedDamageType(ref RoR2.DamageTypeCombo, R2API.DamageAPI.ModdedDamageType)
+  fullName.vb: R2API.DamageAPI.RemoveModdedDamageType(RoR2.DamageTypeCombo, R2API.DamageAPI.ModdedDamageType)
+  nameWithType: DamageAPI.RemoveModdedDamageType(ref DamageTypeCombo, DamageAPI.ModdedDamageType)
+  nameWithType.vb: DamageAPI.RemoveModdedDamageType(DamageTypeCombo, DamageAPI.ModdedDamageType)
 - uid: R2API.DamageAPI.RemoveModdedDamageType(RoR2.DotController.DotStack,R2API.DamageAPI.ModdedDamageType)
   name: RemoveModdedDamageType(DotStack, ModdedDamageType)
   href: api/R2API.DamageAPI.html#R2API_DamageAPI_RemoveModdedDamageType_RoR2_DotController_DotStack_R2API_DamageAPI_ModdedDamageType_
@@ -13275,6 +13031,30 @@ references:
   commentId: N:RoR2
   fullName: RoR2
   nameWithType: RoR2
+- uid: RoR2.CrocoDamageTypeController
+  name: CrocoDamageTypeController
+  href: api/RoR2.CrocoDamageTypeController.html
+  commentId: T:RoR2.CrocoDamageTypeController
+  fullName: RoR2.CrocoDamageTypeController
+  nameWithType: CrocoDamageTypeController
+- uid: RoR2.CrocoDamageTypeController.r2api_moddedDamageTypes
+  name: r2api_moddedDamageTypes
+  href: api/RoR2.CrocoDamageTypeController.html#RoR2_CrocoDamageTypeController_r2api_moddedDamageTypes
+  commentId: F:RoR2.CrocoDamageTypeController.r2api_moddedDamageTypes
+  fullName: RoR2.CrocoDamageTypeController.r2api_moddedDamageTypes
+  nameWithType: CrocoDamageTypeController.r2api_moddedDamageTypes
+- uid: RoR2.DamageTypeCombo
+  name: DamageTypeCombo
+  href: api/RoR2.DamageTypeCombo.html
+  commentId: T:RoR2.DamageTypeCombo
+  fullName: RoR2.DamageTypeCombo
+  nameWithType: DamageTypeCombo
+- uid: RoR2.DamageTypeCombo.r2api_moddedDamageTypes
+  name: r2api_moddedDamageTypes
+  href: api/RoR2.DamageTypeCombo.html#RoR2_DamageTypeCombo_r2api_moddedDamageTypes
+  commentId: F:RoR2.DamageTypeCombo.r2api_moddedDamageTypes
+  fullName: RoR2.DamageTypeCombo.r2api_moddedDamageTypes
+  nameWithType: DamageTypeCombo.r2api_moddedDamageTypes
 - uid: RoR2.ProcChainMask
   name: ProcChainMask
   href: api/RoR2.ProcChainMask.html

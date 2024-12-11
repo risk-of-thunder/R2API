@@ -534,7 +534,8 @@
   <h6><strong>Assembly</strong>: R2API.DamageType.dll</h6>
   <h5 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class DamageAPI.ModdedDamageTypeHolderComponent : MonoBehaviour</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use ProjectileDamage component damageType field directly to work with ModdedDamageTypes&quot;)]
+public sealed class DamageAPI.ModdedDamageTypeHolderComponent : MonoBehaviour</code></pre>
   </div>
   <h3 id="methods">Methods
 </h3>
@@ -543,7 +544,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_Add_R2API_DamageAPI_ModdedDamageType_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add(R2API.DamageAPI.ModdedDamageType)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1229">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L598">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_Add_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_Add_R2API_DamageAPI_ModdedDamageType_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add(R2API.DamageAPI.ModdedDamageType)">Add(ModdedDamageType)</h4>
@@ -552,7 +553,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Add(DamageAPI.ModdedDamageType moddedDamageType)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Add your ModdedDamageType directly to ProjectileDamage component damageType field&quot;)]
+public void Add(DamageAPI.ModdedDamageType moddedDamageType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -573,43 +575,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_Add_R2API_DamageAPI_ModdedDamageTypeHolder_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add(R2API.DamageAPI.ModdedDamageTypeHolder)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1235">View Source</a>
-  </span>
-  <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_Add_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add*"></a>
-  <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_Add_R2API_DamageAPI_ModdedDamageTypeHolder_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.Add(R2API.DamageAPI.ModdedDamageTypeHolder)">Add(ModdedDamageTypeHolder)</h4>
-  <div class="markdown level1 summary"><p>Enable ModdedDamageTypes from argument for this instance</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Add(DamageAPI.ModdedDamageTypeHolder moddedDamageTypeHolder)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="R2API.DamageAPI.html">DamageAPI</a>.<a class="xref" href="R2API.DamageAPI.ModdedDamageTypeHolder.html">ModdedDamageTypeHolder</a></td>
-        <td><span class="parametername">moddedDamageTypeHolder</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_BlastAttack_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.BlastAttack)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1293">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L702">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_BlastAttack_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.BlastAttack)">CopyTo(BlastAttack)</h4>
@@ -618,7 +587,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CopyTo(BlastAttack blastAttack)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component&quot;)]
+public void CopyTo(BlastAttack blastAttack)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -642,7 +612,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_BulletAttack_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.BulletAttack)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1269">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L674">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_BulletAttack_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.BulletAttack)">CopyTo(BulletAttack)</h4>
@@ -651,7 +621,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CopyTo(BulletAttack bulletAttack)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component&quot;)]
+public void CopyTo(BulletAttack bulletAttack)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -675,7 +646,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_CrocoDamageTypeController_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.CrocoDamageTypeController)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1311">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L723">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_CrocoDamageTypeController_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.CrocoDamageTypeController)">CopyTo(CrocoDamageTypeController)</h4>
@@ -684,7 +655,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CopyTo(CrocoDamageTypeController croco)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component&quot;)]
+public void CopyTo(CrocoDamageTypeController croco)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -697,7 +669,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">CrocoDamageTypeController</span></td>
+        <td><a class="xref" href="RoR2.CrocoDamageTypeController.html">CrocoDamageTypeController</a></td>
         <td><span class="parametername">croco</span></td>
         <td></td>
       </tr>
@@ -708,7 +680,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_DamageInfo_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.DamageInfo)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1263">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L667">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_DamageInfo_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.DamageInfo)">CopyTo(DamageInfo)</h4>
@@ -717,7 +689,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CopyTo(DamageInfo damageInfo)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component&quot;)]
+public void CopyTo(DamageInfo damageInfo)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -741,7 +714,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_DotController_DotStack_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.DotController.DotStack)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1305">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L716">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_DotController_DotStack_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.DotController.DotStack)">CopyTo(DotStack)</h4>
@@ -750,7 +723,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CopyTo(DotController.DotStack dotStack)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component&quot;)]
+public void CopyTo(DotController.DotStack dotStack)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -774,7 +748,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_Orbs_DamageOrb_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.Orbs.DamageOrb)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1275">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L681">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_Orbs_DamageOrb_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.Orbs.DamageOrb)">CopyTo(DamageOrb)</h4>
@@ -783,7 +757,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CopyTo(DamageOrb damageOrb)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component&quot;)]
+public void CopyTo(DamageOrb damageOrb)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -807,7 +782,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_Orbs_GenericDamageOrb_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.Orbs.GenericDamageOrb)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1281">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L688">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_Orbs_GenericDamageOrb_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.Orbs.GenericDamageOrb)">CopyTo(GenericDamageOrb)</h4>
@@ -816,7 +791,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CopyTo(GenericDamageOrb genericDamageOrb)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component&quot;)]
+public void CopyTo(GenericDamageOrb genericDamageOrb)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -840,7 +816,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_Orbs_LightningOrb_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.Orbs.LightningOrb)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1287">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L695">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_Orbs_LightningOrb_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.Orbs.LightningOrb)">CopyTo(LightningOrb)</h4>
@@ -849,7 +825,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CopyTo(LightningOrb lightningOrb)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component&quot;)]
+public void CopyTo(LightningOrb lightningOrb)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -873,7 +850,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_OverlapAttack_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.OverlapAttack)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1299">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L709">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_CopyTo_RoR2_OverlapAttack_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.CopyTo(RoR2.OverlapAttack)">CopyTo(OverlapAttack)</h4>
@@ -882,7 +859,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CopyTo(OverlapAttack overlapAttack)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Apply ModdedDamageType directly to ProjectileDamage component when creating a prefab then copy damageType from that component&quot;)]
+public void CopyTo(OverlapAttack overlapAttack)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -906,7 +884,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_Has_R2API_DamageAPI_ModdedDamageType_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.Has(R2API.DamageAPI.ModdedDamageType)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1256">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L644">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_Has_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.Has*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_Has_R2API_DamageAPI_ModdedDamageType_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.Has(R2API.DamageAPI.ModdedDamageType)">Has(ModdedDamageType)</h4>
@@ -915,7 +893,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Has(DamageAPI.ModdedDamageType moddedDamageType)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Check your ModdedDamageType directly on ProjectileDamage component damageType field&quot;)]
+public bool Has(DamageAPI.ModdedDamageType moddedDamageType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -945,37 +924,6 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_MakeHolder.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.MakeHolder%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1324">View Source</a>
-  </span>
-  <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_MakeHolder_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.MakeHolder*"></a>
-  <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_MakeHolder" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.MakeHolder">MakeHolder()</h4>
-  <div class="markdown level1 summary"><p>Create ModdedDamageTypeHolder using values of this instance</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DamageAPI.ModdedDamageTypeHolder MakeHolder()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="R2API.DamageAPI.html">DamageAPI</a>.<a class="xref" href="R2API.DamageAPI.ModdedDamageTypeHolder.html">ModdedDamageTypeHolder</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -985,7 +933,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_Remove_R2API_DamageAPI_ModdedDamageType_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove(R2API.DamageAPI.ModdedDamageType)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1242">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L621">View Source</a>
   </span>
   <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_Remove_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove*"></a>
   <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_Remove_R2API_DamageAPI_ModdedDamageType_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove(R2API.DamageAPI.ModdedDamageType)">Remove(ModdedDamageType)</h4>
@@ -994,7 +942,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Remove(DamageAPI.ModdedDamageType moddedDamageType)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Remove your ModdedDamageType directly from ProjectileDamage component damageType field&quot;)]
+public bool Remove(DamageAPI.ModdedDamageType moddedDamageType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -1009,54 +958,6 @@
       <tr>
         <td><a class="xref" href="R2API.DamageAPI.html">DamageAPI</a>.<a class="xref" href="R2API.DamageAPI.ModdedDamageType.html">ModdedDamageType</a></td>
         <td><span class="parametername">moddedDamageType</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent_Remove_R2API_DamageAPI_ModdedDamageTypeHolder_.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove(R2API.DamageAPI.ModdedDamageTypeHolder)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1249">View Source</a>
-  </span>
-  <a id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_Remove_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove*"></a>
-  <h4 id="R2API_DamageAPI_ModdedDamageTypeHolderComponent_Remove_R2API_DamageAPI_ModdedDamageTypeHolder_" data-uid="R2API.DamageAPI.ModdedDamageTypeHolderComponent.Remove(R2API.DamageAPI.ModdedDamageTypeHolder)">Remove(ModdedDamageTypeHolder)</h4>
-  <div class="markdown level1 summary"><p>Disable ModdedDamageTypes from argument for this instance</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Remove(DamageAPI.ModdedDamageTypeHolder moddedDamageTypeHolder)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="R2API.DamageAPI.html">DamageAPI</a>.<a class="xref" href="R2API.DamageAPI.ModdedDamageTypeHolder.html">ModdedDamageTypeHolder</a></td>
-        <td><span class="parametername">moddedDamageTypeHolder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -1119,7 +1020,7 @@
                     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DamageAPI_ModdedDamageTypeHolderComponent.md&amp;value=---%0Auid%3A%20R2API.DamageAPI.ModdedDamageTypeHolderComponent%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L1216" class="contribution-link">View Source</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.DamageType/DamageAPI.cs/#L570" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

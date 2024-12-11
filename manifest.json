@@ -374,16 +374,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/R2API.DamageAPI.ModdedDamageTypeHolder.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/R2API.DamageAPI.ModdedDamageTypeHolder.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/R2API.DamageAPI.ModdedDamageTypeHolderComponent.yml",
       "output": {
         ".html": {
@@ -2038,6 +2028,26 @@
       "output": {
         ".html": {
           "relative_path": "api/R2API.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/RoR2.CrocoDamageTypeController.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/RoR2.CrocoDamageTypeController.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/RoR2.DamageTypeCombo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/RoR2.DamageTypeCombo.html"
         }
       },
       "version": ""
