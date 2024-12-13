@@ -20,6 +20,9 @@ The EliteRamp implementation is handled inside the EliteRamp class, you can use 
 
 ## Changelog
 
+### '1.0.7'
+* Fixes for 1.3.6 Game Update.
+
 ### '1.0.6'
 * Add EliteRamp.TryGetRamp method.
 
