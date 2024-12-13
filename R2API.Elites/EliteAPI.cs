@@ -132,7 +132,22 @@ public static partial class EliteAPI
                 Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteFire/edFireHonor.asset").WaitForCompletion(),
                 Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC1/EliteEarth/edEarthHonor.asset").WaitForCompletion(),
             },
-            isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.IsEliteOnlyArtifactActive(),
+            isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.IsEliteOnlyArtifactActive() && Run.instance.stageClearCount < 2,
+            canSelectWithoutAvailableEliteDef = false
+        };
+        eliteTiersDef.Add(eliteTierDef);
+
+        eliteTierDef = new CombatDirector.EliteTierDef
+        {
+            costMultiplier = Mathf.LerpUnclamped(1f, CombatDirector.baseEliteCostMultiplier, 0.5f),
+            eliteTypes = new EliteDef[] {
+                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteLightning/edLightningHonor.asset").WaitForCompletion(),
+                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteIce/edIceHonor.asset").WaitForCompletion(),
+                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteFire/edFireHonor.asset").WaitForCompletion(),
+                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC1/EliteEarth/edEarthHonor.asset").WaitForCompletion(),
+                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC2/Elites/EliteAurelionite/edAurelioniteHonor.asset").WaitForCompletion(),
+            },
+            isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.IsEliteOnlyArtifactActive() && Run.instance.stageClearCount >= 2,
             canSelectWithoutAvailableEliteDef = false
         };
         eliteTiersDef.Add(eliteTierDef);
