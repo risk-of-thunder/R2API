@@ -58,11 +58,13 @@ public static partial class DamageAPI
 
         On.RoR2.CrocoDamageTypeController.GetDamageType += CrocoDamageTypeControllerGetDamageType;
 
-        //There are also 2 more bitwise operations (^ and ~) but they are never used in vanilla
-        //and are not really applicable to modded damage types, so we skip them
+        //There are also 2 more operations (^ and ~) but they are never used in vanilla
+        //and are not really applicable to modded damage types, so we skip them.
+        //For & doing the same thing as |, since we don't hook ~ which leads to
+        //missing modded damage types when mods remove some vanilla damage types.
         HookEndpointManager.Add(
             typeof(DamageTypeCombo).GetMethodCached("op_BitwiseAnd"),
-            DamageTypeComboOpBitwiseAnd);
+            DamageTypeComboOpBitwiseOr);
         HookEndpointManager.Add(
             typeof(DamageTypeCombo).GetMethodCached("op_BitwiseOr"),
             DamageTypeComboOpBitwiseOr);
@@ -85,7 +87,7 @@ public static partial class DamageAPI
 
         HookEndpointManager.Remove(
             typeof(DamageTypeCombo).GetMethodCached("op_BitwiseAnd"),
-            DamageTypeComboOpBitwiseAnd);
+            DamageTypeComboOpBitwiseOr);
         HookEndpointManager.Remove(
             typeof(DamageTypeCombo).GetMethodCached("op_BitwiseOr"),
             DamageTypeComboOpBitwiseOr);
@@ -162,28 +164,6 @@ public static partial class DamageAPI
     #endregion
 
     #region DamageTypeCombo
-    private static DamageTypeCombo DamageTypeComboOpBitwiseAnd(Func<DamageTypeCombo, DamageTypeCombo, DamageTypeCombo> orig, DamageTypeCombo operand1, DamageTypeCombo operand2)
-    {
-        var newDamageType = orig(operand1, operand2);
-
-        var moddedDamageTypes1 = DamageTypeComboInterop.GetModdedDamageTypes(operand1);
-        var moddedDamageTypes2 = DamageTypeComboInterop.GetModdedDamageTypes(operand2);
-
-        if (moddedDamageTypes1 is null || moddedDamageTypes2 is null)
-        {
-            return newDamageType;
-        }
-
-        var newModdedDamageTypes = new byte[Math.Min(moddedDamageTypes1.Length, moddedDamageTypes2.Length)];
-        for (var i = 0; i < newModdedDamageTypes.Length; i++)
-        {
-            newModdedDamageTypes[i] = (byte)(moddedDamageTypes1[i] & moddedDamageTypes2[i]);
-        }
-
-        DamageTypeComboInterop.SetModdedDamageTypes(ref newDamageType, newModdedDamageTypes);
-        return newDamageType;
-    }
-
     private static DamageTypeCombo DamageTypeComboOpBitwiseOr(Func<DamageTypeCombo, DamageTypeCombo, DamageTypeCombo> orig, DamageTypeCombo operand1, DamageTypeCombo operand2)
     {
         var newDamageType = orig(operand1, operand2);
