@@ -29,6 +29,9 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 
 ## Changelog
 
+### '1.5.0'
+* Added `bleedChanceAdd`.
+
 ### '1.4.0'
 * Initial fixes for SOTS DLC2 Release.
 

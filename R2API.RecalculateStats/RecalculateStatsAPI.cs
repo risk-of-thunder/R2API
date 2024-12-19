@@ -158,6 +158,11 @@ public static partial class RecalculateStatsAPI
         public float critDamageMultAdd = 0;
         #endregion
 
+        #region bleed
+        /// <summary>Added to bleed chance.</summary> <remarks>BLEED_CHANCE ~ BASE_BLEED_CHANCE + bleedChanceAdd</remarks>
+        public float bleedChanceAdd = 0f;
+        #endregion
+
         #region armor
         /// <summary>Added to armor.</summary> <remarks>ARMOR ~ BASE_ARMOR + armorAdd + levelArmorAdd * <inheritdoc cref="_levelMultiplier"/></remarks>
         public float armorAdd = 0f;
@@ -258,6 +263,7 @@ public static partial class RecalculateStatsAPI
         ModifyDamageStat(c, emitLevelMultiplier);
         ModifyAttackSpeedStat(c, emitLevelMultiplier);
         ModifyCritStat(c, emitLevelMultiplier);
+        ModifyBleedStat(c);
         ModifyArmorStat(c, emitLevelMultiplier);
         ModifyCurseStat(c);
         ModifyCooldownStat(c);
@@ -521,6 +527,32 @@ public static partial class RecalculateStatsAPI
         else
         {
             RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyCritStat)} failed.");
+        }
+    }
+
+    private static void ModifyBleedStat(ILCursor c)
+    {
+        c.Index = 0;
+
+        bool ILFound = c.TryGotoNext(
+            MoveType.After,
+            x => x.MatchLdarg(0),
+            x => x.MatchLdcR4(10),
+            x => x.MatchLdloc(out _),
+            x => x.MatchConvR4(),
+            x => x.MatchMul(),
+            x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.bleedChance)))
+        );
+
+        if (ILFound)
+        {
+            c.Index--;
+            c.EmitDelegate<Func<float>>(() => StatMods.bleedChanceAdd);
+            c.Emit(OpCodes.Add);
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBleedStat)} failed.");
         }
     }
 
