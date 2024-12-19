@@ -9459,6 +9459,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.baseShieldAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.baseShieldAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.baseShieldAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceAdd
+  name: bleedChanceAdd
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_bleedChanceAdd
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceAdd
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceAdd
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.bleedChanceAdd
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownMultAdd
   name: cooldownMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_cooldownMultAdd
