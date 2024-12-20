@@ -32,13 +32,13 @@ jobs:
 
     # Install Mono on Ubuntu to run nuget.exe (due to this issue on Ubuntu 24 that hasn't been fixed yet - https://github.com/NuGet/setup-nuget/issues/168)
     - name: Install Mono on Ubuntu
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https dirmngr gnupg ca-certificates
-          sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-          echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
-          sudo apt-get update
-          sudo apt-get install -y mono-complete
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y apt-transport-https dirmngr gnupg ca-certificates
+        sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+        sudo apt-get update
+        sudo apt-get install -y mono-complete
 
     - name: Build and Publish
       run: |
