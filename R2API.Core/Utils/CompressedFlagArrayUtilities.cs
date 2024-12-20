@@ -80,6 +80,7 @@ internal static class CompressedFlagArrayUtilities
             var oldValues = values;
             values = new byte[values.Length];
             oldValues.CopyTo(values, 0);
+            values[valueIndex] = newValue;
         }
         else
         {
