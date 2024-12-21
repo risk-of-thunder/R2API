@@ -138,7 +138,7 @@ internal static class CompressedFlagArrayUtilities
 
         if (newValue == 0)
         {
-            DownsizeIfNeeded(ref values);
+            DownsizeIgnoreLast(ref values);
             if (values.Length == 0)
             {
                 values = null;
@@ -363,6 +363,11 @@ internal static class CompressedFlagArrayUtilities
         {
             return;
         }
+        DownsizeIgnoreLast(ref value);
+    }
+
+    private static void DownsizeIgnoreLast(ref byte[] value)
+    {
         for (var i = value.Length - 2; i >= 0; i--)
         {
             if (value[i] != 0)

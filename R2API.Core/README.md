@@ -18,6 +18,9 @@ Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
 ### '5.1.4'
+* Fixed CompressedFlagArrayUtilities.RemoveImmutable.
+
+### '5.1.4'
 * Fixed CompressedFlagArrayUtilities.AddImmutable.
 
 ### '5.1.3'
