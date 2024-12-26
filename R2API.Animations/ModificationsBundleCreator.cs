@@ -148,7 +148,7 @@ internal class ModificationsBundleCreator
 
         foreach (var modification in modifications)
         {
-            foreach ((string layerName, State state) in modification.NewStates)
+            foreach (var (layerName, states) in modification.NewStates)
             {
                 var layerHash = (uint)Animator.StringToHash(layerName);
                 var layer = mController["m_LayerArray.Array"].FirstOrDefault(f => f["data.m_Binding"].AsUInt == layerHash);
@@ -159,84 +159,88 @@ internal class ModificationsBundleCreator
                 }
 
                 var stateMachineIndex = layer["data.m_StateMachineIndex"].AsUInt;
-                var clipPathID = NativeHelpers.GetAssetPathID(state.Clip);
-                var clipBundleFile = manager.LoadBundleFile(state.ClipBundlePath);
-                var clipAssetFile = manager.LoadAssetsFileFromBundle(clipBundleFile, 0, false);
-
-                var depPath = $"archive:/{clipAssetFile.name}/{clipAssetFile.name}";
-                var fileID = dependencies.IndexOf(depPath);
-                if (fileID == -1)
-                {
-                    fileID = dependencies.Count;
-                    dependencies.Add(depPath);
-                }
-                fileID++;
-
-                var clipID = animationClips.Children.Count;
-                var clipField = ValueBuilder.DefaultValueFieldFromTemplate(animationClips.TemplateField.Children[1]);
-                clipField["m_FileID"].AsInt = fileID;
-                clipField["m_PathID"].AsLong = clipPathID;
-                animationClips.Children.Add(clipField);
-
                 var stateMachine = mController["m_StateMachineArray.Array"][(int)stateMachineIndex];
-                var stateHash = (uint)Animator.StringToHash(state.Name);
-                var stateFullPathName = $"{layerName}.{state.Name}";
-                var stateFullPathHash = (uint)Animator.StringToHash(stateFullPathName);
-                var tagHash = (uint)Animator.StringToHash(state.Tag);
-                var speedHash = (uint)Animator.StringToHash(state.SpeedParam);
-                var mirrorHash = (uint)Animator.StringToHash(state.MirrorParam);
-                var cycleOffsetHash = (uint)Animator.StringToHash(state.CycleOffsetParam);
-                var timeHash = (uint)Animator.StringToHash(state.TimeParam);
+                var statesArray = stateMachine["data.m_StateConstantArray.Array"];
 
-                var states = stateMachine["data.m_StateConstantArray.Array"];
-                var stateField = ValueBuilder.DefaultValueFieldFromTemplate(states.TemplateField.Children[1]);
-                var stateDataField = stateField["data"];
-                stateDataField["m_NameID"].AsUInt = stateHash;
-                stateDataField["m_PathID"].AsUInt = stateFullPathHash;
-                stateDataField["m_FullPathID"].AsUInt = stateFullPathHash;
-                stateDataField["m_TagID"].AsUInt = tagHash;
-                stateDataField["m_SpeedParamID"].AsUInt = speedHash;
-                stateDataField["m_MirrorParamID"].AsUInt = mirrorHash;
-                stateDataField["m_CycleOffsetParamID"].AsUInt = cycleOffsetHash;
-                stateDataField["m_TimeParamID"].AsUInt = timeHash;
-                stateDataField["m_Speed"].AsFloat = state.Speed;
-                stateDataField["m_CycleOffset"].AsFloat = state.CycleOffset;
-                stateDataField["m_IKOnFeet"].AsBool = state.IKOnFeet;
-                stateDataField["m_WriteDefaultValues"].AsBool = state.WriteDefaultValues;
-                stateDataField["m_Loop"].AsBool = state.Loop;
-                stateDataField["m_Mirror"].AsBool = state.Mirror;
-                states.Children.Add(stateField);
-
-                var transitions = stateField["data.m_TransitionConstantArray.Array"];
-                foreach (var transition in state.Transitions)
+                foreach (var state in states)
                 {
-                    AddTransition(layerName, state.Name, transition, transitions, states);
-                }
+                    var clipPathID = NativeHelpers.GetAssetPathID(state.Clip);
+                    var clipBundleFile = manager.LoadBundleFile(state.ClipBundlePath);
+                    var clipAssetFile = manager.LoadAssetsFileFromBundle(clipBundleFile, 0, false);
 
-                var blendTreeIndex = stateField["data.m_BlendTreeConstantIndexArray.Array"];
-                var blendTreeIndexField = ValueBuilder.DefaultValueFieldFromTemplate(blendTreeIndex.TemplateField.Children[1]);
-                blendTreeIndexField.AsInt = 0;
-                blendTreeIndex.Children.Add(blendTreeIndexField);
+                    var depPath = $"archive:/{clipAssetFile.name}/{clipAssetFile.name}";
+                    var fileID = dependencies.IndexOf(depPath);
+                    if (fileID == -1)
+                    {
+                        fileID = dependencies.Count;
+                        dependencies.Add(depPath);
+                    }
+                    fileID++;
 
-                var blendTree = stateField["data.m_BlendTreeConstantArray.Array"];
-                var blendTreeField = ValueBuilder.DefaultValueFieldFromTemplate(blendTree.TemplateField.Children[1]);
-                blendTree.Children.Add(blendTreeField);
+                    var clipID = animationClips.Children.Count;
+                    var clipField = ValueBuilder.DefaultValueFieldFromTemplate(animationClips.TemplateField.Children[1]);
+                    clipField["m_FileID"].AsInt = fileID;
+                    clipField["m_PathID"].AsLong = clipPathID;
+                    animationClips.Children.Add(clipField);
 
-                var nodeArray = blendTreeField["data.m_NodeArray.Array"];
-                var nodeField = ValueBuilder.DefaultValueFieldFromTemplate(nodeArray.TemplateField.Children[1]);
-                var nodeDataField = nodeField["data"];
-                nodeDataField["m_BlendEventID"].AsUInt = 0xffffffffu;
-                nodeDataField["m_BlendEventYID"].AsUInt = 0xffffffffu;
-                nodeDataField["m_ClipID"].AsInt = clipID;
-                nodeDataField["m_Duration"].AsFloat = 1;
-                nodeDataField["m_CycleOffset"].AsFloat = 0;
-                nodeArray.Children.Add(nodeField);
+                    var stateHash = (uint)Animator.StringToHash(state.Name);
+                    var stateFullPathName = $"{layerName}.{state.Name}";
+                    var stateFullPathHash = (uint)Animator.StringToHash(stateFullPathName);
+                    var tagHash = (uint)Animator.StringToHash(state.Tag);
+                    var speedHash = (uint)Animator.StringToHash(state.SpeedParam);
+                    var mirrorHash = (uint)Animator.StringToHash(state.MirrorParam);
+                    var cycleOffsetHash = (uint)Animator.StringToHash(state.CycleOffsetParam);
+                    var timeHash = (uint)Animator.StringToHash(state.TimeParam);
 
-                names.Add(stateFullPathName);
-                names.Add(state.Name);
-                if (!string.IsNullOrWhiteSpace(state.Tag))
-                {
-                    names.Add(state.Tag);
+                    var stateField = ValueBuilder.DefaultValueFieldFromTemplate(statesArray.TemplateField.Children[1]);
+                    var stateDataField = stateField["data"];
+                    stateDataField["m_NameID"].AsUInt = stateHash;
+                    stateDataField["m_PathID"].AsUInt = stateFullPathHash;
+                    stateDataField["m_FullPathID"].AsUInt = stateFullPathHash;
+                    stateDataField["m_TagID"].AsUInt = tagHash;
+                    stateDataField["m_SpeedParamID"].AsUInt = speedHash;
+                    stateDataField["m_MirrorParamID"].AsUInt = mirrorHash;
+                    stateDataField["m_CycleOffsetParamID"].AsUInt = cycleOffsetHash;
+                    stateDataField["m_TimeParamID"].AsUInt = timeHash;
+                    stateDataField["m_Speed"].AsFloat = state.Speed;
+                    stateDataField["m_CycleOffset"].AsFloat = state.CycleOffset;
+                    stateDataField["m_IKOnFeet"].AsBool = state.IKOnFeet;
+                    stateDataField["m_WriteDefaultValues"].AsBool = state.WriteDefaultValues;
+                    stateDataField["m_Loop"].AsBool = state.Loop;
+                    stateDataField["m_Mirror"].AsBool = state.Mirror;
+                    statesArray.Children.Add(stateField);
+
+                    var transitions = stateField["data.m_TransitionConstantArray.Array"];
+                    foreach (var transition in state.Transitions)
+                    {
+                        AddTransition(layerName, state.Name, transition, transitions, statesArray);
+                    }
+
+                    var blendTreeIndex = stateField["data.m_BlendTreeConstantIndexArray.Array"];
+                    var blendTreeIndexField = ValueBuilder.DefaultValueFieldFromTemplate(blendTreeIndex.TemplateField.Children[1]);
+                    blendTreeIndexField.AsInt = 0;
+                    blendTreeIndex.Children.Add(blendTreeIndexField);
+
+                    var blendTree = stateField["data.m_BlendTreeConstantArray.Array"];
+                    var blendTreeField = ValueBuilder.DefaultValueFieldFromTemplate(blendTree.TemplateField.Children[1]);
+                    blendTree.Children.Add(blendTreeField);
+
+                    var nodeArray = blendTreeField["data.m_NodeArray.Array"];
+                    var nodeField = ValueBuilder.DefaultValueFieldFromTemplate(nodeArray.TemplateField.Children[1]);
+                    var nodeDataField = nodeField["data"];
+                    nodeDataField["m_BlendEventID"].AsUInt = 0xffffffffu;
+                    nodeDataField["m_BlendEventYID"].AsUInt = 0xffffffffu;
+                    nodeDataField["m_ClipID"].AsInt = clipID;
+                    nodeDataField["m_Duration"].AsFloat = 1;
+                    nodeDataField["m_CycleOffset"].AsFloat = 0;
+                    nodeArray.Children.Add(nodeField);
+
+                    names.Add(stateFullPathName);
+                    names.Add(state.Name);
+                    if (!string.IsNullOrWhiteSpace(state.Tag))
+                    {
+                        names.Add(state.Tag);
+                    }
                 }
             }
         }
@@ -249,7 +253,7 @@ internal class ModificationsBundleCreator
 
         foreach (var modification in modifications)
         {
-            foreach (var ((layerName, stateName), transition) in modification.NewTransitions)
+            foreach (var ((layerName, stateName), transitions) in modification.NewTransitions)
             {
                 var layerHash = (uint)Animator.StringToHash(layerName);
                 var stateHash = (uint)Animator.StringToHash(stateName);
@@ -269,9 +273,12 @@ internal class ModificationsBundleCreator
                 {
                     AnimationsPlugin.Logger.LogError($"State \"{stateName}\" not found for a layer \"{layerName}\" for a controller \"{controllerName}\". Mod: {modification.Key}");
                 }
-                var transitions = stateField["data.m_TransitionConstantArray.Array"];
 
-                AddTransition(layerName, stateName, transition, transitions, states);
+                var transitionsArray = stateField["data.m_TransitionConstantArray.Array"];
+                foreach (var transition in transitions)
+                {
+                    AddTransition(layerName, stateName, transition, transitionsArray, states);
+                }
             }
         }
     }

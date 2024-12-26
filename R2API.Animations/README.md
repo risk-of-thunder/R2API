@@ -8,5 +8,8 @@ You can add states, transitions and parameters.
 
 ## Changelog
 
+### '1.0.1'
+* Values for `NewStates` and `NewTransitions` dictionaries are now lists
+
 ### '1.0.0'
 * Release
