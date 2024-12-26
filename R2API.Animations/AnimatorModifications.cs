@@ -18,11 +18,11 @@ public class AnimatorModifications
     /// <summary>
     /// New states to add. The Key is a layer name to which a state will be added.
     /// </summary>
-    public Dictionary<string, State> NewStates { get; } = [];
+    public Dictionary<string, List<State>> NewStates { get; } = [];
     /// <summary>
     /// New transitions to add. The key is a (layer name, state name)
     /// </summary>
-    public Dictionary<(string, string), Transition> NewTransitions { get; } = [];
+    public Dictionary<(string, string), List<Transition>> NewTransitions { get; } = [];
     /// <summary>
     /// New parameters to add.
     /// </summary>
@@ -45,17 +45,23 @@ public class AnimatorModifications
     {
         writer.Write(Key);
 
-        foreach (var (layer, state) in NewStates)
+        foreach (var (layer, states) in NewStates)
         {
             writer.Write(layer);
-            state.WriteBinary(writer);
+            foreach (var state in states)
+            {
+                state.WriteBinary(writer);
+            }
         }
 
-        foreach (var ((layer, state), transition) in NewTransitions)
+        foreach (var ((layer, state), transitions) in NewTransitions)
         {
             writer.Write(layer);
             writer.Write(state);
-            transition.WriteBinary(writer);
+            foreach (var transition in transitions)
+            {
+                transition.WriteBinary(writer);
+            }
         }
 
         foreach (var parameter in NewParameters)
