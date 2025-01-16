@@ -1,0 +1,42 @@
+
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "RiskofThunder"
+name = "R2API_Skills"
+versionNumber = "1.0.0"
+description = "API for skills"
+websiteUrl = "https://github.com/risk-of-thunder/R2API"
+containsNsfwContent = false
+
+[package.dependencies]
+bbepis-BepInExPack = "5.4.2109"
+RiskofThunder-HookGenPatcher = "1.2.3"
+RiskofThunder-R2API_Core = "1.0.0"
+
+[build]
+icon = "../icon.png"
+readme = "./README.md"
+outdir = "./build"
+
+[[build.copy]]
+source = "./ReleaseOutput/R2API.Skills.dll"
+target = "./plugins/R2API.Skills/R2API.Skills.dll"
+
+[[build.copy]]
+source = "./ReleaseOutput/R2API.Skills.xml"
+target = "./plugins/R2API.Skills/R2API.Skills.xml"
+
+[[build.copy]]
+source = "../R2API.Skills.Interop/ReleaseOutput/R2API.Skills.Interop.dll"
+target = "./plugins/R2API.Skills/R2API.Skills.Interop.dll"
+
+[[build.copy]]
+source = "../R2API.Skills.Patcher/ReleaseOutput/R2API.Skills.Patcher.dll"
+target = "./patchers/R2API.Skills/R2API.Skills.Patcher.dll"
+
+[publish]
+repository = "https://thunderstore.io"
+communities = ["riskofrain2"]
+categories = ["libraries"]
