@@ -23,7 +23,7 @@ jobs:
         find ./DebugOutput ! -name 'R2API*.dll' ! -name 'R2API*.pdb' ! -name 'R2API*.xml' ! -name 'xunit*' -type f -delete
 
     - name: Upload R2API Build Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: R2API
         path: |
