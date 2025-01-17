@@ -10,5 +10,8 @@ Adds extra fields (can be accessed with extension methods) to GenericSkill that 
 
 ## Changelog
 
+### '1.0.1'
+* Fix an incompatibility with another mod
+
 ### '1.0.0'
 * Initial Release

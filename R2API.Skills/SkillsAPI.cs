@@ -162,10 +162,8 @@ public static partial class SkillsAPI
     {
         var c = new ILCursor(il);
         if (c.TryGotoNext(MoveType.Before,
-            x => x.MatchLdloc(out _),
             x => x.MatchNewobj<LoadoutPanelController.Row>()))
         {
-            c.Index++;
             c.Emit(OpCodes.Ldarg_3);
             c.EmitDelegate(LoadoutPanelControllerReplaceTitleToken);
         }
