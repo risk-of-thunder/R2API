@@ -115,6 +115,7 @@ public class R2APISerializableContentPack : ScriptableObject
         cp.itemDefs.Add(itemDefs);
         cp.itemTierDefs.Add(itemTierDefs);
         cp.itemRelationshipTypes.Add(itemRelationshipTypes);
+        cp.itemRelationshipProviders.Add(itemRelationshipProviders);
         cp.equipmentDefs.Add(equipmentDefs);
         cp.buffDefs.Add(buffDefs);
         cp.eliteDefs.Add(eliteDefs);
