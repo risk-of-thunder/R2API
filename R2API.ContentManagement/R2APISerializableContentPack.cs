@@ -115,7 +115,6 @@ public class R2APISerializableContentPack : ScriptableObject
         cp.itemDefs.Add(itemDefs);
         cp.itemTierDefs.Add(itemTierDefs);
         cp.itemRelationshipTypes.Add(itemRelationshipTypes);
-        cp.itemRelationshipProviders.Add(itemRelationshipProviders);
         cp.equipmentDefs.Add(equipmentDefs);
         cp.buffDefs.Add(buffDefs);
         cp.eliteDefs.Add(eliteDefs);
@@ -128,6 +127,8 @@ public class R2APISerializableContentPack : ScriptableObject
         cp.gameEndingDefs.Add(gameEndingDefs);
         cp.miscPickupDefs.Add(miscPickupDefs);
         cp.entityStateConfigurations.Add(entityStateConfigurations);
+        cp.expansionDefs.Add(expansionDefs);
+        cp.entitlementDefs.Add(entitlementDefs);
 
         List<Type> list = new List<Type>();
         for (int i = 0; i < entityStateTypes.Length; i++)
@@ -142,8 +143,26 @@ public class R2APISerializableContentPack : ScriptableObject
         }
         cp.entityStateTypes.Add(list.ToArray());
 
-        cp.expansionDefs.Add(expansionDefs);
-        cp.entitlementDefs.Add(entitlementDefs);
+        for (int i = 0; i < itemRelationshipProviders.Length; i++)
+        {
+            ItemRelationshipProvider provider = itemRelationshipProviders[i];
+            List<ItemDef.Pair> validPairs = new List<ItemDef.Pair>();
+
+            for (int j = 0; j < provider.relationships.Length; j++)
+            {
+                ItemDef.Pair pair = provider.relationships[j];
+                if (pair.itemDef1 && pair.itemDef2)
+                {
+                    validPairs.Add(pair);
+                    continue;
+                }
+                Debug.LogWarning("SerializableContentPack \"" + base.name + "\" is trying to define a " + provider.relationshipType.name +
+                    " relationship between the invalid pair \"" + pair.itemDef1?.name + "\" and \"" + pair.itemDef2?.name + "\".");
+            }
+
+            provider.relationships = validPairs.ToArray();
+        }
+        cp.itemRelationshipProviders.Add(itemRelationshipProviders);
 
         return cp;
     }

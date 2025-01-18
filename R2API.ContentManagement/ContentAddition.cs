@@ -284,10 +284,19 @@ public static class ContentAddition
     /// <returns>True if valid and added, false if one of the requirements is not met</returns>
     public static bool AddItemRelationshipProvider(ItemRelationshipProvider itemRelationshipProvider)
     {
-        //Todo: Find what makes an ItemRelationshipProvider invalid
         var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<ItemRelationshipProvider>())
         {
+            if (!itemRelationshipProvider.relationshipType)
+            {
+                RejectContent(itemRelationshipProvider, asm, "ItemRelationshipProvider", "but the RelationshipType is null!");
+                return false;
+            }
+            if (itemRelationshipProvider.relationships == null)
+            {
+                RejectContent(itemRelationshipProvider, asm, "ItemRelationshipProvider", "but the Relationships array is null!");
+                return false;
+            }
             R2APIContentManager.HandleContentAddition(asm, itemRelationshipProvider);
             return true;
         }
