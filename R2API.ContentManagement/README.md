@@ -23,6 +23,9 @@ R2API.ContentManaged is used for mods that would like to have R2API handle the c
 
 ## Changelog
 
+### '1.0.7'
+* Adds ItemRelationshipProviders to the ContentPack as intended.
+
 ### '1.0.6'
 * Fix SystemInitializer infinite loop.
 
