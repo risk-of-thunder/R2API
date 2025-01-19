@@ -2883,6 +2883,22 @@ references:
   isSpec: "True"
   fullName: R2API.DamageAPI.AddModdedDamageType
   nameWithType: DamageAPI.AddModdedDamageType
+- uid: R2API.DamageAPI.HasAnyModdedDamageType(RoR2.DamageTypeCombo@)
+  name: HasAnyModdedDamageType(ref DamageTypeCombo)
+  href: api/R2API.DamageAPI.html#R2API_DamageAPI_HasAnyModdedDamageType_RoR2_DamageTypeCombo__
+  commentId: M:R2API.DamageAPI.HasAnyModdedDamageType(RoR2.DamageTypeCombo@)
+  name.vb: HasAnyModdedDamageType(DamageTypeCombo)
+  fullName: R2API.DamageAPI.HasAnyModdedDamageType(ref RoR2.DamageTypeCombo)
+  fullName.vb: R2API.DamageAPI.HasAnyModdedDamageType(RoR2.DamageTypeCombo)
+  nameWithType: DamageAPI.HasAnyModdedDamageType(ref DamageTypeCombo)
+  nameWithType.vb: DamageAPI.HasAnyModdedDamageType(DamageTypeCombo)
+- uid: R2API.DamageAPI.HasAnyModdedDamageType*
+  name: HasAnyModdedDamageType
+  href: api/R2API.DamageAPI.html#R2API_DamageAPI_HasAnyModdedDamageType_
+  commentId: Overload:R2API.DamageAPI.HasAnyModdedDamageType
+  isSpec: "True"
+  fullName: R2API.DamageAPI.HasAnyModdedDamageType
+  nameWithType: DamageAPI.HasAnyModdedDamageType
 - uid: R2API.DamageAPI.HasModdedDamageType(RoR2.BlastAttack,R2API.DamageAPI.ModdedDamageType)
   name: HasModdedDamageType(BlastAttack, ModdedDamageType)
   href: api/R2API.DamageAPI.html#R2API_DamageAPI_HasModdedDamageType_RoR2_BlastAttack_R2API_DamageAPI_ModdedDamageType_
