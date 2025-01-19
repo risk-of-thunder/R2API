@@ -1,4 +1,6 @@
 ﻿using System;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
 using R2API.AutoVersionGen;
 using R2API.Utils;
@@ -58,6 +60,8 @@ public static partial class DamageAPI
 
         On.RoR2.CrocoDamageTypeController.GetDamageType += CrocoDamageTypeControllerGetDamageType;
 
+        IL.RoR2.Projectile.ProjectileManager.InitializeProjectile += ProjectileManagerInitializeProjectile;
+
         //There are also 2 more operations (^ and ~) but they are never used in vanilla
         //and are not really applicable to modded damage types, so we skip them.
         //For & doing the same thing as |, since we don't hook ~ which leads to
@@ -84,6 +88,8 @@ public static partial class DamageAPI
         On.Unity.GeneratedNetworkCode._WriteDamageTypeCombo_None -= WriteDamageTypeCombo;
 
         On.RoR2.CrocoDamageTypeController.GetDamageType -= CrocoDamageTypeControllerGetDamageType;
+
+        IL.RoR2.Projectile.ProjectileManager.InitializeProjectile -= ProjectileManagerInitializeProjectile;
 
         HookEndpointManager.Remove(
             typeof(DamageTypeCombo).GetMethodCached("op_BitwiseAnd"),
@@ -215,6 +221,32 @@ public static partial class DamageAPI
         return newDamageType;
     }
     #endregion
+
+    private static void ProjectileManagerInitializeProjectile(MonoMod.Cil.ILContext il)
+    {
+        var c = new ILCursor(il);
+
+        ILLabel ifBodyLabel = null;
+        if (c.TryGotoNext(MoveType.After,
+            x => x.MatchLdfld<DamageTypeCombo>(nameof(DamageTypeCombo.damageType)),
+            x => x.MatchBrtrue(out ifBodyLabel)))
+        {
+            c.Emit(OpCodes.Ldarg, 1); //fireProjectileInfo
+            c.EmitDelegate(FireProjectileInfoHasModdedDamageType);
+            c.Emit(OpCodes.Brtrue, ifBodyLabel);
+        }
+        else
+        {
+            DamageTypePlugin.Logger.LogError($"Failed to apply {nameof(ProjectileManagerInitializeProjectile)} hook");
+        }
+    }
+
+    private static bool FireProjectileInfoHasModdedDamageType(FireProjectileInfo fireProjectileInfo)
+    {
+        var damageType = fireProjectileInfo.damageTypeOverride.GetValueOrDefault();
+        return damageType.HasAnyModdedDamageType();
+    }
+
     #endregion
 
     #region Public
@@ -438,6 +470,19 @@ public static partial class DamageAPI
     #endregion
 
     #region HasModdedDamageType
+    /// <summary>
+    /// Checks if DamageTypeCombo instance has any ModdedDamageType assigned. One DamageTypeCombo can have more than one damage type.
+    /// </summary>
+    /// <param name="damageType"></param>
+    /// <returns></returns>
+    public static bool HasAnyModdedDamageType(this ref DamageTypeCombo damageType)
+    {
+        SetHooks();
+
+        var damageTypes = DamageTypeComboInterop.GetModdedDamageTypes(damageType);
+        return damageTypes is not null && damageTypes.Length > 0;
+    }
+
     /// <summary>
     /// Checks if DamageTypeCombo instance has ModdedDamageType assigned. One DamageTypeCombo can have more than one damage type.
     /// </summary>

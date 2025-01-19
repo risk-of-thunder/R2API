@@ -23,6 +23,9 @@ This is done via the DamageAPI class, which is used for reserving DamageTypes an
 
 ## Changelog
 
+### '1.1.5'
+* Fixed an issue where `FireProjectileInfo.damageTypeOverride` wasn't applied to a projectile if it only had ModdedDamageType set.
+
 ### '1.1.4'
 * Fixed an issue where removing vanilla damage type with `a &= ~b` would also remove all modded damage types.
 
