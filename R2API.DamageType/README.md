@@ -23,6 +23,9 @@ This is done via the DamageAPI class, which is used for reserving DamageTypes an
 
 ## Changelog
 
+### '1.1.6'
+* Changed bounds check and minimum damage type value to make it easier to notice when using unregistered damage type.
+
 ### '1.1.5'
 * Fixed an issue where `FireProjectileInfo.damageTypeOverride` wasn't applied to a projectile if it only had ModdedDamageType set.
 

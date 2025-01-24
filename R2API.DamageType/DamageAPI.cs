@@ -266,7 +266,9 @@ public static partial class DamageAPI
             throw new IndexOutOfRangeException($"Reached the limit of {CompressedFlagArrayUtilities.sectionsCount * CompressedFlagArrayUtilities.flagsPerSection} ModdedDamageTypes. Please contact R2API developers to increase the limit");
         }
 
-        return (ModdedDamageType)ModdedDamageTypeCount++;
+        ModdedDamageTypeCount++;
+
+        return (ModdedDamageType)ModdedDamageTypeCount;
     }
 
     #region AddModdedDamageType
@@ -342,13 +344,13 @@ public static partial class DamageAPI
     {
         SetHooks();
 
-        if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
+        if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
+            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
         }
 
         var damageTypes = CrocoDamageTypeControllerInterop.GetModdedDamageTypes(croco);
-        CompressedFlagArrayUtilities.AddImmutable(ref damageTypes, (int)moddedDamageType);
+        CompressedFlagArrayUtilities.AddImmutable(ref damageTypes, (int)moddedDamageType - 1);
         CrocoDamageTypeControllerInterop.SetModdedDamageTypes(croco, damageTypes);
     }
 
@@ -356,13 +358,13 @@ public static partial class DamageAPI
     {
         SetHooks();
 
-        if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
+        if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
+            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
         }
 
         var damageTypes = DamageTypeComboInterop.GetModdedDamageTypes(damageType);
-        CompressedFlagArrayUtilities.AddImmutable(ref damageTypes, (int)moddedDamageType);
+        CompressedFlagArrayUtilities.AddImmutable(ref damageTypes, (int)moddedDamageType - 1);
         DamageTypeComboInterop.SetModdedDamageTypes(ref damageType, damageTypes);
     }
     #endregion
@@ -440,13 +442,13 @@ public static partial class DamageAPI
     {
         SetHooks();
 
-        if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
+        if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
+            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
         }
 
         var damageTypes = CrocoDamageTypeControllerInterop.GetModdedDamageTypes(croco);
-        var removed = CompressedFlagArrayUtilities.RemoveImmutable(ref damageTypes, (int)moddedDamageType);
+        var removed = CompressedFlagArrayUtilities.RemoveImmutable(ref damageTypes, (int)moddedDamageType - 1);
         CrocoDamageTypeControllerInterop.SetModdedDamageTypes(croco, damageTypes);
 
         return removed;
@@ -456,13 +458,13 @@ public static partial class DamageAPI
     {
         SetHooks();
 
-        if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
+        if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
+            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
         }
 
         var damageTypes = DamageTypeComboInterop.GetModdedDamageTypes(damageType);
-        var removed = CompressedFlagArrayUtilities.RemoveImmutable(ref damageTypes, (int)moddedDamageType);
+        var removed = CompressedFlagArrayUtilities.RemoveImmutable(ref damageTypes, (int)moddedDamageType - 1);
         DamageTypeComboInterop.SetModdedDamageTypes(ref damageType, damageTypes);
 
         return removed;
@@ -565,26 +567,26 @@ public static partial class DamageAPI
     {
         SetHooks();
 
-        if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
+        if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
+            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
         }
 
         var damageTypes = CrocoDamageTypeControllerInterop.GetModdedDamageTypes(croco);
-        return CompressedFlagArrayUtilities.Has(damageTypes, (int)moddedDamageType);
+        return CompressedFlagArrayUtilities.Has(damageTypes, (int)moddedDamageType - 1);
     }
 
     private static bool HasModdedDamageTypeInternal(ref DamageTypeCombo damageType, ModdedDamageType moddedDamageType)
     {
         SetHooks();
 
-        if ((int)moddedDamageType >= ModdedDamageTypeCount || (int)moddedDamageType < 0)
+        if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (0-{ModdedDamageTypeCount - 1})");
+            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
         }
 
         var damageTypes = DamageTypeComboInterop.GetModdedDamageTypes(damageType);
-        return CompressedFlagArrayUtilities.Has(damageTypes, (int)moddedDamageType);
+        return CompressedFlagArrayUtilities.Has(damageTypes, (int)moddedDamageType - 1);
     }
     #endregion
 
@@ -635,7 +637,7 @@ public static partial class DamageAPI
                 projectileDamage.damageType.AddModdedDamageType(moddedDamageType);
             }
 
-            CompressedFlagArrayUtilities.AddImmutable(ref values, (int)moddedDamageType);
+            CompressedFlagArrayUtilities.AddImmutable(ref values, (int)moddedDamageType - 1);
         }
 
         /// <summary>
@@ -658,7 +660,7 @@ public static partial class DamageAPI
                 return projectileDamage.damageType.RemoveModdedDamageType(moddedDamageType);
             }
 
-            return CompressedFlagArrayUtilities.RemoveImmutable(ref values, (int)moddedDamageType);
+            return CompressedFlagArrayUtilities.RemoveImmutable(ref values, (int)moddedDamageType - 1);
         }
 
         /// <summary>
@@ -681,7 +683,7 @@ public static partial class DamageAPI
                 return projectileDamage.damageType.HasModdedDamageType(moddedDamageType);
             }
 
-            return CompressedFlagArrayUtilities.Has(values, (int)moddedDamageType);
+            return CompressedFlagArrayUtilities.Has(values, (int)moddedDamageType - 1);
         }
 
         #region CopyTo
