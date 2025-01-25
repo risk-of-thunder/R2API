@@ -14,6 +14,9 @@ R2API.ProcType patches RoR2.ProcChainMask to store additional data and this data
 
 ## Changelog
 
+### '1.0.2'
+* Changed bounds check and minimum proc type value to make it easier to notice when using unregistered proc type.
+
 ### '1.0.1'
 * Fix NuGet package
 
