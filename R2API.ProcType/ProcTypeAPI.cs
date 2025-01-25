@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using HG;
@@ -64,7 +65,9 @@ public static partial class ProcTypeAPI
         {
             throw new IndexOutOfRangeException($"Reached the ModdedProcType limit ({int.MaxValue})! Please contact R2API developers to increase the limit");
         }
-        return (ModdedProcType)ModdedProcTypeCount++;
+
+        ModdedProcTypeCount++;
+        return (ModdedProcType)ModdedProcTypeCount;
     }
 
     /// <summary>
@@ -73,12 +76,15 @@ public static partial class ProcTypeAPI
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="procType"/> is invalid</exception>
     public static void AddModdedProc(ref this ProcChainMask procChainMask, ModdedProcType procType)
     {
-        if (procType <= ModdedProcType.Invalid || (int)procType >= ModdedProcTypeCount)
+        if (procType <= ModdedProcType.Invalid || (int)procType > ModdedProcTypeCount)
         {
-            throw new ArgumentOutOfRangeException(nameof(procType));
+            ProcTypePlugin.Logger.LogError($"Parameter '{nameof(procType)}' with value {procType} is out of range of registered types (1-{ModdedProcTypeCount})\n{new StackTrace(true)}");
+            return;
         }
 
         SetHooks();
+
+        procType--;
 
         byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         byte[] value;
@@ -115,12 +121,16 @@ public static partial class ProcTypeAPI
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="procType"/> is invalid</exception>
     public static void RemoveModdedProc(ref this ProcChainMask procChainMask, ModdedProcType procType)
     {
-        if (procType <= ModdedProcType.Invalid || (int)procType >= ModdedProcTypeCount)
+        if (procType <= ModdedProcType.Invalid || (int)procType > ModdedProcTypeCount)
         {
-            throw new ArgumentOutOfRangeException(nameof(procType));
+            ProcTypePlugin.Logger.LogError($"Parameter '{nameof(procType)}' with value {procType} is out of range of registered types (1-{ModdedProcTypeCount})\n{new StackTrace(true)}");
+            return;
         }
 
         SetHooks();
+
+        procType--;
+
         byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         if (mask == null)
         {
@@ -178,10 +188,13 @@ public static partial class ProcTypeAPI
     public static bool HasModdedProc(this ProcChainMask procChainMask, ModdedProcType procType)
 #pragma warning restore R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
     {
-        if (procType <= ModdedProcType.Invalid || (int)procType >= ModdedProcTypeCount)
+        if (procType <= ModdedProcType.Invalid || (int)procType > ModdedProcTypeCount)
         {
-            throw new ArgumentOutOfRangeException(nameof(procType));
+            ProcTypePlugin.Logger.LogError($"Parameter '{nameof(procType)}' with value {procType} is out of range of registered types (1-{ModdedProcTypeCount})\n{new StackTrace(true)}");
+            return false;
         }
+
+        procType--;
 
         byte[] mask = ProcTypeInterop.GetModdedMask(procChainMask);
         if (mask == null)

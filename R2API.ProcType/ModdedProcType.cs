@@ -15,5 +15,5 @@ public enum ModdedProcType : int
     /// Represents an invalid value of <see cref="ModdedProcType"/>.
     /// </summary>
     /// <remarks>All negative values of <see cref="ModdedProcType"/> are considered invalid.</remarks>
-    Invalid = -1
+    Invalid = 0
 }
