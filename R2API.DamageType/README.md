@@ -23,6 +23,9 @@ This is done via the DamageAPI class, which is used for reserving DamageTypes an
 
 ## Changelog
 
+### '1.1.7'
+* Changed bounds exception to just log error to not completely break mods that already try to use not registered damage types.
+
 ### '1.1.6'
 * Changed bounds check and minimum damage type value to make it easier to notice when using unregistered damage type.
 

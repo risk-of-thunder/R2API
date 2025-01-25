@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
@@ -346,7 +347,8 @@ public static partial class DamageAPI
 
         if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
+            DamageTypePlugin.Logger.LogError($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})\n{new StackTrace(true)}");
+            return;
         }
 
         var damageTypes = CrocoDamageTypeControllerInterop.GetModdedDamageTypes(croco);
@@ -360,7 +362,8 @@ public static partial class DamageAPI
 
         if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
+            DamageTypePlugin.Logger.LogError($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})\n{new StackTrace(true)}");
+            return;
         }
 
         var damageTypes = DamageTypeComboInterop.GetModdedDamageTypes(damageType);
@@ -444,7 +447,8 @@ public static partial class DamageAPI
 
         if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
+            DamageTypePlugin.Logger.LogError($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})\n{new StackTrace(true)}");
+            return false;
         }
 
         var damageTypes = CrocoDamageTypeControllerInterop.GetModdedDamageTypes(croco);
@@ -460,7 +464,8 @@ public static partial class DamageAPI
 
         if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
+            DamageTypePlugin.Logger.LogError($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})\n{new StackTrace(true)}");
+            return false;
         }
 
         var damageTypes = DamageTypeComboInterop.GetModdedDamageTypes(damageType);
@@ -569,7 +574,8 @@ public static partial class DamageAPI
 
         if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
+            DamageTypePlugin.Logger.LogError($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})\n{new StackTrace(true)}");
+            return false;
         }
 
         var damageTypes = CrocoDamageTypeControllerInterop.GetModdedDamageTypes(croco);
@@ -582,7 +588,8 @@ public static partial class DamageAPI
 
         if ((int)moddedDamageType > ModdedDamageTypeCount || (int)moddedDamageType < 1)
         {
-            throw new ArgumentOutOfRangeException($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})");
+            DamageTypePlugin.Logger.LogError($"Parameter '{nameof(moddedDamageType)}' with value {moddedDamageType} is out of range of registered types (1-{ModdedDamageTypeCount})\n{new StackTrace(true)}");
+            return false;
         }
 
         var damageTypes = DamageTypeComboInterop.GetModdedDamageTypes(damageType);
