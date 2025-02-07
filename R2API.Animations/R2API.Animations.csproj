@@ -5,6 +5,7 @@
     <None Include="$(PkgAssetsTools_NET)\lib\netstandard2.0\AssetsTools.NET.dll" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\R2API.Animations.Runtime\R2API.Animations.Runtime.csproj" />
     <ProjectReference Include="..\R2API.Core\R2API.Core.csproj" Private="false" />
   </ItemGroup>
   <ItemGroup>
