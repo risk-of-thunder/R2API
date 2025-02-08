@@ -1621,6 +1621,72 @@ references:
   commentId: F:R2API.AddressablesPlugin.PluginVersion
   fullName: R2API.AddressablesPlugin.PluginVersion
   nameWithType: AddressablesPlugin.PluginVersion
+- uid: R2API.Animations.Editor
+  name: R2API.Animations.Editor
+  href: api/R2API.Animations.Editor.html
+  commentId: N:R2API.Animations.Editor
+  fullName: R2API.Animations.Editor
+  nameWithType: R2API.Animations.Editor
+- uid: R2API.Animations.Editor.AnimatorDiffImporter
+  name: AnimatorDiffImporter
+  href: api/R2API.Animations.Editor.AnimatorDiffImporter.html
+  commentId: T:R2API.Animations.Editor.AnimatorDiffImporter
+  fullName: R2API.Animations.Editor.AnimatorDiffImporter
+  nameWithType: AnimatorDiffImporter
+- uid: R2API.Animations.Editor.AnimatorDiffImporter.CreateDiff
+  name: CreateDiff()
+  href: api/R2API.Animations.Editor.AnimatorDiffImporter.html#R2API_Animations_Editor_AnimatorDiffImporter_CreateDiff
+  commentId: M:R2API.Animations.Editor.AnimatorDiffImporter.CreateDiff
+  fullName: R2API.Animations.Editor.AnimatorDiffImporter.CreateDiff()
+  nameWithType: AnimatorDiffImporter.CreateDiff()
+- uid: R2API.Animations.Editor.AnimatorDiffImporter.CreateDiff*
+  name: CreateDiff
+  href: api/R2API.Animations.Editor.AnimatorDiffImporter.html#R2API_Animations_Editor_AnimatorDiffImporter_CreateDiff_
+  commentId: Overload:R2API.Animations.Editor.AnimatorDiffImporter.CreateDiff
+  isSpec: "True"
+  fullName: R2API.Animations.Editor.AnimatorDiffImporter.CreateDiff
+  nameWithType: AnimatorDiffImporter.CreateDiff
+- uid: R2API.Animations.Editor.AnimatorDiffImporter.OnImportAsset(UnityEditor.AssetImporters.AssetImportContext)
+  name: OnImportAsset(AssetImportContext)
+  href: api/R2API.Animations.Editor.AnimatorDiffImporter.html#R2API_Animations_Editor_AnimatorDiffImporter_OnImportAsset_UnityEditor_AssetImporters_AssetImportContext_
+  commentId: M:R2API.Animations.Editor.AnimatorDiffImporter.OnImportAsset(UnityEditor.AssetImporters.AssetImportContext)
+  fullName: R2API.Animations.Editor.AnimatorDiffImporter.OnImportAsset(UnityEditor.AssetImporters.AssetImportContext)
+  nameWithType: AnimatorDiffImporter.OnImportAsset(AssetImportContext)
+- uid: R2API.Animations.Editor.AnimatorDiffImporter.OnImportAsset*
+  name: OnImportAsset
+  href: api/R2API.Animations.Editor.AnimatorDiffImporter.html#R2API_Animations_Editor_AnimatorDiffImporter_OnImportAsset_
+  commentId: Overload:R2API.Animations.Editor.AnimatorDiffImporter.OnImportAsset
+  isSpec: "True"
+  fullName: R2API.Animations.Editor.AnimatorDiffImporter.OnImportAsset
+  nameWithType: AnimatorDiffImporter.OnImportAsset
+- uid: R2API.Animations.Editor.AnimatorDiffImporter.PreventDiffDoubleClick(System.Int32,System.Int32)
+  name: PreventDiffDoubleClick(int, int)
+  href: api/R2API.Animations.Editor.AnimatorDiffImporter.html#R2API_Animations_Editor_AnimatorDiffImporter_PreventDiffDoubleClick_System_Int32_System_Int32_
+  commentId: M:R2API.Animations.Editor.AnimatorDiffImporter.PreventDiffDoubleClick(System.Int32,System.Int32)
+  name.vb: PreventDiffDoubleClick(Integer, Integer)
+  fullName: R2API.Animations.Editor.AnimatorDiffImporter.PreventDiffDoubleClick(int, int)
+  fullName.vb: R2API.Animations.Editor.AnimatorDiffImporter.PreventDiffDoubleClick(Integer, Integer)
+  nameWithType: AnimatorDiffImporter.PreventDiffDoubleClick(int, int)
+  nameWithType.vb: AnimatorDiffImporter.PreventDiffDoubleClick(Integer, Integer)
+- uid: R2API.Animations.Editor.AnimatorDiffImporter.PreventDiffDoubleClick*
+  name: PreventDiffDoubleClick
+  href: api/R2API.Animations.Editor.AnimatorDiffImporter.html#R2API_Animations_Editor_AnimatorDiffImporter_PreventDiffDoubleClick_
+  commentId: Overload:R2API.Animations.Editor.AnimatorDiffImporter.PreventDiffDoubleClick
+  isSpec: "True"
+  fullName: R2API.Animations.Editor.AnimatorDiffImporter.PreventDiffDoubleClick
+  nameWithType: AnimatorDiffImporter.PreventDiffDoubleClick
+- uid: R2API.Animations.Editor.AnimatorDiffImporter.modifiedController
+  name: modifiedController
+  href: api/R2API.Animations.Editor.AnimatorDiffImporter.html#R2API_Animations_Editor_AnimatorDiffImporter_modifiedController
+  commentId: F:R2API.Animations.Editor.AnimatorDiffImporter.modifiedController
+  fullName: R2API.Animations.Editor.AnimatorDiffImporter.modifiedController
+  nameWithType: AnimatorDiffImporter.modifiedController
+- uid: R2API.Animations.Editor.AnimatorDiffImporter.sourceController
+  name: sourceController
+  href: api/R2API.Animations.Editor.AnimatorDiffImporter.html#R2API_Animations_Editor_AnimatorDiffImporter_sourceController
+  commentId: F:R2API.Animations.Editor.AnimatorDiffImporter.sourceController
+  fullName: R2API.Animations.Editor.AnimatorDiffImporter.sourceController
+  nameWithType: AnimatorDiffImporter.sourceController
 - uid: R2API.AnimationsAPI
   name: AnimationsAPI
   href: api/R2API.AnimationsAPI.html
@@ -1705,6 +1771,22 @@ references:
   fullName.vb: R2API.AnimatorModifications.New
   nameWithType: AnimatorModifications.AnimatorModifications
   nameWithType.vb: AnimatorModifications.New
+- uid: R2API.AnimatorModifications.CreateFromDiff(R2API.Models.AnimatorDiff,BepInEx.BepInPlugin,System.String)
+  name: CreateFromDiff(AnimatorDiff, BepInPlugin, string)
+  href: api/R2API.AnimatorModifications.html#R2API_AnimatorModifications_CreateFromDiff_R2API_Models_AnimatorDiff_BepInEx_BepInPlugin_System_String_
+  commentId: M:R2API.AnimatorModifications.CreateFromDiff(R2API.Models.AnimatorDiff,BepInEx.BepInPlugin,System.String)
+  name.vb: CreateFromDiff(AnimatorDiff, BepInPlugin, String)
+  fullName: R2API.AnimatorModifications.CreateFromDiff(R2API.Models.AnimatorDiff, BepInEx.BepInPlugin, string)
+  fullName.vb: R2API.AnimatorModifications.CreateFromDiff(R2API.Models.AnimatorDiff, BepInEx.BepInPlugin, String)
+  nameWithType: AnimatorModifications.CreateFromDiff(AnimatorDiff, BepInPlugin, string)
+  nameWithType.vb: AnimatorModifications.CreateFromDiff(AnimatorDiff, BepInPlugin, String)
+- uid: R2API.AnimatorModifications.CreateFromDiff*
+  name: CreateFromDiff
+  href: api/R2API.AnimatorModifications.html#R2API_AnimatorModifications_CreateFromDiff_
+  commentId: Overload:R2API.AnimatorModifications.CreateFromDiff
+  isSpec: "True"
+  fullName: R2API.AnimatorModifications.CreateFromDiff
+  nameWithType: AnimatorModifications.CreateFromDiff
 - uid: R2API.AnimatorModifications.Key
   name: Key
   href: api/R2API.AnimatorModifications.html#R2API_AnimatorModifications_Key
@@ -7627,6 +7709,287 @@ references:
   commentId: N:R2API.Models
   fullName: R2API.Models
   nameWithType: R2API.Models
+- uid: R2API.Models.AnimatorDiff
+  name: AnimatorDiff
+  href: api/R2API.Models.AnimatorDiff.html
+  commentId: T:R2API.Models.AnimatorDiff
+  fullName: R2API.Models.AnimatorDiff
+  nameWithType: AnimatorDiff
+- uid: R2API.Models.AnimatorDiff.Layers
+  name: Layers
+  href: api/R2API.Models.AnimatorDiff.html#R2API_Models_AnimatorDiff_Layers
+  commentId: P:R2API.Models.AnimatorDiff.Layers
+  fullName: R2API.Models.AnimatorDiff.Layers
+  nameWithType: AnimatorDiff.Layers
+- uid: R2API.Models.AnimatorDiff.Layers*
+  name: Layers
+  href: api/R2API.Models.AnimatorDiff.html#R2API_Models_AnimatorDiff_Layers_
+  commentId: Overload:R2API.Models.AnimatorDiff.Layers
+  isSpec: "True"
+  fullName: R2API.Models.AnimatorDiff.Layers
+  nameWithType: AnimatorDiff.Layers
+- uid: R2API.Models.AnimatorDiff.NewParameters
+  name: NewParameters
+  href: api/R2API.Models.AnimatorDiff.html#R2API_Models_AnimatorDiff_NewParameters
+  commentId: P:R2API.Models.AnimatorDiff.NewParameters
+  fullName: R2API.Models.AnimatorDiff.NewParameters
+  nameWithType: AnimatorDiff.NewParameters
+- uid: R2API.Models.AnimatorDiff.NewParameters*
+  name: NewParameters
+  href: api/R2API.Models.AnimatorDiff.html#R2API_Models_AnimatorDiff_NewParameters_
+  commentId: Overload:R2API.Models.AnimatorDiff.NewParameters
+  isSpec: "True"
+  fullName: R2API.Models.AnimatorDiff.NewParameters
+  nameWithType: AnimatorDiff.NewParameters
+- uid: R2API.Models.AnimatorDiff.layers
+  name: layers
+  href: api/R2API.Models.AnimatorDiff.html#R2API_Models_AnimatorDiff_layers
+  commentId: F:R2API.Models.AnimatorDiff.layers
+  fullName: R2API.Models.AnimatorDiff.layers
+  nameWithType: AnimatorDiff.layers
+- uid: R2API.Models.BlendTree
+  name: BlendTree
+  href: api/R2API.Models.BlendTree.html
+  commentId: T:R2API.Models.BlendTree
+  fullName: R2API.Models.BlendTree
+  nameWithType: BlendTree
+- uid: R2API.Models.BlendTree.BlendParameter
+  name: BlendParameter
+  href: api/R2API.Models.BlendTree.html#R2API_Models_BlendTree_BlendParameter
+  commentId: P:R2API.Models.BlendTree.BlendParameter
+  fullName: R2API.Models.BlendTree.BlendParameter
+  nameWithType: BlendTree.BlendParameter
+- uid: R2API.Models.BlendTree.BlendParameter*
+  name: BlendParameter
+  href: api/R2API.Models.BlendTree.html#R2API_Models_BlendTree_BlendParameter_
+  commentId: Overload:R2API.Models.BlendTree.BlendParameter
+  isSpec: "True"
+  fullName: R2API.Models.BlendTree.BlendParameter
+  nameWithType: BlendTree.BlendParameter
+- uid: R2API.Models.BlendTree.BlendParameterY
+  name: BlendParameterY
+  href: api/R2API.Models.BlendTree.html#R2API_Models_BlendTree_BlendParameterY
+  commentId: P:R2API.Models.BlendTree.BlendParameterY
+  fullName: R2API.Models.BlendTree.BlendParameterY
+  nameWithType: BlendTree.BlendParameterY
+- uid: R2API.Models.BlendTree.BlendParameterY*
+  name: BlendParameterY
+  href: api/R2API.Models.BlendTree.html#R2API_Models_BlendTree_BlendParameterY_
+  commentId: Overload:R2API.Models.BlendTree.BlendParameterY
+  isSpec: "True"
+  fullName: R2API.Models.BlendTree.BlendParameterY
+  nameWithType: BlendTree.BlendParameterY
+- uid: R2API.Models.BlendTree.BlendType
+  name: BlendType
+  href: api/R2API.Models.BlendTree.html#R2API_Models_BlendTree_BlendType
+  commentId: P:R2API.Models.BlendTree.BlendType
+  fullName: R2API.Models.BlendTree.BlendType
+  nameWithType: BlendTree.BlendType
+- uid: R2API.Models.BlendTree.BlendType*
+  name: BlendType
+  href: api/R2API.Models.BlendTree.html#R2API_Models_BlendTree_BlendType_
+  commentId: Overload:R2API.Models.BlendTree.BlendType
+  isSpec: "True"
+  fullName: R2API.Models.BlendTree.BlendType
+  nameWithType: BlendTree.BlendType
+- uid: R2API.Models.BlendTree.Children
+  name: Children
+  href: api/R2API.Models.BlendTree.html#R2API_Models_BlendTree_Children
+  commentId: P:R2API.Models.BlendTree.Children
+  fullName: R2API.Models.BlendTree.Children
+  nameWithType: BlendTree.Children
+- uid: R2API.Models.BlendTree.Children*
+  name: Children
+  href: api/R2API.Models.BlendTree.html#R2API_Models_BlendTree_Children_
+  commentId: Overload:R2API.Models.BlendTree.Children
+  isSpec: "True"
+  fullName: R2API.Models.BlendTree.Children
+  nameWithType: BlendTree.Children
+- uid: R2API.Models.BlendTree.WriteBinary(System.IO.BinaryWriter)
+  name: WriteBinary(BinaryWriter)
+  href: api/R2API.Models.BlendTree.html#R2API_Models_BlendTree_WriteBinary_System_IO_BinaryWriter_
+  commentId: M:R2API.Models.BlendTree.WriteBinary(System.IO.BinaryWriter)
+  fullName: R2API.Models.BlendTree.WriteBinary(System.IO.BinaryWriter)
+  nameWithType: BlendTree.WriteBinary(BinaryWriter)
+- uid: R2API.Models.BlendTree.WriteBinary*
+  name: WriteBinary
+  href: api/R2API.Models.BlendTree.html#R2API_Models_BlendTree_WriteBinary_
+  commentId: Overload:R2API.Models.BlendTree.WriteBinary
+  isSpec: "True"
+  fullName: R2API.Models.BlendTree.WriteBinary
+  nameWithType: BlendTree.WriteBinary
+- uid: R2API.Models.BlendTreeType
+  name: BlendTreeType
+  href: api/R2API.Models.BlendTreeType.html
+  commentId: T:R2API.Models.BlendTreeType
+  fullName: R2API.Models.BlendTreeType
+  nameWithType: BlendTreeType
+- uid: R2API.Models.BlendTreeType.Direct
+  name: Direct
+  href: api/R2API.Models.BlendTreeType.html#R2API_Models_BlendTreeType_Direct
+  commentId: F:R2API.Models.BlendTreeType.Direct
+  fullName: R2API.Models.BlendTreeType.Direct
+  nameWithType: BlendTreeType.Direct
+- uid: R2API.Models.BlendTreeType.FreeformCartesian2D
+  name: FreeformCartesian2D
+  href: api/R2API.Models.BlendTreeType.html#R2API_Models_BlendTreeType_FreeformCartesian2D
+  commentId: F:R2API.Models.BlendTreeType.FreeformCartesian2D
+  fullName: R2API.Models.BlendTreeType.FreeformCartesian2D
+  nameWithType: BlendTreeType.FreeformCartesian2D
+- uid: R2API.Models.BlendTreeType.FreeformDirectional2D
+  name: FreeformDirectional2D
+  href: api/R2API.Models.BlendTreeType.html#R2API_Models_BlendTreeType_FreeformDirectional2D
+  commentId: F:R2API.Models.BlendTreeType.FreeformDirectional2D
+  fullName: R2API.Models.BlendTreeType.FreeformDirectional2D
+  nameWithType: BlendTreeType.FreeformDirectional2D
+- uid: R2API.Models.BlendTreeType.Simple1D
+  name: Simple1D
+  href: api/R2API.Models.BlendTreeType.html#R2API_Models_BlendTreeType_Simple1D
+  commentId: F:R2API.Models.BlendTreeType.Simple1D
+  fullName: R2API.Models.BlendTreeType.Simple1D
+  nameWithType: BlendTreeType.Simple1D
+- uid: R2API.Models.BlendTreeType.SimpleDirectional2D
+  name: SimpleDirectional2D
+  href: api/R2API.Models.BlendTreeType.html#R2API_Models_BlendTreeType_SimpleDirectional2D
+  commentId: F:R2API.Models.BlendTreeType.SimpleDirectional2D
+  fullName: R2API.Models.BlendTreeType.SimpleDirectional2D
+  nameWithType: BlendTreeType.SimpleDirectional2D
+- uid: R2API.Models.ChildMotion
+  name: ChildMotion
+  href: api/R2API.Models.ChildMotion.html
+  commentId: T:R2API.Models.ChildMotion
+  fullName: R2API.Models.ChildMotion
+  nameWithType: ChildMotion
+- uid: R2API.Models.ChildMotion.BlendTree
+  name: BlendTree
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_BlendTree
+  commentId: P:R2API.Models.ChildMotion.BlendTree
+  fullName: R2API.Models.ChildMotion.BlendTree
+  nameWithType: ChildMotion.BlendTree
+- uid: R2API.Models.ChildMotion.BlendTree*
+  name: BlendTree
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_BlendTree_
+  commentId: Overload:R2API.Models.ChildMotion.BlendTree
+  isSpec: "True"
+  fullName: R2API.Models.ChildMotion.BlendTree
+  nameWithType: ChildMotion.BlendTree
+- uid: R2API.Models.ChildMotion.Clip
+  name: Clip
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_Clip
+  commentId: P:R2API.Models.ChildMotion.Clip
+  fullName: R2API.Models.ChildMotion.Clip
+  nameWithType: ChildMotion.Clip
+- uid: R2API.Models.ChildMotion.Clip*
+  name: Clip
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_Clip_
+  commentId: Overload:R2API.Models.ChildMotion.Clip
+  isSpec: "True"
+  fullName: R2API.Models.ChildMotion.Clip
+  nameWithType: ChildMotion.Clip
+- uid: R2API.Models.ChildMotion.ClipBundlePath
+  name: ClipBundlePath
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_ClipBundlePath
+  commentId: P:R2API.Models.ChildMotion.ClipBundlePath
+  fullName: R2API.Models.ChildMotion.ClipBundlePath
+  nameWithType: ChildMotion.ClipBundlePath
+- uid: R2API.Models.ChildMotion.ClipBundlePath*
+  name: ClipBundlePath
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_ClipBundlePath_
+  commentId: Overload:R2API.Models.ChildMotion.ClipBundlePath
+  isSpec: "True"
+  fullName: R2API.Models.ChildMotion.ClipBundlePath
+  nameWithType: ChildMotion.ClipBundlePath
+- uid: R2API.Models.ChildMotion.CycleOffset
+  name: CycleOffset
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_CycleOffset
+  commentId: P:R2API.Models.ChildMotion.CycleOffset
+  fullName: R2API.Models.ChildMotion.CycleOffset
+  nameWithType: ChildMotion.CycleOffset
+- uid: R2API.Models.ChildMotion.CycleOffset*
+  name: CycleOffset
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_CycleOffset_
+  commentId: Overload:R2API.Models.ChildMotion.CycleOffset
+  isSpec: "True"
+  fullName: R2API.Models.ChildMotion.CycleOffset
+  nameWithType: ChildMotion.CycleOffset
+- uid: R2API.Models.ChildMotion.DirectBlendParameter
+  name: DirectBlendParameter
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_DirectBlendParameter
+  commentId: P:R2API.Models.ChildMotion.DirectBlendParameter
+  fullName: R2API.Models.ChildMotion.DirectBlendParameter
+  nameWithType: ChildMotion.DirectBlendParameter
+- uid: R2API.Models.ChildMotion.DirectBlendParameter*
+  name: DirectBlendParameter
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_DirectBlendParameter_
+  commentId: Overload:R2API.Models.ChildMotion.DirectBlendParameter
+  isSpec: "True"
+  fullName: R2API.Models.ChildMotion.DirectBlendParameter
+  nameWithType: ChildMotion.DirectBlendParameter
+- uid: R2API.Models.ChildMotion.Mirror
+  name: Mirror
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_Mirror
+  commentId: P:R2API.Models.ChildMotion.Mirror
+  fullName: R2API.Models.ChildMotion.Mirror
+  nameWithType: ChildMotion.Mirror
+- uid: R2API.Models.ChildMotion.Mirror*
+  name: Mirror
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_Mirror_
+  commentId: Overload:R2API.Models.ChildMotion.Mirror
+  isSpec: "True"
+  fullName: R2API.Models.ChildMotion.Mirror
+  nameWithType: ChildMotion.Mirror
+- uid: R2API.Models.ChildMotion.Position
+  name: Position
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_Position
+  commentId: P:R2API.Models.ChildMotion.Position
+  fullName: R2API.Models.ChildMotion.Position
+  nameWithType: ChildMotion.Position
+- uid: R2API.Models.ChildMotion.Position*
+  name: Position
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_Position_
+  commentId: Overload:R2API.Models.ChildMotion.Position
+  isSpec: "True"
+  fullName: R2API.Models.ChildMotion.Position
+  nameWithType: ChildMotion.Position
+- uid: R2API.Models.ChildMotion.Threshold
+  name: Threshold
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_Threshold
+  commentId: P:R2API.Models.ChildMotion.Threshold
+  fullName: R2API.Models.ChildMotion.Threshold
+  nameWithType: ChildMotion.Threshold
+- uid: R2API.Models.ChildMotion.Threshold*
+  name: Threshold
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_Threshold_
+  commentId: Overload:R2API.Models.ChildMotion.Threshold
+  isSpec: "True"
+  fullName: R2API.Models.ChildMotion.Threshold
+  nameWithType: ChildMotion.Threshold
+- uid: R2API.Models.ChildMotion.TimeScale
+  name: TimeScale
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_TimeScale
+  commentId: P:R2API.Models.ChildMotion.TimeScale
+  fullName: R2API.Models.ChildMotion.TimeScale
+  nameWithType: ChildMotion.TimeScale
+- uid: R2API.Models.ChildMotion.TimeScale*
+  name: TimeScale
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_TimeScale_
+  commentId: Overload:R2API.Models.ChildMotion.TimeScale
+  isSpec: "True"
+  fullName: R2API.Models.ChildMotion.TimeScale
+  nameWithType: ChildMotion.TimeScale
+- uid: R2API.Models.ChildMotion.WriteBinary(System.IO.BinaryWriter)
+  name: WriteBinary(BinaryWriter)
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_WriteBinary_System_IO_BinaryWriter_
+  commentId: M:R2API.Models.ChildMotion.WriteBinary(System.IO.BinaryWriter)
+  fullName: R2API.Models.ChildMotion.WriteBinary(System.IO.BinaryWriter)
+  nameWithType: ChildMotion.WriteBinary(BinaryWriter)
+- uid: R2API.Models.ChildMotion.WriteBinary*
+  name: WriteBinary
+  href: api/R2API.Models.ChildMotion.html#R2API_Models_ChildMotion_WriteBinary_
+  commentId: Overload:R2API.Models.ChildMotion.WriteBinary
+  isSpec: "True"
+  fullName: R2API.Models.ChildMotion.WriteBinary
+  nameWithType: ChildMotion.WriteBinary
 - uid: R2API.Models.Condition
   name: Condition
   href: api/R2API.Models.Condition.html
@@ -7727,6 +8090,119 @@ references:
   commentId: F:R2API.Models.ConditionMode.IsTrue
   fullName: R2API.Models.ConditionMode.IsTrue
   nameWithType: ConditionMode.IsTrue
+- uid: R2API.Models.ExistingLayer
+  name: ExistingLayer
+  href: api/R2API.Models.ExistingLayer.html
+  commentId: T:R2API.Models.ExistingLayer
+  fullName: R2API.Models.ExistingLayer
+  nameWithType: ExistingLayer
+- uid: R2API.Models.ExistingLayer.ExistingStates
+  name: ExistingStates
+  href: api/R2API.Models.ExistingLayer.html#R2API_Models_ExistingLayer_ExistingStates
+  commentId: P:R2API.Models.ExistingLayer.ExistingStates
+  fullName: R2API.Models.ExistingLayer.ExistingStates
+  nameWithType: ExistingLayer.ExistingStates
+- uid: R2API.Models.ExistingLayer.ExistingStates*
+  name: ExistingStates
+  href: api/R2API.Models.ExistingLayer.html#R2API_Models_ExistingLayer_ExistingStates_
+  commentId: Overload:R2API.Models.ExistingLayer.ExistingStates
+  isSpec: "True"
+  fullName: R2API.Models.ExistingLayer.ExistingStates
+  nameWithType: ExistingLayer.ExistingStates
+- uid: R2API.Models.ExistingLayer.Name
+  name: Name
+  href: api/R2API.Models.ExistingLayer.html#R2API_Models_ExistingLayer_Name
+  commentId: P:R2API.Models.ExistingLayer.Name
+  fullName: R2API.Models.ExistingLayer.Name
+  nameWithType: ExistingLayer.Name
+- uid: R2API.Models.ExistingLayer.Name*
+  name: Name
+  href: api/R2API.Models.ExistingLayer.html#R2API_Models_ExistingLayer_Name_
+  commentId: Overload:R2API.Models.ExistingLayer.Name
+  isSpec: "True"
+  fullName: R2API.Models.ExistingLayer.Name
+  nameWithType: ExistingLayer.Name
+- uid: R2API.Models.ExistingLayer.NewStates
+  name: NewStates
+  href: api/R2API.Models.ExistingLayer.html#R2API_Models_ExistingLayer_NewStates
+  commentId: P:R2API.Models.ExistingLayer.NewStates
+  fullName: R2API.Models.ExistingLayer.NewStates
+  nameWithType: ExistingLayer.NewStates
+- uid: R2API.Models.ExistingLayer.NewStates*
+  name: NewStates
+  href: api/R2API.Models.ExistingLayer.html#R2API_Models_ExistingLayer_NewStates_
+  commentId: Overload:R2API.Models.ExistingLayer.NewStates
+  isSpec: "True"
+  fullName: R2API.Models.ExistingLayer.NewStates
+  nameWithType: ExistingLayer.NewStates
+- uid: R2API.Models.ExistingState
+  name: ExistingState
+  href: api/R2API.Models.ExistingState.html
+  commentId: T:R2API.Models.ExistingState
+  fullName: R2API.Models.ExistingState
+  nameWithType: ExistingState
+- uid: R2API.Models.ExistingState.Name
+  name: Name
+  href: api/R2API.Models.ExistingState.html#R2API_Models_ExistingState_Name
+  commentId: P:R2API.Models.ExistingState.Name
+  fullName: R2API.Models.ExistingState.Name
+  nameWithType: ExistingState.Name
+- uid: R2API.Models.ExistingState.Name*
+  name: Name
+  href: api/R2API.Models.ExistingState.html#R2API_Models_ExistingState_Name_
+  commentId: Overload:R2API.Models.ExistingState.Name
+  isSpec: "True"
+  fullName: R2API.Models.ExistingState.Name
+  nameWithType: ExistingState.Name
+- uid: R2API.Models.ExistingState.NewTransitions
+  name: NewTransitions
+  href: api/R2API.Models.ExistingState.html#R2API_Models_ExistingState_NewTransitions
+  commentId: P:R2API.Models.ExistingState.NewTransitions
+  fullName: R2API.Models.ExistingState.NewTransitions
+  nameWithType: ExistingState.NewTransitions
+- uid: R2API.Models.ExistingState.NewTransitions*
+  name: NewTransitions
+  href: api/R2API.Models.ExistingState.html#R2API_Models_ExistingState_NewTransitions_
+  commentId: Overload:R2API.Models.ExistingState.NewTransitions
+  isSpec: "True"
+  fullName: R2API.Models.ExistingState.NewTransitions
+  nameWithType: ExistingState.NewTransitions
+- uid: R2API.Models.InterruptionSource
+  name: InterruptionSource
+  href: api/R2API.Models.InterruptionSource.html
+  commentId: T:R2API.Models.InterruptionSource
+  fullName: R2API.Models.InterruptionSource
+  nameWithType: InterruptionSource
+- uid: R2API.Models.InterruptionSource.Destination
+  name: Destination
+  href: api/R2API.Models.InterruptionSource.html#R2API_Models_InterruptionSource_Destination
+  commentId: F:R2API.Models.InterruptionSource.Destination
+  fullName: R2API.Models.InterruptionSource.Destination
+  nameWithType: InterruptionSource.Destination
+- uid: R2API.Models.InterruptionSource.DestinationThenSource
+  name: DestinationThenSource
+  href: api/R2API.Models.InterruptionSource.html#R2API_Models_InterruptionSource_DestinationThenSource
+  commentId: F:R2API.Models.InterruptionSource.DestinationThenSource
+  fullName: R2API.Models.InterruptionSource.DestinationThenSource
+  nameWithType: InterruptionSource.DestinationThenSource
+- uid: R2API.Models.InterruptionSource.None
+  name: None
+  href: api/R2API.Models.InterruptionSource.html#R2API_Models_InterruptionSource_None
+  commentId: F:R2API.Models.InterruptionSource.None
+  fullName: R2API.Models.InterruptionSource.None
+  nameWithType: InterruptionSource.None
+- uid: R2API.Models.InterruptionSource.Source
+  name: Source
+  href: api/R2API.Models.InterruptionSource.html#R2API_Models_InterruptionSource_Source
+  commentId: F:R2API.Models.InterruptionSource.Source
+  fullName: R2API.Models.InterruptionSource.Source
+  nameWithType: InterruptionSource.Source
+- uid: R2API.Models.InterruptionSource.SourceThenDestination
+  name: SourceThenDestination
+  href: api/R2API.Models.InterruptionSource.html#R2API_Models_InterruptionSource_SourceThenDestination
+  commentId: F:R2API.Models.InterruptionSource.SourceThenDestination
+  fullName: R2API.Models.InterruptionSource.SourceThenDestination
+  nameWithType: InterruptionSource.SourceThenDestination
 - uid: R2API.Models.Parameter
   name: Parameter
   href: api/R2API.Models.Parameter.html
@@ -7980,6 +8456,19 @@ references:
   commentId: T:R2API.Models.State
   fullName: R2API.Models.State
   nameWithType: State
+- uid: R2API.Models.State.BlendTree
+  name: BlendTree
+  href: api/R2API.Models.State.html#R2API_Models_State_BlendTree
+  commentId: P:R2API.Models.State.BlendTree
+  fullName: R2API.Models.State.BlendTree
+  nameWithType: State.BlendTree
+- uid: R2API.Models.State.BlendTree*
+  name: BlendTree
+  href: api/R2API.Models.State.html#R2API_Models_State_BlendTree_
+  commentId: Overload:R2API.Models.State.BlendTree
+  isSpec: "True"
+  fullName: R2API.Models.State.BlendTree
+  nameWithType: State.BlendTree
 - uid: R2API.Models.State.Clip
   name: Clip
   href: api/R2API.Models.State.html#R2API_Models_State_Clip
@@ -8194,6 +8683,19 @@ references:
   commentId: T:R2API.Models.Transition
   fullName: R2API.Models.Transition
   nameWithType: Transition
+- uid: R2API.Models.Transition.CanTransitionToSelf
+  name: CanTransitionToSelf
+  href: api/R2API.Models.Transition.html#R2API_Models_Transition_CanTransitionToSelf
+  commentId: P:R2API.Models.Transition.CanTransitionToSelf
+  fullName: R2API.Models.Transition.CanTransitionToSelf
+  nameWithType: Transition.CanTransitionToSelf
+- uid: R2API.Models.Transition.CanTransitionToSelf*
+  name: CanTransitionToSelf
+  href: api/R2API.Models.Transition.html#R2API_Models_Transition_CanTransitionToSelf_
+  commentId: Overload:R2API.Models.Transition.CanTransitionToSelf
+  isSpec: "True"
+  fullName: R2API.Models.Transition.CanTransitionToSelf
+  nameWithType: Transition.CanTransitionToSelf
 - uid: R2API.Models.Transition.Conditions
   name: Conditions
   href: api/R2API.Models.Transition.html#R2API_Models_Transition_Conditions
@@ -8259,6 +8761,19 @@ references:
   isSpec: "True"
   fullName: R2API.Models.Transition.HasFixedDuration
   nameWithType: Transition.HasFixedDuration
+- uid: R2API.Models.Transition.InterruptionSource
+  name: InterruptionSource
+  href: api/R2API.Models.Transition.html#R2API_Models_Transition_InterruptionSource
+  commentId: P:R2API.Models.Transition.InterruptionSource
+  fullName: R2API.Models.Transition.InterruptionSource
+  nameWithType: Transition.InterruptionSource
+- uid: R2API.Models.Transition.InterruptionSource*
+  name: InterruptionSource
+  href: api/R2API.Models.Transition.html#R2API_Models_Transition_InterruptionSource_
+  commentId: Overload:R2API.Models.Transition.InterruptionSource
+  isSpec: "True"
+  fullName: R2API.Models.Transition.InterruptionSource
+  nameWithType: Transition.InterruptionSource
 - uid: R2API.Models.Transition.Offset
   name: Offset
   href: api/R2API.Models.Transition.html#R2API_Models_Transition_Offset
@@ -8272,6 +8787,19 @@ references:
   isSpec: "True"
   fullName: R2API.Models.Transition.Offset
   nameWithType: Transition.Offset
+- uid: R2API.Models.Transition.OrderedInterruption
+  name: OrderedInterruption
+  href: api/R2API.Models.Transition.html#R2API_Models_Transition_OrderedInterruption
+  commentId: P:R2API.Models.Transition.OrderedInterruption
+  fullName: R2API.Models.Transition.OrderedInterruption
+  nameWithType: Transition.OrderedInterruption
+- uid: R2API.Models.Transition.OrderedInterruption*
+  name: OrderedInterruption
+  href: api/R2API.Models.Transition.html#R2API_Models_Transition_OrderedInterruption_
+  commentId: Overload:R2API.Models.Transition.OrderedInterruption
+  isSpec: "True"
+  fullName: R2API.Models.Transition.OrderedInterruption
+  nameWithType: Transition.OrderedInterruption
 - uid: R2API.Models.Transition.TransitionDuration
   name: TransitionDuration
   href: api/R2API.Models.Transition.html#R2API_Models_Transition_TransitionDuration

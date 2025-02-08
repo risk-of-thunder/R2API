@@ -204,6 +204,26 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Editor.AnimatorDiffImporter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Editor.AnimatorDiffImporter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Editor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Editor.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.AnimationsAPI.yml",
       "output": {
         ".html": {
@@ -904,6 +924,46 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.AnimatorDiff.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.AnimatorDiff.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.BlendTree.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.BlendTree.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.BlendTreeType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.BlendTreeType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.ChildMotion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.ChildMotion.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.Models.Condition.yml",
       "output": {
         ".html": {
@@ -918,6 +978,36 @@
       "output": {
         ".html": {
           "relative_path": "api/R2API.Models.ConditionMode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.ExistingLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.ExistingLayer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.ExistingState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.ExistingState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.InterruptionSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.InterruptionSource.html"
         }
       },
       "version": ""

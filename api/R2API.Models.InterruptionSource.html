@@ -5,11 +5,11 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Enum ParameterType </title>
+      <title>Enum InterruptionSource </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Enum ParameterType ">
+      <meta name="title" content="Enum InterruptionSource ">
     
-    <meta name="description" content="Type of a parameter value">
+    <meta name="description" content="Which AnimatorState transitions can interrupt the Transition.">
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
@@ -66,20 +66,20 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="R2API.Models.ParameterType">
+            <article class="content wrap" id="_content" data-uid="R2API.Models.InterruptionSource">
 
 
 
 
-  <h1 id="R2API_Models_ParameterType" data-uid="R2API.Models.ParameterType" class="text-break">Enum ParameterType</h1>
-  <div class="markdown level0 summary"><p>Type of a parameter value</p>
+  <h1 id="R2API_Models_InterruptionSource" data-uid="R2API.Models.InterruptionSource" class="text-break">Enum InterruptionSource</h1>
+  <div class="markdown level0 summary"><p>Which AnimatorState transitions can interrupt the Transition.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="R2API.html">R2API</a>.<a class="xref" href="R2API.Models.html">Models</a></h6>
   <h6><strong>Assembly</strong>: R2API.Animations.Runtime.dll</h6>
-  <h5 id="R2API_Models_ParameterType_syntax">Syntax</h5>
+  <h5 id="R2API_Models_InterruptionSource_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum ParameterType</code></pre>
+    <pre><code class="lang-csharp hljs">public enum InterruptionSource</code></pre>
   </div>
   <h3 id="fields">Fields
 </h3>
@@ -92,42 +92,47 @@
     <thead>
     </thead></thead><tbody>
       <tr>
-        <td id="R2API_Models_ParameterType_Bool">Bool</td>
-        <td><p>bool type</p>
+        <td id="R2API_Models_InterruptionSource_Destination">Destination</td>
+        <td><p>The Transition can be interrupted by transitions in the destination AnimatorState.</p>
 </td>
       </tr>
       <tr>
-        <td id="R2API_Models_ParameterType_Float">Float</td>
-        <td><p>float type</p>
+        <td id="R2API_Models_InterruptionSource_DestinationThenSource">DestinationThenSource</td>
+        <td><p>The Transition can be interrupted by transitions in the source or the destination AnimatorState.</p>
 </td>
       </tr>
       <tr>
-        <td id="R2API_Models_ParameterType_Int">Int</td>
-        <td><p>int type</p>
+        <td id="R2API_Models_InterruptionSource_None">None</td>
+        <td><p>The Transition cannot be interrupted. Formerly know as Atomic.</p>
 </td>
       </tr>
       <tr>
-        <td id="R2API_Models_ParameterType_Trigger">Trigger</td>
-        <td><p>Trigger work mostly like bool parameter, but their values are reset to false when used in a Transition</p>
+        <td id="R2API_Models_InterruptionSource_Source">Source</td>
+        <td><p>The Transition can be interrupted by transitions in the source AnimatorState.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="R2API_Models_InterruptionSource_SourceThenDestination">SourceThenDestination</td>
+        <td><p>The Transition can be interrupted by transitions in the source or the destination AnimatorState.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;ParameterType, TReply&gt;(ParameterType, NetworkDestination)</a>
+      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;InterruptionSource, TReply&gt;(InterruptionSource, NetworkDestination)</a>
   </div>
   <div>
-      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_UnityEngine_Networking_NetworkConnection_">NetRequestExtensions.Send&lt;ParameterType, TReply&gt;(ParameterType, NetworkConnection)</a>
+      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_UnityEngine_Networking_NetworkConnection_">NetRequestExtensions.Send&lt;InterruptionSource, TReply&gt;(InterruptionSource, NetworkConnection)</a>
   </div>
   <div>
-      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_GetStructPropertyValue__2___0__System_String_">Reflection.GetStructPropertyValue&lt;ParameterType, TValue&gt;(ref ParameterType, string)</a>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_GetStructPropertyValue__2___0__System_String_">Reflection.GetStructPropertyValue&lt;InterruptionSource, TValue&gt;(ref InterruptionSource, string)</a>
   </div>
   <div>
-      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetStructFieldValue__2___0__System_String___1_">Reflection.SetStructFieldValue&lt;ParameterType, TValue&gt;(ref ParameterType, string, TValue)</a>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetStructFieldValue__2___0__System_String___1_">Reflection.SetStructFieldValue&lt;InterruptionSource, TValue&gt;(ref InterruptionSource, string, TValue)</a>
   </div>
   <div>
-      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetStructPropertyValue__2___0__System_String___1_">Reflection.SetStructPropertyValue&lt;ParameterType, TValue&gt;(ref ParameterType, string, TValue)</a>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetStructPropertyValue__2___0__System_String___1_">Reflection.SetStructPropertyValue&lt;InterruptionSource, TValue&gt;(ref InterruptionSource, string, TValue)</a>
   </div>
   <div>
       <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_GetFieldValue__1_System_Object_System_String_">Reflection.GetFieldValue&lt;TReturn&gt;(object, string)</a>
@@ -161,10 +166,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ParameterType.md&amp;value=---%0Auid%3A%20R2API.Models.ParameterType%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_InterruptionSource.md&amp;value=---%0Auid%3A%20R2API.Models.InterruptionSource%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ParameterType.cs/#L6" class="contribution-link">View Source</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/InterruptionSource.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
