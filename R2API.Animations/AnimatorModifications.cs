@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using BepInEx;
 using R2API.Models;
 using UnityEngine;
@@ -67,6 +69,59 @@ public class AnimatorModifications
         foreach (var parameter in NewParameters)
         {
             parameter.WriteBinary(writer);
+        }
+    }
+
+    /// <summary>
+    /// Creates an <see cref="AnimatorModifications"/> from <see cref="AnimatorDiff"/> created in Unity.
+    /// </summary>
+    /// <param name="diff"></param>
+    /// <param name="plugin"></param>
+    /// <param name="clipBundlePath"></param>
+    /// <returns></returns>
+    public static AnimatorModifications CreateFromDiff(AnimatorDiff diff, BepInPlugin plugin, string clipBundlePath)
+    {
+        var modifications = new AnimatorModifications(plugin);
+
+        foreach (var layer in diff.Layers)
+        {
+            modifications.NewStates[layer.Name] = layer.NewStates;
+
+            foreach (var state in layer.NewStates)
+            {
+                if (state.Clip)
+                {
+                    state.ClipBundlePath = clipBundlePath;
+                }
+                else if (state.BlendTree)
+                {
+                    FillBlendTreeClipBundlePath(state.BlendTree, clipBundlePath);
+                }
+            }
+
+            foreach (var state in layer.ExistingStates)
+            {
+                modifications.NewTransitions[(layer.Name, state.Name)] = state.NewTransitions;
+            }
+        }
+
+        modifications.NewParameters.AddRange(diff.NewParameters);
+
+        return modifications;
+    }
+
+    private static void FillBlendTreeClipBundlePath(BlendTree blendTree, string clipBundlePath)
+    {
+        foreach (var child in blendTree.Children)
+        {
+            if (child.Clip)
+            {
+                child.ClipBundlePath = clipBundlePath;
+            }
+            else if (child.BlendTree)
+            {
+                FillBlendTreeClipBundlePath(child.BlendTree, clipBundlePath);
+            }
         }
     }
 }

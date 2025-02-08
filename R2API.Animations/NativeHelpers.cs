@@ -35,6 +35,11 @@ internal static unsafe class NativeHelpers
 
     public static long GetAssetPathID(UnityEngine.Object obj)
     {
+        if (!obj)
+        {
+            return 0;
+        }
+
         var identifier = new SerializedObjectIdentifier();
         var remapper = PersistentManager->Remapper;
         InstanceIDToSerializedObjectIdentifier(remapper, obj.GetInstanceID(), &identifier);

@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../R2API.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\R2API.Animations.Runtime\R2API.Animations.Runtime.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="UnityEditor">
+      <HintPath>..\libs\UnityEditor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

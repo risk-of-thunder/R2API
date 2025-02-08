@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_Animations"
-versionNumber = "1.0.1"
+versionNumber = "1.1.0"
 description = "API for modifying RuntimeAnimatorController"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
@@ -20,8 +20,32 @@ readme = "./README.md"
 outdir = "./build"
 
 [[build.copy]]
-source = "./ReleaseOutput"
-target = "./plugins/R2API.Animations"
+source = "./ReleaseOutput/R2API.Animations.dll"
+target = "./plugins/R2API.Animations/R2API.Animations.dll"
+
+[[build.copy]]
+source = "./ReleaseOutput/AssetsTools.NET.dll"
+target = "./plugins/R2API.Animations/AssetsTools.NET.dll"
+
+[[build.copy]]
+source = "./ReleaseOutput/dummy_controller_bundle"
+target = "./plugins/R2API.Animations/dummy_controller_bundle"
+
+[[build.copy]]
+source = "./ReleaseOutput/R2API.Animations.xml"
+target = "./plugins/R2API.Animations/R2API.Animations.xml"
+
+[[build.copy]]
+source = "../R2API.Animations.Runtime/ReleaseOutput/R2API.Animations.Runtime.dll"
+target = "./plugins/R2API.Animations/R2API.Animations.Runtime.dll"
+
+[[build.copy]]
+source = "../R2API.Animations.Runtime/ReleaseOutput/R2API.Animations.Runtime.xml"
+target = "./plugins/R2API.Animations/R2API.Animations.Runtime.xml"
+
+[[build.copy]]
+source = "../R2API.Animations.Editor/ReleaseOutput/R2API.Animations.Editor.dll"
+target = "./plugins/R2API.Animations/R2API.Animations.Editor.dll"
 
 [publish]
 repository = "https://thunderstore.io"
