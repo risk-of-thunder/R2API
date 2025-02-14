@@ -12,6 +12,7 @@ namespace R2API.Test;
 [BepInDependency(DirectorAPI.PluginGUID)]
 [BepInDependency(EliteAPI.PluginGUID)]
 [BepInDependency(SceneAssetAPI.PluginGUID)]
+[BepInDependency(CostAPI.PluginGUID)]
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 public class R2APITest : BaseUnityPlugin
 {
