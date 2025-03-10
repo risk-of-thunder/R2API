@@ -17,6 +17,9 @@ Alongside adding new DotIndices and DotDefs, One can also provide CustomDotBehav
 
 ## Changelog
 
+### '1.0.4'
+* Fix Death Mark IL hook for SOTS Phase 2.
+
 ### '1.0.3'
 * Initial fixes for SOTS DLC2 Release.
 
