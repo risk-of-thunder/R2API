@@ -159,7 +159,7 @@ public static partial class DotAPI
         On.RoR2.DotController.HasDotActive += OnHasDotActive;
         IL.RoR2.DotController.EvaluateDotStacksForType += EvaluateDotStacksForType;
 
-        IL.RoR2.GlobalEventManager.ProcessHitEnemy += FixDeathMark;
+        IL.RoR2.GlobalEventManager.ProcDeathMark += FixDeathMark;
 
         _hooksEnabled = true;
     }
@@ -177,7 +177,7 @@ public static partial class DotAPI
         On.RoR2.DotController.HasDotActive -= OnHasDotActive;
         IL.RoR2.DotController.EvaluateDotStacksForType -= EvaluateDotStacksForType;
 
-        IL.RoR2.GlobalEventManager.ProcessHitEnemy -= FixDeathMark;
+        IL.RoR2.GlobalEventManager.ProcDeathMark -= FixDeathMark;
 
         _hooksEnabled = false;
     }
