@@ -18,6 +18,10 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.3.3'
+
+* Fixed custom monsters and interactables being added to stage pool multiple times as a result of SoTS Phase 2 changes.
+
 ### '2.3.2'
 
 * Fixed `RemoveExistingMonsterFromStage`, which by default removed the given monster from family DCCSs, potentially affecting other scenes unintentionally since those are shared between stages.
