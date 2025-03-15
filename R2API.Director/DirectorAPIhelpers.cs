@@ -1076,9 +1076,13 @@ public static partial class DirectorAPI
                 }
             }
 
-            CallAction(dccsPoolCategory.alwaysIncluded);
-            CallAction(dccsPoolCategory.includedIfConditionsMet);
-            CallAction(dccsPoolCategory.includedIfNoConditionsMet);
+            if (dccsPoolCategory.alwaysIncluded.Length > 0)
+            {
+                CallAction(dccsPoolCategory.alwaysIncluded);
+            } else
+            {
+                CallAction(dccsPoolCategory.includedIfNoConditionsMet);
+            }
         }
 
         /// <summary>
