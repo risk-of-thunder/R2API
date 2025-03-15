@@ -1079,9 +1079,12 @@ public static partial class DirectorAPI
             if (dccsPoolCategory.alwaysIncluded.Length > 0)
             {
                 CallAction(dccsPoolCategory.alwaysIncluded);
-            } else
+            } else if(dccsPoolCategory.includedIfNoConditionsMet.Length > 0)
             {
                 CallAction(dccsPoolCategory.includedIfNoConditionsMet);
+            } else
+            {
+                CallAction(dccsPoolCategory.includedIfConditionsMet);
             }
         }
 
