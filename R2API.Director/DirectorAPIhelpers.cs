@@ -407,7 +407,7 @@ public static partial class DirectorAPI
                     var isAFamilyCategoryAndShouldAddToIt = addToFamilies && isAFamilyCategory;
                     if (isNotAFamilyCategory || isAFamilyCategoryAndShouldAddToIt)
                     {
-                        ForEachPoolEntryInDccsPoolCategory(poolCategory, (poolEntry) =>
+                        ForEachElementInPoolEntryArray(SelectPoolEntryArrayGearboxStyle(poolCategory), (poolEntry) =>
                         {
                             AddMonsterToPoolEntry(monsterCardHolder, poolEntry, predicate);
                         });
@@ -428,6 +428,24 @@ public static partial class DirectorAPI
             }
 
             return true;
+        }
+
+        private static DccsPool.PoolEntry[] SelectPoolEntryArrayGearboxStyle(DccsPool.Category poolCategory)
+        {
+            // With SoTS Phase 2 update (1.3.7) DCCSBlender has been added, so we want to add cards primarily to alwaysIncluded to avoid card duplication.
+            // If alwaysIncluded doesn't have any pool entries then we add cards to includedIfNoConditionsMet, since some Simulacrum DccsPools are like that.
+            // And if includedIfNoConditionsMet doesn't have any pool entries then this is most likely a modded stage made before 1.3.7
+            // and we just add to includedIfConditionsMet for backwards compatibility.
+            if (poolCategory.alwaysIncluded.Length > 0)
+            {
+                return poolCategory.alwaysIncluded;
+            } else if(poolCategory.includedIfNoConditionsMet.Length > 0)
+            {
+                return poolCategory.includedIfNoConditionsMet;
+            } else
+            {
+                return poolCategory.includedIfConditionsMet;
+            }
         }
 
         private static void AddMonsterToPoolEntry(DirectorCardHolder monsterCardHolder, DccsPool.PoolEntry poolEntry, Predicate<DirectorCardCategorySelection> predicate)
@@ -659,9 +677,12 @@ public static partial class DirectorAPI
         {
             if (interactablesDccsPool)
             {
-                ForEachPoolEntryInDccsPool(interactablesDccsPool, (poolEntry) =>
+                ForEachPoolCategoryInDccsPool(interactablesDccsPool, (poolCategory) =>
                 {
-                    AddInteractableToPoolEntry(interactableCardHolder, poolEntry, predicate);
+                    ForEachElementInPoolEntryArray(SelectPoolEntryArrayGearboxStyle(poolCategory), (poolEntry) =>
+                    {
+                        AddInteractableToPoolEntry(interactableCardHolder, poolEntry, predicate);
+                    });
                 });
             }
         }
@@ -1061,30 +1082,23 @@ public static partial class DirectorAPI
         {
             DirectorAPI.SetHooks();
 
-            void CallAction(DccsPool.PoolEntry[] poolEntries)
-            {
-                foreach (var poolEntry in poolEntries)
-                {
-                    try
-                    {
-                        action(poolEntry);
-                    }
-                    catch (Exception e)
-                    {
-                        DirectorPlugin.Logger.LogError(e);
-                    }
-                }
-            }
+            ForEachElementInPoolEntryArray(dccsPoolCategory.alwaysIncluded, action);
+            ForEachElementInPoolEntryArray(dccsPoolCategory.includedIfNoConditionsMet, action);
+            ForEachElementInPoolEntryArray(dccsPoolCategory.includedIfConditionsMet, action);
+        }
 
-            if (dccsPoolCategory.alwaysIncluded.Length > 0)
+        private static void ForEachElementInPoolEntryArray(DccsPool.PoolEntry[] poolEntries, Action<DccsPool.PoolEntry> action)
+        {
+            foreach (var poolEntry in poolEntries)
             {
-                CallAction(dccsPoolCategory.alwaysIncluded);
-            } else if(dccsPoolCategory.includedIfNoConditionsMet.Length > 0)
-            {
-                CallAction(dccsPoolCategory.includedIfNoConditionsMet);
-            } else
-            {
-                CallAction(dccsPoolCategory.includedIfConditionsMet);
+                try
+                {
+                    action(poolEntry);
+                }
+                catch (Exception e)
+                {
+                    DirectorPlugin.Logger.LogError(e);
+                }
             }
         }
 
