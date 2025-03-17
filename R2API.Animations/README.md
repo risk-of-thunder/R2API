@@ -14,6 +14,8 @@ and `Modified Controller` which should have all things that `Source Controller` 
 After that you add the `AnimatorDiff` to an `AssetBundle` and in code you can create an instance of `AnimatorModifications` with `AnimatorModifications.CreateFromDiff()`.
 
 ## Changelog
+### '1.1.1'
+* Fix NuGet package
 
 ### '1.1.0'
 * Added support for `BlendTree`s.
