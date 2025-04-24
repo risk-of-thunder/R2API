@@ -357,12 +357,12 @@ public static partial class DirectorAPI
         SulfurPools = 1L << 27,
 
         /// <summary>
-        /// External / Internal Name : Void Locus / voidraid
+        /// External / Internal Name : Void Locus / voidstage
         /// </summary>
         VoidLocus = 1L << 28,
 
         /// <summary>
-        /// External / Internal Name : The Planetarium / voidstage
+        /// External / Internal Name : The Planetarium / voidraid
         /// </summary>
         ThePlanetarium = 1L << 29,
 
