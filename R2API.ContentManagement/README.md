@@ -21,6 +21,8 @@ R2API.ContentManaged is used for mods that would like to have R2API handle the c
 
 ## Related Pages
 
+* [GameModes Wiki Section](https://risk-of-thunder.github.io/R2Wiki/Mod-Creation/Assets/GameModes/)
+
 ## Changelog
 
 ### '1.0.9'
