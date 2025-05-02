@@ -6306,6 +6306,18 @@ references:
   commentId: F:R2API.ExtendedRuleChoiceDef.requiredUnlockables
   fullName: R2API.ExtendedRuleChoiceDef.requiredUnlockables
   nameWithType: ExtendedRuleChoiceDef.requiredUnlockables
+- uid: R2API.GameModeInfo
+  name: GameModeInfo
+  href: api/R2API.GameModeInfo.html
+  commentId: T:R2API.GameModeInfo
+  fullName: R2API.GameModeInfo
+  nameWithType: GameModeInfo
+- uid: R2API.GameModeInfo.buttonHoverDescription
+  name: buttonHoverDescription
+  href: api/R2API.GameModeInfo.html#R2API_GameModeInfo_buttonHoverDescription
+  commentId: F:R2API.GameModeInfo.buttonHoverDescription
+  fullName: R2API.GameModeInfo.buttonHoverDescription
+  nameWithType: GameModeInfo.buttonHoverDescription
 - uid: R2API.IModdedUnlockableDataProvider
   name: IModdedUnlockableDataProvider
   href: api/R2API.IModdedUnlockableDataProvider.html

@@ -714,6 +714,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.GameModeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.GameModeInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.IModdedUnlockableDataProvider.yml",
       "output": {
         ".html": {
