@@ -24,6 +24,7 @@ internal sealed class ContentManagementPlugin : BaseUnityPlugin
         Logger = base.Logger;
 
         R2APIContentPackProvider.Init();
+        GameModeFixes.AddModdedGameModeSupport();
     }
 
     private void OnDestroy()

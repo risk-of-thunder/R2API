@@ -23,6 +23,13 @@ R2API.ContentManaged is used for mods that would like to have R2API handle the c
 
 ## Changelog
 
+### '1.0.9'
+* Adds better support for modded Game Modes
+    * Adds fixes for modded Game Modes not showing up in the multiplayer menu
+    * Adds sorting for Game Modes to display them in the proper order (modded modes after vanilla)
+    * Adds automatic button addition to the "Alternate GameModes" screen
+    * Adds custom component for additional Game Mode info
+
 ### '1.0.8'
 * Adds additional null checks to the ItemRelationshipProvider content.
 
