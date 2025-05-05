@@ -44,7 +44,7 @@ public partial class R2API : BaseUnityPlugin
 
     public const string PluginName = "R2API";
 
-    private const string GameBuildId = "1.3.1";
+    private const string GameBuildId = "1.3.8";
 
     internal static new ManualLogSource Logger { get; set; }
 

@@ -4,8 +4,33 @@ using UnityEngine.AddressableAssets;
 
 namespace R2API.Test.Tests.ConCommandTests;
 
+#pragma warning disable IDE0051
+
 public static class DirectorTests
 {
+    [ConCommand(commandName = "add_remove_monster_test")]
+    private static void AddRemoveMonsterTest(ConCommandArgs args)
+    {
+        string monsterName;
+
+        if (args.Count == 1)
+        {
+            monsterName = args[0];
+        }
+        else
+        {
+            monsterName = "cscBeetle";
+        }
+
+        DirectorAPI.Helpers.RemoveExistingMonster(monsterName);
+    }
+
+    [ConCommand(commandName = "rem_remove_monster_test")]
+    private static void RemoveRemoveMonsterTest(ConCommandArgs args)
+    {
+        // TODO
+    }
+
     private const string GupCharacterSpawnCard = "RoR2/DLC1/Gup/cscGupBody.asset";
     private static CharacterSpawnCard _myGupSpawnCard;
     private static DirectorCard _myGupDC;
@@ -118,3 +143,5 @@ public static class DirectorTests
         }
     }
 }
+
+#pragma warning restore IDE0051

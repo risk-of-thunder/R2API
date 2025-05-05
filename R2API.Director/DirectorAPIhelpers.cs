@@ -303,6 +303,11 @@ public static partial class DirectorAPI
 
             static void PreventElite(string? monsterName, bool elitesAllowed, DirectorCard card)
             {
+                if (card == null || card.spawnCard == null)
+                {
+                    return;
+                }
+
                 if (string.Equals(card.spawnCard.name, monsterName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     ((CharacterSpawnCard)card.spawnCard).noElites = elitesAllowed;
@@ -439,10 +444,12 @@ public static partial class DirectorAPI
             if (poolCategory.alwaysIncluded.Length > 0)
             {
                 return poolCategory.alwaysIncluded;
-            } else if(poolCategory.includedIfNoConditionsMet.Length > 0)
+            }
+            else if (poolCategory.includedIfNoConditionsMet.Length > 0)
             {
                 return poolCategory.includedIfNoConditionsMet;
-            } else
+            }
+            else
             {
                 return poolCategory.includedIfConditionsMet;
             }
@@ -748,7 +755,7 @@ public static partial class DirectorAPI
                 });
             }
 
-            mixEnemyArtifactMonsters.RemoveAll((card) => card.Card.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
+            mixEnemyArtifactMonsters.RemoveAll((card) => card != null && card.Card != null && card.Card.spawnCard && card.Card.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
         }
 
         private static void RemoveMonsterFromPoolEntry(string monsterNameLowered, DccsPool.PoolEntry poolEntry, Predicate<DirectorCardCategorySelection> predicate)
@@ -758,7 +765,7 @@ public static partial class DirectorAPI
                 for (int i = 0; i < poolEntry.dccs.categories.Length; i++)
                 {
                     var cards = poolEntry.dccs.categories[i].cards.ToList();
-                    cards.RemoveAll((card) => card.spawnCard.name.ToLowerInvariant() == monsterNameLowered);
+                    cards.RemoveAll((card) => card != null && card.spawnCard && card.spawnCard.name?.ToLowerInvariant() == monsterNameLowered);
                     poolEntry.dccs.categories[i].cards = cards.ToArray();
                 }
             }
@@ -900,7 +907,7 @@ public static partial class DirectorAPI
                 for (int i = 0; i < poolEntry.dccs.categories.Length; i++)
                 {
                     var cards = poolEntry.dccs.categories[i].cards.ToList();
-                    cards.RemoveAll((card) => card.spawnCard.name.ToLowerInvariant() == interactableNameLowered);
+                    cards.RemoveAll((card) => card != null && card.spawnCard && card.spawnCard.name?.ToLowerInvariant() == interactableNameLowered);
                     poolEntry.dccs.categories[i].cards = cards.ToArray();
                 }
             }
