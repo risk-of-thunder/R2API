@@ -209,7 +209,7 @@ public static partial class SkillsAPI
         return sortedValues.Select(x => x.index).ToArray();
     }
     
-    private void GenericSkill_SetBonusStockFromBody(On.RoR2.GenericSkill.orig_SetBonusStockFromBody orig, GenericSkill self, int newBonusStockFromBody)
+    private static void GenericSkill_SetBonusStockFromBody(On.RoR2.GenericSkill.orig_SetBonusStockFromBody orig, GenericSkill self, int newBonusStockFromBody)
     {
     if (self.skillDef)newBonusStockFromBody *= (int)MathF.Min(1, self.skillDef.GetBonusStockMultiplier());
     orig(self, newBonusStockFromBody);
