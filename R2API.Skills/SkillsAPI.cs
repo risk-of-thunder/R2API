@@ -211,7 +211,7 @@ public static partial class SkillsAPI
     
     private static void GenericSkill_SetBonusStockFromBody(On.RoR2.GenericSkill.orig_SetBonusStockFromBody orig, GenericSkill self, int newBonusStockFromBody)
     {
-    if (self.skillDef)newBonusStockFromBody *= (int)MathF.Min(1, self.skillDef.GetBonusStockMultiplier());
+    if (self.skillDef)newBonusStockFromBody *= (int)MathF.Max(1, self.skillDef.GetBonusStockMultiplier());
     orig(self, newBonusStockFromBody);
     }
 
