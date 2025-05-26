@@ -41,7 +41,7 @@ public static partial class SkillsAPI
      /// <summary>
     /// Sets the value of bonus stock multiplication of a SkillDef.
     /// </summary>
-    public static void SetBonusStockMultiplier(this SkillDef skillDef, int value) => SkillDefInterop.GetBonusStockMultiplier(skillDef, value);
+    public static void SetBonusStockMultiplier(this SkillDef skillDef, int value) => SkillDefInterop.SetBonusStockMultiplier(skillDef, value);
     
     /// <summary>
     /// Gets the value of whether a GenericSkill row should be hidden in loadout tab or not.
