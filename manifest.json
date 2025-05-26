@@ -1524,6 +1524,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Skills.Interop.SkillDefInterop.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Skills.Interop.SkillDefInterop.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.Skills.Interop.yml",
       "output": {
         ".html": {
@@ -2208,6 +2218,26 @@
       "output": {
         ".html": {
           "relative_path": "api/RoR2.ProcChainMask.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/RoR2.Skills.SkillDef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/RoR2.Skills.SkillDef.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/RoR2.Skills.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/RoR2.Skills.html"
         }
       },
       "version": ""

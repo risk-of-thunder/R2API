@@ -10960,12 +10960,60 @@ references:
   isSpec: "True"
   fullName: R2API.Skills.Interop.GenericSkillInterop.SetOrderPriority
   nameWithType: GenericSkillInterop.SetOrderPriority
+- uid: R2API.Skills.Interop.SkillDefInterop
+  name: SkillDefInterop
+  href: api/R2API.Skills.Interop.SkillDefInterop.html
+  commentId: T:R2API.Skills.Interop.SkillDefInterop
+  fullName: R2API.Skills.Interop.SkillDefInterop
+  nameWithType: SkillDefInterop
+- uid: R2API.Skills.Interop.SkillDefInterop.GetBonusStockMultiplier(RoR2.Skills.SkillDef)
+  name: GetBonusStockMultiplier(SkillDef)
+  href: api/R2API.Skills.Interop.SkillDefInterop.html#R2API_Skills_Interop_SkillDefInterop_GetBonusStockMultiplier_RoR2_Skills_SkillDef_
+  commentId: M:R2API.Skills.Interop.SkillDefInterop.GetBonusStockMultiplier(RoR2.Skills.SkillDef)
+  fullName: R2API.Skills.Interop.SkillDefInterop.GetBonusStockMultiplier(RoR2.Skills.SkillDef)
+  nameWithType: SkillDefInterop.GetBonusStockMultiplier(SkillDef)
+- uid: R2API.Skills.Interop.SkillDefInterop.GetBonusStockMultiplier*
+  name: GetBonusStockMultiplier
+  href: api/R2API.Skills.Interop.SkillDefInterop.html#R2API_Skills_Interop_SkillDefInterop_GetBonusStockMultiplier_
+  commentId: Overload:R2API.Skills.Interop.SkillDefInterop.GetBonusStockMultiplier
+  isSpec: "True"
+  fullName: R2API.Skills.Interop.SkillDefInterop.GetBonusStockMultiplier
+  nameWithType: SkillDefInterop.GetBonusStockMultiplier
+- uid: R2API.Skills.Interop.SkillDefInterop.SetBonusStockMultiplier(RoR2.Skills.SkillDef,System.Int32)
+  name: SetBonusStockMultiplier(SkillDef, int)
+  href: api/R2API.Skills.Interop.SkillDefInterop.html#R2API_Skills_Interop_SkillDefInterop_SetBonusStockMultiplier_RoR2_Skills_SkillDef_System_Int32_
+  commentId: M:R2API.Skills.Interop.SkillDefInterop.SetBonusStockMultiplier(RoR2.Skills.SkillDef,System.Int32)
+  name.vb: SetBonusStockMultiplier(SkillDef, Integer)
+  fullName: R2API.Skills.Interop.SkillDefInterop.SetBonusStockMultiplier(RoR2.Skills.SkillDef, int)
+  fullName.vb: R2API.Skills.Interop.SkillDefInterop.SetBonusStockMultiplier(RoR2.Skills.SkillDef, Integer)
+  nameWithType: SkillDefInterop.SetBonusStockMultiplier(SkillDef, int)
+  nameWithType.vb: SkillDefInterop.SetBonusStockMultiplier(SkillDef, Integer)
+- uid: R2API.Skills.Interop.SkillDefInterop.SetBonusStockMultiplier*
+  name: SetBonusStockMultiplier
+  href: api/R2API.Skills.Interop.SkillDefInterop.html#R2API_Skills_Interop_SkillDefInterop_SetBonusStockMultiplier_
+  commentId: Overload:R2API.Skills.Interop.SkillDefInterop.SetBonusStockMultiplier
+  isSpec: "True"
+  fullName: R2API.Skills.Interop.SkillDefInterop.SetBonusStockMultiplier
+  nameWithType: SkillDefInterop.SetBonusStockMultiplier
 - uid: R2API.SkillsAPI
   name: SkillsAPI
   href: api/R2API.SkillsAPI.html
   commentId: T:R2API.SkillsAPI
   fullName: R2API.SkillsAPI
   nameWithType: SkillsAPI
+- uid: R2API.SkillsAPI.GetBonusStockMultiplier(RoR2.Skills.SkillDef)
+  name: GetBonusStockMultiplier(SkillDef)
+  href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_GetBonusStockMultiplier_RoR2_Skills_SkillDef_
+  commentId: M:R2API.SkillsAPI.GetBonusStockMultiplier(RoR2.Skills.SkillDef)
+  fullName: R2API.SkillsAPI.GetBonusStockMultiplier(RoR2.Skills.SkillDef)
+  nameWithType: SkillsAPI.GetBonusStockMultiplier(SkillDef)
+- uid: R2API.SkillsAPI.GetBonusStockMultiplier*
+  name: GetBonusStockMultiplier
+  href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_GetBonusStockMultiplier_
+  commentId: Overload:R2API.SkillsAPI.GetBonusStockMultiplier
+  isSpec: "True"
+  fullName: R2API.SkillsAPI.GetBonusStockMultiplier
+  nameWithType: SkillsAPI.GetBonusStockMultiplier
 - uid: R2API.SkillsAPI.GetHideInCharacterSelectIfFirstSkillSelected(RoR2.GenericSkill)
   name: GetHideInCharacterSelectIfFirstSkillSelected(GenericSkill)
   href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_GetHideInCharacterSelectIfFirstSkillSelected_RoR2_GenericSkill_
@@ -11036,6 +11084,22 @@ references:
   commentId: F:R2API.SkillsAPI.PluginVersion
   fullName: R2API.SkillsAPI.PluginVersion
   nameWithType: SkillsAPI.PluginVersion
+- uid: R2API.SkillsAPI.SetBonusStockMultiplier(RoR2.Skills.SkillDef,System.Int32)
+  name: SetBonusStockMultiplier(SkillDef, int)
+  href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_SetBonusStockMultiplier_RoR2_Skills_SkillDef_System_Int32_
+  commentId: M:R2API.SkillsAPI.SetBonusStockMultiplier(RoR2.Skills.SkillDef,System.Int32)
+  name.vb: SetBonusStockMultiplier(SkillDef, Integer)
+  fullName: R2API.SkillsAPI.SetBonusStockMultiplier(RoR2.Skills.SkillDef, int)
+  fullName.vb: R2API.SkillsAPI.SetBonusStockMultiplier(RoR2.Skills.SkillDef, Integer)
+  nameWithType: SkillsAPI.SetBonusStockMultiplier(SkillDef, int)
+  nameWithType.vb: SkillsAPI.SetBonusStockMultiplier(SkillDef, Integer)
+- uid: R2API.SkillsAPI.SetBonusStockMultiplier*
+  name: SetBonusStockMultiplier
+  href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_SetBonusStockMultiplier_
+  commentId: Overload:R2API.SkillsAPI.SetBonusStockMultiplier
+  isSpec: "True"
+  fullName: R2API.SkillsAPI.SetBonusStockMultiplier
+  nameWithType: SkillsAPI.SetBonusStockMultiplier
 - uid: R2API.SkillsAPI.SetHideInCharacterSelectIfFirstSkillSelected(RoR2.GenericSkill,System.Boolean)
   name: SetHideInCharacterSelectIfFirstSkillSelected(GenericSkill, bool)
   href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_SetHideInCharacterSelectIfFirstSkillSelected_RoR2_GenericSkill_System_Boolean_
@@ -13933,3 +13997,21 @@ references:
   commentId: F:RoR2.ProcChainMask.r2api_moddedMask
   fullName: RoR2.ProcChainMask.r2api_moddedMask
   nameWithType: ProcChainMask.r2api_moddedMask
+- uid: RoR2.Skills
+  name: RoR2.Skills
+  href: api/RoR2.Skills.html
+  commentId: N:RoR2.Skills
+  fullName: RoR2.Skills
+  nameWithType: RoR2.Skills
+- uid: RoR2.Skills.SkillDef
+  name: SkillDef
+  href: api/RoR2.Skills.SkillDef.html
+  commentId: T:RoR2.Skills.SkillDef
+  fullName: RoR2.Skills.SkillDef
+  nameWithType: SkillDef
+- uid: RoR2.Skills.SkillDef.r2api_bonusStockMultiplier
+  name: r2api_bonusStockMultiplier
+  href: api/RoR2.Skills.SkillDef.html#RoR2_Skills_SkillDef_r2api_bonusStockMultiplier
+  commentId: F:RoR2.Skills.SkillDef.r2api_bonusStockMultiplier
+  fullName: RoR2.Skills.SkillDef.r2api_bonusStockMultiplier
+  nameWithType: SkillDef.r2api_bonusStockMultiplier
