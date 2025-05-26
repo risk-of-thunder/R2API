@@ -6,6 +6,7 @@ using MonoMod.Cil;
 using R2API.AutoVersionGen;
 using R2API.Skills.Interop;
 using RoR2;
+using RoR2.Skills;
 using RoR2.UI;
 
 namespace R2API;
