@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using RoR2;
+using RoR2.Skills;
 
 [assembly:InternalsVisibleTo("R2API.Skills")]
 namespace R2API.Skills.Interop;
