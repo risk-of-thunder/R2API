@@ -36,12 +36,12 @@ public static partial class SkillsAPI
     /// <summary>
     /// Gets the value of bonus stock multiplication of a SkillDef.
     /// </summary>
-    public static bool GetBonusStockMultiplier(this SkillDef skillDef) => SkillDefInterop.GetBonusStockMultiplier(skillDef);
+    public static int GetBonusStockMultiplier(this SkillDef skillDef) => SkillDefInterop.GetBonusStockMultiplier(skillDef);
     
      /// <summary>
     /// Sets the value of bonus stock multiplication of a SkillDef.
     /// </summary>
-    public static bool SetBonusStockMultiplier(this SkillDef skillDef, int value) => SkillDefInterop.GetBonusStockMultiplier(skillDef, value);
+    public static void SetBonusStockMultiplier(this SkillDef skillDef, int value) => SkillDefInterop.GetBonusStockMultiplier(skillDef, value);
     
     /// <summary>
     /// Gets the value of whether a GenericSkill row should be hidden in loadout tab or not.
@@ -212,7 +212,7 @@ public static partial class SkillsAPI
     
     private static void GenericSkill_SetBonusStockFromBody(On.RoR2.GenericSkill.orig_SetBonusStockFromBody orig, GenericSkill self, int newBonusStockFromBody)
     {
-    if (self.skillDef)newBonusStockFromBody *= (int)MathF.Max(1, self.skillDef.GetBonusStockMultiplier());
+    if (self.skillDef)newBonusStockFromBody *= (int)System.MathF.Max(1, self.skillDef.GetBonusStockMultiplier());
     orig(self, newBonusStockFromBody);
     }
 
