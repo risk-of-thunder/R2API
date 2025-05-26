@@ -21,5 +21,7 @@ internal static class SkillsPatcher
         genericSkill?.Fields.Add(new FieldDefinition("r2api_hideInCharacterSelectIfFirstSkillSelected", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(bool))));
         genericSkill?.Fields.Add(new FieldDefinition("r2api_orderPriority", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(int))));
         genericSkill?.Fields.Add(new FieldDefinition("r2api_loadoutTitleTokenOverride", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(string))));
+        TypeDefinition skillDef = assembly.MainModule.GetType("RoR2.Skills", "SkillDef");
+        skillDef?.Fields.Add(new FieldDefinition("r2api_bonusStockMultiplier", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(int))));
     }
 }

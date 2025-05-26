@@ -6,6 +6,7 @@ using MonoMod.Cil;
 using R2API.AutoVersionGen;
 using R2API.Skills.Interop;
 using RoR2;
+using RoR2.Skills;
 using RoR2.UI;
 
 namespace R2API;
@@ -21,6 +22,7 @@ public static partial class SkillsAPI
         IL.RoR2.UI.LoadoutPanelController.Rebuild += LoadoutPanelControllerRebuildHook;
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot += LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData += CharacterSelectControllerBuildSkillStripDisplayDataHook;
+        On.RoR2.GenericSkill.SetBonusStockFromBody += GenericSkill_SetBonusStockFromBody;
     }
 
     internal static void UnsetHooks()
@@ -28,8 +30,19 @@ public static partial class SkillsAPI
         IL.RoR2.UI.LoadoutPanelController.Rebuild -= LoadoutPanelControllerRebuildHook;
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot -= LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData -= CharacterSelectControllerBuildSkillStripDisplayDataHook;
+        On.RoR2.GenericSkill.SetBonusStockFromBody -= GenericSkill_SetBonusStockFromBody;
     }
 
+    /// <summary>
+    /// Gets the value of bonus stock multiplication of a SkillDef.
+    /// </summary>
+    public static int GetBonusStockMultiplier(this SkillDef skillDef) => SkillDefInterop.GetBonusStockMultiplier(skillDef);
+    
+     /// <summary>
+    /// Sets the value of bonus stock multiplication of a SkillDef.
+    /// </summary>
+    public static void SetBonusStockMultiplier(this SkillDef skillDef, int value) => SkillDefInterop.SetBonusStockMultiplier(skillDef, value);
+    
     /// <summary>
     /// Gets the value of whether a GenericSkill row should be hidden in loadout tab or not.
     /// </summary>
@@ -195,6 +208,12 @@ public static partial class SkillsAPI
             .OrderBy(x => x.skill.GetOrderPriority());
         previousValue = sortedValues.Select(x => x.skill).ToArray();
         return sortedValues.Select(x => x.index).ToArray();
+    }
+    
+    private static void GenericSkill_SetBonusStockFromBody(On.RoR2.GenericSkill.orig_SetBonusStockFromBody orig, GenericSkill self, int newBonusStockFromBody)
+    {
+    if (self.skillDef)newBonusStockFromBody *= (int)System.MathF.Max(1, self.skillDef.GetBonusStockMultiplier());
+    orig(self, newBonusStockFromBody);
     }
 
     private static string LoadoutPanelControllerReplaceTitleToken(string token, GenericSkill skill)
