@@ -91,6 +91,19 @@ public static partial class DirectorAPI
 
     /// <summary>
     /// <para>
+    /// Event used to interact with DCCS of MixEnemy artifact (Artifact of Dissonance).
+    /// </para>
+    ///
+    /// <para>
+    /// First parameter is the <see cref="RoR2.DirectorCardCategorySelection"/>,
+    /// it is used by DirectorAPI to replace default <see cref="RoR2.DirectorCardCategorySelection"/> of MixEnemy artifact.
+    /// </para>
+    ///
+    /// </summary>
+    public static event Action<DirectorCardCategorySelection>? MixEnemiesDccsActions;
+
+    /// <summary>
+    /// <para>
     /// Event used to edit the pool of interactables that can spawn in a given stage.
     /// </para>
     ///
