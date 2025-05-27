@@ -267,6 +267,21 @@ public static partial class DirectorAPI
         }
 
         ApplyNewCardHoldersToDCCS(_dccsMixEnemyArtifact, cardHoldersMixEnemyArtifact);
+
+        if(MixEnemiesDccsActions != null)
+        {
+            foreach(Action<DirectorCardCategorySelection> item in MixEnemiesDccsActions.GetInvocationList())
+            {
+                try
+                {
+                    item(_dccsMixEnemyArtifact);
+                }
+                catch (Exception e)
+                {
+                    DirectorPlugin.Logger.LogError(e);
+                }
+            }
+        }
     }
 
     // Somehow the changes persist across stages sometimes, so... copy the originals,
