@@ -5319,6 +5319,12 @@ references:
   isSpec: "True"
   fullName: R2API.DirectorAPI.Loaded
   nameWithType: DirectorAPI.Loaded
+- uid: R2API.DirectorAPI.MixEnemiesDccsActions
+  name: MixEnemiesDccsActions
+  href: api/R2API.DirectorAPI.html#R2API_DirectorAPI_MixEnemiesDccsActions
+  commentId: E:R2API.DirectorAPI.MixEnemiesDccsActions
+  fullName: R2API.DirectorAPI.MixEnemiesDccsActions
+  nameWithType: DirectorAPI.MixEnemiesDccsActions
 - uid: R2API.DirectorAPI.MonsterActions
   name: MonsterActions
   href: api/R2API.DirectorAPI.html#R2API_DirectorAPI_MonsterActions
