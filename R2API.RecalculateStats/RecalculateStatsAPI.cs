@@ -58,7 +58,7 @@ public static partial class RecalculateStatsAPI
         public const string _levelMultiplier = "Used for internal documentation";
 
         #region health
-        /// <summary>Added to base health.</summary> <remarks>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * <inheritdoc cref="_levelMultiplier"/>) * (HEALTH_MULT + healthMultAdd)</remarks>
+        /// <summary>Added to base health.</summary> <remarks>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * <inheritdoc cref="_levelMultiplier"/>) * (HEALTH_MULT + healthMultAdd) * healthTotalMult</remarks>
         public float baseHealthAdd = 0f;
 
         /// <summary>Multiplied by character level and added to base health.</summary> <inheritdoc cref="baseHealthAdd"/>
@@ -66,10 +66,13 @@ public static partial class RecalculateStatsAPI
 
         /// <summary>Added to the direct multiplier to base health.</summary> <inheritdoc cref="baseHealthAdd"/>
         public float healthMultAdd = 0f;
+
+        /// <summary>Base health is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="baseHealthAdd"/>
+        public float healthTotalMult = 1f;
         #endregion
 
         #region shield
-        /// <summary>Added to base shield.</summary> <remarks>MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd + levelShieldAdd * <inheritdoc cref="_levelMultiplier"/>) * (SHIELD_MULT + shieldMultAdd)</remarks>remarks>
+        /// <summary>Added to base shield.</summary> <remarks>MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd + levelShieldAdd * <inheritdoc cref="_levelMultiplier"/>) * (SHIELD_MULT + shieldMultAdd) * shieldTotalMult</remarks>remarks>
         public float baseShieldAdd = 0f;
 
         /// <summary>Multiplied by level and added to base shield.</summary> <inheritdoc cref="baseShieldAdd"/>
@@ -77,11 +80,14 @@ public static partial class RecalculateStatsAPI
 
         /// <summary>Added to the direct multiplier to shields.</summary> <inheritdoc cref="baseShieldAdd"/>
         public float shieldMultAdd = 0f;
+
+        /// <summary>Base shield is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="baseShieldAdd"/>
+        public float shieldTotalMult = 1f;
         #endregion
 
         #region regen
 
-        /// <summary>Added to base health regen.</summary> <remarks>HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd + levelRegenAdd * <inheritdoc cref="_levelMultiplier"/>) * (REGEN_MULT + regenMultAdd)</remarks>
+        /// <summary>Added to base health regen.</summary> <remarks>HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd + levelRegenAdd * <inheritdoc cref="_levelMultiplier"/>) * (REGEN_MULT + regenMultAdd) * regenTotalMult</remarks>
         public float baseRegenAdd = 0f;
 
         /// <summary>Multiplied by level and added to base health regen.</summary> <inheritdoc cref="baseRegenAdd"/>
@@ -89,10 +95,13 @@ public static partial class RecalculateStatsAPI
 
         /// <summary>Added to the direct multiplier to base health regen.</summary> <inheritdoc cref="baseRegenAdd"/>
         public float regenMultAdd = 0f;
+
+        /// <summary>Base health regen is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="baseRegenAdd"/>
+        public float regenTotalMult = 1f;
         #endregion
 
         #region moveSpeed
-        /// <summary>Added to base move speed.</summary> <remarks>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd + levelMoveSpeedAdd * <inheritdoc cref="_levelMultiplier"/>) * (MOVE_SPEED_MULT + moveSpeedMultAdd) / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</remarks>
+        /// <summary>Added to base move speed.</summary> <remarks>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd + levelMoveSpeedAdd * <inheritdoc cref="_levelMultiplier"/>) * (MOVE_SPEED_MULT + moveSpeedMultAdd) * moveSpeedTotalMult / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</remarks>
         public float baseMoveSpeedAdd = 0f;
 
         /// <summary>Multiplied by level and added to base move speed.</summary> <inheritdoc cref="baseMoveSpeedAdd"/>
@@ -100,6 +109,9 @@ public static partial class RecalculateStatsAPI
 
         /// <summary>Added to the direct multiplier to move speed.</summary> <inheritdoc cref="baseMoveSpeedAdd"/>
         public float moveSpeedMultAdd = 0f;
+
+        /// <summary>Base move speed is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="baseMoveSpeedAdd"/>
+        public float moveSpeedTotalMult = 1f;
 
         /// <summary>Added reduction multiplier to move speed.</summary> <inheritdoc cref="baseMoveSpeedAdd"/>
         public float moveSpeedReductionMultAdd = 0f;
@@ -112,7 +124,7 @@ public static partial class RecalculateStatsAPI
         #endregion
 
         #region jumpPower
-        /// <summary>Added to base jump power.</summary> <remarks>JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd + levelJumpPowerAdd * <inheritdoc cref="_levelMultiplier"/>) * (JUMP_POWER_MULT + jumpPowerMultAdd)</remarks>
+        /// <summary>Added to base jump power.</summary> <remarks>JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd + levelJumpPowerAdd * <inheritdoc cref="_levelMultiplier"/>) * (JUMP_POWER_MULT + jumpPowerMultAdd) * jumpPowerTotalMult</remarks>
         public float baseJumpPowerAdd = 0f;
 
         /// <summary>Multiplied by level and added to base jump power.</summary> <inheritdoc cref="baseJumpPowerAdd"/>
@@ -120,10 +132,13 @@ public static partial class RecalculateStatsAPI
 
         /// <summary>Added to the direct multiplier to jump power.</summary> <inheritdoc cref="baseJumpPowerAdd"/>
         public float jumpPowerMultAdd = 0f;
+
+        /// <summary>Base jump power is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="baseJumpPowerAdd"/>
+        public float jumpPowerTotalMult = 1f;
         #endregion
 
         #region damage
-        /// <summary>Added to base damage.</summary> <remarks>DAMAGE ~ (BASE_DAMAGE + baseDamageAdd + levelDamageAdd * <inheritdoc cref="_levelMultiplier"/>) * (DAMAGE_MULT + damageMultAdd)</remarks>
+        /// <summary>Added to base damage.</summary> <remarks>DAMAGE ~ (BASE_DAMAGE + baseDamageAdd + levelDamageAdd * <inheritdoc cref="_levelMultiplier"/>) * (DAMAGE_MULT + damageMultAdd) * damageTotalMult</remarks>
         public float baseDamageAdd = 0f;
 
         /// <summary>Multiplied by level and added to base damage.</summary> <inheritdoc cref="baseDamageAdd"/>
@@ -131,10 +146,13 @@ public static partial class RecalculateStatsAPI
 
         /// <summary>Added to the direct multiplier to base damage.</summary> <inheritdoc cref="baseDamageAdd"/>
         public float damageMultAdd = 0f;
+
+        /// <summary>Base damage is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="baseDamageAdd"/>
+        public float damageTotalMult = 1f;
         #endregion
 
         #region attackSpeed
-        /// <summary>Added to attack speed.</summary> <remarks>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd + levelAttackkSpeedAdd * <inheritdoc cref="_levelMultiplier"/>) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</remarks>
+        /// <summary>Added to attack speed.</summary> <remarks>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd + levelAttackkSpeedAdd * <inheritdoc cref="_levelMultiplier"/>) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) * attackSpeedTotalMult / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</remarks>
         public float baseAttackSpeedAdd = 0f;
 
         /// <summary>Multiplied by level and added to attack speed.</summary> <inheritdoc cref="baseAttackSpeedAdd"/>
@@ -143,37 +161,55 @@ public static partial class RecalculateStatsAPI
         /// <summary>Added to the direct multiplier to attack speed.</summary> <inheritdoc cref="baseAttackSpeedAdd"/>
         public float attackSpeedMultAdd = 0f;
 
+        /// <summary>Base attack speed is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="baseAttackSpeedAdd"/>
+        public float attackSpeedTotalMult = 1f;
+
         /// <summary>Added reduction multiplier to attack speed.</summary> <inheritdoc cref="baseAttackSpeedAdd"/>
         public float attackSpeedReductionMultAdd = 0f;
         #endregion
 
         #region crit
-        /// <summary>Added to crit chance.</summary> <remarks>CRIT_CHANCE ~ BASE_CRIT_CHANCE + critAdd + levelCritAdd * <inheritdoc cref="_levelMultiplier"/></remarks>
+        /// <summary>Added to crit chance.</summary> <remarks>CRIT_CHANCE ~ (BASE_CRIT_CHANCE + critAdd + levelCritAdd * <inheritdoc cref="_levelMultiplier"/>) * critTotalMult</remarks>
         public float critAdd = 0f;
 
         /// <summary>Multiplied by level and added to crit chance.</summary> <inheritdoc cref="critAdd"/>
         public float levelCritAdd = 0f;
 
-        /// <summary>Added to the direct multiplier to crit damage.</summary> <remarks>CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd) </remarks>
+        /// <summary>Crit chance is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="critAdd"/>
+        public float critTotalMult = 1f;
+
+        /// <summary>Added to the direct multiplier to crit damage.</summary> <remarks>CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd) * critDamageTotalMult</remarks>
         public float critDamageMultAdd = 0;
+
+        /// <summary>Crit damage is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="critDamageMultAdd"/>
+        public float critDamageTotalMult = 1f;
         #endregion
 
         #region bleed
-        /// <summary>Added to bleed chance.</summary> <remarks>BLEED_CHANCE ~ BASE_BLEED_CHANCE + bleedChanceAdd</remarks>
+        /// <summary>Added to bleed chance.</summary> <remarks>BLEED_CHANCE ~ (BASE_BLEED_CHANCE + bleedChanceAdd) * bleedChanceMult</remarks>
         public float bleedChanceAdd = 0f;
+
+        /// <summary>Bleed chance is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="bleedChanceAdd"/>
+        public float bleedChanceMult = 1f;
         #endregion
 
         #region armor
-        /// <summary>Added to armor.</summary> <remarks>ARMOR ~ BASE_ARMOR + armorAdd + levelArmorAdd * <inheritdoc cref="_levelMultiplier"/></remarks>
+        /// <summary>Added to armor.</summary> <remarks>ARMOR ~ (BASE_ARMOR + armorAdd + levelArmorAdd * <inheritdoc cref="_levelMultiplier"/>) * armorTotalMult</remarks>
         public float armorAdd = 0f;
 
         /// <summary>Multiplied by level and added to armor.</summary> <inheritdoc cref="armorAdd"/>
         public float levelArmorAdd = 0f;
+
+        /// <summary>Armor is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="armorAdd"/>
+        public float armorTotalMult = 1f;
         #endregion
 
         #region curse
-        /// <summary> Added to Curse Penalty.</summary> <remarks><inheritdoc cref="baseHealthAdd"/> / (BASE_CURSE_PENALTY + baseCurseAdd)</remarks>
+        /// <summary> Added to Curse Penalty.</summary> <remarks><inheritdoc cref="baseHealthAdd"/> / ((BASE_CURSE_PENALTY + baseCurseAdd) * curseTotalMult)</remarks>
         public float baseCurseAdd = 0f;
+
+        /// <summary>Curse penalty is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="baseCurseAdd"/>
+        public float curseTotalMult = 1f;
         #endregion
 
         #region cooldowns
@@ -322,14 +358,13 @@ public static partial class RecalculateStatsAPI
         {
             c.MoveAfterLabels();
             c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Action<CharacterBody>>((body) => { body.cursePenalty += StatMods.baseCurseAdd; });
+            c.EmitDelegate<Action<CharacterBody>>((body) => { body.cursePenalty += StatMods.baseCurseAdd; body.cursePenalty *= StatMods.curseTotalMult; });
         }
         else
         {
             RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyCurseStat)} failed.");
         }
     }
-
 
     private static void ModifyCooldownStat(ILCursor c)
     {
@@ -412,7 +447,6 @@ public static partial class RecalculateStatsAPI
         }
     }
 
-
     private static void ModifyLevelingStat(ILCursor c)
     {
         c.Index = 0;
@@ -450,6 +484,12 @@ public static partial class RecalculateStatsAPI
             emitLevelMultiplier();
             c.EmitDelegate<Func<float, float>>((levelMultiplier) => StatMods.armorAdd + StatMods.levelArmorAdd * levelMultiplier);
             c.Emit(OpCodes.Add);
+
+            c.GotoNext(x => x.MatchLdsfld(typeof(DLC1Content.Buffs), nameof(DLC1Content.Buffs.PermanentDebuff)));
+            c.GotoNext(MoveType.After, x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.armor))));
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate<Action<CharacterBody>>((body) => body.armor *= StatMods.armorTotalMult);
         }
         else
         {
@@ -484,6 +524,9 @@ public static partial class RecalculateStatsAPI
             c.EmitDelegate<Func<float, float>>((levelMultiplier) => StatMods.baseAttackSpeedAdd + StatMods.levelAttackSpeedAdd * levelMultiplier);
             c.Emit(OpCodes.Add);
 
+            c.EmitDelegate<Func<float>>(() => StatMods.attackSpeedTotalMult);
+            c.Emit(OpCodes.Mul);
+
             c.GotoNext(x => x.MatchStloc(locAttackSpeedMultIndex));
             c.EmitDelegate<Func<float>>(() => StatMods.attackSpeedMultAdd);
             c.Emit(OpCodes.Add);
@@ -517,11 +560,16 @@ public static partial class RecalculateStatsAPI
             c.EmitDelegate<Func<float>>(() => StatMods.critDamageMultAdd);
             c.Emit(OpCodes.Add);
 
+            c.EmitDelegate<Func<float>>(() => StatMods.critDamageTotalMult);
+            c.Emit(OpCodes.Mul);
+
             c.GotoNext(MoveType.After, x => x.MatchStloc(locOrigCrit));
             c.Emit(OpCodes.Ldloc, locOrigCrit);
             emitLevelMultiplier();
             c.EmitDelegate<Func<float, float>>((levelMultiplier) => StatMods.critAdd + StatMods.levelCritAdd * levelMultiplier);
             c.Emit(OpCodes.Add);
+            c.EmitDelegate<Func<float>>(() => StatMods.critTotalMult);
+            c.Emit(OpCodes.Mul);
             c.Emit(OpCodes.Stloc, locOrigCrit);
         }
         else
@@ -549,6 +597,9 @@ public static partial class RecalculateStatsAPI
             c.Index--;
             c.EmitDelegate<Func<float>>(() => StatMods.bleedChanceAdd);
             c.Emit(OpCodes.Add);
+
+            c.EmitDelegate<Func<float>>(() => StatMods.bleedChanceMult);
+            c.Emit(OpCodes.Mul);
         }
         else
         {
@@ -583,6 +634,9 @@ public static partial class RecalculateStatsAPI
             c.EmitDelegate<Func<float, float>>((levelMultiplier) => StatMods.baseDamageAdd + StatMods.levelDamageAdd * levelMultiplier);
             c.Emit(OpCodes.Add);
 
+            c.EmitDelegate<Func<float>>(() => StatMods.damageTotalMult);
+            c.Emit(OpCodes.Mul);
+
             c.GotoNext(x => x.MatchStloc(locDamageMultIndex));
             c.EmitDelegate<Func<float, float>>((origDamageMult) =>
             {
@@ -612,7 +666,7 @@ public static partial class RecalculateStatsAPI
             emitLevelMultiplier();
             c.EmitDelegate<Func<float, float, float>>((origJumpPower, levelMultiplier) =>
             {
-                return (origJumpPower + StatMods.baseJumpPowerAdd + StatMods.levelJumpPowerAdd * levelMultiplier) * (1 + StatMods.jumpPowerMultAdd);
+                return (origJumpPower + StatMods.baseJumpPowerAdd + StatMods.levelJumpPowerAdd * levelMultiplier) * (1 + StatMods.jumpPowerMultAdd) * StatMods.jumpPowerTotalMult;
             });
         }
         else
@@ -647,6 +701,9 @@ public static partial class RecalculateStatsAPI
             emitLevelMultiplier();
             c.EmitDelegate<Func<float, float>>((levelMultiplier) => StatMods.baseHealthAdd + StatMods.levelHealthAdd * levelMultiplier);
             c.Emit(OpCodes.Add);
+
+            c.EmitDelegate<Func<float>>(() => StatMods.healthTotalMult);
+            c.Emit(OpCodes.Mul);
 
             c.GotoNext(x => x.MatchStloc(locHealthMultIndex));
             c.EmitDelegate<Func<float>>(() => StatMods.healthMultAdd);
@@ -685,6 +742,9 @@ public static partial class RecalculateStatsAPI
             emitLevelMultiplier();
             c.EmitDelegate<Func<float, float>>((levelMultiplier) => StatMods.baseShieldAdd + StatMods.levelShieldAdd * levelMultiplier);
             c.Emit(OpCodes.Add);
+
+            c.EmitDelegate<Func<float>>(() => StatMods.shieldTotalMult);
+            c.Emit(OpCodes.Mul);
         }
         else
         {
@@ -714,6 +774,9 @@ public static partial class RecalculateStatsAPI
             emitLevelMultiplier();
             c.EmitDelegate<Func<float, float>>((levelMultiplier) => StatMods.baseRegenAdd + StatMods.levelRegenAdd * levelMultiplier);
             c.Emit(OpCodes.Add);
+
+            c.EmitDelegate<Func<float>>(() => StatMods.regenTotalMult);
+            c.Emit(OpCodes.Mul);
 
             c.GotoNext(x => x.MatchMul());
             c.EmitDelegate<Func<float>>(() => StatMods.regenMultAdd);
@@ -761,6 +824,9 @@ public static partial class RecalculateStatsAPI
             emitLevelMultiplier();
             c.EmitDelegate<Func<float, float>>((levelMultiplier) => StatMods.baseMoveSpeedAdd + StatMods.levelMoveSpeedAdd * levelMultiplier);
             c.Emit(OpCodes.Add);
+
+            c.EmitDelegate<Func<float>>(() => StatMods.moveSpeedTotalMult);
+            c.Emit(OpCodes.Mul);
 
             c.GotoNext(x => x.MatchStloc(locSpeedMultIndex));
             c.EmitDelegate<Func<float>>(() => StatMods.moveSpeedMultAdd);
