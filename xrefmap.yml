@@ -9961,6 +9961,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.armorAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.armorAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.armorAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.armorTotalMult
+  name: armorTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_armorTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.armorTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.armorTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.armorTotalMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedMultAdd
   name: attackSpeedMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_attackSpeedMultAdd
@@ -9973,6 +9979,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedReductionMultAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedReductionMultAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.attackSpeedReductionMultAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedTotalMult
+  name: attackSpeedTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_attackSpeedTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.attackSpeedTotalMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.baseAttackSpeedAdd
   name: baseAttackSpeedAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_baseAttackSpeedAdd
@@ -10027,6 +10039,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.bleedChanceAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceMult
+  name: bleedChanceMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_bleedChanceMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.bleedChanceMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownMultAdd
   name: cooldownMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_cooldownMultAdd
@@ -10051,24 +10069,60 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.critDamageMultAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.critDamageMultAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.critDamageMultAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.critDamageTotalMult
+  name: critDamageTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_critDamageTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.critDamageTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.critDamageTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.critDamageTotalMult
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.critTotalMult
+  name: critTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_critTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.critTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.critTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.critTotalMult
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.curseTotalMult
+  name: curseTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_curseTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.curseTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.curseTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.curseTotalMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.damageMultAdd
   name: damageMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_damageMultAdd
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.damageMultAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.damageMultAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.damageMultAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.damageTotalMult
+  name: damageTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_damageTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.damageTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.damageTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.damageTotalMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.healthMultAdd
   name: healthMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_healthMultAdd
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.healthMultAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.healthMultAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.healthMultAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.healthTotalMult
+  name: healthTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_healthTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.healthTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.healthTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.healthTotalMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.jumpPowerMultAdd
   name: jumpPowerMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_jumpPowerMultAdd
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.jumpPowerMultAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.jumpPowerMultAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.jumpPowerMultAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.jumpPowerTotalMult
+  name: jumpPowerTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_jumpPowerTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.jumpPowerTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.jumpPowerTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.jumpPowerTotalMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.levelArmorAdd
   name: levelArmorAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_levelArmorAdd
@@ -10153,6 +10207,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedRootCount
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedRootCount
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.moveSpeedRootCount
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedTotalMult
+  name: moveSpeedTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.moveSpeedTotalMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.primaryCooldownMultAdd
   name: primaryCooldownMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_primaryCooldownMultAdd
@@ -10165,6 +10225,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.regenMultAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.regenMultAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.regenMultAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.regenTotalMult
+  name: regenTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_regenTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.regenTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.regenTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.regenTotalMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.secondaryCooldownMultAdd
   name: secondaryCooldownMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_secondaryCooldownMultAdd
@@ -10177,6 +10243,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.shieldMultAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.shieldMultAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.shieldMultAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.shieldTotalMult
+  name: shieldTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_shieldTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.shieldTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.shieldTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.shieldTotalMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.specialCooldownMultAdd
   name: specialCooldownMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_specialCooldownMultAdd

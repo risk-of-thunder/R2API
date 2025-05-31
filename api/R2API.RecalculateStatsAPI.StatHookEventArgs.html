@@ -120,7 +120,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_armorAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.armorAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L168">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L198">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_armorAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.armorAdd">armorAdd</h4>
   <div class="markdown level1 summary"><p>Added to armor.</p>
@@ -146,14 +146,47 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_armorAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>ARMOR ~ BASE_ARMOR + armorAdd + levelArmorAdd * (LEVEL - 1)</p>
+  <div class="markdown level1 remarks"><p>ARMOR ~ (BASE_ARMOR + armorAdd + levelArmorAdd * (LEVEL - 1)) * armorTotalMult</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_armorTotalMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.armorTotalMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L204">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_armorTotalMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.armorTotalMult">armorTotalMult</h4>
+  <div class="markdown level1 summary"><p>Armor is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float armorTotalMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_armorTotalMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>ARMOR ~ (BASE_ARMOR + armorAdd + levelArmorAdd * (LEVEL - 1)) * armorTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_attackSpeedMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L144">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L162">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_attackSpeedMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedMultAdd">attackSpeedMultAdd</h4>
   <div class="markdown level1 summary"><p>Added to the direct multiplier to attack speed.</p>
@@ -179,14 +212,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_attackSpeedMultAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd + levelAttackkSpeedAdd * (LEVEL - 1)) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</p>
+  <div class="markdown level1 remarks"><p>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd + levelAttackkSpeedAdd * (LEVEL - 1)) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) * attackSpeedTotalMult / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_attackSpeedReductionMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedReductionMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L147">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L168">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_attackSpeedReductionMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedReductionMultAdd">attackSpeedReductionMultAdd</h4>
   <div class="markdown level1 summary"><p>Added reduction multiplier to attack speed.</p>
@@ -212,14 +245,47 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_attackSpeedReductionMultAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd + levelAttackkSpeedAdd * (LEVEL - 1)) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</p>
+  <div class="markdown level1 remarks"><p>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd + levelAttackkSpeedAdd * (LEVEL - 1)) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) * attackSpeedTotalMult / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_attackSpeedTotalMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedTotalMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L165">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_attackSpeedTotalMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedTotalMult">attackSpeedTotalMult</h4>
+  <div class="markdown level1 summary"><p>Base attack speed is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float attackSpeedTotalMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_attackSpeedTotalMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd + levelAttackkSpeedAdd * (LEVEL - 1)) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) * attackSpeedTotalMult / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_baseAttackSpeedAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.baseAttackSpeedAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L138">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L156">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseAttackSpeedAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.baseAttackSpeedAdd">baseAttackSpeedAdd</h4>
   <div class="markdown level1 summary"><p>Added to attack speed.</p>
@@ -245,14 +311,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseAttackSpeedAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd + levelAttackkSpeedAdd * (LEVEL - 1)) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</p>
+  <div class="markdown level1 remarks"><p>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd + levelAttackkSpeedAdd * (LEVEL - 1)) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) * attackSpeedTotalMult / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_baseCurseAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.baseCurseAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L176">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L209">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseCurseAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.baseCurseAdd">baseCurseAdd</h4>
   <div class="markdown level1 summary"><p>Added to Curse Penalty.</p>
@@ -278,14 +344,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseCurseAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * (LEVEL - 1)) * (HEALTH_MULT + healthMultAdd) / (BASE_CURSE_PENALTY + baseCurseAdd)</p>
+  <div class="markdown level1 remarks"><p>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * (LEVEL - 1)) * (HEALTH_MULT + healthMultAdd) * healthTotalMult / ((BASE_CURSE_PENALTY + baseCurseAdd) * curseTotalMult)</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_baseDamageAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.baseDamageAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L127">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L142">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseDamageAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.baseDamageAdd">baseDamageAdd</h4>
   <div class="markdown level1 summary"><p>Added to base damage.</p>
@@ -311,7 +377,7 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseDamageAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>DAMAGE ~ (BASE_DAMAGE + baseDamageAdd + levelDamageAdd * (LEVEL - 1)) * (DAMAGE_MULT + damageMultAdd)</p>
+  <div class="markdown level1 remarks"><p>DAMAGE ~ (BASE_DAMAGE + baseDamageAdd + levelDamageAdd * (LEVEL - 1)) * (DAMAGE_MULT + damageMultAdd) * damageTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
@@ -344,14 +410,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseHealthAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * (LEVEL - 1)) * (HEALTH_MULT + healthMultAdd)</p>
+  <div class="markdown level1 remarks"><p>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * (LEVEL - 1)) * (HEALTH_MULT + healthMultAdd) * healthTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_baseJumpPowerAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.baseJumpPowerAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L116">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L128">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseJumpPowerAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.baseJumpPowerAdd">baseJumpPowerAdd</h4>
   <div class="markdown level1 summary"><p>Added to base jump power.</p>
@@ -377,14 +443,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseJumpPowerAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd + levelJumpPowerAdd * (LEVEL - 1)) * (JUMP_POWER_MULT + jumpPowerMultAdd)</p>
+  <div class="markdown level1 remarks"><p>JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd + levelJumpPowerAdd * (LEVEL - 1)) * (JUMP_POWER_MULT + jumpPowerMultAdd) * jumpPowerTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_baseMoveSpeedAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.baseMoveSpeedAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L96">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L105">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseMoveSpeedAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.baseMoveSpeedAdd">baseMoveSpeedAdd</h4>
   <div class="markdown level1 summary"><p>Added to base move speed.</p>
@@ -410,14 +476,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseMoveSpeedAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd + levelMoveSpeedAdd * (LEVEL - 1)) * (MOVE_SPEED_MULT + moveSpeedMultAdd) / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</p>
+  <div class="markdown level1 remarks"><p>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd + levelMoveSpeedAdd * (LEVEL - 1)) * (MOVE_SPEED_MULT + moveSpeedMultAdd) * moveSpeedTotalMult / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_baseRegenAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.baseRegenAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L85">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L91">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseRegenAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.baseRegenAdd">baseRegenAdd</h4>
   <div class="markdown level1 summary"><p>Added to base health regen.</p>
@@ -443,14 +509,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseRegenAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd + levelRegenAdd * (LEVEL - 1)) * (REGEN_MULT + regenMultAdd)</p>
+  <div class="markdown level1 remarks"><p>HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd + levelRegenAdd * (LEVEL - 1)) * (REGEN_MULT + regenMultAdd) * regenTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_baseShieldAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.baseShieldAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L73">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L76">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseShieldAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.baseShieldAdd">baseShieldAdd</h4>
   <div class="markdown level1 summary"><p>Added to base shield.</p>
@@ -476,14 +542,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_baseShieldAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd + levelShieldAdd * (LEVEL - 1)) * (SHIELD_MULT + shieldMultAdd)</p>
+  <div class="markdown level1 remarks"><p>MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd + levelShieldAdd * (LEVEL - 1)) * (SHIELD_MULT + shieldMultAdd) * shieldTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_bleedChanceAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L163">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L190">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_bleedChanceAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceAdd">bleedChanceAdd</h4>
   <div class="markdown level1 summary"><p>Added to bleed chance.</p>
@@ -509,14 +575,47 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_bleedChanceAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>BLEED_CHANCE ~ BASE_BLEED_CHANCE + bleedChanceAdd</p>
+  <div class="markdown level1 remarks"><p>BLEED_CHANCE ~ (BASE_BLEED_CHANCE + bleedChanceAdd) * bleedChanceMult</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_bleedChanceMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L193">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_bleedChanceMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceMult">bleedChanceMult</h4>
+  <div class="markdown level1 summary"><p>Bleed chance is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float bleedChanceMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_bleedChanceMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>BLEED_CHANCE ~ (BASE_BLEED_CHANCE + bleedChanceAdd) * bleedChanceMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_cooldownMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L184">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L220">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_cooldownMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownMultAdd">cooldownMultAdd</h4>
   <div class="markdown level1 summary"><p>Added to the direct multiplier to cooldown timers.</p>
@@ -549,7 +648,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_cooldownReductionAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownReductionAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L181">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L217">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_cooldownReductionAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownReductionAdd">cooldownReductionAdd</h4>
   <div class="markdown level1 summary"><p>Added to flat cooldown reduction.</p>
@@ -582,7 +681,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_critAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.critAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L152">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L173">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_critAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.critAdd">critAdd</h4>
   <div class="markdown level1 summary"><p>Added to crit chance.</p>
@@ -608,14 +707,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_critAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>CRIT_CHANCE ~ BASE_CRIT_CHANCE + critAdd + levelCritAdd * (LEVEL - 1)</p>
+  <div class="markdown level1 remarks"><p>CRIT_CHANCE ~ (BASE_CRIT_CHANCE + critAdd + levelCritAdd * (LEVEL - 1)) * critTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_critDamageMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.critDamageMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L158">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L182">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_critDamageMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.critDamageMultAdd">critDamageMultAdd</h4>
   <div class="markdown level1 summary"><p>Added to the direct multiplier to crit damage.</p>
@@ -641,14 +740,113 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_critDamageMultAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd)</p>
+  <div class="markdown level1 remarks"><p>CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd) * critDamageTotalMult</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_critDamageTotalMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.critDamageTotalMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L185">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_critDamageTotalMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.critDamageTotalMult">critDamageTotalMult</h4>
+  <div class="markdown level1 summary"><p>Crit damage is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float critDamageTotalMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_critDamageTotalMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd) * critDamageTotalMult</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_critTotalMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.critTotalMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L179">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_critTotalMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.critTotalMult">critTotalMult</h4>
+  <div class="markdown level1 summary"><p>Crit chance is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float critTotalMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_critTotalMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>CRIT_CHANCE ~ (BASE_CRIT_CHANCE + critAdd + levelCritAdd * (LEVEL - 1)) * critTotalMult</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_curseTotalMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.curseTotalMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L212">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_curseTotalMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.curseTotalMult">curseTotalMult</h4>
+  <div class="markdown level1 summary"><p>Curse penalty is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float curseTotalMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_curseTotalMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * (LEVEL - 1)) * (HEALTH_MULT + healthMultAdd) * healthTotalMult / ((BASE_CURSE_PENALTY + baseCurseAdd) * curseTotalMult)</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_damageMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.damageMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L133">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L148">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_damageMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.damageMultAdd">damageMultAdd</h4>
   <div class="markdown level1 summary"><p>Added to the direct multiplier to base damage.</p>
@@ -674,7 +872,40 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_damageMultAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>DAMAGE ~ (BASE_DAMAGE + baseDamageAdd + levelDamageAdd * (LEVEL - 1)) * (DAMAGE_MULT + damageMultAdd)</p>
+  <div class="markdown level1 remarks"><p>DAMAGE ~ (BASE_DAMAGE + baseDamageAdd + levelDamageAdd * (LEVEL - 1)) * (DAMAGE_MULT + damageMultAdd) * damageTotalMult</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_damageTotalMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.damageTotalMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L151">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_damageTotalMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.damageTotalMult">damageTotalMult</h4>
+  <div class="markdown level1 summary"><p>Base damage is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float damageTotalMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_damageTotalMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>DAMAGE ~ (BASE_DAMAGE + baseDamageAdd + levelDamageAdd * (LEVEL - 1)) * (DAMAGE_MULT + damageMultAdd) * damageTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
@@ -707,14 +938,47 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_healthMultAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * (LEVEL - 1)) * (HEALTH_MULT + healthMultAdd)</p>
+  <div class="markdown level1 remarks"><p>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * (LEVEL - 1)) * (HEALTH_MULT + healthMultAdd) * healthTotalMult</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_healthTotalMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.healthTotalMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L71">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_healthTotalMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.healthTotalMult">healthTotalMult</h4>
+  <div class="markdown level1 summary"><p>Base health is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float healthTotalMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_healthTotalMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * (LEVEL - 1)) * (HEALTH_MULT + healthMultAdd) * healthTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_jumpPowerMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.jumpPowerMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L122">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L134">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_jumpPowerMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.jumpPowerMultAdd">jumpPowerMultAdd</h4>
   <div class="markdown level1 summary"><p>Added to the direct multiplier to jump power.</p>
@@ -740,14 +1004,47 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_jumpPowerMultAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd + levelJumpPowerAdd * (LEVEL - 1)) * (JUMP_POWER_MULT + jumpPowerMultAdd)</p>
+  <div class="markdown level1 remarks"><p>JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd + levelJumpPowerAdd * (LEVEL - 1)) * (JUMP_POWER_MULT + jumpPowerMultAdd) * jumpPowerTotalMult</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_jumpPowerTotalMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.jumpPowerTotalMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L137">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_jumpPowerTotalMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.jumpPowerTotalMult">jumpPowerTotalMult</h4>
+  <div class="markdown level1 summary"><p>Base jump power is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float jumpPowerTotalMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_jumpPowerTotalMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd + levelJumpPowerAdd * (LEVEL - 1)) * (JUMP_POWER_MULT + jumpPowerMultAdd) * jumpPowerTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_levelArmorAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.levelArmorAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L171">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L201">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelArmorAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.levelArmorAdd">levelArmorAdd</h4>
   <div class="markdown level1 summary"><p>Multiplied by level and added to armor.</p>
@@ -773,14 +1070,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelArmorAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>ARMOR ~ BASE_ARMOR + armorAdd + levelArmorAdd * (LEVEL - 1)</p>
+  <div class="markdown level1 remarks"><p>ARMOR ~ (BASE_ARMOR + armorAdd + levelArmorAdd * (LEVEL - 1)) * armorTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_levelAttackSpeedAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.levelAttackSpeedAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L141">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L159">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelAttackSpeedAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.levelAttackSpeedAdd">levelAttackSpeedAdd</h4>
   <div class="markdown level1 summary"><p>Multiplied by level and added to attack speed.</p>
@@ -806,14 +1103,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelAttackSpeedAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd + levelAttackkSpeedAdd * (LEVEL - 1)) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</p>
+  <div class="markdown level1 remarks"><p>ATTACK_SPEED ~ (BASE_ATTACK_SPEED + baseAttackSpeedAdd + levelAttackkSpeedAdd * (LEVEL - 1)) * (ATTACK_SPEED_MULT + attackSpeedMultAdd) * attackSpeedTotalMult / (ATTACK_SPEED_REDUCTION_MULT + attackSpeedReductionMultAdd)</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_levelCritAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.levelCritAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L155">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L176">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelCritAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.levelCritAdd">levelCritAdd</h4>
   <div class="markdown level1 summary"><p>Multiplied by level and added to crit chance.</p>
@@ -839,14 +1136,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelCritAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>CRIT_CHANCE ~ BASE_CRIT_CHANCE + critAdd + levelCritAdd * (LEVEL - 1)</p>
+  <div class="markdown level1 remarks"><p>CRIT_CHANCE ~ (BASE_CRIT_CHANCE + critAdd + levelCritAdd * (LEVEL - 1)) * critTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_levelDamageAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.levelDamageAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L130">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L145">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelDamageAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.levelDamageAdd">levelDamageAdd</h4>
   <div class="markdown level1 summary"><p>Multiplied by level and added to base damage.</p>
@@ -872,14 +1169,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelDamageAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>DAMAGE ~ (BASE_DAMAGE + baseDamageAdd + levelDamageAdd * (LEVEL - 1)) * (DAMAGE_MULT + damageMultAdd)</p>
+  <div class="markdown level1 remarks"><p>DAMAGE ~ (BASE_DAMAGE + baseDamageAdd + levelDamageAdd * (LEVEL - 1)) * (DAMAGE_MULT + damageMultAdd) * damageTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_levelFlatAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.levelFlatAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L201">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L237">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelFlatAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.levelFlatAdd">levelFlatAdd</h4>
   <div class="markdown level1 summary"><p>Added to the body's current level.</p>
@@ -938,14 +1235,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelHealthAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * (LEVEL - 1)) * (HEALTH_MULT + healthMultAdd)</p>
+  <div class="markdown level1 remarks"><p>MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd + levelHealthAdd * (LEVEL - 1)) * (HEALTH_MULT + healthMultAdd) * healthTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_levelJumpPowerAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.levelJumpPowerAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L119">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L131">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelJumpPowerAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.levelJumpPowerAdd">levelJumpPowerAdd</h4>
   <div class="markdown level1 summary"><p>Multiplied by level and added to base jump power.</p>
@@ -971,14 +1268,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelJumpPowerAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd + levelJumpPowerAdd * (LEVEL - 1)) * (JUMP_POWER_MULT + jumpPowerMultAdd)</p>
+  <div class="markdown level1 remarks"><p>JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd + levelJumpPowerAdd * (LEVEL - 1)) * (JUMP_POWER_MULT + jumpPowerMultAdd) * jumpPowerTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_levelMoveSpeedAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.levelMoveSpeedAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L99">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L108">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelMoveSpeedAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.levelMoveSpeedAdd">levelMoveSpeedAdd</h4>
   <div class="markdown level1 summary"><p>Multiplied by level and added to base move speed.</p>
@@ -1004,14 +1301,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelMoveSpeedAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd + levelMoveSpeedAdd * (LEVEL - 1)) * (MOVE_SPEED_MULT + moveSpeedMultAdd) / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</p>
+  <div class="markdown level1 remarks"><p>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd + levelMoveSpeedAdd * (LEVEL - 1)) * (MOVE_SPEED_MULT + moveSpeedMultAdd) * moveSpeedTotalMult / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_levelMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.levelMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L204">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L240">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.levelMultAdd">levelMultAdd</h4>
   <div class="markdown level1 summary"><p>Added to the direct multiplier to level scaling.</p>
@@ -1044,7 +1341,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_levelRegenAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.levelRegenAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L88">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L94">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelRegenAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.levelRegenAdd">levelRegenAdd</h4>
   <div class="markdown level1 summary"><p>Multiplied by level and added to base health regen.</p>
@@ -1070,14 +1367,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelRegenAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd + levelRegenAdd * (LEVEL - 1)) * (REGEN_MULT + regenMultAdd)</p>
+  <div class="markdown level1 remarks"><p>HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd + levelRegenAdd * (LEVEL - 1)) * (REGEN_MULT + regenMultAdd) * regenTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_levelShieldAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.levelShieldAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L76">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L79">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelShieldAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.levelShieldAdd">levelShieldAdd</h4>
   <div class="markdown level1 summary"><p>Multiplied by level and added to base shield.</p>
@@ -1103,14 +1400,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_levelShieldAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd + levelShieldAdd * (LEVEL - 1)) * (SHIELD_MULT + shieldMultAdd)</p>
+  <div class="markdown level1 remarks"><p>MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd + levelShieldAdd * (LEVEL - 1)) * (SHIELD_MULT + shieldMultAdd) * shieldTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L102">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L111">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedMultAdd">moveSpeedMultAdd</h4>
   <div class="markdown level1 summary"><p>Added to the direct multiplier to move speed.</p>
@@ -1136,14 +1433,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedMultAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd + levelMoveSpeedAdd * (LEVEL - 1)) * (MOVE_SPEED_MULT + moveSpeedMultAdd) / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</p>
+  <div class="markdown level1 remarks"><p>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd + levelMoveSpeedAdd * (LEVEL - 1)) * (MOVE_SPEED_MULT + moveSpeedMultAdd) * moveSpeedTotalMult / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedReductionMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedReductionMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L105">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L117">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedReductionMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedReductionMultAdd">moveSpeedReductionMultAdd</h4>
   <div class="markdown level1 summary"><p>Added reduction multiplier to move speed.</p>
@@ -1169,14 +1466,14 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedReductionMultAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd + levelMoveSpeedAdd * (LEVEL - 1)) * (MOVE_SPEED_MULT + moveSpeedMultAdd) / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</p>
+  <div class="markdown level1 remarks"><p>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd + levelMoveSpeedAdd * (LEVEL - 1)) * (MOVE_SPEED_MULT + moveSpeedMultAdd) * moveSpeedTotalMult / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedRootCount.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedRootCount%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L111">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L123">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedRootCount" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedRootCount">moveSpeedRootCount</h4>
   <div class="markdown level1 summary"><p>Amount of Root effects currently applied.</p>
@@ -1206,10 +1503,43 @@
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedTotalMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedTotalMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L114">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedTotalMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedTotalMult">moveSpeedTotalMult</h4>
+  <div class="markdown level1 summary"><p>Base move speed is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float moveSpeedTotalMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedTotalMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>MOVE_SPEED ~ (BASE_MOVE_SPEED + baseMoveSpeedAdd + levelMoveSpeedAdd * (LEVEL - 1)) * (MOVE_SPEED_MULT + moveSpeedMultAdd) * moveSpeedTotalMult / (MOVE_SPEED_REDUCTION_MULT + moveSpeedReductionMultAdd)</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_primaryCooldownMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.primaryCooldownMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L187">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L223">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_primaryCooldownMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.primaryCooldownMultAdd">primaryCooldownMultAdd</h4>
   <div class="markdown level1 summary"><p>(Primary) Added to the direct multiplier to cooldown timers.</p>
@@ -1242,7 +1572,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_regenMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.regenMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L91">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L97">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_regenMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.regenMultAdd">regenMultAdd</h4>
   <div class="markdown level1 summary"><p>Added to the direct multiplier to base health regen.</p>
@@ -1268,14 +1598,47 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_regenMultAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd + levelRegenAdd * (LEVEL - 1)) * (REGEN_MULT + regenMultAdd)</p>
+  <div class="markdown level1 remarks"><p>HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd + levelRegenAdd * (LEVEL - 1)) * (REGEN_MULT + regenMultAdd) * regenTotalMult</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_regenTotalMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.regenTotalMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L100">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_regenTotalMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.regenTotalMult">regenTotalMult</h4>
+  <div class="markdown level1 summary"><p>Base health regen is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float regenTotalMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_regenTotalMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd + levelRegenAdd * (LEVEL - 1)) * (REGEN_MULT + regenMultAdd) * regenTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_secondaryCooldownMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.secondaryCooldownMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L190">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L226">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_secondaryCooldownMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.secondaryCooldownMultAdd">secondaryCooldownMultAdd</h4>
   <div class="markdown level1 summary"><p>(Secondary) Added to the direct multiplier to cooldown timers.</p>
@@ -1308,7 +1671,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_shieldMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.shieldMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L79">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L82">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_shieldMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.shieldMultAdd">shieldMultAdd</h4>
   <div class="markdown level1 summary"><p>Added to the direct multiplier to shields.</p>
@@ -1334,14 +1697,47 @@
     </tbody>
   </table>
   <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_shieldMultAdd_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd + levelShieldAdd * (LEVEL - 1)) * (SHIELD_MULT + shieldMultAdd)</p>
+  <div class="markdown level1 remarks"><p>MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd + levelShieldAdd * (LEVEL - 1)) * (SHIELD_MULT + shieldMultAdd) * shieldTotalMult</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_shieldTotalMult.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.shieldTotalMult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L85">View Source</a>
+  </span>
+  <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_shieldTotalMult" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.shieldTotalMult">shieldTotalMult</h4>
+  <div class="markdown level1 summary"><p>Base shield is multiplied by this number. Multiply this value by your multiplier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float shieldTotalMult</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="R2API_RecalculateStatsAPI_StatHookEventArgs_shieldTotalMult_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd + levelShieldAdd * (LEVEL - 1)) * (SHIELD_MULT + shieldMultAdd) * shieldTotalMult</p>
 </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_specialCooldownMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.specialCooldownMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L196">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L232">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_specialCooldownMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.specialCooldownMultAdd">specialCooldownMultAdd</h4>
   <div class="markdown level1 summary"><p>(Special) Added to the direct multiplier to cooldown timers.</p>
@@ -1374,7 +1770,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_sprintSpeedAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.sprintSpeedAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L108">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L120">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_sprintSpeedAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.sprintSpeedAdd">sprintSpeedAdd</h4>
   <div class="markdown level1 summary"><p>Added to the direct multiplier to sprinting speed.</p>
@@ -1407,7 +1803,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_RecalculateStatsAPI_StatHookEventArgs_utilityCooldownMultAdd.md&amp;value=---%0Auid%3A%20R2API.RecalculateStatsAPI.StatHookEventArgs.utilityCooldownMultAdd%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L193">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.RecalculateStats/RecalculateStatsAPI.cs/#L229">View Source</a>
   </span>
   <h4 id="R2API_RecalculateStatsAPI_StatHookEventArgs_utilityCooldownMultAdd" data-uid="R2API.RecalculateStatsAPI.StatHookEventArgs.utilityCooldownMultAdd">utilityCooldownMultAdd</h4>
   <div class="markdown level1 summary"><p>(Utility) Added to the direct multiplier to cooldown timers.</p>
