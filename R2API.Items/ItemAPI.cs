@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -374,9 +375,9 @@ public static partial class ItemAPI
     // todo : allow override of existing item display rules
     // This method only allow the addition of custom rules.
     //
-    private static void AddingItemDisplayRulesToCharacterModels(On.RoR2.ItemDisplayRuleSet.orig_Init orig)
+    private static IEnumerator AddingItemDisplayRulesToCharacterModels(On.RoR2.ItemDisplayRuleSet.orig_Init orig)
     {
-        orig();
+        yield return orig();
 
         foreach (var bodyPrefab in BodyCatalog.allBodyPrefabs)
         {
