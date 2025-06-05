@@ -22,7 +22,7 @@ public class AddressReferencedSpawnCard : AddressReferencedAsset<SpawnCard>
     }
 
     /// <summary>
-    /// Operator for casting <see cref="AddressReferencedSpawnCard"/> to it's currently loaded <see cref="Asset"/> value
+    /// Operator for casting <see cref="AddressReferencedSpawnCard"/> to it's currently loaded <see cref="AddressReferencedAsset{T}.Asset"/> value
     /// </summary>
     public static implicit operator SpawnCard(AddressReferencedSpawnCard addressReferencedAsset)
     {
