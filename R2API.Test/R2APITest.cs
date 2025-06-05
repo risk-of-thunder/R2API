@@ -37,7 +37,7 @@ public class R2APITest : BaseUnityPlugin
     }
     public class TestAssets
     {
-        public static CharacterBodyAPI.ModdedBodyFlag krodFlag = CharacterBodyAPI.ReserveDamageType();
+        public static CharacterBodyAPI.ModdedBodyFlag krodFlag = CharacterBodyAPI.ReserveBodyFlag();
     }
     public void Update()
     {

@@ -65,7 +65,7 @@ public static partial class CharacterBodyAPI
     /// <see cref="HasModdedBodyFlag(CharacterBody, ModdedBodyFlag))"/>
     /// </summary>
     /// <returns></returns>
-    public static ModdedBodyFlag ReserveDamageType()
+    public static ModdedBodyFlag ReserveBodyFlag()
     {
         SetHooks();
         if (ModdedBodyFlagCount >= CompressedFlagArrayUtilities.sectionsCount * CompressedFlagArrayUtilities.flagsPerSection)
