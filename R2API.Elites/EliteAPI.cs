@@ -4,12 +4,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using MonoMod.Utils;
 using R2API.AutoVersionGen;
 using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
-using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -36,20 +38,6 @@ public static partial class EliteAPI
 #pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
-    /// <summary>
-    /// See <see cref="CombatDirectorInitNoTimingIssue"/>
-    /// </summary>
-    static EliteAPI()
-    {
-        CombatDirectorInitNoTimingIssue();
-
-        VanillaEliteTiers = RetrieveVanillaEliteTiers();
-        VanillaFirstTierDef = RetrieveFirstVanillaTierDef();
-        VanillaEliteOnlyFirstTierDef = RetrieveVanillaEliteOnlyFirstTierDef();
-
-        ElitesPlugin.Logger.LogDebug("EliteAPI.cctor finished.");
-    }
-
     private static bool _hooksEnabled = false;
 
     #region ModHelper Events and Hooks
@@ -60,147 +48,74 @@ public static partial class EliteAPI
             return;
         }
 
-        IL.RoR2.CombatDirector.Init += RetrieveVanillaEliteTierCount;
-        On.RoR2.CombatDirector.Init += UseOurCombatDirectorInitInstead;
-
+        IL.RoR2.CombatDirector.Init += CombatDirector_Init;
         R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
 
         _hooksEnabled = true;
+
+        // run this after, if it fails catastrophically we dont need it breaking more than once
+        CombatDirectorInitNoTimingIssue();
     }
 
     internal static void UnsetHooks()
     {
-        IL.RoR2.CombatDirector.Init -= RetrieveVanillaEliteTierCount;
-        On.RoR2.CombatDirector.Init -= UseOurCombatDirectorInitInstead;
-
+        IL.RoR2.CombatDirector.Init -= CombatDirector_Init;
         R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
 
         _hooksEnabled = false;
     }
 
-    private static void UseOurCombatDirectorInitInstead(On.RoR2.CombatDirector.orig_Init orig)
+    internal static void CombatDirectorInitNoTimingIssue()
     {
-        CombatDirectorInitNoTimingIssue();
+        CombatDirector.Init();
+
+        VanillaEliteTiers = RetrieveVanillaEliteTiers();
+        VanillaFirstTierDef = RetrieveVanillaTier(1, "FirstTier");
+        VanillaEliteOnlyFirstTierDef = RetrieveVanillaTier(2, "EliteOnlyFirstTier");
+        VanillaEliteOnlyFirstExtendedTierDef = RetrieveVanillaTier(3, "EliteOnlyFirstExtendedTier");
+        VanillaFirstExtendedTierDef = RetrieveVanillaTier(4, "FirstExtendedTier");
+        VanillaSecondTierDef = RetrieveVanillaTier(5, "SecondTier");
+        VanillaLunarTierDef = RetrieveVanillaTier(6, "LunarTier");
     }
 
-    /// <summary>
-    /// Only hope at this point is HG using extensible code and not hard coding.
-    /// Before we were loading all hard refs earlier, but we removed that in favor of a bit better loading screen.
-    /// Bandaid fix for now for the api to work again : replace the RoR2Content hard refs with Addressables Load Asset.
-    /// Todo : investigate if adding an event like the other catalogs have + putting code inside a GenerateContentPackAsync
-    /// would be a cleaner fix or not.
-    /// Note: Will be breaking as opposed to current solution below which doesnt change anything on how the old mods were operating.
-    /// </summary>
-    private static void CombatDirectorInitNoTimingIssue()
+    internal static void SetEliteTierDefNameInternal(CombatDirector.EliteTierDef eliteTierDef, string name)
     {
-        if (_combatDirectorInitialized)
+        if (eliteTierDef is null)
         {
+            ElitesPlugin.Logger.LogError($"Error setting name of {name ?? "<NULL>"}");
             return;
         }
 
-        var eliteTiersDef = new List<CombatDirector.EliteTierDef>();
+        ElitesInterop.SetEliteTierDefName(eliteTierDef, name);
+    }
 
-        var eliteTierDef = new CombatDirector.EliteTierDef
+    internal static string GetEliteTierDefNameInternal(CombatDirector.EliteTierDef eliteTierDef)
+    {
+        if (eliteTierDef is null)
         {
-            costMultiplier = 1f,
-            eliteTypes = new EliteDef[1],
-            isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.NotEliteOnlyArtifactActive(),
-            canSelectWithoutAvailableEliteDef = true
-        };
-        eliteTiersDef.Add(eliteTierDef);
+            ElitesPlugin.Logger.LogError($"Error getting name of null EliteTierDef");
+            return "";
+        }
 
-        eliteTierDef = new CombatDirector.EliteTierDef
-        {
-            costMultiplier = CombatDirector.baseEliteCostMultiplier,
-            eliteTypes = new EliteDef[] {
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteLightning/edLightning.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteIce/edIce.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteFire/edFire.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC1/EliteEarth/edEarth.asset").WaitForCompletion(),
-            },
-            isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.NotEliteOnlyArtifactActive() && rules == SpawnCard.EliteRules.Default && Run.instance.stageClearCount < 2,
-            canSelectWithoutAvailableEliteDef = false
-        };
-        eliteTiersDef.Add(eliteTierDef);
+        return ElitesInterop.GetEliteTierDefName(eliteTierDef);
+    }
 
-        eliteTierDef = new CombatDirector.EliteTierDef
-        {
-            costMultiplier = Mathf.LerpUnclamped(1f, CombatDirector.baseEliteCostMultiplier, 0.5f),
-            eliteTypes = new EliteDef[] {
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteLightning/edLightningHonor.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteIce/edIceHonor.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteFire/edFireHonor.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC1/EliteEarth/edEarthHonor.asset").WaitForCompletion(),
-            },
-            isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.IsEliteOnlyArtifactActive() && Run.instance.stageClearCount < 2,
-            canSelectWithoutAvailableEliteDef = false
-        };
-        eliteTiersDef.Add(eliteTierDef);
+    private static CombatDirector.EliteTierDef[] RetrieveVanillaEliteTiers() => CombatDirector.eliteTiers;
 
-        eliteTierDef = new CombatDirector.EliteTierDef
-        {
-            costMultiplier = Mathf.LerpUnclamped(1f, CombatDirector.baseEliteCostMultiplier, 0.5f),
-            eliteTypes = new EliteDef[] {
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteLightning/edLightningHonor.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteIce/edIceHonor.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteFire/edFireHonor.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC1/EliteEarth/edEarthHonor.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC2/Elites/EliteAurelionite/edAurelioniteHonor.asset").WaitForCompletion(),
-            },
-            isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.IsEliteOnlyArtifactActive() && Run.instance.stageClearCount >= 2,
-            canSelectWithoutAvailableEliteDef = false
-        };
-        eliteTiersDef.Add(eliteTierDef);
+    private static CombatDirector.EliteTierDef RetrieveVanillaTier(int index, string name)
+    {
+        var tier = CombatDirector.eliteTiers[index];
+        tier.SetName(name);
 
-        eliteTierDef = new CombatDirector.EliteTierDef
-        {
-            costMultiplier = CombatDirector.baseEliteCostMultiplier,
-            eliteTypes = new EliteDef[] {
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteLightning/edLightning.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteIce/edIce.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteFire/edFire.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC1/EliteEarth/edEarth.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC2/Elites/EliteAurelionite/edAurelionite.asset").WaitForCompletion(),
-            },
-            isAvailable = (SpawnCard.EliteRules rules) => CombatDirector.NotEliteOnlyArtifactActive() && rules == SpawnCard.EliteRules.Default && Run.instance.stageClearCount >= 2,
-            canSelectWithoutAvailableEliteDef = false
-        };
-        eliteTiersDef.Add(eliteTierDef);
+        ElitesPlugin.Logger.LogDebug($"Set name of {index} to {tier.GetName()}");
 
-        eliteTierDef = new CombatDirector.EliteTierDef
-        {
-            costMultiplier = CombatDirector.baseEliteCostMultiplier * 6f,
-            eliteTypes = new EliteDef[] {
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/ElitePoison/edPoison.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteHaunted/edHaunted.asset").WaitForCompletion(),
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/DLC2/Elites/EliteBead/edBead.asset").WaitForCompletion(),
-            },
-            isAvailable = (SpawnCard.EliteRules rules) => Run.instance.loopClearCount > 0 && rules == SpawnCard.EliteRules.Default,
-            canSelectWithoutAvailableEliteDef = false
-        };
-        eliteTiersDef.Add(eliteTierDef);
-
-        eliteTierDef = new CombatDirector.EliteTierDef
-        {
-            costMultiplier = CombatDirector.baseEliteCostMultiplier,
-            eliteTypes = new EliteDef[] {
-                Addressables.LoadAssetAsync<EliteDef>("RoR2/Base/EliteLunar/edLunar.asset").WaitForCompletion(),
-            },
-            isAvailable = (SpawnCard.EliteRules rules) => rules == SpawnCard.EliteRules.Lunar,
-            canSelectWithoutAvailableEliteDef = false
-        };
-        eliteTiersDef.Add(eliteTierDef);
-
-        CombatDirector.eliteTiers = eliteTiersDef.ToArray();
-
-        _combatDirectorInitialized = true;
+        return tier;
     }
 
     private static void AddElitesToGame()
     {
         foreach (var customElite in EliteDefinitions)
         {
-
             foreach (var eliteTierDef in customElite.EliteTierDefs)
             {
                 if (eliteTierDef.eliteTypes == null)
@@ -226,18 +141,72 @@ public static partial class EliteAPI
         }
     }
 
-    private static void RetrieveVanillaEliteTierCount(ILContext il)
+    private static void CombatDirector_Init(ILContext il)
     {
-        var c = new ILCursor(il);
-        if (c.TryGotoNext(
+        if (!new ILCursor(il).TryGotoNext(
                 i => i.MatchLdcI4(out VanillaEliteTierCount),
                 i => i.MatchNewarr<CombatDirector.EliteTierDef>()))
         {
-        }
-        else
-        {
             ElitesPlugin.Logger.LogError("Failed finding IL Instructions. Aborting RetrieveVanillaEliteTierCount IL Hook");
         }
+
+        int i = 0;
+        var c = new ILCursor(il);
+
+        while (c.TryGotoNext(MoveType.After,
+                x => x.MatchLdsfld(out var fld) && fld.FieldType.Is(typeof(EliteDef))
+            ))
+        {
+            i++;
+            if (i > 100)
+            {
+                ElitesPlugin.Logger.LogError("Some kind of cracked out recursion is going on! There's no way vanilla has over 100 elites, right???");
+                return;
+            }
+
+            var stringToLoad = GetAddressableName(c.Prev.Operand as FieldReference);
+            if (Addressables.LoadAssetAsync<EliteDef>(stringToLoad).WaitForCompletion() == null)
+            {
+                ElitesPlugin.Logger.LogError($"The addressable path {stringToLoad} is invalid! Skipping IL edit for this section!");
+                continue;
+            }
+
+            c.Emit(OpCodes.Ldstr, stringToLoad);
+            c.EmitDelegate(delegate (EliteDef origDef, string addressableName)
+            {
+                return origDef ?? Addressables.LoadAssetAsync<EliteDef>(addressableName).WaitForCompletion();
+            });
+        }
+
+        ElitesPlugin.Logger.LogDebug($"{nameof(CombatDirector_Init)} | Applied addressable overrides for {i} elite defs");
+    }
+
+    private static string GetAddressableName(FieldReference field)
+    {
+        // RoR2.RoR2Content/Elites::Lightning
+        // RoR2.DLC1Content/Elites::Earth
+        // RoR2.DLC2Content/Elites::AurelioniteHonor
+
+        // RoR2/Base/EliteLightning/edLightning.asset
+        // RoR2/DLC1/EliteEarth/edEarth.asset
+        // RoR2/DLC2/Elites/EliteAurelionite/edAurelioniteHonor.asset
+
+        // because FUCK CONSISTENCY
+
+        if (string.IsNullOrEmpty(field?.Name) || string.IsNullOrEmpty(field.DeclaringType?.FullName))
+            return $"{field?.Name ?? "NULL FIELD"} :: {field?.DeclaringType?.FullName ?? "NULL DECLARING TYPE"}";
+
+        var dlcName = field.DeclaringType.FullName.Substring(5, 4);
+        if (dlcName is "RoR2")
+            dlcName = "Base";
+
+        var folderName = $"Elite{field.Name.Replace("Honor", string.Empty)}";
+        if (dlcName is not "Base" and not "DLC1")
+            folderName = "Elites/" + folderName;
+
+        var eliteName = $"ed{field.Name}.asset";
+
+        return $"RoR2/{dlcName}/{folderName}/{eliteName}";
     }
 
     #endregion ModHelper Events and Hooks
@@ -288,24 +257,66 @@ public static partial class EliteAPI
 
     #region Combat Director Modifications
 
-    private static CombatDirector.EliteTierDef[] RetrieveVanillaEliteTiers()
-    {
-        return CombatDirector.eliteTiers;
-    }
-
-    private static CombatDirector.EliteTierDef RetrieveFirstVanillaTierDef()
-    {
-        return CombatDirector.eliteTiers[1];
-    }
-
-    private static CombatDirector.EliteTierDef RetrieveVanillaEliteOnlyFirstTierDef()
-    {
-        return CombatDirector.eliteTiers[2];
-    }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public static CombatDirector.EliteTierDef[] VanillaEliteTiers { get; private set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public static CombatDirector.EliteTierDef VanillaFirstTierDef { get; private set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef { get; private set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static CombatDirector.EliteTierDef VanillaFirstExtendedTierDef { get; private set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstExtendedTierDef { get; private set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static CombatDirector.EliteTierDef VanillaSecondTierDef { get; private set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static CombatDirector.EliteTierDef VanillaLunarTierDef { get; private set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static int VanillaEliteTierCount;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
+
+    private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = new List<CombatDirector.EliteTierDef>();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="eliteTierDef"></param>
+    /// <returns></returns>
+    public static string GetName(this CombatDirector.EliteTierDef eliteTierDef) => GetEliteTierDefNameInternal(eliteTierDef);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="eliteTierDef"></param>
+    /// <param name="name"></param>
+    public static void SetName(this CombatDirector.EliteTierDef eliteTierDef, string name) => SetEliteTierDefNameInternal(eliteTierDef, name);
 
     /// <summary>
     /// Returns the current elite tier definitions used by the Combat Director for doing its elite spawning while doing a run.
@@ -315,12 +326,6 @@ public static partial class EliteAPI
         EliteAPI.SetHooks();
         return CombatDirector.eliteTiers;
     }
-
-    private static bool _combatDirectorInitialized;
-
-    public static int VanillaEliteTierCount;
-    private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = new List<CombatDirector.EliteTierDef>();
-    public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
 
     /// <summary>
     /// The EliteTierDef array is used by the Combat Director for doing its elite spawning while doing a run.
