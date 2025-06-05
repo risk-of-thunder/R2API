@@ -95,6 +95,10 @@ public class ItemDisplayRuleDict
                 if (rule.followerPrefab)
                 {
                     followerPrefab = rule.followerPrefab;
+
+                    // Not the best place for this but this will do.
+                    // game code doesn't null check it.
+                    rule.followerPrefabAddress = new UnityEngine.AddressableAssets.AssetReferenceGameObject("");
                 }
                 else
                 {

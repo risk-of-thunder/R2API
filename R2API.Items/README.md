@@ -20,6 +20,9 @@ A detailed tutorial on how to make custom items using ItemAPI can be found [here
 
 ## Changelog
 
+### '1.0.7'
+* Ensure followerPrefabAddress is never null.
+
 ### '1.0.6'
 * Add support for followerPrefabAddress and pickupModelReference, also use GenerateRuntimeValuesAsync inside AddingItemDisplayRulesToCharacterModels
 
