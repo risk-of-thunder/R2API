@@ -23,7 +23,7 @@ public class AddressReferencedFamilyDirectorCardCategorySelection : AddressRefer
     }
 
     /// <summary>
-    /// Operator for casting <see cref="AddressReferencedFamilyDirectorCardCategorySelection"/> to it's currently loaded <see cref="Asset"/> value
+    /// Operator for casting <see cref="AddressReferencedFamilyDirectorCardCategorySelection"/> to it's currently loaded <see cref="AddressReferencedAsset{T}.Asset"/> value
     /// </summary>
     public static implicit operator FamilyDirectorCardCategorySelection(AddressReferencedFamilyDirectorCardCategorySelection addressReferencedAsset)
     {

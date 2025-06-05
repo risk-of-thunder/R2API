@@ -18,7 +18,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset<BuffDef>
     protected override async Task LoadAsync()
     {
         BuffIndex index = BuffCatalog.FindBuffIndex(Address);
-        if(index != BuffIndex.None)
+        if (index != BuffIndex.None)
         {
             Asset = BuffCatalog.GetBuffDef(index);
             return;
@@ -47,7 +47,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset<BuffDef>
     }
 
     /// <summary>
-    /// Operator for casting <see cref="AddressReferencedBuffDef"/> to it's currently loaded <see cref="Asset"/> value
+    /// Operator for casting <see cref="AddressReferencedBuffDef"/> to it's currently loaded <see cref="AddressReferencedAsset{T}.Asset"/> value
     /// </summary>
     public static implicit operator BuffDef(AddressReferencedBuffDef addressReferencedAsset)
     {

@@ -46,7 +46,7 @@ public class AddressReferencedExpansionDef : AddressReferencedAsset<ExpansionDef
     }
 
     /// <summary>
-    /// Operator for casting <see cref="AddressReferencedExpansionDef"/> to it's currently loaded <see cref="Asset"/> value
+    /// Operator for casting <see cref="AddressReferencedExpansionDef"/> to it's currently loaded <see cref="AddressReferencedAsset{T}.Asset"/> value
     /// </summary>
     public static implicit operator ExpansionDef(AddressReferencedExpansionDef addressReferencedAsset)
     {

@@ -47,7 +47,7 @@ public class AddressReferencedUnlockableDef : AddressReferencedAsset<UnlockableD
     }
 
     /// <summary>
-    /// Operator for casting <see cref="AddressReferencedUnlockableDef"/> to it's currently loaded <see cref="Asset"/> value
+    /// Operator for casting <see cref="AddressReferencedUnlockableDef"/> to it's currently loaded <see cref="AddressReferencedAsset{T}.Asset"/> value
     /// </summary>
     public static implicit operator UnlockableDef(AddressReferencedUnlockableDef addressReferencedAsset)
     {
