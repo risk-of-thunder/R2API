@@ -16,6 +16,9 @@ The StageRegistration class also hosts `stageVariantDictionary`, which is a read
 
 ## Changelog
 
+### '1.0.3'
+- Support for previewTextureReference in MakeBazaarSeerMaterial
+
 ### '1.0.2'
 - Stripped the Variant Rebalancer and Blacklister. This was to account for the inconsistencies in the stage weights in DLC2 and give more control to the user.
 - You can now register stages into post-loop scene collections.
