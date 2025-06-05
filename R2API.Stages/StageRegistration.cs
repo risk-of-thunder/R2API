@@ -56,7 +56,8 @@ public static partial class StageRegistration
             foreach (SceneCollection.SceneEntry sceneEntry in sceneCollection.sceneEntries)
             {
                 SceneDef sceneDef = sceneEntry.sceneDef;
-                if (privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName) && privateStageVariantDictionary[sceneDef.baseSceneName].Contains(sceneDef)){
+                if (privateStageVariantDictionary.ContainsKey(sceneDef.baseSceneName) && privateStageVariantDictionary[sceneDef.baseSceneName].Contains(sceneDef))
+                {
                     continue;
                 }
 
@@ -276,13 +277,26 @@ public static partial class StageRegistration
     public static Material MakeBazaarSeerMaterial(SceneDef sceneDef)
     {
         StageRegistration.SetHooks();
-        Material bazaarMaterial = UnityEngine.Object.Instantiate(baseBazaarSeerMaterial);
-        if(sceneDef.previewTexture == null)
+
+#pragma warning disable CS0618 // Type or member is obsolete
+        if (sceneDef.previewTexture == null && sceneDef.previewTextureReference == null)
         {
             StagesPlugin.Logger.LogError($"SceneDef {sceneDef.cachedName} does not have a preview texture.");
             return null;
         }
-        bazaarMaterial.mainTexture = sceneDef.previewTexture;
+        Texture previewTexture;
+        if (sceneDef.previewTexture)
+        {
+            previewTexture = sceneDef.previewTexture;
+        }
+        else
+        {
+            previewTexture = sceneDef.previewTextureReference.LoadAssetAsync<Texture>().WaitForCompletion();
+        }
+#pragma warning restore CS0618 // Type or member is obsolete
+
+        Material bazaarMaterial = UnityEngine.Object.Instantiate(baseBazaarSeerMaterial);
+        bazaarMaterial.mainTexture = previewTexture;
         return bazaarMaterial;
     }
 
@@ -304,7 +318,8 @@ public static partial class StageRegistration
     private static void AppendSceneCollections(SceneDef sceneDef, float weight, bool preLoop, bool postLoop)
     {
         int stageOrderIndex = sceneDef.stageOrder - 1;
-        if (preLoop) {
+        if (preLoop)
+        {
             ref var sceneEntries = ref preLoopSceneCollections[stageOrderIndex]._sceneEntries;
             HG.ArrayUtils.ArrayAppend(ref sceneEntries, new SceneCollection.SceneEntry { sceneDef = sceneDef, weightMinusOne = weight - 1 });
         }
@@ -323,5 +338,5 @@ public static partial class StageRegistration
     {
         stageVariantDictionary = new ReadOnlyDictionary<string, List<SceneDef>>(privateStageVariantDictionary);
     }
-    
+
 }

@@ -89,10 +89,12 @@ internal static class CompressedFlagArrayUtilities
         }
     }
 
-    public static void Add(ref byte[] values, byte[] operand){
-        ResizeIfNeeded(ref values,operand.Length);
-        for(int i = 0 ; i < operand.Length ; i++){
-          values[i] |= operand[i];
+    public static void Add(ref byte[] values, byte[] operand)
+    {
+        ResizeIfNeeded(ref values, operand.Length);
+        for (int i = 0; i < operand.Length; i++)
+        {
+            values[i] |= operand[i];
         }
     }
 
@@ -155,12 +157,14 @@ internal static class CompressedFlagArrayUtilities
         return true;
     }
 
-    public static bool Remove(ref byte[] values, byte[] operand){
+    public static bool Remove(ref byte[] values, byte[] operand)
+    {
         bool result = false;
-        int length = Math.Min(values.Length,operand.Length);
-        for(int i = 0 ; i < length ; i++){
-           result |= ((values[i] & operand[i]) != Byte.MinValue);
-           values[i] &= (byte)(~operand[i]);
+        int length = Math.Min(values.Length, operand.Length);
+        for (int i = 0; i < length; i++)
+        {
+            result |= ((values[i] & operand[i]) != Byte.MinValue);
+            values[i] &= (byte)(~operand[i]);
         }
         DownsizeIfNeeded(ref values);
         return result;
@@ -249,6 +253,7 @@ internal static class CompressedFlagArrayUtilities
     /// <param name="values"></param>
     /// <param name="writer"></param>
     /// <param name="maxValue"></param>
+    /// </summary>
     public static void WriteToNetworkWriter(byte[] values, NetworkWriter writer, int maxValue)
     {
         var section = 0;

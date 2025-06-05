@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using R2API.MiscHelpers;
 using RoR2;
+using UnityEngine;
 
 namespace R2API;
 
@@ -82,16 +83,29 @@ public class ItemDisplayRuleDict
                 if (rule.ruleType != ItemDisplayRuleType.ParentedPrefab)
                     continue;
 
-                if (!rule.followerPrefab)
+#pragma warning disable CS0618 // Type or member is obsolete
+                if (!rule.followerPrefab && rule.followerPrefabAddress == null)
                 {
                     logger.AppendLine($"invalid follower prefab for entry {bodyName}. The follower prefab of entry N°{i} is null. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)");
                     invalidDisplays = true;
                     continue;
                 }
-                ItemDisplay itemDisplay = rule.followerPrefab.GetComponent<ItemDisplay>();
+
+                GameObject followerPrefab;
+                if (rule.followerPrefab)
+                {
+                    followerPrefab = rule.followerPrefab;
+                }
+                else
+                {
+                    followerPrefab = rule.followerPrefabAddress.LoadAssetAsync<GameObject>().WaitForCompletion();
+                }
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                ItemDisplay itemDisplay = followerPrefab.GetComponent<ItemDisplay>();
                 if (!itemDisplay)
                 {
-                    logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) does not have an ItemDisplay component. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab) " +
+                    logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({followerPrefab}) does not have an ItemDisplay component. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab) " +
                         $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
                     invalidDisplays = true;
                     continue;
@@ -99,7 +113,7 @@ public class ItemDisplayRuleDict
 
                 if (itemDisplay.rendererInfos == null || itemDisplay.rendererInfos.Length == 0)
                 {
-                    logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({rule.followerPrefab}) has an ItemDisplay component, but no RendererInfos assigned. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)" +
+                    logger.AppendLine($"Invalid follower prefab for entry {bodyName}. The follower prefab ({followerPrefab}) has an ItemDisplay component, but no RendererInfos assigned. (The ItemDisplayRule.ruleType is ItemDisplayRuleType.ParentedPrefab)" +
                         $"The ItemDisplay model should have one and have at least a rendererInfo in it for having correct visibility levels.");
                     invalidDisplays = true;
                     continue;

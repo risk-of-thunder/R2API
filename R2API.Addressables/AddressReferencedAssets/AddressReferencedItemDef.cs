@@ -46,7 +46,7 @@ public class AddressReferencedItemDef : AddressReferencedAsset<ItemDef>
     }
 
     /// <summary>
-    /// Operator for casting <see cref="AddressReferencedItemDef"/> to it's currently loaded <see cref="Asset"/> value
+    /// Operator for casting <see cref="AddressReferencedItemDef"/> to it's currently loaded <see cref="AddressReferencedAsset{T}.Asset"/> value
     /// </summary>
     public static implicit operator ItemDef(AddressReferencedItemDef addressReferencedAsset)
     {

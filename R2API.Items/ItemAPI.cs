@@ -109,7 +109,7 @@ public static partial class ItemAPI
             ItemsPlugin.Logger.LogError("ItemDef.name is null or empty ! Can't add the custom item.");
         }
 
-        if (!item.ItemDef.pickupModelPrefab)
+        if (!item.ItemDef.pickupModelPrefab && item.ItemDef.pickupModelReference == null)
         {
             ItemsPlugin.Logger.LogWarning($"No ItemDef.pickupModelPrefab ({item.ItemDef.name}), the game will show nothing when the item is on the ground.");
         }
@@ -184,9 +184,9 @@ public static partial class ItemAPI
             ItemsPlugin.Logger.LogError("EquipmentDef.name is null or empty ! Can't add the custom Equipment.");
         }
 
-        if (!equip.EquipmentDef.pickupModelPrefab)
+        if (!equip.EquipmentDef.pickupModelPrefab && equip.EquipmentDef.pickupModelReference == null)
         {
-            ItemsPlugin.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab ({equip.EquipmentDef.name}), the game will show nothing when the equipment is on the ground.");
+            ItemsPlugin.Logger.LogWarning($"No EquipmentDef.pickupModelPrefab or EquipmentDef.pickupModelReference ({equip.EquipmentDef.name}), the game will show nothing when the equipment is on the ground.");
         }
 
         if (equip.ItemDisplayRules != null &&
@@ -432,7 +432,7 @@ public static partial class ItemAPI
                     }
                 }
 
-                characterModel.itemDisplayRuleSet.GenerateRuntimeValues();
+                yield return characterModel.itemDisplayRuleSet.GenerateRuntimeValuesAsync();
             }
         }
     }
