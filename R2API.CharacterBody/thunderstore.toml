@@ -1,0 +1,42 @@
+
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "RiskofThunder"
+name = "R2API_CharacterBody"
+versionNumber = "1.0.1"
+description = "API for adding various stuff to Character Body such as: Modded Body Flags"
+websiteUrl = "https://github.com/risk-of-thunder/R2API"
+containsNsfwContent = false
+
+[package.dependencies]
+bbepis-BepInExPack = "5.4.2109"
+RiskofThunder-HookGenPatcher = "1.2.3"
+RiskofThunder-R2API_Core = "1.0.0"
+
+[build]
+icon = "../icon.png"
+readme = "./README.md"
+outdir = "./build"
+
+[[build.copy]]
+source = "./ReleaseOutput/R2API.CharacterBody.dll"
+target = "./plugins/R2API.CharacterBody/R2API.CharacterBody.dll"
+
+[[build.copy]]
+source = "./ReleaseOutput/R2API.CharacterBody.xml"
+target = "./plugins/R2API.CharacterBody/R2API.CharacterBody.xml"
+
+[[build.copy]]
+source = "../R2API.CharacterBody.Interop/ReleaseOutput/R2API.CharacterBody.Interop.dll"
+target = "./plugins/R2API.CharacterBody/R2API.CharacterBody.Interop.dll"
+
+[[build.copy]]
+source = "../R2API.CharacterBody.Patcher/ReleaseOutput/R2API.CharacterBody.Patcher.dll"
+target = "./patchers/R2API.CharacterBody/R2API.CharacterBody.Patcher.dll"
+
+[publish]
+repository = "https://thunderstore.io"
+communities = ["riskofrain2"]
+categories = ["libraries"]
