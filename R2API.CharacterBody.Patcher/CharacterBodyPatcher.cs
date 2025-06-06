@@ -22,7 +22,6 @@ internal static class CharacterBodyPatcher
     {
         var characterBody = assembly.MainModule.GetType("RoR2", "CharacterBody");
         var moddedBodyFlags = new FieldDefinition("r2api_moddedBodyFlags", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(byte[])));
-        moddedBodyFlags.Offset = 16;
         characterBody?.Fields.Add(moddedBodyFlags);
     }
 }
