@@ -33,6 +33,7 @@ namespace R2API;
 [BepInDependency(PluginGUID + ".sound", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(PluginGUID + ".tempvisualeffect", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(PluginGUID + ".unlockable", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(PluginGUID + ".character_body", BepInDependency.DependencyFlags.SoftDependency)]
 
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 [AutoVersion]
