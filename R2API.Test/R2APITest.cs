@@ -9,11 +9,11 @@ using UnityEngine;
 
 namespace R2API.Test;
 
-//[BepInDependency(ItemAPI.PluginGUID)]
-//[BepInDependency(LanguageAPI.PluginGUID)]
-//[BepInDependency(DirectorAPI.PluginGUID)]
-//[BepInDependency(EliteAPI.PluginGUID)]
-//[BepInDependency(SceneAssetAPI.PluginGUID)]
+[BepInDependency(ItemAPI.PluginGUID)]
+[BepInDependency(LanguageAPI.PluginGUID)]
+[BepInDependency(DirectorAPI.PluginGUID)]
+[BepInDependency(EliteAPI.PluginGUID)]
+[BepInDependency(SceneAssetAPI.PluginGUID)]
 [BepInDependency(CharacterBodyAPI.PluginGUID)]
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 public class R2APITest : BaseUnityPlugin
@@ -21,7 +21,7 @@ public class R2APITest : BaseUnityPlugin
     public const string PluginGUID = "com.bepis.r2apitest";
     public const string PluginName = "R2APITest";
     public const string PluginVersion = "0.0.1";
-
+    public static bool enableBodyFlagTesting;
     internal new static ManualLogSource Logger { get; set; }
 
     private void Awake()
@@ -32,26 +32,28 @@ public class R2APITest : BaseUnityPlugin
         throw new System.Exception("R2API.DebugMode is not enabled");
 #endif
 
-        //var awakeRunner = new AwakeRunner();
-        //awakeRunner.DiscoverAndRun();
+        var awakeRunner = new AwakeRunner();
+        awakeRunner.DiscoverAndRun();
+        enableBodyFlagTesting = false;
     }
     public class TestAssets
     {
-        public static CharacterBodyAPI.ModdedBodyFlag krodFlag = CharacterBodyAPI.ReserveBodyFlag();
+        public static CharacterBodyAPI.ModdedBodyFlag testFlag = CharacterBodyAPI.ReserveBodyFlag();
     }
     public void Update()
     {
+        if (!enableBodyFlagTesting) return;
         if (Input.GetKeyDown(KeyCode.Y))
         {
             try
             {
                 RoR2.CharacterBody characterBody = RoR2.NetworkUser.readOnlyInstancesList[0].master.GetBody();
-                characterBody.AddModdedBodyFlag(TestAssets.krodFlag);
-                RoR2.Chat.AddMessage("Krod flag has been added");
+                characterBody.AddModdedBodyFlag(TestAssets.testFlag);
+                RoR2.Chat.AddMessage("Test flag has been added");
             }
             catch
             {
-                RoR2.Chat.AddMessage("failed to add Krod flag");
+                RoR2.Chat.AddMessage("failed to add Test flag");
             }
         }
         if (Input.GetKeyDown(KeyCode.I))
@@ -59,12 +61,12 @@ public class R2APITest : BaseUnityPlugin
             try
             {
                 RoR2.CharacterBody characterBody = RoR2.NetworkUser.readOnlyInstancesList[0].master.GetBody();
-                bool removed = characterBody.RemoveModdedBodyFlag(TestAssets.krodFlag);
-                RoR2.Chat.AddMessage(removed ? "Krod flag has been remved" : "No Krod flag to remove");
+                bool removed = characterBody.RemoveModdedBodyFlag(TestAssets.testFlag);
+                RoR2.Chat.AddMessage(removed ? "Test flag has been removed" : "No Test flag to remove");
             }
             catch
             {
-                RoR2.Chat.AddMessage("failed to remove Krod flag");
+                RoR2.Chat.AddMessage("failed to remove Test flag");
             }
         }
         if (Input.GetKeyDown(KeyCode.U))
@@ -72,12 +74,12 @@ public class R2APITest : BaseUnityPlugin
             try
             {
                 RoR2.CharacterBody characterBody = RoR2.NetworkUser.readOnlyInstancesList[0].master.GetBody();
-                bool removed = characterBody.HasModdedBodyFlag(TestAssets.krodFlag);
-                RoR2.Chat.AddMessage(removed ? "Krod" : "No Krod");
+                bool removed = characterBody.HasModdedBodyFlag(TestAssets.testFlag);
+                RoR2.Chat.AddMessage(removed ? "Has Test flag" : "No Test flag");
             }
             catch
             {
-                RoR2.Chat.AddMessage("failed to check Krod flag");
+                RoR2.Chat.AddMessage("failed to check Test flag");
             }
         }
     }
