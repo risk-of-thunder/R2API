@@ -284,6 +284,36 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.CharacterBodyAPI.ModdedBodyFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.CharacterBodyAPI.ModdedBodyFlag.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.CharacterBodyAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.CharacterBodyAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.CharacterBodyPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.CharacterBodyPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.ColorsAPI.yml",
       "output": {
         ".html": {
@@ -2178,6 +2208,16 @@
       "output": {
         ".html": {
           "relative_path": "api/R2API.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/RoR2.CharacterBody.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/RoR2.CharacterBody.html"
         }
       },
       "version": ""

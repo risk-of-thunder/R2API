@@ -1996,6 +1996,133 @@ references:
   commentId: T:R2API.ArtifactCodePlugin
   fullName: R2API.ArtifactCodePlugin
   nameWithType: ArtifactCodePlugin
+- uid: R2API.CharacterBodyAPI
+  name: CharacterBodyAPI
+  href: api/R2API.CharacterBodyAPI.html
+  commentId: T:R2API.CharacterBodyAPI
+  fullName: R2API.CharacterBodyAPI
+  nameWithType: CharacterBodyAPI
+- uid: R2API.CharacterBodyAPI.AddModdedBodyFlag(RoR2.CharacterBody,R2API.CharacterBodyAPI.ModdedBodyFlag)
+  name: AddModdedBodyFlag(CharacterBody, ModdedBodyFlag)
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_AddModdedBodyFlag_RoR2_CharacterBody_R2API_CharacterBodyAPI_ModdedBodyFlag_
+  commentId: M:R2API.CharacterBodyAPI.AddModdedBodyFlag(RoR2.CharacterBody,R2API.CharacterBodyAPI.ModdedBodyFlag)
+  fullName: R2API.CharacterBodyAPI.AddModdedBodyFlag(RoR2.CharacterBody, R2API.CharacterBodyAPI.ModdedBodyFlag)
+  nameWithType: CharacterBodyAPI.AddModdedBodyFlag(CharacterBody, CharacterBodyAPI.ModdedBodyFlag)
+- uid: R2API.CharacterBodyAPI.AddModdedBodyFlag*
+  name: AddModdedBodyFlag
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_AddModdedBodyFlag_
+  commentId: Overload:R2API.CharacterBodyAPI.AddModdedBodyFlag
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.AddModdedBodyFlag
+  nameWithType: CharacterBodyAPI.AddModdedBodyFlag
+- uid: R2API.CharacterBodyAPI.HasAnyModdedBodyFlag(RoR2.CharacterBody)
+  name: HasAnyModdedBodyFlag(CharacterBody)
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_HasAnyModdedBodyFlag_RoR2_CharacterBody_
+  commentId: M:R2API.CharacterBodyAPI.HasAnyModdedBodyFlag(RoR2.CharacterBody)
+  fullName: R2API.CharacterBodyAPI.HasAnyModdedBodyFlag(RoR2.CharacterBody)
+  nameWithType: CharacterBodyAPI.HasAnyModdedBodyFlag(CharacterBody)
+- uid: R2API.CharacterBodyAPI.HasAnyModdedBodyFlag*
+  name: HasAnyModdedBodyFlag
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_HasAnyModdedBodyFlag_
+  commentId: Overload:R2API.CharacterBodyAPI.HasAnyModdedBodyFlag
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.HasAnyModdedBodyFlag
+  nameWithType: CharacterBodyAPI.HasAnyModdedBodyFlag
+- uid: R2API.CharacterBodyAPI.HasModdedBodyFlag(RoR2.CharacterBody,R2API.CharacterBodyAPI.ModdedBodyFlag)
+  name: HasModdedBodyFlag(CharacterBody, ModdedBodyFlag)
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_HasModdedBodyFlag_RoR2_CharacterBody_R2API_CharacterBodyAPI_ModdedBodyFlag_
+  commentId: M:R2API.CharacterBodyAPI.HasModdedBodyFlag(RoR2.CharacterBody,R2API.CharacterBodyAPI.ModdedBodyFlag)
+  fullName: R2API.CharacterBodyAPI.HasModdedBodyFlag(RoR2.CharacterBody, R2API.CharacterBodyAPI.ModdedBodyFlag)
+  nameWithType: CharacterBodyAPI.HasModdedBodyFlag(CharacterBody, CharacterBodyAPI.ModdedBodyFlag)
+- uid: R2API.CharacterBodyAPI.HasModdedBodyFlag*
+  name: HasModdedBodyFlag
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_HasModdedBodyFlag_
+  commentId: Overload:R2API.CharacterBodyAPI.HasModdedBodyFlag
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.HasModdedBodyFlag
+  nameWithType: CharacterBodyAPI.HasModdedBodyFlag
+- uid: R2API.CharacterBodyAPI.Loaded
+  name: Loaded
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_Loaded
+  commentId: P:R2API.CharacterBodyAPI.Loaded
+  fullName: R2API.CharacterBodyAPI.Loaded
+  nameWithType: CharacterBodyAPI.Loaded
+- uid: R2API.CharacterBodyAPI.Loaded*
+  name: Loaded
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_Loaded_
+  commentId: Overload:R2API.CharacterBodyAPI.Loaded
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.Loaded
+  nameWithType: CharacterBodyAPI.Loaded
+- uid: R2API.CharacterBodyAPI.ModdedBodyFlag
+  name: CharacterBodyAPI.ModdedBodyFlag
+  href: api/R2API.CharacterBodyAPI.ModdedBodyFlag.html
+  commentId: T:R2API.CharacterBodyAPI.ModdedBodyFlag
+  fullName: R2API.CharacterBodyAPI.ModdedBodyFlag
+  nameWithType: CharacterBodyAPI.ModdedBodyFlag
+- uid: R2API.CharacterBodyAPI.ModdedBodyFlagCount
+  name: ModdedBodyFlagCount
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_ModdedBodyFlagCount
+  commentId: P:R2API.CharacterBodyAPI.ModdedBodyFlagCount
+  fullName: R2API.CharacterBodyAPI.ModdedBodyFlagCount
+  nameWithType: CharacterBodyAPI.ModdedBodyFlagCount
+- uid: R2API.CharacterBodyAPI.ModdedBodyFlagCount*
+  name: ModdedBodyFlagCount
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_ModdedBodyFlagCount_
+  commentId: Overload:R2API.CharacterBodyAPI.ModdedBodyFlagCount
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.ModdedBodyFlagCount
+  nameWithType: CharacterBodyAPI.ModdedBodyFlagCount
+- uid: R2API.CharacterBodyAPI.PluginGUID
+  name: PluginGUID
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_PluginGUID
+  commentId: F:R2API.CharacterBodyAPI.PluginGUID
+  fullName: R2API.CharacterBodyAPI.PluginGUID
+  nameWithType: CharacterBodyAPI.PluginGUID
+- uid: R2API.CharacterBodyAPI.PluginName
+  name: PluginName
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_PluginName
+  commentId: F:R2API.CharacterBodyAPI.PluginName
+  fullName: R2API.CharacterBodyAPI.PluginName
+  nameWithType: CharacterBodyAPI.PluginName
+- uid: R2API.CharacterBodyAPI.PluginVersion
+  name: PluginVersion
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_PluginVersion
+  commentId: F:R2API.CharacterBodyAPI.PluginVersion
+  fullName: R2API.CharacterBodyAPI.PluginVersion
+  nameWithType: CharacterBodyAPI.PluginVersion
+- uid: R2API.CharacterBodyAPI.RemoveModdedBodyFlag(RoR2.CharacterBody,R2API.CharacterBodyAPI.ModdedBodyFlag)
+  name: RemoveModdedBodyFlag(CharacterBody, ModdedBodyFlag)
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_RemoveModdedBodyFlag_RoR2_CharacterBody_R2API_CharacterBodyAPI_ModdedBodyFlag_
+  commentId: M:R2API.CharacterBodyAPI.RemoveModdedBodyFlag(RoR2.CharacterBody,R2API.CharacterBodyAPI.ModdedBodyFlag)
+  fullName: R2API.CharacterBodyAPI.RemoveModdedBodyFlag(RoR2.CharacterBody, R2API.CharacterBodyAPI.ModdedBodyFlag)
+  nameWithType: CharacterBodyAPI.RemoveModdedBodyFlag(CharacterBody, CharacterBodyAPI.ModdedBodyFlag)
+- uid: R2API.CharacterBodyAPI.RemoveModdedBodyFlag*
+  name: RemoveModdedBodyFlag
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_RemoveModdedBodyFlag_
+  commentId: Overload:R2API.CharacterBodyAPI.RemoveModdedBodyFlag
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.RemoveModdedBodyFlag
+  nameWithType: CharacterBodyAPI.RemoveModdedBodyFlag
+- uid: R2API.CharacterBodyAPI.ReserveBodyFlag
+  name: ReserveBodyFlag()
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_ReserveBodyFlag
+  commentId: M:R2API.CharacterBodyAPI.ReserveBodyFlag
+  fullName: R2API.CharacterBodyAPI.ReserveBodyFlag()
+  nameWithType: CharacterBodyAPI.ReserveBodyFlag()
+- uid: R2API.CharacterBodyAPI.ReserveBodyFlag*
+  name: ReserveBodyFlag
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_ReserveBodyFlag_
+  commentId: Overload:R2API.CharacterBodyAPI.ReserveBodyFlag
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.ReserveBodyFlag
+  nameWithType: CharacterBodyAPI.ReserveBodyFlag
+- uid: R2API.CharacterBodyPlugin
+  name: CharacterBodyPlugin
+  href: api/R2API.CharacterBodyPlugin.html
+  commentId: T:R2API.CharacterBodyPlugin
+  fullName: R2API.CharacterBodyPlugin
+  nameWithType: CharacterBodyPlugin
 - uid: R2API.ColorsAPI
   name: ColorsAPI
   href: api/R2API.ColorsAPI.html
@@ -14009,6 +14136,18 @@ references:
   commentId: N:RoR2
   fullName: RoR2
   nameWithType: RoR2
+- uid: RoR2.CharacterBody
+  name: CharacterBody
+  href: api/RoR2.CharacterBody.html
+  commentId: T:RoR2.CharacterBody
+  fullName: RoR2.CharacterBody
+  nameWithType: CharacterBody
+- uid: RoR2.CharacterBody.r2api_moddedBodyFlags
+  name: r2api_moddedBodyFlags
+  href: api/RoR2.CharacterBody.html#RoR2_CharacterBody_r2api_moddedBodyFlags
+  commentId: F:RoR2.CharacterBody.r2api_moddedBodyFlags
+  fullName: RoR2.CharacterBody.r2api_moddedBodyFlags
+  nameWithType: CharacterBody.r2api_moddedBodyFlags
 - uid: RoR2.CrocoDamageTypeController
   name: CrocoDamageTypeController
   href: api/RoR2.CrocoDamageTypeController.html
