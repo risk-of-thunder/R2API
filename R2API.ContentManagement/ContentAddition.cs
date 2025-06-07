@@ -94,6 +94,31 @@ public static class ContentAddition
         RejectContent(projectilePrefab, asm, "ProjectilePrefab", "but the ProjectileCatalog has already initialized!");
         return false;
     }
+
+    /// <summary>
+    /// Adds a GameModePrefab to your Mod's ContentPack
+    /// <para>GameModePrefab requires a Run component.</para>
+    /// </summary>
+    /// <param name="gameModePrefab">The GameModePrefab to add.</param>
+    /// <returns>true if valid and added, false if one of the requirements is not met</returns>
+    [Obsolete("AddGameMode is deprecated, please use Method2 instead.")]
+    public static bool AddGameMode(GameObject gameModePrefab)
+    {
+        var asm = GetNonAPICaller();
+        if (CatalogBlockers.GetAvailability<Run>())
+        {
+            if (!HasComponent<Run>(gameModePrefab))
+            {
+                RejectContent(gameModePrefab, asm, "GameMode", $"but it has no {nameof(Run)} component!");
+                return false;
+            }
+            R2APIContentManager.HandleContentAddition(asm, gameModePrefab);
+            return true;
+        }
+        RejectContent(gameModePrefab, asm, "GameMode", "but the GameModeCatalog has already initialized!");
+        return false;
+    }
+
     /// <summary>
     /// Adds a GameModePrefab to your Mod's ContentPack
     /// <para>GameModePrefab requires a Run component.</para>
@@ -101,7 +126,7 @@ public static class ContentAddition
     /// <param name="gameModePrefab">The GameModePrefab to add.</param>
     /// <param name="gameModeDescription">The description that shows up when hovering over the menu button.</param>
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
-    public static bool AddGameMode(GameObject gameModePrefab, string gameModeDescription = "")
+    public static bool AddGameMode(GameObject gameModePrefab, string gameModeDescription)
     {
         var asm = GetNonAPICaller();
         if (CatalogBlockers.GetAvailability<Run>())
@@ -118,6 +143,7 @@ public static class ContentAddition
         RejectContent(gameModePrefab, asm, "GameMode", "but the GameModeCatalog has already initialized!");
         return false;
     }
+
     /// <summary>
     /// Adds a NetworkedObject prefab to your Mod's ContentPack
     /// <para>NetworkedObject requires a NetworkIdentity component.</para>
