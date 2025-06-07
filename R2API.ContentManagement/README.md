@@ -19,11 +19,12 @@ R2API.ContentManaged is used for mods that would like to have R2API handle the c
 * A ContentAddition class that can be used for adding ContentPieces using the ContentManager, the class comes with error checking functionality which will inform the mod creator if something is wrong with their content piece (IE: An artifact def that does not have icons. (Causes exceptions at runtime));
     * While ItemDefs, EquipmentDefs and EliteDefs can be added by ContentAddition, it is heavily recommended to use the Items and Elites modules respectively.
 
-## Related Pages
-
-* [GameModes Wiki Section](https://risk-of-thunder.github.io/R2Wiki/Mod-Creation/Assets/GameModes/)
-
 ## Changelog
+
+### '1.0.10'
+* Enhances modded Game Mode support
+    * `ContentAddition.AddGameMode()` now takes an additional `gameModeDescription` argument instead of requiring modders to add the component themselves.
+    * Now sorts modded game modes separately, so there's no need to add an `x` to the beginning of Game Mode prefabs
 
 ### '1.0.9'
 * Adds better support for modded Game Modes

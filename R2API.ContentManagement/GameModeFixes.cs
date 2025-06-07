@@ -43,13 +43,29 @@ internal static class GameModeFixes
             c.Emit(OpCodes.Pop); // Remove the original result
             c.Emit(OpCodes.Ldc_I4_1); // Return true
         }
-        else ContentManagementPlugin.Logger.LogError($"Failed to apply AddModdedGameModesToMultiplayer IL Hook");
+        else ContentManagementPlugin.Logger.LogError($"R2API.ContentManagement: Failed to apply AddModdedGameModesToMultiplayer IL Hook");
     }
 
     private static void SortGameModes(On.RoR2.GameModeCatalog.orig_SetGameModes orig, Run[] newGameModePrefabComponents)
     {
-        Array.Sort(newGameModePrefabComponents, (a, b) => string.CompareOrdinal(a.name, b.name));
-        orig(newGameModePrefabComponents);
+        List<Run> vanillaPrefabs = new List<Run>();
+        List<Run> moddedPrefabs = new List<Run>();
+
+        foreach (Run run in newGameModePrefabComponents)
+        {
+            if (run.GetComponent<GameModeInfo>())
+                moddedPrefabs.Add(run);
+            else
+                vanillaPrefabs.Add(run);
+        }
+
+        vanillaPrefabs.Sort((a, b) => string.CompareOrdinal(a.name, b.name));
+        moddedPrefabs.Sort((a, b) => string.CompareOrdinal(a.name, b.name));
+        vanillaPrefabs.AddRange(moddedPrefabs);
+
+        Run[] sortedPrefabs = vanillaPrefabs.ToArray();
+
+        orig(sortedPrefabs);
     }
 
     private static void AddGameModeButton(On.RoR2.UI.LanguageTextMeshController.orig_Start orig, LanguageTextMeshController self)
@@ -87,11 +103,11 @@ internal static class GameModeFixes
     {
         public void Start()
         {
-            for (GameModeIndex gameModeIndex = (GameModeIndex)0; gameModeIndex < (GameModeIndex)GameModeCatalog.gameModeCount; gameModeIndex++)
+            for (GameModeIndex gameModeIndex = 0; gameModeIndex < (GameModeIndex)GameModeCatalog.gameModeCount; gameModeIndex++)
             {
                 Run gameModePrefabComponent = GameModeCatalog.GetGameModePrefabComponent(gameModeIndex);
                 ExpansionRequirementComponent component = gameModePrefabComponent.GetComponent<ExpansionRequirementComponent>();
-                if (gameModePrefabComponent != null && gameModePrefabComponent.userPickable && (!component || !component.requiredExpansion || EntitlementManager.localUserEntitlementTracker.AnyUserHasEntitlement(component.requiredExpansion.requiredEntitlement)) && gameModePrefabComponent.name.Substring(0, 1) == "x")
+                if (gameModePrefabComponent != null && gameModePrefabComponent.userPickable && (!component || !component.requiredExpansion || EntitlementManager.localUserEntitlementTracker.AnyUserHasEntitlement(component.requiredExpansion.requiredEntitlement)) && gameModePrefabComponent.GetComponent<GameModeInfo>())
                 {
                     GameObject newButton = Instantiate(this.transform.Find("GenericMenuButton (Eclipse)").gameObject, this.transform);
 
@@ -101,7 +117,7 @@ internal static class GameModeFixes
 
                     newButton.AddComponent<ModdedGameModeButton>().Initialize(runName);
                     newButton.GetComponent<LanguageTextMeshController>().token = runNameToken;
-                    
+
                     if (gameModeInfo != null)
                     {
                         newButton.GetComponent<HGButton>().hoverToken = gameModeInfo.buttonHoverDescription;
