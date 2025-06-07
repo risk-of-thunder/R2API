@@ -18,6 +18,13 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.3.5'
+* Added MixEnemiesDccsActions action that would allow interaction with MixEnemy artifact DCCS replacement.
+
+### '2.3.4'
+
+* Fixes.
+
 ### '2.3.3'
 
 * Fixed custom monsters and interactables being added to stage pool multiple times as a result of SoTS Phase 2 changes.

@@ -8,7 +8,7 @@ using UnityEngine;
 namespace R2API;
 
 /// <summary>
-/// Represents a <see cref="DirectorCard"/> that can be created from using <see cref=""/>
+/// Represents a <see cref="DirectorCard"/> that can be created from using <see cref="AddressReferencedSpawnCard"/>
 /// </summary>
 [Serializable]
 public class AddressableDirectorCard

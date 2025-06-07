@@ -49,7 +49,7 @@ public class AddressReferencedEliteDef : AddressReferencedAsset<EliteDef>
     }
 
     /// <summary>
-    /// Operator for casting <see cref="AddressReferencedEliteDef"/> to it's currently loaded <see cref="Asset"/> value
+    /// Operator for casting <see cref="AddressReferencedEliteDef"/> to it's currently loaded <see cref="AddressReferencedAsset{T}.Asset"/> value
     /// </summary>
     public static implicit operator EliteDef(AddressReferencedEliteDef addressReferencedAsset)
     {

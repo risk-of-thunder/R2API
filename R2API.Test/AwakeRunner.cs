@@ -30,7 +30,7 @@ internal class AwakeRunner
             }
             catch (Exception ex)
             {
-                R2APITest.Logger.LogError($"[Tests] [FAIL] {method.DeclaringType.Name}.{method.Name} - {ex.InnerException?.Message ?? ex.Message}");
+                R2APITest.Logger.LogError($"[Tests] [FAIL] {method.DeclaringType.Name}.{method.Name} - {ex}");
                 failedTests++;
             }
         }
