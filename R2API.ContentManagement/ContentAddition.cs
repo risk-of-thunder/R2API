@@ -101,7 +101,7 @@ public static class ContentAddition
     /// </summary>
     /// <param name="gameModePrefab">The GameModePrefab to add.</param>
     /// <returns>true if valid and added, false if one of the requirements is not met</returns>
-    [Obsolete("AddGameMode is deprecated, please use Method2 instead.")]
+    [Obsolete("AddGameMode(gameModePrefab) is deprecated, please use AddGameMode(gameModePrefab, gameModeDescription) instead.")]
     public static bool AddGameMode(GameObject gameModePrefab)
     {
         var asm = GetNonAPICaller();
