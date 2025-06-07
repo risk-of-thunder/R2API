@@ -2385,6 +2385,15 @@ references:
   commentId: M:R2API.ContentAddition.AddGameMode(UnityEngine.GameObject)
   fullName: R2API.ContentAddition.AddGameMode(UnityEngine.GameObject)
   nameWithType: ContentAddition.AddGameMode(GameObject)
+- uid: R2API.ContentAddition.AddGameMode(UnityEngine.GameObject,System.String)
+  name: AddGameMode(GameObject, string)
+  href: api/R2API.ContentAddition.html#R2API_ContentAddition_AddGameMode_UnityEngine_GameObject_System_String_
+  commentId: M:R2API.ContentAddition.AddGameMode(UnityEngine.GameObject,System.String)
+  name.vb: AddGameMode(GameObject, String)
+  fullName: R2API.ContentAddition.AddGameMode(UnityEngine.GameObject, string)
+  fullName.vb: R2API.ContentAddition.AddGameMode(UnityEngine.GameObject, String)
+  nameWithType: ContentAddition.AddGameMode(GameObject, string)
+  nameWithType.vb: ContentAddition.AddGameMode(GameObject, String)
 - uid: R2API.ContentAddition.AddGameMode*
   name: AddGameMode
   href: api/R2API.ContentAddition.html#R2API_ContentAddition_AddGameMode_
