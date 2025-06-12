@@ -9,15 +9,13 @@
     <None Include="$(PkgAssetsTools_NET)\lib\netstandard2.0\AssetsTools.NET.dll" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\R2API.Animations.Runtime\R2API.Animations.Runtime.csproj" Private="true" PrivateAssets="all"/>
+    <ProjectReference Include="..\R2API.Animations.Runtime\R2API.Animations.Runtime.csproj" Private="true" PrivateAssets="all" />
     <ProjectReference Include="..\R2API.Core\R2API.Core.csproj" Private="false" />
     <ProjectReference Include="..\R2API.Animations.Editor\R2API.Animations.Editor.csproj" Private="false" PrivateAssets="all" ReferenceOutputAssembly="false" />
   </ItemGroup>
   <Target Name="IncludeProjectReferenceDlls" DependsOnTargets="BuildOnlySettings;ResolveReferences">
     <ItemGroup>
-      <BuildOutputInPackage
-        Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))"
-        TargetPath="%(ReferenceCopyLocalPaths.DestinationSubDirectory)" />
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" TargetPath="%(ReferenceCopyLocalPaths.DestinationSubDirectory)" />
     </ItemGroup>
   </Target>
   <ItemGroup>
@@ -27,5 +25,8 @@
     <None Update="dummy_controller_bundle">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="BepInEx.Core" Version="5.4.21" />
   </ItemGroup>
 </Project>

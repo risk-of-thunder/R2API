@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using EntityStates;
+using HG;
 using R2API.AutoVersionGen;
 using R2API.Utils;
 using RoR2;
 using RoR2.Skills;
+using RoR2.UI.MainMenu;
 using Unity.Jobs;
 using UnityEngine;
 
@@ -23,6 +26,69 @@ public static partial class Skins
 
     private static readonly HashSet<SkinDef> AddedSkins = new HashSet<SkinDef>();
 
+    private static bool _hooksSet;
+
+    internal static void SetHooks()
+    {
+        if (_hooksSet)
+            return;
+
+        _hooksSet = true;
+
+        MainMenuController.OnMainMenuInitialised += OnLoad;
+    }
+    internal static void UnsetHooks()
+    {
+        _hooksSet = false;
+
+        MainMenuController.OnMainMenuInitialised += OnLoad;
+    }
+
+    private static void OnLoad()
+    {
+        MainMenuController.OnMainMenuInitialised -= OnLoad;
+
+        try
+        {
+            foreach (var survivor in SurvivorCatalog.survivorDefs)
+            {
+                var display = survivor?.displayPrefab;
+                var body = survivor?.bodyPrefab;
+
+                if (!(display && body))
+                    continue;
+
+                var bodySkins = body.GetComponentInChildren<ModelSkinController>();
+                if (bodySkins?.skins?.Any() != true)
+                    continue;
+
+                var displayModel = display.GetComponentInChildren<CharacterModel>();
+                if (!displayModel)
+                {
+                    SkinsPlugin.Logger.LogWarning($"Display prefab {display.name} is missing the CharacterModel component! Skipping...");
+                    continue;
+                }
+
+                var displaySkins = displayModel.GetComponent<ModelSkinController>();
+                if (!displaySkins)
+                {
+                    SkinsPlugin.Logger.LogWarning($"Display prefab {displayModel.name} is missing a ModelSkinController component! Adding...");
+                    displaySkins = displayModel.gameObject.AddComponent<ModelSkinController>();
+                }
+
+                if (displaySkins.skins?.Length != bodySkins.skins.Length)
+                {
+                    SkinsPlugin.Logger.LogWarning($"Display prefab {displayModel.name} ModelSkinController.skins array is incorrect! Cloning from body prefab...");
+                    displaySkins.skins = ArrayUtils.Clone(bodySkins.skins);
+                }
+            }
+        }
+        catch (System.Exception e)
+        {
+            SkinsPlugin.Logger.LogError(e);
+        }
+    }
+
     /// <summary>
     /// Creates a skin icon sprite styled after the ones already in the game.
     /// </summary>
@@ -33,6 +99,7 @@ public static partial class Skins
     /// <returns>The icon sprite</returns>
     public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left)
     {
+        SetHooks();
         return CreateSkinIcon(top, right, bottom, left, new Color(0.6f, 0.6f, 0.6f));
     }
 
@@ -47,6 +114,7 @@ public static partial class Skins
     /// <returns></returns>
     public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left, Color line)
     {
+        SetHooks();
         var tex = new Texture2D(128, 128, TextureFormat.RGBA32, false);
         new IconTexJob
         {
@@ -62,36 +130,42 @@ public static partial class Skins
         return Sprite.Create(tex, new Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
     }
 
+    private static Sprite CreateDefaultSkinIcon() => CreateSkinIcon(Color.red, Color.green, Color.blue, Color.black);
+
     /// <summary>
     /// Creates a new SkinDef from a SkinDefInfo.
-    /// Note that this prevents null-refs by disabling SkinDef awake while the SkinDef is being created.
-    /// The things that occur during awake are performed when first applied to a character instead.
     /// </summary>
     /// <param name="skin"></param>
     /// <returns></returns>
-    public static SkinDef CreateNewSkinDef(SkinDefInfo skin)
+    public static SkinDef CreateNewSkinDef(SkinDefParamsInfo skin)
     {
-        On.RoR2.SkinDef.Awake += DoNothing;
-
+        SetHooks();
         var newSkin = ScriptableObject.CreateInstance<SkinDef>();
 
-        newSkin.baseSkins = skin.BaseSkins ?? Array.Empty<SkinDef>();
+        newSkin.name = skin.Name;
+        newSkin.nameToken = skin.NameToken;
         newSkin.icon = skin.Icon;
+        newSkin.baseSkins = skin.BaseSkins ?? [];
         newSkin.unlockableDef = skin.UnlockableDef;
         newSkin.rootObject = skin.RootObject;
-        newSkin.rendererInfos = skin.RendererInfos ?? Array.Empty<CharacterModel.RendererInfo>();
-        newSkin.gameObjectActivations = skin.GameObjectActivations ?? Array.Empty<SkinDef.GameObjectActivation>();
-        newSkin.meshReplacements = skin.MeshReplacements ?? Array.Empty<SkinDef.MeshReplacement>();
-        newSkin.projectileGhostReplacements = skin.ProjectileGhostReplacements ?? Array.Empty<SkinDef.ProjectileGhostReplacement>();
-        newSkin.minionSkinReplacements = skin.MinionSkinReplacements ?? Array.Empty<SkinDef.MinionSkinReplacement>();
-        newSkin.nameToken = skin.NameToken;
-        newSkin.name = skin.Name;
+        newSkin.skinDefParams = skin.SkinDefParams;
 
-        On.RoR2.SkinDef.Awake -= DoNothing;
+        if (newSkin.skinDefParams == null)
+        {
+            newSkin.skinDefParams = ScriptableObject.CreateInstance<SkinDefParams>();
+            newSkin.skinDefParams.rendererInfos = skin.RendererInfos ?? [];
+            newSkin.skinDefParams.gameObjectActivations = skin.GameObjectActivations ?? [];
+            newSkin.skinDefParams.meshReplacements = skin.MeshReplacements ?? [];
+            newSkin.skinDefParams.projectileGhostReplacements = skin.ProjectileGhostReplacements ?? [];
+            newSkin.skinDefParams.minionSkinReplacements = skin.MinionSkinReplacements ?? [];
+        }
 
         AddedSkins.Add(newSkin);
         return newSkin;
     }
+
+    [System.Obsolete]
+    public static SkinDef CreateNewSkinDef(SkinDefInfo skin) => CreateNewSkinDef((SkinDefParamsInfo) skin);
 
     /// <summary>
     /// Adds a skin to the body prefab for a character.
@@ -101,11 +175,15 @@ public static partial class Skins
     /// <param name="bodyPrefab">The body to add the skin to</param>
     /// <param name="skin">The SkinDefInfo for the skin to add</param>
     /// <returns>True if successful</returns>
-    public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDefInfo skin)
+    public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDefParamsInfo skin)
     {
+        SetHooks();
         var skinDef = CreateNewSkinDef(skin);
         return AddSkinToCharacter(bodyPrefab, skinDef);
     }
+
+    [System.Obsolete]
+    public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDefInfo skin) => AddSkinToCharacter(bodyPrefab, (SkinDefParamsInfo)skin);
 
     /// <summary>
     /// Adds a skin to the body prefab for a character.
@@ -117,6 +195,7 @@ public static partial class Skins
     /// <returns>True if successful</returns>
     public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDef? skin)
     {
+        SetHooks();
         if (bodyPrefab == null)
         {
             SkinsPlugin.Logger.LogError("Tried to add skin to null body prefab.");
@@ -177,32 +256,34 @@ public static partial class Skins
 
             modelSkins = model.gameObject.AddComponent<ModelSkinController>();
 
-            var skinDefInfo = new SkinDefInfo
+            var skinDefInfo = new SkinDefParamsInfo
             {
-                BaseSkins = Array.Empty<SkinDef>(),
-                GameObjectActivations = Array.Empty<SkinDef.GameObjectActivation>(),
                 Icon = CreateDefaultSkinIcon(),
                 Name = "skin" + bodyPrefab.name + "Default",
                 NameToken = bodyPrefab.name.ToUpper() + "_DEFAULT_SKIN_NAME",
                 RootObject = model.gameObject,
                 UnlockableDef = null,
-                MeshReplacements = new[]
-                {
-                    new SkinDef.MeshReplacement {
+                MeshReplacements =
+                [
+                    new SkinDefParams.MeshReplacement
+                    {
                         renderer = skinnedRenderer,
                         mesh = skinnedRenderer.sharedMesh
                     }
-                },
+                ],
                 RendererInfos = charModel.baseRendererInfos,
-                ProjectileGhostReplacements = Array.Empty<SkinDef.ProjectileGhostReplacement>(),
-                MinionSkinReplacements = Array.Empty<SkinDef.MinionSkinReplacement>()
+                BaseSkins = [],
+                GameObjectActivations = [],
+                ProjectileGhostReplacements = [],
+                MinionSkinReplacements = []
             };
 
             var defaultSkinDef = CreateNewSkinDef(skinDefInfo);
 
-            modelSkins.skins = new[] {
+            modelSkins.skins =
+            [
                 defaultSkinDef
-            };
+            ];
         }
 
         var skinsArray = modelSkins.skins;
@@ -211,15 +292,5 @@ public static partial class Skins
         skinsArray[index] = skin;
         modelSkins.skins = skinsArray;
         return true;
-    }
-
-    private static Sprite CreateDefaultSkinIcon()
-    {
-        return CreateSkinIcon(Color.red, Color.green, Color.blue, Color.black);
-    }
-
-    private static void DoNothing(On.RoR2.SkinDef.orig_Awake orig, SkinDef self)
-    {
-        //Intentionally do nothing
     }
 }
