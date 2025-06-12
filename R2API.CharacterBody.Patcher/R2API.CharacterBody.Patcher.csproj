@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../R2API.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>preview</LangVersion>
@@ -8,4 +7,8 @@
     <NoWarn>$(NoWarn);NU5104</NoWarn>
     <RootNamespace>R2API</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Core" Version="5.4.19" />
+  </ItemGroup>
 </Project>
