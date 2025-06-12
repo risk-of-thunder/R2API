@@ -8,8 +8,7 @@ using UnityEngine;
 namespace R2API;
 
 /// <summary>
-/// A container struct for all SkinDef parameters.
-/// Use this to set skinDef values, then call CreateNewSkinDef().
+/// Use SkinDefParamsInfo instead
 /// </summary>
 [System.Obsolete]
 public struct SkinDefInfo
@@ -82,7 +81,10 @@ public struct SkinDefInfo
 }
 
 /// <summary>
-/// 
+/// A container struct for all SkinDef and SkinDefParams parameters.
+/// Use this to set skinDef values, then call CreateNewSkinDef().
+/// Leave SkinDefParams null to create one automatically with the given arrays.
+/// Otherwise, the arrays will be ignored and the SkinDefParams fields will take priority.
 /// </summary>
 public struct SkinDefParamsInfo
 {
@@ -92,10 +94,16 @@ public struct SkinDefParamsInfo
     public UnlockableDef? UnlockableDef;
     public GameObject? RootObject;
     public SkinDef?[]? BaseSkins;
+    /// <summary> Leave null to create this automatically. </summary>
     public SkinDefParams? SkinDefParams;
+    /// <summary> Used when SkinDefParams is null. </summary>
     public CharacterModel.RendererInfo[]? RendererInfos;
+    /// <summary> Used when SkinDefParams is null. </summary>
     public SkinDefParams.MeshReplacement[]? MeshReplacements;
+    /// <summary> Used when SkinDefParams is null. </summary>
     public SkinDefParams.GameObjectActivation[]? GameObjectActivations;
+    /// <summary> Used when SkinDefParams is null. </summary>
     public SkinDefParams.ProjectileGhostReplacement[]? ProjectileGhostReplacements;
+    /// <summary> Used when SkinDefParams is null. </summary>
     public SkinDefParams.MinionSkinReplacement[]? MinionSkinReplacements;
 }

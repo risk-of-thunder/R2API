@@ -37,6 +37,7 @@ public static partial class Skins
 
         MainMenuController.OnMainMenuInitialised += OnMainMenuInitialized;
     }
+
     internal static void UnsetHooks()
     {
         _hooksSet = false;
@@ -49,6 +50,8 @@ public static partial class Skins
     {
         MainMenuController.OnMainMenuInitialised -= OnMainMenuInitialized;
 
+        // just catching all since it prevents loading
+        // not important enough to warrent that
         try
         {
             foreach (var survivor in SurvivorCatalog.survivorDefs)
@@ -66,7 +69,7 @@ public static partial class Skins
                 var displayModel = display.GetComponentInChildren<CharacterModel>();
                 if (!displayModel)
                 {
-                    SkinsPlugin.Logger.LogWarning($"Display prefab {display.name} is missing the CharacterModel component! Skipping...");
+                    SkinsPlugin.Logger.LogWarning($"Display prefab {display.name} is missing the CharacterModel component! You need to have this! Skipping...");
                     continue;
                 }
 
