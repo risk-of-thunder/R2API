@@ -35,18 +35,19 @@ public static partial class Skins
 
         _hooksSet = true;
 
-        MainMenuController.OnMainMenuInitialised += OnLoad;
+        MainMenuController.OnMainMenuInitialised += OnMainMenuInitialized;
     }
     internal static void UnsetHooks()
     {
         _hooksSet = false;
 
-        MainMenuController.OnMainMenuInitialised += OnLoad;
+        MainMenuController.OnMainMenuInitialised += OnMainMenuInitialized;
     }
 
-    private static void OnLoad()
+    // we want this to load REALLY late
+    private static void OnMainMenuInitialized()
     {
-        MainMenuController.OnMainMenuInitialised -= OnLoad;
+        MainMenuController.OnMainMenuInitialised -= OnMainMenuInitialized;
 
         try
         {
