@@ -26,7 +26,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="BepInEx.Core" Version="5.4.21" />
-  </ItemGroup>
 </Project>

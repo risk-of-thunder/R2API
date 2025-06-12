@@ -14,11 +14,6 @@
     <ProjectReference Include="../R2API.Elites/R2API.Elites.csproj" />
     <ProjectReference Include="../R2API.SceneAsset/R2API.SceneAsset.csproj" />
     <ProjectReference Include="../R2API.Deployable/R2API.Deployable.csproj" />
-
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="BepInEx.Core" Version="5.4.21" />
   </ItemGroup>
 
 </Project>

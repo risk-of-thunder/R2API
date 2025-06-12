@@ -5,10 +5,6 @@
         <AssemblyName>R2API</AssemblyName>
         <RootNamespace>R2API</RootNamespace>
     </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="BepInEx.Core" Version="5.4.21" />
-    </ItemGroup>
   
     <ItemGroup>
       <ProjectReference Include="../R2API.Core/R2API.Core.csproj" Private="false" />

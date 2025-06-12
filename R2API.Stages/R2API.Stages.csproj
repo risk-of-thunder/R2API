@@ -4,7 +4,4 @@
     <ProjectReference Include="..\R2API.ContentManagement\R2API.ContentManagement.csproj" Private="false" />
     <ProjectReference Include="..\R2API.Core\R2API.Core.csproj" Private="false" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="BepInEx.Core" Version="5.4.21" />
-  </ItemGroup>
 </Project>

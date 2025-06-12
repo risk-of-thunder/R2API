@@ -5,7 +5,4 @@
     <ProjectReference Include="..\R2API.DamageType.Interop\R2API.DamageType.Interop.csproj" Private="false" PrivateAssets="all" />
     <ProjectReference Include="..\R2API.DamageType.Patcher\R2API.DamageType.Patcher.csproj" Private="false" PrivateAssets="all" ReferenceOutputAssembly="false" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="BepInEx.Core" Version="5.4.21" />
-  </ItemGroup>
 </Project>

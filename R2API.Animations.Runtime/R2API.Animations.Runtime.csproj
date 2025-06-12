@@ -1,6 +1,3 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../R2API.props" />
-  <ItemGroup>
-    <PackageReference Update="BepInEx.Core" Version="5.4.21" />
-  </ItemGroup>
 </Project>
