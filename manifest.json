@@ -1604,6 +1604,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SkinDefParamsInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SkinDefParamsInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.SkinIDRS.yml",
       "output": {
         ".html": {

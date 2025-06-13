@@ -11456,6 +11456,103 @@ references:
   commentId: F:R2API.SkinDefInfo.UnlockableDef
   fullName: R2API.SkinDefInfo.UnlockableDef
   nameWithType: SkinDefInfo.UnlockableDef
+- uid: R2API.SkinDefInfo.op_Implicit(R2API.SkinDefInfo)~R2API.SkinDefParamsInfo
+  name: implicit operator SkinDefParamsInfo(SkinDefInfo)
+  href: api/R2API.SkinDefInfo.html#R2API_SkinDefInfo_op_Implicit_R2API_SkinDefInfo__R2API_SkinDefParamsInfo
+  commentId: M:R2API.SkinDefInfo.op_Implicit(R2API.SkinDefInfo)~R2API.SkinDefParamsInfo
+  name.vb: CType(SkinDefInfo)
+  fullName: R2API.SkinDefInfo.implicit operator R2API.SkinDefParamsInfo(R2API.SkinDefInfo)
+  fullName.vb: R2API.SkinDefInfo.CType(R2API.SkinDefInfo)
+  nameWithType: SkinDefInfo.implicit operator SkinDefParamsInfo(SkinDefInfo)
+  nameWithType.vb: SkinDefInfo.CType(SkinDefInfo)
+- uid: R2API.SkinDefInfo.op_Implicit*
+  name: implicit operator
+  href: api/R2API.SkinDefInfo.html#R2API_SkinDefInfo_op_Implicit_
+  commentId: Overload:R2API.SkinDefInfo.op_Implicit
+  isSpec: "True"
+  name.vb: CType
+  fullName: R2API.SkinDefInfo.implicit operator
+  fullName.vb: R2API.SkinDefInfo.CType
+  nameWithType: SkinDefInfo.implicit operator
+  nameWithType.vb: SkinDefInfo.CType
+- uid: R2API.SkinDefParamsInfo
+  name: SkinDefParamsInfo
+  href: api/R2API.SkinDefParamsInfo.html
+  commentId: T:R2API.SkinDefParamsInfo
+  fullName: R2API.SkinDefParamsInfo
+  nameWithType: SkinDefParamsInfo
+- uid: R2API.SkinDefParamsInfo.BaseSkins
+  name: BaseSkins
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_BaseSkins
+  commentId: F:R2API.SkinDefParamsInfo.BaseSkins
+  fullName: R2API.SkinDefParamsInfo.BaseSkins
+  nameWithType: SkinDefParamsInfo.BaseSkins
+- uid: R2API.SkinDefParamsInfo.GameObjectActivations
+  name: GameObjectActivations
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_GameObjectActivations
+  commentId: F:R2API.SkinDefParamsInfo.GameObjectActivations
+  fullName: R2API.SkinDefParamsInfo.GameObjectActivations
+  nameWithType: SkinDefParamsInfo.GameObjectActivations
+- uid: R2API.SkinDefParamsInfo.Icon
+  name: Icon
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_Icon
+  commentId: F:R2API.SkinDefParamsInfo.Icon
+  fullName: R2API.SkinDefParamsInfo.Icon
+  nameWithType: SkinDefParamsInfo.Icon
+- uid: R2API.SkinDefParamsInfo.MeshReplacements
+  name: MeshReplacements
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_MeshReplacements
+  commentId: F:R2API.SkinDefParamsInfo.MeshReplacements
+  fullName: R2API.SkinDefParamsInfo.MeshReplacements
+  nameWithType: SkinDefParamsInfo.MeshReplacements
+- uid: R2API.SkinDefParamsInfo.MinionSkinReplacements
+  name: MinionSkinReplacements
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_MinionSkinReplacements
+  commentId: F:R2API.SkinDefParamsInfo.MinionSkinReplacements
+  fullName: R2API.SkinDefParamsInfo.MinionSkinReplacements
+  nameWithType: SkinDefParamsInfo.MinionSkinReplacements
+- uid: R2API.SkinDefParamsInfo.Name
+  name: Name
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_Name
+  commentId: F:R2API.SkinDefParamsInfo.Name
+  fullName: R2API.SkinDefParamsInfo.Name
+  nameWithType: SkinDefParamsInfo.Name
+- uid: R2API.SkinDefParamsInfo.NameToken
+  name: NameToken
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_NameToken
+  commentId: F:R2API.SkinDefParamsInfo.NameToken
+  fullName: R2API.SkinDefParamsInfo.NameToken
+  nameWithType: SkinDefParamsInfo.NameToken
+- uid: R2API.SkinDefParamsInfo.ProjectileGhostReplacements
+  name: ProjectileGhostReplacements
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_ProjectileGhostReplacements
+  commentId: F:R2API.SkinDefParamsInfo.ProjectileGhostReplacements
+  fullName: R2API.SkinDefParamsInfo.ProjectileGhostReplacements
+  nameWithType: SkinDefParamsInfo.ProjectileGhostReplacements
+- uid: R2API.SkinDefParamsInfo.RendererInfos
+  name: RendererInfos
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_RendererInfos
+  commentId: F:R2API.SkinDefParamsInfo.RendererInfos
+  fullName: R2API.SkinDefParamsInfo.RendererInfos
+  nameWithType: SkinDefParamsInfo.RendererInfos
+- uid: R2API.SkinDefParamsInfo.RootObject
+  name: RootObject
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_RootObject
+  commentId: F:R2API.SkinDefParamsInfo.RootObject
+  fullName: R2API.SkinDefParamsInfo.RootObject
+  nameWithType: SkinDefParamsInfo.RootObject
+- uid: R2API.SkinDefParamsInfo.SkinDefParams
+  name: SkinDefParams
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_SkinDefParams
+  commentId: F:R2API.SkinDefParamsInfo.SkinDefParams
+  fullName: R2API.SkinDefParamsInfo.SkinDefParams
+  nameWithType: SkinDefParamsInfo.SkinDefParams
+- uid: R2API.SkinDefParamsInfo.UnlockableDef
+  name: UnlockableDef
+  href: api/R2API.SkinDefParamsInfo.html#R2API_SkinDefParamsInfo_UnlockableDef
+  commentId: F:R2API.SkinDefParamsInfo.UnlockableDef
+  fullName: R2API.SkinDefParamsInfo.UnlockableDef
+  nameWithType: SkinDefParamsInfo.UnlockableDef
 - uid: R2API.SkinIDRS
   name: SkinIDRS
   href: api/R2API.SkinIDRS.html
@@ -11640,6 +11737,15 @@ references:
   fullName.vb: R2API.Skins.AddSkinToCharacter(UnityEngine.GameObject, R2API.SkinDefInfo)
   nameWithType: Skins.AddSkinToCharacter(GameObject?, SkinDefInfo)
   nameWithType.vb: Skins.AddSkinToCharacter(GameObject, SkinDefInfo)
+- uid: R2API.Skins.AddSkinToCharacter(UnityEngine.GameObject,R2API.SkinDefParamsInfo)
+  name: AddSkinToCharacter(GameObject?, SkinDefParamsInfo)
+  href: api/R2API.Skins.html#R2API_Skins_AddSkinToCharacter_UnityEngine_GameObject_R2API_SkinDefParamsInfo_
+  commentId: M:R2API.Skins.AddSkinToCharacter(UnityEngine.GameObject,R2API.SkinDefParamsInfo)
+  name.vb: AddSkinToCharacter(GameObject, SkinDefParamsInfo)
+  fullName: R2API.Skins.AddSkinToCharacter(UnityEngine.GameObject?, R2API.SkinDefParamsInfo)
+  fullName.vb: R2API.Skins.AddSkinToCharacter(UnityEngine.GameObject, R2API.SkinDefParamsInfo)
+  nameWithType: Skins.AddSkinToCharacter(GameObject?, SkinDefParamsInfo)
+  nameWithType.vb: Skins.AddSkinToCharacter(GameObject, SkinDefParamsInfo)
 - uid: R2API.Skins.AddSkinToCharacter(UnityEngine.GameObject,RoR2.SkinDef)
   name: AddSkinToCharacter(GameObject?, SkinDef?)
   href: api/R2API.Skins.html#R2API_Skins_AddSkinToCharacter_UnityEngine_GameObject_RoR2_SkinDef_
@@ -11662,6 +11768,12 @@ references:
   commentId: M:R2API.Skins.CreateNewSkinDef(R2API.SkinDefInfo)
   fullName: R2API.Skins.CreateNewSkinDef(R2API.SkinDefInfo)
   nameWithType: Skins.CreateNewSkinDef(SkinDefInfo)
+- uid: R2API.Skins.CreateNewSkinDef(R2API.SkinDefParamsInfo)
+  name: CreateNewSkinDef(SkinDefParamsInfo)
+  href: api/R2API.Skins.html#R2API_Skins_CreateNewSkinDef_R2API_SkinDefParamsInfo_
+  commentId: M:R2API.Skins.CreateNewSkinDef(R2API.SkinDefParamsInfo)
+  fullName: R2API.Skins.CreateNewSkinDef(R2API.SkinDefParamsInfo)
+  nameWithType: Skins.CreateNewSkinDef(SkinDefParamsInfo)
 - uid: R2API.Skins.CreateNewSkinDef*
   name: CreateNewSkinDef
   href: api/R2API.Skins.html#R2API_Skins_CreateNewSkinDef_

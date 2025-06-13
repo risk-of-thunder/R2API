@@ -362,8 +362,13 @@ It stores the enum value as an Int64 for serialization purposes.</p>
       <h4><a class="xref" href="R2API.LoadoutAPI.SkinDefInfo.html">LoadoutAPI.SkinDefInfo</a></h4>
       <section></section>
       <h4><a class="xref" href="R2API.SkinDefInfo.html">SkinDefInfo</a></h4>
-      <section><p>A container struct for all SkinDef parameters.
-Use this to set skinDef values, then call CreateNewSkinDef().</p>
+      <section><p>Use <a class="xref" href="R2API.SkinDefParamsInfo.html">SkinDefParamsInfo</a> instead</p>
+</section>
+      <h4><a class="xref" href="R2API.SkinDefParamsInfo.html">SkinDefParamsInfo</a></h4>
+      <section><p>A container struct for all SkinDef and SkinDefParams data.
+Use this to set skinDef values, then call CreateNewSkinDef().
+Leave SkinDefParams null to create one automatically with the given arrays.
+If SkinDefParams is not null, the arrays will be ignored and the SkinDefParams fields will take priority.</p>
 </section>
       <h4><a class="xref" href="R2API.SoundAPI.Music.CustomMusicTrackDef.CustomState.html">SoundAPI.Music.CustomMusicTrackDef.CustomState</a></h4>
       <section><p>Struct for storing the wwise state data
