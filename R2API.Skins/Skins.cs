@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using EntityStates;
 using HG;
 using R2API.AutoVersionGen;
-using R2API.Utils;
 using RoR2;
-using RoR2.Skills;
 using RoR2.UI.MainMenu;
 using Unity.Jobs;
 using UnityEngine;
@@ -24,8 +18,7 @@ public static partial class Skins
     public const string PluginGUID = R2API.PluginGUID + ".skins";
     public const string PluginName = R2API.PluginName + ".Skins";
 
-    private static readonly HashSet<SkinDef> AddedSkins = new HashSet<SkinDef>();
-
+    #region Hooks
     private static bool _hooksSet;
 
     internal static void SetHooks()
@@ -50,97 +43,58 @@ public static partial class Skins
     {
         MainMenuController.OnMainMenuInitialised -= OnMainMenuInitialized;
 
-        // just catching all since it prevents loading
-        // not important enough to warrent that
-        try
+        foreach (var survivor in SurvivorCatalog.survivorDefs)
         {
-            foreach (var survivor in SurvivorCatalog.survivorDefs)
+            if (!survivor)
+                continue;
+
+            var display = survivor.displayPrefab;
+            var body = survivor.bodyPrefab;
+
+            if (!(display && body))
             {
-                var display = survivor?.displayPrefab;
-                var body = survivor?.bodyPrefab;
+                SkinsPlugin.Logger.LogWarning($"SurvivorDef {survivor.cachedName} is missing a displayPrefab or bodyPrefab! You need to have this! Skipping...");
+                continue;
+            }
 
-                if (!(display && body))
-                    continue;
+            var bodySkins = body.GetComponentInChildren<ModelSkinController>();
+            if (!bodySkins || bodySkins.skins is null || bodySkins.skins.Length == 0)
+            {
+                SkinsPlugin.Logger.LogWarning($"BodyPrefab for {survivor.cachedName} is missing a ModelSkinController on the bodyPrefab! You need to have this! Skipping...");
+                continue;
+            }
 
-                var bodySkins = body.GetComponentInChildren<ModelSkinController>();
-                if (bodySkins?.skins?.Any() != true)
-                    continue;
+            var displayModel = display.GetComponentInChildren<CharacterModel>();
+            if (!displayModel)
+            {
+                SkinsPlugin.Logger.LogWarning($"Display prefab {display.name} is missing the CharacterModel component! You need to have this! Skipping...");
+                continue;
+            }
 
-                var displayModel = display.GetComponentInChildren<CharacterModel>();
-                if (!displayModel)
-                {
-                    SkinsPlugin.Logger.LogWarning($"Display prefab {display.name} is missing the CharacterModel component! You need to have this! Skipping...");
-                    continue;
-                }
+            var displaySkins = displayModel.GetComponent<ModelSkinController>();
+            if (!displaySkins)
+            {
+                SkinsPlugin.Logger.LogWarning($"Display prefab {displayModel.name} is missing a ModelSkinController component!\r\nHighly recommended you set the controller up manually. Adding component...");
+                displaySkins = displayModel.gameObject.AddComponent<ModelSkinController>();
+            }
 
-                var displaySkins = displayModel.GetComponent<ModelSkinController>();
-                if (!displaySkins)
-                {
-                    SkinsPlugin.Logger.LogWarning($"Display prefab {displayModel.name} is missing a ModelSkinController component! Adding...");
-                    displaySkins = displayModel.gameObject.AddComponent<ModelSkinController>();
-                }
-
-                if (displaySkins.skins?.Length != bodySkins.skins.Length)
-                {
-                    SkinsPlugin.Logger.LogWarning($"Display prefab {displayModel.name} ModelSkinController.skins array is incorrect! Cloning from body prefab...");
-                    displaySkins.skins = ArrayUtils.Clone(bodySkins.skins);
-                }
+            displaySkins.skins ??= [];
+            if (displaySkins.skins.Length != bodySkins.skins.Length)
+            {
+                SkinsPlugin.Logger.LogWarning($"ModelSkinController skins array on the displayPrefab {displayModel.name} array does not match the one on the bodyPrefab!" +
+                    $"\r\nHighly recommended you set the controller up manually. Cloning from body prefab...");
+                displaySkins.skins = ArrayUtils.Clone(bodySkins.skins);
             }
         }
-        catch (System.Exception e)
-        {
-            SkinsPlugin.Logger.LogError(e);
-        }
     }
+    #endregion
 
-    /// <summary>
-    /// Creates a skin icon sprite styled after the ones already in the game.
-    /// </summary>
-    /// <param name="top">The color of the top portion</param>
-    /// <param name="right">The color of the right portion</param>
-    /// <param name="bottom">The color of the bottom portion</param>
-    /// <param name="left">The color of the left portion</param>
-    /// <returns>The icon sprite</returns>
-    public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left)
-    {
-        SetHooks();
-        return CreateSkinIcon(top, right, bottom, left, new Color(0.6f, 0.6f, 0.6f));
-    }
-
-    /// <summary>
-    /// Creates a skin icon sprite styled after the ones already in the game.
-    /// </summary>
-    /// <param name="top">The color of the top portion</param>
-    /// <param name="right">The color of the right portion</param>
-    /// <param name="bottom">The color of the bottom portion</param>
-    /// <param name="left">The color of the left portion</param>
-    /// <param name="line">The color of the dividing lines</param>
-    /// <returns></returns>
-    public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left, Color line)
-    {
-        SetHooks();
-        var tex = new Texture2D(128, 128, TextureFormat.RGBA32, false);
-        new IconTexJob
-        {
-            Top = top,
-            Bottom = bottom,
-            Right = right,
-            Left = left,
-            Line = line,
-            TexOutput = tex.GetRawTextureData<Color32>()
-        }.Schedule(16384, 1).Complete();
-        tex.wrapMode = TextureWrapMode.Clamp;
-        tex.Apply();
-        return Sprite.Create(tex, new Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
-    }
-
-    private static Sprite CreateDefaultSkinIcon() => CreateSkinIcon(Color.red, Color.green, Color.blue, Color.black);
-
+    #region Skin Creation
     /// <summary>
     /// Creates a new SkinDef from a SkinDefInfo.
     /// </summary>
-    /// <param name="skin"></param>
-    /// <returns></returns>
+    /// <param name="skin">Will be used to populate the SkinDef</param>
+    /// <returns>The new SkinDef</returns>
     public static SkinDef CreateNewSkinDef(SkinDefParamsInfo skin)
     {
         SetHooks();
@@ -164,12 +118,27 @@ public static partial class Skins
             newSkin.skinDefParams.minionSkinReplacements = skin.MinionSkinReplacements ?? [];
         }
 
-        AddedSkins.Add(newSkin);
         return newSkin;
     }
 
-    [System.Obsolete]
-    public static SkinDef CreateNewSkinDef(SkinDefInfo skin) => CreateNewSkinDef((SkinDefParamsInfo) skin);
+    /// <summary>
+    /// Use <see cref="CreateNewSkinDef(SkinDefParamsInfo)"/> instead
+    /// </summary>
+    [Obsolete]
+    public static SkinDef CreateNewSkinDef(SkinDefInfo skin)
+    {
+        SetHooks();
+
+        // really dont like this but full compat is better here.
+        var def = CreateNewSkinDef((SkinDefParamsInfo)skin);
+        def.rendererInfos = skin.RendererInfos;
+        def.gameObjectActivations = skin.GameObjectActivations;
+        def.meshReplacements = skin.MeshReplacements;
+        def.projectileGhostReplacements = skin.ProjectileGhostReplacements;
+        def.minionSkinReplacements = skin.MinionSkinReplacements;
+
+        return def;
+    }
 
     /// <summary>
     /// Adds a skin to the body prefab for a character.
@@ -186,8 +155,16 @@ public static partial class Skins
         return AddSkinToCharacter(bodyPrefab, skinDef);
     }
 
-    [System.Obsolete]
-    public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDefInfo skin) => AddSkinToCharacter(bodyPrefab, (SkinDefParamsInfo)skin);
+    /// <summary>
+    /// Use <see cref="AddSkinToCharacter(GameObject?, SkinDefParamsInfo)"/> instead
+    /// </summary>
+    [Obsolete]
+    public static bool AddSkinToCharacter(GameObject? bodyPrefab, SkinDefInfo skin)
+    {
+        SetHooks();
+        var skinDef = CreateNewSkinDef(skin);
+        return AddSkinToCharacter(bodyPrefab, skinDef);
+    }
 
     /// <summary>
     /// Adds a skin to the body prefab for a character.
@@ -211,10 +188,14 @@ public static partial class Skins
             SkinsPlugin.Logger.LogError("Tried to add invalid skin.");
             return false;
         }
-        AddedSkins.Add(skin);
 
-        var modelLocator = bodyPrefab.GetComponent<ModelLocator>();
-        if (modelLocator == null)
+        if (string.IsNullOrEmpty(skin.name) || string.IsNullOrEmpty(skin.nameToken))
+        {
+            SkinsPlugin.Logger.LogError("Tried to add invalid skin. Please add a name and nameToken.");
+            return false;
+        }
+
+        if (!bodyPrefab.TryGetComponent<ModelLocator>(out var modelLocator))
         {
             SkinsPlugin.Logger.LogError("Tried to add skin to invalid body prefab (No ModelLocator).");
             return false;
@@ -233,12 +214,10 @@ public static partial class Skins
             return false;
         }
 
-        var modelSkins = model.GetComponent<ModelSkinController>();
-        if (modelSkins == null)
+        if (!model.TryGetComponent<ModelSkinController>(out var modelSkins))
         {
             SkinsPlugin.Logger.LogWarning(bodyPrefab.name + " does not have a modelSkinController.\nAdding a new one and attempting to populate the default skin.\nHighly recommended you set the controller up manually.");
-            var charModel = model.GetComponent<CharacterModel>();
-            if (charModel == null)
+            if (!model.TryGetComponent<CharacterModel>(out var charModel))
             {
                 SkinsPlugin.Logger.LogError("Unable to locate CharacterModel, default skin creation aborted.");
                 return false;
@@ -252,21 +231,21 @@ public static partial class Skins
             }
 
             var baseRenderInfos = charModel.baseRendererInfos;
-            if (baseRenderInfos == null || baseRenderInfos.Length == 0)
+            if (baseRenderInfos is null || baseRenderInfos.Length == 0)
             {
                 SkinsPlugin.Logger.LogError("CharacterModel rendererInfos are invalid, default skin creation aborted.");
                 return false;
             }
 
             modelSkins = model.gameObject.AddComponent<ModelSkinController>();
-
-            var skinDefInfo = new SkinDefParamsInfo
+            var defaultSkinDef = CreateNewSkinDef(new SkinDefParamsInfo
             {
                 Icon = CreateDefaultSkinIcon(),
                 Name = "skin" + bodyPrefab.name + "Default",
                 NameToken = bodyPrefab.name.ToUpper() + "_DEFAULT_SKIN_NAME",
                 RootObject = model.gameObject,
                 UnlockableDef = null,
+                RendererInfos = ArrayUtils.Clone(charModel.baseRendererInfos),
                 MeshReplacements =
                 [
                     new SkinDefParams.MeshReplacement
@@ -274,15 +253,8 @@ public static partial class Skins
                         renderer = skinnedRenderer,
                         mesh = skinnedRenderer.sharedMesh
                     }
-                ],
-                RendererInfos = charModel.baseRendererInfos,
-                BaseSkins = [],
-                GameObjectActivations = [],
-                ProjectileGhostReplacements = [],
-                MinionSkinReplacements = []
-            };
-
-            var defaultSkinDef = CreateNewSkinDef(skinDefInfo);
+                ]
+            });
 
             modelSkins.skins =
             [
@@ -290,11 +262,54 @@ public static partial class Skins
             ];
         }
 
-        var skinsArray = modelSkins.skins;
-        var index = skinsArray.Length;
-        Array.Resize(ref skinsArray, index + 1);
-        skinsArray[index] = skin;
-        modelSkins.skins = skinsArray;
+        ArrayUtils.ArrayAppend(ref modelSkins.skins, skin);
         return true;
     }
+    #endregion
+
+    #region Icons
+    /// <summary>
+    /// Creates a skin icon sprite styled after the ones already in the game.
+    /// </summary>
+    /// <param name="top">The color of the top portion</param>
+    /// <param name="right">The color of the right portion</param>
+    /// <param name="bottom">The color of the bottom portion</param>
+    /// <param name="left">The color of the left portion</param>
+    /// <returns>The icon sprite</returns>
+    public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left)
+    {
+        SetHooks();
+        return CreateSkinIcon(top, right, bottom, left, new Color(0.6f, 0.6f, 0.6f));
+    }
+
+    /// <summary>
+    /// Creates a skin icon sprite styled after the ones already in the game.
+    /// </summary>
+    /// <param name="top">The color of the top portion</param>
+    /// <param name="right">The color of the right portion</param>
+    /// <param name="bottom">The color of the bottom portion</param>
+    /// <param name="left">The color of the left portion</param>
+    /// <param name="line">The color of the dividing lines</param>
+    /// <returns>The icon sprite</returns>
+    public static Sprite CreateSkinIcon(Color top, Color right, Color bottom, Color left, Color line)
+    {
+        SetHooks();
+        var tex = new Texture2D(128, 128, TextureFormat.RGBA32, false);
+        new IconTexJob
+        {
+            Top = top,
+            Bottom = bottom,
+            Right = right,
+            Left = left,
+            Line = line,
+            TexOutput = tex.GetRawTextureData<Color32>()
+        }.Schedule(16384, 1).Complete();
+        tex.wrapMode = TextureWrapMode.Clamp;
+        tex.Apply();
+        return Sprite.Create(tex, new Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
+    }
+
+    private static Sprite CreateDefaultSkinIcon() => CreateSkinIcon(Color.red, Color.green, Color.blue, Color.black);
+    #endregion
+
 }
