@@ -8,23 +8,29 @@ Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also
 
 ## Changelog
 
+### `1.2.1`
 
-### '1.2.0
+* Moved to SkinDefParams creation
+* SkinDefInfo is now obsolete. Use SkinDefParamsInfo instead.
+* Added precautions to automatically add and populate the ModelSkinsController on displayPrefabs, when necessary. This should be done by the devs.
+* Added validity checks for name and nameTokens
+
+### `1.2.0`
 
 * Added the ability to replace the color LightInfos for a skin
 
-### '1.1.2'
+### `1.1.2`
 
 * Initial fixes for SOTS DLC2 Release.
 
-### '1.1.1
+### `1.1.1`
 
 * Added the ability to override `DisplayGroupRule` per item for a skin. Which allows to add skin-specic item display without requiring to create IDRS with all items. See `SkinIDRS.AddGroupOverride()`.
 
-### '1.1.0'
+### `1.1.0`
 
 * Added the SkinVFX class for adding skin-specific effect replacements.
 
-### '1.0.0'
+### `1.0.0`
 
 * Initial Release

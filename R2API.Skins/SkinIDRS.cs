@@ -18,6 +18,24 @@ public static class SkinIDRS
     private static bool hooksSet = false;
     private static bool initialized = false;
 
+    internal static void SetHooks()
+    {
+        if (hooksSet)
+            return;
+
+        hooksSet = true;
+
+        On.RoR2.ModelSkinController.ApplySkin += SetCustomIDRS;
+        RoR2Application.onLoad += SystemInit;
+    }
+
+    internal static void UnsetHooks()
+    {
+        hooksSet = false;
+        On.RoR2.ModelSkinController.ApplySkin -= SetCustomIDRS;
+        RoR2Application.onLoad -= SystemInit;
+    }
+
     /// <summary>
     /// Adds a pair of SkinDef and ItemDisplayRuleSet
     /// <para>Ingame, once the Skin is applied to the model, the default IDRS will be swapped for the one specified in <paramref name="ruleSet"/></para>
@@ -78,16 +96,16 @@ public static class SkinIDRS
 
         foreach (var body in BodyCatalog.allBodyPrefabBodyBodyComponents)
         {
-            if (!body
-                || !body.TryGetComponent<ModelLocator>(out var modelLocator)
-                || !modelLocator.modelTransform
-                || !modelLocator.modelTransform.TryGetComponent<CharacterModel>(out var characterModel))
+            if (!body ||
+                !body.TryGetComponent<ModelLocator>(out var modelLocator) ||
+                !modelLocator.modelTransform ||
+                !modelLocator.modelTransform.TryGetComponent<CharacterModel>(out var characterModel))
             {
                 continue;
             }
 
             var baseIDRS = characterModel.itemDisplayRuleSet;
-            foreach (var skin in BodyCatalog.GetBodySkins(body.bodyIndex))
+            foreach (var skin in SkinCatalog.GetBodySkinDefs(body.bodyIndex))
             {
                 if (!skinIDRSOverrides.TryGetValue(skin, out var overrides))
                 {
@@ -108,21 +126,12 @@ public static class SkinIDRS
                     idrs.SetDisplayRuleGroup(kvp.Key, kvp.Value);
                 }
 
-                idrs.GenerateRuntimeValues();
+                var async = idrs.GenerateRuntimeValuesAsync();
+                while (async.MoveNext()) ;
             }
         }
 
         skinIDRSOverrides.Clear();
-    }
-
-    internal static void SetHooks()
-    {
-        if (hooksSet)
-            return;
-        hooksSet = true;
-
-        On.RoR2.ModelSkinController.ApplySkin += SetCustomIDRS;
-        RoR2Application.onLoad += SystemInit;
     }
 
     private static void SetCustomIDRS(On.RoR2.ModelSkinController.orig_ApplySkin orig, ModelSkinController self, int skinIndex)
@@ -139,12 +148,5 @@ public static class SkinIDRS
         }
 
         self.characterModel.itemDisplayRuleSet = idrs;
-    }
-
-    internal static void UnsetHooks()
-    {
-        hooksSet = false;
-        On.RoR2.ModelSkinController.ApplySkin -= SetCustomIDRS;
-        RoR2Application.onLoad -= SystemInit;
     }
 }
