@@ -114,10 +114,10 @@ public static partial class EliteAPI
         VanillaEliteTiers = [..CombatDirector.eliteTiers];
         VanillaFirstTierDef = RetrieveVanillaTier(1, "FirstTier");
         VanillaEliteOnlyFirstTierDef = RetrieveVanillaTier(2, "EliteOnlyFirstTier");
-        VanillaEliteOnlyFirstExtendedTierDef = RetrieveVanillaTier(3, "EliteOnlyFirstExtendedTier");
+        /*VanillaEliteOnlyFirstExtendedTierDef = RetrieveVanillaTier(3, "EliteOnlyFirstExtendedTier");
         VanillaFirstExtendedTierDef = RetrieveVanillaTier(4, "FirstExtendedTier");
         VanillaSecondTierDef = RetrieveVanillaTier(5, "SecondTier");
-        VanillaLunarTierDef = RetrieveVanillaTier(6, "LunarTier");
+        VanillaLunarTierDef = RetrieveVanillaTier(6, "LunarTier");*/
     }
 
     private static void CombatDirector_Init(ILContext il)
@@ -175,10 +175,6 @@ public static partial class EliteAPI
     private static CombatDirector.EliteTierDef RetrieveVanillaTier(int index, string name)
     {
         var tier = CombatDirector.eliteTiers[index];
-        tier.SetName(name);
-
-        ElitesPlugin.Logger.LogDebug($"Set name of {index} to {tier.GetName()}");
-
         return tier;
     }
 
@@ -277,26 +273,6 @@ public static partial class EliteAPI
     /// <summary>
     /// 
     /// </summary>
-    public static CombatDirector.EliteTierDef VanillaFirstExtendedTierDef { get; private set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstExtendedTierDef { get; private set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public static CombatDirector.EliteTierDef VanillaSecondTierDef { get; private set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public static CombatDirector.EliteTierDef VanillaLunarTierDef { get; private set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
     public static int VanillaEliteTierCount;
 
     /// <summary>
@@ -305,20 +281,6 @@ public static partial class EliteAPI
     public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
 
     private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = new List<CombatDirector.EliteTierDef>();
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="eliteTierDef"></param>
-    /// <returns></returns>
-    public static string GetName(this CombatDirector.EliteTierDef eliteTierDef) => GetEliteTierDefNameInternal(eliteTierDef);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="eliteTierDef"></param>
-    /// <param name="name"></param>
-    public static void SetName(this CombatDirector.EliteTierDef eliteTierDef, string name) => SetEliteTierDefNameInternal(eliteTierDef, name);
 
     /// <summary>
     /// Returns the current elite tier definitions used by the Combat Director for doing its elite spawning while doing a run.
