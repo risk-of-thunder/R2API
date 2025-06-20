@@ -75,9 +75,6 @@ public static partial class EliteAPI
         var filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "lrapi_returns.json");
         LoadTokensFromFile(filePath);
 
-        foreach (var k in _assetNameToGuid.Keys)
-            Debug.LogWarning(k);
-
         CombatDirector.Init();
 
         VanillaEliteTiers = [..CombatDirector.eliteTiers];
@@ -89,7 +86,7 @@ public static partial class EliteAPI
     {
         if (!File.Exists(filePath))
         {
-            Debug.LogError(filePath + " doesnt exist");
+            ElitesPlugin.Logger.LogError(filePath + " doesnt exist");
             return;
         }
 
@@ -98,7 +95,7 @@ public static partial class EliteAPI
         JSONNode jSONNode = JSON.Parse(streamReader.ReadToEnd());
         if (jSONNode == null)
         {
-            Debug.LogError("json is null");
+            ElitesPlugin.Logger.LogError("json is null");
             return;
         }
 
