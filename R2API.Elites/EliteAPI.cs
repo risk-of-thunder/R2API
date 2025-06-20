@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Text.RegularExpressions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -12,6 +15,8 @@ using R2API.AutoVersionGen;
 using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
+using SimpleJSON;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -28,7 +33,9 @@ public static partial class EliteAPI
     public const string PluginGUID = R2API.PluginGUID + ".elites";
     public const string PluginName = R2API.PluginName + ".Elites";
 
-    public static ObservableCollection<CustomElite?>? EliteDefinitions = new ObservableCollection<CustomElite?>();
+    public static ObservableCollection<CustomElite?> EliteDefinitions = new ObservableCollection<CustomElite?>();
+
+    private static Dictionary<string, string> _assetNameToGuid = [];
 
     /// <summary>
     /// Return true if the submodule is loaded.
@@ -41,6 +48,41 @@ public static partial class EliteAPI
     private static bool _hooksEnabled = false;
 
     #region ModHelper Events and Hooks
+    static EliteAPI()
+    {
+        var filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "lrapi_returns.json");
+        LoadTokensFromFile(filePath);
+
+        foreach (var k in _assetNameToGuid.Keys)
+            Debug.LogWarning(k);
+    }
+
+    private static void LoadTokensFromFile(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            Debug.LogError(filePath + " doesnt exist");
+            return;
+        }
+
+        using Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
+        using StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
+        JSONNode jSONNode = JSON.Parse(streamReader.ReadToEnd());
+        if (jSONNode == null)
+        {
+            Debug.LogError("json is null");
+            return;
+        }
+
+        var regex = new Regex("RoR2.*/ed.*\\.asset", RegexOptions.Compiled);
+
+        _assetNameToGuid = new Dictionary<string, string>(
+            from key in jSONNode.Keys
+            where key.StartsWith("RoR2") && key.EndsWith(".asset") && key.Contains("/ed")
+            let asset = key.Split('/')[^1][2..^6]
+            select new KeyValuePair<string, string>(asset, jSONNode[key].Value));
+    }
+
     internal static void SetHooks()
     {
         if (_hooksEnabled)
@@ -69,7 +111,7 @@ public static partial class EliteAPI
     {
         CombatDirector.Init();
 
-        VanillaEliteTiers = RetrieveVanillaEliteTiers();
+        VanillaEliteTiers = [..CombatDirector.eliteTiers];
         VanillaFirstTierDef = RetrieveVanillaTier(1, "FirstTier");
         VanillaEliteOnlyFirstTierDef = RetrieveVanillaTier(2, "EliteOnlyFirstTier");
         VanillaEliteOnlyFirstExtendedTierDef = RetrieveVanillaTier(3, "EliteOnlyFirstExtendedTier");
@@ -78,29 +120,57 @@ public static partial class EliteAPI
         VanillaLunarTierDef = RetrieveVanillaTier(6, "LunarTier");
     }
 
-    internal static void SetEliteTierDefNameInternal(CombatDirector.EliteTierDef eliteTierDef, string name)
+    private static void CombatDirector_Init(ILContext il)
     {
-        if (eliteTierDef is null)
-        {
-            ElitesPlugin.Logger.LogError($"Error setting name of {name ?? "<NULL>"}");
-            return;
-        }
-
-        ElitesInterop.SetEliteTierDefName(eliteTierDef, name);
+        GetVanillaEliteTierCount(new ILCursor(il));
+        ApplyAddressableOverrides(new ILCursor(il));
     }
 
-    internal static string GetEliteTierDefNameInternal(CombatDirector.EliteTierDef eliteTierDef)
+    private static void GetVanillaEliteTierCount(ILCursor c)
     {
-        if (eliteTierDef is null)
+        if (!c.TryGotoNext(
+                i => i.MatchLdcI4(out VanillaEliteTierCount),
+                i => i.MatchNewarr<CombatDirector.EliteTierDef>()))
         {
-            ElitesPlugin.Logger.LogError($"Error getting name of null EliteTierDef");
-            return "";
+            ElitesPlugin.Logger.LogError("Failed finding IL Instructions. Aborting RetrieveVanillaEliteTierCount IL Hook");
         }
-
-        return ElitesInterop.GetEliteTierDefName(eliteTierDef);
     }
 
-    private static CombatDirector.EliteTierDef[] RetrieveVanillaEliteTiers() => CombatDirector.eliteTiers;
+    private static void ApplyAddressableOverrides(ILCursor c)
+    {
+        var cList = new List<(ILCursor cursor, string addressableGuid)>();
+
+        while (c.TryGotoNext(MoveType.After,
+                    x => x.MatchLdsfld(out var fld) && fld.FieldType.Is(typeof(EliteDef))
+            ))
+        {
+            if (!(c.Prev.Operand is FieldReference field && field.Name is not null))
+            {
+                ElitesPlugin.Logger.LogError($"how did you manage to match with a null field ref?\r\n{c}");
+                continue;
+            }
+
+            if (!_assetNameToGuid.TryGetValue(field.Name, out var addressableGuid))
+            {
+                ElitesPlugin.Logger.LogError($"The addressable path {field.Name} is invalid! Skipping IL edit for this section!");
+                continue;
+            }
+
+            ElitesPlugin.Logger.LogDebug($"{nameof(CombatDirector_Init)} | Applying addressable overrides for {field.Name}");
+
+            cList.Add((c.Clone(), addressableGuid));
+        }
+
+        foreach ((var cursor, var addressableGuid) in cList)
+        {
+            c.Emit(OpCodes.Ldstr, addressableGuid);
+            c.EmitDelegate(LazyNullCheck);
+        }
+
+        ElitesPlugin.Logger.LogDebug($"{nameof(CombatDirector_Init)} | Applied addressable overrides for {cList} elite defs");
+    }
+
+    private static EliteDef LazyNullCheck(EliteDef origDef, string addressableGuid) => origDef ?? Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion();
 
     private static CombatDirector.EliteTierDef RetrieveVanillaTier(int index, string name)
     {
@@ -139,74 +209,6 @@ public static partial class EliteAPI
                 EliteRamp.AddRamp(customElite.EliteDef, customElite.EliteRamp);
             }
         }
-    }
-
-    private static void CombatDirector_Init(ILContext il)
-    {
-        if (!new ILCursor(il).TryGotoNext(
-                i => i.MatchLdcI4(out VanillaEliteTierCount),
-                i => i.MatchNewarr<CombatDirector.EliteTierDef>()))
-        {
-            ElitesPlugin.Logger.LogError("Failed finding IL Instructions. Aborting RetrieveVanillaEliteTierCount IL Hook");
-        }
-
-        int i = 0;
-        var c = new ILCursor(il);
-
-        while (c.TryGotoNext(MoveType.After,
-                x => x.MatchLdsfld(out var fld) && fld.FieldType.Is(typeof(EliteDef))
-            ))
-        {
-            i++;
-            if (i > 100)
-            {
-                ElitesPlugin.Logger.LogError("Some kind of cracked out recursion is going on! There's no way vanilla has over 100 elites, right???");
-                return;
-            }
-
-            var stringToLoad = GetAddressableName(c.Prev.Operand as FieldReference);
-            if (Addressables.LoadAssetAsync<EliteDef>(stringToLoad).WaitForCompletion() == null)
-            {
-                ElitesPlugin.Logger.LogError($"The addressable path {stringToLoad} is invalid! Skipping IL edit for this section!");
-                continue;
-            }
-
-            c.Emit(OpCodes.Ldstr, stringToLoad);
-            c.EmitDelegate(delegate (EliteDef origDef, string addressableName)
-            {
-                return origDef ?? Addressables.LoadAssetAsync<EliteDef>(addressableName).WaitForCompletion();
-            });
-        }
-
-        ElitesPlugin.Logger.LogDebug($"{nameof(CombatDirector_Init)} | Applied addressable overrides for {i} elite defs");
-    }
-
-    private static string GetAddressableName(FieldReference field)
-    {
-        // RoR2.RoR2Content/Elites::Lightning
-        // RoR2.DLC1Content/Elites::Earth
-        // RoR2.DLC2Content/Elites::AurelioniteHonor
-
-        // RoR2/Base/EliteLightning/edLightning.asset
-        // RoR2/DLC1/EliteEarth/edEarth.asset
-        // RoR2/DLC2/Elites/EliteAurelionite/edAurelioniteHonor.asset
-
-        // because FUCK CONSISTENCY
-
-        if (string.IsNullOrEmpty(field?.Name) || string.IsNullOrEmpty(field.DeclaringType?.FullName))
-            return $"{field?.Name ?? "NULL FIELD"} :: {field?.DeclaringType?.FullName ?? "NULL DECLARING TYPE"}";
-
-        var dlcName = field.DeclaringType.FullName.Substring(5, 4);
-        if (dlcName is "RoR2")
-            dlcName = "Base";
-
-        var folderName = $"Elite{field.Name.Replace("Honor", string.Empty)}";
-        if (dlcName is not "Base" and not "DLC1")
-            folderName = "Elites/" + folderName;
-
-        var eliteName = $"ed{field.Name}.asset";
-
-        return $"RoR2/{dlcName}/{folderName}/{eliteName}";
     }
 
     #endregion ModHelper Events and Hooks
