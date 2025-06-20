@@ -99,11 +99,11 @@ public static partial class EliteAPI
             return;
         }
 
-        var regex = new Regex("RoR2.*/ed.*\\.asset", RegexOptions.Compiled);
+        var regex = new Regex("RoR2.*/ed[A-Z].*\\.asset", RegexOptions.Compiled);
 
         _assetNameToGuid = new Dictionary<string, string>(
             from key in jSONNode.Keys
-            where key.StartsWith("RoR2") && key.EndsWith(".asset") && key.Contains("/ed")
+            where regex.Match(key).Success
             let asset = key.Split('/')[^1][2..^6]
             select new KeyValuePair<string, string>(asset, jSONNode[key].Value));
     }
