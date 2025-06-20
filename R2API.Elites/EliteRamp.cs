@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using R2API.ContentManagement;
 using RoR2;
 using RoR2BepInExPack.GameAssetPaths;
 using UnityEngine;
