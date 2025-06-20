@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../R2API.props" />
   <ItemGroup>
-    <ProjectReference Include="..\R2API.Core\R2API.Core.csproj" Private="false"/>
-    <ProjectReference Include="../R2API.ContentManagement/R2API.ContentManagement.csproj" Private="false"/>
+    <ProjectReference Include="../R2API.Core/R2API.Core.csproj" Private="false" />
+    <ProjectReference Include="../R2API.ContentManagement/R2API.ContentManagement.csproj" Private="false" />
   </ItemGroup>
 </Project>

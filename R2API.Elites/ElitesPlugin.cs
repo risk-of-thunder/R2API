@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using BepInEx;
 using BepInEx.Logging;
 using R2API.ContentManagement;
@@ -13,9 +14,14 @@ public sealed class ElitesPlugin : BaseUnityPlugin
     private void Awake()
     {
         Logger = base.Logger;
+        Stopwatch s = new Stopwatch();
+        s.Start();
 
         EliteAPI.SetHooks();
         EliteRamp.SetHooks();
+
+        s.Stop();
+        Logger.LogDebug("startup done in: " + s.Elapsed.TotalMilliseconds + "ms");
     }
 
     private void OnDestroy()
