@@ -33,7 +33,7 @@ public static partial class EliteAPI
     public const string PluginGUID = R2API.PluginGUID + ".elites";
     public const string PluginName = R2API.PluginName + ".Elites";
 
-    public static ObservableCollection<CustomElite?> EliteDefinitions = new ObservableCollection<CustomElite?>();
+    public static ObservableCollection<CustomElite> EliteDefinitions = [];
 
     private static Dictionary<string, string> _assetNameToGuid = [];
 
@@ -48,13 +48,41 @@ public static partial class EliteAPI
     private static bool _hooksEnabled = false;
 
     #region ModHelper Events and Hooks
-    static EliteAPI()
+
+    internal static void SetHooks()
+    {
+        if (_hooksEnabled)
+            return;
+
+        IL.RoR2.CombatDirector.Init += CombatDirector_Init;
+        R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
+
+        CombatDirectorInitNoTimingIssue();
+
+        _hooksEnabled = true;
+    }
+
+    internal static void UnsetHooks()
+    {
+        IL.RoR2.CombatDirector.Init -= CombatDirector_Init;
+        R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
+
+        _hooksEnabled = false;
+    }
+
+    private static void CombatDirectorInitNoTimingIssue()
     {
         var filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "lrapi_returns.json");
         LoadTokensFromFile(filePath);
 
         foreach (var k in _assetNameToGuid.Keys)
             Debug.LogWarning(k);
+
+        CombatDirector.Init();
+
+        VanillaEliteTiers = [..CombatDirector.eliteTiers];
+        VanillaFirstTierDef = VanillaEliteTiers[1];
+        VanillaEliteOnlyFirstTierDef = VanillaEliteTiers[2];
     }
 
     private static void LoadTokensFromFile(string filePath)
@@ -81,43 +109,6 @@ public static partial class EliteAPI
             where key.StartsWith("RoR2") && key.EndsWith(".asset") && key.Contains("/ed")
             let asset = key.Split('/')[^1][2..^6]
             select new KeyValuePair<string, string>(asset, jSONNode[key].Value));
-    }
-
-    internal static void SetHooks()
-    {
-        if (_hooksEnabled)
-        {
-            return;
-        }
-
-        IL.RoR2.CombatDirector.Init += CombatDirector_Init;
-        R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
-
-        _hooksEnabled = true;
-
-        // run this after, if it fails catastrophically we dont need it breaking more than once
-        CombatDirectorInitNoTimingIssue();
-    }
-
-    internal static void UnsetHooks()
-    {
-        IL.RoR2.CombatDirector.Init -= CombatDirector_Init;
-        R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
-
-        _hooksEnabled = false;
-    }
-
-    internal static void CombatDirectorInitNoTimingIssue()
-    {
-        CombatDirector.Init();
-
-        VanillaEliteTiers = [..CombatDirector.eliteTiers];
-        VanillaFirstTierDef = RetrieveVanillaTier(1, "FirstTier");
-        VanillaEliteOnlyFirstTierDef = RetrieveVanillaTier(2, "EliteOnlyFirstTier");
-        /*VanillaEliteOnlyFirstExtendedTierDef = RetrieveVanillaTier(3, "EliteOnlyFirstExtendedTier");
-        VanillaFirstExtendedTierDef = RetrieveVanillaTier(4, "FirstExtendedTier");
-        VanillaSecondTierDef = RetrieveVanillaTier(5, "SecondTier");
-        VanillaLunarTierDef = RetrieveVanillaTier(6, "LunarTier");*/
     }
 
     private static void CombatDirector_Init(ILContext il)
@@ -172,41 +163,6 @@ public static partial class EliteAPI
 
     private static EliteDef LazyNullCheck(EliteDef origDef, string addressableGuid) => origDef ?? Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion();
 
-    private static CombatDirector.EliteTierDef RetrieveVanillaTier(int index, string name)
-    {
-        var tier = CombatDirector.eliteTiers[index];
-        return tier;
-    }
-
-    private static void AddElitesToGame()
-    {
-        foreach (var customElite in EliteDefinitions)
-        {
-            foreach (var eliteTierDef in customElite.EliteTierDefs)
-            {
-                if (eliteTierDef.eliteTypes == null)
-                {
-                    eliteTierDef.eliteTypes = Array.Empty<EliteDef>();
-                }
-                else
-                {
-                    var isCustomEliteAlreadyInEliteTierDef = eliteTierDef.eliteTypes.Any(e => e == customElite.EliteDef);
-                    if (isCustomEliteAlreadyInEliteTierDef)
-                    {
-                        continue;
-                    }
-                }
-
-                HG.ArrayUtils.ArrayAppend(ref eliteTierDef.eliteTypes, customElite.EliteDef);
-            }
-
-            if (customElite.EliteRamp)
-            {
-                EliteRamp.AddRamp(customElite.EliteDef, customElite.EliteRamp);
-            }
-        }
-    }
-
     #endregion ModHelper Events and Hooks
 
     #region Add Methods
@@ -224,82 +180,8 @@ public static partial class EliteAPI
     public static bool Add(CustomElite? elite)
     {
         EliteAPI.SetHooks();
+
         return AddInternal(elite, Assembly.GetCallingAssembly());
-    }
-
-    internal static bool AddInternal(CustomElite customElite, Assembly addingAssembly)
-    {
-
-        if (!customElite.EliteDef)
-        {
-            throw new ArgumentNullException("customElite.EliteDef");
-        }
-
-        if (!CatalogBlockers.GetAvailability<EliteDef>())
-        {
-            ElitesPlugin.Logger.LogError($"Too late ! Tried to add elite: {customElite.EliteDef.modifierToken} after the EliteCatalog has initialized!");
-            return false;
-        }
-
-        if (customElite.EliteTierDefs == null || customElite.EliteTierDefs.Count() <= 0)
-        {
-            throw new ArgumentNullException("customElite.EliteTierDefs");
-        }
-
-        R2APIContentManager.HandleContentAddition(addingAssembly, customElite.EliteDef);
-        EliteDefinitions.Add(customElite);
-        return true;
-    }
-
-    #endregion Add Methods
-
-    #region Combat Director Modifications
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public static CombatDirector.EliteTierDef[] VanillaEliteTiers { get; private set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public static CombatDirector.EliteTierDef VanillaFirstTierDef { get; private set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef { get; private set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public static int VanillaEliteTierCount;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
-
-    private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = new List<CombatDirector.EliteTierDef>();
-
-    /// <summary>
-    /// Returns the current elite tier definitions used by the Combat Director for doing its elite spawning while doing a run.
-    /// </summary>
-    public static CombatDirector.EliteTierDef?[]? GetCombatDirectorEliteTiers()
-    {
-        EliteAPI.SetHooks();
-        return CombatDirector.eliteTiers;
-    }
-
-    /// <summary>
-    /// The EliteTierDef array is used by the Combat Director for doing its elite spawning while doing a run.
-    /// You can get the current array used by the director with <see cref="GetCombatDirectorEliteTiers"/>
-    /// </summary>
-    /// <param name="newEliteTiers">The new elite tiers that will be used by the combat director.</param>
-    public static void OverrideCombatDirectorEliteTiers(CombatDirector.EliteTierDef?[]? newEliteTiers)
-    {
-        EliteAPI.SetHooks();
-        CombatDirector.eliteTiers = newEliteTiers;
     }
 
     /// <summary>
@@ -312,56 +194,51 @@ public static partial class EliteAPI
     public static int AppendCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef)
     {
         EliteAPI.SetHooks();
+
         return AddCustomEliteTier(eliteTierDef, -1);
     }
 
     /// <summary>
     /// Allows for adding a new elite tier def to the combat director.
     /// Automatically insert the eliteTierDef at the correct position in the array based on its <see cref="CombatDirector.EliteTierDef.costMultiplier"/>
-    /// When adding a new elite tier, do not fill the eliteTypes field with your custom elites defs if your goal is to add your custom elite in it right after.
-    /// Because when doing EliteAPI.Add, the API will add your elite to the specified tiers <see cref="CustomElite.EliteTierDefs"/>.
     /// </summary>
     /// <param name="eliteTierDef">The new elite tier to add.</param>
     public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef)
     {
         EliteAPI.SetHooks();
+
+        if (eliteTierDef == null)
+        {
+            throw new ArgumentNullException("customElite.EliteTierDefs");
+        }
+
         var indexToInsertAt = Array.FindIndex(GetCombatDirectorEliteTiers(), x => x.costMultiplier >= eliteTierDef.costMultiplier);
-        if (indexToInsertAt >= 0)
-        {
-            return AddCustomEliteTier(eliteTierDef, indexToInsertAt);
-        }
-        else
-        {
-            return AppendCustomEliteTier(eliteTierDef);
-        }
+        return AddCustomEliteTier(eliteTierDef, indexToInsertAt);
     }
 
-    // todo : maybe sort the CombatDirector.eliteTiers array based on cost ? the game code isnt the cleanest about this
     /// <summary>
-    /// Allows for adding a new <see cref="CombatDirector.EliteTierDef"/>
-    /// Do NOT fill the <see cref="CombatDirector.EliteTierDef.eliteTypes"/> field with your custom elites defs if your goal is to add your custom elite in it right after.
-    /// Because when doing <see cref="Add"/>, it'll add your elite to the specified <see cref="CustomElite.EliteTierDefs"/>.
+    /// Allows for adding a new <see cref="CombatDirector.EliteTierDef"/> at the given index in <see cref="GetCombatDirectorEliteTiers"/>
     /// </summary>
     /// <param name="eliteTierDef">The new elite tier to add.</param>
     /// <param name="indexToInsertAt">Optional index to specify if you want to insert a cheaper elite tier</param>
     public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef, int indexToInsertAt = -1)
     {
         EliteAPI.SetHooks();
-        var eliteTiersSize = VanillaEliteTierCount + CustomEliteTierCount;
+
+        if (eliteTierDef == null)
+        {
+            throw new ArgumentNullException("customElite.EliteTierDefs");
+        }
 
         var currentEliteTiers = GetCombatDirectorEliteTiers();
         if (currentEliteTiers != null)
         {
-
             if (indexToInsertAt == -1)
             {
                 indexToInsertAt = currentEliteTiers.Length;
-                HG.ArrayUtils.ArrayAppend(ref currentEliteTiers, eliteTierDef);
             }
-            else
-            {
-                HG.ArrayUtils.ArrayInsert(ref currentEliteTiers, indexToInsertAt, eliteTierDef);
-            }
+
+            HG.ArrayUtils.ArrayInsert(ref currentEliteTiers, indexToInsertAt, eliteTierDef);
 
             OverrideCombatDirectorEliteTiers(currentEliteTiers);
         }
@@ -373,5 +250,81 @@ public static partial class EliteAPI
         return indexToInsertAt;
     }
 
+
+    internal static bool AddInternal(CustomElite customElite, Assembly addingAssembly)
+    {
+        if (customElite?.EliteDef == null)
+        {
+            throw new ArgumentNullException("customElite.EliteDef");
+        }
+
+        if (customElite.EliteTierDefs?.Any() != true)
+        {
+            throw new ArgumentNullException("customElite.EliteTierDefs");
+        }
+
+        if (!CatalogBlockers.GetAvailability<EliteDef>())
+        {
+            ElitesPlugin.Logger.LogError($"Too late ! Tried to add elite: {customElite.EliteDef.modifierToken} after the EliteCatalog has initialized!");
+            return false;
+        }
+
+        R2APIContentManager.HandleContentAddition(addingAssembly, customElite.EliteDef);
+        EliteDefinitions.Add(customElite);
+
+        return true;
+    }
+
+    private static void AddElitesToGame()
+    {
+        foreach (var customElite in EliteDefinitions)
+        {
+            if (customElite.EliteRamp)
+                EliteRamp.AddRamp(customElite.EliteDef, customElite.EliteRamp);
+
+            foreach (var tierDefToAdd in customElite.EliteTierDefs)
+            {
+                tierDefToAdd.eliteTypes ??= [];
+
+                if (Array.IndexOf(tierDefToAdd.eliteTypes, customElite.EliteDef) == -1)
+                    HG.ArrayUtils.ArrayAppend(ref tierDefToAdd.eliteTypes, customElite.EliteDef);
+            }
+        }
+    }
+
+    #endregion Add Methods
+
+    #region Combat Director Modifications
+
+    public static CombatDirector.EliteTierDef[] VanillaEliteTiers { get; private set; }
+    public static CombatDirector.EliteTierDef VanillaFirstTierDef { get; private set; }
+    public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef { get; private set; }
+    public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
+
+    public static int VanillaEliteTierCount;
+
+    private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = [];
+
+    /// <summary>
+    /// Returns the current elite tier definitions used by the Combat Director for doing its elite spawning while doing a run.
+    /// </summary>
+    public static CombatDirector.EliteTierDef[] GetCombatDirectorEliteTiers()
+    {
+        EliteAPI.SetHooks();
+
+        return CombatDirector.eliteTiers;
+    }
+
+    /// <summary>
+    /// The EliteTierDef array is used by the Combat Director for doing its elite spawning while doing a run.
+    /// You can get the current array used by the director with <see cref="GetCombatDirectorEliteTiers"/>
+    /// </summary>
+    /// <param name="newEliteTiers">The new elite tiers that will be used by the combat director.</param>
+    public static void OverrideCombatDirectorEliteTiers(CombatDirector.EliteTierDef[] newEliteTiers)
+    {
+        EliteAPI.SetHooks();
+
+        CombatDirector.eliteTiers = newEliteTiers;
+    }
     #endregion Combat Director Modifications
 }

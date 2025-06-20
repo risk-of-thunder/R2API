@@ -13,11 +13,10 @@ namespace R2API;
 /// </summary>
 public class CustomElite
 {
-
     /// <summary>
     /// Elite definition
     /// </summary>
-    public EliteDef? EliteDef;
+    public EliteDef EliteDef;
 
     /// <summary>
     /// The TextureRamp for this elite, can be omitted
@@ -37,7 +36,7 @@ public class CustomElite
     /// directly modifying the array through <see cref="EliteAPI.GetCombatDirectorEliteTiers"/> and <see cref="EliteAPI.OverrideCombatDirectorEliteTiers"/>
     /// or by using <see cref="EliteAPI.AddCustomEliteTier(CombatDirector.EliteTierDef?)"/>
     /// </summary>
-    public CustomElite(string? name, EquipmentDef equipmentDef, Color32 color, string? modifierToken, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs)
+    public CustomElite(string name, EquipmentDef equipmentDef, Color32 color, string modifierToken, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs)
     {
         EliteDef = ScriptableObject.CreateInstance<EliteDef>();
         EliteDef.name = name;
@@ -47,8 +46,8 @@ public class CustomElite
         EliteTierDefs = eliteTierDefs;
     }
 
-    /// <inheritdoc cref="CustomElite(string?, EquipmentDef, Color32, string?, IEnumerable{CombatDirector.EliteTierDef})"/>
-    public CustomElite(string? name, EquipmentDef equipmentDef, Color32 color, string? modifierToken, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs, Texture2D eliteRamp)
+    /// <inheritdoc cref="CustomElite(string, EquipmentDef, Color32, string, IEnumerable{CombatDirector.EliteTierDef})"/>
+    public CustomElite(string name, EquipmentDef equipmentDef, Color32 color, string modifierToken, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs, Texture2D eliteRamp)
     {
         EliteDef = ScriptableObject.CreateInstance<EliteDef>();
         EliteDef.name = name;
@@ -59,14 +58,15 @@ public class CustomElite
         EliteRamp = eliteRamp;
     }
 
-    /// <inheritdoc cref="CustomElite(string?, EquipmentDef, Color32, string?, IEnumerable{CombatDirector.EliteTierDef})"/>
-    public CustomElite(EliteDef? eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs)
+    /// <inheritdoc cref="CustomElite(string, EquipmentDef, Color32, string, IEnumerable{CombatDirector.EliteTierDef})"/>
+    public CustomElite(EliteDef eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs)
     {
         EliteDef = eliteDef;
         EliteTierDefs = eliteTierDefs;
     }
-    /// <inheritdoc cref="CustomElite(string?, EquipmentDef, Color32, string?, IEnumerable{CombatDirector.EliteTierDef})"/>
-    public CustomElite(EliteDef? eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs, Texture2D eliteRamp)
+
+    /// <inheritdoc cref="CustomElite(string, EquipmentDef, Color32, string, IEnumerable{CombatDirector.EliteTierDef})"/>
+    public CustomElite(EliteDef eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs, Texture2D eliteRamp)
     {
         EliteDef = eliteDef;
         EliteTierDefs = eliteTierDefs;
