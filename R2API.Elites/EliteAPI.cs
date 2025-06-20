@@ -182,10 +182,7 @@ public static partial class EliteAPI
     }
 
     /// <summary>
-    /// Allows for adding a new elite tier def to the combat director.
-    /// When adding a new elite tier,
-    /// do not fill the eliteTypes field with your custom elites defs if your goal is to add your custom elite in it right after.
-    /// Because when doing EliteAPI.Add, the API will add your elite to the specified tiers <see cref="CustomElite.EliteTierDefs"/>.
+    /// Allows for adding a new elite tier def to the combat director during runtime.
     /// </summary>
     /// <param name="eliteTierDef">The new elite tier to add.</param>
     public static int AppendCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef)
@@ -200,13 +197,15 @@ public static partial class EliteAPI
     /// Automatically insert the eliteTierDef at the correct position in the array based on its <see cref="CombatDirector.EliteTierDef.costMultiplier"/>
     /// </summary>
     /// <param name="eliteTierDef">The new elite tier to add.</param>
+    /// <returns>Index inserted at, or -1 if the operation failed</returns>
     public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef)
     {
         EliteAPI.SetHooks();
 
-        if (eliteTierDef == null)
+        if (eliteTierDef is null)
         {
-            throw new ArgumentNullException("customElite.EliteTierDefs");
+            ElitesPlugin.Logger.LogError("EliteTierDef cannot be null");
+            return -1;
         }
 
         var indexToInsertAt = Array.FindIndex(GetCombatDirectorEliteTiers(), x => x.costMultiplier >= eliteTierDef.costMultiplier);
@@ -218,22 +217,22 @@ public static partial class EliteAPI
     /// </summary>
     /// <param name="eliteTierDef">The new elite tier to add.</param>
     /// <param name="indexToInsertAt">Optional index to specify if you want to insert a cheaper elite tier</param>
+    /// <returns>Index inserted at, or -1 if the operation failed</returns>
     public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef, int indexToInsertAt = -1)
     {
         EliteAPI.SetHooks();
 
-        if (eliteTierDef == null)
+        if (eliteTierDef is null)
         {
-            throw new ArgumentNullException("customElite.EliteTierDefs");
+            ElitesPlugin.Logger.LogError("EliteTierDef cannot be null");
+            return -1;
         }
 
         var currentEliteTiers = GetCombatDirectorEliteTiers();
         if (currentEliteTiers != null)
         {
             if (indexToInsertAt == -1)
-            {
                 indexToInsertAt = currentEliteTiers.Length;
-            }
 
             HG.ArrayUtils.ArrayInsert(ref currentEliteTiers, indexToInsertAt, eliteTierDef);
 
@@ -255,11 +254,6 @@ public static partial class EliteAPI
             throw new ArgumentNullException("customElite.EliteDef");
         }
 
-        if (customElite.EliteTierDefs?.Any() != true)
-        {
-            throw new ArgumentNullException("customElite.EliteTierDefs");
-        }
-
         if (!CatalogBlockers.GetAvailability<EliteDef>())
         {
             ElitesPlugin.Logger.LogError($"Too late ! Tried to add elite: {customElite.EliteDef.modifierToken} after the EliteCatalog has initialized!");
@@ -278,6 +272,9 @@ public static partial class EliteAPI
         {
             if (customElite.EliteRamp)
                 EliteRamp.AddRamp(customElite.EliteDef, customElite.EliteRamp);
+
+            if (customElite.EliteTierDefs is null)
+                continue;
 
             foreach (var tierDefToAdd in customElite.EliteTierDefs)
             {
