@@ -155,7 +155,7 @@ public static partial class EliteAPI
             c.EmitDelegate(LazyNullCheck);
         }
 
-        ElitesPlugin.Logger.LogDebug($"{nameof(CombatDirector_Init)} | Applied addressable overrides for {cList} elite defs");
+        ElitesPlugin.Logger.LogDebug($"{nameof(CombatDirector_Init)} | Applied addressable overrides for {cList.Count} elite defs");
     }
 
     private static EliteDef LazyNullCheck(EliteDef origDef, string addressableGuid) => origDef ?? Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion();
