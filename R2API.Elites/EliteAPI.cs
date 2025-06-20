@@ -55,6 +55,7 @@ public static partial class EliteAPI
             return;
 
         IL.RoR2.CombatDirector.Init += CombatDirector_Init;
+        IL.RoR2.CombatDirector.Init += GetVanillaEliteTierCount;
         R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
 
         CombatDirectorInitNoTimingIssue();
@@ -65,6 +66,7 @@ public static partial class EliteAPI
     internal static void UnsetHooks()
     {
         IL.RoR2.CombatDirector.Init -= CombatDirector_Init;
+        IL.RoR2.CombatDirector.Init -= GetVanillaEliteTierCount;
         R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
 
         _hooksEnabled = false;
@@ -77,7 +79,7 @@ public static partial class EliteAPI
 
         CombatDirector.Init();
 
-        VanillaEliteTiers = [..CombatDirector.eliteTiers];
+        VanillaEliteTiers = CombatDirector.eliteTiers;
         VanillaFirstTierDef = VanillaEliteTiers[1];
         VanillaEliteOnlyFirstTierDef = VanillaEliteTiers[2];
     }
@@ -106,16 +108,14 @@ public static partial class EliteAPI
             where regex.Match(key).Success
             let asset = key.Split('/')[^1][2..^6]
             select new KeyValuePair<string, string>(asset, jSONNode[key].Value));
+
+        foreach (var a in _assetNameToGuid)
+            ElitesPlugin.Logger.LogInfo(a.Key);
     }
 
-    private static void CombatDirector_Init(ILContext il)
+    private static void GetVanillaEliteTierCount(ILContext il)
     {
-        GetVanillaEliteTierCount(new ILCursor(il));
-        ApplyAddressableOverrides(new ILCursor(il));
-    }
-
-    private static void GetVanillaEliteTierCount(ILCursor c)
-    {
+        var c = new ILCursor(il);
         if (!c.TryGotoNext(
                 i => i.MatchLdcI4(out VanillaEliteTierCount),
                 i => i.MatchNewarr<CombatDirector.EliteTierDef>()))
@@ -124,8 +124,9 @@ public static partial class EliteAPI
         }
     }
 
-    private static void ApplyAddressableOverrides(ILCursor c)
+    private static void CombatDirector_Init(ILContext il)
     {
+        var c = new ILCursor(il);
         var cList = new List<(ILCursor cursor, string addressableGuid)>();
 
         while (c.TryGotoNext(MoveType.After,
@@ -144,18 +145,18 @@ public static partial class EliteAPI
                 continue;
             }
 
-            ElitesPlugin.Logger.LogDebug($"{nameof(CombatDirector_Init)} | Applying addressable overrides for {field.Name}");
+            ElitesPlugin.Logger.LogInfo($"{nameof(CombatDirector_Init)} | Applying addressable overrides for {field.Name}");
 
             cList.Add((c.Clone(), addressableGuid));
         }
 
         foreach ((var cursor, var addressableGuid) in cList)
         {
-            c.Emit(OpCodes.Ldstr, addressableGuid);
-            c.EmitDelegate(LazyNullCheck);
+            cursor.Emit(OpCodes.Ldstr, addressableGuid);
+            cursor.EmitDelegate(LazyNullCheck);
         }
 
-        ElitesPlugin.Logger.LogDebug($"{nameof(CombatDirector_Init)} | Applied addressable overrides for {cList.Count} elite defs");
+        ElitesPlugin.Logger.LogInfo($"{nameof(CombatDirector_Init)} | Applied addressable overrides for {cList.Count} elite defs");
     }
 
     private static EliteDef LazyNullCheck(EliteDef origDef, string addressableGuid) => origDef ?? Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion();
