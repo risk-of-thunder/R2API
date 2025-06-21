@@ -34,7 +34,14 @@ public static partial class EliteAPI
     public const string PluginName = R2API.PluginName + ".Elites";
 
     public static ObservableCollection<CustomElite> EliteDefinitions = [];
+    public static CombatDirector.EliteTierDef[] VanillaEliteTiers { get; private set; }
+    public static CombatDirector.EliteTierDef VanillaFirstTierDef => GetVanillaEliteTierDef(VanillaEliteTier.BaseTier1);
+    public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef => GetVanillaEliteTierDef(VanillaEliteTier.BaseTier1Honor);
+    public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
 
+    public static int VanillaEliteTierCount;
+
+    private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = [];
     private static Dictionary<string, string> _assetNameToGuid = [];
 
     /// <summary>
@@ -55,7 +62,6 @@ public static partial class EliteAPI
             return;
 
         IL.RoR2.CombatDirector.Init += CombatDirector_Init;
-        IL.RoR2.CombatDirector.Init += GetVanillaEliteTierCount;
         R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
 
         CombatDirectorInitNoTimingIssue();
@@ -66,7 +72,6 @@ public static partial class EliteAPI
     internal static void UnsetHooks()
     {
         IL.RoR2.CombatDirector.Init -= CombatDirector_Init;
-        IL.RoR2.CombatDirector.Init -= GetVanillaEliteTierCount;
         R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
 
         _hooksEnabled = false;
@@ -79,9 +84,8 @@ public static partial class EliteAPI
 
         CombatDirector.Init();
 
-        VanillaEliteTiers = CombatDirector.eliteTiers;
-        VanillaFirstTierDef = VanillaEliteTiers[1];
-        VanillaEliteOnlyFirstTierDef = VanillaEliteTiers[2];
+        VanillaEliteTiers = [.. CombatDirector.eliteTiers];
+        VanillaEliteTierCount = VanillaEliteTiers.Length;
     }
 
     private static void LoadTokensFromFile(string filePath)
@@ -108,17 +112,6 @@ public static partial class EliteAPI
             where regex.Match(key).Success
             let asset = key.Split('/')[^1][2..^6]
             select new KeyValuePair<string, string>(asset, jSONNode[key].Value));
-    }
-
-    private static void GetVanillaEliteTierCount(ILContext il)
-    {
-        var c = new ILCursor(il);
-        if (!c.TryGotoNext(
-                i => i.MatchLdcI4(out VanillaEliteTierCount),
-                i => i.MatchNewarr<CombatDirector.EliteTierDef>()))
-        {
-            ElitesPlugin.Logger.LogError("Failed finding IL Instructions. Aborting RetrieveVanillaEliteTierCount IL Hook");
-        }
     }
 
     private static void CombatDirector_Init(ILContext il)
@@ -271,9 +264,6 @@ public static partial class EliteAPI
             if (customElite.EliteRamp)
                 EliteRamp.AddRamp(customElite.EliteDef, customElite.EliteRamp);
 
-            if (customElite.EliteTierDefs is null)
-                continue;
-
             foreach (var tierDefToAdd in customElite.EliteTierDefs)
             {
                 tierDefToAdd.eliteTypes ??= [];
@@ -288,17 +278,44 @@ public static partial class EliteAPI
 
     #region Combat Director Modifications
 
-    public static CombatDirector.EliteTierDef[] VanillaEliteTiers { get; private set; }
-    public static CombatDirector.EliteTierDef VanillaFirstTierDef { get; private set; }
-    public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef { get; private set; }
-    public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
+    /// <summary>
+    /// Returns the vanilla <see cref="CombatDirector.EliteTierDef"/> for the given <see cref="VanillaEliteTier"/>
+    /// </summary>
+    public static CombatDirector.EliteTierDef GetVanillaEliteTierDef(VanillaEliteTier tier)
+    {
+        EliteAPI.SetHooks();
 
-    public static int VanillaEliteTierCount;
-
-    private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = [];
+        return VanillaEliteTiers[(int)tier];
+    }
 
     /// <summary>
-    /// Returns the current elite tier definitions used by the Combat Director for doing its elite spawning while doing a run.
+    /// Used for ensuring correct tier placement when creating a new <see cref="CustomElite"/>. When given <see cref="VanillaEliteTier.BaseTier1"/>,
+    /// the list will also include <see cref="VanillaEliteTier.FullTier1"/> in the result to ensure the elite doesn't stop spawning after stage 2.
+    /// </summary>
+    /// <returns> All vanilla <see cref="CombatDirector.EliteTierDef"/> that the elite can appear in, or empty for None. </returns>
+    public static IEnumerable<CombatDirector.EliteTierDef> GetEliteTierEnumerable(VanillaEliteTier tier) => tier switch
+    {
+        VanillaEliteTier.None => [],
+        VanillaEliteTier.BaseTier1 => [GetVanillaEliteTierDef(tier), GetVanillaEliteTierDef(VanillaEliteTier.FullTier1)],
+        VanillaEliteTier.BaseTier1Honor => [GetVanillaEliteTierDef(tier), GetVanillaEliteTierDef(VanillaEliteTier.FullTier1Honor)],
+        _ => [GetVanillaEliteTierDef(tier)]
+    };
+
+    /// <summary>
+    /// <para>Retrieves the honor compatible <see cref="CombatDirector.EliteTierDef"/> for the given tier. <see cref="VanillaEliteTier.BaseTier1"/> and <see cref="VanillaEliteTier.FullTier1"/> will be changed to their Honor variants.</para>
+    /// Used for ensuring correct tier placement when creating a new <see cref="CustomElite"/>. When given <see cref="VanillaEliteTier.BaseTier1Honor"/>,
+    /// the list will also include <see cref="VanillaEliteTier.FullTier1Honor"/> in the result to ensure the elite doesn't stop spawning after stage 2.
+    /// </summary>
+    /// <returns> All vanilla honor <see cref="CombatDirector.EliteTierDef"/> that the elite can appear in, or empty for None, Tier2 and Lunar. </returns>
+    public static IEnumerable<CombatDirector.EliteTierDef> GetHonorEliteTierEnumerable(VanillaEliteTier tier) => tier switch
+    {
+        VanillaEliteTier.BaseTier1 or VanillaEliteTier.BaseTier1Honor => [GetVanillaEliteTierDef(VanillaEliteTier.BaseTier1Honor), GetVanillaEliteTierDef(VanillaEliteTier.FullTier1Honor)],
+        VanillaEliteTier.FullTier1 or VanillaEliteTier.FullTier1Honor => [GetVanillaEliteTierDef(VanillaEliteTier.FullTier1Honor)],
+        _ => [],
+    };
+
+    /// <summary>
+    /// Returns the current <see cref="CombatDirector.eliteTiers"/> used by the Combat Director for doing its elite spawning while doing a run.
     /// </summary>
     public static CombatDirector.EliteTierDef[] GetCombatDirectorEliteTiers()
     {

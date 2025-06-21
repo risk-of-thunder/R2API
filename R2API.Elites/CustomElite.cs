@@ -29,47 +29,49 @@ public class CustomElite
     public IEnumerable<CombatDirector.EliteTierDef> EliteTierDefs;
 
     /// <summary>
-    /// You can omit giving a value to <see cref="EliteDef.eliteIndex"/>, as it'll be filled in automatically by the game.
-    /// For your custom elite to spawn, you need to provide an enumerable of <see cref="CombatDirector.EliteTierDef"/> as second parameter.
-    /// The API will then add your <see cref="EliteDef"/> in them.
-    /// You can also make a totally new tier, by either
-    /// directly modifying the array through <see cref="EliteAPI.GetCombatDirectorEliteTiers"/> and <see cref="EliteAPI.OverrideCombatDirectorEliteTiers"/>
-    /// or by using <see cref="EliteAPI.AddCustomEliteTier(CombatDirector.EliteTierDef?)"/>
+    /// 
     /// </summary>
     public CustomElite(string name, EquipmentDef equipmentDef, Color32 color, string modifierToken, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs)
-    {
-        EliteDef = ScriptableObject.CreateInstance<EliteDef>();
-        EliteDef.name = name;
-        EliteDef.eliteEquipmentDef = equipmentDef;
-        EliteDef.color = color;
-        EliteDef.modifierToken = modifierToken;
-        EliteTierDefs = eliteTierDefs;
-    }
+        : this(name, equipmentDef, color, modifierToken, eliteTierDefs, eliteRamp: null) { }
 
-    /// <inheritdoc cref="CustomElite(string, EquipmentDef, Color32, string, IEnumerable{CombatDirector.EliteTierDef})"/>
-    public CustomElite(string name, EquipmentDef equipmentDef, Color32 color, string modifierToken, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs, Texture2D eliteRamp)
+    /// <summary>
+    /// Use <see cref="EliteAPI.Add(CustomElite?)"/> to add your <see cref="EliteDef"/> to the <see cref="EliteCatalog"/> during startup,
+    /// along with adding it to all the given <see cref="EliteTierDefs"/>.
+    /// <para>
+    /// It's recommended that you use <see cref="EliteAPI.GetEliteTierEnumerable(VanillaEliteTier)"/> or <see cref="EliteAPI.GetHonorEliteTierEnumerable(VanillaEliteTier)"/>
+    /// if you intend on adding this elite to any vanilla tiers to ensure correct tier placement, with custom tiers added as needed.
+    /// </para>
+    /// </summary>
+    /// <param name="name">Internal <see cref="Object.name"/> for the <see cref="EliteDef"/></param>
+    /// <param name="equipmentDef">Elite affix equipment</param>
+    /// <param name="color">Elite base color</param>
+    /// <param name="modifierToken">Token for the text before a characters name</param>
+    /// <param name="eliteTierDefs">List of all tiers that can spawn this elite.</param>
+    /// <param name="eliteRamp">Color ramp to be used in <see cref="EliteRamp"/>. Can be null.</param>
+    public CustomElite(string name, EquipmentDef equipmentDef, Color32 color, string modifierToken, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs, Texture2D? eliteRamp)
     {
         EliteDef = ScriptableObject.CreateInstance<EliteDef>();
         EliteDef.name = name;
         EliteDef.eliteEquipmentDef = equipmentDef;
         EliteDef.color = color;
         EliteDef.modifierToken = modifierToken;
-        EliteTierDefs = eliteTierDefs;
+        EliteTierDefs = eliteTierDefs ?? [];
         EliteRamp = eliteRamp;
     }
 
-    /// <inheritdoc cref="CustomElite(string, EquipmentDef, Color32, string, IEnumerable{CombatDirector.EliteTierDef})"/>
-    public CustomElite(EliteDef eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs)
+    /// <inheritdoc cref="CustomElite(EliteDef, IEnumerable{CombatDirector.EliteTierDef}?, Texture2D)"/>
+    public CustomElite(EliteDef eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs) : this(eliteDef, eliteTierDefs, eliteRamp: null) { }
+    /// <summary>
+    /// <para>You can omit giving a value to <see cref="EliteDef.eliteIndex"/>, as it'll be filled in automatically by the game.</para>
+    /// <inheritdoc cref="CustomElite(string, EquipmentDef, Color32, string, IEnumerable{CombatDirector.EliteTierDef}, Texture2D?)"/>
+    /// </summary>
+    /// <param name="eliteDef"></param>
+    /// <param name="eliteTierDefs">List of <see cref="CombatDirector.EliteTierDef"/> the <see cref="EliteDef"/> can spawn in.</param>
+    /// <param name="eliteRamp">Color ramp to be used in <see cref="EliteRamp"/>. Can be null.</param>
+    public CustomElite(EliteDef eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs, Texture2D? eliteRamp)
     {
         EliteDef = eliteDef;
-        EliteTierDefs = eliteTierDefs;
-    }
-
-    /// <inheritdoc cref="CustomElite(string, EquipmentDef, Color32, string, IEnumerable{CombatDirector.EliteTierDef})"/>
-    public CustomElite(EliteDef eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs, Texture2D eliteRamp)
-    {
-        EliteDef = eliteDef;
-        EliteTierDefs = eliteTierDefs;
+        EliteTierDefs = eliteTierDefs ?? [];
         EliteRamp = eliteRamp;
     }
 }
