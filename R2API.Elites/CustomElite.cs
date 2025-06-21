@@ -28,14 +28,12 @@ public class CustomElite
     /// </summary>
     public IEnumerable<CombatDirector.EliteTierDef> EliteTierDefs;
 
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <inheritdoc cref="CustomElite(string, EquipmentDef, Color32, string, IEnumerable{CombatDirector.EliteTierDef}, Texture2D)"/>
     public CustomElite(string name, EquipmentDef equipmentDef, Color32 color, string modifierToken, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs)
         : this(name, equipmentDef, color, modifierToken, eliteTierDefs, eliteRamp: null) { }
 
     /// <summary>
-    /// Use <see cref="EliteAPI.Add(CustomElite?)"/> to add your <see cref="EliteDef"/> to the <see cref="EliteCatalog"/> during startup,
+    /// Use <see cref="EliteAPI.Add(CustomElite?)"/> to add your elite to the <see cref="EliteCatalog"/> during startup,
     /// along with adding it to all the given <see cref="EliteTierDefs"/>.
     /// <para>
     /// It's recommended that you use <see cref="EliteAPI.GetEliteTierEnumerable(VanillaEliteTier)"/> or <see cref="EliteAPI.GetHonorEliteTierEnumerable(VanillaEliteTier)"/>
@@ -59,8 +57,9 @@ public class CustomElite
         EliteRamp = eliteRamp;
     }
 
-    /// <inheritdoc cref="CustomElite(EliteDef, IEnumerable{CombatDirector.EliteTierDef}?, Texture2D)"/>
+    /// <inheritdoc cref="CustomElite(EliteDef, IEnumerable{CombatDirector.EliteTierDef}, Texture2D)"/>
     public CustomElite(EliteDef eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs) : this(eliteDef, eliteTierDefs, eliteRamp: null) { }
+
     /// <summary>
     /// <para>You can omit giving a value to <see cref="EliteDef.eliteIndex"/>, as it'll be filled in automatically by the game.</para>
     /// <inheritdoc cref="CustomElite(string, EquipmentDef, Color32, string, IEnumerable{CombatDirector.EliteTierDef}, Texture2D?)"/>
