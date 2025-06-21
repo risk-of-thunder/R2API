@@ -135,8 +135,6 @@ public static partial class EliteAPI
                 continue;
             }
 
-            ElitesPlugin.Logger.LogInfo($"{nameof(CombatDirector_Init)} | Applying addressable overrides for {field.Name}");
-
             cList.Add((c.Clone(), addressableGuid));
         }
 
@@ -146,7 +144,7 @@ public static partial class EliteAPI
             cursor.EmitDelegate(LazyNullCheck);
         }
 
-        ElitesPlugin.Logger.LogInfo($"{nameof(CombatDirector_Init)} | Applied addressable overrides for {cList.Count} elite defs");
+        ElitesPlugin.Logger.LogDebug($"{nameof(CombatDirector_Init)} | Applied addressable overrides for {cList.Count} elite defs");
     }
 
     private static EliteDef LazyNullCheck(EliteDef origDef, string addressableGuid) => origDef ?? Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion();
