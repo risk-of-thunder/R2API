@@ -61,6 +61,9 @@ public static partial class EliteAPI
         if (_hooksEnabled)
             return;
 
+        var filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "lrapi_returns.json");
+        LoadTokensFromFile(filePath);
+
         IL.RoR2.CombatDirector.Init += CombatDirector_Init;
         R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
 
@@ -79,9 +82,6 @@ public static partial class EliteAPI
 
     private static void CombatDirectorInitNoTimingIssue()
     {
-        var filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "lrapi_returns.json");
-        LoadTokensFromFile(filePath);
-
         CombatDirector.Init();
 
         VanillaEliteTiers = [.. CombatDirector.eliteTiers];
@@ -105,13 +105,15 @@ public static partial class EliteAPI
             return;
         }
 
-        var regex = new Regex("RoR2.*/ed.*\\.asset", RegexOptions.Compiled);
+        var regex = new Regex("RoR2.*/ed[A-Z].*asset", RegexOptions.Compiled);
 
         _assetNameToGuid = new Dictionary<string, string>(
             from key in jSONNode.Keys
             where regex.Match(key).Success
             let asset = key.Split('/')[^1][2..^6]
             select new KeyValuePair<string, string>(asset, jSONNode[key].Value));
+
+        ElitesPlugin.Logger.LogDebug($"{nameof(CombatDirector_Init)} | Able to apply addressable overrides for {_assetNameToGuid.Count} elite defs");
     }
 
     private static void CombatDirector_Init(ILContext il)
