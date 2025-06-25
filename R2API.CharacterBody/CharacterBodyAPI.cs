@@ -110,14 +110,14 @@ public static partial class CharacterBodyAPI
     /// <returns></returns>
     public static bool HasModdedBodyFlag(this CharacterBody characterBody, ModdedBodyFlag moddedBodyFlag) => HasModdedBodyFlagInternal(characterBody, moddedBodyFlag);
     /// <summary>
-    /// Get damage multiplier for the specified damage source.
+    /// Get damage multiplier for the specified damage source. Value resets on Recalculate Stats
     /// </summary>
     /// <param name="characterBody"></param>
     /// <param name="damageSource"></param>
     /// <returns></returns>
     public static float GetDamageSourceDamageMultiplier(this CharacterBody characterBody, DamageSource damageSource) => CharacterBodyInterop.GetDamageSourceDamageMultiplier(characterBody, Enum.GetName(typeof(DamageSource), damageSource));
     /// <summary>
-    /// Set damage multiplier for the specified damage source.
+    /// Set damage multiplier for the specified damage source. Value resets on Recalculate Stats
     /// </summary>
     /// <param name="characterBody"></param>
     /// <param name="damageSource"></param>
@@ -125,14 +125,14 @@ public static partial class CharacterBodyAPI
     /// <returns></returns>
     public static void SetDamageSourceDamageMultiplier(this CharacterBody characterBody, DamageSource damageSource, float value) => CharacterBodyInterop.SetDamageSourceDamageMultiplier(characterBody, Enum.GetName(typeof(DamageSource), damageSource), value);
     /// <summary>
-    /// Get damage flat addition for the specified damage source.
+    /// Get damage flat addition for the specified damage source. Value resets on Recalculate Stats
     /// </summary>
     /// <param name="characterBody"></param>
     /// <param name="damageSource"></param>
     /// <returns></returns>
     public static float GetDamageSourceDamageAddition(this CharacterBody characterBody, DamageSource damageSource) => CharacterBodyInterop.GetDamageSourceDamageAddition(characterBody, Enum.GetName(typeof(DamageSource), damageSource));
     /// <summary>
-    /// Set damage flat addition for the specified damage source.
+    /// Set damage flat addition for the specified damage source. Value resets on Recalculate Stats
     /// </summary>
     /// <param name="characterBody"></param>
     /// <param name="damageSource"></param>
@@ -140,14 +140,14 @@ public static partial class CharacterBodyAPI
     /// <returns></returns>
     public static void SetDamageSourceDamageAddition(this CharacterBody characterBody, DamageSource damageSource, float value) => CharacterBodyInterop.SetDamageSourceDamageAddition(characterBody, Enum.GetName(typeof(DamageSource), damageSource), value);
     /// <summary>
-    /// Get damage vulnerability multiplier for the specified damage source.
+    /// Get damage vulnerability multiplier for the specified damage source. Value resets on Recalculate Stats
     /// </summary>
     /// <param name="characterBody"></param>
     /// <param name="damageSource"></param>
     /// <returns></returns>
     public static float GetDamageSourceVulnerabilityMultiplier(this CharacterBody characterBody, DamageSource damageSource) => CharacterBodyInterop.GetDamageSourceVulnerabilityMultiplier(characterBody, Enum.GetName(typeof(DamageSource), damageSource));
     /// <summary>
-    /// Set damage vulnerability multiplier for the specified damage source.
+    /// Set damage vulnerability multiplier for the specified damage source. Value resets on Recalculate Stats
     /// </summary>
     /// <param name="characterBody"></param>
     /// <param name="damageSource"></param>
@@ -155,14 +155,14 @@ public static partial class CharacterBodyAPI
     /// <returns></returns>
     public static void SetDamageSourceVulnerabilityMultiplier(this CharacterBody characterBody, DamageSource damageSource, float value) => CharacterBodyInterop.SetDamageSourceVulnerabilityMultiplier(characterBody, Enum.GetName(typeof(DamageSource), damageSource), value);
     /// <summary>
-    /// Get damage vulnerability flat addition for the specified damage source.
+    /// Get damage vulnerability flat addition for the specified damage source. Value resets on Recalculate Stats
     /// </summary>
     /// <param name="characterBody"></param>
     /// <param name="damageSource"></param>
     /// <returns></returns>
     public static float GetDamageSourceVulnerabilityAddition(this CharacterBody characterBody, DamageSource damageSource) => CharacterBodyInterop.GetDamageSourceVulnerabilityAddition(characterBody, Enum.GetName(typeof(DamageSource), damageSource));
     /// <summary>
-    /// Set damage vulnerability flat addition for the specified damage source.
+    /// Set damage vulnerability flat addition for the specified damage source. Value resets on Recalculate Stats
     /// </summary>
     /// <param name="characterBody"></param>
     /// <param name="damageSource"></param>
