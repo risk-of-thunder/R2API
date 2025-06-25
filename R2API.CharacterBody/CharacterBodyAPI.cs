@@ -220,8 +220,8 @@ public static partial class CharacterBodyAPI
             {
                 characterBody.SetDamageSourceDamageAddition(value, 0f);
                 characterBody.SetDamageSourceDamageMultiplier(value, 1f);
-                characterBody.SetDamageSourceDamageAddition(value, 0f);
-                characterBody.SetDamageSourceDamageMultiplier(value, 1f);
+                characterBody.SetDamageSourceVulnerabilityAddition(value, 0f);
+                characterBody.SetDamageSourceVulnerabilityMultiplier(value, 1f);
             }
         }
     }
