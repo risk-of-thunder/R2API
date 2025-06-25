@@ -17,7 +17,12 @@ A lot of documentation is in the included xmldocs, and further information may b
 Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
-### '5.1.4'
+
+### '5.1.6'
+
+* Added RoR2BepinexPack as a required BepInDependency
+
+### '5.1.5'
 * Fixed CompressedFlagArrayUtilities.RemoveImmutable.
 
 ### '5.1.4'

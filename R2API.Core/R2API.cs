@@ -33,7 +33,7 @@ namespace R2API;
 [BepInDependency(PluginGUID + ".sound", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(PluginGUID + ".tempvisualeffect", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(PluginGUID + ".unlockable", BepInDependency.DependencyFlags.SoftDependency)]
-
+[BepInDependency(RoR2BepInExPack.RoR2BepInExPack.PluginGUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 [AutoVersion]
 // ReSharper disable once InconsistentNaming
@@ -44,7 +44,7 @@ public partial class R2API : BaseUnityPlugin
 
     public const string PluginName = "R2API";
 
-    private const string GameBuildId = "1.3.8";
+    private const string GameBuildId = "1.3.9";
 
     internal static new ManualLogSource Logger { get; set; }
 
