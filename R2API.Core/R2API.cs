@@ -6,7 +6,6 @@ using BepInEx.Logging;
 using R2API.AutoVersionGen;
 using R2API.Utils;
 using RoR2;
-using RoR2BepInExPack;
 using UnityEngine;
 
 namespace R2API;
