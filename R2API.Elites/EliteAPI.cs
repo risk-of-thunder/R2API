@@ -34,13 +34,22 @@ public static partial class EliteAPI
     public const string PluginName = R2API.PluginName + ".Elites";
 
     public static ObservableCollection<CustomElite> EliteDefinitions = [];
-    public static CombatDirector.EliteTierDef[] VanillaEliteTiers { get; private set; }
+    public static CombatDirector.EliteTierDef[] VanillaEliteTiers
+    {
+        get
+        {
+            EliteAPI.SetHooks();
+            return _vanillaEliteTiers;
+        }
+        private set => _vanillaEliteTiers = value;
+    }
     public static CombatDirector.EliteTierDef VanillaFirstTierDef => GetVanillaEliteTierDef(VanillaEliteTier.BaseTier1);
     public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef => GetVanillaEliteTierDef(VanillaEliteTier.BaseTier1Honor);
     public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
 
     public static int VanillaEliteTierCount;
 
+    private static CombatDirector.EliteTierDef[] _vanillaEliteTiers = [];
     private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = [];
     private static Dictionary<string, string> _assetNameToGuid = [];
 
@@ -119,8 +128,18 @@ public static partial class EliteAPI
     private static void CombatDirector_Init(ILContext il)
     {
         var c = new ILCursor(il);
-        var cList = new List<(ILCursor cursor, string addressableGuid)>();
+        int idx = 0;
 
+        while (c.TryGotoNext(MoveType.After,
+                x => x.MatchLdcI4(out idx),
+                x => x.MatchNewobj<CombatDirector.EliteTierDef>()
+            ))
+        {
+            c.Emit(OpCodes.Ldc_I4, idx);
+            c.EmitDelegate(UseExistingTierDef);
+        }
+
+        c.Index = 0;
         while (c.TryGotoNext(MoveType.After,
                     x => x.MatchLdsfld(out var fld) && fld.FieldType.Is(typeof(EliteDef))
             ))
@@ -137,20 +156,15 @@ public static partial class EliteAPI
                 continue;
             }
 
-            cList.Add((c.Clone(), addressableGuid));
+            c.Emit(OpCodes.Ldstr, addressableGuid);
+            c.EmitDelegate(LazyNullCheck);
         }
-
-        foreach ((var cursor, var addressableGuid) in cList)
-        {
-            cursor.Emit(OpCodes.Ldstr, addressableGuid);
-            cursor.EmitDelegate(LazyNullCheck);
-        }
-
-        ElitesPlugin.Logger.LogDebug($"{nameof(CombatDirector_Init)} | Applied addressable overrides for {cList.Count} elite defs");
     }
 
-    private static EliteDef LazyNullCheck(EliteDef origDef, string addressableGuid) => origDef ?? Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion();
+    private static CombatDirector.EliteTierDef UseExistingTierDef(CombatDirector.EliteTierDef tierDef, int index) => HG.ArrayUtils.GetSafe(_vanillaEliteTiers, index, tierDef);
 
+    private static EliteDef LazyNullCheck(EliteDef origDef, string addressableGuid) => origDef ?? Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion();
+    
     #endregion ModHelper Events and Hooks
 
     #region Add Methods

@@ -13,9 +13,6 @@ public sealed class ElitesPlugin : BaseUnityPlugin
     private void Awake()
     {
         Logger = base.Logger;
-
-        EliteAPI.SetHooks();
-        EliteRamp.SetHooks();
     }
 
     private void OnDestroy()

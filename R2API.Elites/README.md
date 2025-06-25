@@ -23,11 +23,8 @@ The EliteRamp implementation is handled inside the EliteRamp class, you can use 
 ### `1.0.8`
 
 * Dynamic implementation of CombatDirectorInitNoTimingIssue
-  * Uses an IL hook to add a null conditional Addressables load operation to all the static fields.
-  * Makes CombatDirector.Init hookable again, vanilla behaviour is no longer skipped.
-* CombatDirector.Init is called when hooks are set for compatibility reasons, and then again by the normal SystemInitializer.
-  * You should not make direct modifications to the CombatDirector.eliteTiers until after the SystemInitializer has run. Anything before this will be
-  * If called after static content has been loaded by the vanilla systems, then the CombatDirector.Init will load like normal.
+  * Makes CombatDirector.Init IL hookable again, since vanilla behaviour is no longer skipped.
+  * Hooks are applied as needed instead of always enabled
 
 ### '1.0.7'
 * Fixes for 1.3.6 Game Update.
