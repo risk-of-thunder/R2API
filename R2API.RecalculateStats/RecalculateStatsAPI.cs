@@ -279,7 +279,28 @@ public static partial class RecalculateStatsAPI
     private static void HookRecalculateStats(ILContext il)
     {
         ILCursor c = new ILCursor(il);
-
+        ILLabel iLLabel = null;
+        bool flag = true;
+        if (c.TryGotoNext(MoveType.After,
+            x => x.MatchCall<Run>("get_instance"),
+            x => x.MatchCall<UnityEngine.Object>("op_Implicit"),
+            x => x.MatchBrtrue(out iLLabel),
+            x => x.MatchRet()
+            ))
+        {
+            c.Index -= 2;
+            c.Remove();
+            Instruction instruction = null;
+            Instruction instruction2 = c.Next;
+            c.GotoLabel(iLLabel);
+            instruction = c.Emit(OpCodes.Ldarg_0).Prev;
+            c.Goto(instruction2);
+            c.Emit(OpCodes.Brtrue_S, instruction);
+            c.Goto(instruction);
+            c.Index++;
+            flag = false;
+        }
+        if(flag)
         c.Emit(OpCodes.Ldarg_0);
         c.EmitDelegate<Action<CharacterBody>>(GetStatMods);
 
@@ -309,7 +330,6 @@ public static partial class RecalculateStatsAPI
     private static void GetStatMods(CharacterBody characterBody)
     {
         StatMods = new StatHookEventArgs();
-
         if (_getStatCoefficients != null)
         {
             foreach (StatHookEventHandler @event in _getStatCoefficients.GetInvocationList())
