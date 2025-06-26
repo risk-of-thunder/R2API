@@ -215,7 +215,6 @@ public static partial class CharacterBodyAPI
         c.EmitDelegate(ResetDamageSourceValues);
         void ResetDamageSourceValues(CharacterBody characterBody)
         {
-            CharacterBodyPlugin.Logger.LogMessage("balls");
             var values = Enum.GetValues(typeof(DamageSource)).Cast<DamageSource>();
             foreach (var value in values)
             {
