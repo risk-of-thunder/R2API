@@ -212,9 +212,10 @@ public static partial class CharacterBodyAPI
     {
         var c = new ILCursor(il);
         c.Emit(OpCodes.Ldarg_0);
-        c.EmitDelegate(balls);
-        void balls(CharacterBody characterBody)
+        c.EmitDelegate(ResetDamageSourceValues);
+        void ResetDamageSourceValues(CharacterBody characterBody)
         {
+            CharacterBodyPlugin.Logger.LogMessage("balls");
             var values = Enum.GetValues(typeof(DamageSource)).Cast<DamageSource>();
             foreach (var value in values)
             {

@@ -300,7 +300,7 @@ public static partial class RecalculateStatsAPI
             c.Index++;
             flag = false;
         }
-        if(flag)
+        if (flag)
         c.Emit(OpCodes.Ldarg_0);
         c.EmitDelegate<Action<CharacterBody>>(GetStatMods);
 
