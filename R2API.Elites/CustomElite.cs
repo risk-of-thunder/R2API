@@ -58,7 +58,8 @@ public class CustomElite
     }
 
     /// <inheritdoc cref="CustomElite(EliteDef, IEnumerable{CombatDirector.EliteTierDef}, Texture2D)"/>
-    public CustomElite(EliteDef eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs) : this(eliteDef, eliteTierDefs, eliteRamp: null) { }
+    public CustomElite(EliteDef eliteDef, IEnumerable<CombatDirector.EliteTierDef> eliteTierDefs)
+        : this(eliteDef, eliteTierDefs, eliteRamp: null) { }
 
     /// <summary>
     /// <para>You can omit giving a value to <see cref="EliteDef.eliteIndex"/>, as it'll be filled in automatically by the game.</para>

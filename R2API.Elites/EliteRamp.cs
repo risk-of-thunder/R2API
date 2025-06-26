@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
@@ -10,10 +11,9 @@ namespace R2API;
 
 public static class EliteRamp
 {
-    private static int EliteRampPropertyID => Shader.PropertyToID("_EliteRamp");
-
-    private static readonly List<(EliteDef eliteDef, Texture2D ramp)> elitesAndRamps = [];
-    private static readonly Dictionary<EliteIndex, Texture2D> eliteIndexToTexture = [];
+    private static readonly Dictionary<EliteDef, Texture2D> _elitesAndRamps = [];
+    private static readonly Dictionary<EliteIndex, Texture2D> _eliteIndexToTexture = [];
+    private static int _eliteRampPropertyID;
 
     private static bool _hooksEnabled = false;
 
@@ -25,6 +25,9 @@ public static class EliteRamp
         {
             return;
         }
+
+        Addressables.LoadAssetAsync<Texture2D>(RoR2_Base_Common_GlobalTextures.texRampElites_psd).Completed +=
+            (task) => _eliteIndexToTexture[EliteIndex.None] = task.Result;
 
         IL.RoR2.CharacterModel.UpdateMaterials += UpdateRampProperly;
         RoR2Application.onLoad += SetupDictionary;
@@ -67,20 +70,23 @@ public static class EliteRamp
 
     private static void UpdateRampFromModel(CharacterModel model)
     {
-        if (eliteIndexToTexture.TryGetValue(model.myEliteIndex, out var ramp))
-            model.propertyStorage.SetTexture(EliteRampPropertyID, ramp);
+        if (!_eliteIndexToTexture.TryGetValue(model.myEliteIndex, out var ramp))
+            ramp = _eliteIndexToTexture[EliteIndex.None];
+
+        model.propertyStorage.SetTexture(_eliteRampPropertyID, ramp);
     }
 
     private static void SetupDictionary()
     {
-        eliteIndexToTexture[EliteIndex.None] = Addressables.LoadAssetAsync<Texture2D>(RoR2_Base_Common_GlobalTextures.texRampElites_psd).WaitForCompletion();
+        _eliteRampPropertyID = Shader.PropertyToID("_EliteRamp");
 
-        foreach ((var eliteDef, var texture) in elitesAndRamps)
+        foreach ((var eliteDef, var texture) in _elitesAndRamps)
         {
-            eliteIndexToTexture[eliteDef.eliteIndex] = texture;
+            if (eliteDef && eliteDef.eliteIndex != EliteIndex.None)
+                _eliteIndexToTexture[eliteDef.eliteIndex] = texture;
         }
 
-        elitesAndRamps.Clear();
+        _elitesAndRamps.Clear();
     }
 
     #endregion
@@ -94,11 +100,19 @@ public static class EliteRamp
     {
         EliteRamp.SetHooks();
 
-        if (eliteDef)
+        if (!eliteDef)
         {
-            eliteDef.shaderEliteRampIndex = 0;
-            elitesAndRamps.Add((eliteDef, ramp));
+            ElitesPlugin.Logger.LogError("Attempted to set a texture ramp for a null elite def!");
+            return;
         }
+
+        if (_elitesAndRamps.ContainsKey(eliteDef))
+        {
+            ElitesPlugin.Logger.LogWarning($"Texture ramp for {eliteDef.name ?? eliteDef.modifierToken} already exists. The new texture will be used instead.");
+        }
+
+        eliteDef.shaderEliteRampIndex = 0;
+        _elitesAndRamps[eliteDef] = ramp;
     }
 
     /// <summary>
@@ -127,6 +141,6 @@ public static class EliteRamp
         EliteRamp.SetHooks();
 
         ramp = null;
-        return eliteIndex != EliteIndex.None && eliteIndexToTexture.TryGetValue(eliteIndex, out ramp);
+        return eliteIndex != EliteIndex.None && _eliteIndexToTexture.TryGetValue(eliteIndex, out ramp);
     }
 }
