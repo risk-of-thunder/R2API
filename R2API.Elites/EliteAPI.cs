@@ -34,6 +34,7 @@ public static partial class EliteAPI
     public const string PluginName = R2API.PluginName + ".Elites";
 
     public static ObservableCollection<CustomElite> EliteDefinitions = [];
+
     public static CombatDirector.EliteTierDef[] VanillaEliteTiers
     {
         get
@@ -43,14 +44,17 @@ public static partial class EliteAPI
         }
         private set => _vanillaEliteTiers = value;
     }
+
     public static CombatDirector.EliteTierDef VanillaFirstTierDef => GetVanillaEliteTierDef(VanillaEliteTier.BaseTier1);
     public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef => GetVanillaEliteTierDef(VanillaEliteTier.BaseTier1Honor);
+
     public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
 
     public static int VanillaEliteTierCount;
 
-    private static CombatDirector.EliteTierDef[] _vanillaEliteTiers = [];
     private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = [];
+
+    private static CombatDirector.EliteTierDef[] _vanillaEliteTiers = [];
     private static Dictionary<string, string> _assetNameToGuid = [];
 
     /// <summary>
@@ -76,9 +80,9 @@ public static partial class EliteAPI
         IL.RoR2.CombatDirector.Init += CombatDirector_Init;
         R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
 
-        CombatDirectorInitNoTimingIssue();
-
         _hooksEnabled = true;
+
+        CombatDirectorInitNoTimingIssue();
     }
 
     internal static void UnsetHooks()
@@ -94,7 +98,7 @@ public static partial class EliteAPI
         CombatDirector.Init();
 
         VanillaEliteTiers = [.. CombatDirector.eliteTiers];
-        VanillaEliteTierCount = VanillaEliteTiers.Length;
+        VanillaEliteTierCount = CombatDirector.eliteTiers.Length;
     }
 
     private static void LoadTokensFromFile(string filePath)
@@ -233,6 +237,8 @@ public static partial class EliteAPI
             return -1;
         }
 
+        eliteTierDef.eliteTypes ??= [];
+
         var currentEliteTiers = GetCombatDirectorEliteTiers();
         if (currentEliteTiers != null)
         {
@@ -252,7 +258,7 @@ public static partial class EliteAPI
     }
 
 
-    internal static bool AddInternal(CustomElite customElite, Assembly addingAssembly)
+    internal static bool AddInternal(CustomElite? customElite, Assembly addingAssembly)
     {
         if (customElite?.EliteDef == null)
         {
