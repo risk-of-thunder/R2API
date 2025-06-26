@@ -22,6 +22,17 @@ internal static class CharacterBodyPatcher
     {
         var characterBody = assembly.MainModule.GetType("RoR2", "CharacterBody");
         var moddedBodyFlags = new FieldDefinition("r2api_moddedBodyFlags", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(byte[])));
-        characterBody?.Fields.Add(moddedBodyFlags);
+        var damageSourceDamageMultiplier = new FieldDefinition("r2api_damageSourceDamageMultiplier", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(Dictionary<string, float>)));
+        var damageSourceDamageAddition = new FieldDefinition("r2api_damageSourceDamageAddition", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(Dictionary<string, float>)));
+        var damageSourceVulnerabilityMultiplier = new FieldDefinition("r2api_damageSourceVulnerabilityMultiplier", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(Dictionary<string, float>)));
+        var damageSourceVulnerabilityAddition = new FieldDefinition("r2api_damageSourceVulnerabilityAddition", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(Dictionary<string, float>)));
+        if (characterBody != null)
+        {
+            characterBody.Fields.Add(moddedBodyFlags);
+            characterBody.Fields.Add(damageSourceDamageMultiplier);
+            characterBody.Fields.Add(damageSourceDamageAddition);
+            characterBody.Fields.Add(damageSourceVulnerabilityMultiplier);
+            characterBody.Fields.Add(damageSourceVulnerabilityAddition);
+        }
     }
 }

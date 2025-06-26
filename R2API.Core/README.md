@@ -20,6 +20,10 @@ Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ### '5.1.6'
 
+* Added R2API.CharacterBody as a soft BepInDependency
+
+### '5.1.6'
+
 * Added RoR2BepinexPack as a required BepInDependency
 
 ### '5.1.5'

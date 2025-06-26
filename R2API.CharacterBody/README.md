@@ -6,5 +6,8 @@ R2API.CharacterBody is a submodule for R2API that currently adds Modded Body Fla
 
 ## Changelog
 
+### '1.1.0'
+* Added DamageSource damage and vulnerability multipliers and additions.
+
 ### '1.0.0'
 * Create new module.
