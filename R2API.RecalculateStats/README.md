@@ -16,6 +16,7 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 * Health Regeneration
 * Movement Speed
 * Jump Power
+* Jump Count
 * Damage
 * Attack Speed
 * Critical Strike Chance
@@ -24,13 +25,14 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 * Cooldown reduction for skills
 * Shield
 * Critical Strike Damage
+* Luck
 
 ## Related Pages
 
 ## Changelog
 
 ### `1.6.1`
-* Moved GetStatMods event delegate. Added stats: `jumpCountAdd` and `jumpCountMult`.
+* Moved GetStatMods event delegate. Added stats: `jumpCountAdd`, `jumpCountMult`, `luckAdd` and `luckMult`.
 
 ### `1.6.0`
 * Added multiplicative stat modifiers `healthTotalMult`, `shieldTotalMult`, `regenTotalMult`, `moveSpeedTotalMult`, `jumpPowerTotalMult`, `damageTotalMult` `attackSpeedTotalMult`, `critMult`, `bleedChanceMult`, `armorMult`, and `curseTotalMult`.
