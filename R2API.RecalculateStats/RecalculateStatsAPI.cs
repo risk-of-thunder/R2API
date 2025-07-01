@@ -239,6 +239,14 @@ public static partial class RecalculateStatsAPI
         /// <summary>Added to the direct multiplier to level scaling.</summary> <inheritdoc cref="levelFlatAdd"/>
         public float levelMultAdd = 0f;
         #endregion
+
+        #region jump
+        /// <summary>Added to max jump count.</summary> <remarks>JUMP_COUNT ~ (BASE_JUMP_COUNT + jumpCountAdd) * jumpCountMult</remarks>
+        public int jumpCountAdd = 0;
+
+        /// <summary>Jump count is multiplied by this number.</summary> <remarks>JUMP_COUNT ~ (BASE_JUMP_COUNT + jumpCountAdd) * jumpCountMult</remarks>
+        public int jumpCountMult = 1;
+        #endregion
     }
 
     /// <summary>
@@ -325,6 +333,7 @@ public static partial class RecalculateStatsAPI
         ModifyCurseStat(c);
         ModifyCooldownStat(c);
         ModifyLevelingStat(c);
+        ModifyJumpStat(c);
     }
 
     private static void GetStatMods(CharacterBody characterBody)
@@ -597,7 +606,34 @@ public static partial class RecalculateStatsAPI
             RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyCritStat)} failed.");
         }
     }
+    private static void ModifyJumpStat(ILCursor c)
+    {
+        c.Index = 0;
 
+        bool ILFound = c.TryGotoNext(
+            MoveType.After,
+            x => x.MatchLdarg(0),
+            x => x.MatchLdarg(0),
+            x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.baseJumpCount)),
+            x => x.MatchLdloc(out _),
+            x => x.MatchAdd(),
+            x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.maxJumpCount)))
+        );
+
+        if (ILFound)
+        {
+            c.Index--;
+            c.EmitDelegate<Func<int>>(() => StatMods.jumpCountAdd);
+            c.Emit(OpCodes.Add);
+
+            c.EmitDelegate<Func<int>>(() => StatMods.jumpCountMult);
+            c.Emit(OpCodes.Mul);
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpStat)} failed.");
+        }
+    }
     private static void ModifyBleedStat(ILCursor c)
     {
         c.Index = 0;
