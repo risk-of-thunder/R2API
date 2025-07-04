@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Text.RegularExpressions;
 using Mono.Cecil;
@@ -54,7 +55,6 @@ public static partial class EliteAPI
 
     private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = [];
     private static CombatDirector.EliteTierDef[] _vanillaEliteTiers = [];
-    private static Dictionary<string, string> _assetNameToGuid = [];
 
     /// <summary>
     /// Return true if the submodule is loaded.
@@ -65,67 +65,41 @@ public static partial class EliteAPI
     public static bool Loaded => true;
 
     private static bool _hooksEnabled = false;
+    private static bool _resolvedFields = false;
 
     #region ModHelper Events and Hooks
-
-    internal static void SetHooks()
-    {
-        if (_hooksEnabled)
-            return;
-
-        R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
-
-        _hooksEnabled = true;
-
-        // prevent recursion by setting hooks enabled first
-        CombatDirectorInitNoTimingIssue();
-    }
-
-    internal static void UnsetHooks()
-    {
-        On.RoR2.CombatDirector.Init -= CopyCombatDirectorTiers;
-        IL.RoR2.CombatDirector.Init -= InitEarlyCombatDirector;
-        R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
-
-        _hooksEnabled = false;
-    }
 
     internal static void Init()
     {
         // this is done so that VanillaEliteTiers is always accurate
         // seperated from the InitEarlyCombatDirector since using the vanilla timings is preferrable
         On.RoR2.CombatDirector.Init += CopyCombatDirectorTiers;
-
-        var filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "lrapi_returns.json");
-        LoadTokensFromFile(filePath);
     }
 
-    private static void LoadTokensFromFile(string filePath)
+    internal static void SetHooks()
     {
-        if (!File.Exists(filePath))
-        {
-            ElitesPlugin.Logger.LogError(filePath + " doesnt exist or could not be read");
+        if (_hooksEnabled)
             return;
-        }
 
-        using Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
-        using StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
-        JSONNode jSONNode = JSON.Parse(streamReader.ReadToEnd());
-        if (jSONNode == null)
+        _hooksEnabled = true;
+
+        R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
+
+        if (CombatDirector.eliteTiers is null)
         {
-            ElitesPlugin.Logger.LogError("json read error at " + filePath);
-            return;
+            IL.RoR2.CombatDirector.Init += InitEarlyCombatDirector;
+            CombatDirector.Init();
         }
+    }
 
-        var regex = new Regex("RoR2.*/ed[A-Z].*asset", RegexOptions.Compiled);
+    internal static void UnsetHooks()
+    {
+        IL.RoR2.CombatDirector.Init -= InitEarlyCombatDirector;
+        On.RoR2.CombatDirector.Init -= CopyCombatDirectorTiers;
 
-        _assetNameToGuid = new Dictionary<string, string>(
-            from key in jSONNode.Keys
-            where regex.Match(key).Success
-            let asset = key.Split('/')[^1][2..^6]
-            select new KeyValuePair<string, string>(asset, jSONNode[key].Value));
+        R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
 
-        ElitesPlugin.Logger.LogDebug($"{nameof(InitEarlyCombatDirector)} | Able to apply addressable overrides for {_assetNameToGuid.Count} elite defs");
+        _hooksEnabled = false;
     }
 
     private static void CopyCombatDirectorTiers(On.RoR2.CombatDirector.orig_Init orig)
@@ -133,52 +107,10 @@ public static partial class EliteAPI
         orig();
 
         _vanillaEliteTiers = [.. CombatDirector.eliteTiers];
-        VanillaEliteTierCount = _vanillaEliteTiers.Length;
+        VanillaEliteTierCount = CombatDirector.eliteTiers.Length;
 
-        // called once
+        // run once
         On.RoR2.CombatDirector.Init -= CopyCombatDirectorTiers;
-    }
-
-    private static void CombatDirectorInitNoTimingIssue()
-    {
-        // call init early if needed
-        if (CombatDirector.eliteTiers is null)
-        {
-            IL.RoR2.CombatDirector.Init += InitEarlyCombatDirector;
-            IL.RoR2.CombatDirector.Init += ResolveFieldInfo;
-
-            // calls CopyVanillaEliteTiers
-            CombatDirector.Init();
-
-            // yeah it's stupid to do this using ILContext, but it's easy
-            IL.RoR2.CombatDirector.Init -= ResolveFieldInfo;
-        }
-    }
-
-    private static void ResolveFieldInfo(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        while (c.TryGotoNext(MoveType.After,
-                    x => x.MatchLdsfld(out var fld) && fld.FieldType.Is(typeof(EliteDef))
-            ))
-        {
-            if (!(c.Prev.Operand is FieldReference field) || string.IsNullOrEmpty(field.Name))
-            {
-                ElitesPlugin.Logger.LogError($"how did you manage to match with a null field ref?\r\n{c}");
-                continue;
-            }
-
-            if (!_assetNameToGuid.TryGetValue(field.Name, out var addressableGuid))
-            {
-                ElitesPlugin.Logger.LogError($"The addressable path {field.Name} is invalid! Skipping IL edit for this section!");
-                continue;
-            }
-
-            var fieldInfo = field.ResolveReflection();
-            if (fieldInfo.GetValue(null) is null)
-                fieldInfo.SetValue(null, Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion());
-        }
     }
 
     private static void InitEarlyCombatDirector(ILContext il)
@@ -194,9 +126,75 @@ public static partial class EliteAPI
             c.Emit(OpCodes.Ldc_I4, idx);
             c.EmitDelegate(UseExistingTierDef);
         }
+
+        // populate null static fields
+        ResolveFieldInfo(il);
     }
 
-    private static CombatDirector.EliteTierDef UseExistingTierDef(CombatDirector.EliteTierDef tierDef, int index) => HG.ArrayUtils.GetSafe(_vanillaEliteTiers, index, tierDef);
+    private static CombatDirector.EliteTierDef UseExistingTierDef(CombatDirector.EliteTierDef tierDef, int index)
+    {
+        return HG.ArrayUtils.GetSafe(_vanillaEliteTiers, index, tierDef);
+    }
+
+    private static void ResolveFieldInfo(ILContext il)
+    {
+        if (_resolvedFields)
+            return;
+
+        if (!TryLoadTokensFromFile(out Dictionary<string, string> assetNameToGuid))
+            return;
+
+        FieldReference fieldRef = null;
+        while (new ILCursor(il).TryGotoNext(MoveType.After, x => x.MatchLdsfld(out fieldRef)))
+        {
+            if (string.IsNullOrEmpty(fieldRef?.Name) || !fieldRef.Is(typeof(EliteDef)))
+                continue;
+
+            if (!assetNameToGuid.TryGetValue(fieldRef.Name, out var addressableGuid))
+            {
+                ElitesPlugin.Logger.LogError($"The addressable path {fieldRef.Name} is invalid! Skipping the addressable load.");
+                continue;
+            }
+
+            var fieldInfo = fieldRef.ResolveReflection();
+            if (fieldInfo.GetValue(null) is null)
+                fieldInfo.SetValue(null, Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion());
+        }
+
+        _resolvedFields = true;
+    }
+
+    private static bool TryLoadTokensFromFile(out Dictionary<string, string> assetNameToGuid)
+    {
+        assetNameToGuid = null;
+
+        var filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "lrapi_returns.json");
+        if (!File.Exists(filePath))
+        {
+            ElitesPlugin.Logger.LogError(filePath + " doesnt exist or could not be read");
+            return false;
+        }
+
+        using Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
+        using StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
+
+        var jSONNode = JSON.Parse(streamReader.ReadToEnd());
+        if (jSONNode == null)
+        {
+            ElitesPlugin.Logger.LogError("json read error at " + filePath);
+            return false;
+        }
+
+        var regex = new Regex("RoR2.*/ed[A-Z].*asset");
+
+        assetNameToGuid = new Dictionary<string, string>(
+            from key in jSONNode.Keys
+            where regex.Match(key).Success
+            let asset = key.Split('/')[^1][2..^6] // ignore the "ed" prefix and the ".asset" postfix
+            select new KeyValuePair<string, string>(asset, jSONNode[key].Value));
+
+        return true;
+    }
 
     #endregion ModHelper Events and Hooks
 
