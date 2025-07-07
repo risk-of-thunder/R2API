@@ -66,6 +66,10 @@ public static partial class RecalculateStatsAPI
     {
         IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
         luckHook.Undo();
+        On.RoR2.CharacterBody.UpdateOutOfCombatAndDanger -= UpdateDangerMoreStats;
+        IL.RoR2.HealthComponent.ServerFixedUpdate -= HookHealthComponentUpdate;
+        IL.RoR2.HealthComponent.TakeDamageProcess -= ModifyExecutionThreshold;
+        On.RoR2.HealthComponent.GetHealthBarValues -= DisplayExecutionThreshold;
 
         _hooksEnabled = false;
     }
