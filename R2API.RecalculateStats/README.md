@@ -32,7 +32,7 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 ## Changelog
 
 ### `1.6.1`
-* Moved GetStatMods event delegate. Added stats: `jumpCountAdd`, `jumpCountMult`, `luckAdd` and `luckMult`.
+* Moved GetStatMods event delegate. Added stats: `jumpCountAdd`, `jumpCountMult`, `luckAdd`, `luckMult`, `luckReductionAdd` and `luckReductionMult`.
 
 ### `1.6.0`
 * Added multiplicative stat modifiers `healthTotalMult`, `shieldTotalMult`, `regenTotalMult`, `moveSpeedTotalMult`, `jumpPowerTotalMult`, `damageTotalMult` `attackSpeedTotalMult`, `critMult`, `bleedChanceMult`, `armorMult`, and `curseTotalMult`.
