@@ -238,7 +238,7 @@ public static partial class RecalculateStatsAPI
         public float levelMultAdd = 0f;
         #endregion
 
-        #region jump
+        #region jumpCount
         /// <summary>Added to max jump count.</summary> <remarks>JUMP_COUNT ~ (BASE_JUMP_COUNT + jumpCountAdd) * jumpCountMult</remarks>
         public int jumpCountAdd = 0;
 
@@ -310,7 +310,7 @@ public static partial class RecalculateStatsAPI
         ModifyCurseStat(c);
         ModifyCooldownStat(c);
         ModifyLevelingStat(c);
-        ModifyJumpStat(c);
+        ModifyJumpCountStat(c);
     }
 
     private static void GetStatMods(CharacterBody characterBody)
@@ -682,7 +682,7 @@ public static partial class RecalculateStatsAPI
         }
     }
 
-    private static void ModifyJumpStat(ILCursor c)
+    private static void ModifyJumpCountStat(ILCursor c)
     {
         c.Index = 0;
 
