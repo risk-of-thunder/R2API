@@ -5,6 +5,7 @@ using Mono.Cecil.Rocks;
 using MonoMod.Cil;
 using R2API.AutoVersionGen;
 using R2API.Skills.Interop;
+using R2API.Utils;
 using RoR2;
 using RoR2.Skills;
 using RoR2.UI;
@@ -22,16 +23,31 @@ public static partial class SkillsAPI
         IL.RoR2.UI.LoadoutPanelController.Rebuild += LoadoutPanelControllerRebuildHook;
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot += LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData += CharacterSelectControllerBuildSkillStripDisplayDataHook;
-        On.RoR2.GenericSkill.SetBonusStockFromBody += GenericSkill_SetBonusStockFromBody;
+        On.RoR2.GenericSkill.CanApplyAmmoPack += GenericSkill_CanApplyAmmoPack;
+        IL.RoR2.GenericSkill.ApplyAmmoPack += GenericSkill_ApplyAmmoPack;
+        IL.RoR2.SkillLocator.ApplyAmmoPack += SkillLocator_ApplyAmmoPack;
+        IL.RoR2.GenericSkill.RecalculateMaxStock += GenericSkill_RecalculateMaxStock;
     }
-
     internal static void UnsetHooks()
     {
         IL.RoR2.UI.LoadoutPanelController.Rebuild -= LoadoutPanelControllerRebuildHook;
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot -= LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData -= CharacterSelectControllerBuildSkillStripDisplayDataHook;
-        On.RoR2.GenericSkill.SetBonusStockFromBody -= GenericSkill_SetBonusStockFromBody;
+        On.RoR2.GenericSkill.CanApplyAmmoPack -= GenericSkill_CanApplyAmmoPack;
+        IL.RoR2.GenericSkill.ApplyAmmoPack -= GenericSkill_ApplyAmmoPack;
+        IL.RoR2.SkillLocator.ApplyAmmoPack -= SkillLocator_ApplyAmmoPack;
+        IL.RoR2.GenericSkill.RecalculateMaxStock += GenericSkill_RecalculateMaxStock;
     }
+
+    /// <summary>
+    /// Gets the value of blacklisting a SkillDef from AmmoPack restock.
+    /// </summary>
+    public static bool GetBlacklistAmmoPack(this SkillDef skillDef) => SkillDefInterop.GetBlacklistAmmoPack(skillDef);
+
+    /// <summary>
+    /// Sets the value of blacklisting a SkillDef from AmmoPack restock.
+    /// </summary>
+    public static void SetBlacklistAmmoPack(this SkillDef skillDef, bool value) => SkillDefInterop.SetBlacklistAmmoPack(skillDef, value);
 
     /// <summary>
     /// Gets the value of bonus stock multiplication of a SkillDef.
@@ -226,7 +242,84 @@ public static partial class SkillsAPI
 
         return token;
     }
+    private static bool GenericSkill_CanApplyAmmoPack(On.RoR2.GenericSkill.orig_CanApplyAmmoPack orig, GenericSkill self)
+    {
+        if (self.skillDef && self.skillDef.GetBlacklistAmmoPack()) return false;
+        return orig(self);
+    }
+    private static void SkillLocator_ApplyAmmoPack(ILContext il)
+    {
+        var c = new ILCursor(il);
+        if (c.TryGotoNext(MoveType.Before,
+            x => x.MatchLdloc(out var num),
+            x => x.MatchCallvirt<GenericSkill>(nameof(GenericSkill.CanApplyAmmoPack)),
+            x => x.MatchBrfalse(out var iLLabel)
+            )
+            )
+        {
+            c.RemoveRange(3);
+        }
+        else
+        {
+            SkillsPlugin.Logger.LogError($"Failed to apply {nameof(SkillLocator_ApplyAmmoPack)}");
+            return;
+        }
+    }
+    private static void GenericSkill_ApplyAmmoPack(ILContext il)
+    {
+        var c = new ILCursor(il);
+        ILLabel iLLabel = null;
+        if (c.TryGotoNext(MoveType.Before,
+            x => x.MatchLdarg(0),
+            x => x.MatchCall<GenericSkill>("get_stock"),
+            x => x.MatchLdarg(0),
+            x => x.MatchCall<GenericSkill>("get_maxStock"),
+            x => x.MatchBge(out iLLabel)
+            )
+            )
+        {
+            c.RemoveRange(5);
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Callvirt, HarmonyLib.AccessTools.Method(typeof(GenericSkill), nameof(GenericSkill.CanApplyAmmoPack)));
+            c.Emit(OpCodes.Brfalse_S, iLLabel);
+        }
+        else
+        {
+            SkillsPlugin.Logger.LogError($"Failed to apply {nameof(GenericSkill_ApplyAmmoPack)}");
+            return;
+        }
+    }
+    private static void GenericSkill_RecalculateMaxStock(ILContext il)
+    {
+        var c = new ILCursor(il);
+        if (c.TryGotoNext(MoveType.After,
+            x => x.MatchLdarg(0),
+            x => x.MatchLdarg(0),
+            x => x.MatchCall(typeof(GenericSkill).GetPropertyGetter(nameof(GenericSkill.maxStock))),
+            x => x.MatchLdarg(0),
+            x => x.MatchLdfld<GenericSkill>(nameof(GenericSkill.bonusStockFromBody)),
+            x => x.MatchAdd()
+            )
+            )
+        {
+            c.Index--;
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(MultiplyBonusStock);
+            int MultiplyBonusStock(GenericSkill genericSkill)
+            {
+                SkillDef skillDef = genericSkill.skillDef;
+                int multiplier = skillDef ? skillDef.GetBonusStockMultiplier() : 1;
+                return multiplier == 0 ? 1 : multiplier;
+            }
+            c.Emit(OpCodes.Mul);
 
+        }
+        else
+        {
+            SkillsPlugin.Logger.LogError($"Failed to apply {nameof(GenericSkill_RecalculateMaxStock)}");
+            return;
+        }
+    }
     private struct GenericSkillComparer : IComparer<GenericSkill>
     {
         public readonly int Compare(GenericSkill x, GenericSkill y) => x.GetOrderPriority() - y.GetOrderPriority();
