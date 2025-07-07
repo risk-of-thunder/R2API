@@ -37,14 +37,12 @@ public static partial class RecalculateStatsAPI
         }
 
         IL.RoR2.CharacterBody.RecalculateStats += HookRecalculateStats;
-        IL.RoR2.CharacterMaster.OnInventoryChanged += HookInventoryChanged;
         _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
-        IL.RoR2.CharacterMaster.OnInventoryChanged -= HookInventoryChanged;
         _hooksEnabled = false;
     }
 
@@ -247,20 +245,6 @@ public static partial class RecalculateStatsAPI
         /// <summary>Jump count is multiplied by this number.</summary> <remarks>JUMP_COUNT ~ (BASE_JUMP_COUNT + jumpCountAdd) * jumpCountMult</remarks>
         public int jumpCountMult = 1;
         #endregion
-
-        #region luck
-        /// <summary>Added to luck.</summary> <remarks>LUCK ~ (CLOVER_COUNT + luckAdd) * luckMult - (PURITY_COUNT + luckReductionAdd) * luckReductionMult</remarks>
-        public float luckAdd = 0;
-
-        /// <summary>Luck is multiplied by this number.</summary> <remarks>LUCK ~ (CLOVER_COUNT + luckAdd) * luckMult - (PURITY_COUNT + luckReductionAdd) * luckReductionMult</remarks>
-        public float luckMult = 1;
-
-        /// <summary>Added to luck reduction.</summary> <remarks>LUCK ~ (CLOVER_COUNT + luckAdd) * luckMult - (PURITY_COUNT + luckReductionAdd) * luckReductionMult</remarks>
-        public float luckReductionAdd = 0;
-
-        /// <summary>Luck reduction is multiplied by this number.</summary> <remarks>LUCK ~ (CLOVER_COUNT + luckAdd) * luckMult - (PURITY_COUNT + luckReductionAdd) * luckReductionMult</remarks>
-        public float luckReductionMult = 1;
-        #endregion
     }
 
     /// <summary>
@@ -327,11 +311,6 @@ public static partial class RecalculateStatsAPI
         ModifyCooldownStat(c);
         ModifyLevelingStat(c);
         ModifyJumpStat(c);
-    }
-    private static void HookInventoryChanged(ILContext il)
-    {
-        ILCursor c = new ILCursor(il);
-        ModifyLuckStat(c);
     }
 
     private static void GetStatMods(CharacterBody characterBody)
@@ -729,69 +708,6 @@ public static partial class RecalculateStatsAPI
         else
         {
             RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpStat)} failed.");
-        }
-    }
-
-    private static void ModifyLuckStat(ILCursor c)
-    {
-        c.Index = 0;
-
-        bool ILFound = c.TryGotoNext(
-            MoveType.After,
-            x => x.MatchLdarg(0),
-            x => x.MatchLdcR4(0f),
-            x => x.MatchCallOrCallvirt(typeof(CharacterMaster).GetPropertySetter(nameof(CharacterMaster.luck))),
-            x => x.MatchLdarg(0),
-            x => x.MatchLdarg(0),
-            x => x.MatchCallOrCallvirt(typeof(CharacterMaster).GetPropertyGetter(nameof(CharacterMaster.luck))),
-            x => x.MatchLdarg(0),
-            x => x.MatchCallOrCallvirt(typeof(CharacterMaster).GetPropertyGetter(nameof(CharacterMaster.inventory))),
-            x => x.MatchLdsfld(typeof(RoR2Content.Items), nameof(RoR2Content.Items.Clover)),
-            x => x.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCount)),
-            x => x.MatchConvR4(),
-            x => x.MatchAdd(),
-            x => x.MatchCallOrCallvirt(typeof(CharacterMaster).GetPropertySetter(nameof(CharacterMaster.luck)))
-        );
-
-        if (ILFound)
-        {
-            c.Index--;
-            c.EmitDelegate<Func<float>>(() => StatMods.luckAdd);
-            c.Emit(OpCodes.Add);
-
-            c.EmitDelegate<Func<float>>(() => StatMods.luckMult);
-            c.Emit(OpCodes.Mul);
-        }
-        else
-        {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyLuckStat)} failed.");
-        }
-        ILFound = c.TryGotoNext(
-            MoveType.After,
-            x => x.MatchLdarg(0),
-            x => x.MatchLdarg(0),
-            x => x.MatchCallOrCallvirt(typeof(CharacterMaster).GetPropertyGetter(nameof(CharacterMaster.luck))),
-            x => x.MatchLdarg(0),
-            x => x.MatchCallOrCallvirt(typeof(CharacterMaster).GetPropertyGetter(nameof(CharacterMaster.inventory))),
-            x => x.MatchLdsfld(typeof(RoR2Content.Items), nameof(RoR2Content.Items.LunarBadLuck)),
-            x => x.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCount)),
-            x => x.MatchConvR4(),
-            x => x.MatchSub(),
-            x => x.MatchCallOrCallvirt(typeof(CharacterMaster).GetPropertySetter(nameof(CharacterMaster.luck)))
-        );
-
-        if (ILFound)
-        {
-            c.Index -= 2;
-            c.EmitDelegate<Func<float>>(() => StatMods.luckReductionAdd);
-            c.Emit(OpCodes.Add);
-
-            c.EmitDelegate<Func<float>>(() => StatMods.luckReductionMult);
-            c.Emit(OpCodes.Mul);
-        }
-        else
-        {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyLuckStat)} failed.");
         }
     }
 
