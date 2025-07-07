@@ -2,9 +2,11 @@
 using System.ComponentModel;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
 using R2API.AutoVersionGen;
 using R2API.Utils;
 using RoR2;
+using RoR2BepInExPack.Utilities;
 
 namespace R2API;
 
@@ -29,6 +31,15 @@ public static partial class RecalculateStatsAPI
 
     private static bool _hooksEnabled = false;
 
+    #region custom hooks
+    static ILHook luckHook;
+    internal static void InitHooks()
+    {
+        var hookConfig = new ILHookConfig() { ManualApply = true };
+        luckHook = new ILHook(typeof(CharacterMaster).GetMethod("get_luck"), ModifyLuckStat, ref hookConfig);
+    }
+    #endregion
+
     internal static void SetHooks()
     {
         if (_hooksEnabled)
@@ -38,12 +49,23 @@ public static partial class RecalculateStatsAPI
 
         IL.RoR2.CharacterBody.RecalculateStats += HookRecalculateStats;
 
+        // adding custom luck stat to CharacterMaster.get_luck
+        luckHook.Apply();
+        // Continuously Update Shield Ready
+        On.RoR2.CharacterBody.UpdateOutOfCombatAndDanger += UpdateDangerMoreStats;
+        // Barrier Decay And Shield Recharge
+        IL.RoR2.HealthComponent.ServerFixedUpdate += HookHealthComponentUpdate;
+        // Execution
+        IL.RoR2.HealthComponent.TakeDamageProcess += ModifyExecutionThreshold;
+        On.RoR2.HealthComponent.GetHealthBarValues += DisplayExecutionThreshold;
+
         _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
+        luckHook.Undo();
 
         _hooksEnabled = false;
     }
@@ -239,6 +261,135 @@ public static partial class RecalculateStatsAPI
         /// <summary>Added to the direct multiplier to level scaling.</summary> <inheritdoc cref="levelFlatAdd"/>
         public float levelMultAdd = 0f;
         #endregion
+
+        #region barrier
+        /// <summary>
+        /// Tally of barrier freeze sources. If over 0, barrier will not decay.
+        /// </summary>
+        public int barrierFreezeCount = 0;
+
+        /// <summary>
+        /// MULTIPLY to increase decay. Can be multiplied by values less than 1 if you want classic cooldown reduction style reduction.
+        /// BARRIER_DECAY_RATE = 
+        /// ([BASE_DECAY_RATE] + [barrierDecayPerSecondFlat])
+        /// * ([barrierDecayIncreaseMultiplier] / [barrierDecayDecreaseDivisor]) + barrierGenPerSecondFlat
+        /// </summary>
+        public float barrierDecayRatePercentIncreaseMult = 1;
+        /// <summary>
+        /// MULTIPLY to reduce decay.
+        /// BARRIER_DECAY_RATE = 
+        /// ([BASE_DECAY_RATE] + [barrierDecayPerSecondFlat])
+        /// * ([barrierDecayIncreaseMultiplier] / [barrierDecayDecreaseDivisor]) + barrierGenPerSecondFlat
+        /// </summary>
+        public float barrierDecayRatePercentDecreaseDiv = 1;
+        public float barrierDecayMultiplier
+        {
+            get
+            {
+                if (barrierDecayRatePercentDecreaseDiv <= 0 || barrierDecayRatePercentIncreaseMult <= 0)
+                    return 0;
+                return barrierDecayRatePercentIncreaseMult / barrierDecayRatePercentDecreaseDiv;
+            }
+        }
+
+        //flats
+        /// <summary>
+        /// ADD to reduce barrier decay rate. Generates barrier if above barrier decay rate; not affected by multipliers.
+        /// BARRIER_DECAY_RATE = 
+        /// ([BASE_DECAY_RATE] + [barrierDecayPerSecondFlat])
+        /// * ([barrierDecayIncreaseMultiplier] / [barrierDecayDecreaseDivisor]) + barrierGenPerSecondFlat
+        /// </summary>
+        public float barrierGenerationRateAddPostMult = 0;
+        /// <summary>
+        /// ADD to increase barrier decay rate.
+        /// BARRIER_DECAY_RATE = 
+        /// ([BASE_DECAY_RATE] + [barrierDecayPerSecondFlat])
+        /// * ([barrierDecayIncreaseMultiplier] / [barrierDecayDecreaseDivisor]) + barrierGenPerSecondFlat
+        /// </summary>
+        public float barrierDecayRateAddPreMult = 0;
+        #endregion
+
+        #region jumps
+        public int jumpCountAdd = 0;
+        public float jumpCountMult = 0;
+        //public float jumpVerticalIncreaseMultiplier = 1;
+        //public float jumpVerticalDecreaseDivisor = 1;
+        //public float jumpHorizontalIncreaseMultiplier = 1;
+        //public float jumpHorizontalDecreaseMultiplier = 1;
+        #endregion
+
+        #region shield
+        /// <summary>
+        /// ADD to increase shield to health conversion
+        /// Expressed as a decimal, i.e. 0.5 is 50% and 1 is 100%
+        /// Max of 1 (100%), in which case the health stat will always be 1.
+        /// </summary>
+        public float shieldToHealthConversionFractionAdd = 0;
+        /// <summary>
+        /// SUBTRACT to reduce delay, ADD to increase
+        /// SHIELD_DELAY = ([baseShieldDelay] + [shieldDelaySecondsIncreaseAddPreMult]) 
+        /// * ([shieldDelayPercentIncreaseMult] / [shieldDelayPercentDecreaseDiv]) + shieldDelaySecondsIncreaseAddPostMult
+        /// </summary>
+        public float shieldDelaySecondsIncreaseAddPreMult = 0f;
+        /// <summary>
+        /// SUBTRACT to reduce delay, ADD to increase
+        /// SHIELD_DELAY = ([baseShieldDelay] + [shieldDelaySecondsIncreaseAddPreMult]) 
+        /// * ([shieldDelayPercentIncreaseMult] / [shieldDelayPercentDecreaseDiv]) + shieldDelaySecondsIncreaseAddPostMult
+        /// </summary>
+        public float shieldDelaySecondsIncreaseAddPostMult = 0f;
+        /// <summary>
+        /// MULTIPLY to increase delay. Can be multiplied by values less than 1 if you want classic cooldown reduction style reduction
+        /// SHIELD_DELAY = ([baseShieldDelay] + [shieldDelaySecondsIncreaseAddPreMult]) 
+        /// * ([shieldDelayPercentIncreaseMult] / [shieldDelayPercentDecreaseDiv]) + shieldDelaySecondsIncreaseAddPostMult
+        /// </summary>
+        public float shieldDelayPercentIncreaseMult = 1f;
+        /// <summary>
+        /// MULTIPLY to reduce delay.
+        /// SHIELD_DELAY = ([baseShieldDelay] + [shieldDelaySecondsIncreaseAddPreMult]) 
+        /// * ([shieldDelayPercentIncreaseMult] / [shieldDelayPercentDecreaseDiv]) + shieldDelaySecondsIncreaseAddPostMult
+        /// </summary>
+        public float shieldDelayPercentDecreaseDiv = 1f;
+
+        public float shieldDelayMultiplier
+        {
+            get
+            {
+                if (shieldDelayPercentDecreaseDiv <= 0 || shieldDelayPercentIncreaseMult <= 0)
+                    return 0;
+                return shieldDelayPercentIncreaseMult / shieldDelayPercentDecreaseDiv;
+            }
+        }
+        #endregion
+
+        #region luck
+        public float luckAdd = 0;
+        #endregion
+
+        #region execution
+        /// <summary>
+        /// Vanilla sources of execution are mutually exclusive and use the highest threshold rather than adding. Consider this a modded synergy. 
+        /// Expressed out of 1, ie 0.15 is +15% max health execution
+        /// </summary>
+        public float selfExecutionThresholdAdd = 0;
+        public float selfExecutionThresholdBase { get; private set; } = float.NegativeInfinity;
+        /// <summary>
+        /// Mimics vanilla sources of execution, which are mutually exclusive. Uses the highest applicable threshold.
+        /// Expressed out of 1, ie 0.15 is 15% max health execution
+        /// </summary>
+        /// <param name="newThreshold">The execution threshold from your source</param>
+        /// <param name="condition">The condition your source needs to meet for the threshold to apply, i.e if the characterbody has the required buff</param>
+        public float ModifyBaseExecutionThreshold(float newThreshold, bool condition)
+        {
+            if (newThreshold <= 0 || selfExecutionThresholdBase >= 1)
+                return selfExecutionThresholdBase;
+
+            if (condition && newThreshold > selfExecutionThresholdBase)
+            {
+                selfExecutionThresholdBase = newThreshold;
+            }
+            return selfExecutionThresholdBase;
+        }
+        #endregion
     }
 
     /// <summary>
@@ -275,6 +426,7 @@ public static partial class RecalculateStatsAPI
     }
 
     private static StatHookEventArgs StatMods;
+    private static MoreStats CustomStats;
 
     private static void HookRecalculateStats(ILContext il)
     {
@@ -291,11 +443,37 @@ public static partial class RecalculateStatsAPI
 
         Action emitLevelMultiplier = locLevelMultiplierIndex >= 0 ? EmitLevelMultiplier : EmitFallbackLevelMultiplier;
 
+        c.Emit(OpCodes.Ldarg_0);
+        c.EmitDelegate<Action<CharacterBody>>((body) => SetCustomStats(body));
+        void SetCustomStats(CharacterBody body)
+        {
+            //get stats
+            CustomStats = GetMoreStatsFromBody(body);
+            CustomStats.ResetStats();
+
+            CustomStats.luckAdd = StatMods.luckAdd;
+
+            //process shield recharge delay
+            #region shield delay
+            float shieldDelay = (BaseStats.BaseShieldDelaySeconds + StatMods.shieldDelaySecondsIncreaseAddPreMult)
+                * StatMods.shieldDelayMultiplier + StatMods.shieldDelaySecondsIncreaseAddPostMult;
+
+            CustomStats.shieldRechargeDelay = Math.Max(BaseStats.MinShieldDelaySeconds, shieldDelay);
+            UpdateShieldRechargeReady(body, CustomStats);
+            #endregion
+
+            CustomStats.selfExecutionThresholdAdd = StatMods.selfExecutionThresholdAdd;
+            CustomStats.selfExecutionThresholdBase = StatMods.selfExecutionThresholdBase;
+        }
+
+
         ModifyHealthStat(c, emitLevelMultiplier);
         ModifyShieldStat(c, emitLevelMultiplier);
+        ModifyBarrierDecayStats(c);
         ModifyHealthRegenStat(c, emitLevelMultiplier);
         ModifyMovementSpeedStat(c, emitLevelMultiplier);
-        ModifyJumpStat(c, emitLevelMultiplier);
+        ModifyJumpPowerStat(c, emitLevelMultiplier);
+        ModifyJumpCountStat(c);
         ModifyDamageStat(c, emitLevelMultiplier);
         ModifyAttackSpeedStat(c, emitLevelMultiplier);
         ModifyCritStat(c, emitLevelMultiplier);
@@ -649,7 +827,7 @@ public static partial class RecalculateStatsAPI
         }
     }
 
-    private static void ModifyJumpStat(ILCursor c, Action emitLevelMultiplier)
+    private static void ModifyJumpPowerStat(ILCursor c, Action emitLevelMultiplier)
     {
         c.Index = 0;
 
@@ -671,7 +849,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpPowerStat)} failed.");
         }
     }
 
@@ -849,4 +1027,359 @@ public static partial class RecalculateStatsAPI
             RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyMovementSpeedStat)} failed.");
         }
     }
+
+
+    private static void HookHealthComponentUpdate(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+        ModifyShieldRechargeReady(c);
+        ModifyBarrierDecayRate_ServerFixedUpdate(c);
+    }
+
+    #region barrier
+    private static void ModifyBarrierDecayStats(ILCursor c)
+    {
+        c.Index = 0;
+
+        bool ILFound =
+            c.TryGotoNext(MoveType.Before,
+                x => x.MatchCallOrCallvirt<CharacterBody>("set_barrierDecayRate")
+                ) &&
+            c.TryGotoPrev(MoveType.After,
+                x => x.MatchLdcR4(out _)
+                );
+
+        if (ILFound)
+        {
+            c.Remove(); //remove div
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate<Func<float, float, CharacterBody, float>>((maxBarrier, decayTime, body) =>
+            {
+                //process barrier decay stats
+                float decayRate = 0;
+                bool decayFrozen = StatMods.barrierFreezeCount > 0;
+                float decayMultiplier = StatMods.barrierDecayRatePercentDecreaseDiv > 0 ? StatMods.barrierDecayRatePercentIncreaseMult / StatMods.barrierDecayRatePercentDecreaseDiv : 0;
+
+                CustomStats.barrierDecayFrozen = decayFrozen;
+                CustomStats.barrierDecayDynamicHalfLife = decayMultiplier > 0 ? BaseStats.BarrierDecayDynamicHalfLife / decayMultiplier : 0;
+
+                if (!decayFrozen && decayMultiplier > 0)
+                {
+                    decayRate = StatMods.barrierDecayRateAddPreMult;
+                    if (BaseStats.BarrierDecayStaticMaxHealthTime > 0)
+                    {
+                        decayRate += maxBarrier / BaseStats.BarrierDecayStaticMaxHealthTime;
+                    }
+                    decayRate *= decayMultiplier;
+                }
+
+                decayRate -= StatMods.barrierGenerationRateAddPostMult;
+                //if(StatMods.barrierGenPerSecondFlat > 0)
+                //{
+                //    if(StatMods.barrierGenPerSecondFlat > decayRate)
+                //    {
+                //        float excessBarrierGen = StatMods.barrierGenPerSecondFlat - decayRate;
+                //        decayRate = 0;
+                //        CustomStats.barrierGenRate = excessBarrierGen;
+                //    }
+                //    else
+                //    {
+                //        decayRate -= StatMods.barrierGenPerSecondFlat;
+                //    }
+                //}
+
+                return decayRate;
+            });
+            //c.EmitDelegate<Func<float>>(() => StatMods.barrierBaseStaticDecayRateMaxHealthTime);
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayStats)} failed.");
+        }
+    }
+
+    private static void ModifyBarrierDecayRate_ServerFixedUpdate(ILCursor c)
+    {
+        c.Index = 0;
+
+        bool ILFound = c.TryGotoNext(MoveType.After,
+            x => x.MatchLdfld<HealthComponent>("barrier"),
+            x => x.MatchLdcR4(out _)
+            );
+
+        if (ILFound)
+        {
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate<Func<float, HealthComponent, float>>((minBarrier, healthComponent) =>
+            {
+                CharacterBody body = healthComponent.body;
+                if (body)
+                {
+                    if (body.barrierDecayRate < 0)
+                    {
+                        //return -1;
+                        minBarrier += body.barrierDecayRate;
+                    }
+                }
+                return minBarrier;
+            });
+
+            c.GotoNext(MoveType.After,
+                x => x.MatchCallOrCallvirt<CharacterBody>("get_barrierDecayRate")
+                );
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate<Func<float, HealthComponent, float>>((barrierDecayRate, healthComponent) =>
+            {
+                MoreStats stats = GetMoreStatsFromBody(healthComponent.body);
+                if (stats == null)
+                    return barrierDecayRate;
+
+                if (!stats.barrierDecayFrozen && stats.barrierDecayDynamicHalfLife > 0)
+                {
+                    barrierDecayRate += (float)Math.Max(BaseStats.MinBarrierDecayWithDynamicRate - stats.barrierGenRate,
+                        healthComponent.barrier * Math.Log(2) / stats.barrierDecayDynamicHalfLife);
+                }
+
+                //healthComponent.AddBarrier(stats.barrierGenRate * Time.fixedDeltaTime);
+
+                return barrierDecayRate;
+            });
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayRate_ServerFixedUpdate)} failed.");
+        }
+    }
+    #endregion
+
+    #region jumps
+    private static void ModifyJumpCountStat(ILCursor c)
+    {
+        c.Index = 0;
+
+        int featherCountLoc = 0;
+        bool ILFound = c.TryGotoNext(MoveType.After,
+            x => x.MatchLdsfld("RoR2.RoR2Content/Items", "Feather")
+            ) &&
+        c.TryGotoNext(MoveType.After,
+            x => x.MatchStloc(out featherCountLoc)
+            ) &&
+        c.TryGotoNext(MoveType.After,
+            x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.baseJumpCount)),
+            x => x.MatchLdloc(featherCountLoc)
+            ); ;
+
+        if (ILFound)
+        {
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate<Func<int, CharacterBody, int>>((featherCount, self) =>
+            {
+                int jumpCount = 0;
+                MoreStats stats = GetMoreStatsFromBody(self);
+                // featherCount, which is used as jump count in vanilla, will instead be used as an item count using BaseStats to specify stacking behavior
+                // why, you ask? because this makes FruityJumps's job easier. dont question it 
+                if (featherCount > 0)
+                {
+                    jumpCount += BaseStats.FeatherJumpCountBase + BaseStats.FeatherJumpCountStack * (featherCount - 1);
+                }
+                jumpCount += StatMods.jumpCountAdd;
+                jumpCount = (int)Math.Floor(jumpCount * StatMods.jumpCountMult);
+
+                return Math.Max(jumpCount, 0);
+            });
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpCountStat)} failed.");
+        }
+    }
+    #endregion
+
+    #region luck
+    private static void ModifyLuckStat(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+        if (c.TryGotoNext(MoveType.Before,
+            x => x.MatchRet()
+            ))
+        {
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate<Func<Single, CharacterMaster, Single>>((baseLuck, master) =>
+            {
+                if (master == null || !master.hasBody)
+                    return baseLuck;
+
+                CharacterBody body = master.GetBody();
+                if (body == null)
+                    return baseLuck;
+                MoreStats msc = GetMoreStatsFromBody(body);
+                float newLuck = baseLuck + msc.luckAdd;
+                float remainder = newLuck % 1;
+                if (remainder < 0)
+                    remainder += 1;
+                if (remainder > Single.Epsilon && Util.CheckRoll(remainder * 100, 0))
+                {
+                    newLuck = (float)Math.Ceiling(newLuck);
+                }
+                else
+                {
+                    newLuck = (float)Math.Floor(newLuck);
+                }
+                return newLuck;
+            });
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyLuckStat)} failed.");
+        }
+    }
+    #endregion
+
+    #region shield recharge delay
+    private static void UpdateDangerMoreStats(On.RoR2.CharacterBody.orig_UpdateOutOfCombatAndDanger orig, CharacterBody self)
+    {
+        orig(self);
+        MoreStats stats = GetMoreStatsFromBody(self);
+        UpdateShieldRechargeReady(self, stats);
+    }
+
+    private static void UpdateShieldRechargeReady(CharacterBody body, MoreStats stats)
+    {
+        bool shouldShieldRecharge = body.outOfDangerStopwatch >= stats.shieldRechargeDelay;
+        if (stats.shieldRechargeReady != shouldShieldRecharge)
+        {
+            stats.shieldRechargeReady = shouldShieldRecharge;
+            body.statsDirty = true;
+        }
+    }
+
+    private static void ModifyShieldRechargeReady(ILCursor c)
+    {
+        c.Index = 0;
+
+        if (c.TryGotoNext(MoveType.After,
+            x => x.MatchCallOrCallvirt<CharacterBody>("get_maxShield")
+            ) &&
+        c.TryGotoNext(MoveType.Before,
+            x => x.MatchCallOrCallvirt<CharacterBody>("get_outOfDanger")
+            ))
+        {
+
+            c.Remove();
+            c.EmitDelegate<Func<CharacterBody, bool>>((body) =>
+            {
+                MoreStats stats = GetMoreStatsFromBody(body);
+                return stats.shieldRechargeReady;
+            });
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyShieldRechargeReady)} failed.");
+        }
+    }
+    #endregion
+
+    #region execution
+    private static void ModifyExecutionThreshold(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+
+        int thresholdPosition = 0;
+
+        bool ILFound = c.TryGotoNext(MoveType.After,
+            x => x.MatchLdcR4(float.NegativeInfinity),
+            x => x.MatchStloc(out thresholdPosition)
+            )
+         && c.TryGotoNext(MoveType.Before,
+            x => x.MatchLdarg(0),
+            x => x.MatchCallOrCallvirt<HealthComponent>("get_isInFrozenState")
+            );
+
+        if (ILFound)
+        {
+            c.Emit(OpCodes.Ldloc, thresholdPosition);
+            c.Emit(OpCodes.Ldarg, 0);
+            c.EmitDelegate<Func<float, HealthComponent, float>>((currentThreshold, hc) =>
+            {
+                float newThreshold = currentThreshold;
+
+                newThreshold = RecalculateExecutionThreshold(currentThreshold, hc);
+
+                return newThreshold;
+            });
+            c.Emit(OpCodes.Stloc, thresholdPosition);
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyExecutionThreshold)} failed.");
+        }
+    }
+
+    private static float RecalculateExecutionThreshold(float currentThreshold, HealthComponent healthComponent, float mult = 1)
+    {
+        CharacterBody body = healthComponent.body;
+
+        if (body != null)
+        {
+            if (!body.bodyFlags.HasFlag(CharacterBody.BodyFlags.ImmuneToExecutes))
+            {
+                MoreStats stats = GetMoreStatsFromBody(body);
+                float t = Math.Max(currentThreshold, stats.selfExecutionThresholdBase * mult);
+                return t + stats.selfExecutionThresholdAdd;
+            }
+        }
+
+        return currentThreshold;
+    }
+
+    private static HealthComponent.HealthBarValues DisplayExecutionThreshold(On.RoR2.HealthComponent.orig_GetHealthBarValues orig, HealthComponent self)
+    {
+        HealthComponent.HealthBarValues values = orig(self);
+
+        float maxHealthFractionClamped = Math.Clamp(1f - (1f - 1f / self.body.cursePenalty), 0, 1);
+        float threshold = RecalculateExecutionThreshold(values.cullFraction, self, maxHealthFractionClamped);
+        values.cullFraction = Math.Clamp(threshold, 0, 1);
+
+        return values;
+    }
+    #endregion
+
+    #region custom stats
+    public static FixedConditionalWeakTable<CharacterBody, MoreStats> characterCustomStats = new FixedConditionalWeakTable<CharacterBody, MoreStats>();
+    public static MoreStats GetMoreStatsFromBody(CharacterBody body)
+    {
+        if (body == null)
+            return null;
+        return characterCustomStats.GetOrCreateValue(body);
+    }
+    public class MoreStats
+    {
+        public bool barrierDecayFrozen = false;
+        public float barrierDecayDynamicHalfLife = BaseStats.BarrierDecayDynamicHalfLife;
+        public float barrierGenRate = 0;
+
+        public float luckAdd = 0;
+
+        public bool shieldRechargeReady = true;
+        public float shieldRechargeDelay = BaseStats.BaseShieldDelaySeconds;
+
+        public float selfExecutionThresholdAdd = 0;
+        public float selfExecutionThresholdBase = float.NegativeInfinity;
+
+        public void ResetStats()
+        {
+            barrierDecayFrozen = false;
+            barrierDecayDynamicHalfLife = BaseStats.BarrierDecayDynamicHalfLife;
+            barrierGenRate = 0;
+
+            luckAdd = 0;  
+
+            shieldRechargeReady = true;
+            shieldRechargeDelay = BaseStats.BaseShieldDelaySeconds;
+
+            selfExecutionThresholdAdd = 0;
+            selfExecutionThresholdBase = 0;
+        }
+    }
+    #endregion
 }
