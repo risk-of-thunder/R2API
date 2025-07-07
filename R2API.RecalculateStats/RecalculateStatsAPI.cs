@@ -18,6 +18,36 @@ namespace R2API;
 #pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class RecalculateStatsAPI
 {
+    public class MoreStats
+    {
+        public bool barrierDecayFrozen = false;
+        public float barrierDecayDynamicHalfLife = GlobalBaseStats.BarrierDecayDynamicHalfLife;
+        public float barrierGenRate = 0;
+
+        public float luckAdd = 0;
+
+        public bool shieldRechargeReady = true;
+        public float shieldRechargeDelay = GlobalBaseStats.BaseShieldDelaySeconds;
+
+        public float selfExecutionThresholdAdd = 0;
+        public float selfExecutionThresholdBase = float.NegativeInfinity;
+
+        internal void ResetStats()
+        {
+            barrierDecayFrozen = false;
+            barrierDecayDynamicHalfLife = GlobalBaseStats.BarrierDecayDynamicHalfLife;
+            barrierGenRate = 0;
+
+            luckAdd = 0;
+
+            shieldRechargeReady = true;
+            shieldRechargeDelay = GlobalBaseStats.BaseShieldDelaySeconds;
+
+            selfExecutionThresholdAdd = 0;
+            selfExecutionThresholdBase = 0;
+        }
+    }
+
     public const string PluginGUID = R2API.PluginGUID + ".recalculatestats";
     public const string PluginName = R2API.PluginName + ".RecalculateStats";
 
@@ -453,10 +483,10 @@ public static partial class RecalculateStatsAPI
 
             //process shield recharge delay
             #region shield delay
-            float shieldDelay = (BaseStats.BaseShieldDelaySeconds + StatMods.shieldDelaySecondsIncreaseAddPreMult)
+            float shieldDelay = (GlobalBaseStats.BaseShieldDelaySeconds + StatMods.shieldDelaySecondsIncreaseAddPreMult)
                 * StatMods.shieldDelayMultiplier + StatMods.shieldDelaySecondsIncreaseAddPostMult;
 
-            CustomStats.shieldRechargeDelay = Math.Max(BaseStats.MinShieldDelaySeconds, shieldDelay);
+            CustomStats.shieldRechargeDelay = Math.Max(GlobalBaseStats.MinShieldDelaySeconds, shieldDelay);
             UpdateShieldRechargeReady(body, CustomStats);
             #endregion
 
@@ -1059,14 +1089,14 @@ public static partial class RecalculateStatsAPI
                 float decayMultiplier = StatMods.barrierDecayRatePercentDecreaseDiv > 0 ? StatMods.barrierDecayRatePercentIncreaseMult / StatMods.barrierDecayRatePercentDecreaseDiv : 0;
 
                 CustomStats.barrierDecayFrozen = decayFrozen;
-                CustomStats.barrierDecayDynamicHalfLife = decayMultiplier > 0 ? BaseStats.BarrierDecayDynamicHalfLife / decayMultiplier : 0;
+                CustomStats.barrierDecayDynamicHalfLife = decayMultiplier > 0 ? GlobalBaseStats.BarrierDecayDynamicHalfLife / decayMultiplier : 0;
 
                 if (!decayFrozen && decayMultiplier > 0)
                 {
                     decayRate = StatMods.barrierDecayRateAddPreMult;
-                    if (BaseStats.BarrierDecayStaticMaxHealthTime > 0)
+                    if (GlobalBaseStats.BarrierDecayStaticMaxHealthTime > 0)
                     {
-                        decayRate += maxBarrier / BaseStats.BarrierDecayStaticMaxHealthTime;
+                        decayRate += maxBarrier / GlobalBaseStats.BarrierDecayStaticMaxHealthTime;
                     }
                     decayRate *= decayMultiplier;
                 }
@@ -1134,7 +1164,7 @@ public static partial class RecalculateStatsAPI
 
                 if (!stats.barrierDecayFrozen && stats.barrierDecayDynamicHalfLife > 0)
                 {
-                    barrierDecayRate += (float)Math.Max(BaseStats.MinBarrierDecayWithDynamicRate - stats.barrierGenRate,
+                    barrierDecayRate += (float)Math.Max(GlobalBaseStats.MinBarrierDecayWithDynamicRate - stats.barrierGenRate,
                         healthComponent.barrier * Math.Log(2) / stats.barrierDecayDynamicHalfLife);
                 }
 
@@ -1178,7 +1208,7 @@ public static partial class RecalculateStatsAPI
                 // why, you ask? because this makes FruityJumps's job easier. dont question it 
                 if (featherCount > 0)
                 {
-                    jumpCount += BaseStats.FeatherJumpCountBase + BaseStats.FeatherJumpCountStack * (featherCount - 1);
+                    jumpCount += GlobalBaseStats.FeatherJumpCountBase + GlobalBaseStats.FeatherJumpCountStack * (featherCount - 1);
                 }
                 jumpCount += StatMods.jumpCountAdd;
                 jumpCount = (int)Math.Floor(jumpCount * StatMods.jumpCountMult);
@@ -1349,35 +1379,6 @@ public static partial class RecalculateStatsAPI
         if (body == null)
             return null;
         return characterCustomStats.GetOrCreateValue(body);
-    }
-    public class MoreStats
-    {
-        public bool barrierDecayFrozen = false;
-        public float barrierDecayDynamicHalfLife = BaseStats.BarrierDecayDynamicHalfLife;
-        public float barrierGenRate = 0;
-
-        public float luckAdd = 0;
-
-        public bool shieldRechargeReady = true;
-        public float shieldRechargeDelay = BaseStats.BaseShieldDelaySeconds;
-
-        public float selfExecutionThresholdAdd = 0;
-        public float selfExecutionThresholdBase = float.NegativeInfinity;
-
-        internal void ResetStats()
-        {
-            barrierDecayFrozen = false;
-            barrierDecayDynamicHalfLife = BaseStats.BarrierDecayDynamicHalfLife;
-            barrierGenRate = 0;
-
-            luckAdd = 0;  
-
-            shieldRechargeReady = true;
-            shieldRechargeDelay = BaseStats.BaseShieldDelaySeconds;
-
-            selfExecutionThresholdAdd = 0;
-            selfExecutionThresholdBase = 0;
-        }
     }
     #endregion
 }
