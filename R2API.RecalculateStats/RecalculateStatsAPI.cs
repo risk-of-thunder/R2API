@@ -1061,7 +1061,7 @@ public static partial class RecalculateStatsAPI
     {
         ILCursor c = new ILCursor(il);
         ModifyShieldRechargeReady(c);
-        ModifyBarrierDecayRate_ServerFixedUpdate(c);
+        ModifyBarrierDecayRate(c);
     }
 
     #region barrier
@@ -1126,7 +1126,7 @@ public static partial class RecalculateStatsAPI
         }
     }
 
-    private static void ModifyBarrierDecayRate_ServerFixedUpdate(ILCursor c)
+    private static void ModifyBarrierDecayRate(ILCursor c)
     {
         c.Index = 0;
 
@@ -1141,41 +1141,47 @@ public static partial class RecalculateStatsAPI
             c.EmitDelegate<Func<float, HealthComponent, float>>((minBarrier, healthComponent) =>
             {
                 CharacterBody body = healthComponent.body;
-                if (body)
+                //if barrier decay is negative (meaning barrier is being generated) this delegate allows barrier generation to proceed
+                //may interfere with the if statement below which requires having no barrier but since barrier is being generated you should never have 0 barrier anyways?
+                if (body.barrierDecayRate < 0)
                 {
-                    if (body.barrierDecayRate < 0)
-                    {
-                        //return -1;
-                        minBarrier += body.barrierDecayRate;
-                    }
+                    //return -1;
+                    minBarrier += body.barrierDecayRate;
                 }
                 return minBarrier;
             });
 
-            c.GotoNext(MoveType.After,
+            bool ILFound2 = c.TryGotoNext(MoveType.After,
                 x => x.MatchCallOrCallvirt<CharacterBody>("get_barrierDecayRate")
                 );
-            c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Func<float, HealthComponent, float>>((barrierDecayRate, healthComponent) =>
+            if (ILFound2)
             {
-                MoreStats stats = GetMoreStatsFromBody(healthComponent.body);
-                if (stats == null)
-                    return barrierDecayRate;
-
-                if (!stats.barrierDecayFrozen && stats.barrierDecayDynamicHalfLife > 0)
+                c.Emit(OpCodes.Ldarg_0);
+                c.EmitDelegate<Func<float, HealthComponent, float>>((barrierDecayRate, healthComponent) =>
                 {
-                    barrierDecayRate += (float)Math.Max(GlobalBaseStats.MinBarrierDecayWithDynamicRate - stats.barrierGenRate,
-                        healthComponent.barrier * Math.Log(2) / stats.barrierDecayDynamicHalfLife);
-                }
+                    MoreStats stats = GetMoreStatsFromBody(healthComponent.body);
+                    if (stats == null)
+                        return barrierDecayRate;
 
-                //healthComponent.AddBarrier(stats.barrierGenRate * Time.fixedDeltaTime);
+                    if (!stats.barrierDecayFrozen && stats.barrierDecayDynamicHalfLife > 0)
+                    {
+                        barrierDecayRate += (float)Math.Max(GlobalBaseStats.MinBarrierDecayWithDynamicRate - stats.barrierGenRate,
+                            healthComponent.barrier * Math.Log(2) / stats.barrierDecayDynamicHalfLife);
+                    }
 
-                return barrierDecayRate;
-            });
+                    //healthComponent.AddBarrier(stats.barrierGenRate * Time.fixedDeltaTime);
+
+                    return barrierDecayRate;
+                });
+            }
+            else
+            {
+                RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayRate)} failed.");
+            }
         }
         else
         {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayRate_ServerFixedUpdate)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayRate)} failed.");
         }
     }
     #endregion
