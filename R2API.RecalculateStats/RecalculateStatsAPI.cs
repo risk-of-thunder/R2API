@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
@@ -1233,39 +1234,32 @@ public static partial class RecalculateStatsAPI
     private static void ModifyLuckStat(ILContext il)
     {
         ILCursor c = new ILCursor(il);
-        if (c.TryGotoNext(MoveType.Before,
-            x => x.MatchRet()
-            ))
-        {
-            c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Func<Single, CharacterMaster, Single>>((baseLuck, master) =>
-            {
-                if (master == null || !master.hasBody)
-                    return baseLuck;
 
-                CharacterBody body = master.GetBody();
-                if (body == null)
-                    return baseLuck;
-                MoreStats msc = GetMoreStatsFromBody(body);
-                float newLuck = baseLuck + msc.luckAdd;
-                float remainder = newLuck % 1;
-                if (remainder < 0)
-                    remainder += 1;
-                if (remainder > Single.Epsilon && Util.CheckRoll(remainder * 100, 0))
-                {
-                    newLuck = (float)Math.Ceiling(newLuck);
-                }
-                else
-                {
-                    newLuck = (float)Math.Floor(newLuck);
-                }
-                return newLuck;
-            });
-        }
-        else
+        c.Goto(il.Instrs.Last());
+        c.Emit(OpCodes.Ldarg_0);
+        c.EmitDelegate<Func<Single, CharacterMaster, Single>>((baseLuck, master) =>
         {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyLuckStat)} failed.");
-        }
+            if (master == null || !master.hasBody)
+                return baseLuck;
+
+            CharacterBody body = master.GetBody();
+            if (body == null)
+                return baseLuck;
+            MoreStats msc = GetMoreStatsFromBody(body);
+            float newLuck = baseLuck + msc.luckAdd;
+            float remainder = newLuck % 1;
+            if (remainder < 0)
+                remainder += 1;
+            if (remainder > Single.Epsilon && Util.CheckRoll(remainder * 100, 0))
+            {
+                newLuck = (float)Math.Ceiling(newLuck);
+            }
+            else
+            {
+                newLuck = (float)Math.Floor(newLuck);
+            }
+            return newLuck;
+        });
     }
     #endregion
 
