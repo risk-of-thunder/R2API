@@ -286,7 +286,7 @@ public static partial class RecalculateStatsAPI
         /// * ([barrierDecayIncreaseMultiplier] / [barrierDecayDecreaseDivisor]) + barrierGenPerSecondFlat
         /// </summary>
         public float barrierDecayRatePercentDecreaseDiv = 1;
-        public float barrierDecayMultiplier
+        internal float barrierDecayMultiplier
         {
             get
             {
@@ -348,7 +348,7 @@ public static partial class RecalculateStatsAPI
         /// </summary>
         public float shieldDelayPercentDecreaseDiv = 1f;
 
-        public float shieldDelayMultiplier
+        internal float shieldDelayMultiplier
         {
             get
             {
@@ -376,7 +376,7 @@ public static partial class RecalculateStatsAPI
         /// </summary>
         /// <param name="newThreshold">The execution threshold from your source</param>
         /// <param name="condition">The condition your source needs to meet for the threshold to apply, i.e if the characterbody has the required buff</param>
-        public float ModifyBaseExecutionThreshold(float newThreshold, bool condition)
+        internal float ModifyBaseExecutionThreshold(float newThreshold, bool condition)
         {
             if (newThreshold <= 0 || selfExecutionThresholdBase >= 1)
                 return selfExecutionThresholdBase;
@@ -1344,7 +1344,7 @@ public static partial class RecalculateStatsAPI
 
     #region custom stats
     public static FixedConditionalWeakTable<CharacterBody, MoreStats> characterCustomStats = new FixedConditionalWeakTable<CharacterBody, MoreStats>();
-    public static MoreStats GetMoreStatsFromBody(CharacterBody body)
+    internal static MoreStats GetMoreStatsFromBody(CharacterBody body)
     {
         if (body == null)
             return null;
@@ -1364,7 +1364,7 @@ public static partial class RecalculateStatsAPI
         public float selfExecutionThresholdAdd = 0;
         public float selfExecutionThresholdBase = float.NegativeInfinity;
 
-        public void ResetStats()
+        internal void ResetStats()
         {
             barrierDecayFrozen = false;
             barrierDecayDynamicHalfLife = BaseStats.BarrierDecayDynamicHalfLife;
