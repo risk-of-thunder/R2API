@@ -344,15 +344,6 @@ public static partial class RecalculateStatsAPI
         public float barrierDecayRateAddPreMult = 0;
         #endregion
 
-        #region jumps
-        public int jumpCountAdd = 0;
-        public float jumpCountMult = 0;
-        //public float jumpVerticalIncreaseMultiplier = 1;
-        //public float jumpVerticalDecreaseDivisor = 1;
-        //public float jumpHorizontalIncreaseMultiplier = 1;
-        //public float jumpHorizontalDecreaseMultiplier = 1;
-        #endregion
-
         #region shield recharge
         /// <summary>
         /// SUBTRACT to reduce delay, ADD to increase
@@ -502,7 +493,6 @@ public static partial class RecalculateStatsAPI
         ModifyHealthRegenStat(c, emitLevelMultiplier);
         ModifyMovementSpeedStat(c, emitLevelMultiplier);
         ModifyJumpPowerStat(c, emitLevelMultiplier);
-        ModifyJumpCountStat(c);
         ModifyDamageStat(c, emitLevelMultiplier);
         ModifyAttackSpeedStat(c, emitLevelMultiplier);
         ModifyCritStat(c, emitLevelMultiplier);
@@ -1183,49 +1173,6 @@ public static partial class RecalculateStatsAPI
         else
         {
             RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayRate)} failed.");
-        }
-    }
-    #endregion
-
-    #region jumps
-    private static void ModifyJumpCountStat(ILCursor c)
-    {
-        c.Index = 0;
-
-        int featherCountLoc = 0;
-        bool ILFound = c.TryGotoNext(MoveType.After,
-            x => x.MatchLdsfld("RoR2.RoR2Content/Items", "Feather")
-            ) &&
-        c.TryGotoNext(MoveType.After,
-            x => x.MatchStloc(out featherCountLoc)
-            ) &&
-        c.TryGotoNext(MoveType.After,
-            x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.baseJumpCount)),
-            x => x.MatchLdloc(featherCountLoc)
-            ); ;
-
-        if (ILFound)
-        {
-            c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Func<int, CharacterBody, int>>((featherCount, self) =>
-            {
-                int jumpCount = 0;
-                MoreStats stats = GetMoreStatsFromBody(self);
-                // featherCount, which is used as jump count in vanilla, will instead be used as an item count using BaseStats to specify stacking behavior
-                // why, you ask? because this makes FruityJumps's job easier. dont question it 
-                if (featherCount > 0)
-                {
-                    jumpCount += GlobalBaseStats.FeatherJumpCountBase + GlobalBaseStats.FeatherJumpCountStack * (featherCount - 1);
-                }
-                jumpCount += StatMods.jumpCountAdd;
-                jumpCount = (int)Math.Floor(jumpCount * StatMods.jumpCountMult);
-
-                return Math.Max(jumpCount, 0);
-            });
-        }
-        else
-        {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpCountStat)} failed.");
         }
     }
     #endregion
