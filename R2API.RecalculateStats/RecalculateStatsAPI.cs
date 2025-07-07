@@ -312,11 +312,6 @@ public static partial class RecalculateStatsAPI
         ModifyLevelingStat(c);
         ModifyJumpStat(c);
     }
-    private static void HookInventoryChanged(ILContext il)
-    {
-        ILCursor c = new ILCursor(il);
-        ModifyLuckStat(c);
-    }
 
     private static void GetStatMods(CharacterBody characterBody)
     {
