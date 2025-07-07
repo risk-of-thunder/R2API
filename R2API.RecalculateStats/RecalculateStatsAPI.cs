@@ -318,7 +318,7 @@ public static partial class RecalculateStatsAPI
         //public float jumpHorizontalDecreaseMultiplier = 1;
         #endregion
 
-        #region shield
+        #region shield recharge
         /// <summary>
         /// ADD to increase shield to health conversion
         /// Expressed as a decimal, i.e. 0.5 is 50% and 1 is 100%
