@@ -320,12 +320,6 @@ public static partial class RecalculateStatsAPI
 
         #region shield recharge
         /// <summary>
-        /// ADD to increase shield to health conversion
-        /// Expressed as a decimal, i.e. 0.5 is 50% and 1 is 100%
-        /// Max of 1 (100%), in which case the health stat will always be 1.
-        /// </summary>
-        public float shieldToHealthConversionFractionAdd = 0;
-        /// <summary>
         /// SUBTRACT to reduce delay, ADD to increase
         /// SHIELD_DELAY = ([baseShieldDelay] + [shieldDelaySecondsIncreaseAddPreMult]) 
         /// * ([shieldDelayPercentIncreaseMult] / [shieldDelayPercentDecreaseDiv]) + shieldDelaySecondsIncreaseAddPostMult
