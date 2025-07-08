@@ -13,7 +13,7 @@ Adds extra fields (can be accessed with extension methods) to SkillDef:
 
 ## Changelog
 
-### '1.0.2'
+### '1.0.3'
 * Remake bonusStockMultiplier logic
 
 ### '1.0.2'
