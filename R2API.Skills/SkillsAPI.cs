@@ -23,7 +23,6 @@ public static partial class SkillsAPI
         IL.RoR2.UI.LoadoutPanelController.Rebuild += LoadoutPanelControllerRebuildHook;
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot += LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData += CharacterSelectControllerBuildSkillStripDisplayDataHook;
-        On.RoR2.GenericSkill.CanApplyAmmoPack += GenericSkill_CanApplyAmmoPack;
         IL.RoR2.GenericSkill.RecalculateMaxStock += GenericSkill_RecalculateMaxStock;
     }
     internal static void UnsetHooks()
@@ -31,19 +30,8 @@ public static partial class SkillsAPI
         IL.RoR2.UI.LoadoutPanelController.Rebuild -= LoadoutPanelControllerRebuildHook;
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot -= LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData -= CharacterSelectControllerBuildSkillStripDisplayDataHook;
-        On.RoR2.GenericSkill.CanApplyAmmoPack -= GenericSkill_CanApplyAmmoPack;
         IL.RoR2.GenericSkill.RecalculateMaxStock += GenericSkill_RecalculateMaxStock;
     }
-
-    /// <summary>
-    /// Gets the value of blacklisting a SkillDef from AmmoPack restock.
-    /// </summary>
-    public static bool GetBlacklistAmmoPack(this SkillDef skillDef) => SkillDefInterop.GetBlacklistAmmoPack(skillDef);
-
-    /// <summary>
-    /// Sets the value of blacklisting a SkillDef from AmmoPack restock.
-    /// </summary>
-    public static void SetBlacklistAmmoPack(this SkillDef skillDef, bool value) => SkillDefInterop.SetBlacklistAmmoPack(skillDef, value);
 
     /// <summary>
     /// Gets the value of bonus stock multiplication of a SkillDef.
@@ -237,12 +225,6 @@ public static partial class SkillsAPI
         }
 
         return token;
-    }
-    
-    private static bool GenericSkill_CanApplyAmmoPack(On.RoR2.GenericSkill.orig_CanApplyAmmoPack orig, GenericSkill self)
-    {
-        if (self.skillDef && self.skillDef.GetBlacklistAmmoPack()) return false;
-        return orig(self);
     }
     
     private static void GenericSkill_RecalculateMaxStock(ILContext il)

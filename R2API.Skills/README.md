@@ -14,7 +14,7 @@ Adds extra fields (can be accessed with extension methods) to SkillDef:
 ## Changelog
 
 ### '1.0.2'
-* Add GetBlacklistAmmoPack and SetBlacklistAmmoPack to SkillDef
+* Remake bonusStockMultiplier logic
 
 ### '1.0.2'
 * Add GetBonusStockMultiplier and SetBonusStockMultiplier to SkillDef

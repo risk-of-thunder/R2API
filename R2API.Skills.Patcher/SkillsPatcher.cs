@@ -28,7 +28,6 @@ internal static class SkillsPatcher
         if (skillDef != null)
         {
             skillDef.Fields.Add(new FieldDefinition("r2api_bonusStockMultiplier", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(int))));
-            skillDef.Fields.Add(new FieldDefinition("r2api_blacklistAmmoPack", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(bool))));
         }
     }
 }
