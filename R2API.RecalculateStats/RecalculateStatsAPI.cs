@@ -27,9 +27,6 @@ public static partial class RecalculateStatsAPI
 
         public float luckAdd = 0;
 
-        public bool shieldRechargeReady = true;
-        public float shieldRechargeDelay = GlobalBaseStats.BaseShieldDelaySeconds;
-
         public float selfExecutionThresholdAdd = 0;
         public float selfExecutionThresholdBase = float.NegativeInfinity;
 
@@ -40,9 +37,6 @@ public static partial class RecalculateStatsAPI
             barrierGenRate = 0;
 
             luckAdd = 0;
-
-            shieldRechargeReady = true;
-            shieldRechargeDelay = GlobalBaseStats.BaseShieldDelaySeconds;
 
             selfExecutionThresholdAdd = 0;
             selfExecutionThresholdBase = 0;
@@ -83,7 +77,6 @@ public static partial class RecalculateStatsAPI
         // adding custom luck stat to CharacterMaster.get_luck
         luckHook.Apply();
         // Continuously Update Shield Ready
-        On.RoR2.CharacterBody.UpdateOutOfCombatAndDanger += UpdateDangerMoreStats;
         // Barrier Decay And Shield Recharge
         IL.RoR2.HealthComponent.ServerFixedUpdate += HookHealthComponentUpdate;
         // Execution
@@ -97,7 +90,6 @@ public static partial class RecalculateStatsAPI
     {
         IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
         luckHook.Undo();
-        On.RoR2.CharacterBody.UpdateOutOfCombatAndDanger -= UpdateDangerMoreStats;
         IL.RoR2.HealthComponent.ServerFixedUpdate -= HookHealthComponentUpdate;
         IL.RoR2.HealthComponent.TakeDamageProcess -= ModifyExecutionThreshold;
         On.RoR2.HealthComponent.GetHealthBarValues -= DisplayExecutionThreshold;
@@ -344,43 +336,6 @@ public static partial class RecalculateStatsAPI
         public float barrierDecayRateAddPreMult = 0;
         #endregion
 
-        #region shield recharge
-        /// <summary>
-        /// SUBTRACT to reduce delay, ADD to increase
-        /// SHIELD_DELAY = ([baseShieldDelay] + [shieldDelaySecondsIncreaseAddPreMult]) 
-        /// * ([shieldDelayPercentIncreaseMult] / [shieldDelayPercentDecreaseDiv]) + shieldDelaySecondsIncreaseAddPostMult
-        /// </summary>
-        public float shieldDelaySecondsIncreaseAddPreMult = 0f;
-        /// <summary>
-        /// SUBTRACT to reduce delay, ADD to increase
-        /// SHIELD_DELAY = ([baseShieldDelay] + [shieldDelaySecondsIncreaseAddPreMult]) 
-        /// * ([shieldDelayPercentIncreaseMult] / [shieldDelayPercentDecreaseDiv]) + shieldDelaySecondsIncreaseAddPostMult
-        /// </summary>
-        public float shieldDelaySecondsIncreaseAddPostMult = 0f;
-        /// <summary>
-        /// MULTIPLY to increase delay. Can be multiplied by values less than 1 if you want classic cooldown reduction style reduction
-        /// SHIELD_DELAY = ([baseShieldDelay] + [shieldDelaySecondsIncreaseAddPreMult]) 
-        /// * ([shieldDelayPercentIncreaseMult] / [shieldDelayPercentDecreaseDiv]) + shieldDelaySecondsIncreaseAddPostMult
-        /// </summary>
-        public float shieldDelayPercentIncreaseMult = 1f;
-        /// <summary>
-        /// MULTIPLY to reduce delay.
-        /// SHIELD_DELAY = ([baseShieldDelay] + [shieldDelaySecondsIncreaseAddPreMult]) 
-        /// * ([shieldDelayPercentIncreaseMult] / [shieldDelayPercentDecreaseDiv]) + shieldDelaySecondsIncreaseAddPostMult
-        /// </summary>
-        public float shieldDelayPercentDecreaseDiv = 1f;
-
-        internal float shieldDelayMultiplier
-        {
-            get
-            {
-                if (shieldDelayPercentDecreaseDiv <= 0 || shieldDelayPercentIncreaseMult <= 0)
-                    return 0;
-                return shieldDelayPercentIncreaseMult / shieldDelayPercentDecreaseDiv;
-            }
-        }
-        #endregion
-
         #region luck
         public float luckAdd = 0;
         #endregion
@@ -472,15 +427,6 @@ public static partial class RecalculateStatsAPI
             CustomStats.ResetStats();
 
             CustomStats.luckAdd = StatMods.luckAdd;
-
-            //process shield recharge delay
-            #region shield delay
-            float shieldDelay = (GlobalBaseStats.BaseShieldDelaySeconds + StatMods.shieldDelaySecondsIncreaseAddPreMult)
-                * StatMods.shieldDelayMultiplier + StatMods.shieldDelaySecondsIncreaseAddPostMult;
-
-            CustomStats.shieldRechargeDelay = Math.Max(GlobalBaseStats.MinShieldDelaySeconds, shieldDelay);
-            UpdateShieldRechargeReady(body, CustomStats);
-            #endregion
 
             CustomStats.selfExecutionThresholdAdd = StatMods.selfExecutionThresholdAdd;
             CustomStats.selfExecutionThresholdBase = StatMods.selfExecutionThresholdBase;
@@ -1051,7 +997,6 @@ public static partial class RecalculateStatsAPI
     private static void HookHealthComponentUpdate(ILContext il)
     {
         ILCursor c = new ILCursor(il);
-        ModifyShieldRechargeReady(c);
         ModifyBarrierDecayRate(c);
     }
 
@@ -1207,50 +1152,6 @@ public static partial class RecalculateStatsAPI
             }
             return newLuck;
         });
-    }
-    #endregion
-
-    #region shield recharge delay
-    private static void UpdateDangerMoreStats(On.RoR2.CharacterBody.orig_UpdateOutOfCombatAndDanger orig, CharacterBody self)
-    {
-        orig(self);
-        MoreStats stats = GetMoreStatsFromBody(self);
-        UpdateShieldRechargeReady(self, stats);
-    }
-
-    private static void UpdateShieldRechargeReady(CharacterBody body, MoreStats stats)
-    {
-        bool shouldShieldRecharge = body.outOfDangerStopwatch >= stats.shieldRechargeDelay;
-        if (stats.shieldRechargeReady != shouldShieldRecharge)
-        {
-            stats.shieldRechargeReady = shouldShieldRecharge;
-            body.statsDirty = true;
-        }
-    }
-
-    private static void ModifyShieldRechargeReady(ILCursor c)
-    {
-        c.Index = 0;
-
-        if (c.TryGotoNext(MoveType.After,
-            x => x.MatchCallOrCallvirt<CharacterBody>("get_maxShield")
-            ) &&
-        c.TryGotoNext(MoveType.Before,
-            x => x.MatchCallOrCallvirt<CharacterBody>("get_outOfDanger")
-            ))
-        {
-
-            c.Remove();
-            c.EmitDelegate<Func<CharacterBody, bool>>((body) =>
-            {
-                MoreStats stats = GetMoreStatsFromBody(body);
-                return stats.shieldRechargeReady;
-            });
-        }
-        else
-        {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyShieldRechargeReady)} failed.");
-        }
     }
     #endregion
 
