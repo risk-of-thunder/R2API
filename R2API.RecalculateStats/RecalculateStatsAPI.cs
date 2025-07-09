@@ -60,6 +60,7 @@ public static partial class RecalculateStatsAPI
     static ILHook luckHook;
     internal static void InitHooks()
     {
+        // Does nothing until the hook is applied in SetHooks
         var hookConfig = new ILHookConfig() { ManualApply = true };
         luckHook = new ILHook(typeof(CharacterMaster).GetMethod("get_luck"), ModifyLuckStat, ref hookConfig);
     }
@@ -74,14 +75,13 @@ public static partial class RecalculateStatsAPI
 
         IL.RoR2.CharacterBody.RecalculateStats += HookRecalculateStats;
 
-        // adding custom luck stat to CharacterMaster.get_luck
+        // Adding custom luck stat to CharacterMaster.get_luck
         luckHook.Apply();
-        // Continuously Update Shield Ready
-        // Barrier Decay And Shield Recharge
-        IL.RoR2.HealthComponent.ServerFixedUpdate += HookHealthComponentUpdate;
+        // Barrier Decay
+        IL.RoR2.HealthComponent.ServerFixedUpdate += ModifyBarrierDecayRate;
         // Execution
         IL.RoR2.HealthComponent.TakeDamageProcess += ModifyExecutionThreshold;
-        On.RoR2.HealthComponent.GetHealthBarValues += DisplayExecutionThreshold;
+        On.RoR2.HealthComponent.GetHealthBarValues += DisplayModifiedExecutionThreshold;
 
         _hooksEnabled = true;
     }
@@ -90,9 +90,9 @@ public static partial class RecalculateStatsAPI
     {
         IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
         luckHook.Undo();
-        IL.RoR2.HealthComponent.ServerFixedUpdate -= HookHealthComponentUpdate;
+        IL.RoR2.HealthComponent.ServerFixedUpdate -= ModifyBarrierDecayRate;
         IL.RoR2.HealthComponent.TakeDamageProcess -= ModifyExecutionThreshold;
-        On.RoR2.HealthComponent.GetHealthBarValues -= DisplayExecutionThreshold;
+        On.RoR2.HealthComponent.GetHealthBarValues -= DisplayModifiedExecutionThreshold;
 
         _hooksEnabled = false;
     }
@@ -290,50 +290,32 @@ public static partial class RecalculateStatsAPI
         #endregion
 
         #region barrier
-        /// <summary>
-        /// Tally of barrier freeze sources. If over 0, barrier will not decay.
-        /// </summary>
+        /// <summary>Amount of Barrier Freeze effects currently applied.</summary> <remarks>BARRIER_DECAY_RATE ~ (barrierFreezeCount > 0) ? 0 : BARRIER_DECAY_RATE</remarks>
         public int barrierFreezeCount = 0;
 
-        /// <summary>
-        /// MULTIPLY to increase decay. Can be multiplied by values less than 1 if you want classic cooldown reduction style reduction.
-        /// BARRIER_DECAY_RATE = 
-        /// ([BASE_DECAY_RATE] + [barrierDecayAdd]) * ([barrierDecayMult])
-        /// </summary>
+        /// <summary>Multiply to increase or decrease barrier decay rate.</summary> <remarks>BARRIER_DECAY_RATE ~ (BASE_DECAY_RATE + barrierDecayAdd) * (barrierDecayMult). Cannot be less than 0.</remarks>
         public float barrierDecayMult = 1;
 
-        //flats
-        /// <summary>
-        /// ADD to increase barrier decay rate. Expressed as a rate per second.
-        /// BARRIER_DECAY_RATE = 
-        /// ([BASE_DECAY_RATE] + [barrierDecayAdd]) * ([barrierDecayMult])
-        /// </summary>
+        /// <summary>ADD to increase or decrease barrier decay rate. Expressed as a rate per second.</summary> <inheritdoc cref="barrierDecayMult"/>
         public float barrierDecayAdd = 0;
         #endregion
 
         #region luck
+        /// <summary>Add to increase or decrease Luck. Can be negative.</summary> <remarks>LUCK ~ (MASTER_LUCK + luckAdd).</remarks>
         public float luckAdd = 0;
         #endregion
 
         #region execution
-        /// <summary>
-        /// Vanilla sources of execution are mutually exclusive and use the highest threshold rather than adding. Consider this a modded synergy. 
-        /// Expressed out of 1, ie 0.15 is +15% max health execution
-        /// </summary>
+        /// <summary>Add to increase or decrease sender's execution threshold</summary> <remarks>EXECUTION_THRESHOLD ~ Max(BASE_THRESHOLD, newThreshold) + selfExecutionThresholdAdd. Cannot be less than 0.</remarks>
         public float selfExecutionThresholdAdd = 0;
         public float selfExecutionThresholdBase { get; private set; } = float.NegativeInfinity;
-        /// <summary>
-        /// Mimics vanilla sources of execution, which are mutually exclusive. Uses the highest applicable threshold.
-        /// Expressed out of 1, ie 0.15 is 15% max health execution
-        /// </summary>
-        /// <param name="newThreshold">The execution threshold from your source</param>
-        /// <param name="condition">The condition your source needs to meet for the threshold to apply, i.e if the characterbody has the required buff</param>
-        internal float ModifyBaseExecutionThreshold(float newThreshold, bool condition)
+        /// <summary>Uses the largest execution threshold given (mimics vanilla's mutually-exclusive behavior).</summary> <inheritdoc cref="selfExecutionThresholdAdd"/>
+        internal float ModifySelfExecutionThreshold(float newThreshold)
         {
             if (newThreshold <= 0 || selfExecutionThresholdBase >= 1)
                 return selfExecutionThresholdBase;
 
-            if (condition && newThreshold > selfExecutionThresholdBase)
+            if (newThreshold > selfExecutionThresholdBase)
             {
                 selfExecutionThresholdBase = newThreshold;
             }
@@ -973,17 +955,9 @@ public static partial class RecalculateStatsAPI
         }
     }
 
-
-    private static void HookHealthComponentUpdate(ILContext il)
+    private static void ModifyBarrierDecayRate(ILContext il)
     {
         ILCursor c = new ILCursor(il);
-        ModifyBarrierDecayRate(c);
-    }
-
-    #region barrier
-    private static void ModifyBarrierDecayRate(ILCursor c)
-    {
-        c.Index = 0;
 
         bool ILFound = c.TryGotoNext(MoveType.After,
             x => x.MatchLdfld<HealthComponent>("barrier"),
@@ -1022,9 +996,7 @@ public static partial class RecalculateStatsAPI
             RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayRate)} failed.");
         }
     }
-    #endregion
 
-    #region luck
     private static void ModifyLuckStat(ILContext il)
     {
         ILCursor c = new ILCursor(il);
@@ -1055,7 +1027,6 @@ public static partial class RecalculateStatsAPI
             return newLuck;
         });
     }
-    #endregion
 
     #region execution
     private static void ModifyExecutionThreshold(ILContext il)
@@ -1110,7 +1081,7 @@ public static partial class RecalculateStatsAPI
         return currentThreshold;
     }
 
-    private static HealthComponent.HealthBarValues DisplayExecutionThreshold(On.RoR2.HealthComponent.orig_GetHealthBarValues orig, HealthComponent self)
+    private static HealthComponent.HealthBarValues DisplayModifiedExecutionThreshold(On.RoR2.HealthComponent.orig_GetHealthBarValues orig, HealthComponent self)
     {
         HealthComponent.HealthBarValues values = orig(self);
 
