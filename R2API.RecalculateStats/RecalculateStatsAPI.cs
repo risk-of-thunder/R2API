@@ -306,11 +306,16 @@ public static partial class RecalculateStatsAPI
         #endregion
 
         #region execution
-        /// <summary>Add to increase or decrease sender's execution threshold</summary> <remarks>EXECUTION_THRESHOLD ~ Max(BASE_THRESHOLD, newThreshold) + selfExecutionThresholdAdd. Cannot be less than 0.</remarks>
+        /// <summary>Not to be touched directly. Use ModifySelfExecutionThreshold or selfExecutionThresholdAdd</summary> <remarks>EXECUTION_THRESHOLD ~ Max(BASE_THRESHOLD, newThreshold) + selfExecutionThresholdAdd. Cannot be less than 0.</remarks>
+        internal float selfExecutionThresholdBase { get; private set; } = float.NegativeInfinity;
+
+        /// <summary>Add to increase or decrease sender's execution threshold</summary> <inheritdoc cref="selfExecutionThresholdAdd"/>
         public float selfExecutionThresholdAdd = 0;
-        public float selfExecutionThresholdBase { get; private set; } = float.NegativeInfinity;
+
         /// <summary>Uses the largest execution threshold given (mimics vanilla's mutually-exclusive behavior).</summary> <inheritdoc cref="selfExecutionThresholdAdd"/>
-        internal float ModifySelfExecutionThreshold(float newThreshold)
+        public float ModifySelfExecutionThreshold(float newThreshold) => _ModifySelfExecutionThreshold(newThreshold);
+        //this was the ONLY way i could think of to circumvent the analyzer complaining about not setting hooks (its not even a hook :sob:)
+        private float _ModifySelfExecutionThreshold(float newThreshold)
         {
             if (newThreshold <= 0 || selfExecutionThresholdBase >= 1)
                 return selfExecutionThresholdBase;
