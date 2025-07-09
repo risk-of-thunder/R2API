@@ -22,8 +22,8 @@ public static partial class RecalculateStatsAPI
     public class MoreStats
     {
         public bool barrierDecayFrozen = false;
-        public float barrierDecayDynamicHalfLife = GlobalBaseStats.BarrierDecayDynamicHalfLife;
-        public float barrierGenRate = 0;
+        public float barrierDecayRateAdd = 0;
+        public float barrierDecayRateMult = 1;
 
         public float luckAdd = 0;
 
@@ -33,8 +33,8 @@ public static partial class RecalculateStatsAPI
         internal void ResetStats()
         {
             barrierDecayFrozen = false;
-            barrierDecayDynamicHalfLife = GlobalBaseStats.BarrierDecayDynamicHalfLife;
-            barrierGenRate = 0;
+            barrierDecayRateAdd = 0;
+            barrierDecayRateMult = 1;
 
             luckAdd = 0;
 
@@ -298,42 +298,17 @@ public static partial class RecalculateStatsAPI
         /// <summary>
         /// MULTIPLY to increase decay. Can be multiplied by values less than 1 if you want classic cooldown reduction style reduction.
         /// BARRIER_DECAY_RATE = 
-        /// ([BASE_DECAY_RATE] + [barrierDecayPerSecondFlat])
-        /// * ([barrierDecayIncreaseMultiplier] / [barrierDecayDecreaseDivisor]) + barrierGenPerSecondFlat
+        /// ([BASE_DECAY_RATE] + [barrierDecayAdd]) * ([barrierDecayMult])
         /// </summary>
-        public float barrierDecayRatePercentIncreaseMult = 1;
-        /// <summary>
-        /// MULTIPLY to reduce decay.
-        /// BARRIER_DECAY_RATE = 
-        /// ([BASE_DECAY_RATE] + [barrierDecayPerSecondFlat])
-        /// * ([barrierDecayIncreaseMultiplier] / [barrierDecayDecreaseDivisor]) + barrierGenPerSecondFlat
-        /// </summary>
-        public float barrierDecayRatePercentDecreaseDiv = 1;
-        internal float barrierDecayMultiplier
-        {
-            get
-            {
-                if (barrierDecayRatePercentDecreaseDiv <= 0 || barrierDecayRatePercentIncreaseMult <= 0)
-                    return 0;
-                return barrierDecayRatePercentIncreaseMult / barrierDecayRatePercentDecreaseDiv;
-            }
-        }
+        public float barrierDecayMult = 1;
 
         //flats
         /// <summary>
-        /// ADD to reduce barrier decay rate. Generates barrier if above barrier decay rate; not affected by multipliers.
+        /// ADD to increase barrier decay rate. Expressed as a rate per second.
         /// BARRIER_DECAY_RATE = 
-        /// ([BASE_DECAY_RATE] + [barrierDecayPerSecondFlat])
-        /// * ([barrierDecayIncreaseMultiplier] / [barrierDecayDecreaseDivisor]) + barrierGenPerSecondFlat
+        /// ([BASE_DECAY_RATE] + [barrierDecayAdd]) * ([barrierDecayMult])
         /// </summary>
-        public float barrierGenerationRateAddPostMult = 0;
-        /// <summary>
-        /// ADD to increase barrier decay rate.
-        /// BARRIER_DECAY_RATE = 
-        /// ([BASE_DECAY_RATE] + [barrierDecayPerSecondFlat])
-        /// * ([barrierDecayIncreaseMultiplier] / [barrierDecayDecreaseDivisor]) + barrierGenPerSecondFlat
-        /// </summary>
-        public float barrierDecayRateAddPreMult = 0;
+        public float barrierDecayAdd = 0;
         #endregion
 
         #region luck
@@ -430,12 +405,17 @@ public static partial class RecalculateStatsAPI
 
             CustomStats.selfExecutionThresholdAdd = StatMods.selfExecutionThresholdAdd;
             CustomStats.selfExecutionThresholdBase = StatMods.selfExecutionThresholdBase;
+
+            CustomStats.barrierDecayFrozen = StatMods.barrierFreezeCount > 0;
+            CustomStats.barrierDecayRateMult = StatMods.barrierDecayMult;
+            if (CustomStats.barrierDecayRateMult < 0)
+                CustomStats.barrierDecayRateMult = 0;
+            CustomStats.barrierDecayRateAdd = StatMods.barrierDecayAdd;
         }
 
 
         ModifyHealthStat(c, emitLevelMultiplier);
         ModifyShieldStat(c, emitLevelMultiplier);
-        ModifyBarrierDecayStats(c);
         ModifyHealthRegenStat(c, emitLevelMultiplier);
         ModifyMovementSpeedStat(c, emitLevelMultiplier);
         ModifyJumpPowerStat(c, emitLevelMultiplier);
@@ -1001,67 +981,6 @@ public static partial class RecalculateStatsAPI
     }
 
     #region barrier
-    private static void ModifyBarrierDecayStats(ILCursor c)
-    {
-        c.Index = 0;
-
-        bool ILFound =
-            c.TryGotoNext(MoveType.Before,
-                x => x.MatchCallOrCallvirt<CharacterBody>("set_barrierDecayRate")
-                ) &&
-            c.TryGotoPrev(MoveType.After,
-                x => x.MatchLdcR4(out _)
-                );
-
-        if (ILFound)
-        {
-            c.Remove(); //remove div
-            c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Func<float, float, CharacterBody, float>>((maxBarrier, decayTime, body) =>
-            {
-                //process barrier decay stats
-                float decayRate = 0;
-                bool decayFrozen = StatMods.barrierFreezeCount > 0;
-                float decayMultiplier = StatMods.barrierDecayRatePercentDecreaseDiv > 0 ? StatMods.barrierDecayRatePercentIncreaseMult / StatMods.barrierDecayRatePercentDecreaseDiv : 0;
-
-                CustomStats.barrierDecayFrozen = decayFrozen;
-                CustomStats.barrierDecayDynamicHalfLife = decayMultiplier > 0 ? GlobalBaseStats.BarrierDecayDynamicHalfLife / decayMultiplier : 0;
-
-                if (!decayFrozen && decayMultiplier > 0)
-                {
-                    decayRate = StatMods.barrierDecayRateAddPreMult;
-                    if (GlobalBaseStats.BarrierDecayStaticMaxHealthTime > 0)
-                    {
-                        decayRate += maxBarrier / GlobalBaseStats.BarrierDecayStaticMaxHealthTime;
-                    }
-                    decayRate *= decayMultiplier;
-                }
-
-                decayRate -= StatMods.barrierGenerationRateAddPostMult;
-                //if(StatMods.barrierGenPerSecondFlat > 0)
-                //{
-                //    if(StatMods.barrierGenPerSecondFlat > decayRate)
-                //    {
-                //        float excessBarrierGen = StatMods.barrierGenPerSecondFlat - decayRate;
-                //        decayRate = 0;
-                //        CustomStats.barrierGenRate = excessBarrierGen;
-                //    }
-                //    else
-                //    {
-                //        decayRate -= StatMods.barrierGenPerSecondFlat;
-                //    }
-                //}
-
-                return decayRate;
-            });
-            //c.EmitDelegate<Func<float>>(() => StatMods.barrierBaseStaticDecayRateMaxHealthTime);
-        }
-        else
-        {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayStats)} failed.");
-        }
-    }
-
     private static void ModifyBarrierDecayRate(ILCursor c)
     {
         c.Index = 0;
@@ -1070,19 +989,19 @@ public static partial class RecalculateStatsAPI
             x => x.MatchLdfld<HealthComponent>("barrier"),
             x => x.MatchLdcR4(out _)
             );
-
         if (ILFound)
         {
             c.Emit(OpCodes.Ldarg_0);
             c.EmitDelegate<Func<float, HealthComponent, float>>((minBarrier, healthComponent) =>
             {
                 CharacterBody body = healthComponent.body;
+                MoreStats customStats = GetMoreStatsFromBody(body);
                 //if barrier decay is negative (meaning barrier is being generated) this delegate allows barrier generation to proceed
                 //may interfere with the if statement below which requires having no barrier but since barrier is being generated you should never have 0 barrier anyways?
-                if (body.barrierDecayRate < 0)
+                if (body.barrierDecayRate + customStats.barrierDecayRateAdd < 0)
                 {
                     //return -1;
-                    minBarrier += body.barrierDecayRate;
+                    minBarrier += customStats.barrierDecayRateAdd;
                 }
                 return minBarrier;
             });
@@ -1099,13 +1018,13 @@ public static partial class RecalculateStatsAPI
                     if (stats == null)
                         return barrierDecayRate;
 
-                    if (!stats.barrierDecayFrozen && stats.barrierDecayDynamicHalfLife > 0)
+                    if (stats.barrierDecayFrozen)
+                        barrierDecayRate = 0;
+                    barrierDecayRate += stats.barrierDecayRateAdd;
+                    if(barrierDecayRate > 0)
                     {
-                        barrierDecayRate += (float)Math.Max(GlobalBaseStats.MinBarrierDecayWithDynamicRate - stats.barrierGenRate,
-                            healthComponent.barrier * Math.Log(2) / stats.barrierDecayDynamicHalfLife);
+                        barrierDecayRate *= stats.barrierDecayRateMult;
                     }
-
-                    //healthComponent.AddBarrier(stats.barrierGenRate * Time.fixedDeltaTime);
 
                     return barrierDecayRate;
                 });
