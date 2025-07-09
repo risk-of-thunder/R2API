@@ -991,21 +991,6 @@ public static partial class RecalculateStatsAPI
             );
         if (ILFound)
         {
-            c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Func<float, HealthComponent, float>>((minBarrier, healthComponent) =>
-            {
-                CharacterBody body = healthComponent.body;
-                MoreStats customStats = GetMoreStatsFromBody(body);
-                //if barrier decay is negative (meaning barrier is being generated) this delegate allows barrier generation to proceed
-                //may interfere with the if statement below which requires having no barrier but since barrier is being generated you should never have 0 barrier anyways?
-                if (body.barrierDecayRate + customStats.barrierDecayRateAdd < 0)
-                {
-                    //return -1;
-                    minBarrier += customStats.barrierDecayRateAdd;
-                }
-                return minBarrier;
-            });
-
             bool ILFound2 = c.TryGotoNext(MoveType.After,
                 x => x.MatchCallOrCallvirt<CharacterBody>("get_barrierDecayRate")
                 );
@@ -1018,13 +1003,11 @@ public static partial class RecalculateStatsAPI
                     if (stats == null)
                         return barrierDecayRate;
 
-                    if (stats.barrierDecayFrozen)
-                        barrierDecayRate = 0;
                     barrierDecayRate += stats.barrierDecayRateAdd;
-                    if(barrierDecayRate > 0)
-                    {
+                    if (stats.barrierDecayFrozen || barrierDecayRate < 0)
+                        barrierDecayRate = 0;
+                    else
                         barrierDecayRate *= stats.barrierDecayRateMult;
-                    }
 
                     return barrierDecayRate;
                 });
