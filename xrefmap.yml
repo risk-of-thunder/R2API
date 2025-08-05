@@ -9714,6 +9714,31 @@ references:
   commentId: T:R2API.PrefabAPI
   fullName: R2API.PrefabAPI
   nameWithType: PrefabAPI
+- uid: R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject,System.String)
+  name: CreateEmptyPrefab(GameObject, string)
+  href: api/R2API.PrefabAPI.html#R2API_PrefabAPI_CreateEmptyPrefab_UnityEngine_GameObject_System_String_
+  commentId: M:R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject,System.String)
+  name.vb: CreateEmptyPrefab(GameObject, String)
+  fullName: R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject, string)
+  fullName.vb: R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject, String)
+  nameWithType: PrefabAPI.CreateEmptyPrefab(GameObject, string)
+  nameWithType.vb: PrefabAPI.CreateEmptyPrefab(GameObject, String)
+- uid: R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject,System.String,System.Boolean)
+  name: CreateEmptyPrefab(GameObject, string, bool)
+  href: api/R2API.PrefabAPI.html#R2API_PrefabAPI_CreateEmptyPrefab_UnityEngine_GameObject_System_String_System_Boolean_
+  commentId: M:R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject,System.String,System.Boolean)
+  name.vb: CreateEmptyPrefab(GameObject, String, Boolean)
+  fullName: R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject, string, bool)
+  fullName.vb: R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject, String, Boolean)
+  nameWithType: PrefabAPI.CreateEmptyPrefab(GameObject, string, bool)
+  nameWithType.vb: PrefabAPI.CreateEmptyPrefab(GameObject, String, Boolean)
+- uid: R2API.PrefabAPI.CreateEmptyPrefab*
+  name: CreateEmptyPrefab
+  href: api/R2API.PrefabAPI.html#R2API_PrefabAPI_CreateEmptyPrefab_
+  commentId: Overload:R2API.PrefabAPI.CreateEmptyPrefab
+  isSpec: "True"
+  fullName: R2API.PrefabAPI.CreateEmptyPrefab
+  nameWithType: PrefabAPI.CreateEmptyPrefab
 - uid: R2API.PrefabAPI.InstantiateClone(UnityEngine.GameObject,System.String)
   name: InstantiateClone(GameObject, string)
   href: api/R2API.PrefabAPI.html#R2API_PrefabAPI_InstantiateClone_UnityEngine_GameObject_System_String_
