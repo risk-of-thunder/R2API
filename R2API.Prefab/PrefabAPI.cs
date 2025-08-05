@@ -50,6 +50,33 @@ public static partial class PrefabAPI
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
     /// <summary>
+    /// Creates an empty GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
+    /// Also adds NetworkIdentity component and registers the clone to network.
+    /// </summary>
+    /// <param name="g">The GameObject to clone</param>
+    /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
+    /// <returns>The GameObject of the clone</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static GameObject CreateEmptyPrefab(this GameObject g, string nameToSet)
+    {
+        return CreateEmptyPrefabInternal(g, nameToSet, true);
+    }
+
+    /// <summary>
+    /// Creates an empty GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
+    /// Also adds NetworkIdentity component and registers the clone to network if registerNetwork is not set to false.
+    /// </summary>
+    /// <param name="g">The GameObject to clone</param>
+    /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
+    /// <param name="registerNetwork">Should the object receive NetworkIdentity component and be registered to network.</param>
+    /// <returns>The GameObject of the clone</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static GameObject CreateEmptyPrefab(this GameObject g, string nameToSet, bool registerNetwork)
+    {
+        return CreateEmptyPrefabInternal(g, nameToSet, true);
+    }
+
+    /// <summary>
     /// Duplicates a GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
     /// Also registers the clone to network.
     /// </summary>
@@ -82,6 +109,18 @@ public static partial class PrefabAPI
     public static GameObject InstantiateClone(this GameObject? g, string? nameToSet, bool registerNetwork = true, [CallerFilePath] string? file = "", [CallerMemberName] string? member = "", [CallerLineNumber] int line = 0)
     {
         return InstantiateCloneInternal(g, nameToSet, registerNetwork);
+    }
+
+    private static GameObject CreateEmptyPrefabInternal(this GameObject g, string nameToSet, bool registerNetwork)
+    {
+        var prefab = new GameObject(nameToSet);
+        prefab.transform.SetParent(GetParent().transform);
+        if (registerNetwork)
+        {
+            prefab.AddComponent<NetworkIdentity>();
+            RegisterPrefabInternal(prefab, new StackFrame(2));
+        }
+        return prefab;
     }
 
     private static GameObject InstantiateCloneInternal(this GameObject g, string nameToSet, bool registerNetwork)
