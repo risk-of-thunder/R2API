@@ -142,6 +142,9 @@ public static partial class PrefabAPI
     private static GameObject CreateEmptyPrefabInternal(this GameObject g, string nameToSet, Type[] components, bool registerNetwork)
     {
         var prefab = new GameObject(nameToSet, components);
+        UnityObject.DontDestroyOnLoad(prefab);
+        prefab.hideFlags = HideFlags.HideAndDontSave;
+        prefab.SetActive(false);
         if (registerNetwork)
         {
             RegisterPrefabInternal(prefab, new StackFrame(2));
