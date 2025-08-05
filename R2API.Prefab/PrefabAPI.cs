@@ -48,23 +48,10 @@ public static partial class PrefabAPI
     public static bool IsPrefabHashed(GameObject prefabToCheck) => _networkedPrefabs.Select(hash => hash.Prefab).Contains(prefabToCheck);
 
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-    /// <summary>
-    /// Creates an empty GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
-    /// Also registers the clone to network.
-    /// </summary>
-    /// <param name="g">The GameObject to clone</param>
-    /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
-    /// <param name="components">Add components to the object</param>
-    /// <returns>The GameObject of the clone</returns>
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public static GameObject CreateEmptyPrefab(this GameObject g, string nameToSet, Type[] components)
-    {
-        return CreateEmptyPrefabInternal(g, nameToSet, components, true);
-    }
 
     /// <summary>
     /// Creates an empty GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
-    /// Also registers the clone to network.
+    /// Also adds NetworkIdentity component and registers the clone to network.
     /// </summary>
     /// <param name="g">The GameObject to clone</param>
     /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
@@ -72,36 +59,21 @@ public static partial class PrefabAPI
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static GameObject CreateEmptyPrefab(this GameObject g, string nameToSet)
     {
-        return CreateEmptyPrefabInternal(g, nameToSet, null, true);
+        return CreateEmptyPrefabInternal(g, nameToSet, true);
     }
 
     /// <summary>
     /// Creates an empty GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
-    /// Also registers the clone to network if registerNetwork is not set to false.
+    /// Also adds NetworkIdentity component and registers the clone to network if registerNetwork is not set to false.
     /// </summary>
     /// <param name="g">The GameObject to clone</param>
     /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
-    /// <param name="components">Add components to the object</param>
-    /// <param name="registerNetwork">Should the object be registered to network</param>
-    /// <returns>The GameObject of the clone</returns>
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public static GameObject CreateEmptyPrefab(this GameObject g, string nameToSet, Type[] components, bool registerNetwork)
-    {
-        return CreateEmptyPrefabInternal(g, nameToSet, components, true);
-    }
-
-    /// <summary>
-    /// Creates an empty GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
-    /// Also registers the clone to network if registerNetwork is not set to false.
-    /// </summary>
-    /// <param name="g">The GameObject to clone</param>
-    /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
-    /// <param name="registerNetwork">Should the object be registered to network</param>
+    /// <param name="registerNetwork">Should the object receive NetworkIdentity component and be registered to network.</param>
     /// <returns>The GameObject of the clone</returns>
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static GameObject CreateEmptyPrefab(this GameObject g, string nameToSet, bool registerNetwork)
     {
-        return CreateEmptyPrefabInternal(g, nameToSet, null, true);
+        return CreateEmptyPrefabInternal(g, nameToSet, true);
     }
 
     /// <summary>
@@ -139,14 +111,13 @@ public static partial class PrefabAPI
         return InstantiateCloneInternal(g, nameToSet, registerNetwork);
     }
 
-    private static GameObject CreateEmptyPrefabInternal(this GameObject g, string nameToSet, Type[] components, bool registerNetwork)
+    private static GameObject CreateEmptyPrefabInternal(this GameObject g, string nameToSet, bool registerNetwork)
     {
-        var prefab = new GameObject(nameToSet, components);
-        UnityObject.DontDestroyOnLoad(prefab);
-        prefab.hideFlags = HideFlags.HideAndDontSave;
-        prefab.SetActive(false);
+        var prefab = new GameObject(nameToSet);
+        prefab.transform.SetParent(GetParent().transform);
         if (registerNetwork)
         {
+            prefab.AddComponent<NetworkIdentity>();
             RegisterPrefabInternal(prefab, new StackFrame(2));
         }
         return prefab;
