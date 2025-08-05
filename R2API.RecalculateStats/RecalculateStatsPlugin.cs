@@ -11,6 +11,7 @@ public sealed class RecalculateStatsPlugin : BaseUnityPlugin
     private void Awake()
     {
         Logger = base.Logger;
+        RecalculateStatsAPI.InitHooks();
     }
 
     private void OnDestroy()
