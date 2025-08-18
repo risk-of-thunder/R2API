@@ -60,6 +60,18 @@ public static partial class PrefabAPI
     {
         return CreateEmptyPrefabInternal(nameToSet, true);
     }
+    
+    /// <summary>
+    /// Creates an empty GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
+    /// Also adds NetworkIdentity component and registers the clone to network.
+    /// </summary>
+    /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
+    /// <returns>The GameObject of the clone</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static GameObject CreateEmptyPrefab(this Gameobject g, string nameToSet)
+    {
+        return CreateEmptyPrefabInternal(nameToSet, true);
+    }
 
     /// <summary>
     /// Creates an empty GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
@@ -70,6 +82,19 @@ public static partial class PrefabAPI
     /// <returns>The GameObject of the clone</returns>
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static GameObject CreateEmptyPrefab(string nameToSet, bool registerNetwork)
+    {
+        return CreateEmptyPrefabInternal(nameToSet, true);
+    }
+
+    /// <summary>
+    /// Creates an empty GameObject and leaves it in a "sleeping" state where it is inactive, but becomes active when spawned.
+    /// Also adds NetworkIdentity component and registers the clone to network if registerNetwork is not set to false.
+    /// </summary>
+    /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
+    /// <param name="registerNetwork">Should the object receive NetworkIdentity component and be registered to network.</param>
+    /// <returns>The GameObject of the clone</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static GameObject CreateEmptyPrefab(this Gameobject g, string nameToSet, bool registerNetwork)
     {
         return CreateEmptyPrefabInternal(nameToSet, true);
     }
