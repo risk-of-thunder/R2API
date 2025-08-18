@@ -68,7 +68,7 @@ public static partial class PrefabAPI
     /// <param name="nameToSet">The name to give the clone (Should be unique)</param>
     /// <returns>The GameObject of the clone</returns>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static GameObject CreateEmptyPrefab(this Gameobject g, string nameToSet)
+    public static GameObject CreateEmptyPrefab(this GameObject g, string nameToSet)
     {
         return CreateEmptyPrefabInternal(nameToSet, true);
     }
@@ -94,7 +94,7 @@ public static partial class PrefabAPI
     /// <param name="registerNetwork">Should the object receive NetworkIdentity component and be registered to network.</param>
     /// <returns>The GameObject of the clone</returns>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static GameObject CreateEmptyPrefab(this Gameobject g, string nameToSet, bool registerNetwork)
+    public static GameObject CreateEmptyPrefab(this GameObject g, string nameToSet, bool registerNetwork)
     {
         return CreateEmptyPrefabInternal(nameToSet, true);
     }
