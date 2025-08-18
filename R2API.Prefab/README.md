@@ -20,6 +20,9 @@ by using the `RegisterNetworkPrefab` method.
 
 ## Changelog
 
+### '1.1.1'
+* Remove unused parameter from `CreateEmptyPrefab` method.
+
 ### '1.1.0'
 * Add `CreateEmptyPrefab` method.
 
