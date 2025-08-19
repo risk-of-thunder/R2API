@@ -10272,6 +10272,18 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.healthTotalMult
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.healthTotalMult
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.healthTotalMult
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.jumpCountAdd
+  name: jumpCountAdd
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_jumpCountAdd
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.jumpCountAdd
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.jumpCountAdd
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.jumpCountAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.jumpCountMult
+  name: jumpCountMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_jumpCountMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.jumpCountMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.jumpCountMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.jumpCountMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.jumpPowerMultAdd
   name: jumpPowerMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_jumpPowerMultAdd
