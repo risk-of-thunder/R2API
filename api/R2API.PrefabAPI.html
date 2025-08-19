@@ -176,7 +176,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string PluginVersion = &quot;1.1.0&quot;</code></pre>
+    <pre><code class="lang-csharp hljs">public const string PluginVersion = &quot;1.1.1&quot;</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-condensed">
@@ -231,10 +231,118 @@ public static bool Loaded { get; }</code></pre>
 </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_PrefabAPI_CreateEmptyPrefab_System_String_.md&amp;value=---%0Auid%3A%20R2API.PrefabAPI.CreateEmptyPrefab(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L58">View Source</a>
+  </span>
+  <a id="R2API_PrefabAPI_CreateEmptyPrefab_" data-uid="R2API.PrefabAPI.CreateEmptyPrefab*"></a>
+  <h4 id="R2API_PrefabAPI_CreateEmptyPrefab_System_String_" data-uid="R2API.PrefabAPI.CreateEmptyPrefab(System.String)">CreateEmptyPrefab(string)</h4>
+  <div class="markdown level1 summary"><p>Creates an empty GameObject and leaves it in a &quot;sleeping&quot; state where it is inactive, but becomes active when spawned.
+Also adds NetworkIdentity component and registers the clone to network.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static GameObject CreateEmptyPrefab(string nameToSet)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">nameToSet</span></td>
+        <td><p>The name to give the clone (Should be unique)</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GameObject</span></td>
+        <td><p>The GameObject of the clone</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_PrefabAPI_CreateEmptyPrefab_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20R2API.PrefabAPI.CreateEmptyPrefab(System.String%2CSystem.Boolean)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L83">View Source</a>
+  </span>
+  <a id="R2API_PrefabAPI_CreateEmptyPrefab_" data-uid="R2API.PrefabAPI.CreateEmptyPrefab*"></a>
+  <h4 id="R2API_PrefabAPI_CreateEmptyPrefab_System_String_System_Boolean_" data-uid="R2API.PrefabAPI.CreateEmptyPrefab(System.String,System.Boolean)">CreateEmptyPrefab(string, bool)</h4>
+  <div class="markdown level1 summary"><p>Creates an empty GameObject and leaves it in a &quot;sleeping&quot; state where it is inactive, but becomes active when spawned.
+Also adds NetworkIdentity component and registers the clone to network if registerNetwork is not set to false.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static GameObject CreateEmptyPrefab(string nameToSet, bool registerNetwork)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">nameToSet</span></td>
+        <td><p>The name to give the clone (Should be unique)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><span class="parametername">registerNetwork</span></td>
+        <td><p>Should the object receive NetworkIdentity component and be registered to network.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GameObject</span></td>
+        <td><p>The GameObject of the clone</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_PrefabAPI_CreateEmptyPrefab_UnityEngine_GameObject_System_String_.md&amp;value=---%0Auid%3A%20R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L59">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L70">View Source</a>
   </span>
   <a id="R2API_PrefabAPI_CreateEmptyPrefab_" data-uid="R2API.PrefabAPI.CreateEmptyPrefab*"></a>
   <h4 id="R2API_PrefabAPI_CreateEmptyPrefab_UnityEngine_GameObject_System_String_" data-uid="R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject,System.String)">CreateEmptyPrefab(GameObject, string)</h4>
@@ -259,8 +367,7 @@ Also adds NetworkIdentity component and registers the clone to network.</p>
       <tr>
         <td><span class="xref">GameObject</span></td>
         <td><span class="parametername">g</span></td>
-        <td><p>The GameObject to clone</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
@@ -291,7 +398,7 @@ Also adds NetworkIdentity component and registers the clone to network.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_PrefabAPI_CreateEmptyPrefab_UnityEngine_GameObject_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject%2CSystem.String%2CSystem.Boolean)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L73">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L96">View Source</a>
   </span>
   <a id="R2API_PrefabAPI_CreateEmptyPrefab_" data-uid="R2API.PrefabAPI.CreateEmptyPrefab*"></a>
   <h4 id="R2API_PrefabAPI_CreateEmptyPrefab_UnityEngine_GameObject_System_String_System_Boolean_" data-uid="R2API.PrefabAPI.CreateEmptyPrefab(UnityEngine.GameObject,System.String,System.Boolean)">CreateEmptyPrefab(GameObject, string, bool)</h4>
@@ -316,8 +423,7 @@ Also adds NetworkIdentity component and registers the clone to network if regist
       <tr>
         <td><span class="xref">GameObject</span></td>
         <td><span class="parametername">g</span></td>
-        <td><p>The GameObject to clone</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
@@ -354,7 +460,7 @@ Also adds NetworkIdentity component and registers the clone to network if regist
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_PrefabAPI_InstantiateClone_UnityEngine_GameObject_System_String_.md&amp;value=---%0Auid%3A%20R2API.PrefabAPI.InstantiateClone(UnityEngine.GameObject%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L86">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L109">View Source</a>
   </span>
   <a id="R2API_PrefabAPI_InstantiateClone_" data-uid="R2API.PrefabAPI.InstantiateClone*"></a>
   <h4 id="R2API_PrefabAPI_InstantiateClone_UnityEngine_GameObject_System_String_" data-uid="R2API.PrefabAPI.InstantiateClone(UnityEngine.GameObject,System.String)">InstantiateClone(GameObject, string)</h4>
@@ -411,7 +517,7 @@ Also registers the clone to network.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_PrefabAPI_InstantiateClone_UnityEngine_GameObject_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20R2API.PrefabAPI.InstantiateClone(UnityEngine.GameObject%2CSystem.String%2CSystem.Boolean)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L100">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L123">View Source</a>
   </span>
   <a id="R2API_PrefabAPI_InstantiateClone_" data-uid="R2API.PrefabAPI.InstantiateClone*"></a>
   <h4 id="R2API_PrefabAPI_InstantiateClone_UnityEngine_GameObject_System_String_System_Boolean_" data-uid="R2API.PrefabAPI.InstantiateClone(UnityEngine.GameObject,System.String,System.Boolean)">InstantiateClone(GameObject, string, bool)</h4>
@@ -522,7 +628,7 @@ Also registers the clone to network if registerNetwork is not set to false.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_PrefabAPI_RegisterNetworkPrefab_UnityEngine_GameObject_.md&amp;value=---%0Auid%3A%20R2API.PrefabAPI.RegisterNetworkPrefab(UnityEngine.GameObject)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L143">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Prefab/PrefabAPI.cs/#L166">View Source</a>
   </span>
   <a id="R2API_PrefabAPI_RegisterNetworkPrefab_" data-uid="R2API.PrefabAPI.RegisterNetworkPrefab*"></a>
   <h4 id="R2API_PrefabAPI_RegisterNetworkPrefab_UnityEngine_GameObject_" data-uid="R2API.PrefabAPI.RegisterNetworkPrefab(UnityEngine.GameObject)">RegisterNetworkPrefab(GameObject)</h4>
