@@ -10,106 +10,25 @@ using UnityEngine;
 namespace R2API;
 
 /// <summary>
-/// Static class utilized for implementing Light Replacements for a Model
+/// This class is obsolete, as light replacements are now a vanilla feature. You can find it inside <see cref="SkinDefParams.lightReplacements"/>.
 /// </summary>
+[Obsolete("This class never worked. SkinLightReplacements are now a vanilla feature within the Skin system's SkinDefParams object.")]
 public static class SkinLightReplacement
 {
-    private static List<(SkinDef, LightReplacement[])> _tuples = new List<(SkinDef, LightReplacement[])>();
-    private static Dictionary<SkinIndex, RuntimeLightReplacement[]> _skinIndexToLightReplacements = new Dictionary<SkinIndex, RuntimeLightReplacement[]>();
-
-    private static bool _hooksSet = false;
-    private static bool _catalogInitialized = false;
-
     /// <summary>
-    /// Adds new LightReplacements that will be applied to a SkinDef
+    /// Does nothing.
     /// </summary>
-    /// <param name="targetSkinDef">The skin def which will apply the light replacements.</param>
-    /// <param name="lightReplacements">The light replacements for the skin.</param>
-    /// <returns>true if the light replacement was added succesfully, false otherwise.</returns>
+    /// <returns>true</returns>
     public static bool AddLightReplacement(SkinDef targetSkinDef, params LightReplacement[] lightReplacements)
     {
-        SetHooks();
-
-        if (_catalogInitialized)
-        {
-            SkinsPlugin.Logger.LogInfo($"Cannot add {lightReplacements.Length} light replacement(s) to the SkinDef {targetSkinDef} because the skin catalog has already initialized.");
-            return false;
-        }
-
-        if (_tuples.Any(t => t.Item1 == targetSkinDef))
-        {
-            SkinsPlugin.Logger.LogInfo($"Cannot add {lightReplacements.Length} light replacement(s) to the SkinDef {targetSkinDef} because the skinDef already has light replacements associated to it.");
-            return false;
-        }
-        _tuples.Add((targetSkinDef, lightReplacements));
         return true;
-    }
-
-    private static void SystemInit()
-    {
-        _catalogInitialized = true;
-
-        foreach (var (skin, lightReplacements) in _tuples)
-        {
-            _skinIndexToLightReplacements.Add(skin.skinIndex, lightReplacements.Select(lr => new RuntimeLightReplacement
-            {
-                color = lr.color,
-                path = Util.BuildPrefabTransformPath(skin.rootObject.transform, lr.light.transform)
-            }).ToArray());
-        }
-    }
-
-    private static void SetHooks()
-    {
-        if (_hooksSet)
-            return;
-
-        _hooksSet = true;
-
-        On.RoR2.ModelSkinController.ApplySkin += SetLightOverrides;
-    }
-
-    internal static void UnsetHooks()
-    {
-        _hooksSet = false;
-
-        On.RoR2.ModelSkinController.ApplySkin -= SetLightOverrides;
-    }
-
-    private static void SetLightOverrides(On.RoR2.ModelSkinController.orig_ApplySkin orig, ModelSkinController self, int skinIndex)
-    {
-        orig(self, skinIndex);
-
-        SkinDef skin = HG.ArrayUtils.GetSafe(self.skins, skinIndex);
-
-        if (!skin)
-            return;
-
-        if (_skinIndexToLightReplacements.TryGetValue(skin.skinIndex, out var lightReplacements))
-        {
-            foreach (RuntimeLightReplacement replacement in lightReplacements)
-            {
-                Transform transform = self.transform;
-                Light light = transform.Find(replacement.path).GetComponent<Light>();
-                if (light)
-                {
-                    light.color = replacement.color;
-                }
-            }
-        }
-    }
-
-    private struct RuntimeLightReplacement
-    {
-        public string path;
-        public Color color;
     }
 }
 
 /// <summary>
 /// Struct that represents a LightReplacement for a Skin
 /// </summary>
-[Serializable]
+[Serializable, Obsolete("This struct is obsolete, you can utilize a SkinDefParams instead to specify light replacements.")]
 public struct LightReplacement
 {
     //Tooltips work as documentation as well
