@@ -8,6 +8,9 @@ Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also
 
 ## Changelog
 
+### '1.2.2'
+* Removed the SkinLightReplacement system, as it was not used by a single mod in the entire thunderstore, alongside the fact that the Memory Optimization patch made its concept obsolete.
+
 ### `1.2.1`
 
 * Moved to SkinDefParams creation
