@@ -69,17 +69,29 @@ public static partial class DotAPI
     private static CustomDotVisual[] _customDotVisuals = new CustomDotVisual[0];
 
     /// <summary>
+    /// Allows for custom damage evaluation on dot damage evaluation. <see cref="DotController.EvaluateDotStacksForType(DotController.DotIndex, float, out int)"/>
+    /// </summary>
+    /// <param name="self"></param>
+    /// <param name="pendingDamage"></param>
+    public delegate void CustomDotDamageEvaluation(DotController self, DotController.PendingDamage pendingDamage);
+
+    private static CustomDotDamageEvaluation[] _customDotDamageEvaluations = new CustomDotDamageEvaluation[0];
+
+
+    /// <summary>
     /// customDotBehaviour code will be executed when the dot is added to the target.
     /// Please refer to the game AddDot() method for example use case.
     /// customDotVisual code will be executed in the FixedUpdate of the DotController.
     /// Please refer to the game FixedUpdate() method for example use case.
+    /// customDotDamageEvaluation code will be executed instead of TakeDamage in the EvaluateDotStacksForType of the DotController.
     /// </summary>
     /// <param name="dotDef"></param>
     /// <param name="customDotBehaviour"></param>
     /// <param name="customDotVisual"></param>
+    /// <param name="customDotDamageEvaluation"></param>
     /// <returns></returns>
     public static DotController.DotIndex RegisterDotDef(DotController.DotDef? dotDef,
-        CustomDotBehaviour? customDotBehaviour = null, CustomDotVisual? customDotVisual = null)
+        CustomDotBehaviour? customDotBehaviour = null, CustomDotVisual? customDotVisual = null, CustomDotDamageEvaluation? customDotDamageEvaluation = null)
     {
         DotAPI.SetHooks();
         var dotDefIndex = VanillaDotCount + CustomDotCount;
@@ -99,6 +111,9 @@ public static partial class DotAPI
         Array.Resize(ref _customDotVisuals, _customDotVisuals.Length + 1);
         _customDotVisuals[customArrayIndex] = customDotVisual;
 
+        Array.Resize(ref _customDotDamageEvaluations, _customDotDamageEvaluations.Length + 1);
+        _customDotDamageEvaluations[customArrayIndex] = customDotDamageEvaluation;
+
         if (dotDef.associatedBuff != null)
         {
             DotPlugin.Logger.LogInfo($"Custom Dot (Index: {dotDefIndex}) that uses Buff : {dotDef.associatedBuff.name} added");
@@ -111,7 +126,48 @@ public static partial class DotAPI
 
         return (DotController.DotIndex)dotDefIndex;
     }
-
+    /// <summary>
+    /// customDotBehaviour code will be executed when the dot is added to the target.
+    /// Please refer to the game AddDot() method for example use case.
+    /// customDotVisual code will be executed in the FixedUpdate of the DotController.
+    /// Please refer to the game FixedUpdate() method for example use case.
+    /// </summary>
+    /// <param name="dotDef"></param>
+    /// <param name="customDotBehaviour"></param>
+    /// <param name="customDotVisual"></param>
+    /// <returns></returns>
+    public static DotController.DotIndex RegisterDotDef(DotController.DotDef? dotDef,
+        CustomDotBehaviour? customDotBehaviour = null, CustomDotVisual? customDotVisual = null)
+    {
+        DotAPI.SetHooks();
+        return RegisterDotDef(dotDef, customDotBehaviour, customDotVisual, null);
+    }
+    /// <summary>
+    /// Unrolled version of RegisterDotDef(DotController.DotDef, CustomDotBehaviour, CustomDotVisual)
+    /// <see cref="RegisterDotDef(DotController.DotDef, CustomDotBehaviour, CustomDotVisual, CustomDotDamageEvaluation)"/>
+    /// </summary>
+    /// <param name="interval"></param>
+    /// <param name="damageCoefficient"></param>
+    /// <param name="colorIndex"></param>
+    /// <param name="associatedBuff">The buff associated with the DOT, can be null</param>
+    /// <param name="customDotBehaviour"></param>
+    /// <param name="customDotVisual"></param>
+    /// <param name="customDotDamageEvaluation"></param>
+    /// <returns></returns>
+    public static DotController.DotIndex RegisterDotDef(float interval, float damageCoefficient,
+        DamageColorIndex colorIndex, BuffDef associatedBuff = null, CustomDotBehaviour customDotBehaviour = null,
+        CustomDotVisual customDotVisual = null, CustomDotDamageEvaluation customDotDamageEvaluation = null)
+    {
+        DotAPI.SetHooks();
+        var dotDef = new DotController.DotDef
+        {
+            associatedBuff = associatedBuff,
+            damageCoefficient = damageCoefficient,
+            interval = interval,
+            damageColorIndex = colorIndex
+        };
+        return RegisterDotDef(dotDef, customDotBehaviour, customDotVisual);
+    }
     /// <summary>
     /// Unrolled version of RegisterDotDef(DotController.DotDef, CustomDotBehaviour, CustomDotVisual)
     /// <see cref="RegisterDotDef(DotController.DotDef, CustomDotBehaviour, CustomDotVisual)"/>
@@ -128,14 +184,7 @@ public static partial class DotAPI
         CustomDotVisual customDotVisual = null)
     {
         DotAPI.SetHooks();
-        var dotDef = new DotController.DotDef
-        {
-            associatedBuff = associatedBuff,
-            damageCoefficient = damageCoefficient,
-            interval = interval,
-            damageColorIndex = colorIndex
-        };
-        return RegisterDotDef(dotDef, customDotBehaviour, customDotVisual);
+        return RegisterDotDef(interval, damageCoefficient, colorIndex, associatedBuff, customDotBehaviour, customDotVisual, null);
     }
 
     private static bool _hooksEnabled = false;
@@ -184,15 +233,70 @@ public static partial class DotAPI
 
     private static void EvaluateDotStacksForType(ILContext il)
     {
-        //Empty IL hook that doesn't add nor delete anything.
-        //The purpose of it is to fix weird issue with DamageAPI.
-        //For some reason if an IL hook for `DotController.EvaluateDotStacksForType` is added in `DamageAPI`
-        //calling `self.EvaluateDotStacksForType` in `DotAPI.FixedUpdate` throws NRE in it because
-        //instead of calling `DotController.GetDotDef` hook for some reason original method is called which returns null for modded DOT.
-        //Seems like it's important that this hook is applied after `DotController.GetDotDef` otherwise the issue persits.
-        //idk what is the reason for that behaviour, probably something to do with optimizations because
-        //if you replace `mono-2.0-bdwgc.dll` in the game files with the one that allows you to debug code with dnSpy
-        //the issue dissapear even without this hook.
+        var c = new ILCursor(il);
+        int pendingDamageLocNumber = 0;
+
+        // ReSharper disable once InconsistentNaming
+        static void ILFailMessage(int index)
+        {
+            DotPlugin.Logger.LogError(
+                $"Failed finding IL Instructions. Aborting OnEvaluateDotStacksForType IL Hook {index}");
+        }
+
+        if (c.TryGotoNext(MoveType.Before,
+                i => i.MatchLdarg(0),
+                i => i.MatchCallOrCallvirt(typeof(DotController).GetPropertyGetter(nameof(DotController.victimHealthComponent))),
+                i => i.MatchLdloc(out _),
+                i => i.MatchCallOrCallvirt<HealthComponent>(nameof(HealthComponent.TakeDamage))
+                ))
+        {
+            Instruction instruction2 = c.Next;
+            Instruction instruction = c.Next.Next.Next.Next.Next;
+            if (c.TryGotoPrev(MoveType.Before,
+                    i => i.MatchStloc(out pendingDamageLocNumber),
+                    i => i.MatchBr(out _),
+                    i => i.MatchNewobj<DamageInfo>(),
+                    i => i.MatchStloc(out _)))
+            {
+                c.Goto(instruction);
+                instruction = c.Emit(OpCodes.Ldarg_0).Prev;
+                c.Emit(OpCodes.Ldarg_1);    
+                c.Emit(OpCodes.Ldloc_0);
+                c.Emit(OpCodes.Ldloc, pendingDamageLocNumber);
+                // Harmony method of getting DotController.PendingDamage
+                //c.Emit(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(List<DotController.PendingDamage>), "Item"));
+                c.EmitDelegate<Func<List<DotController.PendingDamage>, int, DotController.PendingDamage>>((list, index) => { return list[index]; });
+                c.EmitDelegate<Action<DotController, DotController.DotIndex, DotController.PendingDamage>>((self, dotIndex, pendingDamage) =>
+                {
+                    if ((int)dotIndex >= VanillaDotCount)
+                    {
+                        var customDotIndex = (int)dotIndex - VanillaDotCount;
+                        _customDotDamageEvaluations[customDotIndex]?.Invoke(self, pendingDamage);
+                    }
+                });
+                c.Goto(instruction2);
+                c.Emit(OpCodes.Ldarg_1);
+                c.EmitDelegate<Func<DotController.DotIndex, bool>>((dotIndex) =>
+                {
+                    bool baseDamageEvaluation = true;
+                    if ((int)dotIndex >= VanillaDotCount)
+                    {
+                        var customDotIndex = (int)dotIndex - VanillaDotCount;
+                        baseDamageEvaluation = _customDotDamageEvaluations[customDotIndex] == null;
+                    }
+                    return baseDamageEvaluation;
+                });
+                c.Emit(OpCodes.Brfalse_S, instruction);
+            }
+            else
+            {
+                ILFailMessage(2);
+            }
+        }
+        else
+        {
+            ILFailMessage(1);
+        }
     }
 
     private static void RetrieveVanillaCount(ILContext il)

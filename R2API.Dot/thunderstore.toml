@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_Dot"
-versionNumber = "1.0.4"
+versionNumber = "1.1.0"
 description = "API for adding custom damage over time effects"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
