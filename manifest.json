@@ -834,16 +834,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/R2API.LightReplacement.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/R2API.LightReplacement.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/R2API.LoadoutAPI.SkinDefInfo.yml",
       "output": {
         ".html": {
@@ -1618,16 +1608,6 @@
       "output": {
         ".html": {
           "relative_path": "api/R2API.SkinIDRS.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/R2API.SkinLightReplacement.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/R2API.SkinLightReplacement.html"
         }
       },
       "version": ""

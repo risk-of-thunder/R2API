@@ -7092,24 +7092,6 @@ references:
   commentId: T:R2API.LanguagePlugin
   fullName: R2API.LanguagePlugin
   nameWithType: LanguagePlugin
-- uid: R2API.LightReplacement
-  name: LightReplacement
-  href: api/R2API.LightReplacement.html
-  commentId: T:R2API.LightReplacement
-  fullName: R2API.LightReplacement
-  nameWithType: LightReplacement
-- uid: R2API.LightReplacement.color
-  name: color
-  href: api/R2API.LightReplacement.html#R2API_LightReplacement_color
-  commentId: F:R2API.LightReplacement.color
-  fullName: R2API.LightReplacement.color
-  nameWithType: LightReplacement.color
-- uid: R2API.LightReplacement.light
-  name: light
-  href: api/R2API.LightReplacement.html#R2API_LightReplacement_light
-  commentId: F:R2API.LightReplacement.light
-  fullName: R2API.LightReplacement.light
-  nameWithType: LightReplacement.light
 - uid: R2API.LoadoutAPI
   name: LoadoutAPI
   href: api/R2API.LoadoutAPI.html
@@ -11640,28 +11622,6 @@ references:
   isSpec: "True"
   fullName: R2API.SkinIDRS.AddPair
   nameWithType: SkinIDRS.AddPair
-- uid: R2API.SkinLightReplacement
-  name: SkinLightReplacement
-  href: api/R2API.SkinLightReplacement.html
-  commentId: T:R2API.SkinLightReplacement
-  fullName: R2API.SkinLightReplacement
-  nameWithType: SkinLightReplacement
-- uid: R2API.SkinLightReplacement.AddLightReplacement(RoR2.SkinDef,R2API.LightReplacement[])
-  name: AddLightReplacement(SkinDef, params LightReplacement[])
-  href: api/R2API.SkinLightReplacement.html#R2API_SkinLightReplacement_AddLightReplacement_RoR2_SkinDef_R2API_LightReplacement___
-  commentId: M:R2API.SkinLightReplacement.AddLightReplacement(RoR2.SkinDef,R2API.LightReplacement[])
-  name.vb: AddLightReplacement(SkinDef, ParamArray LightReplacement())
-  fullName: R2API.SkinLightReplacement.AddLightReplacement(RoR2.SkinDef, params R2API.LightReplacement[])
-  fullName.vb: R2API.SkinLightReplacement.AddLightReplacement(RoR2.SkinDef, ParamArray R2API.LightReplacement())
-  nameWithType: SkinLightReplacement.AddLightReplacement(SkinDef, params LightReplacement[])
-  nameWithType.vb: SkinLightReplacement.AddLightReplacement(SkinDef, ParamArray LightReplacement())
-- uid: R2API.SkinLightReplacement.AddLightReplacement*
-  name: AddLightReplacement
-  href: api/R2API.SkinLightReplacement.html#R2API_SkinLightReplacement_AddLightReplacement_
-  commentId: Overload:R2API.SkinLightReplacement.AddLightReplacement
-  isSpec: "True"
-  fullName: R2API.SkinLightReplacement.AddLightReplacement
-  nameWithType: SkinLightReplacement.AddLightReplacement
 - uid: R2API.SkinVFX
   name: SkinVFX
   href: api/R2API.SkinVFX.html
