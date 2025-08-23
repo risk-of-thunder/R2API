@@ -16,7 +16,7 @@ namespace R2API.AddressReferencedAssets;
 [Serializable]
 public class AddressReferencedBuffDef : AddressReferencedAsset<BuffDef>
 {
-    public override bool CanLoadFromCatalog => _canLoadFromCatalog;
+    public override bool CanLoadFromCatalog { get => _canLoadFromCatalog; protected set => _canLoadFromCatalog = value; }
 
     [SerializeField, HideInInspector]
     private bool _canLoadFromCatalog = true;

@@ -163,7 +163,7 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     /// Wether this AddressReferencedAsset can load an Asset using the game's catalogues.
     /// <br>If this is true, you're encouraged to wait for AddressReferencedAsset to initialize fully using <see cref="AddressReferencedAsset.OnAddressReferencedAssetsLoaded"/></br>
     /// </summary>
-    public virtual bool CanLoadFromCatalog { get; } = false;
+    public virtual bool CanLoadFromCatalog { get; protected set; } = false;
 
     private bool _AddressFailedToLoad;
 
