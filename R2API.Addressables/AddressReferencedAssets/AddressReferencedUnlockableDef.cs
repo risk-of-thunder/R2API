@@ -19,7 +19,7 @@ public class AddressReferencedUnlockableDef : AddressReferencedAsset<UnlockableD
 {
     public override bool CanLoadFromCatalog => _canLoadFromCatalog;
 
-    [SerializeField]
+    [SerializeField, HideInInspector]
     private bool _canLoadFromCatalog = true;
 
     protected override IEnumerator LoadAsyncCoroutine()
@@ -30,7 +30,7 @@ public class AddressReferencedUnlockableDef : AddressReferencedAsset<UnlockableD
             if (unlockable)
             {
                 Asset = unlockable;
-                return;
+                yield break;
             }
         }
         var subroutine = LoadFromAddressAsyncCoroutine();

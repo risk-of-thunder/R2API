@@ -18,7 +18,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset<BuffDef>
 {
     public override bool CanLoadFromCatalog => _canLoadFromCatalog;
 
-    [SerializeField]
+    [SerializeField, HideInInspector]
     private bool _canLoadFromCatalog = true;
 
     protected override IEnumerator LoadAsyncCoroutine()
@@ -39,7 +39,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset<BuffDef>
         }
     }
 
-    [Obsolete("Call LoadAsyncCoroutine isntead")]
+    [Obsolete("Call LoadAsyncCoroutine instead")]
     protected override async Task LoadAsync()
     {
         if(CanLoadFromCatalog)

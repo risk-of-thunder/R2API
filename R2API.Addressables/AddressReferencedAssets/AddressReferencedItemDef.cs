@@ -18,7 +18,7 @@ public class AddressReferencedItemDef : AddressReferencedAsset<ItemDef>
 {
     public override bool CanLoadFromCatalog => _canLoadFromCatalog;
 
-    [SerializeField]
+    [SerializeField, HideInInspector]
     private bool _canLoadFromCatalog = true;
 
     protected override IEnumerator LoadAsyncCoroutine()
@@ -29,7 +29,7 @@ public class AddressReferencedItemDef : AddressReferencedAsset<ItemDef>
             if (index != ItemIndex.None)
             {
                 Asset = ItemCatalog.GetItemDef(index);
-                return;
+                yield break;
             }
         }
         var subroutine = LoadFromAddressAsyncCoroutine();

@@ -19,7 +19,7 @@ public class AddressReferencedExpansionDef : AddressReferencedAsset<ExpansionDef
 {
     public override bool CanLoadFromCatalog => _canLoadFromCatalog;
 
-    [SerializeField]
+    [SerializeField, HideInInspector]
     private bool _canLoadFromCatalog = true;
 
     protected override IEnumerator LoadAsyncCoroutine()
