@@ -198,14 +198,14 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     }
 
     /// <summary>
-    /// Allows you to Resolve the asset immediatly, instead of awaiting for <see cref="AddressReferencedAsset.OnAddressReferencedAssetsLoaded"/>.
-    /// <br></br>
-    /// If <see cref="CanLoadFromCatalog"/> is true, then you should at the very least await for said asset's catalog to initialize, otherwise null might return.
+    /// Loads the asset immediatly, instead of awaiting for <see cref="AddressReferencedAsset.OnAddressReferencedAssetsLoaded"/>
     /// </summary>
-    /// <returns>The direct referenced asset or the loaded asset</returns>
-    public virtual T ResolveAsset()
+    /// <returns>The loaded asset, or null if no asset was found.</returns>
+    public T LoadAssetNow()
     {
-        Load();
+        if(!AssetExists)
+            Load();
+
         return Asset;
     }
 
@@ -213,15 +213,20 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     /// Allows you to Resolve the asset immediatly using a coroutine, instead of awaiting for <see cref="AddressReferencedAsset.OnAddressReferencedAssetsLoaded"/>.
     /// <br></br>
     /// If <see cref="CanLoadFromCatalog"/> is true, then you should at the very least await for said asset's catalog to initialize, otherwise null might return.
+    /// <br></br>
+    /// If you want to immediatly load the asset, you can do so by calling LoadAssetNow
     /// </summary>
     /// <param name="onLoaded">An action to execute once the asset is loaded.</param>
     /// <returns>Yield returns null until the asset is loaded, afterwards it returns </returns>
-    public virtual IEnumerator ResolveAssetCoroutine(Action<T> onLoaded)
+    public virtual IEnumerator LoadAssetNowCoroutine(Action<T> onLoaded)
     {
-        var loadCoroutine = LoadAsyncCoroutine();
-        while(loadCoroutine.MoveNext())
+        if(!AssetExists)
         {
-            yield return null;
+            var loadCoroutine = LoadAsyncCoroutine();
+            while(loadCoroutine.MoveNext())
+            {
+                yield return null;
+            }
         }
 
         onLoaded?.Invoke(Asset);
