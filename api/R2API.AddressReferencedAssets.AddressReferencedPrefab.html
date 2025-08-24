@@ -82,10 +82,20 @@
     <div class="level2"><a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html">AddressReferencedAsset</a>&lt;<span class="xref">GameObject</span>&gt;</div>
     <div class="level3"><span class="xref">AddressReferencedPrefab</span></div>
   </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_Asset">AddressReferencedAsset&lt;GameObject&gt;.Asset</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_BoxedAsset">AddressReferencedAsset&lt;GameObject&gt;.BoxedAsset</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_AsyncOperationHandle">AddressReferencedAsset&lt;GameObject&gt;.AsyncOperationHandle</a>
     </div>
     <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_AssetExists">AddressReferencedAsset&lt;GameObject&gt;.AssetExists</a>
@@ -106,10 +116,25 @@
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetAsync">AddressReferencedAsset&lt;GameObject&gt;.LoadAssetAsync()</a>
     </div>
     <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetAsyncCoroutine">AddressReferencedAsset&lt;GameObject&gt;.LoadAssetAsyncCoroutine()</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetNow">AddressReferencedAsset&lt;GameObject&gt;.LoadAssetNow()</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetNowCoroutine_System_Action__0__">AddressReferencedAsset&lt;GameObject&gt;.LoadAssetNowCoroutine(Action&lt;GameObject&gt;)</a>
+    </div>
+    <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_Load">AddressReferencedAsset&lt;GameObject&gt;.Load()</a>
     </div>
     <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAsyncCoroutine">AddressReferencedAsset&lt;GameObject&gt;.LoadAsyncCoroutine()</a>
+    </div>
+    <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAsync">AddressReferencedAsset&lt;GameObject&gt;.LoadAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadFromAddressAsyncCoroutine">AddressReferencedAsset&lt;GameObject&gt;.LoadFromAddressAsyncCoroutine()</a>
     </div>
     <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadFromAddressAsync">AddressReferencedAsset&lt;GameObject&gt;.LoadFromAddressAsync()</a>
@@ -119,6 +144,9 @@
     </div>
     <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_ToString">AddressReferencedAsset&lt;GameObject&gt;.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_Dispose">AddressReferencedAsset&lt;GameObject&gt;.Dispose()</a>
     </div>
     <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_instances">AddressReferencedAsset.instances</a>
@@ -159,7 +187,7 @@
   <h5 id="R2API_AddressReferencedAssets_AddressReferencedPrefab_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Serializable]
-public class AddressReferencedPrefab : AddressReferencedAsset&lt;GameObject&gt;</code></pre>
+public class AddressReferencedPrefab : AddressReferencedAsset&lt;GameObject&gt;, IDisposable</code></pre>
   </div>
   <h3 id="constructors">Constructors
 </h3>
@@ -440,6 +468,10 @@ public class AddressReferencedPrefab : AddressReferencedAsset&lt;GameObject&gt;<
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
