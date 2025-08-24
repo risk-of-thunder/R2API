@@ -1,6 +1,8 @@
 ﻿using BepInEx;
+using HG.Coroutines;
 using RoR2;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UObject = UnityEngine.Object;
 
 namespace R2API.AddressReferencedAssets;
@@ -74,6 +77,28 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     }
 
     /// <summary>
+    /// <inheritdoc cref="AddressReferencedAsset.BoxedAsset"/>
+    /// </summary>
+    public override UObject BoxedAsset => _asset;
+
+    /// <summary>
+    /// <inheritdoc cref="AddressReferencedAsset.AsyncOperationHandle"/>
+    /// </summary>
+    public new AsyncOperationHandle<T> AsyncOperationHandle
+    {
+        get
+        {
+            return _asyncOperationHandle;
+        }
+        protected set
+        {
+            _asyncOperationHandle = value;
+            base.AsyncOperationHandle = value;
+        }
+    }
+    private AsyncOperationHandle<T> _asyncOperationHandle;
+
+    /// <summary>
     /// Determines wether <see cref="Asset"/>'s backing field has a value.
     /// </summary>
     public bool AssetExists
@@ -98,6 +123,13 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
             _asset = null;
             _useDirectReference = false;
             _AddressFailedToLoad = false;
+
+            //Release the handle
+            if(_asyncOperationHandle.IsValid())
+            {
+                Addressables.Release(_asyncOperationHandle);
+            }
+
             if(RoR2Application.loadFinished)
             {
                 Load();
@@ -131,7 +163,7 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     /// Wether this AddressReferencedAsset can load an Asset using the game's catalogues.
     /// <br>If this is true, you're encouraged to wait for AddressReferencedAsset to initialize fully using <see cref="AddressReferencedAsset.OnAddressReferencedAssetsLoaded"/></br>
     /// </summary>
-    public virtual bool CanLoadFromCatalog { get; } = false;
+    public virtual bool CanLoadFromCatalog { get; protected set; } = false;
 
     private bool _AddressFailedToLoad;
 
@@ -139,16 +171,66 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     {
         return !_asset && !string.IsNullOrEmpty(_address);
     }
-    /// <summary>
-    /// Loads the asset asynchronously if <see cref="Asset"/> is not null and <see cref="Address"/> is not null or empty.
-    /// <br>This is automatically called by the AddressReferencedAsset system and should not be called manually.</br>
-    /// </summary>
+
+    [Obsolete("Call \"LoadAssetAsyncCoroutine()\" instead.")]
     protected sealed override async Task LoadAssetAsync()
     {
         if(IsValidForLoadingWithAddress())
         {
             await LoadAsync();
         }
+    }
+
+    /// <summary>
+    /// Loads the asset asynchronously with a coroutine.
+    /// </summary>
+    /// <returns>A Coroutine, which can be awaited</returns>
+    protected sealed override IEnumerator LoadAssetAsyncCoroutine()
+    {
+        if(IsValidForLoadingWithAddress())
+        {
+            var coroutine = LoadAsyncCoroutine();
+            while(coroutine.MoveNext())
+            {
+                yield return null;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Loads the asset immediatly, instead of awaiting for <see cref="AddressReferencedAsset.OnAddressReferencedAssetsLoaded"/>
+    /// </summary>
+    /// <returns>The loaded asset, or null if no asset was found.</returns>
+    public T LoadAssetNow()
+    {
+        if(!AssetExists)
+            Load();
+
+        return Asset;
+    }
+
+    /// <summary>
+    /// Allows you to Resolve the asset immediatly using a coroutine, instead of awaiting for <see cref="AddressReferencedAsset.OnAddressReferencedAssetsLoaded"/>.
+    /// <br></br>
+    /// If <see cref="CanLoadFromCatalog"/> is true, then you should at the very least await for said asset's catalog to initialize, otherwise null might return.
+    /// <br></br>
+    /// If you want to immediatly load the asset, you can do so by calling LoadAssetNow
+    /// </summary>
+    /// <param name="onLoaded">An action to execute once the asset is loaded.</param>
+    /// <returns>Yield returns null until the asset is loaded, afterwards it returns </returns>
+    public virtual IEnumerator LoadAssetNowCoroutine(Action<T> onLoaded)
+    {
+        if(!AssetExists)
+        {
+            var loadCoroutine = LoadAsyncCoroutine();
+            while(loadCoroutine.MoveNext())
+            {
+                yield return null;
+            }
+        }
+
+        onLoaded?.Invoke(Asset);
+        yield break;
     }
 
     /// <summary>
@@ -162,6 +244,17 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     /// <summary>
     /// Implement how the Asset of type <typeparamref name="T"/> is loaded asynchronously when <see cref="Asset"/> is null
     /// </summary>
+    /// <returns></returns>
+    protected virtual IEnumerator LoadAsyncCoroutine()
+    {
+        var loadCoroutine = LoadFromAddressAsyncCoroutine();
+        while(loadCoroutine.MoveNext())
+        {
+            yield return null;
+        }
+    }
+
+    [Obsolete("Use \"LoadAsyncCoroutine()\" Instead")]
     protected virtual async Task LoadAsync()
     {
         await LoadFromAddressAsync();
@@ -170,16 +263,52 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
     /// <summary>
     /// Loads the Asset asynchronously via <see cref="Addressables"/>
     /// </summary>
-    protected async Task LoadFromAddressAsync()
+    protected IEnumerator LoadFromAddressAsyncCoroutine()
     {
-        if (!await IsAddressValidAsync())
+        bool? result = null;
+        IEnumerator<bool?> addressValidCoroutine = IsAdressValidAsync();
+        while(result != null && addressValidCoroutine.MoveNext())
+        {
+            result = addressValidCoroutine.Current;
+        }
+
+        result ??= false;
+        if(result == false)
         {
             AddressablesPlugin.Logger.LogWarning($"{this} failed to load from it's address because the address is either invalid, or malformed.");
             _AddressFailedToLoad = true;
-            return;
         }
 
-        var task = Addressables.LoadAssetAsync<T>(_address).Task;
+        AsyncOperationHandle = Addressables.LoadAssetAsync<T>(_address);
+        while(!AsyncOperationHandle.IsDone)
+        {
+            yield return null;
+        }
+        _asset = AsyncOperationHandle.Result;
+    }
+
+    [Obsolete("Use \"LoadFromAdressAsyncCoroutine\" Instead")]
+    protected async Task LoadFromAddressAsync()
+    {
+        bool? result = null;
+        IEnumerator<bool?> coroutine = IsAdressValidAsync();
+        while(result != null)
+        {
+            if(coroutine.MoveNext())
+            {
+                result = coroutine.Current;
+            }
+            break;
+        }
+
+        if(result == false)
+        {
+            AddressablesPlugin.Logger.LogWarning($"{this} failed to load from it's address because the address is either invalid, or malformed.");
+            _AddressFailedToLoad = true;
+        }
+
+        AsyncOperationHandle = Addressables.LoadAssetAsync<T>(_address);
+        var task = AsyncOperationHandle.Task;
         _asset = await task;
     }
 
@@ -194,7 +323,8 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
             _AddressFailedToLoad = true;
             return;
         }
-        _asset = Addressables.LoadAssetAsync<T>(_address).WaitForCompletion();
+        AsyncOperationHandle = Addressables.LoadAssetAsync<T>(_address);
+        _asset = AsyncOperationHandle.WaitForCompletion();
     }
 
     private bool IsAddressValid()
@@ -205,16 +335,36 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
         return location.Any();
     }
 
-    private async Task<bool> IsAddressValidAsync()
+    private IEnumerator<bool?> IsAdressValidAsync()
     {
         var locationTask = Addressables.LoadResourceLocationsAsync(_address);
-        var result = await locationTask.Task;
-        return result.Any();
+        while(!locationTask.IsDone)
+        {
+            yield return null;
+        }
+
+        var result = locationTask.Result;
+        yield return result.Any();
     }
 
+    /// <summary>
+    /// Returns a human readable representation of this AddressReferencedAsset
+    /// </summary>
+    /// <returns></returns>
     public override string ToString()
     {
         return $"{GetType().Name}(Asset={(_asset ? _asset : "null")}.Address={Address}";
+    }
+
+    /// <summary>
+    /// Calls <see cref="Addressables.Release{TObject}(AsyncOperationHandle{TObject})"/> on <see cref="AsyncOperationHandle"/>
+    /// </summary>
+    public override void Dispose()
+    {
+        if (AsyncOperationHandle.IsValid())
+        {
+            Addressables.Release(AsyncOperationHandle);
+        }
     }
 
     /// <summary>
@@ -298,9 +448,14 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
 /// A <see cref="AddressReferencedAsset"/> is a class that's used for referencing assets ingame.
 /// <br>You're strongly adviced to use <see cref="AddressReferencedAsset{T}"/> instead.</br> 
 /// </summary>
-public abstract class AddressReferencedAsset
+public abstract class AddressReferencedAsset : IDisposable
 {
     protected static readonly HashSet<AddressReferencedAsset> instances = new();
+
+    /// <summary>
+    /// The asset loaded, boxed inside a regular unity object.
+    /// </summary>
+    public abstract UObject BoxedAsset { get; }
 
     /// <summary>
     /// Wether or not the <see cref="AddressReferencedAsset"/> system has initialized.
@@ -316,17 +471,22 @@ public abstract class AddressReferencedAsset
     public static event Action OnAddressReferencedAssetsLoaded;
 
     /// <summary>
+    /// An exposure to the internal AsyncOperationHandle, this operation handle is only valid if the object was loaded via an address.
+    /// </summary>
+    public AsyncOperationHandle AsyncOperationHandle { get; protected set; }
+
+    /// <summary>
     /// Sets hooks for the AddressReferencedSystem, any constructor from classes inheriting <see cref="AddressReferencedAsset"/> must call it.
     /// </summary>
     protected void SetHooks()
     {
         if(RoR2Application.loadFinished)
         {
-            LoadReferencesAsync();
+            StartCoroutineOnLoad();
             return;
         }
-        RoR2Application.onLoad -= LoadReferencesAsync;
-        RoR2Application.onLoad += LoadReferencesAsync;
+        RoR2Application.onLoad -= StartCoroutineOnLoad;
+        RoR2Application.onLoad += StartCoroutineOnLoad;
     }
 
     /// <summary>
@@ -335,24 +495,72 @@ public abstract class AddressReferencedAsset
     protected void UnsetHooks()
     {
         if (!RoR2Application.loadFinished)
-            RoR2Application.onLoad -= LoadReferencesAsync;
+            RoR2Application.onLoad -= StartCoroutineOnLoad;
     }
 
-    private static async void LoadReferencesAsync()
+    private void StartCoroutineOnLoad()
     {
+        AddressablesPlugin.Instance.StartCoroutine(LoadReferencesAsync());
+    }
+
+    private static IEnumerator LoadReferencesAsync()
+    {
+        ParallelCoroutine parallelCoroutine = new ParallelCoroutine();
+        foreach(var instance in instances)
+        {
+            if(instance.BoxedAsset)
+            {
+                continue;
+            }
+
+            parallelCoroutine.Add(instance.LoadAssetAsyncCoroutine());
+        }
+
+        while(parallelCoroutine.MoveNext())
+        {
+            yield return null;
+        }
+
+        //Backwards compat for the task version.
+        List<Task> tasks = new List<Task>();
         foreach(AddressReferencedAsset instance in instances)
         {
-            try
+            if(instance.BoxedAsset)
             {
-                await instance.LoadAssetAsync();
+                continue;
             }
-            catch(Exception e)
-            {
-                AddressablesPlugin.Logger.LogError(e);
-            }
+
+            tasks.Add(instance.LoadAssetAsync());
         }
+
+        var supertask = Task.WhenAll(tasks);
+        while(!supertask.IsCompleted)
+        {
+            yield return null;
+        }
+
         _initialized = true;
         OnAddressReferencedAssetsLoaded?.Invoke();
     }
+
+    [Obsolete("If you need to implement this, implement a method that just returns Task.CompeltedTask, loading is now done via LoadAssetAsyncCoroutine instead.")]
     protected abstract Task LoadAssetAsync();
+
+    /// <summary>
+    /// Implement how the asset is loaded asynchronously using a coroutine
+    /// </summary>
+    protected abstract IEnumerator LoadAssetAsyncCoroutine();
+
+#pragma warning disable R2APISubmodulesAnalyzer
+    /// <summary>
+    /// Calls <see cref="Addressables.Release{TObject}(AsyncOperationHandle{TObject})"/> on <see cref="AsyncOperationHandle"/>
+    /// </summary>
+    public virtual void Dispose()
+    {
+        if(AsyncOperationHandle.IsValid())
+        {
+            Addressables.Release(AsyncOperationHandle);
+        }
+    }
+#pragma warning restore R2APISubmodulesAnalyzer
 }

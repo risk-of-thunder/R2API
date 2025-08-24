@@ -1,8 +1,10 @@
 ﻿using RoR2;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace R2API.AddressReferencedAssets;
 
@@ -14,25 +16,54 @@ namespace R2API.AddressReferencedAssets;
 [Serializable]
 public class AddressReferencedBuffDef : AddressReferencedAsset<BuffDef>
 {
-    public override bool CanLoadFromCatalog => true;
+    public override bool CanLoadFromCatalog { get => _canLoadFromCatalog; protected set => _canLoadFromCatalog = value; }
+
+    [SerializeField, HideInInspector]
+    private bool _canLoadFromCatalog = true;
+
+    protected override IEnumerator LoadAsyncCoroutine()
+    {
+        if(CanLoadFromCatalog)
+        {
+            BuffIndex index = BuffCatalog.FindBuffIndex(Address);
+            if(index != BuffIndex.None)
+            {
+                Asset = BuffCatalog.GetBuffDef(index);
+                yield break;
+            }
+        }
+        var subroutine = LoadFromAddressAsyncCoroutine();
+        while(subroutine.MoveNext())
+        {
+            yield return null;
+        }
+    }
+
+    [Obsolete("Call LoadAsyncCoroutine instead")]
     protected override async Task LoadAsync()
     {
-        BuffIndex index = BuffCatalog.FindBuffIndex(Address);
-        if (index != BuffIndex.None)
+        if(CanLoadFromCatalog)
         {
-            Asset = BuffCatalog.GetBuffDef(index);
-            return;
+            BuffIndex index = BuffCatalog.FindBuffIndex(Address);
+            if (index != BuffIndex.None)
+            {
+                Asset = BuffCatalog.GetBuffDef(index);
+                return;
+            }
         }
         await LoadFromAddressAsync();
     }
 
     protected override void Load()
     {
-        BuffIndex index = BuffCatalog.FindBuffIndex(Address);
-        if (index != BuffIndex.None)
+        if(CanLoadFromCatalog)
         {
-            Asset = BuffCatalog.GetBuffDef(index);
-            return;
+            BuffIndex index = BuffCatalog.FindBuffIndex(Address);
+            if (index != BuffIndex.None)
+            {
+                Asset = BuffCatalog.GetBuffDef(index);
+                return;
+            }
         }
         LoadFromAddress();
     }
