@@ -15,11 +15,8 @@ public sealed partial class AddressablesPlugin : BaseUnityPlugin
     public const string PluginName = R2API.PluginName + ".Addressables";
     internal static new ManualLogSource Logger { get; set; }
 
-    public static AddressablesPlugin Instance { get; private set; }
-
     private void Awake()
     {
         Logger = base.Logger;
-        Instance = this;
     }
 }
