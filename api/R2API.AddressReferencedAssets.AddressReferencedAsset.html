@@ -81,10 +81,6 @@
     <div class="level1"><span class="xref">AddressReferencedAsset</span></div>
       <div class="level2"><a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html">AddressReferencedAsset</a>&lt;T&gt;</div>
   </div>
-  <div class="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
-  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -113,7 +109,7 @@
   <h6><strong>Assembly</strong>: R2API.Addressables.dll</h6>
   <h5 id="R2API_AddressReferencedAssets_AddressReferencedAsset_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class AddressReferencedAsset : IDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class AddressReferencedAsset</code></pre>
   </div>
   <h3 id="fields">Fields
 </h3>
@@ -122,7 +118,7 @@
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedAsset_instances.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedAsset.instances%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L453">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L303">View Source</a>
   </span>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedAsset_instances" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.instances">instances</h4>
   <div class="markdown level1 summary"></div>
@@ -150,72 +146,10 @@
 </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedAsset_AsyncOperationHandle.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedAsset.AsyncOperationHandle%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L476">View Source</a>
-  </span>
-  <a id="R2API_AddressReferencedAssets_AddressReferencedAsset_AsyncOperationHandle_" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.AsyncOperationHandle*"></a>
-  <h4 id="R2API_AddressReferencedAssets_AddressReferencedAsset_AsyncOperationHandle" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.AsyncOperationHandle">AsyncOperationHandle</h4>
-  <div class="markdown level1 summary"><p>An exposure to the internal AsyncOperationHandle, this operation handle is only valid if the object was loaded via an address.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AsyncOperationHandle AsyncOperationHandle { get; protected set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">AsyncOperationHandle</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedAsset_BoxedAsset.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedAsset.BoxedAsset%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L458">View Source</a>
-  </span>
-  <a id="R2API_AddressReferencedAssets_AddressReferencedAsset_BoxedAsset_" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.BoxedAsset*"></a>
-  <h4 id="R2API_AddressReferencedAssets_AddressReferencedAsset_BoxedAsset" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.BoxedAsset">BoxedAsset</h4>
-  <div class="markdown level1 summary"><p>The asset loaded, boxed inside a regular unity object.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract Object BoxedAsset { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Object</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedAsset_Initialized.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedAsset.Initialized%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L464">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L309">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedAsset_Initialized_" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.Initialized*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedAsset_Initialized" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.Initialized">Initialized</h4>
@@ -246,26 +180,10 @@
 </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedAsset_Dispose.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedAsset.Dispose%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L558">View Source</a>
-  </span>
-  <a id="R2API_AddressReferencedAssets_AddressReferencedAsset_Dispose_" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.Dispose*"></a>
-  <h4 id="R2API_AddressReferencedAssets_AddressReferencedAsset_Dispose" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.Dispose">Dispose()</h4>
-  <div class="markdown level1 summary"><p>Calls <span class="xref">UnityEngine.AddressableAssets.Addressables.Release&lt;TObject&gt;(UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle&lt;TObject&gt;)</span> on <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_AsyncOperationHandle">AsyncOperationHandle</a></p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual void Dispose()</code></pre>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedAsset_LoadAssetAsync.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsync%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L546">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L357">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedAsset_LoadAssetAsync_" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsync*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedAsset_LoadAssetAsync" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsync">LoadAssetAsync()</h4>
@@ -273,8 +191,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;If you need to implement this, implement a method that just returns Task.CompeltedTask, loading is now done via LoadAssetAsyncCoroutine instead.&quot;)]
-protected abstract Task LoadAssetAsync()</code></pre>
+    <pre><code class="lang-csharp hljs">protected abstract Task LoadAssetAsync()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-condensed">
@@ -293,41 +210,10 @@ protected abstract Task LoadAssetAsync()</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedAsset_LoadAssetAsyncCoroutine.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsyncCoroutine%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L552">View Source</a>
-  </span>
-  <a id="R2API_AddressReferencedAssets_AddressReferencedAsset_LoadAssetAsyncCoroutine_" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsyncCoroutine*"></a>
-  <h4 id="R2API_AddressReferencedAssets_AddressReferencedAsset_LoadAssetAsyncCoroutine" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsyncCoroutine">LoadAssetAsyncCoroutine()</h4>
-  <div class="markdown level1 summary"><p>Implement how the asset is loaded asynchronously using a coroutine</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected abstract IEnumerator LoadAssetAsyncCoroutine()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerator">IEnumerator</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedAsset_SetHooks.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedAsset.SetHooks%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L481">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L321">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedAsset_SetHooks_" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.SetHooks*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedAsset_SetHooks" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.SetHooks">SetHooks()</h4>
@@ -343,7 +229,7 @@ protected abstract Task LoadAssetAsync()</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedAsset_UnsetHooks.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedAsset.UnsetHooks%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L495">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L335">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedAsset_UnsetHooks_" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.UnsetHooks*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedAsset_UnsetHooks" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.UnsetHooks">UnsetHooks()</h4>
@@ -361,7 +247,7 @@ protected abstract Task LoadAssetAsync()</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedAsset_OnAddressReferencedAssetsLoaded.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedAsset.OnAddressReferencedAssetsLoaded%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L471">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L316">View Source</a>
   </span>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedAsset_OnAddressReferencedAssetsLoaded" data-uid="R2API.AddressReferencedAssets.AddressReferencedAsset.OnAddressReferencedAssetsLoaded">OnAddressReferencedAssetsLoaded</h4>
   <div class="markdown level1 summary"><p>An event that gets invoked when all the AddressReferencedAssets have been loaded.</p>
@@ -386,10 +272,6 @@ protected abstract Task LoadAssetAsync()</code></pre>
       </tr>
     </tbody>
   </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a>
-  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
@@ -433,7 +315,7 @@ protected abstract Task LoadAssetAsync()</code></pre>
                     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedAsset.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedAsset%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L451" class="contribution-link">View Source</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedAsset.cs/#L301" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

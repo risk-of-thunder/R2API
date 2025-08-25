@@ -19,45 +19,6 @@ references:
   commentId: T:R2API.AddressReferencedAssets.AddressReferencedAsset
   fullName: R2API.AddressReferencedAssets.AddressReferencedAsset
   nameWithType: AddressReferencedAsset
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset.AsyncOperationHandle
-  name: AsyncOperationHandle
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_AsyncOperationHandle
-  commentId: P:R2API.AddressReferencedAssets.AddressReferencedAsset.AsyncOperationHandle
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset.AsyncOperationHandle
-  nameWithType: AddressReferencedAsset.AsyncOperationHandle
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset.AsyncOperationHandle*
-  name: AsyncOperationHandle
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_AsyncOperationHandle_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset.AsyncOperationHandle
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset.AsyncOperationHandle
-  nameWithType: AddressReferencedAsset.AsyncOperationHandle
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset.BoxedAsset
-  name: BoxedAsset
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_BoxedAsset
-  commentId: P:R2API.AddressReferencedAssets.AddressReferencedAsset.BoxedAsset
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset.BoxedAsset
-  nameWithType: AddressReferencedAsset.BoxedAsset
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset.BoxedAsset*
-  name: BoxedAsset
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_BoxedAsset_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset.BoxedAsset
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset.BoxedAsset
-  nameWithType: AddressReferencedAsset.BoxedAsset
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset.Dispose
-  name: Dispose()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_Dispose
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedAsset.Dispose
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset.Dispose()
-  nameWithType: AddressReferencedAsset.Dispose()
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset.Dispose*
-  name: Dispose
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_Dispose_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset.Dispose
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset.Dispose
-  nameWithType: AddressReferencedAsset.Dispose
 - uid: R2API.AddressReferencedAssets.AddressReferencedAsset.Initialized
   name: Initialized
   href: api/R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_Initialized
@@ -84,19 +45,6 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsync
   nameWithType: AddressReferencedAsset.LoadAssetAsync
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsyncCoroutine
-  name: LoadAssetAsyncCoroutine()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_LoadAssetAsyncCoroutine
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsyncCoroutine
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsyncCoroutine()
-  nameWithType: AddressReferencedAsset.LoadAssetAsyncCoroutine()
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsyncCoroutine*
-  name: LoadAssetAsyncCoroutine
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_LoadAssetAsyncCoroutine_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsyncCoroutine
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset.LoadAssetAsyncCoroutine
-  nameWithType: AddressReferencedAsset.LoadAssetAsyncCoroutine
 - uid: R2API.AddressReferencedAssets.AddressReferencedAsset.OnAddressReferencedAssetsLoaded
   name: OnAddressReferencedAssetsLoaded
   href: api/R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_OnAddressReferencedAssetsLoaded
@@ -232,40 +180,6 @@ references:
   fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).AssetExists
   nameWithType: AddressReferencedAsset<T>.AssetExists
   nameWithType.vb: AddressReferencedAsset(Of T).AssetExists
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.AsyncOperationHandle
-  name: AsyncOperationHandle
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_AsyncOperationHandle
-  commentId: P:R2API.AddressReferencedAssets.AddressReferencedAsset`1.AsyncOperationHandle
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.AsyncOperationHandle
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).AsyncOperationHandle
-  nameWithType: AddressReferencedAsset<T>.AsyncOperationHandle
-  nameWithType.vb: AddressReferencedAsset(Of T).AsyncOperationHandle
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.AsyncOperationHandle*
-  name: AsyncOperationHandle
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_AsyncOperationHandle_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset`1.AsyncOperationHandle
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.AsyncOperationHandle
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).AsyncOperationHandle
-  nameWithType: AddressReferencedAsset<T>.AsyncOperationHandle
-  nameWithType.vb: AddressReferencedAsset(Of T).AsyncOperationHandle
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.BoxedAsset
-  name: BoxedAsset
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_BoxedAsset
-  commentId: P:R2API.AddressReferencedAssets.AddressReferencedAsset`1.BoxedAsset
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.BoxedAsset
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).BoxedAsset
-  nameWithType: AddressReferencedAsset<T>.BoxedAsset
-  nameWithType.vb: AddressReferencedAsset(Of T).BoxedAsset
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.BoxedAsset*
-  name: BoxedAsset
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_BoxedAsset_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset`1.BoxedAsset
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.BoxedAsset
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).BoxedAsset
-  nameWithType: AddressReferencedAsset<T>.BoxedAsset
-  nameWithType.vb: AddressReferencedAsset(Of T).BoxedAsset
 - uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.CanLoadFromCatalog
   name: CanLoadFromCatalog
   href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_CanLoadFromCatalog
@@ -283,23 +197,6 @@ references:
   fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).CanLoadFromCatalog
   nameWithType: AddressReferencedAsset<T>.CanLoadFromCatalog
   nameWithType.vb: AddressReferencedAsset(Of T).CanLoadFromCatalog
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.Dispose
-  name: Dispose()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_Dispose
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedAsset`1.Dispose
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.Dispose()
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).Dispose()
-  nameWithType: AddressReferencedAsset<T>.Dispose()
-  nameWithType.vb: AddressReferencedAsset(Of T).Dispose()
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.Dispose*
-  name: Dispose
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_Dispose_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset`1.Dispose
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.Dispose
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).Dispose
-  nameWithType: AddressReferencedAsset<T>.Dispose
-  nameWithType.vb: AddressReferencedAsset(Of T).Dispose
 - uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.Finalize
   name: ~AddressReferencedAsset()
   href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_Finalize
@@ -367,58 +264,6 @@ references:
   fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadAssetAsync
   nameWithType: AddressReferencedAsset<T>.LoadAssetAsync
   nameWithType.vb: AddressReferencedAsset(Of T).LoadAssetAsync
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetAsyncCoroutine
-  name: LoadAssetAsyncCoroutine()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetAsyncCoroutine
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetAsyncCoroutine
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.LoadAssetAsyncCoroutine()
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadAssetAsyncCoroutine()
-  nameWithType: AddressReferencedAsset<T>.LoadAssetAsyncCoroutine()
-  nameWithType.vb: AddressReferencedAsset(Of T).LoadAssetAsyncCoroutine()
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetAsyncCoroutine*
-  name: LoadAssetAsyncCoroutine
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetAsyncCoroutine_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetAsyncCoroutine
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.LoadAssetAsyncCoroutine
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadAssetAsyncCoroutine
-  nameWithType: AddressReferencedAsset<T>.LoadAssetAsyncCoroutine
-  nameWithType.vb: AddressReferencedAsset(Of T).LoadAssetAsyncCoroutine
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetNow
-  name: LoadAssetNow()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetNow
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetNow
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.LoadAssetNow()
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadAssetNow()
-  nameWithType: AddressReferencedAsset<T>.LoadAssetNow()
-  nameWithType.vb: AddressReferencedAsset(Of T).LoadAssetNow()
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetNow*
-  name: LoadAssetNow
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetNow_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetNow
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.LoadAssetNow
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadAssetNow
-  nameWithType: AddressReferencedAsset<T>.LoadAssetNow
-  nameWithType.vb: AddressReferencedAsset(Of T).LoadAssetNow
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetNowCoroutine(System.Action{`0})
-  name: LoadAssetNowCoroutine(Action<T>)
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetNowCoroutine_System_Action__0__
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetNowCoroutine(System.Action{`0})
-  name.vb: LoadAssetNowCoroutine(Action(Of T))
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.LoadAssetNowCoroutine(System.Action<T>)
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadAssetNowCoroutine(System.Action(Of T))
-  nameWithType: AddressReferencedAsset<T>.LoadAssetNowCoroutine(Action<T>)
-  nameWithType.vb: AddressReferencedAsset(Of T).LoadAssetNowCoroutine(Action(Of T))
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetNowCoroutine*
-  name: LoadAssetNowCoroutine
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetNowCoroutine_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAssetNowCoroutine
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.LoadAssetNowCoroutine
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadAssetNowCoroutine
-  nameWithType: AddressReferencedAsset<T>.LoadAssetNowCoroutine
-  nameWithType.vb: AddressReferencedAsset(Of T).LoadAssetNowCoroutine
 - uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAsync
   name: LoadAsync()
   href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAsync
@@ -436,23 +281,6 @@ references:
   fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadAsync
   nameWithType: AddressReferencedAsset<T>.LoadAsync
   nameWithType.vb: AddressReferencedAsset(Of T).LoadAsync
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAsyncCoroutine
-  name: LoadAsyncCoroutine()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAsyncCoroutine
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAsyncCoroutine
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.LoadAsyncCoroutine()
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadAsyncCoroutine()
-  nameWithType: AddressReferencedAsset<T>.LoadAsyncCoroutine()
-  nameWithType.vb: AddressReferencedAsset(Of T).LoadAsyncCoroutine()
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAsyncCoroutine*
-  name: LoadAsyncCoroutine
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAsyncCoroutine_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadAsyncCoroutine
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.LoadAsyncCoroutine
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadAsyncCoroutine
-  nameWithType: AddressReferencedAsset<T>.LoadAsyncCoroutine
-  nameWithType.vb: AddressReferencedAsset(Of T).LoadAsyncCoroutine
 - uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadFromAddress
   name: LoadFromAddress()
   href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadFromAddress
@@ -487,23 +315,6 @@ references:
   fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadFromAddressAsync
   nameWithType: AddressReferencedAsset<T>.LoadFromAddressAsync
   nameWithType.vb: AddressReferencedAsset(Of T).LoadFromAddressAsync
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadFromAddressAsyncCoroutine
-  name: LoadFromAddressAsyncCoroutine()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadFromAddressAsyncCoroutine
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadFromAddressAsyncCoroutine
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.LoadFromAddressAsyncCoroutine()
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadFromAddressAsyncCoroutine()
-  nameWithType: AddressReferencedAsset<T>.LoadFromAddressAsyncCoroutine()
-  nameWithType.vb: AddressReferencedAsset(Of T).LoadFromAddressAsyncCoroutine()
-- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadFromAddressAsyncCoroutine*
-  name: LoadFromAddressAsyncCoroutine
-  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadFromAddressAsyncCoroutine_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset`1.LoadFromAddressAsyncCoroutine
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.LoadFromAddressAsyncCoroutine
-  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).LoadFromAddressAsyncCoroutine
-  nameWithType: AddressReferencedAsset<T>.LoadFromAddressAsyncCoroutine
-  nameWithType.vb: AddressReferencedAsset(Of T).LoadFromAddressAsyncCoroutine
 - uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.ToString
   name: ToString()
   href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_ToString
@@ -666,19 +477,6 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsync
   nameWithType: AddressReferencedBuffDef.LoadAsync
-- uid: R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsyncCoroutine
-  name: LoadAsyncCoroutine()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedBuffDef.html#R2API_AddressReferencedAssets_AddressReferencedBuffDef_LoadAsyncCoroutine
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsyncCoroutine
-  fullName: R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsyncCoroutine()
-  nameWithType: AddressReferencedBuffDef.LoadAsyncCoroutine()
-- uid: R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsyncCoroutine*
-  name: LoadAsyncCoroutine
-  href: api/R2API.AddressReferencedAssets.AddressReferencedBuffDef.html#R2API_AddressReferencedAssets_AddressReferencedBuffDef_LoadAsyncCoroutine_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsyncCoroutine
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsyncCoroutine
-  nameWithType: AddressReferencedBuffDef.LoadAsyncCoroutine
 - uid: R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit(R2API.AddressReferencedAssets.AddressReferencedBuffDef)~RoR2.BuffDef
   name: implicit operator BuffDef(AddressReferencedBuffDef)
   href: api/R2API.AddressReferencedAssets.AddressReferencedBuffDef.html#R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_R2API_AddressReferencedAssets_AddressReferencedBuffDef__RoR2_BuffDef
@@ -807,19 +605,6 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedEliteDef.LoadAsync
   nameWithType: AddressReferencedEliteDef.LoadAsync
-- uid: R2API.AddressReferencedAssets.AddressReferencedEliteDef.LoadAsyncCoroutine
-  name: LoadAsyncCoroutine()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedEliteDef.html#R2API_AddressReferencedAssets_AddressReferencedEliteDef_LoadAsyncCoroutine
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedEliteDef.LoadAsyncCoroutine
-  fullName: R2API.AddressReferencedAssets.AddressReferencedEliteDef.LoadAsyncCoroutine()
-  nameWithType: AddressReferencedEliteDef.LoadAsyncCoroutine()
-- uid: R2API.AddressReferencedAssets.AddressReferencedEliteDef.LoadAsyncCoroutine*
-  name: LoadAsyncCoroutine
-  href: api/R2API.AddressReferencedAssets.AddressReferencedEliteDef.html#R2API_AddressReferencedAssets_AddressReferencedEliteDef_LoadAsyncCoroutine_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedEliteDef.LoadAsyncCoroutine
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedEliteDef.LoadAsyncCoroutine
-  nameWithType: AddressReferencedEliteDef.LoadAsyncCoroutine
 - uid: R2API.AddressReferencedAssets.AddressReferencedEliteDef.op_Implicit(R2API.AddressReferencedAssets.AddressReferencedEliteDef)~RoR2.EliteDef
   name: implicit operator EliteDef(AddressReferencedEliteDef)
   href: api/R2API.AddressReferencedAssets.AddressReferencedEliteDef.html#R2API_AddressReferencedAssets_AddressReferencedEliteDef_op_Implicit_R2API_AddressReferencedAssets_AddressReferencedEliteDef__RoR2_EliteDef
@@ -948,19 +733,6 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.LoadAsync
   nameWithType: AddressReferencedEquipmentDef.LoadAsync
-- uid: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.LoadAsyncCoroutine
-  name: LoadAsyncCoroutine()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.html#R2API_AddressReferencedAssets_AddressReferencedEquipmentDef_LoadAsyncCoroutine
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.LoadAsyncCoroutine
-  fullName: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.LoadAsyncCoroutine()
-  nameWithType: AddressReferencedEquipmentDef.LoadAsyncCoroutine()
-- uid: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.LoadAsyncCoroutine*
-  name: LoadAsyncCoroutine
-  href: api/R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.html#R2API_AddressReferencedAssets_AddressReferencedEquipmentDef_LoadAsyncCoroutine_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.LoadAsyncCoroutine
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.LoadAsyncCoroutine
-  nameWithType: AddressReferencedEquipmentDef.LoadAsyncCoroutine
 - uid: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.op_Implicit(R2API.AddressReferencedAssets.AddressReferencedEquipmentDef)~RoR2.EquipmentDef
   name: implicit operator EquipmentDef(AddressReferencedEquipmentDef)
   href: api/R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.html#R2API_AddressReferencedAssets_AddressReferencedEquipmentDef_op_Implicit_R2API_AddressReferencedAssets_AddressReferencedEquipmentDef__RoR2_EquipmentDef
@@ -1089,19 +861,6 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.LoadAsync
   nameWithType: AddressReferencedExpansionDef.LoadAsync
-- uid: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.LoadAsyncCoroutine
-  name: LoadAsyncCoroutine()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedExpansionDef.html#R2API_AddressReferencedAssets_AddressReferencedExpansionDef_LoadAsyncCoroutine
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedExpansionDef.LoadAsyncCoroutine
-  fullName: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.LoadAsyncCoroutine()
-  nameWithType: AddressReferencedExpansionDef.LoadAsyncCoroutine()
-- uid: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.LoadAsyncCoroutine*
-  name: LoadAsyncCoroutine
-  href: api/R2API.AddressReferencedAssets.AddressReferencedExpansionDef.html#R2API_AddressReferencedAssets_AddressReferencedExpansionDef_LoadAsyncCoroutine_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedExpansionDef.LoadAsyncCoroutine
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.LoadAsyncCoroutine
-  nameWithType: AddressReferencedExpansionDef.LoadAsyncCoroutine
 - uid: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.op_Implicit(R2API.AddressReferencedAssets.AddressReferencedExpansionDef)~RoR2.ExpansionManagement.ExpansionDef
   name: implicit operator ExpansionDef(AddressReferencedExpansionDef)
   href: api/R2API.AddressReferencedAssets.AddressReferencedExpansionDef.html#R2API_AddressReferencedAssets_AddressReferencedExpansionDef_op_Implicit_R2API_AddressReferencedAssets_AddressReferencedExpansionDef__RoR2_ExpansionManagement_ExpansionDef
@@ -1319,19 +1078,6 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedItemDef.LoadAsync
   nameWithType: AddressReferencedItemDef.LoadAsync
-- uid: R2API.AddressReferencedAssets.AddressReferencedItemDef.LoadAsyncCoroutine
-  name: LoadAsyncCoroutine()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedItemDef.html#R2API_AddressReferencedAssets_AddressReferencedItemDef_LoadAsyncCoroutine
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedItemDef.LoadAsyncCoroutine
-  fullName: R2API.AddressReferencedAssets.AddressReferencedItemDef.LoadAsyncCoroutine()
-  nameWithType: AddressReferencedItemDef.LoadAsyncCoroutine()
-- uid: R2API.AddressReferencedAssets.AddressReferencedItemDef.LoadAsyncCoroutine*
-  name: LoadAsyncCoroutine
-  href: api/R2API.AddressReferencedAssets.AddressReferencedItemDef.html#R2API_AddressReferencedAssets_AddressReferencedItemDef_LoadAsyncCoroutine_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedItemDef.LoadAsyncCoroutine
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedItemDef.LoadAsyncCoroutine
-  nameWithType: AddressReferencedItemDef.LoadAsyncCoroutine
 - uid: R2API.AddressReferencedAssets.AddressReferencedItemDef.op_Implicit(R2API.AddressReferencedAssets.AddressReferencedItemDef)~RoR2.ItemDef
   name: implicit operator ItemDef(AddressReferencedItemDef)
   href: api/R2API.AddressReferencedAssets.AddressReferencedItemDef.html#R2API_AddressReferencedAssets_AddressReferencedItemDef_op_Implicit_R2API_AddressReferencedAssets_AddressReferencedItemDef__RoR2_ItemDef
@@ -1599,19 +1345,6 @@ references:
   fullName.vb: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.New
   nameWithType: AddressReferencedUnlockableDef.AddressReferencedUnlockableDef
   nameWithType.vb: AddressReferencedUnlockableDef.New
-- uid: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.CanLoadFromCatalog
-  name: CanLoadFromCatalog
-  href: api/R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.html#R2API_AddressReferencedAssets_AddressReferencedUnlockableDef_CanLoadFromCatalog
-  commentId: P:R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.CanLoadFromCatalog
-  fullName: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.CanLoadFromCatalog
-  nameWithType: AddressReferencedUnlockableDef.CanLoadFromCatalog
-- uid: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.CanLoadFromCatalog*
-  name: CanLoadFromCatalog
-  href: api/R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.html#R2API_AddressReferencedAssets_AddressReferencedUnlockableDef_CanLoadFromCatalog_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.CanLoadFromCatalog
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.CanLoadFromCatalog
-  nameWithType: AddressReferencedUnlockableDef.CanLoadFromCatalog
 - uid: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.Load
   name: Load()
   href: api/R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.html#R2API_AddressReferencedAssets_AddressReferencedUnlockableDef_Load
@@ -1638,19 +1371,6 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.LoadAsync
   nameWithType: AddressReferencedUnlockableDef.LoadAsync
-- uid: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.LoadAsyncCoroutine
-  name: LoadAsyncCoroutine()
-  href: api/R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.html#R2API_AddressReferencedAssets_AddressReferencedUnlockableDef_LoadAsyncCoroutine
-  commentId: M:R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.LoadAsyncCoroutine
-  fullName: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.LoadAsyncCoroutine()
-  nameWithType: AddressReferencedUnlockableDef.LoadAsyncCoroutine()
-- uid: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.LoadAsyncCoroutine*
-  name: LoadAsyncCoroutine
-  href: api/R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.html#R2API_AddressReferencedAssets_AddressReferencedUnlockableDef_LoadAsyncCoroutine_
-  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.LoadAsyncCoroutine
-  isSpec: "True"
-  fullName: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.LoadAsyncCoroutine
-  nameWithType: AddressReferencedUnlockableDef.LoadAsyncCoroutine
 - uid: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.op_Implicit(R2API.AddressReferencedAssets.AddressReferencedUnlockableDef)~RoR2.UnlockableDef
   name: implicit operator UnlockableDef(AddressReferencedUnlockableDef)
   href: api/R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.html#R2API_AddressReferencedAssets_AddressReferencedUnlockableDef_op_Implicit_R2API_AddressReferencedAssets_AddressReferencedUnlockableDef__RoR2_UnlockableDef
@@ -1883,19 +1603,6 @@ references:
   commentId: T:R2API.AddressablesPlugin
   fullName: R2API.AddressablesPlugin
   nameWithType: AddressablesPlugin
-- uid: R2API.AddressablesPlugin.Instance
-  name: Instance
-  href: api/R2API.AddressablesPlugin.html#R2API_AddressablesPlugin_Instance
-  commentId: P:R2API.AddressablesPlugin.Instance
-  fullName: R2API.AddressablesPlugin.Instance
-  nameWithType: AddressablesPlugin.Instance
-- uid: R2API.AddressablesPlugin.Instance*
-  name: Instance
-  href: api/R2API.AddressablesPlugin.html#R2API_AddressablesPlugin_Instance_
-  commentId: Overload:R2API.AddressablesPlugin.Instance
-  isSpec: "True"
-  fullName: R2API.AddressablesPlugin.Instance
-  nameWithType: AddressablesPlugin.Instance
 - uid: R2API.AddressablesPlugin.PluginGUID
   name: PluginGUID
   href: api/R2API.AddressablesPlugin.html#R2API_AddressablesPlugin_PluginGUID
