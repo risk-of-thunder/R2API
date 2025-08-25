@@ -1,12 +1,10 @@
 ﻿using RoR2;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace R2API.AddressReferencedAssets;
 
@@ -18,54 +16,25 @@ namespace R2API.AddressReferencedAssets;
 [Serializable]
 public class AddressReferencedEliteDef : AddressReferencedAsset<EliteDef>
 {
-    public override bool CanLoadFromCatalog { get => _canLoadFromCatalog; protected set => _canLoadFromCatalog = value; }
-
-    [SerializeField, HideInInspector]
-    private bool _canLoadFromCatalog = true;
-
-    protected override IEnumerator LoadAsyncCoroutine()
-    {
-        if (CanLoadFromCatalog)
-        {
-            EliteDef def = EliteCatalog.eliteDefs.FirstOrDefault(x => x.name.Equals(Address, StringComparison.OrdinalIgnoreCase));
-            if (def != null)
-            {
-                Asset = def;
-                yield break;
-            }
-        }
-        var subroutine = LoadFromAddressAsyncCoroutine();
-        while(subroutine.MoveNext())
-        {
-            yield return null;
-        }
-    }
-
-    [Obsolete("Call LoadAsyncCoroutine instead")]
+    public override bool CanLoadFromCatalog => true;
     protected override async Task LoadAsync()
     {
-        if(CanLoadFromCatalog)
+        EliteDef def = EliteCatalog.eliteDefs.FirstOrDefault(x => x.name.Equals(Address, StringComparison.OrdinalIgnoreCase));
+        if (def != null)
         {
-            EliteDef def = EliteCatalog.eliteDefs.FirstOrDefault(x => x.name.Equals(Address, StringComparison.OrdinalIgnoreCase));
-            if (def != null)
-            {
-                Asset = def;
-                return;
-            }
+            Asset = def;
+            return;
         }
         await LoadFromAddressAsync();
     }
 
     protected override void Load()
     {
-        if(CanLoadFromCatalog)
+        EliteDef def = EliteCatalog.eliteDefs.FirstOrDefault(x => x.name.Equals(Address, StringComparison.OrdinalIgnoreCase));
+        if (def != null)
         {
-            EliteDef def = EliteCatalog.eliteDefs.FirstOrDefault(x => x.name.Equals(Address, StringComparison.OrdinalIgnoreCase));
-            if (def != null)
-            {
-                Asset = def;
-                return;
-            }
+            Asset = def;
+            return;
         }
         LoadFromAddress();
     }

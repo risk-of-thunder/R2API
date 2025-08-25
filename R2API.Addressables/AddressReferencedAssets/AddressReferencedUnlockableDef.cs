@@ -1,11 +1,9 @@
 ﻿using RoR2;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace R2API.AddressReferencedAssets;
 
@@ -17,54 +15,24 @@ namespace R2API.AddressReferencedAssets;
 [Serializable]
 public class AddressReferencedUnlockableDef : AddressReferencedAsset<UnlockableDef>
 {
-    public override bool CanLoadFromCatalog { get => _canLoadFromCatalog; protected set => _canLoadFromCatalog = value; }
-
-    [SerializeField, HideInInspector]
-    private bool _canLoadFromCatalog = true;
-
-    protected override IEnumerator LoadAsyncCoroutine()
-    {
-        if (CanLoadFromCatalog)
-        {
-            UnlockableDef unlockable = UnlockableCatalog.GetUnlockableDef(Address);
-            if (unlockable)
-            {
-                Asset = unlockable;
-                yield break;
-            }
-        }
-        var subroutine = LoadFromAddressAsyncCoroutine();
-        while(subroutine.MoveNext())
-        {
-            yield return null;
-        }
-    }
-
-    [Obsolete("Call LoadAsyncCoroutine instead")]
     protected override async Task LoadAsync()
     {
-        if(CanLoadFromCatalog)
+        UnlockableDef unlockable = UnlockableCatalog.GetUnlockableDef(Address);
+        if (unlockable)
         {
-            UnlockableDef unlockable = UnlockableCatalog.GetUnlockableDef(Address);
-            if (unlockable)
-            {
-                Asset = unlockable;
-                return;
-            }
+            Asset = unlockable;
+            return;
         }
         await LoadFromAddressAsync();
     }
 
     protected override void Load()
     {
-        if (CanLoadFromCatalog)
+        UnlockableDef unlockable = UnlockableCatalog.GetUnlockableDef(Address);
+        if (unlockable)
         {
-            UnlockableDef unlockable = UnlockableCatalog.GetUnlockableDef(Address);
-            if (unlockable)
-            {
-                Asset = unlockable;
-                return;
-            }
+            Asset = unlockable;
+            return;
         }
         LoadFromAddress();
     }

@@ -1,10 +1,8 @@
 ﻿using RoR2;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace R2API.AddressReferencedAssets;
 
@@ -16,54 +14,25 @@ namespace R2API.AddressReferencedAssets;
 [Serializable]
 public class AddressReferencedItemDef : AddressReferencedAsset<ItemDef>
 {
-    public override bool CanLoadFromCatalog { get => _canLoadFromCatalog; protected set => _canLoadFromCatalog = value; }
-
-    [SerializeField, HideInInspector]
-    private bool _canLoadFromCatalog = true;
-
-    protected override IEnumerator LoadAsyncCoroutine()
-    {
-        if (CanLoadFromCatalog)
-        {
-            ItemIndex index = ItemCatalog.FindItemIndex(Address);
-            if (index != ItemIndex.None)
-            {
-                Asset = ItemCatalog.GetItemDef(index);
-                yield break;
-            }
-        }
-        var subroutine = LoadFromAddressAsyncCoroutine();
-        while(subroutine.MoveNext())
-        {
-            yield return null;
-        }
-    }
-
-    [Obsolete("Call LoadAsyncCoroutine instead")]
+    public override bool CanLoadFromCatalog => true;
     protected override async Task LoadAsync()
     {
-        if(CanLoadFromCatalog)
+        ItemIndex index = ItemCatalog.FindItemIndex(Address);
+        if (index != ItemIndex.None)
         {
-            ItemIndex index = ItemCatalog.FindItemIndex(Address);
-            if (index != ItemIndex.None)
-            {
-                Asset = ItemCatalog.GetItemDef(index);
-                return;
-            }
+            Asset = ItemCatalog.GetItemDef(index);
+            return;
         }
         await LoadFromAddressAsync();
     }
 
     protected override void Load()
     {
-        if (CanLoadFromCatalog)
+        ItemIndex index = ItemCatalog.FindItemIndex(Address);
+        if (index != ItemIndex.None)
         {
-            ItemIndex index = ItemCatalog.FindItemIndex(Address);
-            if (index != ItemIndex.None)
-            {
-                Asset = ItemCatalog.GetItemDef(index);
-                return;
-            }
+            Asset = ItemCatalog.GetItemDef(index);
+            return;
         }
         LoadFromAddress();
     }

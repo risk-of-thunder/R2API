@@ -1,11 +1,9 @@
 ﻿using RoR2;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace R2API.AddressReferencedAssets;
 
@@ -17,54 +15,25 @@ namespace R2API.AddressReferencedAssets;
 [Serializable]
 public class AddressReferencedEquipmentDef : AddressReferencedAsset<EquipmentDef>
 {
-    public override bool CanLoadFromCatalog { get => _canLoadFromCatalog; protected set => _canLoadFromCatalog = value; }
-
-    [SerializeField, HideInInspector]
-    private bool _canLoadFromCatalog = true;
-
-    protected override IEnumerator LoadAsyncCoroutine()
-    {
-        if (CanLoadFromCatalog)
-        {
-            EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(Address);
-            if (index != EquipmentIndex.None)
-            {
-                Asset = EquipmentCatalog.GetEquipmentDef(index);
-                yield break;
-            }
-        }
-        var subroutine = LoadFromAddressAsyncCoroutine();
-        while(subroutine.MoveNext())
-        {
-            yield return null;
-        }
-    }
-
-    [Obsolete("Call LoadAsyncCoroutine instead.")]
+    public override bool CanLoadFromCatalog => true;
     protected override async Task LoadAsync()
     {
-        if(CanLoadFromCatalog)
+        EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(Address);
+        if (index != EquipmentIndex.None)
         {
-            EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(Address);
-            if (index != EquipmentIndex.None)
-            {
-                Asset = EquipmentCatalog.GetEquipmentDef(index);
-                return;
-            }
+            Asset = EquipmentCatalog.GetEquipmentDef(index);
+            return;
         }
         await LoadFromAddressAsync();
     }
 
     protected override void Load()
     {
-        if(CanLoadFromCatalog)
+        EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(Address);
+        if (index != EquipmentIndex.None)
         {
-            EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(Address);
-            if (index != EquipmentIndex.None)
-            {
-                Asset = EquipmentCatalog.GetEquipmentDef(index);
-                return;
-            }
+            Asset = EquipmentCatalog.GetEquipmentDef(index);
+            return;
         }
         LoadFromAddress();
     }

@@ -1,11 +1,9 @@
 ﻿using RoR2.ExpansionManagement;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace R2API.AddressReferencedAssets;
 
@@ -17,54 +15,24 @@ namespace R2API.AddressReferencedAssets;
 [Serializable]
 public class AddressReferencedExpansionDef : AddressReferencedAsset<ExpansionDef>
 {
-    public override bool CanLoadFromCatalog { get => _canLoadFromCatalog; protected set => _canLoadFromCatalog = value; }
+    public override bool CanLoadFromCatalog => true;
 
-    [SerializeField, HideInInspector]
-    private bool _canLoadFromCatalog = true;
-
-    protected override IEnumerator LoadAsyncCoroutine()
-    {
-        if(CanLoadFromCatalog)
-        {
-            ExpansionDef expansionDef = ExpansionCatalog.expansionDefs.FirstOrDefault(ed => ed.name.Equals(Address, StringComparison.OrdinalIgnoreCase));
-            if (expansionDef != null)
-            {
-                Asset = expansionDef;
-                yield break;
-            }
-        }
-        var subroutine = LoadFromAddressAsyncCoroutine();
-        while(subroutine.MoveNext())
-        {
-            yield return null;
-        }
-    }
-
-    [Obsolete("Call LoadAsyncCoroutine instead")]
     protected override async Task LoadAsync()
     {
-        if(CanLoadFromCatalog)
+        ExpansionDef expansionDef = ExpansionCatalog.expansionDefs.FirstOrDefault(ed => ed.name.Equals(Address, StringComparison.OrdinalIgnoreCase));
+        if (expansionDef != null)
         {
-            ExpansionDef expansionDef = ExpansionCatalog.expansionDefs.FirstOrDefault(ed => ed.name.Equals(Address, StringComparison.OrdinalIgnoreCase));
-            if (expansionDef != null)
-            {
-                Asset = expansionDef;
-                return;
-            }
+            Asset = expansionDef;
         }
         await LoadFromAddressAsync();
     }
 
     protected override void Load()
     {
-        if(CanLoadFromCatalog)
+        ExpansionDef expansionDef = ExpansionCatalog.expansionDefs.FirstOrDefault(ed => ed.name.Equals(Address, StringComparison.OrdinalIgnoreCase));
+        if (expansionDef != null)
         {
-            ExpansionDef expansionDef = ExpansionCatalog.expansionDefs.FirstOrDefault(ed => ed.name.Equals(Address, StringComparison.OrdinalIgnoreCase));
-            if (expansionDef != null)
-            {
-                Asset = expansionDef;
-                return;
-            }
+            Asset = expansionDef;
         }
         LoadFromAddress();
     }
