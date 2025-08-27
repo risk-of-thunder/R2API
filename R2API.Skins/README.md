@@ -1,12 +1,16 @@
-# R2API.Skins - Adding new Skins and Skin-Specific IDRS
+# R2API.Skins - Adding new Skins, Skin-Specific IDRS and VFX and Skill-Specific parts
 
 ## About
 
 R2API.Skins is a submodule for R2API that takes the Skin related methods and utilities from ``R2API.Loadout`` and implements them in this new submodule
 
-Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also contains utilities for improving the skin experience, such as having Skin-Specific ItemDisplayRuleSets, custom VFX for skins and providing a system for overriding Light colors
+Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also contains utilities for improving the skin experience, such as having Skin-Specific ItemDisplayRuleSets, custom VFX for skins, providing a system for overriding Light colors and having Skill-Specific parts
 
 ## Changelog
+
+### `1.3.0`
+
+* Added SkinSkillVariants feature for adding skill-specific skin parts replacements.
 
 ### '1.2.2'
 * Removed the SkinLightReplacement system, as it was not used by a single mod in the entire thunderstore, alongside the fact that the Memory Optimization patch made its concept obsolete.

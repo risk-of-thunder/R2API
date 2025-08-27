@@ -1,5 +1,6 @@
 using BepInEx;
 using BepInEx.Logging;
+using HarmonyLib;
 using System;
 
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
@@ -11,9 +12,11 @@ public sealed class SkinsPlugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger { get; set; }
 
+    public static Harmony harmonyPatcher;
     private void Awake()
     {
         Logger = base.Logger;
+        harmonyPatcher = new Harmony(Skins.PluginGUID);
     }
 
     private void OnEnable()
@@ -21,6 +24,7 @@ public sealed class SkinsPlugin : BaseUnityPlugin
         Skins.SetHooks();
         SkinIDRS.SetHooks();
         SkinVFX.SetHooks();
+        SkinSkillVariants.SetHooks();
     }
 
     private void OnDisable()
@@ -28,5 +32,6 @@ public sealed class SkinsPlugin : BaseUnityPlugin
         Skins.UnsetHooks();
         SkinIDRS.UnsetHooks();
         SkinVFX.UnsetHooks();
+        SkinSkillVariants.UnsetHooks();
     }
 }
