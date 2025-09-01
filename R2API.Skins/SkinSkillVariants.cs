@@ -351,6 +351,10 @@ public static partial class SkinSkillVariants
     [Serializable]
     public struct RendererInfoSkillVariant : ISkillVariantStruct<CharacterModel.RendererInfo>
     {
+        /// <summary>
+        /// Use this if you are creating <see cref="SkinSkillVariantsDef"/>.
+        /// Otherwise use <see cref="AddRenderInfoSkillVariant(SkinDefParams, string, RendererInfoSkillVariant)"/>.
+        /// </summary>
         [PrefabReference]
         public Renderer renderer;
         public SkillDef skillDef;
@@ -370,6 +374,10 @@ public static partial class SkinSkillVariants
     [Serializable]
     public struct MeshReplacementSkillVariant : ISkillVariantStruct<SkinDefParams.MeshReplacement>
     {
+        /// <summary>
+        /// Use this if you are creating <see cref="SkinSkillVariantsDef"/>.
+        /// Otherwise use <see cref="AddMeshReplacementSkillVariant(SkinDefParams, string, MeshReplacementSkillVariant)"/>.
+        /// </summary>
         [PrefabReference]
         public Renderer renderer;
         public SkillDef skillDef;
@@ -385,6 +393,10 @@ public static partial class SkinSkillVariants
     [Serializable]
     public struct LightInfoSkillVariant : ISkillVariantStruct<CharacterModel.LightInfo>
     {
+        /// <summary>
+        /// Use this if you are creating <see cref="SkinSkillVariantsDef"/>.
+        /// Otherwise use <see cref="AddLightInfoSkillVariant(SkinDefParams, string, LightInfoSkillVariant)"/>.
+        /// </summary>
         [PrefabReference]
         public Light originalLight;
         public SkillDef skillDef;
@@ -400,6 +412,10 @@ public static partial class SkinSkillVariants
     [Serializable]
     public struct ProjectileGhostReplacementSkillVariant : ISkillVariantStruct<SkinDefParams.ProjectileGhostReplacement>
     {
+        /// <summary>
+        /// Use this if you are creating <see cref="SkinSkillVariantsDef"/>.
+        /// Otherwise use <see cref="AddProjectileGhostReplacementSkillVariant(SkinDefParams, GameObject, ProjectileGhostReplacementSkillVariant)"/>.
+        /// </summary>
         public GameObject projectilePrefab;
         public SkillDef skillDef;
         public GameObject projectileGhostReplacementPrefab;
@@ -414,6 +430,10 @@ public static partial class SkinSkillVariants
     [Serializable]
     public struct MinionSkinReplacementSkillVariant : ISkillVariantStruct<SkinDefParams.MinionSkinReplacement>
     {
+        /// <summary>
+        /// Use this if you are creating <see cref="SkinSkillVariantsDef"/>.
+        /// Otherwise use <see cref="AddMinionSkinReplacementSkillVariant(SkinDefParams, GameObject, MinionSkinReplacementSkillVariant)"/>.
+        /// </summary>
         public GameObject minionBodyPrefab;
         public SkillDef skillDef;
         public SkinDef minionSkin;
@@ -519,22 +539,6 @@ public static partial class SkinSkillVariants
         }
         return mesh;
     }
-    private static bool CheckMinionSkinSkillVariants(ref SkinDef.MinionSkinTemplate minionSkinTemplate, List<SkillDef> skillDefs)
-    {
-        if (skillDefs == null) return false;
-        object[] objects = minionSkinTemplate.GetSkillVariants();
-        if (objects == null) return false;
-        foreach (object obj in objects)
-        {
-            if (obj == null) continue;
-            MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant = (MinionSkinReplacementSkillVariant)obj;
-            SkillDef skillDef = minionSkinReplacementSkillVariant.skillDef;
-            if (skillDef == null) continue;
-            if (!skillDefs.Contains(skillDef)) continue;
-            return true;
-        }
-        return false;
-    }
     private static SkinDef ApplyMinionSkinVariants(ref SkinDef.MinionSkinTemplate minionSkinTemplate, List<SkillDef> skillDefs)
     {
         SkinDef skinDef = minionSkinTemplate.minionSkin;
@@ -616,7 +620,8 @@ public static partial class SkinSkillVariants
             if(rendererInfo.renderer == null) continue;
             if(rendererInfo.renderer.name == rendererName) return ref rendererInfo;
         }
-        return ref rendererInfos[0];
+        NullReferenceException nullReferenceException = new($"Couldn't find renderer \"{rendererName}\" for \"{skinDefParams}\"");
+        throw nullReferenceException;
     }
     private static ref SkinDefParams.MeshReplacement GetMeshReplacementByName(SkinDefParams skinDefParams, string meshRendererName)
     {
@@ -627,7 +632,8 @@ public static partial class SkinSkillVariants
             if (meshReplacement.renderer == null) continue;
             if (meshReplacement.renderer.name == meshRendererName) return ref meshReplacement;
         }
-        return ref meshReplacements[0];
+        NullReferenceException nullReferenceException = new($"Couldn't find renderer \"{meshRendererName}\" for \"{skinDefParams}\"");
+        throw nullReferenceException;
     }
     private static ref CharacterModel.LightInfo GetLightInfoByName(SkinDefParams skinDefParams, string lightInfoName)
     {
@@ -638,7 +644,8 @@ public static partial class SkinSkillVariants
             if (lightInfo.light == null) continue;
             if (lightInfo.light.name == lightInfoName) return ref lightInfo;
         }
-        return ref lightInfos[0];
+        NullReferenceException nullReferenceException = new($"Couldn't find light \"{lightInfoName}\" for \"{skinDefParams}\"");
+        throw nullReferenceException;
     }
     private static ref SkinDefParams.ProjectileGhostReplacement GetProjectileGhostReplacementByName(SkinDefParams skinDefParams, string projectileName)
     {
@@ -649,7 +656,20 @@ public static partial class SkinSkillVariants
             if (projectileGhostReplacement.projectilePrefab == null) continue;
             if (projectileGhostReplacement.projectilePrefab.name == projectileName) return ref projectileGhostReplacement;
         }
-        return ref projectileghostReplacements[0];
+        NullReferenceException nullReferenceException = new($"Couldn't find projectile \"{projectileName}\" for \"{skinDefParams}\"");
+        throw nullReferenceException;
+    }
+    private static ref SkinDefParams.ProjectileGhostReplacement GetProjectileGhostReplacementByPrefab(SkinDefParams skinDefParams, GameObject projectilePrefab)
+    {
+        SkinDefParams.ProjectileGhostReplacement[] projectileghostReplacements = skinDefParams.projectileGhostReplacements;
+        for (int i = 0; i < projectileghostReplacements.Length; i++)
+        {
+            ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement = ref projectileghostReplacements[i];
+            if (projectileGhostReplacement.projectilePrefab == null) continue;
+            if (projectileGhostReplacement.projectilePrefab == projectilePrefab) return ref projectileGhostReplacement;
+        }
+        NullReferenceException nullReferenceException = new($"Couldn't find projectile \"{projectilePrefab.name}\" for \"{skinDefParams}\"");
+        throw nullReferenceException;
     }
     private static ref SkinDefParams.MinionSkinReplacement GetMinionSkinReplacementByName(SkinDefParams skinDefParams, string minionBodyName)
     {
@@ -660,7 +680,20 @@ public static partial class SkinSkillVariants
             if (minionSkinReplacement.minionBodyPrefab == null) continue;
             if (minionSkinReplacement.minionBodyPrefab.name == minionBodyName) return ref minionSkinReplacement;
         }
-        return ref minionSkinReplacements[0];
+        NullReferenceException nullReferenceException = new($"Couldn't find minion body \"{minionBodyName}\" for \"{skinDefParams}\"");
+        throw nullReferenceException;
+    }
+    private static ref SkinDefParams.MinionSkinReplacement GetMinionSkinReplacementByPrefab(SkinDefParams skinDefParams, GameObject minionBodyPrefab)
+    {
+        SkinDefParams.MinionSkinReplacement[] minionSkinReplacements = skinDefParams.minionSkinReplacements;
+        for (int i = 0; i < minionSkinReplacements.Length; i++)
+        {
+            ref SkinDefParams.MinionSkinReplacement minionSkinReplacement = ref minionSkinReplacements[i];
+            if (minionSkinReplacement.minionBodyPrefab == null) continue;
+            if (minionSkinReplacement.minionBodyPrefab == minionBodyPrefab) return ref minionSkinReplacement;
+        }
+        NullReferenceException nullReferenceException = new($"Couldn't find minion body \"{minionBodyPrefab}\" for \"{skinDefParams}\"");
+        throw nullReferenceException;
     }
     internal static void AddItemToObjects<T>(ref object[] objects, T t)
     {
@@ -820,6 +853,16 @@ public static partial class SkinSkillVariants
             t1.AddPending(modelSkinController, t2);
         }
     }
+    private static ref object[] GetSkillVariants(this ref SkinDef.MeshReplacementTemplate meshReplacementTemplate) => ref SkinAPIInterop.GetSkillVariants(ref meshReplacementTemplate);
+    private static void SetSkillVariants(this ref SkinDef.MeshReplacementTemplate meshReplacementTemplate, object[] value) => SkinAPIInterop.SetSkillVariants(ref meshReplacementTemplate, value);
+    private static ref object[] GetSkillVariants(this ref SkinDef.LightReplacementTemplate lightReplacementTemplate) => ref SkinAPIInterop.GetSkillVariants(ref lightReplacementTemplate);
+    private static void SetSkillVariants(this ref SkinDef.LightReplacementTemplate lightReplacementTemplate, object[] value) => SkinAPIInterop.SetSkillVariants(ref lightReplacementTemplate, value);
+    private static ref object[] GetSkillVariants(this ref SkinDef.GhostReplacementTemplate ghostReplacementTemplate) => ref SkinAPIInterop.GetSkillVariants(ref ghostReplacementTemplate);
+    private static void SetSkillVariants(this ref SkinDef.GhostReplacementTemplate ghostReplacementTemplate, object[] value) => SkinAPIInterop.SetSkillVariants(ref ghostReplacementTemplate, value);
+    private static ref object[] GetSkillVariants(this ref SkinDef.MinionSkinTemplate minionSkinTemplate) => ref SkinAPIInterop.GetSkillVariants(ref minionSkinTemplate);
+    private static void SetSkillVariants(this ref SkinDef.MinionSkinTemplate minionSkinTemplate, object[] value) => SkinAPIInterop.SetSkillVariants(ref minionSkinTemplate, value);
+    private static SkinDef GetSkinDef(this SkinDef.RuntimeSkin runtimeSkin) => SkinAPIInterop.GetSkinDef(runtimeSkin);
+    private static void SetSkinDef(this SkinDef.RuntimeSkin runtimeSkin, SkinDef skinDef) => SkinAPIInterop.SetSkinDef(runtimeSkin, skinDef);
     internal static SkinSkillVariantsDef GetSkinSkillVariantsDef(this SkinDefParams skinDefParams) => SkinAPIInterop.GetSkinSkillVariantsDef(skinDefParams) == null ? null : SkinAPIInterop.GetSkinSkillVariantsDef(skinDefParams) as SkinSkillVariantsDef;
     internal static void SetSkinSkillVariantsDef(this SkinDefParams skinDefParams, SkinSkillVariantsDef skinSkillVariantsDef) => SkinAPIInterop.SetSkinSkillVariantsDef(skinDefParams, skinSkillVariantsDef);
     internal static SkinSkillVariantsDef GetSkinSkillVariantsDef(this ModelSkinController modelSkinController) => SkinAPIInterop.GetSkinSkillVariantsDef(modelSkinController) == null ? null : SkinAPIInterop.GetSkinSkillVariantsDef(modelSkinController) as SkinSkillVariantsDef;
@@ -863,19 +906,19 @@ public static partial class SkinSkillVariants
     /// Finds the renderer by its index and adds RendererInfoSkillVariant to it.
     /// </summary>
     /// <param name="skinDef">SkinDef for RendererInfoSkillVariant to apply to.</param>
-    /// <param name="rendererIndex">Index filter to find needed RendererInfo.</param>
+    /// <param name="index">Index filter to find needed RendererInfo.</param>
     /// <param name="rendererInfoSkillVariant">Info struct.</param>
-    public static void AddRenderInfoSkillVariant(this SkinDef skinDef, int rendererIndex, RendererInfoSkillVariant rendererInfoSkillVariant) => GetSkinDefParams(skinDef).AddRenderInfoSkillVariant(rendererIndex, rendererInfoSkillVariant);
+    public static void AddRenderInfoSkillVariant(this SkinDef skinDef, int index, RendererInfoSkillVariant rendererInfoSkillVariant) => GetSkinDefParams(skinDef).AddRenderInfoSkillVariant(index, rendererInfoSkillVariant);
     /// <summary>
     /// Finds the renderer by its index and adds RendererInfoSkillVariant to it.
     /// </summary>
     /// <param name="skinDefParams">SkinDefParams for RendererInfoSkillVariant to apply to.</param>
-    /// <param name="rendererIndex">Index filter to find needed RendererInfo.</param>
+    /// <param name="index">Index filter to find needed RendererInfo.</param>
     /// <param name="rendererInfoSkillVariant">Info struct.</param>
-    public static void AddRenderInfoSkillVariant(this SkinDefParams skinDefParams, int rendererIndex, RendererInfoSkillVariant rendererInfoSkillVariant)
+    public static void AddRenderInfoSkillVariant(this SkinDefParams skinDefParams, int index, RendererInfoSkillVariant rendererInfoSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        ref CharacterModel.RendererInfo rendererInfo = ref skinDefParams.rendererInfos[rendererIndex];
+        ref CharacterModel.RendererInfo rendererInfo = ref skinDefParams.rendererInfos[index];
         HandleAddition(skinDefParams, rendererInfoSkillVariant, ref rendererInfo);
     }
     /// <summary>
@@ -883,12 +926,12 @@ public static partial class SkinSkillVariants
     /// RendererInfoSkillVariant added with ModelSkinController will apply to all skins and have lower priority.
     /// </summary>
     /// <param name="modelSkinController">ModelSkinController for RendererInfoSkillVariant to apply to.</param>
-    /// <param name="rendererIndex">Index filter to find needed RendererInfo.</param>
+    /// <param name="index">Index filter to find needed RendererInfo.</param>
     /// <param name="rendererInfoSkillVariant">Info struct.</param>
-    public static void AddRenderInfoSkillVariant(this ModelSkinController modelSkinController, int rendererIndex, RendererInfoSkillVariant rendererInfoSkillVariant)
+    public static void AddRenderInfoSkillVariant(this ModelSkinController modelSkinController, int index, RendererInfoSkillVariant rendererInfoSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        ref CharacterModel.RendererInfo rendererInfo = ref GetSkinDefParams(modelSkinController.skins[0]).rendererInfos[rendererIndex];
+        ref CharacterModel.RendererInfo rendererInfo = ref GetSkinDefParams(modelSkinController.skins[0]).rendererInfos[index];
         HandleAddition(modelSkinController, rendererInfoSkillVariant, ref rendererInfo);
     }
     /// <summary>
@@ -903,128 +946,368 @@ public static partial class SkinSkillVariants
         ref object[] objects = ref rendererInfo.GetSkillVariants();
         AddItemToObjects(ref objects, rendererInfoSkillVariant);
     }
+    /// <summary>
+    /// Finds the mesh replacement by its name and adds MeshReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDef">SkinDef for MeshReplacementSkillVariant to apply to.</param>
+    /// <param name="meshRendererName">Name filter to find needed MeshReplacement.</param>
+    /// <param name="meshReplacementSkillVariant">Info struct.</param>
     public static void AddMeshReplacementSkillVariant(this SkinDef skinDef, string meshRendererName, MeshReplacementSkillVariant meshReplacementSkillVariant) => GetSkinDefParams(skinDef).AddMeshReplacementSkillVariant(meshRendererName, meshReplacementSkillVariant);
+    /// <summary>
+    /// Finds the mesh replacement by its name and adds MeshReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDefParams">SkinDefParams for MeshReplacementSkillVariant to apply to.</param>
+    /// <param name="meshRendererName">Name filter to find needed MeshReplacement.</param>
+    /// <param name="meshReplacementSkillVariant">Info struct.</param>
     public static void AddMeshReplacementSkillVariant(this SkinDefParams skinDefParams, string meshRendererName, MeshReplacementSkillVariant meshReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref SkinDefParams.MeshReplacement meshReplacement = ref GetMeshReplacementByName(skinDefParams, meshRendererName);
         HandleAddition(skinDefParams, meshReplacementSkillVariant, ref meshReplacement);
     }
+    /// <summary>
+    /// Finds the mesh replacement by its name and adds MeshReplacementSkillVariant to it.
+    /// MeshReplacementSkillVariant added with ModelSkinController will apply to all skins and have lower priority.
+    /// </summary>
+    /// <param name="modelSkinController">ModelSkinController for MeshReplacementSkillVariant to apply to.</param>
+    /// <param name="meshRendererName">Name filter to find needed MeshReplacement.</param>
+    /// <param name="meshReplacementSkillVariant">Info struct.</param>
     public static void AddMeshReplacementSkillVariant(this ModelSkinController modelSkinController, string meshRendererName, MeshReplacementSkillVariant meshReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref SkinDefParams.MeshReplacement meshReplacement = ref GetMeshReplacementByName(GetSkinDefParams(modelSkinController.skins[0]), meshRendererName);
         HandleAddition(modelSkinController, meshReplacementSkillVariant, ref meshReplacement);
     }
-    public static void AddMeshReplacementSkillVariant(this SkinDef skinDef, int meshRendererIndex, MeshReplacementSkillVariant meshReplacementSkillVariant) => GetSkinDefParams(skinDef).AddMeshReplacementSkillVariant(meshRendererIndex, meshReplacementSkillVariant);
-    public static void AddMeshReplacementSkillVariant(this SkinDefParams skinDefParams, int meshRendererIndex, MeshReplacementSkillVariant meshReplacementSkillVariant)
+    /// <summary>
+    /// Finds the mesh replacement by its index and adds MeshReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDef">SkinDef for MeshReplacementSkillVariant to apply to.</param>
+    /// <param name="index">Index filter to find needed MeshReplacement.</param>
+    /// <param name="meshReplacementSkillVariant">Info struct.</param>
+    public static void AddMeshReplacementSkillVariant(this SkinDef skinDef, int index, MeshReplacementSkillVariant meshReplacementSkillVariant) => GetSkinDefParams(skinDef).AddMeshReplacementSkillVariant(index, meshReplacementSkillVariant);
+    /// <summary>
+    /// Finds the mesh replacement by its index and adds MeshReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDefParams">SkinDefParams for MeshReplacementSkillVariant to apply to.</param>
+    /// <param name="index">Index filter to find needed MeshReplacement.</param>
+    /// <param name="meshReplacementSkillVariant">Info struct.</param>
+    public static void AddMeshReplacementSkillVariant(this SkinDefParams skinDefParams, int index, MeshReplacementSkillVariant meshReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        ref SkinDefParams.MeshReplacement meshReplacement = ref skinDefParams.meshReplacements[meshRendererIndex];
+        ref SkinDefParams.MeshReplacement meshReplacement = ref skinDefParams.meshReplacements[index];
         HandleAddition(skinDefParams, meshReplacementSkillVariant, ref meshReplacement);
     }
-    public static void AddMeshReplacementSkillVariant(this ModelSkinController modelSkinController, int meshRendererIndex, MeshReplacementSkillVariant meshReplacementSkillVariant)
+    /// <summary>
+    /// Finds the mesh replacement by its index and adds MeshReplacementSkillVariant to it.
+    /// MeshReplacementSkillVariant added with ModelSkinController will apply to all skins and have lower priority.
+    /// </summary>
+    /// <param name="modelSkinController">ModelSkinController for MeshReplacementSkillVariant to apply to.</param>
+    /// <param name="index">Index filter to find needed MeshReplacement.</param>
+    /// <param name="meshReplacementSkillVariant">Info struct.</param>
+    public static void AddMeshReplacementSkillVariant(this ModelSkinController modelSkinController, int index, MeshReplacementSkillVariant meshReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        ref SkinDefParams.MeshReplacement meshReplacement = ref GetSkinDefParams(modelSkinController.skins[0]).meshReplacements[meshRendererIndex];
+        ref SkinDefParams.MeshReplacement meshReplacement = ref GetSkinDefParams(modelSkinController.skins[0]).meshReplacements[index];
         HandleAddition(modelSkinController, meshReplacementSkillVariant, ref meshReplacement);
     }
+    /// <summary>
+    /// Directly adds MeshReplacementSkillVariant to MeshReplacement.
+    /// Please don't use it unless you know what you are doing.
+    /// </summary>
+    /// <param name="meshReplacement">The MeshReplacement itself.</param>
+    /// <param name="meshReplacementSkillVariant">Info struct.</param>
     public static void AddSkillVariant(this ref SkinDefParams.MeshReplacement meshReplacement, MeshReplacementSkillVariant meshReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref object[] objects = ref meshReplacement.GetSkillVariants();
         AddItemToObjects(ref objects, meshReplacementSkillVariant);
     }
+    /// <summary>
+    /// Finds the light by its name and adds LightInfoSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDef">SkinDef for LightInfoSkillVariant to apply to.</param>
+    /// <param name="lightName">Name filter to find needed LightInfo.</param>
+    /// <param name="lightInfoSkillVariant">Info struct.</param>
     public static void AddLightInfoSkillVariant(this SkinDef skinDef, string lightName, LightInfoSkillVariant lightInfoSkillVariant) => GetSkinDefParams(skinDef).AddLightInfoSkillVariant(lightName, lightInfoSkillVariant);
+    /// <summary>
+    /// Finds the light by its name and adds LightInfoSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDefParams">SkinDefParams for LightInfoSkillVariant to apply to.</param>
+    /// <param name="lightName">Name filter to find needed LightInfo.</param>
+    /// <param name="lightInfoSkillVariant">Info struct.</param>
     public static void AddLightInfoSkillVariant(this SkinDefParams skinDefParams, string lightName, LightInfoSkillVariant lightInfoSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref CharacterModel.LightInfo lightInfo = ref GetLightInfoByName(skinDefParams, lightName);
         HandleAddition(skinDefParams, lightInfoSkillVariant, ref lightInfo);
     }
+    /// <summary>
+    /// Finds the light by its name and adds LightInfoSkillVariant to it.
+    /// LightInfoSkillVariant added with ModelSkinController will apply to all skins and have lower priority.
+    /// </summary>
+    /// <param name="modelSkinController">ModelSkinController for LightInfoSkillVariant to apply to.</param>
+    /// <param name="lightName">Name filter to find needed LightInfo.</param>
+    /// <param name="lightInfoSkillVariant">Info struct.</param>
     public static void AddLightInfoSkillVariant(this ModelSkinController modelSkinController, string lightName, LightInfoSkillVariant lightInfoSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref CharacterModel.LightInfo lightInfo = ref GetLightInfoByName(GetSkinDefParams(modelSkinController.skins[0]), lightName);
         HandleAddition(modelSkinController, lightInfoSkillVariant, ref lightInfo);
     }
-    public static void AddLightInfoSkillVariant(this SkinDef skinDef, int lightIndex, LightInfoSkillVariant lightInfoSkillVariant) => GetSkinDefParams(skinDef).AddLightInfoSkillVariant(lightIndex, lightInfoSkillVariant);
-    public static void AddLightInfoSkillVariant(this SkinDefParams skinDefParams, int lightIndex, LightInfoSkillVariant lightInfoSkillVariant)
+    /// <summary>
+    /// Finds the light by its index and adds LightInfoSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDef">SkinDef for LightInfoSkillVariant to apply to.</param>
+    /// <param name="index">Index filter to find needed LightInfo.</param>
+    /// <param name="lightInfoSkillVariant">Info struct.</param>
+    public static void AddLightInfoSkillVariant(this SkinDef skinDef, int index, LightInfoSkillVariant lightInfoSkillVariant) => GetSkinDefParams(skinDef).AddLightInfoSkillVariant(index, lightInfoSkillVariant);
+    /// <summary>
+    /// Finds the light by its index and adds LightInfoSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDefParams">SkinDefParams for LightInfoSkillVariant to apply to.</param>
+    /// <param name="index">Index filter to find needed LightInfo.</param>
+    /// <param name="lightInfoSkillVariant">Info struct.</param>
+    public static void AddLightInfoSkillVariant(this SkinDefParams skinDefParams, int index, LightInfoSkillVariant lightInfoSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        ref CharacterModel.LightInfo lightInfo = ref skinDefParams.lightReplacements[lightIndex];
+        ref CharacterModel.LightInfo lightInfo = ref skinDefParams.lightReplacements[index];
         HandleAddition(skinDefParams, lightInfoSkillVariant, ref lightInfo);
     }
-    public static void AddLightInfoSkillVariant(this ModelSkinController modelSkinController, int lightIndex, LightInfoSkillVariant lightInfoSkillVariant)
+    /// <summary>
+    /// Finds the light by its index and adds LightInfoSkillVariant to it.
+    /// LightInfoSkillVariant added with ModelSkinController will apply to all skins and have lower priority.
+    /// </summary>
+    /// <param name="modelSkinController">ModelSkinController for LightInfoSkillVariant to apply to.</param>
+    /// <param name="index">Name filter to find needed LightInfo.</param>
+    /// <param name="lightInfoSkillVariant">Info struct.</param>
+    public static void AddLightInfoSkillVariant(this ModelSkinController modelSkinController, int index, LightInfoSkillVariant lightInfoSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        ref CharacterModel.LightInfo lightInfo = ref GetSkinDefParams(modelSkinController.skins[0]).lightReplacements[lightIndex];
+        ref CharacterModel.LightInfo lightInfo = ref GetSkinDefParams(modelSkinController.skins[0]).lightReplacements[index];
         HandleAddition(modelSkinController, lightInfoSkillVariant, ref lightInfo);
     }
+    /// <summary>
+    /// Directly adds LightInfoSkillVariant to LightInfo.
+    /// Please don't use it unless you know what you are doing.
+    /// </summary>
+    /// <param name="lightInfo">The LightInfo itself.</param>
+    /// <param name="lightInfoSkillVariant">Info struct.</param>
     public static void AddSkillVariant(this ref CharacterModel.LightInfo lightInfo, LightInfoSkillVariant lightInfoSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref object[] objects = ref lightInfo.GetSkillVariants();
         AddItemToObjects(ref objects, lightInfoSkillVariant);
     }
+    /// <summary>
+    /// Finds the projectile ghost replacement by its name and adds ProjectileGhostReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDef">SkinDef for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="projectileName">Name filter to find needed ProjectileGhostReplacement.</param>
+    /// <param name="projectileGhostReplacementSkillVariant">Info struct.</param>
     public static void AddProjectileGhostReplacementSkillVariant(this SkinDef skinDef, string projectileName, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant) => GetSkinDefParams(skinDef).AddProjectileGhostReplacementSkillVariant(projectileName, projectileGhostReplacementSkillVariant);
+    /// <summary>
+    /// Finds the projectile ghost replacement by its name and adds ProjectileGhostReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDefParams">SkinDefParams for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="projectileName">Name filter to find needed ProjectileGhostReplacement.</param>
+    /// <param name="projectileGhostReplacementSkillVariant">Info struct.</param>
     public static void AddProjectileGhostReplacementSkillVariant(this SkinDefParams skinDefParams, string projectileName, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement = ref GetProjectileGhostReplacementByName(skinDefParams, projectileName);
         HandleAddition(skinDefParams, projectileGhostReplacementSkillVariant, ref projectileGhostReplacement);
     }
+    /// <summary>
+    /// Finds the projectile ghost replacement by its name and adds ProjectileGhostReplacementSkillVariant to it.
+    /// ProjectileGhostReplacementSkillVariant added with ModelSkinController will apply to all skins and have lower priority.
+    /// </summary>
+    /// <param name="modelSkinController">ModelSkinController for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="projectileName">Name filter to find needed ProjectileGhostReplacement.</param>
+    /// <param name="projectileGhostReplacementSkillVariant">Info struct.</param>
     public static void AddProjectileGhostReplacementSkillVariant(this ModelSkinController modelSkinController, string projectileName, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement = ref GetProjectileGhostReplacementByName(GetSkinDefParams(modelSkinController.skins[0]), projectileName);
         HandleAddition(modelSkinController, projectileGhostReplacementSkillVariant, ref projectileGhostReplacement);
     }
+    /// <summary>
+    /// Finds the projectile ghost replacement by its projectile prefab and adds ProjectileGhostReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDef">SkinDef for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="projectilePrefab">Prefab filter to find needed ProjectileGhostReplacement.</param>
+    /// <param name="projectileGhostReplacementSkillVariant">Info struct.</param>
+    public static void AddProjectileGhostReplacementSkillVariant(this SkinDef skinDef, GameObject projectilePrefab, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant) => GetSkinDefParams(skinDef).AddProjectileGhostReplacementSkillVariant(projectilePrefab, projectileGhostReplacementSkillVariant);
+    /// <summary>
+    /// Finds the projectile ghost replacement by its projectile prefab and adds ProjectileGhostReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDefParams">SkinDefParams for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="projectilePrefab">Prefab filter to find needed ProjectileGhostReplacement.</param>
+    /// <param name="projectileGhostReplacementSkillVariant">Info struct.</param>
+    public static void AddProjectileGhostReplacementSkillVariant(this SkinDefParams skinDefParams, GameObject projectilePrefab, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant)
+    {
+        SkinSkillVariants.SetHooks();
+        ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement = ref GetProjectileGhostReplacementByPrefab(skinDefParams, projectilePrefab);
+        HandleAddition(skinDefParams, projectileGhostReplacementSkillVariant, ref projectileGhostReplacement);
+    }
+    /// <summary>
+    /// Finds the projectile ghost replacement by its projectile prefab and adds ProjectileGhostReplacementSkillVariant to it.
+    /// ProjectileGhostReplacementSkillVariant added with ModelSkinController will apply to all skins and have lower priority.
+    /// </summary>
+    /// <param name="modelSkinController">ModelSkinController for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="projectilePrefab">Prefab filter to find needed ProjectileGhostReplacement.</param>
+    /// <param name="projectileGhostReplacementSkillVariant">Info struct.</param>
+    public static void AddProjectileGhostReplacementSkillVariant(this ModelSkinController modelSkinController, GameObject projectilePrefab, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant)
+    {
+        SkinSkillVariants.SetHooks();
+        ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement = ref GetProjectileGhostReplacementByPrefab(GetSkinDefParams(modelSkinController.skins[0]), projectilePrefab);
+        HandleAddition(modelSkinController, projectileGhostReplacementSkillVariant, ref projectileGhostReplacement);
+    }
+    /// <summary>
+    /// Finds the projectile ghost replacement by its index and adds ProjectileGhostReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDef">SkinDef for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="index">Index filter to find needed ProjectileGhostReplacement.</param>
+    /// <param name="projectileGhostReplacementSkillVariant">Info struct.</param>
     public static void AddProjectileGhostReplacementSkillVariant(this SkinDef skinDef, int index, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant) => GetSkinDefParams(skinDef).AddProjectileGhostReplacementSkillVariant(index, projectileGhostReplacementSkillVariant);
+    /// <summary>
+    /// Finds the projectile ghost replacement by its index and adds ProjectileGhostReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDefParams">SkinDefParams for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="index">Index filter to find needed ProjectileGhostReplacement.</param>
+    /// <param name="projectileGhostReplacementSkillVariant">Info struct.</param>
     public static void AddProjectileGhostReplacementSkillVariant(this SkinDefParams skinDefParams, int index, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement = ref skinDefParams.projectileGhostReplacements[index];
         HandleAddition(skinDefParams, projectileGhostReplacementSkillVariant, ref projectileGhostReplacement);
     }
+    /// <summary>
+    /// Finds the projectile ghost replacement by its index and adds ProjectileGhostReplacementSkillVariant to it.
+    /// ProjectileGhostReplacementSkillVariant added with ModelSkinController will apply to all skins and have lower priority.
+    /// </summary>
+    /// <param name="modelSkinController">ModelSkinController for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="index">Index filter to find needed ProjectileGhostReplacement.</param>
+    /// <param name="projectileGhostReplacementSkillVariant">Info struct.</param>
     public static void AddProjectileGhostReplacementSkillVariant(this ModelSkinController modelSkinController, int index, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement = ref GetSkinDefParams(modelSkinController.skins[0]).projectileGhostReplacements[index];
         HandleAddition(modelSkinController, projectileGhostReplacementSkillVariant, ref projectileGhostReplacement);
     }
+    /// <summary>
+    /// Directly adds ProjectileGhostReplacementSkillVariant to ProjectileGhostReplacement.
+    /// Please don't use it unless you know what you are doing.
+    /// </summary>
+    /// <param name="projectileGhostReplacement">The ProjectileGhostReplacement itself.</param>
+    /// <param name="projectileGhostReplacementSkillVariant">Info struct.</param>
     public static void AddSkillVariant(this ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref object[] objects = ref projectileGhostReplacement.GetSkillVariants();
         AddItemToObjects(ref objects, projectileGhostReplacementSkillVariant);
     }
+    /// <summary>
+    /// Finds the minion skill replacement by its name and adds MinionSkinReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDef">SkinDef for MinionSkinReplacementSkillVariant to apply to.</param>
+    /// <param name="minionBodyName">Name filter to find needed MinionSkinReplacement.</param>
+    /// <param name="minionSkinReplacementSkillVariant">Info struct.</param>
     public static void AddMinionSkinReplacementSkillVariant(this SkinDef skinDef, string minionBodyName, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant) => GetSkinDefParams(skinDef).AddMinionSkinReplacementSkillVariant(minionBodyName, minionSkinReplacementSkillVariant);
+    /// <summary>
+    /// Finds the minion skill replacement by its name and adds MinionSkinReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDefParams">SkinDefParams for MinionSkinReplacementSkillVariant to apply to.</param>
+    /// <param name="minionBodyName">Name filter to find needed MinionSkinReplacement.</param>
+    /// <param name="minionSkinReplacementSkillVariant">Info struct.</param>
     public static void AddMinionSkinReplacementSkillVariant(this SkinDefParams skinDefParams, string minionBodyName, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref SkinDefParams.MinionSkinReplacement minionSkinReplacement = ref GetMinionSkinReplacementByName(skinDefParams, minionBodyName);
         HandleAddition(skinDefParams, minionSkinReplacementSkillVariant, ref minionSkinReplacement);
     }
+    /// <summary>
+    /// Finds the minion skill replacement by its name and adds MinionSkinReplacementSkillVariant to it.
+    /// MinionSkinReplacementSkillVariant added with ModelSkinController will apply to all skins and have lower priority.
+    /// </summary>
+    /// <param name="modelSkinController">ModelSkinController for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="minionBodyName">Name filter to find needed MinionSkinReplacement.</param>
+    /// <param name="minionSkinReplacementSkillVariant">Info struct.</param>
     public static void AddMinionSkinReplacementSkillVariant(this ModelSkinController modelSkinController, string minionBodyName, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref SkinDefParams.MinionSkinReplacement minionSkinReplacement = ref GetMinionSkinReplacementByName(GetSkinDefParams(modelSkinController.skins[0]), minionBodyName);
         HandleAddition(modelSkinController, minionSkinReplacementSkillVariant, ref minionSkinReplacement);
     }
+    /// <summary>
+    /// Finds the minion skill replacement by its minion body prefab and adds MinionSkinReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDef">SkinDef for MinionSkinReplacementSkillVariant to apply to.</param>
+    /// <param name="minionBodyPrefab">Prefab filter to find needed MinionSkinReplacement.</param>
+    /// <param name="minionSkinReplacementSkillVariant">Info struct.</param>
+    public static void AddMinionSkinReplacementSkillVariant(this SkinDef skinDef, GameObject minionBodyPrefab, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant) => GetSkinDefParams(skinDef).AddMinionSkinReplacementSkillVariant(minionBodyPrefab, minionSkinReplacementSkillVariant);
+    /// <summary>
+    /// Finds the minion skill replacement by its minion body prefab and adds MinionSkinReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDefParams">SkinDefParams for MinionSkinReplacementSkillVariant to apply to.</param>
+    /// <param name="minionBodyPrefab">Prefab filter to find needed MinionSkinReplacement.</param>
+    /// <param name="minionSkinReplacementSkillVariant">Info struct.</param>
+    public static void AddMinionSkinReplacementSkillVariant(this SkinDefParams skinDefParams, GameObject minionBodyPrefab, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant)
+    {
+        SkinSkillVariants.SetHooks();
+        ref SkinDefParams.MinionSkinReplacement minionSkinReplacement = ref GetMinionSkinReplacementByPrefab(skinDefParams, minionBodyPrefab);
+        HandleAddition(skinDefParams, minionSkinReplacementSkillVariant, ref minionSkinReplacement);
+    }
+    /// <summary>
+    /// Finds the minion skill replacement by its minion body prefab and adds MinionSkinReplacementSkillVariant to it.
+    /// MinionSkinReplacementSkillVariant added with ModelSkinController will apply to all skins and have lower priority.
+    /// </summary>
+    /// <param name="modelSkinController">ModelSkinController for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="minionBodyPrefab">Prefab filter to find needed MinionSkinReplacement.</param>
+    /// <param name="minionSkinReplacementSkillVariant">Info struct.</param>
+    public static void AddMinionSkinReplacementSkillVariant(this ModelSkinController modelSkinController, GameObject minionBodyPrefab, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant)
+    {
+        SkinSkillVariants.SetHooks();
+        ref SkinDefParams.MinionSkinReplacement minionSkinReplacement = ref GetMinionSkinReplacementByPrefab(GetSkinDefParams(modelSkinController.skins[0]), minionBodyPrefab);
+        HandleAddition(modelSkinController, minionSkinReplacementSkillVariant, ref minionSkinReplacement);
+    }
+    /// <summary>
+    /// Finds the minion skill replacement by its index and adds MinionSkinReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDef">SkinDef for MinionSkinReplacementSkillVariant to apply to.</param>
+    /// <param name="index">Index filter to find needed MinionSkinReplacement.</param>
+    /// <param name="minionSkinReplacementSkillVariant">Info struct.</param>
     public static void AddMinionSkinReplacementSkillVariant(this SkinDef skinDef, int index, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant) => GetSkinDefParams(skinDef).AddMinionSkinReplacementSkillVariant(index, minionSkinReplacementSkillVariant);
+    /// <summary>
+    /// Finds the minion skill replacement by its index and adds MinionSkinReplacementSkillVariant to it.
+    /// </summary>
+    /// <param name="skinDefParams">SkinDefParams for MinionSkinReplacementSkillVariant to apply to.</param>
+    /// <param name="index">Index filter to find needed MinionSkinReplacement.</param>
+    /// <param name="minionSkinReplacementSkillVariant">Info struct.</param>
     public static void AddMinionSkinReplacementSkillVariant(this SkinDefParams skinDefParams, int index, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref SkinDefParams.MinionSkinReplacement minionSkinReplacement = ref skinDefParams.minionSkinReplacements[index];
         HandleAddition(skinDefParams, minionSkinReplacementSkillVariant, ref minionSkinReplacement);
     }
+    /// <summary>
+    /// Finds the minion skill replacement by its index and adds MinionSkinReplacementSkillVariant to it.
+    /// MinionSkinReplacementSkillVariant added with ModelSkinController will apply to all skins and have lower priority.
+    /// </summary>
+    /// <param name="modelSkinController">ModelSkinController for ProjectileGhostReplacementSkillVariant to apply to.</param>
+    /// <param name="index">Index filter to find needed MinionSkinReplacement.</param>
+    /// <param name="minionSkinReplacementSkillVariant">Info struct.</param>
     public static void AddMinionSkinReplacementSkillVariant(this ModelSkinController modelSkinController, int index, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
         ref SkinDefParams.MinionSkinReplacement minionSkinReplacement = ref GetSkinDefParams(modelSkinController.skins[0]).minionSkinReplacements[index];
         HandleAddition(modelSkinController, minionSkinReplacementSkillVariant, ref minionSkinReplacement);
     }
+    /// <summary>
+    /// Directly adds MinionSkinReplacementSkillVariant to MinionSkinReplacement.
+    /// Please don't use it unless you know what you are doing.
+    /// </summary>
+    /// <param name="minionSkinReplacement">The MinionSkinReplacement itself.</param>
+    /// <param name="minionSkinReplacementSkillVariant">Info struct.</param>
     public static void AddSkillVariant(this ref SkinDefParams.MinionSkinReplacement minionSkinReplacement, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
@@ -1032,25 +1315,35 @@ public static partial class SkinSkillVariants
         AddItemToObjects(ref objects, minionSkinReplacementSkillVariant);
     }
     public static ref object[] GetSkillVariants(this ref CharacterModel.RendererInfo rendererInfo) => ref SkinAPIInterop.GetSkillVariants(ref rendererInfo);
+    /// <summary>
+    /// Directly sets RendererInfoSkillVariant array to RendererInfo.
+    /// Please don't use it unless you know what you are doing.
+    /// </summary>
     public static void SetSkillVariants(this ref CharacterModel.RendererInfo rendererInfo, object[] value) => SkinAPIInterop.SetSkillVariants(ref rendererInfo, value);
     public static ref object[] GetSkillVariants(this ref SkinDefParams.MeshReplacement meshReplacement) => ref SkinAPIInterop.GetSkillVariants(ref meshReplacement);
+    /// <summary>
+    /// Directly sets MeshReplacementSkillVariant array to MeshReplacement.
+    /// Please don't use it unless you know what you are doing.
+    /// </summary>
     public static void SetSkillVariants(this ref SkinDefParams.MeshReplacement meshReplacement, object[] value) => SkinAPIInterop.SetSkillVariants(ref meshReplacement, value);
     public static ref object[] GetSkillVariants(this ref CharacterModel.LightInfo lightInfo) => ref SkinAPIInterop.GetSkillVariants(ref lightInfo);
+    /// <summary>
+    /// Directly sets LightInfoSkillVariant array to LightInfo.
+    /// Please don't use it unless you know what you are doing.
+    /// </summary>
     public static void SetSkillVariants(this ref CharacterModel.LightInfo lightInfo, object[] value) => SkinAPIInterop.SetSkillVariants(ref lightInfo, value);
     public static ref object[] GetSkillVariants(this ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement) => ref SkinAPIInterop.GetSkillVariants(ref projectileGhostReplacement);
+    /// <summary>
+    /// Directly sets ProjectileGhostReplacementSkillVariant array to ProjectileGhostReplacement.
+    /// Please don't use it unless you know what you are doing.
+    /// </summary>
     public static void SetSkillVariants(this ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement, object[] value) => SkinAPIInterop.SetSkillVariants(ref projectileGhostReplacement, value);
     public static ref object[] GetSkillVariants(this ref SkinDefParams.MinionSkinReplacement minionSkinReplacement) => ref SkinAPIInterop.GetSkillVariants(ref minionSkinReplacement);
+    /// <summary>
+    /// Directly sets MinionSkinReplacementSkillVariant array to MinionSkinReplacement.
+    /// Please don't use it unless you know what you are doing.
+    /// </summary>
     public static void SetSkillVariants(this ref SkinDefParams.MinionSkinReplacement minionSkinReplacement, object[] value) => SkinAPIInterop.SetSkillVariants(ref minionSkinReplacement, value);
-    public static ref object[] GetSkillVariants(this ref SkinDef.MeshReplacementTemplate meshReplacementTemplate) => ref SkinAPIInterop.GetSkillVariants(ref meshReplacementTemplate);
-    public static void SetSkillVariants(this ref SkinDef.MeshReplacementTemplate meshReplacementTemplate, object[] value) => SkinAPIInterop.SetSkillVariants(ref meshReplacementTemplate, value);
-    public static ref object[] GetSkillVariants(this ref SkinDef.LightReplacementTemplate lightReplacementTemplate) => ref SkinAPIInterop.GetSkillVariants(ref lightReplacementTemplate);
-    public static void SetSkillVariants(this ref SkinDef.LightReplacementTemplate lightReplacementTemplate, object[] value) => SkinAPIInterop.SetSkillVariants(ref lightReplacementTemplate, value);
-    public static ref object[] GetSkillVariants(this ref SkinDef.GhostReplacementTemplate ghostReplacementTemplate) => ref SkinAPIInterop.GetSkillVariants(ref ghostReplacementTemplate);
-    public static void SetSkillVariants(this ref SkinDef.GhostReplacementTemplate ghostReplacementTemplate, object[] value) => SkinAPIInterop.SetSkillVariants(ref ghostReplacementTemplate, value);
-    public static ref object[] GetSkillVariants(this ref SkinDef.MinionSkinTemplate minionSkinTemplate) => ref SkinAPIInterop.GetSkillVariants(ref minionSkinTemplate);
-    public static void SetSkillVariants(this ref SkinDef.MinionSkinTemplate minionSkinTemplate, object[] value) => SkinAPIInterop.SetSkillVariants(ref minionSkinTemplate, value);
-    public static SkinDef GetSkinDef(this SkinDef.RuntimeSkin runtimeSkin) => SkinAPIInterop.GetSkinDef(runtimeSkin);
-    public static void SetSkinDef(this SkinDef.RuntimeSkin runtimeSkin, SkinDef skinDef) => SkinAPIInterop.SetSkinDef(runtimeSkin, skinDef);
     public static OnSkinApplied GetOnSkinApplied(this SkinDef skinDef) => SkinAPIInterop.GetOnSkinApplied(skinDef) == null ? null : SkinAPIInterop.GetOnSkinApplied(skinDef) as OnSkinApplied;
     public static void SetOnSkinApplied(this SkinDef skinDef, OnSkinApplied onSkinApplied) => SkinAPIInterop.SetOnSkinApplied(skinDef, onSkinApplied);
     #endregion
@@ -1059,8 +1352,11 @@ public static partial class SkinSkillVariants
 public class SkinSkillVariantsDef : ScriptableObject
 {
     internal static List<SkinSkillVariantsDef> pendingSkinSkillVariantsDefs = [];
+    [Tooltip("SkinDefParams to apply SkillVariants")]
     public SkinDefParams[] skinDefParameters = [];
-    [PrefabReference] public ModelSkinController modelSkinController;
+    [Tooltip("Put ModelSkinController from either the body prefab or display prefab if you want this to be applied to all possible skins. \nSkillVariants added by it will have lower priority")]
+    [PrefabReference]
+    public ModelSkinController modelSkinController;
     public RendererInfoSkillVariant[] rendererInfoSkillVariants = [];
     public MeshReplacementSkillVariant[] meshReplacementSkillVariants = [];
     public LightInfoSkillVariant[] lightInfoSkillVariants = [];
