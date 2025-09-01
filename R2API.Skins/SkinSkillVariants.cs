@@ -5,6 +5,7 @@ using MonoMod.Cil;
 using R2API.SkinsAPI.Interop;
 using R2API.Utils;
 using RoR2;
+using RoR2.ContentManagement;
 using RoR2.Projectile;
 using RoR2.Skills;
 using RoR2.SurvivorMannequins;
@@ -15,14 +16,18 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Text;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using static R2API.SkinSkillVariants;
 using static UnityEngine.GridBrushBase;
 
 namespace R2API;
 public static partial class SkinSkillVariants
 {
-    public static Dictionary<SkinDef, BodyIndex> skinToBody = new Dictionary<SkinDef, BodyIndex>();
+    public static Dictionary<SkinDef, BodyIndex> skinToBody = [];
+    internal static Dictionary<SkinDef, SkinDefParams> skinDefToSkinDefParams = [];
+    internal static Dictionary<SkinDef, SkinDefParams> skinDefToOptimizedSkinDefParams = [];
     #region Hooks
     private static bool _hooksSet;
     private static bool _isLoaded;
@@ -609,8 +614,44 @@ public static partial class SkinSkillVariants
         }
     }
     private static void AddSkinDefToRuntimeSkin(SkinDef skinDef) => skinDef.runtimeSkin.SetSkinDef(skinDef);
-    internal static SkinDefParams GetSkinDefParams(SkinDef skinDef) => skinDef.skinDefParams == null ? skinDef.skinDefParamsAddress.LoadAsset().Result : skinDef.skinDefParams;
-    internal static SkinDefParams GetOptimizedSkinDefParams(SkinDef skinDef) => skinDef.optimizedSkinDefParams == null ? skinDef.optimizedSkinDefParamsAddress.LoadAsset().Result : skinDef.optimizedSkinDefParams;
+    internal static SkinDefParams GetSkinDefParams(SkinDef skinDef)
+    {
+        SkinDefParams skinDefParams = skinDef.skinDefParams;
+        if (skinDefParams == null)
+        {
+            if (skinDef.skinDefParamsAddress != null)
+            {
+                if (skinDef.skinDefParamsAddress.Asset)
+                {
+                    skinDefParams = skinDef.skinDefParamsAddress.Asset as SkinDefParams;
+                }
+                else
+                {
+                    skinDefParams = skinDef.skinDefParamsAddress.LoadAsset().WaitForCompletion();
+                }
+            }
+        }
+        return skinDefParams;
+    }
+    internal static SkinDefParams GetOptimizedSkinDefParams(SkinDef skinDef)
+    {
+        SkinDefParams skinDefParams = skinDef.skinDefParams;
+        if (skinDefParams == null)
+        {
+            if (skinDef.optimizedSkinDefParamsAddress != null)
+            {
+                if (skinDef.optimizedSkinDefParamsAddress.Asset)
+                {
+                    skinDefParams = skinDef.optimizedSkinDefParamsAddress.Asset as SkinDefParams;
+                }
+                else
+                {
+                    skinDefParams = skinDef.optimizedSkinDefParamsAddress.LoadAsset().WaitForCompletion();
+                }
+            }
+        }
+        return skinDefParams;
+    }
     private static ref CharacterModel.RendererInfo GetRendererInfoByName(SkinDefParams skinDefParams, string rendererName)
     {
         CharacterModel.RendererInfo[] rendererInfos = skinDefParams.rendererInfos;
