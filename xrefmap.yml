@@ -11646,6 +11646,1303 @@ references:
   isSpec: "True"
   fullName: R2API.SkinIDRS.AddPair
   nameWithType: SkinIDRS.AddPair
+- uid: R2API.SkinSkillVariants
+  name: SkinSkillVariants
+  href: api/R2API.SkinSkillVariants.html
+  commentId: T:R2API.SkinSkillVariants
+  fullName: R2API.SkinSkillVariants
+  nameWithType: SkinSkillVariants
+- uid: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.ModelSkinController,System.Int32,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name: AddLightInfoSkillVariant(ModelSkinController, int, LightInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddLightInfoSkillVariant_RoR2_ModelSkinController_System_Int32_R2API_SkinSkillVariants_LightInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.ModelSkinController,System.Int32,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name.vb: AddLightInfoSkillVariant(ModelSkinController, Integer, LightInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.ModelSkinController, int, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.ModelSkinController, Integer, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddLightInfoSkillVariant(ModelSkinController, int, SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddLightInfoSkillVariant(ModelSkinController, Integer, SkinSkillVariants.LightInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.ModelSkinController,System.String,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name: AddLightInfoSkillVariant(ModelSkinController, string, LightInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddLightInfoSkillVariant_RoR2_ModelSkinController_System_String_R2API_SkinSkillVariants_LightInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.ModelSkinController,System.String,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name.vb: AddLightInfoSkillVariant(ModelSkinController, String, LightInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.ModelSkinController, string, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.ModelSkinController, String, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddLightInfoSkillVariant(ModelSkinController, string, SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddLightInfoSkillVariant(ModelSkinController, String, SkinSkillVariants.LightInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDef,System.Int32,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name: AddLightInfoSkillVariant(SkinDef, int, LightInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddLightInfoSkillVariant_RoR2_SkinDef_System_Int32_R2API_SkinSkillVariants_LightInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDef,System.Int32,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name.vb: AddLightInfoSkillVariant(SkinDef, Integer, LightInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDef, int, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDef, Integer, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddLightInfoSkillVariant(SkinDef, int, SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddLightInfoSkillVariant(SkinDef, Integer, SkinSkillVariants.LightInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDef,System.String,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name: AddLightInfoSkillVariant(SkinDef, string, LightInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddLightInfoSkillVariant_RoR2_SkinDef_System_String_R2API_SkinSkillVariants_LightInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDef,System.String,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name.vb: AddLightInfoSkillVariant(SkinDef, String, LightInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDef, string, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDef, String, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddLightInfoSkillVariant(SkinDef, string, SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddLightInfoSkillVariant(SkinDef, String, SkinSkillVariants.LightInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDefParams,System.Int32,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name: AddLightInfoSkillVariant(SkinDefParams, int, LightInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddLightInfoSkillVariant_RoR2_SkinDefParams_System_Int32_R2API_SkinSkillVariants_LightInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDefParams,System.Int32,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name.vb: AddLightInfoSkillVariant(SkinDefParams, Integer, LightInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDefParams, int, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDefParams, Integer, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddLightInfoSkillVariant(SkinDefParams, int, SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddLightInfoSkillVariant(SkinDefParams, Integer, SkinSkillVariants.LightInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDefParams,System.String,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name: AddLightInfoSkillVariant(SkinDefParams, string, LightInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddLightInfoSkillVariant_RoR2_SkinDefParams_System_String_R2API_SkinSkillVariants_LightInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDefParams,System.String,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name.vb: AddLightInfoSkillVariant(SkinDefParams, String, LightInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDefParams, string, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddLightInfoSkillVariant(RoR2.SkinDefParams, String, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddLightInfoSkillVariant(SkinDefParams, string, SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddLightInfoSkillVariant(SkinDefParams, String, SkinSkillVariants.LightInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddLightInfoSkillVariant*
+  name: AddLightInfoSkillVariant
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddLightInfoSkillVariant_
+  commentId: Overload:R2API.SkinSkillVariants.AddLightInfoSkillVariant
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.AddLightInfoSkillVariant
+  nameWithType: SkinSkillVariants.AddLightInfoSkillVariant
+- uid: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.ModelSkinController,System.Int32,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name: AddMeshReplacementSkillVariant(ModelSkinController, int, MeshReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMeshReplacementSkillVariant_RoR2_ModelSkinController_System_Int32_R2API_SkinSkillVariants_MeshReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.ModelSkinController,System.Int32,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name.vb: AddMeshReplacementSkillVariant(ModelSkinController, Integer, MeshReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.ModelSkinController, int, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.ModelSkinController, Integer, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMeshReplacementSkillVariant(ModelSkinController, int, SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMeshReplacementSkillVariant(ModelSkinController, Integer, SkinSkillVariants.MeshReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.ModelSkinController,System.String,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name: AddMeshReplacementSkillVariant(ModelSkinController, string, MeshReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMeshReplacementSkillVariant_RoR2_ModelSkinController_System_String_R2API_SkinSkillVariants_MeshReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.ModelSkinController,System.String,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name.vb: AddMeshReplacementSkillVariant(ModelSkinController, String, MeshReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.ModelSkinController, string, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.ModelSkinController, String, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMeshReplacementSkillVariant(ModelSkinController, string, SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMeshReplacementSkillVariant(ModelSkinController, String, SkinSkillVariants.MeshReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDef,System.Int32,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name: AddMeshReplacementSkillVariant(SkinDef, int, MeshReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMeshReplacementSkillVariant_RoR2_SkinDef_System_Int32_R2API_SkinSkillVariants_MeshReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDef,System.Int32,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name.vb: AddMeshReplacementSkillVariant(SkinDef, Integer, MeshReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDef, int, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDef, Integer, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMeshReplacementSkillVariant(SkinDef, int, SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMeshReplacementSkillVariant(SkinDef, Integer, SkinSkillVariants.MeshReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDef,System.String,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name: AddMeshReplacementSkillVariant(SkinDef, string, MeshReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMeshReplacementSkillVariant_RoR2_SkinDef_System_String_R2API_SkinSkillVariants_MeshReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDef,System.String,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name.vb: AddMeshReplacementSkillVariant(SkinDef, String, MeshReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDef, string, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDef, String, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMeshReplacementSkillVariant(SkinDef, string, SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMeshReplacementSkillVariant(SkinDef, String, SkinSkillVariants.MeshReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDefParams,System.Int32,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name: AddMeshReplacementSkillVariant(SkinDefParams, int, MeshReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMeshReplacementSkillVariant_RoR2_SkinDefParams_System_Int32_R2API_SkinSkillVariants_MeshReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDefParams,System.Int32,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name.vb: AddMeshReplacementSkillVariant(SkinDefParams, Integer, MeshReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDefParams, int, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDefParams, Integer, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMeshReplacementSkillVariant(SkinDefParams, int, SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMeshReplacementSkillVariant(SkinDefParams, Integer, SkinSkillVariants.MeshReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDefParams,System.String,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name: AddMeshReplacementSkillVariant(SkinDefParams, string, MeshReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMeshReplacementSkillVariant_RoR2_SkinDefParams_System_String_R2API_SkinSkillVariants_MeshReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDefParams,System.String,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name.vb: AddMeshReplacementSkillVariant(SkinDefParams, String, MeshReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDefParams, string, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant(RoR2.SkinDefParams, String, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMeshReplacementSkillVariant(SkinDefParams, string, SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMeshReplacementSkillVariant(SkinDefParams, String, SkinSkillVariants.MeshReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant*
+  name: AddMeshReplacementSkillVariant
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMeshReplacementSkillVariant_
+  commentId: Overload:R2API.SkinSkillVariants.AddMeshReplacementSkillVariant
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.AddMeshReplacementSkillVariant
+  nameWithType: SkinSkillVariants.AddMeshReplacementSkillVariant
+- uid: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.ModelSkinController,System.Int32,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name: AddMinionSkinReplacementSkillVariant(ModelSkinController, int, MinionSkinReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMinionSkinReplacementSkillVariant_RoR2_ModelSkinController_System_Int32_R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.ModelSkinController,System.Int32,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name.vb: AddMinionSkinReplacementSkillVariant(ModelSkinController, Integer, MinionSkinReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.ModelSkinController, int, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.ModelSkinController, Integer, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(ModelSkinController, int, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(ModelSkinController, Integer, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.ModelSkinController,System.String,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name: AddMinionSkinReplacementSkillVariant(ModelSkinController, string, MinionSkinReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMinionSkinReplacementSkillVariant_RoR2_ModelSkinController_System_String_R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.ModelSkinController,System.String,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name.vb: AddMinionSkinReplacementSkillVariant(ModelSkinController, String, MinionSkinReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.ModelSkinController, string, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.ModelSkinController, String, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(ModelSkinController, string, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(ModelSkinController, String, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.ModelSkinController,UnityEngine.GameObject,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name: AddMinionSkinReplacementSkillVariant(ModelSkinController, GameObject, MinionSkinReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMinionSkinReplacementSkillVariant_RoR2_ModelSkinController_UnityEngine_GameObject_R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.ModelSkinController,UnityEngine.GameObject,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.ModelSkinController, UnityEngine.GameObject, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(ModelSkinController, GameObject, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDef,System.Int32,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name: AddMinionSkinReplacementSkillVariant(SkinDef, int, MinionSkinReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMinionSkinReplacementSkillVariant_RoR2_SkinDef_System_Int32_R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDef,System.Int32,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name.vb: AddMinionSkinReplacementSkillVariant(SkinDef, Integer, MinionSkinReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDef, int, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDef, Integer, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(SkinDef, int, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(SkinDef, Integer, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDef,System.String,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name: AddMinionSkinReplacementSkillVariant(SkinDef, string, MinionSkinReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMinionSkinReplacementSkillVariant_RoR2_SkinDef_System_String_R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDef,System.String,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name.vb: AddMinionSkinReplacementSkillVariant(SkinDef, String, MinionSkinReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDef, string, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDef, String, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(SkinDef, string, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(SkinDef, String, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDef,UnityEngine.GameObject,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name: AddMinionSkinReplacementSkillVariant(SkinDef, GameObject, MinionSkinReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMinionSkinReplacementSkillVariant_RoR2_SkinDef_UnityEngine_GameObject_R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDef,UnityEngine.GameObject,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDef, UnityEngine.GameObject, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(SkinDef, GameObject, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDefParams,System.Int32,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name: AddMinionSkinReplacementSkillVariant(SkinDefParams, int, MinionSkinReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMinionSkinReplacementSkillVariant_RoR2_SkinDefParams_System_Int32_R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDefParams,System.Int32,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name.vb: AddMinionSkinReplacementSkillVariant(SkinDefParams, Integer, MinionSkinReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDefParams, int, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDefParams, Integer, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(SkinDefParams, int, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(SkinDefParams, Integer, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDefParams,System.String,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name: AddMinionSkinReplacementSkillVariant(SkinDefParams, string, MinionSkinReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMinionSkinReplacementSkillVariant_RoR2_SkinDefParams_System_String_R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDefParams,System.String,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name.vb: AddMinionSkinReplacementSkillVariant(SkinDefParams, String, MinionSkinReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDefParams, string, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDefParams, String, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(SkinDefParams, string, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(SkinDefParams, String, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDefParams,UnityEngine.GameObject,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name: AddMinionSkinReplacementSkillVariant(SkinDefParams, GameObject, MinionSkinReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMinionSkinReplacementSkillVariant_RoR2_SkinDefParams_UnityEngine_GameObject_R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDefParams,UnityEngine.GameObject,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant(RoR2.SkinDefParams, UnityEngine.GameObject, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddMinionSkinReplacementSkillVariant(SkinDefParams, GameObject, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant*
+  name: AddMinionSkinReplacementSkillVariant
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddMinionSkinReplacementSkillVariant_
+  commentId: Overload:R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.AddMinionSkinReplacementSkillVariant
+  nameWithType: SkinSkillVariants.AddMinionSkinReplacementSkillVariant
+- uid: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.ModelSkinController,System.Int32,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name: AddProjectileGhostReplacementSkillVariant(ModelSkinController, int, ProjectileGhostReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddProjectileGhostReplacementSkillVariant_RoR2_ModelSkinController_System_Int32_R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.ModelSkinController,System.Int32,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name.vb: AddProjectileGhostReplacementSkillVariant(ModelSkinController, Integer, ProjectileGhostReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.ModelSkinController, int, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.ModelSkinController, Integer, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(ModelSkinController, int, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(ModelSkinController, Integer, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.ModelSkinController,System.String,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name: AddProjectileGhostReplacementSkillVariant(ModelSkinController, string, ProjectileGhostReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddProjectileGhostReplacementSkillVariant_RoR2_ModelSkinController_System_String_R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.ModelSkinController,System.String,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name.vb: AddProjectileGhostReplacementSkillVariant(ModelSkinController, String, ProjectileGhostReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.ModelSkinController, string, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.ModelSkinController, String, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(ModelSkinController, string, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(ModelSkinController, String, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.ModelSkinController,UnityEngine.GameObject,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name: AddProjectileGhostReplacementSkillVariant(ModelSkinController, GameObject, ProjectileGhostReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddProjectileGhostReplacementSkillVariant_RoR2_ModelSkinController_UnityEngine_GameObject_R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.ModelSkinController,UnityEngine.GameObject,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.ModelSkinController, UnityEngine.GameObject, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(ModelSkinController, GameObject, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDef,System.Int32,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name: AddProjectileGhostReplacementSkillVariant(SkinDef, int, ProjectileGhostReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddProjectileGhostReplacementSkillVariant_RoR2_SkinDef_System_Int32_R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDef,System.Int32,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name.vb: AddProjectileGhostReplacementSkillVariant(SkinDef, Integer, ProjectileGhostReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDef, int, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDef, Integer, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(SkinDef, int, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(SkinDef, Integer, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDef,System.String,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name: AddProjectileGhostReplacementSkillVariant(SkinDef, string, ProjectileGhostReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddProjectileGhostReplacementSkillVariant_RoR2_SkinDef_System_String_R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDef,System.String,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name.vb: AddProjectileGhostReplacementSkillVariant(SkinDef, String, ProjectileGhostReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDef, string, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDef, String, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(SkinDef, string, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(SkinDef, String, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDef,UnityEngine.GameObject,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name: AddProjectileGhostReplacementSkillVariant(SkinDef, GameObject, ProjectileGhostReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddProjectileGhostReplacementSkillVariant_RoR2_SkinDef_UnityEngine_GameObject_R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDef,UnityEngine.GameObject,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDef, UnityEngine.GameObject, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(SkinDef, GameObject, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDefParams,System.Int32,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name: AddProjectileGhostReplacementSkillVariant(SkinDefParams, int, ProjectileGhostReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddProjectileGhostReplacementSkillVariant_RoR2_SkinDefParams_System_Int32_R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDefParams,System.Int32,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name.vb: AddProjectileGhostReplacementSkillVariant(SkinDefParams, Integer, ProjectileGhostReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDefParams, int, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDefParams, Integer, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(SkinDefParams, int, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(SkinDefParams, Integer, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDefParams,System.String,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name: AddProjectileGhostReplacementSkillVariant(SkinDefParams, string, ProjectileGhostReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddProjectileGhostReplacementSkillVariant_RoR2_SkinDefParams_System_String_R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDefParams,System.String,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name.vb: AddProjectileGhostReplacementSkillVariant(SkinDefParams, String, ProjectileGhostReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDefParams, string, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDefParams, String, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(SkinDefParams, string, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(SkinDefParams, String, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDefParams,UnityEngine.GameObject,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name: AddProjectileGhostReplacementSkillVariant(SkinDefParams, GameObject, ProjectileGhostReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddProjectileGhostReplacementSkillVariant_RoR2_SkinDefParams_UnityEngine_GameObject_R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDefParams,UnityEngine.GameObject,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(RoR2.SkinDefParams, UnityEngine.GameObject, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant(SkinDefParams, GameObject, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant*
+  name: AddProjectileGhostReplacementSkillVariant
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddProjectileGhostReplacementSkillVariant_
+  commentId: Overload:R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.AddProjectileGhostReplacementSkillVariant
+  nameWithType: SkinSkillVariants.AddProjectileGhostReplacementSkillVariant
+- uid: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.ModelSkinController,System.Int32,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name: AddRenderInfoSkillVariant(ModelSkinController, int, RendererInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddRenderInfoSkillVariant_RoR2_ModelSkinController_System_Int32_R2API_SkinSkillVariants_RendererInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.ModelSkinController,System.Int32,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name.vb: AddRenderInfoSkillVariant(ModelSkinController, Integer, RendererInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.ModelSkinController, int, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.ModelSkinController, Integer, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddRenderInfoSkillVariant(ModelSkinController, int, SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddRenderInfoSkillVariant(ModelSkinController, Integer, SkinSkillVariants.RendererInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.ModelSkinController,System.String,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name: AddRenderInfoSkillVariant(ModelSkinController, string, RendererInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddRenderInfoSkillVariant_RoR2_ModelSkinController_System_String_R2API_SkinSkillVariants_RendererInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.ModelSkinController,System.String,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name.vb: AddRenderInfoSkillVariant(ModelSkinController, String, RendererInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.ModelSkinController, string, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.ModelSkinController, String, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddRenderInfoSkillVariant(ModelSkinController, string, SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddRenderInfoSkillVariant(ModelSkinController, String, SkinSkillVariants.RendererInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDef,System.Int32,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name: AddRenderInfoSkillVariant(SkinDef, int, RendererInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddRenderInfoSkillVariant_RoR2_SkinDef_System_Int32_R2API_SkinSkillVariants_RendererInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDef,System.Int32,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name.vb: AddRenderInfoSkillVariant(SkinDef, Integer, RendererInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDef, int, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDef, Integer, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddRenderInfoSkillVariant(SkinDef, int, SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddRenderInfoSkillVariant(SkinDef, Integer, SkinSkillVariants.RendererInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDef,System.String,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name: AddRenderInfoSkillVariant(SkinDef, string, RendererInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddRenderInfoSkillVariant_RoR2_SkinDef_System_String_R2API_SkinSkillVariants_RendererInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDef,System.String,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name.vb: AddRenderInfoSkillVariant(SkinDef, String, RendererInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDef, string, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDef, String, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddRenderInfoSkillVariant(SkinDef, string, SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddRenderInfoSkillVariant(SkinDef, String, SkinSkillVariants.RendererInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDefParams,System.Int32,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name: AddRenderInfoSkillVariant(SkinDefParams, int, RendererInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddRenderInfoSkillVariant_RoR2_SkinDefParams_System_Int32_R2API_SkinSkillVariants_RendererInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDefParams,System.Int32,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name.vb: AddRenderInfoSkillVariant(SkinDefParams, Integer, RendererInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDefParams, int, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDefParams, Integer, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddRenderInfoSkillVariant(SkinDefParams, int, SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddRenderInfoSkillVariant(SkinDefParams, Integer, SkinSkillVariants.RendererInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDefParams,System.String,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name: AddRenderInfoSkillVariant(SkinDefParams, string, RendererInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddRenderInfoSkillVariant_RoR2_SkinDefParams_System_String_R2API_SkinSkillVariants_RendererInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDefParams,System.String,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name.vb: AddRenderInfoSkillVariant(SkinDefParams, String, RendererInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDefParams, string, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddRenderInfoSkillVariant(RoR2.SkinDefParams, String, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddRenderInfoSkillVariant(SkinDefParams, string, SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddRenderInfoSkillVariant(SkinDefParams, String, SkinSkillVariants.RendererInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddRenderInfoSkillVariant*
+  name: AddRenderInfoSkillVariant
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddRenderInfoSkillVariant_
+  commentId: Overload:R2API.SkinSkillVariants.AddRenderInfoSkillVariant
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.AddRenderInfoSkillVariant
+  nameWithType: SkinSkillVariants.AddRenderInfoSkillVariant
+- uid: R2API.SkinSkillVariants.AddSkillVariant(RoR2.CharacterModel.LightInfo@,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name: AddSkillVariant(ref LightInfo, LightInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddSkillVariant_RoR2_CharacterModel_LightInfo__R2API_SkinSkillVariants_LightInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddSkillVariant(RoR2.CharacterModel.LightInfo@,R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name.vb: AddSkillVariant(LightInfo, LightInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddSkillVariant(ref RoR2.CharacterModel.LightInfo, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddSkillVariant(RoR2.CharacterModel.LightInfo, R2API.SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddSkillVariant(ref CharacterModel.LightInfo, SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddSkillVariant(CharacterModel.LightInfo, SkinSkillVariants.LightInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddSkillVariant(RoR2.CharacterModel.RendererInfo@,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name: AddSkillVariant(ref RendererInfo, RendererInfoSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddSkillVariant_RoR2_CharacterModel_RendererInfo__R2API_SkinSkillVariants_RendererInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddSkillVariant(RoR2.CharacterModel.RendererInfo@,R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name.vb: AddSkillVariant(RendererInfo, RendererInfoSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddSkillVariant(ref RoR2.CharacterModel.RendererInfo, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddSkillVariant(RoR2.CharacterModel.RendererInfo, R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType: SkinSkillVariants.AddSkillVariant(ref CharacterModel.RendererInfo, SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddSkillVariant(CharacterModel.RendererInfo, SkinSkillVariants.RendererInfoSkillVariant)
+- uid: R2API.SkinSkillVariants.AddSkillVariant(RoR2.SkinDefParams.MeshReplacement@,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name: AddSkillVariant(ref MeshReplacement, MeshReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddSkillVariant_RoR2_SkinDefParams_MeshReplacement__R2API_SkinSkillVariants_MeshReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddSkillVariant(RoR2.SkinDefParams.MeshReplacement@,R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name.vb: AddSkillVariant(MeshReplacement, MeshReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddSkillVariant(ref RoR2.SkinDefParams.MeshReplacement, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddSkillVariant(RoR2.SkinDefParams.MeshReplacement, R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddSkillVariant(ref SkinDefParams.MeshReplacement, SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddSkillVariant(SkinDefParams.MeshReplacement, SkinSkillVariants.MeshReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddSkillVariant(RoR2.SkinDefParams.MinionSkinReplacement@,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name: AddSkillVariant(ref MinionSkinReplacement, MinionSkinReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddSkillVariant_RoR2_SkinDefParams_MinionSkinReplacement__R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddSkillVariant(RoR2.SkinDefParams.MinionSkinReplacement@,R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name.vb: AddSkillVariant(MinionSkinReplacement, MinionSkinReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddSkillVariant(ref RoR2.SkinDefParams.MinionSkinReplacement, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddSkillVariant(RoR2.SkinDefParams.MinionSkinReplacement, R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddSkillVariant(ref SkinDefParams.MinionSkinReplacement, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddSkillVariant(SkinDefParams.MinionSkinReplacement, SkinSkillVariants.MinionSkinReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddSkillVariant(RoR2.SkinDefParams.ProjectileGhostReplacement@,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name: AddSkillVariant(ref ProjectileGhostReplacement, ProjectileGhostReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddSkillVariant_RoR2_SkinDefParams_ProjectileGhostReplacement__R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariants.AddSkillVariant(RoR2.SkinDefParams.ProjectileGhostReplacement@,R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name.vb: AddSkillVariant(ProjectileGhostReplacement, ProjectileGhostReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariants.AddSkillVariant(ref RoR2.SkinDefParams.ProjectileGhostReplacement, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  fullName.vb: R2API.SkinSkillVariants.AddSkillVariant(RoR2.SkinDefParams.ProjectileGhostReplacement, R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType: SkinSkillVariants.AddSkillVariant(ref SkinDefParams.ProjectileGhostReplacement, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType.vb: SkinSkillVariants.AddSkillVariant(SkinDefParams.ProjectileGhostReplacement, SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+- uid: R2API.SkinSkillVariants.AddSkillVariant*
+  name: AddSkillVariant
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_AddSkillVariant_
+  commentId: Overload:R2API.SkinSkillVariants.AddSkillVariant
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.AddSkillVariant
+  nameWithType: SkinSkillVariants.AddSkillVariant
+- uid: R2API.SkinSkillVariants.GetOnSkinApplied(RoR2.SkinDef)
+  name: GetOnSkinApplied(SkinDef)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_GetOnSkinApplied_RoR2_SkinDef_
+  commentId: M:R2API.SkinSkillVariants.GetOnSkinApplied(RoR2.SkinDef)
+  fullName: R2API.SkinSkillVariants.GetOnSkinApplied(RoR2.SkinDef)
+  nameWithType: SkinSkillVariants.GetOnSkinApplied(SkinDef)
+- uid: R2API.SkinSkillVariants.GetOnSkinApplied*
+  name: GetOnSkinApplied
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_GetOnSkinApplied_
+  commentId: Overload:R2API.SkinSkillVariants.GetOnSkinApplied
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.GetOnSkinApplied
+  nameWithType: SkinSkillVariants.GetOnSkinApplied
+- uid: R2API.SkinSkillVariants.GetSkillVariants(RoR2.CharacterModel.LightInfo@)
+  name: GetSkillVariants(ref LightInfo)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_GetSkillVariants_RoR2_CharacterModel_LightInfo__
+  commentId: M:R2API.SkinSkillVariants.GetSkillVariants(RoR2.CharacterModel.LightInfo@)
+  name.vb: GetSkillVariants(LightInfo)
+  fullName: R2API.SkinSkillVariants.GetSkillVariants(ref RoR2.CharacterModel.LightInfo)
+  fullName.vb: R2API.SkinSkillVariants.GetSkillVariants(RoR2.CharacterModel.LightInfo)
+  nameWithType: SkinSkillVariants.GetSkillVariants(ref CharacterModel.LightInfo)
+  nameWithType.vb: SkinSkillVariants.GetSkillVariants(CharacterModel.LightInfo)
+- uid: R2API.SkinSkillVariants.GetSkillVariants(RoR2.CharacterModel.RendererInfo@)
+  name: GetSkillVariants(ref RendererInfo)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_GetSkillVariants_RoR2_CharacterModel_RendererInfo__
+  commentId: M:R2API.SkinSkillVariants.GetSkillVariants(RoR2.CharacterModel.RendererInfo@)
+  name.vb: GetSkillVariants(RendererInfo)
+  fullName: R2API.SkinSkillVariants.GetSkillVariants(ref RoR2.CharacterModel.RendererInfo)
+  fullName.vb: R2API.SkinSkillVariants.GetSkillVariants(RoR2.CharacterModel.RendererInfo)
+  nameWithType: SkinSkillVariants.GetSkillVariants(ref CharacterModel.RendererInfo)
+  nameWithType.vb: SkinSkillVariants.GetSkillVariants(CharacterModel.RendererInfo)
+- uid: R2API.SkinSkillVariants.GetSkillVariants(RoR2.SkinDefParams.MeshReplacement@)
+  name: GetSkillVariants(ref MeshReplacement)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_GetSkillVariants_RoR2_SkinDefParams_MeshReplacement__
+  commentId: M:R2API.SkinSkillVariants.GetSkillVariants(RoR2.SkinDefParams.MeshReplacement@)
+  name.vb: GetSkillVariants(MeshReplacement)
+  fullName: R2API.SkinSkillVariants.GetSkillVariants(ref RoR2.SkinDefParams.MeshReplacement)
+  fullName.vb: R2API.SkinSkillVariants.GetSkillVariants(RoR2.SkinDefParams.MeshReplacement)
+  nameWithType: SkinSkillVariants.GetSkillVariants(ref SkinDefParams.MeshReplacement)
+  nameWithType.vb: SkinSkillVariants.GetSkillVariants(SkinDefParams.MeshReplacement)
+- uid: R2API.SkinSkillVariants.GetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement@)
+  name: GetSkillVariants(ref MinionSkinReplacement)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_GetSkillVariants_RoR2_SkinDefParams_MinionSkinReplacement__
+  commentId: M:R2API.SkinSkillVariants.GetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement@)
+  name.vb: GetSkillVariants(MinionSkinReplacement)
+  fullName: R2API.SkinSkillVariants.GetSkillVariants(ref RoR2.SkinDefParams.MinionSkinReplacement)
+  fullName.vb: R2API.SkinSkillVariants.GetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement)
+  nameWithType: SkinSkillVariants.GetSkillVariants(ref SkinDefParams.MinionSkinReplacement)
+  nameWithType.vb: SkinSkillVariants.GetSkillVariants(SkinDefParams.MinionSkinReplacement)
+- uid: R2API.SkinSkillVariants.GetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement@)
+  name: GetSkillVariants(ref ProjectileGhostReplacement)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_GetSkillVariants_RoR2_SkinDefParams_ProjectileGhostReplacement__
+  commentId: M:R2API.SkinSkillVariants.GetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement@)
+  name.vb: GetSkillVariants(ProjectileGhostReplacement)
+  fullName: R2API.SkinSkillVariants.GetSkillVariants(ref RoR2.SkinDefParams.ProjectileGhostReplacement)
+  fullName.vb: R2API.SkinSkillVariants.GetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement)
+  nameWithType: SkinSkillVariants.GetSkillVariants(ref SkinDefParams.ProjectileGhostReplacement)
+  nameWithType.vb: SkinSkillVariants.GetSkillVariants(SkinDefParams.ProjectileGhostReplacement)
+- uid: R2API.SkinSkillVariants.GetSkillVariants*
+  name: GetSkillVariants
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_GetSkillVariants_
+  commentId: Overload:R2API.SkinSkillVariants.GetSkillVariants
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.GetSkillVariants
+  nameWithType: SkinSkillVariants.GetSkillVariants
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1
+  name: SkinSkillVariants.ISkillVariantStruct<T>
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html
+  commentId: T:R2API.SkinSkillVariants.ISkillVariantStruct`1
+  name.vb: SkinSkillVariants.ISkillVariantStruct(Of T)
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T)
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T)
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1.Add(`0@)
+  name: Add(ref T)
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html#R2API_SkinSkillVariants_ISkillVariantStruct_1_Add__0__
+  commentId: M:R2API.SkinSkillVariants.ISkillVariantStruct`1.Add(`0@)
+  name.vb: Add(T)
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>.Add(ref T)
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T).Add(T)
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>.Add(ref T)
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T).Add(T)
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1.Add*
+  name: Add
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html#R2API_SkinSkillVariants_ISkillVariantStruct_1_Add_
+  commentId: Overload:R2API.SkinSkillVariants.ISkillVariantStruct`1.Add
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>.Add
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T).Add
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>.Add
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T).Add
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1.AddPending(RoR2.ModelSkinController,`0)
+  name: AddPending(ModelSkinController, T)
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html#R2API_SkinSkillVariants_ISkillVariantStruct_1_AddPending_RoR2_ModelSkinController__0_
+  commentId: M:R2API.SkinSkillVariants.ISkillVariantStruct`1.AddPending(RoR2.ModelSkinController,`0)
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>.AddPending(RoR2.ModelSkinController, T)
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T).AddPending(RoR2.ModelSkinController, T)
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>.AddPending(ModelSkinController, T)
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T).AddPending(ModelSkinController, T)
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1.AddPending(RoR2.SkinDefParams,`0)
+  name: AddPending(SkinDefParams, T)
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html#R2API_SkinSkillVariants_ISkillVariantStruct_1_AddPending_RoR2_SkinDefParams__0_
+  commentId: M:R2API.SkinSkillVariants.ISkillVariantStruct`1.AddPending(RoR2.SkinDefParams,`0)
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>.AddPending(RoR2.SkinDefParams, T)
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T).AddPending(RoR2.SkinDefParams, T)
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>.AddPending(SkinDefParams, T)
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T).AddPending(SkinDefParams, T)
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1.AddPending*
+  name: AddPending
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html#R2API_SkinSkillVariants_ISkillVariantStruct_1_AddPending_
+  commentId: Overload:R2API.SkinSkillVariants.ISkillVariantStruct`1.AddPending
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>.AddPending
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T).AddPending
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>.AddPending
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T).AddPending
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1.Compare(`0)
+  name: Compare(T)
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html#R2API_SkinSkillVariants_ISkillVariantStruct_1_Compare__0_
+  commentId: M:R2API.SkinSkillVariants.ISkillVariantStruct`1.Compare(`0)
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>.Compare(T)
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T).Compare(T)
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>.Compare(T)
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T).Compare(T)
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1.Compare*
+  name: Compare
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html#R2API_SkinSkillVariants_ISkillVariantStruct_1_Compare_
+  commentId: Overload:R2API.SkinSkillVariants.ISkillVariantStruct`1.Compare
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>.Compare
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T).Compare
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>.Compare
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T).Compare
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1.NullCheck
+  name: NullCheck()
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html#R2API_SkinSkillVariants_ISkillVariantStruct_1_NullCheck
+  commentId: M:R2API.SkinSkillVariants.ISkillVariantStruct`1.NullCheck
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>.NullCheck()
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T).NullCheck()
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>.NullCheck()
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T).NullCheck()
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1.NullCheck*
+  name: NullCheck
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html#R2API_SkinSkillVariants_ISkillVariantStruct_1_NullCheck_
+  commentId: Overload:R2API.SkinSkillVariants.ISkillVariantStruct`1.NullCheck
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>.NullCheck
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T).NullCheck
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>.NullCheck
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T).NullCheck
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1.lowPriority
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html#R2API_SkinSkillVariants_ISkillVariantStruct_1_lowPriority
+  commentId: P:R2API.SkinSkillVariants.ISkillVariantStruct`1.lowPriority
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>.lowPriority
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T).lowPriority
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>.lowPriority
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T).lowPriority
+- uid: R2API.SkinSkillVariants.ISkillVariantStruct`1.lowPriority*
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.ISkillVariantStruct-1.html#R2API_SkinSkillVariants_ISkillVariantStruct_1_lowPriority_
+  commentId: Overload:R2API.SkinSkillVariants.ISkillVariantStruct`1.lowPriority
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.ISkillVariantStruct<T>.lowPriority
+  fullName.vb: R2API.SkinSkillVariants.ISkillVariantStruct(Of T).lowPriority
+  nameWithType: SkinSkillVariants.ISkillVariantStruct<T>.lowPriority
+  nameWithType.vb: SkinSkillVariants.ISkillVariantStruct(Of T).lowPriority
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant
+  name: SkinSkillVariants.LightInfoSkillVariant
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html
+  commentId: T:R2API.SkinSkillVariants.LightInfoSkillVariant
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.Add(RoR2.CharacterModel.LightInfo@)
+  name: Add(ref LightInfo)
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_Add_RoR2_CharacterModel_LightInfo__
+  commentId: M:R2API.SkinSkillVariants.LightInfoSkillVariant.Add(RoR2.CharacterModel.LightInfo@)
+  name.vb: Add(LightInfo)
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.Add(ref RoR2.CharacterModel.LightInfo)
+  fullName.vb: R2API.SkinSkillVariants.LightInfoSkillVariant.Add(RoR2.CharacterModel.LightInfo)
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.Add(ref CharacterModel.LightInfo)
+  nameWithType.vb: SkinSkillVariants.LightInfoSkillVariant.Add(CharacterModel.LightInfo)
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.Add*
+  name: Add
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_Add_
+  commentId: Overload:R2API.SkinSkillVariants.LightInfoSkillVariant.Add
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.Add
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.Add
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.AddPending(RoR2.ModelSkinController,RoR2.CharacterModel.LightInfo)
+  name: AddPending(ModelSkinController, LightInfo)
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_AddPending_RoR2_ModelSkinController_RoR2_CharacterModel_LightInfo_
+  commentId: M:R2API.SkinSkillVariants.LightInfoSkillVariant.AddPending(RoR2.ModelSkinController,RoR2.CharacterModel.LightInfo)
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.AddPending(RoR2.ModelSkinController, RoR2.CharacterModel.LightInfo)
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.AddPending(ModelSkinController, CharacterModel.LightInfo)
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.AddPending(RoR2.SkinDefParams,RoR2.CharacterModel.LightInfo)
+  name: AddPending(SkinDefParams, LightInfo)
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_AddPending_RoR2_SkinDefParams_RoR2_CharacterModel_LightInfo_
+  commentId: M:R2API.SkinSkillVariants.LightInfoSkillVariant.AddPending(RoR2.SkinDefParams,RoR2.CharacterModel.LightInfo)
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.AddPending(RoR2.SkinDefParams, RoR2.CharacterModel.LightInfo)
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.AddPending(SkinDefParams, CharacterModel.LightInfo)
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.AddPending*
+  name: AddPending
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_AddPending_
+  commentId: Overload:R2API.SkinSkillVariants.LightInfoSkillVariant.AddPending
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.AddPending
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.AddPending
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.Compare(RoR2.CharacterModel.LightInfo)
+  name: Compare(LightInfo)
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_Compare_RoR2_CharacterModel_LightInfo_
+  commentId: M:R2API.SkinSkillVariants.LightInfoSkillVariant.Compare(RoR2.CharacterModel.LightInfo)
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.Compare(RoR2.CharacterModel.LightInfo)
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.Compare(CharacterModel.LightInfo)
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.Compare*
+  name: Compare
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_Compare_
+  commentId: Overload:R2API.SkinSkillVariants.LightInfoSkillVariant.Compare
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.Compare
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.Compare
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.NullCheck
+  name: NullCheck()
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_NullCheck
+  commentId: M:R2API.SkinSkillVariants.LightInfoSkillVariant.NullCheck
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.NullCheck()
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.NullCheck()
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.NullCheck*
+  name: NullCheck
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_NullCheck_
+  commentId: Overload:R2API.SkinSkillVariants.LightInfoSkillVariant.NullCheck
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.NullCheck
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.NullCheck
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.lightInfo
+  name: lightInfo
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_lightInfo
+  commentId: F:R2API.SkinSkillVariants.LightInfoSkillVariant.lightInfo
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.lightInfo
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.lightInfo
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.lowPriority
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_lowPriority
+  commentId: P:R2API.SkinSkillVariants.LightInfoSkillVariant.lowPriority
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.lowPriority
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.lowPriority
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.lowPriority*
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_lowPriority_
+  commentId: Overload:R2API.SkinSkillVariants.LightInfoSkillVariant.lowPriority
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.lowPriority
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.lowPriority
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.originalLight
+  name: originalLight
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_originalLight
+  commentId: F:R2API.SkinSkillVariants.LightInfoSkillVariant.originalLight
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.originalLight
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.originalLight
+- uid: R2API.SkinSkillVariants.LightInfoSkillVariant.skillDef
+  name: skillDef
+  href: api/R2API.SkinSkillVariants.LightInfoSkillVariant.html#R2API_SkinSkillVariants_LightInfoSkillVariant_skillDef
+  commentId: F:R2API.SkinSkillVariants.LightInfoSkillVariant.skillDef
+  fullName: R2API.SkinSkillVariants.LightInfoSkillVariant.skillDef
+  nameWithType: SkinSkillVariants.LightInfoSkillVariant.skillDef
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant
+  name: SkinSkillVariants.MeshReplacementSkillVariant
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html
+  commentId: T:R2API.SkinSkillVariants.MeshReplacementSkillVariant
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.Add(RoR2.SkinDefParams.MeshReplacement@)
+  name: Add(ref MeshReplacement)
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_Add_RoR2_SkinDefParams_MeshReplacement__
+  commentId: M:R2API.SkinSkillVariants.MeshReplacementSkillVariant.Add(RoR2.SkinDefParams.MeshReplacement@)
+  name.vb: Add(MeshReplacement)
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.Add(ref RoR2.SkinDefParams.MeshReplacement)
+  fullName.vb: R2API.SkinSkillVariants.MeshReplacementSkillVariant.Add(RoR2.SkinDefParams.MeshReplacement)
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.Add(ref SkinDefParams.MeshReplacement)
+  nameWithType.vb: SkinSkillVariants.MeshReplacementSkillVariant.Add(SkinDefParams.MeshReplacement)
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.Add*
+  name: Add
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_Add_
+  commentId: Overload:R2API.SkinSkillVariants.MeshReplacementSkillVariant.Add
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.Add
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.Add
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.AddPending(RoR2.ModelSkinController,RoR2.SkinDefParams.MeshReplacement)
+  name: AddPending(ModelSkinController, MeshReplacement)
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_AddPending_RoR2_ModelSkinController_RoR2_SkinDefParams_MeshReplacement_
+  commentId: M:R2API.SkinSkillVariants.MeshReplacementSkillVariant.AddPending(RoR2.ModelSkinController,RoR2.SkinDefParams.MeshReplacement)
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.AddPending(RoR2.ModelSkinController, RoR2.SkinDefParams.MeshReplacement)
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.AddPending(ModelSkinController, SkinDefParams.MeshReplacement)
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.AddPending(RoR2.SkinDefParams,RoR2.SkinDefParams.MeshReplacement)
+  name: AddPending(SkinDefParams, MeshReplacement)
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_AddPending_RoR2_SkinDefParams_RoR2_SkinDefParams_MeshReplacement_
+  commentId: M:R2API.SkinSkillVariants.MeshReplacementSkillVariant.AddPending(RoR2.SkinDefParams,RoR2.SkinDefParams.MeshReplacement)
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.AddPending(RoR2.SkinDefParams, RoR2.SkinDefParams.MeshReplacement)
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.AddPending(SkinDefParams, SkinDefParams.MeshReplacement)
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.AddPending*
+  name: AddPending
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_AddPending_
+  commentId: Overload:R2API.SkinSkillVariants.MeshReplacementSkillVariant.AddPending
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.AddPending
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.AddPending
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.Compare(RoR2.SkinDefParams.MeshReplacement)
+  name: Compare(MeshReplacement)
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_Compare_RoR2_SkinDefParams_MeshReplacement_
+  commentId: M:R2API.SkinSkillVariants.MeshReplacementSkillVariant.Compare(RoR2.SkinDefParams.MeshReplacement)
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.Compare(RoR2.SkinDefParams.MeshReplacement)
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.Compare(SkinDefParams.MeshReplacement)
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.Compare*
+  name: Compare
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_Compare_
+  commentId: Overload:R2API.SkinSkillVariants.MeshReplacementSkillVariant.Compare
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.Compare
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.Compare
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.NullCheck
+  name: NullCheck()
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_NullCheck
+  commentId: M:R2API.SkinSkillVariants.MeshReplacementSkillVariant.NullCheck
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.NullCheck()
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.NullCheck()
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.NullCheck*
+  name: NullCheck
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_NullCheck_
+  commentId: Overload:R2API.SkinSkillVariants.MeshReplacementSkillVariant.NullCheck
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.NullCheck
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.NullCheck
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.lowPriority
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_lowPriority
+  commentId: P:R2API.SkinSkillVariants.MeshReplacementSkillVariant.lowPriority
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.lowPriority
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.lowPriority
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.lowPriority*
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_lowPriority_
+  commentId: Overload:R2API.SkinSkillVariants.MeshReplacementSkillVariant.lowPriority
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.lowPriority
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.lowPriority
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.mesh
+  name: mesh
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_mesh
+  commentId: F:R2API.SkinSkillVariants.MeshReplacementSkillVariant.mesh
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.mesh
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.mesh
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.renderer
+  name: renderer
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_renderer
+  commentId: F:R2API.SkinSkillVariants.MeshReplacementSkillVariant.renderer
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.renderer
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.renderer
+- uid: R2API.SkinSkillVariants.MeshReplacementSkillVariant.skillDef
+  name: skillDef
+  href: api/R2API.SkinSkillVariants.MeshReplacementSkillVariant.html#R2API_SkinSkillVariants_MeshReplacementSkillVariant_skillDef
+  commentId: F:R2API.SkinSkillVariants.MeshReplacementSkillVariant.skillDef
+  fullName: R2API.SkinSkillVariants.MeshReplacementSkillVariant.skillDef
+  nameWithType: SkinSkillVariants.MeshReplacementSkillVariant.skillDef
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant
+  name: SkinSkillVariants.MinionSkinReplacementSkillVariant
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html
+  commentId: T:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Add(RoR2.SkinDefParams.MinionSkinReplacement@)
+  name: Add(ref MinionSkinReplacement)
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_Add_RoR2_SkinDefParams_MinionSkinReplacement__
+  commentId: M:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Add(RoR2.SkinDefParams.MinionSkinReplacement@)
+  name.vb: Add(MinionSkinReplacement)
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Add(ref RoR2.SkinDefParams.MinionSkinReplacement)
+  fullName.vb: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Add(RoR2.SkinDefParams.MinionSkinReplacement)
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.Add(ref SkinDefParams.MinionSkinReplacement)
+  nameWithType.vb: SkinSkillVariants.MinionSkinReplacementSkillVariant.Add(SkinDefParams.MinionSkinReplacement)
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Add*
+  name: Add
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_Add_
+  commentId: Overload:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Add
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Add
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.Add
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending(RoR2.ModelSkinController,RoR2.SkinDefParams.MinionSkinReplacement)
+  name: AddPending(ModelSkinController, MinionSkinReplacement)
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_AddPending_RoR2_ModelSkinController_RoR2_SkinDefParams_MinionSkinReplacement_
+  commentId: M:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending(RoR2.ModelSkinController,RoR2.SkinDefParams.MinionSkinReplacement)
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending(RoR2.ModelSkinController, RoR2.SkinDefParams.MinionSkinReplacement)
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending(ModelSkinController, SkinDefParams.MinionSkinReplacement)
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending(RoR2.SkinDefParams,RoR2.SkinDefParams.MinionSkinReplacement)
+  name: AddPending(SkinDefParams, MinionSkinReplacement)
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_AddPending_RoR2_SkinDefParams_RoR2_SkinDefParams_MinionSkinReplacement_
+  commentId: M:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending(RoR2.SkinDefParams,RoR2.SkinDefParams.MinionSkinReplacement)
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending(RoR2.SkinDefParams, RoR2.SkinDefParams.MinionSkinReplacement)
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending(SkinDefParams, SkinDefParams.MinionSkinReplacement)
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending*
+  name: AddPending
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_AddPending_
+  commentId: Overload:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.AddPending
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Compare(RoR2.SkinDefParams.MinionSkinReplacement)
+  name: Compare(MinionSkinReplacement)
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_Compare_RoR2_SkinDefParams_MinionSkinReplacement_
+  commentId: M:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Compare(RoR2.SkinDefParams.MinionSkinReplacement)
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Compare(RoR2.SkinDefParams.MinionSkinReplacement)
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.Compare(SkinDefParams.MinionSkinReplacement)
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Compare*
+  name: Compare
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_Compare_
+  commentId: Overload:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Compare
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.Compare
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.Compare
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.NullCheck
+  name: NullCheck()
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_NullCheck
+  commentId: M:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.NullCheck
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.NullCheck()
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.NullCheck()
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.NullCheck*
+  name: NullCheck
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_NullCheck_
+  commentId: Overload:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.NullCheck
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.NullCheck
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.NullCheck
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.lowPriority
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_lowPriority
+  commentId: P:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.lowPriority
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.lowPriority
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.lowPriority
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.lowPriority*
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_lowPriority_
+  commentId: Overload:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.lowPriority
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.lowPriority
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.lowPriority
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.minionBodyPrefab
+  name: minionBodyPrefab
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_minionBodyPrefab
+  commentId: F:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.minionBodyPrefab
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.minionBodyPrefab
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.minionBodyPrefab
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.minionSkin
+  name: minionSkin
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_minionSkin
+  commentId: F:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.minionSkin
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.minionSkin
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.minionSkin
+- uid: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.skillDef
+  name: skillDef
+  href: api/R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.html#R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_skillDef
+  commentId: F:R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.skillDef
+  fullName: R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant.skillDef
+  nameWithType: SkinSkillVariants.MinionSkinReplacementSkillVariant.skillDef
+- uid: R2API.SkinSkillVariants.OnSkinApplied
+  name: SkinSkillVariants.OnSkinApplied
+  href: api/R2API.SkinSkillVariants.OnSkinApplied.html
+  commentId: T:R2API.SkinSkillVariants.OnSkinApplied
+  fullName: R2API.SkinSkillVariants.OnSkinApplied
+  nameWithType: SkinSkillVariants.OnSkinApplied
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant
+  name: SkinSkillVariants.ProjectileGhostReplacementSkillVariant
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html
+  commentId: T:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Add(RoR2.SkinDefParams.ProjectileGhostReplacement@)
+  name: Add(ref ProjectileGhostReplacement)
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_Add_RoR2_SkinDefParams_ProjectileGhostReplacement__
+  commentId: M:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Add(RoR2.SkinDefParams.ProjectileGhostReplacement@)
+  name.vb: Add(ProjectileGhostReplacement)
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Add(ref RoR2.SkinDefParams.ProjectileGhostReplacement)
+  fullName.vb: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Add(RoR2.SkinDefParams.ProjectileGhostReplacement)
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Add(ref SkinDefParams.ProjectileGhostReplacement)
+  nameWithType.vb: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Add(SkinDefParams.ProjectileGhostReplacement)
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Add*
+  name: Add
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_Add_
+  commentId: Overload:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Add
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Add
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Add
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending(RoR2.ModelSkinController,RoR2.SkinDefParams.ProjectileGhostReplacement)
+  name: AddPending(ModelSkinController, ProjectileGhostReplacement)
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_AddPending_RoR2_ModelSkinController_RoR2_SkinDefParams_ProjectileGhostReplacement_
+  commentId: M:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending(RoR2.ModelSkinController,RoR2.SkinDefParams.ProjectileGhostReplacement)
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending(RoR2.ModelSkinController, RoR2.SkinDefParams.ProjectileGhostReplacement)
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending(ModelSkinController, SkinDefParams.ProjectileGhostReplacement)
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending(RoR2.SkinDefParams,RoR2.SkinDefParams.ProjectileGhostReplacement)
+  name: AddPending(SkinDefParams, ProjectileGhostReplacement)
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_AddPending_RoR2_SkinDefParams_RoR2_SkinDefParams_ProjectileGhostReplacement_
+  commentId: M:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending(RoR2.SkinDefParams,RoR2.SkinDefParams.ProjectileGhostReplacement)
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending(RoR2.SkinDefParams, RoR2.SkinDefParams.ProjectileGhostReplacement)
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending(SkinDefParams, SkinDefParams.ProjectileGhostReplacement)
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending*
+  name: AddPending
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_AddPending_
+  commentId: Overload:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.AddPending
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Compare(RoR2.SkinDefParams.ProjectileGhostReplacement)
+  name: Compare(ProjectileGhostReplacement)
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_Compare_RoR2_SkinDefParams_ProjectileGhostReplacement_
+  commentId: M:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Compare(RoR2.SkinDefParams.ProjectileGhostReplacement)
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Compare(RoR2.SkinDefParams.ProjectileGhostReplacement)
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Compare(SkinDefParams.ProjectileGhostReplacement)
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Compare*
+  name: Compare
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_Compare_
+  commentId: Overload:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Compare
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Compare
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.Compare
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.NullCheck
+  name: NullCheck()
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_NullCheck
+  commentId: M:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.NullCheck
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.NullCheck()
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.NullCheck()
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.NullCheck*
+  name: NullCheck
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_NullCheck_
+  commentId: Overload:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.NullCheck
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.NullCheck
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.NullCheck
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.lowPriority
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_lowPriority
+  commentId: P:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.lowPriority
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.lowPriority
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.lowPriority
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.lowPriority*
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_lowPriority_
+  commentId: Overload:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.lowPriority
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.lowPriority
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.lowPriority
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.projectileGhostReplacementPrefab
+  name: projectileGhostReplacementPrefab
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_projectileGhostReplacementPrefab
+  commentId: F:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.projectileGhostReplacementPrefab
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.projectileGhostReplacementPrefab
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.projectileGhostReplacementPrefab
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.projectilePrefab
+  name: projectilePrefab
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_projectilePrefab
+  commentId: F:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.projectilePrefab
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.projectilePrefab
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.projectilePrefab
+- uid: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.skillDef
+  name: skillDef
+  href: api/R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.html#R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_skillDef
+  commentId: F:R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.skillDef
+  fullName: R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant.skillDef
+  nameWithType: SkinSkillVariants.ProjectileGhostReplacementSkillVariant.skillDef
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant
+  name: SkinSkillVariants.RendererInfoSkillVariant
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html
+  commentId: T:R2API.SkinSkillVariants.RendererInfoSkillVariant
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.Add(RoR2.CharacterModel.RendererInfo@)
+  name: Add(ref RendererInfo)
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_Add_RoR2_CharacterModel_RendererInfo__
+  commentId: M:R2API.SkinSkillVariants.RendererInfoSkillVariant.Add(RoR2.CharacterModel.RendererInfo@)
+  name.vb: Add(RendererInfo)
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.Add(ref RoR2.CharacterModel.RendererInfo)
+  fullName.vb: R2API.SkinSkillVariants.RendererInfoSkillVariant.Add(RoR2.CharacterModel.RendererInfo)
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.Add(ref CharacterModel.RendererInfo)
+  nameWithType.vb: SkinSkillVariants.RendererInfoSkillVariant.Add(CharacterModel.RendererInfo)
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.Add*
+  name: Add
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_Add_
+  commentId: Overload:R2API.SkinSkillVariants.RendererInfoSkillVariant.Add
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.Add
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.Add
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.AddPending(RoR2.ModelSkinController,RoR2.CharacterModel.RendererInfo)
+  name: AddPending(ModelSkinController, RendererInfo)
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_AddPending_RoR2_ModelSkinController_RoR2_CharacterModel_RendererInfo_
+  commentId: M:R2API.SkinSkillVariants.RendererInfoSkillVariant.AddPending(RoR2.ModelSkinController,RoR2.CharacterModel.RendererInfo)
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.AddPending(RoR2.ModelSkinController, RoR2.CharacterModel.RendererInfo)
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.AddPending(ModelSkinController, CharacterModel.RendererInfo)
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.AddPending(RoR2.SkinDefParams,RoR2.CharacterModel.RendererInfo)
+  name: AddPending(SkinDefParams, RendererInfo)
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_AddPending_RoR2_SkinDefParams_RoR2_CharacterModel_RendererInfo_
+  commentId: M:R2API.SkinSkillVariants.RendererInfoSkillVariant.AddPending(RoR2.SkinDefParams,RoR2.CharacterModel.RendererInfo)
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.AddPending(RoR2.SkinDefParams, RoR2.CharacterModel.RendererInfo)
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.AddPending(SkinDefParams, CharacterModel.RendererInfo)
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.AddPending*
+  name: AddPending
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_AddPending_
+  commentId: Overload:R2API.SkinSkillVariants.RendererInfoSkillVariant.AddPending
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.AddPending
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.AddPending
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.Compare(RoR2.CharacterModel.RendererInfo)
+  name: Compare(RendererInfo)
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_Compare_RoR2_CharacterModel_RendererInfo_
+  commentId: M:R2API.SkinSkillVariants.RendererInfoSkillVariant.Compare(RoR2.CharacterModel.RendererInfo)
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.Compare(RoR2.CharacterModel.RendererInfo)
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.Compare(CharacterModel.RendererInfo)
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.Compare*
+  name: Compare
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_Compare_
+  commentId: Overload:R2API.SkinSkillVariants.RendererInfoSkillVariant.Compare
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.Compare
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.Compare
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.NullCheck
+  name: NullCheck()
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_NullCheck
+  commentId: M:R2API.SkinSkillVariants.RendererInfoSkillVariant.NullCheck
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.NullCheck()
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.NullCheck()
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.NullCheck*
+  name: NullCheck
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_NullCheck_
+  commentId: Overload:R2API.SkinSkillVariants.RendererInfoSkillVariant.NullCheck
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.NullCheck
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.NullCheck
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.defaultShadowCastingMode
+  name: defaultShadowCastingMode
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_defaultShadowCastingMode
+  commentId: F:R2API.SkinSkillVariants.RendererInfoSkillVariant.defaultShadowCastingMode
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.defaultShadowCastingMode
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.defaultShadowCastingMode
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.hideOnDeath
+  name: hideOnDeath
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_hideOnDeath
+  commentId: F:R2API.SkinSkillVariants.RendererInfoSkillVariant.hideOnDeath
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.hideOnDeath
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.hideOnDeath
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.ignoreOverlays
+  name: ignoreOverlays
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_ignoreOverlays
+  commentId: F:R2API.SkinSkillVariants.RendererInfoSkillVariant.ignoreOverlays
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.ignoreOverlays
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.ignoreOverlays
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.ignoresMaterialOverrides
+  name: ignoresMaterialOverrides
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_ignoresMaterialOverrides
+  commentId: F:R2API.SkinSkillVariants.RendererInfoSkillVariant.ignoresMaterialOverrides
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.ignoresMaterialOverrides
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.ignoresMaterialOverrides
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.lowPriority
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_lowPriority
+  commentId: P:R2API.SkinSkillVariants.RendererInfoSkillVariant.lowPriority
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.lowPriority
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.lowPriority
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.lowPriority*
+  name: lowPriority
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_lowPriority_
+  commentId: Overload:R2API.SkinSkillVariants.RendererInfoSkillVariant.lowPriority
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.lowPriority
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.lowPriority
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.material
+  name: material
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_material
+  commentId: F:R2API.SkinSkillVariants.RendererInfoSkillVariant.material
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.material
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.material
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.renderer
+  name: renderer
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_renderer
+  commentId: F:R2API.SkinSkillVariants.RendererInfoSkillVariant.renderer
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.renderer
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.renderer
+- uid: R2API.SkinSkillVariants.RendererInfoSkillVariant.skillDef
+  name: skillDef
+  href: api/R2API.SkinSkillVariants.RendererInfoSkillVariant.html#R2API_SkinSkillVariants_RendererInfoSkillVariant_skillDef
+  commentId: F:R2API.SkinSkillVariants.RendererInfoSkillVariant.skillDef
+  fullName: R2API.SkinSkillVariants.RendererInfoSkillVariant.skillDef
+  nameWithType: SkinSkillVariants.RendererInfoSkillVariant.skillDef
+- uid: R2API.SkinSkillVariants.SetOnSkinApplied(RoR2.SkinDef,R2API.SkinSkillVariants.OnSkinApplied)
+  name: SetOnSkinApplied(SkinDef, OnSkinApplied)
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_SetOnSkinApplied_RoR2_SkinDef_R2API_SkinSkillVariants_OnSkinApplied_
+  commentId: M:R2API.SkinSkillVariants.SetOnSkinApplied(RoR2.SkinDef,R2API.SkinSkillVariants.OnSkinApplied)
+  fullName: R2API.SkinSkillVariants.SetOnSkinApplied(RoR2.SkinDef, R2API.SkinSkillVariants.OnSkinApplied)
+  nameWithType: SkinSkillVariants.SetOnSkinApplied(SkinDef, SkinSkillVariants.OnSkinApplied)
+- uid: R2API.SkinSkillVariants.SetOnSkinApplied*
+  name: SetOnSkinApplied
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_SetOnSkinApplied_
+  commentId: Overload:R2API.SkinSkillVariants.SetOnSkinApplied
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.SetOnSkinApplied
+  nameWithType: SkinSkillVariants.SetOnSkinApplied
+- uid: R2API.SkinSkillVariants.SetSkillVariants(RoR2.CharacterModel.LightInfo@,System.Object[])
+  name: SetSkillVariants(ref LightInfo, object[])
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_SetSkillVariants_RoR2_CharacterModel_LightInfo__System_Object___
+  commentId: M:R2API.SkinSkillVariants.SetSkillVariants(RoR2.CharacterModel.LightInfo@,System.Object[])
+  name.vb: SetSkillVariants(LightInfo, Object())
+  fullName: R2API.SkinSkillVariants.SetSkillVariants(ref RoR2.CharacterModel.LightInfo, object[])
+  fullName.vb: R2API.SkinSkillVariants.SetSkillVariants(RoR2.CharacterModel.LightInfo, Object())
+  nameWithType: SkinSkillVariants.SetSkillVariants(ref CharacterModel.LightInfo, object[])
+  nameWithType.vb: SkinSkillVariants.SetSkillVariants(CharacterModel.LightInfo, Object())
+- uid: R2API.SkinSkillVariants.SetSkillVariants(RoR2.CharacterModel.RendererInfo@,System.Object[])
+  name: SetSkillVariants(ref RendererInfo, object[])
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_SetSkillVariants_RoR2_CharacterModel_RendererInfo__System_Object___
+  commentId: M:R2API.SkinSkillVariants.SetSkillVariants(RoR2.CharacterModel.RendererInfo@,System.Object[])
+  name.vb: SetSkillVariants(RendererInfo, Object())
+  fullName: R2API.SkinSkillVariants.SetSkillVariants(ref RoR2.CharacterModel.RendererInfo, object[])
+  fullName.vb: R2API.SkinSkillVariants.SetSkillVariants(RoR2.CharacterModel.RendererInfo, Object())
+  nameWithType: SkinSkillVariants.SetSkillVariants(ref CharacterModel.RendererInfo, object[])
+  nameWithType.vb: SkinSkillVariants.SetSkillVariants(CharacterModel.RendererInfo, Object())
+- uid: R2API.SkinSkillVariants.SetSkillVariants(RoR2.SkinDefParams.MeshReplacement@,System.Object[])
+  name: SetSkillVariants(ref MeshReplacement, object[])
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_SetSkillVariants_RoR2_SkinDefParams_MeshReplacement__System_Object___
+  commentId: M:R2API.SkinSkillVariants.SetSkillVariants(RoR2.SkinDefParams.MeshReplacement@,System.Object[])
+  name.vb: SetSkillVariants(MeshReplacement, Object())
+  fullName: R2API.SkinSkillVariants.SetSkillVariants(ref RoR2.SkinDefParams.MeshReplacement, object[])
+  fullName.vb: R2API.SkinSkillVariants.SetSkillVariants(RoR2.SkinDefParams.MeshReplacement, Object())
+  nameWithType: SkinSkillVariants.SetSkillVariants(ref SkinDefParams.MeshReplacement, object[])
+  nameWithType.vb: SkinSkillVariants.SetSkillVariants(SkinDefParams.MeshReplacement, Object())
+- uid: R2API.SkinSkillVariants.SetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement@,System.Object[])
+  name: SetSkillVariants(ref MinionSkinReplacement, object[])
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_SetSkillVariants_RoR2_SkinDefParams_MinionSkinReplacement__System_Object___
+  commentId: M:R2API.SkinSkillVariants.SetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement@,System.Object[])
+  name.vb: SetSkillVariants(MinionSkinReplacement, Object())
+  fullName: R2API.SkinSkillVariants.SetSkillVariants(ref RoR2.SkinDefParams.MinionSkinReplacement, object[])
+  fullName.vb: R2API.SkinSkillVariants.SetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement, Object())
+  nameWithType: SkinSkillVariants.SetSkillVariants(ref SkinDefParams.MinionSkinReplacement, object[])
+  nameWithType.vb: SkinSkillVariants.SetSkillVariants(SkinDefParams.MinionSkinReplacement, Object())
+- uid: R2API.SkinSkillVariants.SetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement@,System.Object[])
+  name: SetSkillVariants(ref ProjectileGhostReplacement, object[])
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_SetSkillVariants_RoR2_SkinDefParams_ProjectileGhostReplacement__System_Object___
+  commentId: M:R2API.SkinSkillVariants.SetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement@,System.Object[])
+  name.vb: SetSkillVariants(ProjectileGhostReplacement, Object())
+  fullName: R2API.SkinSkillVariants.SetSkillVariants(ref RoR2.SkinDefParams.ProjectileGhostReplacement, object[])
+  fullName.vb: R2API.SkinSkillVariants.SetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement, Object())
+  nameWithType: SkinSkillVariants.SetSkillVariants(ref SkinDefParams.ProjectileGhostReplacement, object[])
+  nameWithType.vb: SkinSkillVariants.SetSkillVariants(SkinDefParams.ProjectileGhostReplacement, Object())
+- uid: R2API.SkinSkillVariants.SetSkillVariants*
+  name: SetSkillVariants
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_SetSkillVariants_
+  commentId: Overload:R2API.SkinSkillVariants.SetSkillVariants
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariants.SetSkillVariants
+  nameWithType: SkinSkillVariants.SetSkillVariants
+- uid: R2API.SkinSkillVariants.skinToBody
+  name: skinToBody
+  href: api/R2API.SkinSkillVariants.html#R2API_SkinSkillVariants_skinToBody
+  commentId: F:R2API.SkinSkillVariants.skinToBody
+  fullName: R2API.SkinSkillVariants.skinToBody
+  nameWithType: SkinSkillVariants.skinToBody
+- uid: R2API.SkinSkillVariantsDef
+  name: SkinSkillVariantsDef
+  href: api/R2API.SkinSkillVariantsDef.html
+  commentId: T:R2API.SkinSkillVariantsDef
+  fullName: R2API.SkinSkillVariantsDef
+  nameWithType: SkinSkillVariantsDef
+- uid: R2API.SkinSkillVariantsDef.AddLightInfoSkillVariant(R2API.SkinSkillVariants.LightInfoSkillVariant)
+  name: AddLightInfoSkillVariant(LightInfoSkillVariant)
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddLightInfoSkillVariant_R2API_SkinSkillVariants_LightInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariantsDef.AddLightInfoSkillVariant(R2API.SkinSkillVariants.LightInfoSkillVariant)
+  fullName: R2API.SkinSkillVariantsDef.AddLightInfoSkillVariant(R2API.SkinSkillVariants.LightInfoSkillVariant)
+  nameWithType: SkinSkillVariantsDef.AddLightInfoSkillVariant(SkinSkillVariants.LightInfoSkillVariant)
+- uid: R2API.SkinSkillVariantsDef.AddLightInfoSkillVariant*
+  name: AddLightInfoSkillVariant
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddLightInfoSkillVariant_
+  commentId: Overload:R2API.SkinSkillVariantsDef.AddLightInfoSkillVariant
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariantsDef.AddLightInfoSkillVariant
+  nameWithType: SkinSkillVariantsDef.AddLightInfoSkillVariant
+- uid: R2API.SkinSkillVariantsDef.AddMeshReplacementSkillVariant(R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  name: AddMeshReplacementSkillVariant(MeshReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddMeshReplacementSkillVariant_R2API_SkinSkillVariants_MeshReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariantsDef.AddMeshReplacementSkillVariant(R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariantsDef.AddMeshReplacementSkillVariant(R2API.SkinSkillVariants.MeshReplacementSkillVariant)
+  nameWithType: SkinSkillVariantsDef.AddMeshReplacementSkillVariant(SkinSkillVariants.MeshReplacementSkillVariant)
+- uid: R2API.SkinSkillVariantsDef.AddMeshReplacementSkillVariant*
+  name: AddMeshReplacementSkillVariant
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddMeshReplacementSkillVariant_
+  commentId: Overload:R2API.SkinSkillVariantsDef.AddMeshReplacementSkillVariant
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariantsDef.AddMeshReplacementSkillVariant
+  nameWithType: SkinSkillVariantsDef.AddMeshReplacementSkillVariant
+- uid: R2API.SkinSkillVariantsDef.AddMinionSkinReplacementSkillVariant(R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  name: AddMinionSkinReplacementSkillVariant(MinionSkinReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddMinionSkinReplacementSkillVariant_R2API_SkinSkillVariants_MinionSkinReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariantsDef.AddMinionSkinReplacementSkillVariant(R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariantsDef.AddMinionSkinReplacementSkillVariant(R2API.SkinSkillVariants.MinionSkinReplacementSkillVariant)
+  nameWithType: SkinSkillVariantsDef.AddMinionSkinReplacementSkillVariant(SkinSkillVariants.MinionSkinReplacementSkillVariant)
+- uid: R2API.SkinSkillVariantsDef.AddMinionSkinReplacementSkillVariant*
+  name: AddMinionSkinReplacementSkillVariant
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddMinionSkinReplacementSkillVariant_
+  commentId: Overload:R2API.SkinSkillVariantsDef.AddMinionSkinReplacementSkillVariant
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariantsDef.AddMinionSkinReplacementSkillVariant
+  nameWithType: SkinSkillVariantsDef.AddMinionSkinReplacementSkillVariant
+- uid: R2API.SkinSkillVariantsDef.AddProjectileGhostReplacementSkillVariant(R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  name: AddProjectileGhostReplacementSkillVariant(ProjectileGhostReplacementSkillVariant)
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddProjectileGhostReplacementSkillVariant_R2API_SkinSkillVariants_ProjectileGhostReplacementSkillVariant_
+  commentId: M:R2API.SkinSkillVariantsDef.AddProjectileGhostReplacementSkillVariant(R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  fullName: R2API.SkinSkillVariantsDef.AddProjectileGhostReplacementSkillVariant(R2API.SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+  nameWithType: SkinSkillVariantsDef.AddProjectileGhostReplacementSkillVariant(SkinSkillVariants.ProjectileGhostReplacementSkillVariant)
+- uid: R2API.SkinSkillVariantsDef.AddProjectileGhostReplacementSkillVariant*
+  name: AddProjectileGhostReplacementSkillVariant
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddProjectileGhostReplacementSkillVariant_
+  commentId: Overload:R2API.SkinSkillVariantsDef.AddProjectileGhostReplacementSkillVariant
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariantsDef.AddProjectileGhostReplacementSkillVariant
+  nameWithType: SkinSkillVariantsDef.AddProjectileGhostReplacementSkillVariant
+- uid: R2API.SkinSkillVariantsDef.AddRendererInfoSkillVariant(R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  name: AddRendererInfoSkillVariant(RendererInfoSkillVariant)
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddRendererInfoSkillVariant_R2API_SkinSkillVariants_RendererInfoSkillVariant_
+  commentId: M:R2API.SkinSkillVariantsDef.AddRendererInfoSkillVariant(R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  fullName: R2API.SkinSkillVariantsDef.AddRendererInfoSkillVariant(R2API.SkinSkillVariants.RendererInfoSkillVariant)
+  nameWithType: SkinSkillVariantsDef.AddRendererInfoSkillVariant(SkinSkillVariants.RendererInfoSkillVariant)
+- uid: R2API.SkinSkillVariantsDef.AddRendererInfoSkillVariant*
+  name: AddRendererInfoSkillVariant
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddRendererInfoSkillVariant_
+  commentId: Overload:R2API.SkinSkillVariantsDef.AddRendererInfoSkillVariant
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariantsDef.AddRendererInfoSkillVariant
+  nameWithType: SkinSkillVariantsDef.AddRendererInfoSkillVariant
+- uid: R2API.SkinSkillVariantsDef.AddSkinDefParams(RoR2.SkinDefParams)
+  name: AddSkinDefParams(SkinDefParams)
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddSkinDefParams_RoR2_SkinDefParams_
+  commentId: M:R2API.SkinSkillVariantsDef.AddSkinDefParams(RoR2.SkinDefParams)
+  fullName: R2API.SkinSkillVariantsDef.AddSkinDefParams(RoR2.SkinDefParams)
+  nameWithType: SkinSkillVariantsDef.AddSkinDefParams(SkinDefParams)
+- uid: R2API.SkinSkillVariantsDef.AddSkinDefParams*
+  name: AddSkinDefParams
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_AddSkinDefParams_
+  commentId: Overload:R2API.SkinSkillVariantsDef.AddSkinDefParams
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariantsDef.AddSkinDefParams
+  nameWithType: SkinSkillVariantsDef.AddSkinDefParams
+- uid: R2API.SkinSkillVariantsDef.Register
+  name: Register()
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_Register
+  commentId: M:R2API.SkinSkillVariantsDef.Register
+  fullName: R2API.SkinSkillVariantsDef.Register()
+  nameWithType: SkinSkillVariantsDef.Register()
+- uid: R2API.SkinSkillVariantsDef.Register*
+  name: Register
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_Register_
+  commentId: Overload:R2API.SkinSkillVariantsDef.Register
+  isSpec: "True"
+  fullName: R2API.SkinSkillVariantsDef.Register
+  nameWithType: SkinSkillVariantsDef.Register
+- uid: R2API.SkinSkillVariantsDef.lightInfoSkillVariants
+  name: lightInfoSkillVariants
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_lightInfoSkillVariants
+  commentId: F:R2API.SkinSkillVariantsDef.lightInfoSkillVariants
+  fullName: R2API.SkinSkillVariantsDef.lightInfoSkillVariants
+  nameWithType: SkinSkillVariantsDef.lightInfoSkillVariants
+- uid: R2API.SkinSkillVariantsDef.meshReplacementSkillVariants
+  name: meshReplacementSkillVariants
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_meshReplacementSkillVariants
+  commentId: F:R2API.SkinSkillVariantsDef.meshReplacementSkillVariants
+  fullName: R2API.SkinSkillVariantsDef.meshReplacementSkillVariants
+  nameWithType: SkinSkillVariantsDef.meshReplacementSkillVariants
+- uid: R2API.SkinSkillVariantsDef.minionSkinReplacementSkillVariants
+  name: minionSkinReplacementSkillVariants
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_minionSkinReplacementSkillVariants
+  commentId: F:R2API.SkinSkillVariantsDef.minionSkinReplacementSkillVariants
+  fullName: R2API.SkinSkillVariantsDef.minionSkinReplacementSkillVariants
+  nameWithType: SkinSkillVariantsDef.minionSkinReplacementSkillVariants
+- uid: R2API.SkinSkillVariantsDef.modelSkinController
+  name: modelSkinController
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_modelSkinController
+  commentId: F:R2API.SkinSkillVariantsDef.modelSkinController
+  fullName: R2API.SkinSkillVariantsDef.modelSkinController
+  nameWithType: SkinSkillVariantsDef.modelSkinController
+- uid: R2API.SkinSkillVariantsDef.projectileGhostReplacementSkillVariants
+  name: projectileGhostReplacementSkillVariants
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_projectileGhostReplacementSkillVariants
+  commentId: F:R2API.SkinSkillVariantsDef.projectileGhostReplacementSkillVariants
+  fullName: R2API.SkinSkillVariantsDef.projectileGhostReplacementSkillVariants
+  nameWithType: SkinSkillVariantsDef.projectileGhostReplacementSkillVariants
+- uid: R2API.SkinSkillVariantsDef.rendererInfoSkillVariants
+  name: rendererInfoSkillVariants
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_rendererInfoSkillVariants
+  commentId: F:R2API.SkinSkillVariantsDef.rendererInfoSkillVariants
+  fullName: R2API.SkinSkillVariantsDef.rendererInfoSkillVariants
+  nameWithType: SkinSkillVariantsDef.rendererInfoSkillVariants
+- uid: R2API.SkinSkillVariantsDef.skinDefParameters
+  name: skinDefParameters
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_skinDefParameters
+  commentId: F:R2API.SkinSkillVariantsDef.skinDefParameters
+  fullName: R2API.SkinSkillVariantsDef.skinDefParameters
+  nameWithType: SkinSkillVariantsDef.skinDefParameters
 - uid: R2API.SkinVFX
   name: SkinVFX
   href: api/R2API.SkinVFX.html
@@ -11857,12 +13154,302 @@ references:
   commentId: F:R2API.Skins.PluginVersion
   fullName: R2API.Skins.PluginVersion
   nameWithType: Skins.PluginVersion
+- uid: R2API.SkinsAPI.Interop
+  name: R2API.SkinsAPI.Interop
+  href: api/R2API.SkinsAPI.Interop.html
+  commentId: N:R2API.SkinsAPI.Interop
+  fullName: R2API.SkinsAPI.Interop
+  nameWithType: R2API.SkinsAPI.Interop
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop
+  name: SkinAPIInterop
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html
+  commentId: T:R2API.SkinsAPI.Interop.SkinAPIInterop
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop
+  nameWithType: SkinAPIInterop
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetOnSkinApplied(RoR2.SkinDef)
+  name: GetOnSkinApplied(SkinDef)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetOnSkinApplied_RoR2_SkinDef_
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetOnSkinApplied(RoR2.SkinDef)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetOnSkinApplied(RoR2.SkinDef)
+  nameWithType: SkinAPIInterop.GetOnSkinApplied(SkinDef)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetOnSkinApplied*
+  name: GetOnSkinApplied
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetOnSkinApplied_
+  commentId: Overload:R2API.SkinsAPI.Interop.SkinAPIInterop.GetOnSkinApplied
+  isSpec: "True"
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetOnSkinApplied
+  nameWithType: SkinAPIInterop.GetOnSkinApplied
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.CharacterModel.LightInfo@)
+  name: GetSkillVariants(ref LightInfo)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkillVariants_RoR2_CharacterModel_LightInfo__
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.CharacterModel.LightInfo@)
+  name.vb: GetSkillVariants(LightInfo)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(ref RoR2.CharacterModel.LightInfo)
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.CharacterModel.LightInfo)
+  nameWithType: SkinAPIInterop.GetSkillVariants(ref CharacterModel.LightInfo)
+  nameWithType.vb: SkinAPIInterop.GetSkillVariants(CharacterModel.LightInfo)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.CharacterModel.RendererInfo@)
+  name: GetSkillVariants(ref RendererInfo)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkillVariants_RoR2_CharacterModel_RendererInfo__
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.CharacterModel.RendererInfo@)
+  name.vb: GetSkillVariants(RendererInfo)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(ref RoR2.CharacterModel.RendererInfo)
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.CharacterModel.RendererInfo)
+  nameWithType: SkinAPIInterop.GetSkillVariants(ref CharacterModel.RendererInfo)
+  nameWithType.vb: SkinAPIInterop.GetSkillVariants(CharacterModel.RendererInfo)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.GhostReplacementTemplate@)
+  name: GetSkillVariants(ref GhostReplacementTemplate)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkillVariants_RoR2_SkinDef_GhostReplacementTemplate__
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.GhostReplacementTemplate@)
+  name.vb: GetSkillVariants(GhostReplacementTemplate)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(ref RoR2.SkinDef.GhostReplacementTemplate)
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.GhostReplacementTemplate)
+  nameWithType: SkinAPIInterop.GetSkillVariants(ref SkinDef.GhostReplacementTemplate)
+  nameWithType.vb: SkinAPIInterop.GetSkillVariants(SkinDef.GhostReplacementTemplate)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.LightReplacementTemplate@)
+  name: GetSkillVariants(ref LightReplacementTemplate)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkillVariants_RoR2_SkinDef_LightReplacementTemplate__
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.LightReplacementTemplate@)
+  name.vb: GetSkillVariants(LightReplacementTemplate)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(ref RoR2.SkinDef.LightReplacementTemplate)
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.LightReplacementTemplate)
+  nameWithType: SkinAPIInterop.GetSkillVariants(ref SkinDef.LightReplacementTemplate)
+  nameWithType.vb: SkinAPIInterop.GetSkillVariants(SkinDef.LightReplacementTemplate)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.MeshReplacementTemplate@)
+  name: GetSkillVariants(ref MeshReplacementTemplate)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkillVariants_RoR2_SkinDef_MeshReplacementTemplate__
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.MeshReplacementTemplate@)
+  name.vb: GetSkillVariants(MeshReplacementTemplate)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(ref RoR2.SkinDef.MeshReplacementTemplate)
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.MeshReplacementTemplate)
+  nameWithType: SkinAPIInterop.GetSkillVariants(ref SkinDef.MeshReplacementTemplate)
+  nameWithType.vb: SkinAPIInterop.GetSkillVariants(SkinDef.MeshReplacementTemplate)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.MinionSkinTemplate@)
+  name: GetSkillVariants(ref MinionSkinTemplate)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkillVariants_RoR2_SkinDef_MinionSkinTemplate__
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.MinionSkinTemplate@)
+  name.vb: GetSkillVariants(MinionSkinTemplate)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(ref RoR2.SkinDef.MinionSkinTemplate)
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDef.MinionSkinTemplate)
+  nameWithType: SkinAPIInterop.GetSkillVariants(ref SkinDef.MinionSkinTemplate)
+  nameWithType.vb: SkinAPIInterop.GetSkillVariants(SkinDef.MinionSkinTemplate)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDefParams.MeshReplacement@)
+  name: GetSkillVariants(ref MeshReplacement)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkillVariants_RoR2_SkinDefParams_MeshReplacement__
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDefParams.MeshReplacement@)
+  name.vb: GetSkillVariants(MeshReplacement)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(ref RoR2.SkinDefParams.MeshReplacement)
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDefParams.MeshReplacement)
+  nameWithType: SkinAPIInterop.GetSkillVariants(ref SkinDefParams.MeshReplacement)
+  nameWithType.vb: SkinAPIInterop.GetSkillVariants(SkinDefParams.MeshReplacement)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement@)
+  name: GetSkillVariants(ref MinionSkinReplacement)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkillVariants_RoR2_SkinDefParams_MinionSkinReplacement__
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement@)
+  name.vb: GetSkillVariants(MinionSkinReplacement)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(ref RoR2.SkinDefParams.MinionSkinReplacement)
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement)
+  nameWithType: SkinAPIInterop.GetSkillVariants(ref SkinDefParams.MinionSkinReplacement)
+  nameWithType.vb: SkinAPIInterop.GetSkillVariants(SkinDefParams.MinionSkinReplacement)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement@)
+  name: GetSkillVariants(ref ProjectileGhostReplacement)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkillVariants_RoR2_SkinDefParams_ProjectileGhostReplacement__
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement@)
+  name.vb: GetSkillVariants(ProjectileGhostReplacement)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(ref RoR2.SkinDefParams.ProjectileGhostReplacement)
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement)
+  nameWithType: SkinAPIInterop.GetSkillVariants(ref SkinDefParams.ProjectileGhostReplacement)
+  nameWithType.vb: SkinAPIInterop.GetSkillVariants(SkinDefParams.ProjectileGhostReplacement)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants*
+  name: GetSkillVariants
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkillVariants_
+  commentId: Overload:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants
+  isSpec: "True"
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkillVariants
+  nameWithType: SkinAPIInterop.GetSkillVariants
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinDef(RoR2.SkinDef.RuntimeSkin)
+  name: GetSkinDef(RuntimeSkin)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkinDef_RoR2_SkinDef_RuntimeSkin_
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinDef(RoR2.SkinDef.RuntimeSkin)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinDef(RoR2.SkinDef.RuntimeSkin)
+  nameWithType: SkinAPIInterop.GetSkinDef(SkinDef.RuntimeSkin)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinDef*
+  name: GetSkinDef
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkinDef_
+  commentId: Overload:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinDef
+  isSpec: "True"
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinDef
+  nameWithType: SkinAPIInterop.GetSkinDef
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinSkillVariantsDef(RoR2.ModelSkinController)
+  name: GetSkinSkillVariantsDef(ModelSkinController)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkinSkillVariantsDef_RoR2_ModelSkinController_
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinSkillVariantsDef(RoR2.ModelSkinController)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinSkillVariantsDef(RoR2.ModelSkinController)
+  nameWithType: SkinAPIInterop.GetSkinSkillVariantsDef(ModelSkinController)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinSkillVariantsDef(RoR2.SkinDefParams)
+  name: GetSkinSkillVariantsDef(SkinDefParams)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkinSkillVariantsDef_RoR2_SkinDefParams_
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinSkillVariantsDef(RoR2.SkinDefParams)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinSkillVariantsDef(RoR2.SkinDefParams)
+  nameWithType: SkinAPIInterop.GetSkinSkillVariantsDef(SkinDefParams)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinSkillVariantsDef*
+  name: GetSkinSkillVariantsDef
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_GetSkinSkillVariantsDef_
+  commentId: Overload:R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinSkillVariantsDef
+  isSpec: "True"
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.GetSkinSkillVariantsDef
+  nameWithType: SkinAPIInterop.GetSkinSkillVariantsDef
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetOnSkinApplied(RoR2.SkinDef,System.Delegate)
+  name: SetOnSkinApplied(SkinDef, Delegate)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetOnSkinApplied_RoR2_SkinDef_System_Delegate_
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetOnSkinApplied(RoR2.SkinDef,System.Delegate)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetOnSkinApplied(RoR2.SkinDef, System.Delegate)
+  nameWithType: SkinAPIInterop.SetOnSkinApplied(SkinDef, Delegate)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetOnSkinApplied*
+  name: SetOnSkinApplied
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetOnSkinApplied_
+  commentId: Overload:R2API.SkinsAPI.Interop.SkinAPIInterop.SetOnSkinApplied
+  isSpec: "True"
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetOnSkinApplied
+  nameWithType: SkinAPIInterop.SetOnSkinApplied
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.CharacterModel.LightInfo@,System.Object[])
+  name: SetSkillVariants(ref LightInfo, object[])
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkillVariants_RoR2_CharacterModel_LightInfo__System_Object___
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.CharacterModel.LightInfo@,System.Object[])
+  name.vb: SetSkillVariants(LightInfo, Object())
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(ref RoR2.CharacterModel.LightInfo, object[])
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.CharacterModel.LightInfo, Object())
+  nameWithType: SkinAPIInterop.SetSkillVariants(ref CharacterModel.LightInfo, object[])
+  nameWithType.vb: SkinAPIInterop.SetSkillVariants(CharacterModel.LightInfo, Object())
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.CharacterModel.RendererInfo@,System.Object[])
+  name: SetSkillVariants(ref RendererInfo, object[])
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkillVariants_RoR2_CharacterModel_RendererInfo__System_Object___
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.CharacterModel.RendererInfo@,System.Object[])
+  name.vb: SetSkillVariants(RendererInfo, Object())
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(ref RoR2.CharacterModel.RendererInfo, object[])
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.CharacterModel.RendererInfo, Object())
+  nameWithType: SkinAPIInterop.SetSkillVariants(ref CharacterModel.RendererInfo, object[])
+  nameWithType.vb: SkinAPIInterop.SetSkillVariants(CharacterModel.RendererInfo, Object())
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.GhostReplacementTemplate@,System.Object[])
+  name: SetSkillVariants(ref GhostReplacementTemplate, object[])
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkillVariants_RoR2_SkinDef_GhostReplacementTemplate__System_Object___
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.GhostReplacementTemplate@,System.Object[])
+  name.vb: SetSkillVariants(GhostReplacementTemplate, Object())
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(ref RoR2.SkinDef.GhostReplacementTemplate, object[])
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.GhostReplacementTemplate, Object())
+  nameWithType: SkinAPIInterop.SetSkillVariants(ref SkinDef.GhostReplacementTemplate, object[])
+  nameWithType.vb: SkinAPIInterop.SetSkillVariants(SkinDef.GhostReplacementTemplate, Object())
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.LightReplacementTemplate@,System.Object[])
+  name: SetSkillVariants(ref LightReplacementTemplate, object[])
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkillVariants_RoR2_SkinDef_LightReplacementTemplate__System_Object___
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.LightReplacementTemplate@,System.Object[])
+  name.vb: SetSkillVariants(LightReplacementTemplate, Object())
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(ref RoR2.SkinDef.LightReplacementTemplate, object[])
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.LightReplacementTemplate, Object())
+  nameWithType: SkinAPIInterop.SetSkillVariants(ref SkinDef.LightReplacementTemplate, object[])
+  nameWithType.vb: SkinAPIInterop.SetSkillVariants(SkinDef.LightReplacementTemplate, Object())
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.MeshReplacementTemplate@,System.Object[])
+  name: SetSkillVariants(ref MeshReplacementTemplate, object[])
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkillVariants_RoR2_SkinDef_MeshReplacementTemplate__System_Object___
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.MeshReplacementTemplate@,System.Object[])
+  name.vb: SetSkillVariants(MeshReplacementTemplate, Object())
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(ref RoR2.SkinDef.MeshReplacementTemplate, object[])
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.MeshReplacementTemplate, Object())
+  nameWithType: SkinAPIInterop.SetSkillVariants(ref SkinDef.MeshReplacementTemplate, object[])
+  nameWithType.vb: SkinAPIInterop.SetSkillVariants(SkinDef.MeshReplacementTemplate, Object())
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.MinionSkinTemplate@,System.Object[])
+  name: SetSkillVariants(ref MinionSkinTemplate, object[])
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkillVariants_RoR2_SkinDef_MinionSkinTemplate__System_Object___
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.MinionSkinTemplate@,System.Object[])
+  name.vb: SetSkillVariants(MinionSkinTemplate, Object())
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(ref RoR2.SkinDef.MinionSkinTemplate, object[])
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDef.MinionSkinTemplate, Object())
+  nameWithType: SkinAPIInterop.SetSkillVariants(ref SkinDef.MinionSkinTemplate, object[])
+  nameWithType.vb: SkinAPIInterop.SetSkillVariants(SkinDef.MinionSkinTemplate, Object())
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDefParams.MeshReplacement@,System.Object[])
+  name: SetSkillVariants(ref MeshReplacement, object[])
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkillVariants_RoR2_SkinDefParams_MeshReplacement__System_Object___
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDefParams.MeshReplacement@,System.Object[])
+  name.vb: SetSkillVariants(MeshReplacement, Object())
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(ref RoR2.SkinDefParams.MeshReplacement, object[])
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDefParams.MeshReplacement, Object())
+  nameWithType: SkinAPIInterop.SetSkillVariants(ref SkinDefParams.MeshReplacement, object[])
+  nameWithType.vb: SkinAPIInterop.SetSkillVariants(SkinDefParams.MeshReplacement, Object())
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement@,System.Object[])
+  name: SetSkillVariants(ref MinionSkinReplacement, object[])
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkillVariants_RoR2_SkinDefParams_MinionSkinReplacement__System_Object___
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement@,System.Object[])
+  name.vb: SetSkillVariants(MinionSkinReplacement, Object())
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(ref RoR2.SkinDefParams.MinionSkinReplacement, object[])
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDefParams.MinionSkinReplacement, Object())
+  nameWithType: SkinAPIInterop.SetSkillVariants(ref SkinDefParams.MinionSkinReplacement, object[])
+  nameWithType.vb: SkinAPIInterop.SetSkillVariants(SkinDefParams.MinionSkinReplacement, Object())
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement@,System.Object[])
+  name: SetSkillVariants(ref ProjectileGhostReplacement, object[])
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkillVariants_RoR2_SkinDefParams_ProjectileGhostReplacement__System_Object___
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement@,System.Object[])
+  name.vb: SetSkillVariants(ProjectileGhostReplacement, Object())
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(ref RoR2.SkinDefParams.ProjectileGhostReplacement, object[])
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants(RoR2.SkinDefParams.ProjectileGhostReplacement, Object())
+  nameWithType: SkinAPIInterop.SetSkillVariants(ref SkinDefParams.ProjectileGhostReplacement, object[])
+  nameWithType.vb: SkinAPIInterop.SetSkillVariants(SkinDefParams.ProjectileGhostReplacement, Object())
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants*
+  name: SetSkillVariants
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkillVariants_
+  commentId: Overload:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants
+  isSpec: "True"
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkillVariants
+  nameWithType: SkinAPIInterop.SetSkillVariants
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinDef(RoR2.SkinDef.RuntimeSkin,RoR2.SkinDef)
+  name: SetSkinDef(RuntimeSkin, SkinDef)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkinDef_RoR2_SkinDef_RuntimeSkin_RoR2_SkinDef_
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinDef(RoR2.SkinDef.RuntimeSkin,RoR2.SkinDef)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinDef(RoR2.SkinDef.RuntimeSkin, RoR2.SkinDef)
+  nameWithType: SkinAPIInterop.SetSkinDef(SkinDef.RuntimeSkin, SkinDef)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinDef*
+  name: SetSkinDef
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkinDef_
+  commentId: Overload:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinDef
+  isSpec: "True"
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinDef
+  nameWithType: SkinAPIInterop.SetSkinDef
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinSkillVariantsDef(RoR2.ModelSkinController,System.Object)
+  name: SetSkinSkillVariantsDef(ModelSkinController, object)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkinSkillVariantsDef_RoR2_ModelSkinController_System_Object_
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinSkillVariantsDef(RoR2.ModelSkinController,System.Object)
+  name.vb: SetSkinSkillVariantsDef(ModelSkinController, Object)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinSkillVariantsDef(RoR2.ModelSkinController, object)
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinSkillVariantsDef(RoR2.ModelSkinController, Object)
+  nameWithType: SkinAPIInterop.SetSkinSkillVariantsDef(ModelSkinController, object)
+  nameWithType.vb: SkinAPIInterop.SetSkinSkillVariantsDef(ModelSkinController, Object)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinSkillVariantsDef(RoR2.SkinDefParams,System.Object)
+  name: SetSkinSkillVariantsDef(SkinDefParams, object)
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkinSkillVariantsDef_RoR2_SkinDefParams_System_Object_
+  commentId: M:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinSkillVariantsDef(RoR2.SkinDefParams,System.Object)
+  name.vb: SetSkinSkillVariantsDef(SkinDefParams, Object)
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinSkillVariantsDef(RoR2.SkinDefParams, object)
+  fullName.vb: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinSkillVariantsDef(RoR2.SkinDefParams, Object)
+  nameWithType: SkinAPIInterop.SetSkinSkillVariantsDef(SkinDefParams, object)
+  nameWithType.vb: SkinAPIInterop.SetSkinSkillVariantsDef(SkinDefParams, Object)
+- uid: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinSkillVariantsDef*
+  name: SetSkinSkillVariantsDef
+  href: api/R2API.SkinsAPI.Interop.SkinAPIInterop.html#R2API_SkinsAPI_Interop_SkinAPIInterop_SetSkinSkillVariantsDef_
+  commentId: Overload:R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinSkillVariantsDef
+  isSpec: "True"
+  fullName: R2API.SkinsAPI.Interop.SkinAPIInterop.SetSkinSkillVariantsDef
+  nameWithType: SkinAPIInterop.SetSkinSkillVariantsDef
 - uid: R2API.SkinsPlugin
   name: SkinsPlugin
   href: api/R2API.SkinsPlugin.html
   commentId: T:R2API.SkinsPlugin
   fullName: R2API.SkinsPlugin
   nameWithType: SkinsPlugin
+- uid: R2API.SkinsPlugin.harmonyPatcher
+  name: harmonyPatcher
+  href: api/R2API.SkinsPlugin.html#R2API_SkinsPlugin_harmonyPatcher
+  commentId: F:R2API.SkinsPlugin.harmonyPatcher
+  fullName: R2API.SkinsPlugin.harmonyPatcher
+  nameWithType: SkinsPlugin.harmonyPatcher
 - uid: R2API.SoundAPI
   name: SoundAPI
   href: api/R2API.SoundAPI.html
@@ -14308,6 +15895,36 @@ references:
   commentId: F:RoR2.CharacterBody.r2api_moddedBodyFlags
   fullName: RoR2.CharacterBody.r2api_moddedBodyFlags
   nameWithType: CharacterBody.r2api_moddedBodyFlags
+- uid: RoR2.CharacterModel
+  name: CharacterModel
+  href: api/RoR2.CharacterModel.html
+  commentId: T:RoR2.CharacterModel
+  fullName: RoR2.CharacterModel
+  nameWithType: CharacterModel
+- uid: RoR2.CharacterModel.LightInfo
+  name: CharacterModel.LightInfo
+  href: api/RoR2.CharacterModel.LightInfo.html
+  commentId: T:RoR2.CharacterModel.LightInfo
+  fullName: RoR2.CharacterModel.LightInfo
+  nameWithType: CharacterModel.LightInfo
+- uid: RoR2.CharacterModel.LightInfo.r2api_skillVariants
+  name: r2api_skillVariants
+  href: api/RoR2.CharacterModel.LightInfo.html#RoR2_CharacterModel_LightInfo_r2api_skillVariants
+  commentId: F:RoR2.CharacterModel.LightInfo.r2api_skillVariants
+  fullName: RoR2.CharacterModel.LightInfo.r2api_skillVariants
+  nameWithType: CharacterModel.LightInfo.r2api_skillVariants
+- uid: RoR2.CharacterModel.RendererInfo
+  name: CharacterModel.RendererInfo
+  href: api/RoR2.CharacterModel.RendererInfo.html
+  commentId: T:RoR2.CharacterModel.RendererInfo
+  fullName: RoR2.CharacterModel.RendererInfo
+  nameWithType: CharacterModel.RendererInfo
+- uid: RoR2.CharacterModel.RendererInfo.r2api_skillVariants
+  name: r2api_skillVariants
+  href: api/RoR2.CharacterModel.RendererInfo.html#RoR2_CharacterModel_RendererInfo_r2api_skillVariants
+  commentId: F:RoR2.CharacterModel.RendererInfo.r2api_skillVariants
+  fullName: RoR2.CharacterModel.RendererInfo.r2api_skillVariants
+  nameWithType: CharacterModel.RendererInfo.r2api_skillVariants
 - uid: RoR2.CrocoDamageTypeController
   name: CrocoDamageTypeController
   href: api/RoR2.CrocoDamageTypeController.html
@@ -14362,6 +15979,18 @@ references:
   commentId: F:RoR2.GenericSkill.r2api_orderPriority
   fullName: RoR2.GenericSkill.r2api_orderPriority
   nameWithType: GenericSkill.r2api_orderPriority
+- uid: RoR2.ModelSkinController
+  name: ModelSkinController
+  href: api/RoR2.ModelSkinController.html
+  commentId: T:RoR2.ModelSkinController
+  fullName: RoR2.ModelSkinController
+  nameWithType: ModelSkinController
+- uid: RoR2.ModelSkinController.r2api_skinSkillVariantsDef
+  name: r2api_skinSkillVariantsDef
+  href: api/RoR2.ModelSkinController.html#RoR2_ModelSkinController_r2api_skinSkillVariantsDef
+  commentId: F:RoR2.ModelSkinController.r2api_skinSkillVariantsDef
+  fullName: RoR2.ModelSkinController.r2api_skinSkillVariantsDef
+  nameWithType: ModelSkinController.r2api_skinSkillVariantsDef
 - uid: RoR2.ProcChainMask
   name: ProcChainMask
   href: api/RoR2.ProcChainMask.html
@@ -14392,3 +16021,123 @@ references:
   commentId: F:RoR2.Skills.SkillDef.r2api_bonusStockMultiplier
   fullName: RoR2.Skills.SkillDef.r2api_bonusStockMultiplier
   nameWithType: SkillDef.r2api_bonusStockMultiplier
+- uid: RoR2.SkinDef
+  name: SkinDef
+  href: api/RoR2.SkinDef.html
+  commentId: T:RoR2.SkinDef
+  fullName: RoR2.SkinDef
+  nameWithType: SkinDef
+- uid: RoR2.SkinDef.GhostReplacementTemplate
+  name: SkinDef.GhostReplacementTemplate
+  href: api/RoR2.SkinDef.GhostReplacementTemplate.html
+  commentId: T:RoR2.SkinDef.GhostReplacementTemplate
+  fullName: RoR2.SkinDef.GhostReplacementTemplate
+  nameWithType: SkinDef.GhostReplacementTemplate
+- uid: RoR2.SkinDef.GhostReplacementTemplate.r2api_skillVariants
+  name: r2api_skillVariants
+  href: api/RoR2.SkinDef.GhostReplacementTemplate.html#RoR2_SkinDef_GhostReplacementTemplate_r2api_skillVariants
+  commentId: F:RoR2.SkinDef.GhostReplacementTemplate.r2api_skillVariants
+  fullName: RoR2.SkinDef.GhostReplacementTemplate.r2api_skillVariants
+  nameWithType: SkinDef.GhostReplacementTemplate.r2api_skillVariants
+- uid: RoR2.SkinDef.LightReplacementTemplate
+  name: SkinDef.LightReplacementTemplate
+  href: api/RoR2.SkinDef.LightReplacementTemplate.html
+  commentId: T:RoR2.SkinDef.LightReplacementTemplate
+  fullName: RoR2.SkinDef.LightReplacementTemplate
+  nameWithType: SkinDef.LightReplacementTemplate
+- uid: RoR2.SkinDef.LightReplacementTemplate.r2api_skillVariants
+  name: r2api_skillVariants
+  href: api/RoR2.SkinDef.LightReplacementTemplate.html#RoR2_SkinDef_LightReplacementTemplate_r2api_skillVariants
+  commentId: F:RoR2.SkinDef.LightReplacementTemplate.r2api_skillVariants
+  fullName: RoR2.SkinDef.LightReplacementTemplate.r2api_skillVariants
+  nameWithType: SkinDef.LightReplacementTemplate.r2api_skillVariants
+- uid: RoR2.SkinDef.MeshReplacementTemplate
+  name: SkinDef.MeshReplacementTemplate
+  href: api/RoR2.SkinDef.MeshReplacementTemplate.html
+  commentId: T:RoR2.SkinDef.MeshReplacementTemplate
+  fullName: RoR2.SkinDef.MeshReplacementTemplate
+  nameWithType: SkinDef.MeshReplacementTemplate
+- uid: RoR2.SkinDef.MeshReplacementTemplate.r2api_skillVariants
+  name: r2api_skillVariants
+  href: api/RoR2.SkinDef.MeshReplacementTemplate.html#RoR2_SkinDef_MeshReplacementTemplate_r2api_skillVariants
+  commentId: F:RoR2.SkinDef.MeshReplacementTemplate.r2api_skillVariants
+  fullName: RoR2.SkinDef.MeshReplacementTemplate.r2api_skillVariants
+  nameWithType: SkinDef.MeshReplacementTemplate.r2api_skillVariants
+- uid: RoR2.SkinDef.MinionSkinTemplate
+  name: SkinDef.MinionSkinTemplate
+  href: api/RoR2.SkinDef.MinionSkinTemplate.html
+  commentId: T:RoR2.SkinDef.MinionSkinTemplate
+  fullName: RoR2.SkinDef.MinionSkinTemplate
+  nameWithType: SkinDef.MinionSkinTemplate
+- uid: RoR2.SkinDef.MinionSkinTemplate.r2api_skillVariants
+  name: r2api_skillVariants
+  href: api/RoR2.SkinDef.MinionSkinTemplate.html#RoR2_SkinDef_MinionSkinTemplate_r2api_skillVariants
+  commentId: F:RoR2.SkinDef.MinionSkinTemplate.r2api_skillVariants
+  fullName: RoR2.SkinDef.MinionSkinTemplate.r2api_skillVariants
+  nameWithType: SkinDef.MinionSkinTemplate.r2api_skillVariants
+- uid: RoR2.SkinDef.RuntimeSkin
+  name: SkinDef.RuntimeSkin
+  href: api/RoR2.SkinDef.RuntimeSkin.html
+  commentId: T:RoR2.SkinDef.RuntimeSkin
+  fullName: RoR2.SkinDef.RuntimeSkin
+  nameWithType: SkinDef.RuntimeSkin
+- uid: RoR2.SkinDef.RuntimeSkin.r2api_skinDef
+  name: r2api_skinDef
+  href: api/RoR2.SkinDef.RuntimeSkin.html#RoR2_SkinDef_RuntimeSkin_r2api_skinDef
+  commentId: F:RoR2.SkinDef.RuntimeSkin.r2api_skinDef
+  fullName: RoR2.SkinDef.RuntimeSkin.r2api_skinDef
+  nameWithType: SkinDef.RuntimeSkin.r2api_skinDef
+- uid: RoR2.SkinDef.r2api_onSkinApplied
+  name: r2api_onSkinApplied
+  href: api/RoR2.SkinDef.html#RoR2_SkinDef_r2api_onSkinApplied
+  commentId: F:RoR2.SkinDef.r2api_onSkinApplied
+  fullName: RoR2.SkinDef.r2api_onSkinApplied
+  nameWithType: SkinDef.r2api_onSkinApplied
+- uid: RoR2.SkinDefParams
+  name: SkinDefParams
+  href: api/RoR2.SkinDefParams.html
+  commentId: T:RoR2.SkinDefParams
+  fullName: RoR2.SkinDefParams
+  nameWithType: SkinDefParams
+- uid: RoR2.SkinDefParams.MeshReplacement
+  name: SkinDefParams.MeshReplacement
+  href: api/RoR2.SkinDefParams.MeshReplacement.html
+  commentId: T:RoR2.SkinDefParams.MeshReplacement
+  fullName: RoR2.SkinDefParams.MeshReplacement
+  nameWithType: SkinDefParams.MeshReplacement
+- uid: RoR2.SkinDefParams.MeshReplacement.r2api_skillVariants
+  name: r2api_skillVariants
+  href: api/RoR2.SkinDefParams.MeshReplacement.html#RoR2_SkinDefParams_MeshReplacement_r2api_skillVariants
+  commentId: F:RoR2.SkinDefParams.MeshReplacement.r2api_skillVariants
+  fullName: RoR2.SkinDefParams.MeshReplacement.r2api_skillVariants
+  nameWithType: SkinDefParams.MeshReplacement.r2api_skillVariants
+- uid: RoR2.SkinDefParams.MinionSkinReplacement
+  name: SkinDefParams.MinionSkinReplacement
+  href: api/RoR2.SkinDefParams.MinionSkinReplacement.html
+  commentId: T:RoR2.SkinDefParams.MinionSkinReplacement
+  fullName: RoR2.SkinDefParams.MinionSkinReplacement
+  nameWithType: SkinDefParams.MinionSkinReplacement
+- uid: RoR2.SkinDefParams.MinionSkinReplacement.r2api_skillVariants
+  name: r2api_skillVariants
+  href: api/RoR2.SkinDefParams.MinionSkinReplacement.html#RoR2_SkinDefParams_MinionSkinReplacement_r2api_skillVariants
+  commentId: F:RoR2.SkinDefParams.MinionSkinReplacement.r2api_skillVariants
+  fullName: RoR2.SkinDefParams.MinionSkinReplacement.r2api_skillVariants
+  nameWithType: SkinDefParams.MinionSkinReplacement.r2api_skillVariants
+- uid: RoR2.SkinDefParams.ProjectileGhostReplacement
+  name: SkinDefParams.ProjectileGhostReplacement
+  href: api/RoR2.SkinDefParams.ProjectileGhostReplacement.html
+  commentId: T:RoR2.SkinDefParams.ProjectileGhostReplacement
+  fullName: RoR2.SkinDefParams.ProjectileGhostReplacement
+  nameWithType: SkinDefParams.ProjectileGhostReplacement
+- uid: RoR2.SkinDefParams.ProjectileGhostReplacement.r2api_skillVariants
+  name: r2api_skillVariants
+  href: api/RoR2.SkinDefParams.ProjectileGhostReplacement.html#RoR2_SkinDefParams_ProjectileGhostReplacement_r2api_skillVariants
+  commentId: F:RoR2.SkinDefParams.ProjectileGhostReplacement.r2api_skillVariants
+  fullName: RoR2.SkinDefParams.ProjectileGhostReplacement.r2api_skillVariants
+  nameWithType: SkinDefParams.ProjectileGhostReplacement.r2api_skillVariants
+- uid: RoR2.SkinDefParams.r2api_skinSkillVariantsDef
+  name: r2api_skinSkillVariantsDef
+  href: api/RoR2.SkinDefParams.html#RoR2_SkinDefParams_r2api_skinSkillVariantsDef
+  commentId: F:RoR2.SkinDefParams.r2api_skinSkillVariantsDef
+  fullName: RoR2.SkinDefParams.r2api_skinSkillVariantsDef
+  nameWithType: SkinDefParams.r2api_skinSkillVariantsDef
