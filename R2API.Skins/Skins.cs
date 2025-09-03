@@ -1,8 +1,8 @@
-using System;
 using HG;
 using R2API.AutoVersionGen;
 using RoR2;
 using RoR2.UI.MainMenu;
+using System;
 using Unity.Jobs;
 using UnityEngine;
 
@@ -20,7 +20,6 @@ public static partial class Skins
 
     #region Hooks
     private static bool _hooksSet;
-
     internal static void SetHooks()
     {
         if (_hooksSet)
@@ -35,7 +34,7 @@ public static partial class Skins
     {
         _hooksSet = false;
 
-        MainMenuController.OnMainMenuInitialised += OnMainMenuInitialized;
+        MainMenuController.OnMainMenuInitialised -= OnMainMenuInitialized;
     }
 
     // we want this to load REALLY late
@@ -87,6 +86,7 @@ public static partial class Skins
             }
         }
     }
+
     #endregion
 
     #region Skin Creation
@@ -311,5 +311,4 @@ public static partial class Skins
 
     private static Sprite CreateDefaultSkinIcon() => CreateSkinIcon(Color.red, Color.green, Color.blue, Color.black);
     #endregion
-
 }
