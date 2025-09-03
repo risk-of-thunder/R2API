@@ -674,6 +674,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.DotAPI.CustomDotDamageEvaluation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.DotAPI.CustomDotDamageEvaluation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.DotAPI.CustomDotVisual.yml",
       "output": {
         ".html": {
@@ -2296,11 +2306,11 @@
       "type": "Toc",
       "source_relative_path": "api/toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "api/toc.html"
-        },
         ".json": {
           "relative_path": "api/toc.json"
+        },
+        ".html": {
+          "relative_path": "api/toc.html"
         }
       },
       "version": ""
@@ -2319,11 +2329,11 @@
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "toc.html"
-        },
         ".json": {
           "relative_path": "toc.json"
+        },
+        ".html": {
+          "relative_path": "toc.html"
         }
       },
       "version": ""

@@ -177,7 +177,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string PluginVersion = &quot;1.0.4&quot;</code></pre>
+    <pre><code class="lang-csharp hljs">public const string PluginVersion = &quot;1.1.0&quot;</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-condensed">
@@ -294,7 +294,7 @@ public static bool Loaded { get; }</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DotAPI_RegisterDotDef_RoR2_DotController_DotDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_.md&amp;value=---%0Auid%3A%20R2API.DotAPI.RegisterDotDef(RoR2.DotController.DotDef%2CR2API.DotAPI.CustomDotBehaviour%2CR2API.DotAPI.CustomDotVisual)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Dot/DotAPI.cs/#L81">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Dot/DotAPI.cs/#L139">View Source</a>
   </span>
   <a id="R2API_DotAPI_RegisterDotDef_" data-uid="R2API.DotAPI.RegisterDotDef*"></a>
   <h4 id="R2API_DotAPI_RegisterDotDef_RoR2_DotController_DotDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_" data-uid="R2API.DotAPI.RegisterDotDef(RoR2.DotController.DotDef,R2API.DotAPI.CustomDotBehaviour,R2API.DotAPI.CustomDotVisual)">RegisterDotDef(DotDef?, CustomDotBehaviour?, CustomDotVisual?)</h4>
@@ -352,10 +352,77 @@ Please refer to the game FixedUpdate() method for example use case.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DotAPI_RegisterDotDef_RoR2_DotController_DotDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_R2API_DotAPI_CustomDotDamageEvaluation_.md&amp;value=---%0Auid%3A%20R2API.DotAPI.RegisterDotDef(RoR2.DotController.DotDef%2CR2API.DotAPI.CustomDotBehaviour%2CR2API.DotAPI.CustomDotVisual%2CR2API.DotAPI.CustomDotDamageEvaluation)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Dot/DotAPI.cs/#L93">View Source</a>
+  </span>
+  <a id="R2API_DotAPI_RegisterDotDef_" data-uid="R2API.DotAPI.RegisterDotDef*"></a>
+  <h4 id="R2API_DotAPI_RegisterDotDef_RoR2_DotController_DotDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_R2API_DotAPI_CustomDotDamageEvaluation_" data-uid="R2API.DotAPI.RegisterDotDef(RoR2.DotController.DotDef,R2API.DotAPI.CustomDotBehaviour,R2API.DotAPI.CustomDotVisual,R2API.DotAPI.CustomDotDamageEvaluation)">RegisterDotDef(DotDef?, CustomDotBehaviour?, CustomDotVisual?, CustomDotDamageEvaluation?)</h4>
+  <div class="markdown level1 summary"><p>customDotBehaviour code will be executed when the dot is added to the target.
+Please refer to the game AddDot() method for example use case.
+customDotVisual code will be executed in the FixedUpdate of the DotController.
+Please refer to the game FixedUpdate() method for example use case.
+customDotDamageEvaluation code will be executed instead of TakeDamage in the EvaluateDotStacksForType of the DotController.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static DotController.DotIndex RegisterDotDef(DotController.DotDef? dotDef, DotAPI.CustomDotBehaviour? customDotBehaviour = null, DotAPI.CustomDotVisual? customDotVisual = null, DotAPI.CustomDotDamageEvaluation? customDotDamageEvaluation = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">DotController</span>.<span class="xref">DotDef</span></td>
+        <td><span class="parametername">dotDef</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="R2API.DotAPI.html">DotAPI</a>.<a class="xref" href="R2API.DotAPI.CustomDotBehaviour.html">CustomDotBehaviour</a></td>
+        <td><span class="parametername">customDotBehaviour</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="R2API.DotAPI.html">DotAPI</a>.<a class="xref" href="R2API.DotAPI.CustomDotVisual.html">CustomDotVisual</a></td>
+        <td><span class="parametername">customDotVisual</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="R2API.DotAPI.html">DotAPI</a>.<a class="xref" href="R2API.DotAPI.CustomDotDamageEvaluation.html">CustomDotDamageEvaluation</a></td>
+        <td><span class="parametername">customDotDamageEvaluation</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">DotController</span>.<span class="xref">DotIndex</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DotAPI_RegisterDotDef_System_Single_System_Single_RoR2_DamageColorIndex_RoR2_BuffDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_.md&amp;value=---%0Auid%3A%20R2API.DotAPI.RegisterDotDef(System.Single%2CSystem.Single%2CRoR2.DamageColorIndex%2CRoR2.BuffDef%2CR2API.DotAPI.CustomDotBehaviour%2CR2API.DotAPI.CustomDotVisual)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Dot/DotAPI.cs/#L126">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Dot/DotAPI.cs/#L182">View Source</a>
   </span>
   <a id="R2API_DotAPI_RegisterDotDef_" data-uid="R2API.DotAPI.RegisterDotDef*"></a>
   <h4 id="R2API_DotAPI_RegisterDotDef_System_Single_System_Single_RoR2_DamageColorIndex_RoR2_BuffDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_" data-uid="R2API.DotAPI.RegisterDotDef(System.Single,System.Single,RoR2.DamageColorIndex,RoR2.BuffDef,R2API.DotAPI.CustomDotBehaviour,R2API.DotAPI.CustomDotVisual)">RegisterDotDef(float, float, DamageColorIndex, BuffDef, CustomDotBehaviour, CustomDotVisual)</h4>
@@ -406,6 +473,86 @@ Please refer to the game FixedUpdate() method for example use case.</p>
       <tr>
         <td><a class="xref" href="R2API.DotAPI.html">DotAPI</a>.<a class="xref" href="R2API.DotAPI.CustomDotVisual.html">CustomDotVisual</a></td>
         <td><span class="parametername">customDotVisual</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">DotController</span>.<span class="xref">DotIndex</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_DotAPI_RegisterDotDef_System_Single_System_Single_RoR2_DamageColorIndex_RoR2_BuffDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_R2API_DotAPI_CustomDotDamageEvaluation_.md&amp;value=---%0Auid%3A%20R2API.DotAPI.RegisterDotDef(System.Single%2CSystem.Single%2CRoR2.DamageColorIndex%2CRoR2.BuffDef%2CR2API.DotAPI.CustomDotBehaviour%2CR2API.DotAPI.CustomDotVisual%2CR2API.DotAPI.CustomDotDamageEvaluation)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Dot/DotAPI.cs/#L157">View Source</a>
+  </span>
+  <a id="R2API_DotAPI_RegisterDotDef_" data-uid="R2API.DotAPI.RegisterDotDef*"></a>
+  <h4 id="R2API_DotAPI_RegisterDotDef_System_Single_System_Single_RoR2_DamageColorIndex_RoR2_BuffDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_R2API_DotAPI_CustomDotDamageEvaluation_" data-uid="R2API.DotAPI.RegisterDotDef(System.Single,System.Single,RoR2.DamageColorIndex,RoR2.BuffDef,R2API.DotAPI.CustomDotBehaviour,R2API.DotAPI.CustomDotVisual,R2API.DotAPI.CustomDotDamageEvaluation)">RegisterDotDef(float, float, DamageColorIndex, BuffDef, CustomDotBehaviour, CustomDotVisual, CustomDotDamageEvaluation)</h4>
+  <div class="markdown level1 summary"><p>Unrolled version of RegisterDotDef(DotController.DotDef, CustomDotBehaviour, CustomDotVisual)
+<a class="xref" href="R2API.DotAPI.html#R2API_DotAPI_RegisterDotDef_RoR2_DotController_DotDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_R2API_DotAPI_CustomDotDamageEvaluation_">RegisterDotDef(DotDef?, CustomDotBehaviour?, CustomDotVisual?, CustomDotDamageEvaluation?)</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static DotController.DotIndex RegisterDotDef(float interval, float damageCoefficient, DamageColorIndex colorIndex, BuffDef associatedBuff = null, DotAPI.CustomDotBehaviour customDotBehaviour = null, DotAPI.CustomDotVisual customDotVisual = null, DotAPI.CustomDotDamageEvaluation customDotDamageEvaluation = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td><span class="parametername">interval</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td><span class="parametername">damageCoefficient</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">DamageColorIndex</span></td>
+        <td><span class="parametername">colorIndex</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">BuffDef</span></td>
+        <td><span class="parametername">associatedBuff</span></td>
+        <td><p>The buff associated with the DOT, can be null</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="R2API.DotAPI.html">DotAPI</a>.<a class="xref" href="R2API.DotAPI.CustomDotBehaviour.html">CustomDotBehaviour</a></td>
+        <td><span class="parametername">customDotBehaviour</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="R2API.DotAPI.html">DotAPI</a>.<a class="xref" href="R2API.DotAPI.CustomDotVisual.html">CustomDotVisual</a></td>
+        <td><span class="parametername">customDotVisual</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="R2API.DotAPI.html">DotAPI</a>.<a class="xref" href="R2API.DotAPI.CustomDotDamageEvaluation.html">CustomDotDamageEvaluation</a></td>
+        <td><span class="parametername">customDotDamageEvaluation</span></td>
         <td></td>
       </tr>
     </tbody>

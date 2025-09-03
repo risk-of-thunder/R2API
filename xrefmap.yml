@@ -6100,6 +6100,12 @@ references:
   isSpec: "True"
   fullName: R2API.DotAPI.CustomDotCount
   nameWithType: DotAPI.CustomDotCount
+- uid: R2API.DotAPI.CustomDotDamageEvaluation
+  name: DotAPI.CustomDotDamageEvaluation
+  href: api/R2API.DotAPI.CustomDotDamageEvaluation.html
+  commentId: T:R2API.DotAPI.CustomDotDamageEvaluation
+  fullName: R2API.DotAPI.CustomDotDamageEvaluation
+  nameWithType: DotAPI.CustomDotDamageEvaluation
 - uid: R2API.DotAPI.CustomDotVisual
   name: DotAPI.CustomDotVisual
   href: api/R2API.DotAPI.CustomDotVisual.html
@@ -6146,6 +6152,15 @@ references:
   fullName.vb: R2API.DotAPI.RegisterDotDef(RoR2.DotController.DotDef, R2API.DotAPI.CustomDotBehaviour, R2API.DotAPI.CustomDotVisual)
   nameWithType: DotAPI.RegisterDotDef(DotController.DotDef?, DotAPI.CustomDotBehaviour?, DotAPI.CustomDotVisual?)
   nameWithType.vb: DotAPI.RegisterDotDef(DotController.DotDef, DotAPI.CustomDotBehaviour, DotAPI.CustomDotVisual)
+- uid: R2API.DotAPI.RegisterDotDef(RoR2.DotController.DotDef,R2API.DotAPI.CustomDotBehaviour,R2API.DotAPI.CustomDotVisual,R2API.DotAPI.CustomDotDamageEvaluation)
+  name: RegisterDotDef(DotDef?, CustomDotBehaviour?, CustomDotVisual?, CustomDotDamageEvaluation?)
+  href: api/R2API.DotAPI.html#R2API_DotAPI_RegisterDotDef_RoR2_DotController_DotDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_R2API_DotAPI_CustomDotDamageEvaluation_
+  commentId: M:R2API.DotAPI.RegisterDotDef(RoR2.DotController.DotDef,R2API.DotAPI.CustomDotBehaviour,R2API.DotAPI.CustomDotVisual,R2API.DotAPI.CustomDotDamageEvaluation)
+  name.vb: RegisterDotDef(DotDef, CustomDotBehaviour, CustomDotVisual, CustomDotDamageEvaluation)
+  fullName: R2API.DotAPI.RegisterDotDef(RoR2.DotController.DotDef?, R2API.DotAPI.CustomDotBehaviour?, R2API.DotAPI.CustomDotVisual?, R2API.DotAPI.CustomDotDamageEvaluation?)
+  fullName.vb: R2API.DotAPI.RegisterDotDef(RoR2.DotController.DotDef, R2API.DotAPI.CustomDotBehaviour, R2API.DotAPI.CustomDotVisual, R2API.DotAPI.CustomDotDamageEvaluation)
+  nameWithType: DotAPI.RegisterDotDef(DotController.DotDef?, DotAPI.CustomDotBehaviour?, DotAPI.CustomDotVisual?, DotAPI.CustomDotDamageEvaluation?)
+  nameWithType.vb: DotAPI.RegisterDotDef(DotController.DotDef, DotAPI.CustomDotBehaviour, DotAPI.CustomDotVisual, DotAPI.CustomDotDamageEvaluation)
 - uid: R2API.DotAPI.RegisterDotDef(System.Single,System.Single,RoR2.DamageColorIndex,RoR2.BuffDef,R2API.DotAPI.CustomDotBehaviour,R2API.DotAPI.CustomDotVisual)
   name: RegisterDotDef(float, float, DamageColorIndex, BuffDef, CustomDotBehaviour, CustomDotVisual)
   href: api/R2API.DotAPI.html#R2API_DotAPI_RegisterDotDef_System_Single_System_Single_RoR2_DamageColorIndex_RoR2_BuffDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_
@@ -6155,6 +6170,15 @@ references:
   fullName.vb: R2API.DotAPI.RegisterDotDef(Single, Single, RoR2.DamageColorIndex, RoR2.BuffDef, R2API.DotAPI.CustomDotBehaviour, R2API.DotAPI.CustomDotVisual)
   nameWithType: DotAPI.RegisterDotDef(float, float, DamageColorIndex, BuffDef, DotAPI.CustomDotBehaviour, DotAPI.CustomDotVisual)
   nameWithType.vb: DotAPI.RegisterDotDef(Single, Single, DamageColorIndex, BuffDef, DotAPI.CustomDotBehaviour, DotAPI.CustomDotVisual)
+- uid: R2API.DotAPI.RegisterDotDef(System.Single,System.Single,RoR2.DamageColorIndex,RoR2.BuffDef,R2API.DotAPI.CustomDotBehaviour,R2API.DotAPI.CustomDotVisual,R2API.DotAPI.CustomDotDamageEvaluation)
+  name: RegisterDotDef(float, float, DamageColorIndex, BuffDef, CustomDotBehaviour, CustomDotVisual, CustomDotDamageEvaluation)
+  href: api/R2API.DotAPI.html#R2API_DotAPI_RegisterDotDef_System_Single_System_Single_RoR2_DamageColorIndex_RoR2_BuffDef_R2API_DotAPI_CustomDotBehaviour_R2API_DotAPI_CustomDotVisual_R2API_DotAPI_CustomDotDamageEvaluation_
+  commentId: M:R2API.DotAPI.RegisterDotDef(System.Single,System.Single,RoR2.DamageColorIndex,RoR2.BuffDef,R2API.DotAPI.CustomDotBehaviour,R2API.DotAPI.CustomDotVisual,R2API.DotAPI.CustomDotDamageEvaluation)
+  name.vb: RegisterDotDef(Single, Single, DamageColorIndex, BuffDef, CustomDotBehaviour, CustomDotVisual, CustomDotDamageEvaluation)
+  fullName: R2API.DotAPI.RegisterDotDef(float, float, RoR2.DamageColorIndex, RoR2.BuffDef, R2API.DotAPI.CustomDotBehaviour, R2API.DotAPI.CustomDotVisual, R2API.DotAPI.CustomDotDamageEvaluation)
+  fullName.vb: R2API.DotAPI.RegisterDotDef(Single, Single, RoR2.DamageColorIndex, RoR2.BuffDef, R2API.DotAPI.CustomDotBehaviour, R2API.DotAPI.CustomDotVisual, R2API.DotAPI.CustomDotDamageEvaluation)
+  nameWithType: DotAPI.RegisterDotDef(float, float, DamageColorIndex, BuffDef, DotAPI.CustomDotBehaviour, DotAPI.CustomDotVisual, DotAPI.CustomDotDamageEvaluation)
+  nameWithType.vb: DotAPI.RegisterDotDef(Single, Single, DamageColorIndex, BuffDef, DotAPI.CustomDotBehaviour, DotAPI.CustomDotVisual, DotAPI.CustomDotDamageEvaluation)
 - uid: R2API.DotAPI.RegisterDotDef*
   name: RegisterDotDef
   href: api/R2API.DotAPI.html#R2API_DotAPI_RegisterDotDef_
