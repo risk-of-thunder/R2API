@@ -8,6 +8,10 @@ Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also
 
 ## Changelog
 
+### `1.3.1`
+
+* Fix missing Patcher / Interop dlls
+
 ### `1.3.0`
 
 * Added SkinSkillVariants feature for adding skill-specific skin parts replacements.
