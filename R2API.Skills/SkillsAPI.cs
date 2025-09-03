@@ -5,6 +5,7 @@ using Mono.Cecil.Rocks;
 using MonoMod.Cil;
 using R2API.AutoVersionGen;
 using R2API.Skills.Interop;
+using R2API.Utils;
 using RoR2;
 using RoR2.Skills;
 using RoR2.UI;
@@ -22,15 +23,14 @@ public static partial class SkillsAPI
         IL.RoR2.UI.LoadoutPanelController.Rebuild += LoadoutPanelControllerRebuildHook;
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot += LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData += CharacterSelectControllerBuildSkillStripDisplayDataHook;
-        On.RoR2.GenericSkill.SetBonusStockFromBody += GenericSkill_SetBonusStockFromBody;
+        IL.RoR2.GenericSkill.RecalculateMaxStock += GenericSkill_RecalculateMaxStock;
     }
-
     internal static void UnsetHooks()
     {
         IL.RoR2.UI.LoadoutPanelController.Rebuild -= LoadoutPanelControllerRebuildHook;
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot -= LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData -= CharacterSelectControllerBuildSkillStripDisplayDataHook;
-        On.RoR2.GenericSkill.SetBonusStockFromBody -= GenericSkill_SetBonusStockFromBody;
+        IL.RoR2.GenericSkill.RecalculateMaxStock -= GenericSkill_RecalculateMaxStock;
     }
 
     /// <summary>
@@ -226,7 +226,39 @@ public static partial class SkillsAPI
 
         return token;
     }
+    
+    private static void GenericSkill_RecalculateMaxStock(ILContext il)
+    {
+        var c = new ILCursor(il);
+        if (c.TryGotoNext(MoveType.After,
+            x => x.MatchLdarg(0),
+            x => x.MatchLdarg(0),
+            x => x.MatchCall(typeof(GenericSkill).GetPropertyGetter(nameof(GenericSkill.maxStock))),
+            x => x.MatchLdarg(0),
+            x => x.MatchLdfld<GenericSkill>(nameof(GenericSkill.bonusStockFromBody)),
+            x => x.MatchAdd()
+            )
+            )
+        {
+            c.Index--;
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(MultiplyBonusStock);
+            int MultiplyBonusStock(GenericSkill genericSkill)
+            {
+                SkillDef skillDef = genericSkill.skillDef;
+                int multiplier = skillDef ? skillDef.GetBonusStockMultiplier() : 1;
+                return multiplier == 0 ? 1 : multiplier;
+            }
+            c.Emit(OpCodes.Mul);
 
+        }
+        else
+        {
+            SkillsPlugin.Logger.LogError($"Failed to apply {nameof(GenericSkill_RecalculateMaxStock)}");
+            return;
+        }
+    }
+    
     private struct GenericSkillComparer : IComparer<GenericSkill>
     {
         public readonly int Compare(GenericSkill x, GenericSkill y) => x.GetOrderPriority() - y.GetOrderPriority();
