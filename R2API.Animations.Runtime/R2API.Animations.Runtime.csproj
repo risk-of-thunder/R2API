@@ -1,3 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../R2API.props" />
+  <PropertyGroup>
+    <RootNamespace>R2API.Animations</RootNamespace>
+  </PropertyGroup>
 </Project>
