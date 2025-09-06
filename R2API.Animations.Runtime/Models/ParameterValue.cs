@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using System;
 using UnityEngine;
 
 namespace R2API.Models;
@@ -6,6 +6,7 @@ namespace R2API.Models;
 /// <summary>
 /// Value of a parameter
 /// </summary>
+[Serializable]
 public struct ParameterValue
 {
     [SerializeField]
@@ -63,15 +64,4 @@ public struct ParameterValue
     public static implicit operator bool(ParameterValue value) => value.BoolValue;
     public static implicit operator float(ParameterValue value) => value.FloatValue;
     public static implicit operator int(ParameterValue value) => value.IntValue;
-
-    /// <summary>
-    /// Writing into a binary writer for caching purposes.
-    /// </summary>
-    /// <param name="writer"></param>
-    public void WriteBinary(BinaryWriter writer)
-    {
-        writer.Write(IntValue);
-        writer.Write(BoolValue);
-        writer.Write(FloatValue);
-    }
 }

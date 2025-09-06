@@ -1,26 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using R2API.Animations.Models.Interfaces;
 using UnityEngine;
 
 namespace R2API.Models;
 
-/// <summary>
-/// Changes to an existing state in a layer.
-/// </summary>
+/// <inheritdoc cref="IExistingState"/>
 [Serializable]
-public class ExistingState
+public class ExistingState : IExistingState
 {
     [SerializeField]
     private string name;
-    /// <summary>
-    /// The name of the state.
-    /// </summary>
+    /// <inheritdoc/>
     public string Name { get => name; set => name = value; }
 
     [SerializeField]
     private List<Transition> newTransitions = [];
-    /// <summary>
-    /// New transitions that will be added to the state.
-    /// </summary>
+    /// <inheritdoc cref="IExistingState.NewTransitions"/>
     public List<Transition> NewTransitions { get => newTransitions; }
+    IReadOnlyList<ITransition> IExistingState.NewTransitions { get => newTransitions; }
+
+    [SerializeField]
+    private List<StateMachineBehaviour> newBehaviours = [];
+    /// <inheritdoc cref="IExistingState.NewBehaviours"/>
+    public List<StateMachineBehaviour> NewBehaviours { get => newBehaviours; }
+    IReadOnlyList<StateMachineBehaviour> IExistingState.NewBehaviours { get => newBehaviours; }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using AssetsTools.NET.Extra;
 using BepInEx;
@@ -28,10 +29,8 @@ public static partial class AnimationsAPI
     
     private static readonly Dictionary<(string, RuntimeAnimatorController), List<AnimatorModifications>> controllerModifications = [];
     private static readonly Dictionary<RuntimeAnimatorController, List<Animator>> controllerToAnimators = [];
-    private static readonly List<UnityEngine.Object> cache = [];
 
     private static bool _hooksEnabled = false;
-    private static bool _requestsDone = false;
 
     internal static void SetHooks()
     {
@@ -147,9 +146,6 @@ public static partial class AnimationsAPI
                     animator.runtimeAnimatorController = modifiedAnimatorController;
                 }
             }
-
-            cache.Add(sourceAnimatorController);
-            cache.Add(modifiedAnimatorController);
         }
 
         manager.UnloadAll(true);
@@ -165,9 +161,9 @@ public static partial class AnimationsAPI
         {
             writer.Write(RoR2.RoR2Application.buildId);
             writer.Write(sourceAnimatorControllerPathID);
-            foreach (var modification in modifications)
+            foreach (var modification in modifications.OrderBy(m => m.Key))
             {
-                modification.WriteBinary(writer);
+                writer.Write(modification.Key);
             }
             var hashBytes = md5.ComputeHash(stream);
             hash = BitConverter.ToString(hashBytes);
