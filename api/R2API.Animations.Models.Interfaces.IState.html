@@ -1,0 +1,607 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface IState </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface IState ">
+    
+    <meta name="description" content="States are the basic building blocks of a state machine. Each state contains a Motion (AnimationClip or BlendTree) which will play while the character is in that state. When an event in the game triggers a state transition, the character will be left in a new state whose animation sequence will then take over.">
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="R2API.Animations.Models.Interfaces.IState">
+
+
+
+  <h1 id="R2API_Animations_Models_Interfaces_IState" data-uid="R2API.Animations.Models.Interfaces.IState" class="text-break">Interface IState</h1>
+  <div class="markdown level0 summary"><p>States are the basic building blocks of a state machine. Each state contains
+a Motion (AnimationClip or BlendTree) which will play while the character is
+in that state. When an event in the game triggers a state transition, the character
+will be left in a new state whose animation sequence will then take over.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="R2API.Animations.Models.Interfaces.IMotion.html#R2API_Animations_Models_Interfaces_IMotion_Clip">IMotion.Clip</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.Animations.Models.Interfaces.IMotion.html#R2API_Animations_Models_Interfaces_IMotion_BlendTree">IMotion.BlendTree</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="R2API.html">R2API</a>.<a class="xref" href="R2API.Animations.html">Animations</a>.<a class="xref" href="R2API.Animations.Models.html">Models</a>.<a class="xref" href="R2API.Animations.Models.Interfaces.html">Interfaces</a></h6>
+  <h6><strong>Assembly</strong>: R2API.Animations.Runtime.dll</h6>
+  <h5 id="R2API_Animations_Models_Interfaces_IState_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IState : IMotion</code></pre>
+  </div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_Behaviours.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.Behaviours%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L85">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_Behaviours_" data-uid="R2API.Animations.Models.Interfaces.IState.Behaviours*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_Behaviours" data-uid="R2API.Animations.Models.Interfaces.IState.Behaviours">Behaviours</h4>
+  <div class="markdown level1 summary"><p>The Behaviour list assigned to this state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IReadOnlyList&lt;StateMachineBehaviour&gt; Behaviours { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<span class="xref">StateMachineBehaviour</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_CycleOffset.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.CycleOffset%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L54">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_CycleOffset_" data-uid="R2API.Animations.Models.Interfaces.IState.CycleOffset*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_CycleOffset" data-uid="R2API.Animations.Models.Interfaces.IState.CycleOffset">CycleOffset</h4>
+  <div class="markdown level1 summary"><p>Offset at which the animation loop starts. Useful for synchronizing looped animations.
+Units is normalized time.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">float CycleOffset { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_CycleOffsetParam.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.CycleOffsetParam%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L38">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_CycleOffsetParam_" data-uid="R2API.Animations.Models.Interfaces.IState.CycleOffsetParam*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_CycleOffsetParam" data-uid="R2API.Animations.Models.Interfaces.IState.CycleOffsetParam">CycleOffsetParam</h4>
+  <div class="markdown level1 summary"><p>The animator controller parameter that drives the cycle offset value. Leave null if you want to use constant value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string CycleOffsetParam { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_IKOnFeet.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.IKOnFeet%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L59">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_IKOnFeet_" data-uid="R2API.Animations.Models.Interfaces.IState.IKOnFeet*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_IKOnFeet" data-uid="R2API.Animations.Models.Interfaces.IState.IKOnFeet">IKOnFeet</h4>
+  <div class="markdown level1 summary"><p>Should Foot IK be respected for this state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IKOnFeet { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_Loop.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.Loop%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L70">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_Loop_" data-uid="R2API.Animations.Models.Interfaces.IState.Loop*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_Loop" data-uid="R2API.Animations.Models.Interfaces.IState.Loop">Loop</h4>
+  <div class="markdown level1 summary"><p>AnimationClip is looped.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool Loop { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_Mirror.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.Mirror%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L75">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_Mirror_" data-uid="R2API.Animations.Models.Interfaces.IState.Mirror*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_Mirror" data-uid="R2API.Animations.Models.Interfaces.IState.Mirror">Mirror</h4>
+  <div class="markdown level1 summary"><p>Should the state be mirrored.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool Mirror { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_MirrorParam.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.MirrorParam%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L33">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_MirrorParam_" data-uid="R2API.Animations.Models.Interfaces.IState.MirrorParam*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_MirrorParam" data-uid="R2API.Animations.Models.Interfaces.IState.MirrorParam">MirrorParam</h4>
+  <div class="markdown level1 summary"><p>The animator controller parameter that drives the mirror value. Leave null if you want to use constant value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string MirrorParam { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_Name.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.Name%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L18">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_Name_" data-uid="R2API.Animations.Models.Interfaces.IState.Name*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_Name" data-uid="R2API.Animations.Models.Interfaces.IState.Name">Name</h4>
+  <div class="markdown level1 summary"><p>Name of the state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string Name { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_Speed.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.Speed%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L48">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_Speed_" data-uid="R2API.Animations.Models.Interfaces.IState.Speed*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_Speed" data-uid="R2API.Animations.Models.Interfaces.IState.Speed">Speed</h4>
+  <div class="markdown level1 summary"><p>The default speed of the motion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">float Speed { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_SpeedParam.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.SpeedParam%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L28">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_SpeedParam_" data-uid="R2API.Animations.Models.Interfaces.IState.SpeedParam*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_SpeedParam" data-uid="R2API.Animations.Models.Interfaces.IState.SpeedParam">SpeedParam</h4>
+  <div class="markdown level1 summary"><p>The animator controller parameter that drives the speed value. Leave null if you want to use constant value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string SpeedParam { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_Tag.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.Tag%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L23">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_Tag_" data-uid="R2API.Animations.Models.Interfaces.IState.Tag*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_Tag" data-uid="R2API.Animations.Models.Interfaces.IState.Tag">Tag</h4>
+  <div class="markdown level1 summary"><p>A tag can be used to identify a state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string Tag { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_TimeParam.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.TimeParam%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L43">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_TimeParam_" data-uid="R2API.Animations.Models.Interfaces.IState.TimeParam*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_TimeParam" data-uid="R2API.Animations.Models.Interfaces.IState.TimeParam">TimeParam</h4>
+  <div class="markdown level1 summary"><p>The animator controller parameter that drives the time value. Leave null if you want to use constant value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string TimeParam { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_Transitions.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.Transitions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L80">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_Transitions_" data-uid="R2API.Animations.Models.Interfaces.IState.Transitions*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_Transitions" data-uid="R2API.Animations.Models.Interfaces.IState.Transitions">Transitions</h4>
+  <div class="markdown level1 summary"><p>The transitions that are going out of the state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IReadOnlyList&lt;ITransition&gt; Transitions { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="R2API.Animations.Models.Interfaces.ITransition.html">ITransition</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState_WriteDefaultValues.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState.WriteDefaultValues%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L65">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_IState_WriteDefaultValues_" data-uid="R2API.Animations.Models.Interfaces.IState.WriteDefaultValues*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_IState_WriteDefaultValues" data-uid="R2API.Animations.Models.Interfaces.IState.WriteDefaultValues">WriteDefaultValues</h4>
+  <div class="markdown level1 summary"><p>Whether or not the AnimatorStates writes back the default values for properties
+that are not animated by its Motion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool WriteDefaultValues { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_UnityEngine_Networking_NetworkConnection_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkConnection)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_GetFieldValue__1_System_Object_System_String_">Reflection.GetFieldValue&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_GetPropertyValue__1_System_Object_System_String_">Reflection.GetPropertyValue&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod_System_Object_System_String_">Reflection.InvokeMethod(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod_System_Object_System_String_System_Object___">Reflection.InvokeMethod(object?, string?, params object?[]?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod__1_System_Object_System_String_">Reflection.InvokeMethod&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod__1_System_Object_System_String_System_Object___">Reflection.InvokeMethod&lt;TReturn&gt;(object?, string?, params object?[]?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetFieldValue__1_System_Object_System_String___0_">Reflection.SetFieldValue&lt;TValue&gt;(object?, string?, TValue)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetPropertyValue__1_System_Object_System_String___0_">Reflection.SetPropertyValue&lt;TValue&gt;(object?, string?, TValue)</a>
+  </div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_IState.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.IState%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/IState.cs/#L13" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

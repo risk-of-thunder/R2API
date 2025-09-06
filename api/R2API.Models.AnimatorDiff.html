@@ -81,6 +81,10 @@
     <div class="level2"><span class="xref">ScriptableObject</span></div>
     <div class="level3"><span class="xref">AnimatorDiff</span></div>
   </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="R2API.Animations.Models.Interfaces.IExistingAnimatorController.html">IExistingAnimatorController</a></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -334,40 +338,8 @@
   <h6><strong>Assembly</strong>: R2API.Animations.Runtime.dll</h6>
   <h5 id="R2API_Models_AnimatorDiff_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class AnimatorDiff : ScriptableObject</code></pre>
+    <pre><code class="lang-csharp hljs">public class AnimatorDiff : ScriptableObject, IExistingAnimatorController</code></pre>
   </div>
-  <h3 id="fields">Fields
-</h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_AnimatorDiff_layers.md&amp;value=---%0Auid%3A%20R2API.Models.AnimatorDiff.layers%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/AnimatorDiff.cs/#L12">View Source</a>
-  </span>
-  <h4 id="R2API_Models_AnimatorDiff_layers" data-uid="R2API.Models.AnimatorDiff.layers">layers</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[SerializeField]
-public List&lt;ExistingLayer&gt; layers</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="R2API.Models.ExistingLayer.html">ExistingLayer</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="properties">Properties
 </h3>
   <span class="small pull-right mobile-hide">
@@ -375,7 +347,7 @@ public List&lt;ExistingLayer&gt; layers</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_AnimatorDiff_Layers.md&amp;value=---%0Auid%3A%20R2API.Models.AnimatorDiff.Layers%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/AnimatorDiff.cs/#L16">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/AnimatorDiff.cs/#L15">View Source</a>
   </span>
   <a id="R2API_Models_AnimatorDiff_Layers_" data-uid="R2API.Models.AnimatorDiff.Layers*"></a>
   <h4 id="R2API_Models_AnimatorDiff_Layers" data-uid="R2API.Models.AnimatorDiff.Layers">Layers</h4>
@@ -403,10 +375,41 @@ public List&lt;ExistingLayer&gt; layers</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_AnimatorDiff_NewLayers.md&amp;value=---%0Auid%3A%20R2API.Models.AnimatorDiff.NewLayers%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/AnimatorDiff.cs/#L21">View Source</a>
+  </span>
+  <a id="R2API_Models_AnimatorDiff_NewLayers_" data-uid="R2API.Models.AnimatorDiff.NewLayers*"></a>
+  <h4 id="R2API_Models_AnimatorDiff_NewLayers" data-uid="R2API.Models.AnimatorDiff.NewLayers">NewLayers</h4>
+  <div class="markdown level1 summary"><p>New layers that will be added to RuntimeAnimatorController.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Layer&gt; NewLayers { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="R2API.Models.Layer.html">Layer</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_AnimatorDiff_NewParameters.md&amp;value=---%0Auid%3A%20R2API.Models.AnimatorDiff.NewParameters%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/AnimatorDiff.cs/#L23">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/AnimatorDiff.cs/#L27">View Source</a>
   </span>
   <a id="R2API_Models_AnimatorDiff_NewParameters_" data-uid="R2API.Models.AnimatorDiff.NewParameters*"></a>
   <h4 id="R2API_Models_AnimatorDiff_NewParameters" data-uid="R2API.Models.AnimatorDiff.NewParameters">NewParameters</h4>
@@ -432,6 +435,10 @@ public List&lt;ExistingLayer&gt; layers</code></pre>
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="R2API.Animations.Models.Interfaces.IExistingAnimatorController.html">IExistingAnimatorController</a>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
@@ -475,7 +482,7 @@ public List&lt;ExistingLayer&gt; layers</code></pre>
                     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_AnimatorDiff.md&amp;value=---%0Auid%3A%20R2API.Models.AnimatorDiff%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/AnimatorDiff.cs/#L9" class="contribution-link">View Source</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/AnimatorDiff.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

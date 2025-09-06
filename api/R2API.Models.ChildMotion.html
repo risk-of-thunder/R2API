@@ -79,6 +79,11 @@
     <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><span class="xref">ChildMotion</span></div>
   </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="R2API.Animations.Models.Interfaces.IChildMotion.html">IChildMotion</a></div>
+    <div><a class="xref" href="R2API.Animations.Models.Interfaces.IMotion.html">IMotion</a></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -108,7 +113,7 @@
   <h5 id="R2API_Models_ChildMotion_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Serializable]
-public class ChildMotion</code></pre>
+public class ChildMotion : IChildMotion, IMotion</code></pre>
   </div>
   <h3 id="properties">Properties
 </h3>
@@ -117,7 +122,7 @@ public class ChildMotion</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ChildMotion_BlendTree.md&amp;value=---%0Auid%3A%20R2API.Models.ChildMotion.BlendTree%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L32">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L26">View Source</a>
   </span>
   <a id="R2API_Models_ChildMotion_BlendTree_" data-uid="R2API.Models.ChildMotion.BlendTree*"></a>
   <h4 id="R2API_Models_ChildMotion_BlendTree" data-uid="R2API.Models.ChildMotion.BlendTree">BlendTree</h4>
@@ -148,7 +153,7 @@ public class ChildMotion</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ChildMotion_Clip.md&amp;value=---%0Auid%3A%20R2API.Models.ChildMotion.Clip%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L25">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L21">View Source</a>
   </span>
   <a id="R2API_Models_ChildMotion_Clip_" data-uid="R2API.Models.ChildMotion.Clip*"></a>
   <h4 id="R2API_Models_ChildMotion_Clip" data-uid="R2API.Models.ChildMotion.Clip">Clip</h4>
@@ -179,7 +184,7 @@ public class ChildMotion</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ChildMotion_ClipBundlePath.md&amp;value=---%0Auid%3A%20R2API.Models.ChildMotion.ClipBundlePath%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L18">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L15">View Source</a>
   </span>
   <a id="R2API_Models_ChildMotion_ClipBundlePath_" data-uid="R2API.Models.ChildMotion.ClipBundlePath*"></a>
   <h4 id="R2API_Models_ChildMotion_ClipBundlePath" data-uid="R2API.Models.ChildMotion.ClipBundlePath">ClipBundlePath</h4>
@@ -188,7 +193,8 @@ public class ChildMotion</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string ClipBundlePath { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;No longer required&quot;)]
+public string ClipBundlePath { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-condensed">
@@ -210,7 +216,7 @@ public class ChildMotion</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ChildMotion_CycleOffset.md&amp;value=---%0Auid%3A%20R2API.Models.ChildMotion.CycleOffset%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L60">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L47">View Source</a>
   </span>
   <a id="R2API_Models_ChildMotion_CycleOffset_" data-uid="R2API.Models.ChildMotion.CycleOffset*"></a>
   <h4 id="R2API_Models_ChildMotion_CycleOffset" data-uid="R2API.Models.ChildMotion.CycleOffset">CycleOffset</h4>
@@ -241,7 +247,7 @@ public class ChildMotion</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ChildMotion_DirectBlendParameter.md&amp;value=---%0Auid%3A%20R2API.Models.ChildMotion.DirectBlendParameter%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L67">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L52">View Source</a>
   </span>
   <a id="R2API_Models_ChildMotion_DirectBlendParameter_" data-uid="R2API.Models.ChildMotion.DirectBlendParameter*"></a>
   <h4 id="R2API_Models_ChildMotion_DirectBlendParameter" data-uid="R2API.Models.ChildMotion.DirectBlendParameter">DirectBlendParameter</h4>
@@ -272,7 +278,7 @@ public class ChildMotion</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ChildMotion_Mirror.md&amp;value=---%0Auid%3A%20R2API.Models.ChildMotion.Mirror%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L74">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L57">View Source</a>
   </span>
   <a id="R2API_Models_ChildMotion_Mirror_" data-uid="R2API.Models.ChildMotion.Mirror*"></a>
   <h4 id="R2API_Models_ChildMotion_Mirror" data-uid="R2API.Models.ChildMotion.Mirror">Mirror</h4>
@@ -303,7 +309,7 @@ public class ChildMotion</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ChildMotion_Position.md&amp;value=---%0Auid%3A%20R2API.Models.ChildMotion.Position%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L46">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L37">View Source</a>
   </span>
   <a id="R2API_Models_ChildMotion_Position_" data-uid="R2API.Models.ChildMotion.Position*"></a>
   <h4 id="R2API_Models_ChildMotion_Position" data-uid="R2API.Models.ChildMotion.Position">Position</h4>
@@ -334,7 +340,7 @@ public class ChildMotion</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ChildMotion_Threshold.md&amp;value=---%0Auid%3A%20R2API.Models.ChildMotion.Threshold%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L39">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L32">View Source</a>
   </span>
   <a id="R2API_Models_ChildMotion_Threshold_" data-uid="R2API.Models.ChildMotion.Threshold*"></a>
   <h4 id="R2API_Models_ChildMotion_Threshold" data-uid="R2API.Models.ChildMotion.Threshold">Threshold</h4>
@@ -365,7 +371,7 @@ public class ChildMotion</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ChildMotion_TimeScale.md&amp;value=---%0Auid%3A%20R2API.Models.ChildMotion.TimeScale%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L53">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L42">View Source</a>
   </span>
   <a id="R2API_Models_ChildMotion_TimeScale_" data-uid="R2API.Models.ChildMotion.TimeScale*"></a>
   <h4 id="R2API_Models_ChildMotion_TimeScale" data-uid="R2API.Models.ChildMotion.TimeScale">TimeScale</h4>
@@ -391,41 +397,13 @@ public class ChildMotion</code></pre>
       </tr>
     </tbody>
   </table>
-  <h3 id="methods">Methods
-</h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ChildMotion_WriteBinary_System_IO_BinaryWriter_.md&amp;value=---%0Auid%3A%20R2API.Models.ChildMotion.WriteBinary(System.IO.BinaryWriter)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L80">View Source</a>
-  </span>
-  <a id="R2API_Models_ChildMotion_WriteBinary_" data-uid="R2API.Models.ChildMotion.WriteBinary*"></a>
-  <h4 id="R2API_Models_ChildMotion_WriteBinary_System_IO_BinaryWriter_" data-uid="R2API.Models.ChildMotion.WriteBinary(System.IO.BinaryWriter)">WriteBinary(BinaryWriter)</h4>
-  <div class="markdown level1 summary"><p>Writing into a binary writer for caching purposes.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void WriteBinary(BinaryWriter writer)</code></pre>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="R2API.Animations.Models.Interfaces.IChildMotion.html">IChildMotion</a>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.binarywriter">BinaryWriter</a></td>
-        <td><span class="parametername">writer</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+  <div>
+      <a class="xref" href="R2API.Animations.Models.Interfaces.IMotion.html">IMotion</a>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
@@ -469,7 +447,7 @@ public class ChildMotion</code></pre>
                     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ChildMotion.md&amp;value=---%0Auid%3A%20R2API.Models.ChildMotion%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ChildMotion.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

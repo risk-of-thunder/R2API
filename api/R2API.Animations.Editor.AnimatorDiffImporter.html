@@ -84,7 +84,22 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
+      <span class="xref">ScriptedImporter.GenerateAssetData(AssetImportContext)</span>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">ScriptedImporter.SupportsRemappedAssetType(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">ScriptedImporter.SupportsRemappedAssetTypeProxy(ScriptedImporter, Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">ScriptedImporter.IsStaticMethodInClassOrParent(Type, string)</a>
+    </div>
+    <div>
+      <span class="xref">ScriptedImporter.RegisterScriptedImporters()</span>
+    </div>
+    <div>
+      <span class="xref">ScriptedImporter.GetHandledExtensionsByImporter(ScriptedImporterAttribute)</span>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">AssetImporter.SetAssetBundleNameAndVariant(string, string)</a>
@@ -96,13 +111,49 @@
       <span class="xref">AssetImporter.SaveAndReimport()</span>
     </div>
     <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">AssetImporter.LocalFileIDToClassID(long)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporter.MakeLocalFileIDWithHash(int, string, long)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporter.MakeInternalID(int, string)</a>
+    </div>
+    <div>
       <span class="xref">AssetImporter.AddRemap(AssetImporter.SourceAssetIdentifier, Object)</span>
     </div>
     <div>
       <span class="xref">AssetImporter.RemoveRemap(AssetImporter.SourceAssetIdentifier)</span>
     </div>
     <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporter.RenameSubAssets(int, string[], string[])</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporter.GetIdentifiers(AssetImporter)</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporter.GetExternalObjects(AssetImporter)</span>
+    </div>
+    <div>
       <span class="xref">AssetImporter.GetExternalObjectMap()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">AssetImporter.RegisterImporter(Type, int, int, string, bool, bool, bool)</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporter.GetImportStartTime()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporter.GetDynamicPostprocessors()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">AssetImporter.GetStaticPostprocessors(Type)</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporter.AddRemap_Injected(ref AssetImporter.SourceAssetIdentifier, Object)</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporter.RemoveRemap_Injected(ref AssetImporter.SourceAssetIdentifier)</span>
     </div>
     <div>
       <span class="xref">AssetImporter.assetPath</span>
@@ -349,24 +400,24 @@
   <h6><strong>Assembly</strong>: R2API.Animations.Editor.dll</h6>
   <h5 id="R2API_Animations_Editor_AnimatorDiffImporter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[ScriptedImporter(1, &quot;controllerdiff&quot;, 1000)]
+    <pre><code class="lang-csharp hljs">[ScriptedImporter(2, &quot;controllerdiff&quot;, 1000)]
 public class AnimatorDiffImporter : ScriptedImporter</code></pre>
   </div>
   <h3 id="fields">Fields
 </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporter_modifiedController.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporter.modifiedController%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporter_modifiedControllerGuid.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporter.modifiedControllerGuid%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L22">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L31">View Source</a>
   </span>
-  <h4 id="R2API_Animations_Editor_AnimatorDiffImporter_modifiedController" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.modifiedController">modifiedController</h4>
+  <h4 id="R2API_Animations_Editor_AnimatorDiffImporter_modifiedControllerGuid" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.modifiedControllerGuid">modifiedControllerGuid</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AnimatorController modifiedController</code></pre>
+    <pre><code class="lang-csharp hljs">public string modifiedControllerGuid</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-condensed">
@@ -378,36 +429,7 @@ public class AnimatorDiffImporter : ScriptedImporter</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">AnimatorController</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporter_sourceController.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporter.sourceController%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L21">View Source</a>
-  </span>
-  <h4 id="R2API_Animations_Editor_AnimatorDiffImporter_sourceController" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.sourceController">sourceController</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AnimatorController sourceController</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">AnimatorController</span></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -416,10 +438,26 @@ public class AnimatorDiffImporter : ScriptedImporter</code></pre>
 </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporter_CreateCopyController.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporter.CreateCopyController%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L57">View Source</a>
+  </span>
+  <a id="R2API_Animations_Editor_AnimatorDiffImporter_CreateCopyController_" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.CreateCopyController*"></a>
+  <h4 id="R2API_Animations_Editor_AnimatorDiffImporter_CreateCopyController" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.CreateCopyController">CreateCopyController()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[MenuItem(&quot;Assets/R2API/Animation/Copy AnimatorController for modification&quot;, false, 19)]
+public static void CreateCopyController()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporter_CreateDiff.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporter.CreateDiff%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L24">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L33">View Source</a>
   </span>
   <a id="R2API_Animations_Editor_AnimatorDiffImporter_CreateDiff_" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.CreateDiff*"></a>
   <h4 id="R2API_Animations_Editor_AnimatorDiffImporter_CreateDiff" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.CreateDiff">CreateDiff()</h4>
@@ -435,7 +473,7 @@ public static void CreateDiff()</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporter_OnImportAsset_UnityEditor_AssetImporters_AssetImportContext_.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporter.OnImportAsset(UnityEditor.AssetImporters.AssetImportContext)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L48">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L174">View Source</a>
   </span>
   <a id="R2API_Animations_Editor_AnimatorDiffImporter_OnImportAsset_" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.OnImportAsset*"></a>
   <h4 id="R2API_Animations_Editor_AnimatorDiffImporter_OnImportAsset_UnityEditor_AssetImporters_AssetImportContext_" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.OnImportAsset(UnityEditor.AssetImporters.AssetImportContext)">OnImportAsset(AssetImportContext)</h4>
@@ -468,10 +506,25 @@ public static void CreateDiff()</code></pre>
   <div><span class="xref">UnityEditor.AssetImporters.ScriptedImporter.OnImportAsset(UnityEditor.AssetImporters.AssetImportContext)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporter_OnValidate.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporter.OnValidate%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L137">View Source</a>
+  </span>
+  <a id="R2API_Animations_Editor_AnimatorDiffImporter_OnValidate_" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.OnValidate*"></a>
+  <h4 id="R2API_Animations_Editor_AnimatorDiffImporter_OnValidate" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.OnValidate">OnValidate()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void OnValidate()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporter_PreventDiffDoubleClick_System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporter.PreventDiffDoubleClick(System.Int32%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L42">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L130">View Source</a>
   </span>
   <a id="R2API_Animations_Editor_AnimatorDiffImporter_PreventDiffDoubleClick_" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.PreventDiffDoubleClick*"></a>
   <h4 id="R2API_Animations_Editor_AnimatorDiffImporter_PreventDiffDoubleClick_System_Int32_System_Int32_" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.PreventDiffDoubleClick(System.Int32,System.Int32)">PreventDiffDoubleClick(int, int)</h4>
@@ -504,6 +557,37 @@ public static bool PreventDiffDoubleClick(int instanceID, int line)</code></pre>
       </tr>
     </tbody>
   </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporter_ValidateCreateCopyController.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporter.ValidateCreateCopyController%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporter.cs/#L51">View Source</a>
+  </span>
+  <a id="R2API_Animations_Editor_AnimatorDiffImporter_ValidateCreateCopyController_" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.ValidateCreateCopyController*"></a>
+  <h4 id="R2API_Animations_Editor_AnimatorDiffImporter_ValidateCreateCopyController" data-uid="R2API.Animations.Editor.AnimatorDiffImporter.ValidateCreateCopyController">ValidateCreateCopyController()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[MenuItem(&quot;Assets/R2API/Animation/Copy AnimatorController for modification&quot;, true, 19)]
+public static bool ValidateCreateCopyController()</code></pre>
+  </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-condensed">
     <thead>

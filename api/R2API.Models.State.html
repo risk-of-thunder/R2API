@@ -82,6 +82,11 @@ will be left in a new state whose animation sequence will then take over.</p>
     <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><span class="xref">State</span></div>
   </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="R2API.Animations.Models.Interfaces.IState.html">IState</a></div>
+    <div><a class="xref" href="R2API.Animations.Models.Interfaces.IMotion.html">IMotion</a></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -111,20 +116,51 @@ will be left in a new state whose animation sequence will then take over.</p>
   <h5 id="R2API_Models_State_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Serializable]
-public class State</code></pre>
+public class State : IState, IMotion</code></pre>
   </div>
   <h3 id="properties">Properties
 </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_Behaviours.md&amp;value=---%0Auid%3A%20R2API.Models.State.Behaviours%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L98">View Source</a>
+  </span>
+  <a id="R2API_Models_State_Behaviours_" data-uid="R2API.Models.State.Behaviours*"></a>
+  <h4 id="R2API_Models_State_Behaviours" data-uid="R2API.Models.State.Behaviours">Behaviours</h4>
+  <div class="markdown level1 summary"><p>The Behaviour list assigned to this state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;StateMachineBehaviour&gt; Behaviours { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<span class="xref">StateMachineBehaviour</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_BlendTree.md&amp;value=---%0Auid%3A%20R2API.Models.State.BlendTree%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L43">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L31">View Source</a>
   </span>
   <a id="R2API_Models_State_BlendTree_" data-uid="R2API.Models.State.BlendTree*"></a>
   <h4 id="R2API_Models_State_BlendTree" data-uid="R2API.Models.State.BlendTree">BlendTree</h4>
-  <div class="markdown level1 summary"><p>BlendTree that will be played by this state. Ignored if Clip is not null.</p>
+  <div class="markdown level1 summary"><p>BlendTree that will be played in this motion. Ignored if Clip is not null.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -151,11 +187,11 @@ public class State</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_Clip.md&amp;value=---%0Auid%3A%20R2API.Models.State.Clip%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L36">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L26">View Source</a>
   </span>
   <a id="R2API_Models_State_Clip_" data-uid="R2API.Models.State.Clip*"></a>
   <h4 id="R2API_Models_State_Clip" data-uid="R2API.Models.State.Clip">Clip</h4>
-  <div class="markdown level1 summary"><p>AnimationClip that will be played by this state. Leave null if BlendTree is set.</p>
+  <div class="markdown level1 summary"><p>AnimationClip that will be played in this motion. Leave null if BlendTree is set.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -182,7 +218,7 @@ public class State</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_ClipBundlePath.md&amp;value=---%0Auid%3A%20R2API.Models.State.ClipBundlePath%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L29">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L20">View Source</a>
   </span>
   <a id="R2API_Models_State_ClipBundlePath_" data-uid="R2API.Models.State.ClipBundlePath*"></a>
   <h4 id="R2API_Models_State_ClipBundlePath" data-uid="R2API.Models.State.ClipBundlePath">ClipBundlePath</h4>
@@ -191,7 +227,8 @@ public class State</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string ClipBundlePath { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;No longer required&quot;)]
+public string ClipBundlePath { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-condensed">
@@ -213,7 +250,7 @@ public class State</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_CycleOffset.md&amp;value=---%0Auid%3A%20R2API.Models.State.CycleOffset%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L93">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L67">View Source</a>
   </span>
   <a id="R2API_Models_State_CycleOffset_" data-uid="R2API.Models.State.CycleOffset*"></a>
   <h4 id="R2API_Models_State_CycleOffset" data-uid="R2API.Models.State.CycleOffset">CycleOffset</h4>
@@ -245,7 +282,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_CycleOffsetParam.md&amp;value=---%0Auid%3A%20R2API.Models.State.CycleOffsetParam%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L71">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L52">View Source</a>
   </span>
   <a id="R2API_Models_State_CycleOffsetParam_" data-uid="R2API.Models.State.CycleOffsetParam*"></a>
   <h4 id="R2API_Models_State_CycleOffsetParam" data-uid="R2API.Models.State.CycleOffsetParam">CycleOffsetParam</h4>
@@ -276,7 +313,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_IKOnFeet.md&amp;value=---%0Auid%3A%20R2API.Models.State.IKOnFeet%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L100">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L72">View Source</a>
   </span>
   <a id="R2API_Models_State_IKOnFeet_" data-uid="R2API.Models.State.IKOnFeet*"></a>
   <h4 id="R2API_Models_State_IKOnFeet" data-uid="R2API.Models.State.IKOnFeet">IKOnFeet</h4>
@@ -307,7 +344,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_Loop.md&amp;value=---%0Auid%3A%20R2API.Models.State.Loop%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L115">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L82">View Source</a>
   </span>
   <a id="R2API_Models_State_Loop_" data-uid="R2API.Models.State.Loop*"></a>
   <h4 id="R2API_Models_State_Loop" data-uid="R2API.Models.State.Loop">Loop</h4>
@@ -338,7 +375,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_Mirror.md&amp;value=---%0Auid%3A%20R2API.Models.State.Mirror%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L122">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L87">View Source</a>
   </span>
   <a id="R2API_Models_State_Mirror_" data-uid="R2API.Models.State.Mirror*"></a>
   <h4 id="R2API_Models_State_Mirror" data-uid="R2API.Models.State.Mirror">Mirror</h4>
@@ -369,7 +406,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_MirrorParam.md&amp;value=---%0Auid%3A%20R2API.Models.State.MirrorParam%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L64">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L47">View Source</a>
   </span>
   <a id="R2API_Models_State_MirrorParam_" data-uid="R2API.Models.State.MirrorParam*"></a>
   <h4 id="R2API_Models_State_MirrorParam" data-uid="R2API.Models.State.MirrorParam">MirrorParam</h4>
@@ -400,7 +437,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_Name.md&amp;value=---%0Auid%3A%20R2API.Models.State.Name%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L22">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L15">View Source</a>
   </span>
   <a id="R2API_Models_State_Name_" data-uid="R2API.Models.State.Name*"></a>
   <h4 id="R2API_Models_State_Name" data-uid="R2API.Models.State.Name">Name</h4>
@@ -431,7 +468,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_Speed.md&amp;value=---%0Auid%3A%20R2API.Models.State.Speed%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L85">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L62">View Source</a>
   </span>
   <a id="R2API_Models_State_Speed_" data-uid="R2API.Models.State.Speed*"></a>
   <h4 id="R2API_Models_State_Speed" data-uid="R2API.Models.State.Speed">Speed</h4>
@@ -462,7 +499,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_SpeedParam.md&amp;value=---%0Auid%3A%20R2API.Models.State.SpeedParam%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L57">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L42">View Source</a>
   </span>
   <a id="R2API_Models_State_SpeedParam_" data-uid="R2API.Models.State.SpeedParam*"></a>
   <h4 id="R2API_Models_State_SpeedParam" data-uid="R2API.Models.State.SpeedParam">SpeedParam</h4>
@@ -493,7 +530,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_Tag.md&amp;value=---%0Auid%3A%20R2API.Models.State.Tag%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L50">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L37">View Source</a>
   </span>
   <a id="R2API_Models_State_Tag_" data-uid="R2API.Models.State.Tag*"></a>
   <h4 id="R2API_Models_State_Tag" data-uid="R2API.Models.State.Tag">Tag</h4>
@@ -524,7 +561,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_TimeParam.md&amp;value=---%0Auid%3A%20R2API.Models.State.TimeParam%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L78">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L57">View Source</a>
   </span>
   <a id="R2API_Models_State_TimeParam_" data-uid="R2API.Models.State.TimeParam*"></a>
   <h4 id="R2API_Models_State_TimeParam" data-uid="R2API.Models.State.TimeParam">TimeParam</h4>
@@ -555,7 +592,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_Transitions.md&amp;value=---%0Auid%3A%20R2API.Models.State.Transitions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L129">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L92">View Source</a>
   </span>
   <a id="R2API_Models_State_Transitions_" data-uid="R2API.Models.State.Transitions*"></a>
   <h4 id="R2API_Models_State_Transitions" data-uid="R2API.Models.State.Transitions">Transitions</h4>
@@ -586,7 +623,7 @@ Units is normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_WriteDefaultValues.md&amp;value=---%0Auid%3A%20R2API.Models.State.WriteDefaultValues%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L108">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L77">View Source</a>
   </span>
   <a id="R2API_Models_State_WriteDefaultValues_" data-uid="R2API.Models.State.WriteDefaultValues*"></a>
   <h4 id="R2API_Models_State_WriteDefaultValues" data-uid="R2API.Models.State.WriteDefaultValues">WriteDefaultValues</h4>
@@ -613,41 +650,13 @@ that are not animated by its Motion.</p>
       </tr>
     </tbody>
   </table>
-  <h3 id="methods">Methods
-</h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State_WriteBinary_System_IO_BinaryWriter_.md&amp;value=---%0Auid%3A%20R2API.Models.State.WriteBinary(System.IO.BinaryWriter)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L135">View Source</a>
-  </span>
-  <a id="R2API_Models_State_WriteBinary_" data-uid="R2API.Models.State.WriteBinary*"></a>
-  <h4 id="R2API_Models_State_WriteBinary_System_IO_BinaryWriter_" data-uid="R2API.Models.State.WriteBinary(System.IO.BinaryWriter)">WriteBinary(BinaryWriter)</h4>
-  <div class="markdown level1 summary"><p>Writing into a binary writer for caching purposes.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void WriteBinary(BinaryWriter writer)</code></pre>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="R2API.Animations.Models.Interfaces.IState.html">IState</a>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.binarywriter">BinaryWriter</a></td>
-        <td><span class="parametername">writer</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+  <div>
+      <a class="xref" href="R2API.Animations.Models.Interfaces.IMotion.html">IMotion</a>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
@@ -691,7 +700,7 @@ that are not animated by its Motion.</p>
                     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_State.md&amp;value=---%0Auid%3A%20R2API.Models.State%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L14" class="contribution-link">View Source</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/State.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

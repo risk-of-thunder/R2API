@@ -9,7 +9,7 @@
       <meta name="viewport" content="width=device-width">
       <meta name="title" content="Class ExistingState ">
     
-    <meta name="description" content="Changes to an existing state in a layer.">
+    <meta name="description" content="Changes to an existing state.">
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
@@ -71,13 +71,17 @@
 
 
   <h1 id="R2API_Models_ExistingState" data-uid="R2API.Models.ExistingState" class="text-break">Class ExistingState</h1>
-  <div class="markdown level0 summary"><p>Changes to an existing state in a layer.</p>
+  <div class="markdown level0 summary"><p>Changes to an existing state.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><span class="xref">ExistingState</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="R2API.Animations.Models.Interfaces.IExistingState.html">IExistingState</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -108,7 +112,7 @@
   <h5 id="R2API_Models_ExistingState_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Serializable]
-public class ExistingState</code></pre>
+public class ExistingState : IExistingState</code></pre>
   </div>
   <h3 id="properties">Properties
 </h3>
@@ -117,11 +121,11 @@ public class ExistingState</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ExistingState_Name.md&amp;value=---%0Auid%3A%20R2API.Models.ExistingState.Name%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ExistingState.cs/#L18">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ExistingState.cs/#L15">View Source</a>
   </span>
   <a id="R2API_Models_ExistingState_Name_" data-uid="R2API.Models.ExistingState.Name*"></a>
   <h4 id="R2API_Models_ExistingState_Name" data-uid="R2API.Models.ExistingState.Name">Name</h4>
-  <div class="markdown level1 summary"><p>The name of the state.</p>
+  <div class="markdown level1 summary"><p>Name of the state.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -145,14 +149,45 @@ public class ExistingState</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ExistingState_NewBehaviours.md&amp;value=---%0Auid%3A%20R2API.Models.ExistingState.NewBehaviours%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ExistingState.cs/#L26">View Source</a>
+  </span>
+  <a id="R2API_Models_ExistingState_NewBehaviours_" data-uid="R2API.Models.ExistingState.NewBehaviours*"></a>
+  <h4 id="R2API_Models_ExistingState_NewBehaviours" data-uid="R2API.Models.ExistingState.NewBehaviours">NewBehaviours</h4>
+  <div class="markdown level1 summary"><p>New behaviours for this state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;StateMachineBehaviour&gt; NewBehaviours { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<span class="xref">StateMachineBehaviour</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ExistingState_NewTransitions.md&amp;value=---%0Auid%3A%20R2API.Models.ExistingState.NewTransitions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ExistingState.cs/#L25">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ExistingState.cs/#L20">View Source</a>
   </span>
   <a id="R2API_Models_ExistingState_NewTransitions_" data-uid="R2API.Models.ExistingState.NewTransitions*"></a>
   <h4 id="R2API_Models_ExistingState_NewTransitions" data-uid="R2API.Models.ExistingState.NewTransitions">NewTransitions</h4>
-  <div class="markdown level1 summary"><p>New transitions that will be added to the state.</p>
+  <div class="markdown level1 summary"><p>New transitions for this state.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -174,6 +209,10 @@ public class ExistingState</code></pre>
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="R2API.Animations.Models.Interfaces.IExistingState.html">IExistingState</a>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
@@ -217,7 +256,7 @@ public class ExistingState</code></pre>
                     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_ExistingState.md&amp;value=---%0Auid%3A%20R2API.Models.ExistingState%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ExistingState.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/ExistingState.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

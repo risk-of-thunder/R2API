@@ -5,11 +5,11 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Class Parameter </title>
+      <title>Interface ICondition </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Class Parameter ">
+      <meta name="title" content="Interface ICondition ">
     
-    <meta name="description" content="Used to communicate between scripting and the controller. Some parameters can be set in scripting and used by the controller, while other parameters are based on Custom Curves in Animation Clips and can be sampled using the scripting API.">
+    <meta name="description" content="Condition that is used to determine if a transition must be taken.">
       <link rel="shortcut icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
       <link rel="stylesheet" href="../styles/docfx.css">
@@ -66,72 +66,68 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="R2API.Models.Parameter">
+            <article class="content wrap" id="_content" data-uid="R2API.Animations.Models.Interfaces.ICondition">
 
 
 
-  <h1 id="R2API_Models_Parameter" data-uid="R2API.Models.Parameter" class="text-break">Class Parameter</h1>
-  <div class="markdown level0 summary"><p>Used to communicate between scripting and the controller. Some parameters can be set in scripting and used by the controller,
-while other parameters are based on Custom Curves in Animation Clips and can be sampled using the scripting API.</p>
+  <h1 id="R2API_Animations_Models_Interfaces_ICondition" data-uid="R2API.Animations.Models.Interfaces.ICondition" class="text-break">Interface ICondition</h1>
+  <div class="markdown level0 summary"><p>Condition that is used to determine if a transition must be taken.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-    <div class="level1"><span class="xref">Parameter</span></div>
-  </div>
-  <div class="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="R2API.Animations.Models.Interfaces.IParameter.html">IParameter</a></div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
-    </div>
-  </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="R2API.html">R2API</a>.<a class="xref" href="R2API.Models.html">Models</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="R2API.html">R2API</a>.<a class="xref" href="R2API.Animations.html">Animations</a>.<a class="xref" href="R2API.Animations.Models.html">Models</a>.<a class="xref" href="R2API.Animations.Models.Interfaces.html">Interfaces</a></h6>
   <h6><strong>Assembly</strong>: R2API.Animations.Runtime.dll</h6>
-  <h5 id="R2API_Models_Parameter_syntax">Syntax</h5>
+  <h5 id="R2API_Animations_Models_Interfaces_ICondition_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Serializable]
-public class Parameter : IParameter</code></pre>
+    <pre><code class="lang-csharp hljs">public interface ICondition</code></pre>
   </div>
   <h3 id="properties">Properties
 </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Parameter_Name.md&amp;value=---%0Auid%3A%20R2API.Models.Parameter.Name%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_ICondition_ConditionMode.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.ICondition.ConditionMode%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Parameter.cs/#L14">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/ICondition.cs/#L15">View Source</a>
   </span>
-  <a id="R2API_Models_Parameter_Name_" data-uid="R2API.Models.Parameter.Name*"></a>
-  <h4 id="R2API_Models_Parameter_Name" data-uid="R2API.Models.Parameter.Name">Name</h4>
-  <div class="markdown level1 summary"><p>The name of the parameter.</p>
+  <a id="R2API_Animations_Models_Interfaces_ICondition_ConditionMode_" data-uid="R2API.Animations.Models.Interfaces.ICondition.ConditionMode*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_ICondition_ConditionMode" data-uid="R2API.Animations.Models.Interfaces.ICondition.ConditionMode">ConditionMode</h4>
+  <div class="markdown level1 summary"><p>The mode of the condition.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Name { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">ConditionMode ConditionMode { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="R2API.Models.ConditionMode.html">ConditionMode</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_ICondition_ParamName.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.ICondition.ParamName%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/ICondition.cs/#L20">View Source</a>
+  </span>
+  <a id="R2API_Animations_Models_Interfaces_ICondition_ParamName_" data-uid="R2API.Animations.Models.Interfaces.ICondition.ParamName*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_ICondition_ParamName" data-uid="R2API.Animations.Models.Interfaces.ICondition.ParamName">ParamName</h4>
+  <div class="markdown level1 summary"><p>The name of the parameter used in the condition.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string ParamName { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-condensed">
@@ -150,19 +146,19 @@ public class Parameter : IParameter</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Parameter_Type.md&amp;value=---%0Auid%3A%20R2API.Models.Parameter.Type%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_ICondition_Value.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.ICondition.Value%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Parameter.cs/#L19">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/ICondition.cs/#L25">View Source</a>
   </span>
-  <a id="R2API_Models_Parameter_Type_" data-uid="R2API.Models.Parameter.Type*"></a>
-  <h4 id="R2API_Models_Parameter_Type" data-uid="R2API.Models.Parameter.Type">Type</h4>
-  <div class="markdown level1 summary"><p>The type of the parameter.</p>
+  <a id="R2API_Animations_Models_Interfaces_ICondition_Value_" data-uid="R2API.Animations.Models.Interfaces.ICondition.Value*"></a>
+  <h4 id="R2API_Animations_Models_Interfaces_ICondition_Value" data-uid="R2API.Animations.Models.Interfaces.ICondition.Value">Value</h4>
+  <div class="markdown level1 summary"><p>The Parameter's threshold value for the condition to be true.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ParameterType Type { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">float Value { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-condensed">
@@ -174,46 +170,11 @@ public class Parameter : IParameter</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="R2API.Models.ParameterType.html">ParameterType</a></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Parameter_Value.md&amp;value=---%0Auid%3A%20R2API.Models.Parameter.Value%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Parameter.cs/#L24">View Source</a>
-  </span>
-  <a id="R2API_Models_Parameter_Value_" data-uid="R2API.Models.Parameter.Value*"></a>
-  <h4 id="R2API_Models_Parameter_Value" data-uid="R2API.Models.Parameter.Value">Value</h4>
-  <div class="markdown level1 summary"><p>The default value for the parameter.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ParameterValue Value { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="R2API.Models.ParameterValue.html">ParameterValue</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="R2API.Animations.Models.Interfaces.IParameter.html">IParameter</a>
-  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
@@ -254,10 +215,10 @@ public class Parameter : IParameter</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Parameter.md&amp;value=---%0Auid%3A%20R2API.Models.Parameter%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Models_Interfaces_ICondition.md&amp;value=---%0Auid%3A%20R2API.Animations.Models.Interfaces.ICondition%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Parameter.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Interfaces/ICondition.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

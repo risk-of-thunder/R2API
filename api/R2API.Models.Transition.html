@@ -81,6 +81,11 @@ and have timing parameters.</p>
     <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
     <div class="level1"><span class="xref">Transition</span></div>
   </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="R2API.Animations.Models.Interfaces.ITransition.html">ITransition</a></div>
+    <div><a class="xref" href="R2API.Animations.Models.Interfaces.ISimpleTransition.html">ISimpleTransition</a></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -110,7 +115,7 @@ and have timing parameters.</p>
   <h5 id="R2API_Models_Transition_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Serializable]
-public class Transition</code></pre>
+public class Transition : ITransition, ISimpleTransition</code></pre>
   </div>
   <h3 id="properties">Properties
 </h3>
@@ -119,7 +124,7 @@ public class Transition</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_CanTransitionToSelf.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.CanTransitionToSelf%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L88">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L60">View Source</a>
   </span>
   <a id="R2API_Models_Transition_CanTransitionToSelf_" data-uid="R2API.Models.Transition.CanTransitionToSelf*"></a>
   <h4 id="R2API_Models_Transition_CanTransitionToSelf" data-uid="R2API.Models.Transition.CanTransitionToSelf">CanTransitionToSelf</h4>
@@ -150,11 +155,11 @@ public class Transition</code></pre>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_Conditions.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.Conditions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L96">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L70">View Source</a>
   </span>
   <a id="R2API_Models_Transition_Conditions_" data-uid="R2API.Models.Transition.Conditions*"></a>
   <h4 id="R2API_Models_Transition_Conditions" data-uid="R2API.Models.Transition.Conditions">Conditions</h4>
-  <div class="markdown level1 summary"><p>Animations.AnimatorCondition conditions that need to be met for a transition
+  <div class="markdown level1 summary"><p>Conditions that need to be met for a transition
 to happen.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -179,10 +184,42 @@ to happen.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_DestinationStateMachinePath.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.DestinationStateMachinePath%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L20">View Source</a>
+  </span>
+  <a id="R2API_Models_Transition_DestinationStateMachinePath_" data-uid="R2API.Models.Transition.DestinationStateMachinePath*"></a>
+  <h4 id="R2API_Models_Transition_DestinationStateMachinePath" data-uid="R2API.Models.Transition.DestinationStateMachinePath">DestinationStateMachinePath</h4>
+  <div class="markdown level1 summary"><p>The path to a DestinationState as all parent StateMachines separated by . i.e. &quot;StateMachine1.StateMachine2&quot;.
+If left empty it's assumed that the source and destination states are in the same state machine.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DestinationStateMachinePath { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_DestinationStateName.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.DestinationStateName%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L21">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L15">View Source</a>
   </span>
   <a id="R2API_Models_Transition_DestinationStateName_" data-uid="R2API.Models.Transition.DestinationStateName*"></a>
   <h4 id="R2API_Models_Transition_DestinationStateName" data-uid="R2API.Models.Transition.DestinationStateName">DestinationStateName</h4>
@@ -213,7 +250,7 @@ to happen.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_ExitTime.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.ExitTime%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L52">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L35">View Source</a>
   </span>
   <a id="R2API_Models_Transition_ExitTime_" data-uid="R2API.Models.Transition.ExitTime*"></a>
   <h4 id="R2API_Models_Transition_ExitTime" data-uid="R2API.Models.Transition.ExitTime">ExitTime</h4>
@@ -254,7 +291,7 @@ a half loops.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_HasExitTime.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.HasExitTime%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L59">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L40">View Source</a>
   </span>
   <a id="R2API_Models_Transition_HasExitTime_" data-uid="R2API.Models.Transition.HasExitTime*"></a>
   <h4 id="R2API_Models_Transition_HasExitTime" data-uid="R2API.Models.Transition.HasExitTime">HasExitTime</h4>
@@ -285,7 +322,7 @@ a half loops.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_HasFixedDuration.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.HasFixedDuration%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L67">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L45">View Source</a>
   </span>
   <a id="R2API_Models_Transition_HasFixedDuration_" data-uid="R2API.Models.Transition.HasFixedDuration*"></a>
   <h4 id="R2API_Models_Transition_HasFixedDuration" data-uid="R2API.Models.Transition.HasFixedDuration">HasFixedDuration</h4>
@@ -317,7 +354,7 @@ in seconds or as a normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_InterruptionSource.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.InterruptionSource%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L74">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L50">View Source</a>
   </span>
   <a id="R2API_Models_Transition_InterruptionSource_" data-uid="R2API.Models.Transition.InterruptionSource*"></a>
   <h4 id="R2API_Models_Transition_InterruptionSource" data-uid="R2API.Models.Transition.InterruptionSource">InterruptionSource</h4>
@@ -345,10 +382,41 @@ in seconds or as a normalized time.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_IsExit.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.IsExit%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L65">View Source</a>
+  </span>
+  <a id="R2API_Models_Transition_IsExit_" data-uid="R2API.Models.Transition.IsExit*"></a>
+  <h4 id="R2API_Models_Transition_IsExit" data-uid="R2API.Models.Transition.IsExit">IsExit</h4>
+  <div class="markdown level1 summary"><p>Is the transition destination the exit of the current state machine.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsExit { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_Offset.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.Offset%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L35">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L30">View Source</a>
   </span>
   <a id="R2API_Models_Transition_Offset_" data-uid="R2API.Models.Transition.Offset*"></a>
   <h4 id="R2API_Models_Transition_Offset" data-uid="R2API.Models.Transition.Offset">Offset</h4>
@@ -379,7 +447,7 @@ in seconds or as a normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_OrderedInterruption.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.OrderedInterruption%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L81">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L55">View Source</a>
   </span>
   <a id="R2API_Models_Transition_OrderedInterruption_" data-uid="R2API.Models.Transition.OrderedInterruption*"></a>
   <h4 id="R2API_Models_Transition_OrderedInterruption" data-uid="R2API.Models.Transition.OrderedInterruption">OrderedInterruption</h4>
@@ -410,7 +478,7 @@ in seconds or as a normalized time.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_TransitionDuration.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.TransitionDuration%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L28">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L25">View Source</a>
   </span>
   <a id="R2API_Models_Transition_TransitionDuration_" data-uid="R2API.Models.Transition.TransitionDuration*"></a>
   <h4 id="R2API_Models_Transition_TransitionDuration" data-uid="R2API.Models.Transition.TransitionDuration">TransitionDuration</h4>
@@ -436,41 +504,13 @@ in seconds or as a normalized time.</p>
       </tr>
     </tbody>
   </table>
-  <h3 id="methods">Methods
-</h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition_WriteBinary_System_IO_BinaryWriter_.md&amp;value=---%0Auid%3A%20R2API.Models.Transition.WriteBinary(System.IO.BinaryWriter)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L102">View Source</a>
-  </span>
-  <a id="R2API_Models_Transition_WriteBinary_" data-uid="R2API.Models.Transition.WriteBinary*"></a>
-  <h4 id="R2API_Models_Transition_WriteBinary_System_IO_BinaryWriter_" data-uid="R2API.Models.Transition.WriteBinary(System.IO.BinaryWriter)">WriteBinary(BinaryWriter)</h4>
-  <div class="markdown level1 summary"><p>Writing modifications into a binary writer for caching purposes.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void WriteBinary(BinaryWriter writer)</code></pre>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="R2API.Animations.Models.Interfaces.ITransition.html">ITransition</a>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.binarywriter">BinaryWriter</a></td>
-        <td><span class="parametername">writer</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+  <div>
+      <a class="xref" href="R2API.Animations.Models.Interfaces.ISimpleTransition.html">ISimpleTransition</a>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
@@ -514,7 +554,7 @@ in seconds or as a normalized time.</p>
                     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Models_Transition.md&amp;value=---%0Auid%3A%20R2API.Models.Transition%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L13" class="contribution-link">View Source</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Runtime/Models/Transition.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

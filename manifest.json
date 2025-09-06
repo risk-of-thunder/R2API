@@ -214,10 +214,220 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Editor.AnimatorDiffImporterEditor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Editor.AnimatorDiffImporterEditor.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Editor.AnimatorDiffImporterExtra.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Editor.AnimatorDiffImporterExtra.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Editor.AnimatorMap.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Editor.AnimatorMap.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Editor.Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Editor.Extensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.Animations.Editor.yml",
       "output": {
         ".html": {
           "relative_path": "api/R2API.Animations.Editor.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.IBlendTree.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.IBlendTree.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.IChildMotion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.IChildMotion.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.ICondition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.ICondition.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.IExistingAnimatorController.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.IExistingAnimatorController.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.IExistingLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.IExistingLayer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.IExistingState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.IExistingState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.IExistingStateMachine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.IExistingStateMachine.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.ILayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.ILayer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.IMotion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.IMotion.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.IParameter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.IParameter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.ISimpleTransition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.ISimpleTransition.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.IState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.IState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.IStateMachine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.IStateMachine.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.ISyncedBehaviour.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.ISyncedBehaviour.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.ISyncedMotion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.ISyncedMotion.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.ITransition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.ITransition.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Animations.Models.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Animations.Models.Interfaces.html"
         }
       },
       "version": ""
@@ -974,6 +1184,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.AnimatorLayerBlendingMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.AnimatorLayerBlendingMode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.Models.BlendTree.yml",
       "output": {
         ".html": {
@@ -1024,6 +1244,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.EntryTransition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.EntryTransition.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.Models.ExistingLayer.yml",
       "output": {
         ".html": {
@@ -1044,10 +1274,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.ExistingStateMachine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.ExistingStateMachine.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.Models.InterruptionSource.yml",
       "output": {
         ".html": {
           "relative_path": "api/R2API.Models.InterruptionSource.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.Layer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.Layer.html"
         }
       },
       "version": ""
@@ -1094,6 +1344,36 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.StateMachine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.StateMachine.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.SyncedBehaviour.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.SyncedBehaviour.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Models.SyncedMotion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Models.SyncedMotion.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.Models.Transition.yml",
       "output": {
         ".html": {
@@ -1114,6 +1394,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.NativeStructs.HeapAllocatedRepresentationV2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.NativeStructs.HeapAllocatedRepresentationV2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.NativeStructs.PersistentManager.yml",
       "output": {
         ".html": {
@@ -1128,6 +1418,46 @@
       "output": {
         ".html": {
           "relative_path": "api/R2API.NativeStructs.SerializedObjectIdentifier.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.NativeStructs.StackAllocatedRepresentationV2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.NativeStructs.StackAllocatedRepresentationV2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.NativeStructs.StringRepresentation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.NativeStructs.StringRepresentation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.NativeStructs.StringStorageDefaultV2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.NativeStructs.StringStorageDefaultV2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.NativeStructs.StringStorageDefaultV2Union.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.NativeStructs.StringStorageDefaultV2Union.html"
         }
       },
       "version": ""

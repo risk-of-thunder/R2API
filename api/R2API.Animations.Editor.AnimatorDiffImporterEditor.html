@@ -1,0 +1,1106 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class AnimatorDiffImporterEditor </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class AnimatorDiffImporterEditor ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor">
+
+
+
+  <h1 id="R2API_Animations_Editor_AnimatorDiffImporterEditor" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor" class="text-break">Class AnimatorDiffImporterEditor</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">Object</span></div>
+    <div class="level2"><span class="xref">ScriptableObject</span></div>
+    <div class="level3"><span class="xref">Editor</span></div>
+    <div class="level4"><span class="xref">AssetImporterEditor</span></div>
+    <div class="level5"><span class="xref">ScriptedImporterEditor</span></div>
+    <div class="level6"><span class="xref">AnimatorDiffImporterEditor</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">IPreviewable</span></div>
+    <div><span class="xref">IToolModeOwner</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">ScriptedImporterEditor.targetTitle</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_AssetHashes</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_AssetEditor</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_ExtraDataTargets</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_ExtraDataSerializedObject</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_InstantApply</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.s_UnreleasedInstances</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_TargetsInstanceID</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_ApplyRevertGUICalled</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_OnEnableCalled</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_CopySaved</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_Inspector</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_HasInspectorBeenSeenLocked</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_TargetsReloaded</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_AvailableImporterTypes</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.k_MultipleSelectedImporterTypes</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_SelectedImporterType</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_AvailableImporterTypesOptions</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_SelectedAssetsPath</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_Postprocessors</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_PostprocessorUI</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.m_ProcessorsAreExpanded</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporterEditor.CreateOrReloadInspectorCopy(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporterEditor.SaveUserData(int, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporterEditor.ReleaseInspectorCopy(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporterEditor.FixCacheCount(int, int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporterEditor.GetInspectorCopyCount(int)</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.IsSerializedDataEqual(Object)</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.RevertObject(Object)</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.UpdateSavedData(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporterEditor.FixSavedAssetbundleSettings(int, PropertyModification[])</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.CheckForInspectorCopyBackingData(Object)</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.InternalSetAssetImporterTargetEditor(Object)</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.CheckExtraDataArray()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.InternalSetTargets(Object[])</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.FixInspectorCache()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">AssetImporterEditor.FixImporterAssetbundleName(string, string)</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.ApplicationWantsToQuit()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.DrawPreview(Rect)</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.DrawImporterSelectionPopup()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.InitializeAvailableImporters()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.OnHeaderControlsGUI()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.OnHeaderIconGUI(Rect)</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.OnDisable()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.InitializePostprocessors()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporterEditor.DrawPostprocessorElement(Rect, int, bool, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">AssetImporterEditor.RightClickPostprocessor(object)</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.CanEditorSurviveAssemblyReload()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.IsClosingInspector()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">AssetImporterEditor.CheckForApplyOnClose(bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">AssetImporterEditor.ShowUnappliedAssetsPopup(List&lt;string&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.Awake()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.GetAssetPaths()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporterEditor.ReloadAssetData(int)</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.ResetValues()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.HasModified()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.CanApply()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.AssetWasUpdated()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.ResetHash()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporterEditor.ResetHash(int)</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.ApplyAndImport()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">AssetImporterEditor.ImportAssets(IEnumerable&lt;string&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.RevertButton()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.ApplyButton()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.OnApplyRevertGUI()</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.ApplyRevertGUI()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">AssetImporterEditor.ReloadTargets(IEnumerable&lt;int&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.assetTargets</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.assetTarget</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.assetSerializedObject</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.extraDataTargets</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.extraDataTarget</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.extraDataSerializedObject</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.needsApplyRevert</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.referenceTargetIndex</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.preview</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.useAssetDrawPreview</span>
+    </div>
+    <div>
+      <span class="xref">AssetImporterEditor.showImportedObject</span>
+    </div>
+    <div>
+      <span class="xref">Editor.m_Targets</span>
+    </div>
+    <div>
+      <span class="xref">Editor.m_Context</span>
+    </div>
+    <div>
+      <span class="xref">Editor.m_IsDirty</span>
+    </div>
+    <div>
+      <span class="xref">Editor.m_ReferenceTargetIndex</span>
+    </div>
+    <div>
+      <span class="xref">Editor.m_PropertyHandlerCache</span>
+    </div>
+    <div>
+      <span class="xref">Editor.m_DummyPreview</span>
+    </div>
+    <div>
+      <span class="xref">Editor.m_AudioFilterGUI</span>
+    </div>
+    <div>
+      <span class="xref">Editor.m_SerializedObject</span>
+    </div>
+    <div>
+      <span class="xref">Editor.m_EnabledProperty</span>
+    </div>
+    <div>
+      <span class="xref">Editor.m_InspectorMode</span>
+    </div>
+    <div>
+      <span class="xref">Editor.kLineHeight</span>
+    </div>
+    <div>
+      <span class="xref">Editor.hideInspector</span>
+    </div>
+    <div>
+      <span class="xref">Editor.kImageSectionWidth</span>
+    </div>
+    <div>
+      <span class="xref">Editor.k_WideModeMinWidth</span>
+    </div>
+    <div>
+      <span class="xref">Editor.k_HeaderHeight</span>
+    </div>
+    <div>
+      <span class="xref">Editor.OnPostIconGUI</span>
+    </div>
+    <div>
+      <span class="xref">Editor.m_AllowMultiObjectAccess</span>
+    </div>
+    <div>
+      <span class="xref">Editor.HasLargeHeader()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Editor.CreateEditorWithContext(Object[], Object, Type)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.CreateEditorWithContext(Object[], Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Editor.CreateCachedEditorWithContext(Object, Object, Type, ref Editor)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Editor.CreateCachedEditorWithContext(Object[], Object, Type, ref Editor)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Editor.CreateCachedEditor(Object, Type, ref Editor)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Editor.CreateCachedEditor(Object[], Type, ref Editor)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.CreateEditor(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Editor.CreateEditor(Object, Type)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.CreateEditor(Object[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Editor.CreateEditor(Object[], Type)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.CleanupPropertyEditor()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.OnDisableINTERNAL()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.GetSerializedObjectInternal()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.CreateSerializedObject()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.AssignCachedProperties&lt;T&gt;(T, SerializedProperty)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Editor.InternalSetHidden(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.InternalSetContextObject(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Editor.IToolModeOwner.GetWorldBoundsOfTargets()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.GetWorldBoundsOfTarget(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Editor.IToolModeOwner.ModeSurvivesSelectionChange(int)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.OnForceReloadInspector()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Editor.GetOptimizedGUIBlock(bool, bool, out float)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.OnOptimizedInspectorGUI(Rect)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Editor.DrawPropertiesExcluding(SerializedObject, params string[])</a>
+    </div>
+    <div>
+      <span class="xref">Editor.DrawDefaultInspector()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.DoDrawDefaultInspector(SerializedObject)</span>
+    </div>
+    <div>
+      <span class="xref">Editor.DoDrawDefaultInspector()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.Repaint()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.CreateInspectorGUI()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.RequiresConstantRepaint()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.DrawHeader()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.OnHeaderGUI()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Editor.ShowOpenButton(Object[], bool)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.ShouldHideOpenButton()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.ShouldTryToMakeEditableOnOpen()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Editor.OnHeaderTitleGUI(Rect, string)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.DrawHeaderHelpAndSettingsGUI(Rect)</span>
+    </div>
+    <div>
+      <span class="xref">Editor.DrawHeaderFromInsideHierarchy()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Editor.DrawHeaderGUI(Editor, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Editor.DrawHeaderGUI(Editor, string, float)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.CheckForMainObjectNameMismatch(Editor)</span>
+    </div>
+    <div>
+      <span class="xref">Editor.DrawPostIconContent(Rect)</span>
+    </div>
+    <div>
+      <span class="xref">Editor.DrawPostIconContent()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.DrawFoldoutInspector(Object, ref Editor)</span>
+    </div>
+    <div>
+      <span class="xref">Editor.HasPreviewGUI()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.GetPreviewTitle()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Editor.RenderStaticPreview(string, Object[], int, int)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.OnPreviewGUI(Rect, GUIStyle)</span>
+    </div>
+    <div>
+      <span class="xref">Editor.OnInteractivePreviewGUI(Rect, GUIStyle)</span>
+    </div>
+    <div>
+      <span class="xref">Editor.OnPreviewSettings()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.GetInfoString()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.ReloadPreviewInstances()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.CanBeExpandedViaAFoldout()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.CanBeExpandedViaAFoldoutWithoutUpdate()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.IsAppropriateFileOpenForEdit(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Editor.IsEnabled()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.IsOpenForEdit()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.UseDefaultMargins()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.MoveNextTarget()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.ResetTarget()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.OnAssetStoreInspectorGUI()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Editor.CreateEditorWithContextInternal(Object[], Object, Type)</a>
+    </div>
+    <div>
+      <span class="xref">Editor.GetCurrentMousePosition()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.IToolModeOwner.GetInstanceID()</span>
+    </div>
+    <div>
+      <span class="xref">Editor.GetCurrentMousePosition_Injected(out Vector2)</span>
+    </div>
+    <div>
+      <span class="xref">Editor.inspectorMode</span>
+    </div>
+    <div>
+      <span class="xref">Editor.canEditMultipleObjects</span>
+    </div>
+    <div>
+      <span class="xref">Editor.propertyHandlerCache</span>
+    </div>
+    <div>
+      <span class="xref">Editor.IToolModeOwner.areToolModesAvailable</span>
+    </div>
+    <div>
+      <span class="xref">Editor.target</span>
+    </div>
+    <div>
+      <span class="xref">Editor.targets</span>
+    </div>
+    <div>
+      <span class="xref">Editor.serializedObject</span>
+    </div>
+    <div>
+      <span class="xref">Editor.enabledProperty</span>
+    </div>
+    <div>
+      <span class="xref">Editor.isInspectorDirty</span>
+    </div>
+    <div>
+      <span class="xref">Editor.finishedDefaultHeaderGUI</span>
+    </div>
+    <div>
+      <span class="xref">ScriptableObject.SetDirty()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">ScriptableObject.CreateInstance(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">ScriptableObject.CreateInstance(Type)</a>
+    </div>
+    <div>
+      <span class="xref">ScriptableObject.CreateInstance&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">ScriptableObject.CreateScriptableObject(ScriptableObject)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">ScriptableObject.CreateScriptableObjectInstanceFromName(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">ScriptableObject.CreateScriptableObjectInstanceFromType(Type, bool)</a>
+    </div>
+    <div>
+      <span class="xref">ScriptableObject.ResetAndApplyDefaultInstances(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.m_CachedPtr</span>
+    </div>
+    <div>
+      <span class="xref">Object.OffsetOfInstanceIDInCPlusPlusObject</span>
+    </div>
+    <div>
+      <span class="xref">Object.objectIsNullMessage</span>
+    </div>
+    <div>
+      <span class="xref">Object.cloneDestroyedMessage</span>
+    </div>
+    <div>
+      <span class="xref">Object.GetInstanceID()</span>
+    </div>
+    <div>
+      <span class="xref">Object.GetHashCode()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object.Equals(object)</a>
+    </div>
+    <div>
+      <span class="xref">Object.CompareBaseObjects(Object, Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.EnsureRunningOnMainThread()</span>
+    </div>
+    <div>
+      <span class="xref">Object.IsNativeObjectAlive(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.GetCachedPtr()</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate(Object, Vector3, Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate(Object, Vector3, Quaternion, Transform)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate(Object, Transform)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.Instantiate(Object, Transform, bool)</a>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate&lt;T&gt;(T)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate&lt;T&gt;(T, Vector3, Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate&lt;T&gt;(T, Vector3, Quaternion, Transform)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate&lt;T&gt;(T, Transform)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.Instantiate&lt;T&gt;(T, Transform, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">Object.Destroy(Object, float)</a>
+    </div>
+    <div>
+      <span class="xref">Object.Destroy(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.DestroyImmediate(Object, bool)</a>
+    </div>
+    <div>
+      <span class="xref">Object.DestroyImmediate(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsOfType(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsOfType(Type, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsByType(Type, FindObjectsSortMode)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsByType(Type, FindObjectsInactive, FindObjectsSortMode)</a>
+    </div>
+    <div>
+      <span class="xref">Object.DontDestroyOnLoad(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">Object.DestroyObject(Object, float)</a>
+    </div>
+    <div>
+      <span class="xref">Object.DestroyObject(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindSceneObjectsOfType(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsOfTypeIncludingAssets(Type)</a>
+    </div>
+    <div>
+      <span class="xref">Object.FindObjectsOfType&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">Object.FindObjectsByType&lt;T&gt;(FindObjectsSortMode)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.FindObjectsOfType&lt;T&gt;(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Object.FindObjectsByType&lt;T&gt;(FindObjectsInactive, FindObjectsSortMode)</span>
+    </div>
+    <div>
+      <span class="xref">Object.FindObjectOfType&lt;T&gt;()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.FindObjectOfType&lt;T&gt;(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Object.FindFirstObjectByType&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">Object.FindAnyObjectByType&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">Object.FindFirstObjectByType&lt;T&gt;(FindObjectsInactive)</span>
+    </div>
+    <div>
+      <span class="xref">Object.FindAnyObjectByType&lt;T&gt;(FindObjectsInactive)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsOfTypeAll(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object.CheckNullArgument(object, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectOfType(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindFirstObjectByType(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindAnyObjectByType(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectOfType(Type, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindFirstObjectByType(Type, FindObjectsInactive)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindAnyObjectByType(Type, FindObjectsInactive)</a>
+    </div>
+    <div>
+      <span class="xref">Object.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">Object.GetOffsetOfInstanceIDInCPlusPlusObject()</span>
+    </div>
+    <div>
+      <span class="xref">Object.CurrentThreadIsMainThread()</span>
+    </div>
+    <div>
+      <span class="xref">Object.Internal_CloneSingle(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.Internal_CloneSingleWithParent(Object, Transform, bool)</a>
+    </div>
+    <div>
+      <span class="xref">Object.Internal_InstantiateSingle(Object, Vector3, Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Internal_InstantiateSingleWithParent(Object, Transform, Vector3, Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.ToString(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.GetName(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.IsPersistent(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Object.SetName(Object, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Object.DoesObjectWithInstanceIDExist(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Object.FindObjectFromInstanceID(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Object.ForceLoadFromInstanceID(int)</a>
+    </div>
+    <div>
+      <span class="xref">Object.Internal_InstantiateSingle_Injected(Object, ref Vector3, ref Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Internal_InstantiateSingleWithParent_Injected(Object, Transform, ref Vector3, ref Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.name</span>
+    </div>
+    <div>
+      <span class="xref">Object.hideFlags</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="R2API.html">R2API</a>.<a class="xref" href="R2API.Animations.html">Animations</a>.<a class="xref" href="R2API.Animations.Editor.html">Editor</a></h6>
+  <h6><strong>Assembly</strong>: R2API.Animations.Editor.dll</h6>
+  <h5 id="R2API_Animations_Editor_AnimatorDiffImporterEditor_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[CustomEditor(typeof(AnimatorDiffImporter))]
+public class AnimatorDiffImporterEditor : ScriptedImporterEditor, IPreviewable, IToolModeOwner</code></pre>
+  </div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporterEditor_extraDataType.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporterEditor.extraDataType%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporterEditor.cs/#L13">View Source</a>
+  </span>
+  <a id="R2API_Animations_Editor_AnimatorDiffImporterEditor_extraDataType_" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.extraDataType*"></a>
+  <h4 id="R2API_Animations_Editor_AnimatorDiffImporterEditor_extraDataType" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.extraDataType">extraDataType</h4>
+  <div class="markdown level1 summary"><p>Override this property to return a type that inherits from ScriptableObject. This makes the AssetImporterEditor aware of serialized data outside of the Importer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Type extraDataType { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">UnityEditor.AssetImporters.AssetImporterEditor.extraDataType</span></div>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporterEditor_Apply.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporterEditor.Apply%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporterEditor.cs/#L51">View Source</a>
+  </span>
+  <a id="R2API_Animations_Editor_AnimatorDiffImporterEditor_Apply_" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.Apply*"></a>
+  <h4 id="R2API_Animations_Editor_AnimatorDiffImporterEditor_Apply" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.Apply">Apply()</h4>
+  <div class="markdown level1 summary"><p>Saves any changes from the Editor's control into the asset's import settings object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Apply()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">UnityEditor.AssetImporters.AssetImporterEditor.Apply()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporterEditor_CanOpenMultipleObjects.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporterEditor.CanOpenMultipleObjects%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporterEditor.cs/#L36">View Source</a>
+  </span>
+  <a id="R2API_Animations_Editor_AnimatorDiffImporterEditor_CanOpenMultipleObjects_" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.CanOpenMultipleObjects*"></a>
+  <h4 id="R2API_Animations_Editor_AnimatorDiffImporterEditor_CanOpenMultipleObjects" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.CanOpenMultipleObjects">CanOpenMultipleObjects()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool CanOpenMultipleObjects()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">UnityEditor.Editor.CanOpenMultipleObjects()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporterEditor_InitializeExtraDataInstance_UnityEngine_Object_System_Int32_.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporterEditor.InitializeExtraDataInstance(UnityEngine.Object%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporterEditor.cs/#L16">View Source</a>
+  </span>
+  <a id="R2API_Animations_Editor_AnimatorDiffImporterEditor_InitializeExtraDataInstance_" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.InitializeExtraDataInstance*"></a>
+  <h4 id="R2API_Animations_Editor_AnimatorDiffImporterEditor_InitializeExtraDataInstance_UnityEngine_Object_System_Int32_" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.InitializeExtraDataInstance(UnityEngine.Object,System.Int32)">InitializeExtraDataInstance(Object, int)</h4>
+  <div class="markdown level1 summary"><p>This method is called during the initialization process of the Editor, after Awake and before OnEnable.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void InitializeExtraDataInstance(Object extraData, int targetIndex)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Object</span></td>
+        <td><span class="parametername">extraData</span></td>
+        <td><p>A ScriptableObject instance of the type provided by AssetImporterEditor.extraDataType.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">targetIndex</span></td>
+        <td><p>The corresponding Editor.targets index of the provided extraData.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">AssetImporterEditor.InitializeExtraDataInstance(Object, int)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporterEditor_OnEnable.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporterEditor.OnEnable%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporterEditor.cs/#L30">View Source</a>
+  </span>
+  <a id="R2API_Animations_Editor_AnimatorDiffImporterEditor_OnEnable_" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.OnEnable*"></a>
+  <h4 id="R2API_Animations_Editor_AnimatorDiffImporterEditor_OnEnable" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.OnEnable">OnEnable()</h4>
+  <div class="markdown level1 summary"><p>This function is called when the object is loaded.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void OnEnable()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">UnityEditor.AssetImporters.AssetImporterEditor.OnEnable()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporterEditor_OnInspectorGUI.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporterEditor.OnInspectorGUI%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporterEditor.cs/#L41">View Source</a>
+  </span>
+  <a id="R2API_Animations_Editor_AnimatorDiffImporterEditor_OnInspectorGUI_" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.OnInspectorGUI*"></a>
+  <h4 id="R2API_Animations_Editor_AnimatorDiffImporterEditor_OnInspectorGUI" data-uid="R2API.Animations.Editor.AnimatorDiffImporterEditor.OnInspectorGUI">OnInspectorGUI()</h4>
+  <div class="markdown level1 summary"><p>Override this method to create your own Inpsector GUI for a ScriptedImporter.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void OnInspectorGUI()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">UnityEditor.AssetImporters.AssetImporterEditor.OnInspectorGUI()</span></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">UnityEditor.IPreviewable</span>
+  </div>
+  <div>
+      <span class="xref">UnityEditor.IToolModeOwner</span>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_UnityEngine_Networking_NetworkConnection_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkConnection)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_GetFieldValue__1_System_Object_System_String_">Reflection.GetFieldValue&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_GetPropertyValue__1_System_Object_System_String_">Reflection.GetPropertyValue&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod_System_Object_System_String_">Reflection.InvokeMethod(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod_System_Object_System_String_System_Object___">Reflection.InvokeMethod(object?, string?, params object?[]?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod__1_System_Object_System_String_">Reflection.InvokeMethod&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod__1_System_Object_System_String_System_Object___">Reflection.InvokeMethod&lt;TReturn&gt;(object?, string?, params object?[]?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetFieldValue__1_System_Object_System_String___0_">Reflection.SetFieldValue&lt;TValue&gt;(object?, string?, TValue)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetPropertyValue__1_System_Object_System_String___0_">Reflection.SetPropertyValue&lt;TValue&gt;(object?, string?, TValue)</a>
+  </div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_Animations_Editor_AnimatorDiffImporterEditor.md&amp;value=---%0Auid%3A%20R2API.Animations.Editor.AnimatorDiffImporterEditor%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Animations.Editor/AnimatorDiffImporterEditor.cs/#L10" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
