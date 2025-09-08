@@ -9,6 +9,8 @@ using R2API.Utils;
 using RoR2;
 using RoR2.Skills;
 using RoR2.UI;
+using UnityEngine;
+using HarmonyLib;
 
 namespace R2API;
 
@@ -24,6 +26,7 @@ public static partial class SkillsAPI
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot += LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData += CharacterSelectControllerBuildSkillStripDisplayDataHook;
         IL.RoR2.GenericSkill.RecalculateMaxStock += GenericSkill_RecalculateMaxStock;
+        IL.RoR2.UI.SkillIcon.Update += SkillIcon_Update;
     }
     internal static void UnsetHooks()
     {
@@ -31,7 +34,18 @@ public static partial class SkillsAPI
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot -= LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData -= CharacterSelectControllerBuildSkillStripDisplayDataHook;
         IL.RoR2.GenericSkill.RecalculateMaxStock -= GenericSkill_RecalculateMaxStock;
+        IL.RoR2.UI.SkillIcon.Update -= SkillIcon_Update;
     }
+
+    /// <summary>
+    /// Gets the value of cooldown refresh sound of a SkillDef.
+    /// </summary>
+    public static string GetCustomCooldownRefreshSound(this SkillDef skillDef) => SkillDefInterop.GetCustomCooldownRefreshSound(skillDef);
+
+    /// <summary>
+    /// Sets the value of cooldown refresh sound of a SkillDef.
+    /// </summary>
+    public static void SetCustomCooldownRefreshSound(this SkillDef skillDef, string value) => SkillDefInterop.SetCustomCooldownRefreshSound(skillDef, value);
 
     /// <summary>
     /// Gets the value of bonus stock multiplication of a SkillDef.
@@ -258,7 +272,34 @@ public static partial class SkillsAPI
             return;
         }
     }
-    
+    private static void SkillIcon_Update(ILContext il)
+    {
+        var c = new ILCursor(il);
+        if (c.TryGotoNext(MoveType.Before,
+            x => x.MatchLdstr(out _),
+            x => x.MatchCall(typeof(RoR2Application).GetPropertyGetter(nameof(RoR2Application.instance))),
+            x => x.MatchCallvirt(typeof(Component).GetPropertyGetter(nameof(Component.gameObject))),
+            x => x.MatchCall(typeof(Util), nameof(Util.PlaySound))
+            )
+            )
+        {
+            Instruction instruction = c.Next;
+            Instruction instruction2 = c.Next.Next;
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(CheckCustomCooldownRefreshSound);
+            bool CheckCustomCooldownRefreshSound(SkillIcon skillIcon) => skillIcon.targetSkill.skillDef.GetCustomCooldownRefreshSound() == null;
+            c.Emit(OpCodes.Brtrue_S, instruction);
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(GetCustomCooldownRefreshSound);
+            string GetCustomCooldownRefreshSound(SkillIcon skillIcon) => skillIcon.targetSkill.skillDef.GetCustomCooldownRefreshSound();
+            c.Emit(OpCodes.Br, instruction2);
+        }
+        else
+        {
+            SkillsPlugin.Logger.LogError($"Failed to apply {nameof(SkillIcon_Update)}");
+            return;
+        }
+    }
     private struct GenericSkillComparer : IComparer<GenericSkill>
     {
         public readonly int Compare(GenericSkill x, GenericSkill y) => x.GetOrderPriority() - y.GetOrderPriority();
