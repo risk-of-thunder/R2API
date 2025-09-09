@@ -13305,6 +13305,19 @@ references:
   isSpec: "True"
   fullName: R2API.Skills.Interop.SkillDefInterop.GetBonusStockMultiplier
   nameWithType: SkillDefInterop.GetBonusStockMultiplier
+- uid: R2API.Skills.Interop.SkillDefInterop.GetCustomCooldownRefreshSound(RoR2.Skills.SkillDef)
+  name: GetCustomCooldownRefreshSound(SkillDef)
+  href: api/R2API.Skills.Interop.SkillDefInterop.html#R2API_Skills_Interop_SkillDefInterop_GetCustomCooldownRefreshSound_RoR2_Skills_SkillDef_
+  commentId: M:R2API.Skills.Interop.SkillDefInterop.GetCustomCooldownRefreshSound(RoR2.Skills.SkillDef)
+  fullName: R2API.Skills.Interop.SkillDefInterop.GetCustomCooldownRefreshSound(RoR2.Skills.SkillDef)
+  nameWithType: SkillDefInterop.GetCustomCooldownRefreshSound(SkillDef)
+- uid: R2API.Skills.Interop.SkillDefInterop.GetCustomCooldownRefreshSound*
+  name: GetCustomCooldownRefreshSound
+  href: api/R2API.Skills.Interop.SkillDefInterop.html#R2API_Skills_Interop_SkillDefInterop_GetCustomCooldownRefreshSound_
+  commentId: Overload:R2API.Skills.Interop.SkillDefInterop.GetCustomCooldownRefreshSound
+  isSpec: "True"
+  fullName: R2API.Skills.Interop.SkillDefInterop.GetCustomCooldownRefreshSound
+  nameWithType: SkillDefInterop.GetCustomCooldownRefreshSound
 - uid: R2API.Skills.Interop.SkillDefInterop.SetBonusStockMultiplier(RoR2.Skills.SkillDef,System.Int32)
   name: SetBonusStockMultiplier(SkillDef, int)
   href: api/R2API.Skills.Interop.SkillDefInterop.html#R2API_Skills_Interop_SkillDefInterop_SetBonusStockMultiplier_RoR2_Skills_SkillDef_System_Int32_
@@ -13321,6 +13334,22 @@ references:
   isSpec: "True"
   fullName: R2API.Skills.Interop.SkillDefInterop.SetBonusStockMultiplier
   nameWithType: SkillDefInterop.SetBonusStockMultiplier
+- uid: R2API.Skills.Interop.SkillDefInterop.SetCustomCooldownRefreshSound(RoR2.Skills.SkillDef,System.String)
+  name: SetCustomCooldownRefreshSound(SkillDef, string)
+  href: api/R2API.Skills.Interop.SkillDefInterop.html#R2API_Skills_Interop_SkillDefInterop_SetCustomCooldownRefreshSound_RoR2_Skills_SkillDef_System_String_
+  commentId: M:R2API.Skills.Interop.SkillDefInterop.SetCustomCooldownRefreshSound(RoR2.Skills.SkillDef,System.String)
+  name.vb: SetCustomCooldownRefreshSound(SkillDef, String)
+  fullName: R2API.Skills.Interop.SkillDefInterop.SetCustomCooldownRefreshSound(RoR2.Skills.SkillDef, string)
+  fullName.vb: R2API.Skills.Interop.SkillDefInterop.SetCustomCooldownRefreshSound(RoR2.Skills.SkillDef, String)
+  nameWithType: SkillDefInterop.SetCustomCooldownRefreshSound(SkillDef, string)
+  nameWithType.vb: SkillDefInterop.SetCustomCooldownRefreshSound(SkillDef, String)
+- uid: R2API.Skills.Interop.SkillDefInterop.SetCustomCooldownRefreshSound*
+  name: SetCustomCooldownRefreshSound
+  href: api/R2API.Skills.Interop.SkillDefInterop.html#R2API_Skills_Interop_SkillDefInterop_SetCustomCooldownRefreshSound_
+  commentId: Overload:R2API.Skills.Interop.SkillDefInterop.SetCustomCooldownRefreshSound
+  isSpec: "True"
+  fullName: R2API.Skills.Interop.SkillDefInterop.SetCustomCooldownRefreshSound
+  nameWithType: SkillDefInterop.SetCustomCooldownRefreshSound
 - uid: R2API.SkillsAPI
   name: SkillsAPI
   href: api/R2API.SkillsAPI.html
@@ -13340,6 +13369,19 @@ references:
   isSpec: "True"
   fullName: R2API.SkillsAPI.GetBonusStockMultiplier
   nameWithType: SkillsAPI.GetBonusStockMultiplier
+- uid: R2API.SkillsAPI.GetCustomCooldownRefreshSound(RoR2.Skills.SkillDef)
+  name: GetCustomCooldownRefreshSound(SkillDef)
+  href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_GetCustomCooldownRefreshSound_RoR2_Skills_SkillDef_
+  commentId: M:R2API.SkillsAPI.GetCustomCooldownRefreshSound(RoR2.Skills.SkillDef)
+  fullName: R2API.SkillsAPI.GetCustomCooldownRefreshSound(RoR2.Skills.SkillDef)
+  nameWithType: SkillsAPI.GetCustomCooldownRefreshSound(SkillDef)
+- uid: R2API.SkillsAPI.GetCustomCooldownRefreshSound*
+  name: GetCustomCooldownRefreshSound
+  href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_GetCustomCooldownRefreshSound_
+  commentId: Overload:R2API.SkillsAPI.GetCustomCooldownRefreshSound
+  isSpec: "True"
+  fullName: R2API.SkillsAPI.GetCustomCooldownRefreshSound
+  nameWithType: SkillsAPI.GetCustomCooldownRefreshSound
 - uid: R2API.SkillsAPI.GetHideInCharacterSelectIfFirstSkillSelected(RoR2.GenericSkill)
   name: GetHideInCharacterSelectIfFirstSkillSelected(GenericSkill)
   href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_GetHideInCharacterSelectIfFirstSkillSelected_RoR2_GenericSkill_
@@ -13426,6 +13468,22 @@ references:
   isSpec: "True"
   fullName: R2API.SkillsAPI.SetBonusStockMultiplier
   nameWithType: SkillsAPI.SetBonusStockMultiplier
+- uid: R2API.SkillsAPI.SetCustomCooldownRefreshSound(RoR2.Skills.SkillDef,System.String)
+  name: SetCustomCooldownRefreshSound(SkillDef, string)
+  href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_SetCustomCooldownRefreshSound_RoR2_Skills_SkillDef_System_String_
+  commentId: M:R2API.SkillsAPI.SetCustomCooldownRefreshSound(RoR2.Skills.SkillDef,System.String)
+  name.vb: SetCustomCooldownRefreshSound(SkillDef, String)
+  fullName: R2API.SkillsAPI.SetCustomCooldownRefreshSound(RoR2.Skills.SkillDef, string)
+  fullName.vb: R2API.SkillsAPI.SetCustomCooldownRefreshSound(RoR2.Skills.SkillDef, String)
+  nameWithType: SkillsAPI.SetCustomCooldownRefreshSound(SkillDef, string)
+  nameWithType.vb: SkillsAPI.SetCustomCooldownRefreshSound(SkillDef, String)
+- uid: R2API.SkillsAPI.SetCustomCooldownRefreshSound*
+  name: SetCustomCooldownRefreshSound
+  href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_SetCustomCooldownRefreshSound_
+  commentId: Overload:R2API.SkillsAPI.SetCustomCooldownRefreshSound
+  isSpec: "True"
+  fullName: R2API.SkillsAPI.SetCustomCooldownRefreshSound
+  nameWithType: SkillsAPI.SetCustomCooldownRefreshSound
 - uid: R2API.SkillsAPI.SetHideInCharacterSelectIfFirstSkillSelected(RoR2.GenericSkill,System.Boolean)
   name: SetHideInCharacterSelectIfFirstSkillSelected(GenericSkill, bool)
   href: api/R2API.SkillsAPI.html#R2API_SkillsAPI_SetHideInCharacterSelectIfFirstSkillSelected_RoR2_GenericSkill_System_Boolean_
@@ -18072,6 +18130,12 @@ references:
   commentId: F:RoR2.Skills.SkillDef.r2api_bonusStockMultiplier
   fullName: RoR2.Skills.SkillDef.r2api_bonusStockMultiplier
   nameWithType: SkillDef.r2api_bonusStockMultiplier
+- uid: RoR2.Skills.SkillDef.r2api_customCooldownRefreshSound
+  name: r2api_customCooldownRefreshSound
+  href: api/RoR2.Skills.SkillDef.html#RoR2_Skills_SkillDef_r2api_customCooldownRefreshSound
+  commentId: F:RoR2.Skills.SkillDef.r2api_customCooldownRefreshSound
+  fullName: RoR2.Skills.SkillDef.r2api_customCooldownRefreshSound
+  nameWithType: SkillDef.r2api_customCooldownRefreshSound
 - uid: RoR2.SkinDef
   name: SkinDef
   href: api/RoR2.SkinDef.html
