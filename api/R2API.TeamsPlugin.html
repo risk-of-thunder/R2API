@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Class R2API </title>
+      <title>Class TeamsPlugin </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Class R2API ">
+      <meta name="title" content="Class TeamsPlugin ">
     
     
       <link rel="shortcut icon" href="../favicon.ico">
@@ -66,11 +66,11 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="R2API.R2API">
+            <article class="content wrap" id="_content" data-uid="R2API.TeamsPlugin">
 
 
 
-  <h1 id="R2API_R2API" data-uid="R2API.R2API" class="text-break">Class R2API</h1>
+  <h1 id="R2API_TeamsPlugin" data-uid="R2API.TeamsPlugin" class="text-break">Class TeamsPlugin</h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -81,15 +81,12 @@
     <div class="level3"><span class="xref">Behaviour</span></div>
     <div class="level4"><span class="xref">MonoBehaviour</span></div>
     <div class="level5"><span class="xref">BaseUnityPlugin</span></div>
-    <div class="level6"><span class="xref">R2API</span></div>
+    <div class="level6"><span class="xref">TeamsPlugin</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
       <span class="xref">BaseUnityPlugin.Info</span>
-    </div>
-    <div>
-      <span class="xref">BaseUnityPlugin.Logger</span>
     </div>
     <div>
       <span class="xref">BaseUnityPlugin.Config</span>
@@ -536,295 +533,16 @@
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="R2API.html">R2API</a></h6>
-  <h6><strong>Assembly</strong>: R2API.Core.dll</h6>
-  <h5 id="R2API_R2API_syntax">Syntax</h5>
+  <h6><strong>Assembly</strong>: R2API.Teams.dll</h6>
+  <h5 id="R2API_TeamsPlugin_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[BepInDependency(&quot;com.bepis.r2api.artifactcode&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.commandhelper&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.content_management&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.damagetype&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.deployable&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.difficulty&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.director&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.dot&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.elites&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.items&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.language&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.loadout&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.lobbyconfig&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.networking&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.orb&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.prefab&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.lobbyconfig&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.recalculatestats&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.sceneasset&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.sound&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.tempvisualeffect&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;com.bepis.r2api.unlockable&quot;, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(&quot;___riskofthunder.RoR2BepInExPack&quot;, BepInDependency.DependencyFlags.HardDependency)]
-[BepInPlugin(&quot;com.bepis.r2api&quot;, &quot;R2API&quot;, &quot;5.1.7&quot;)]
-public class R2API : BaseUnityPlugin</code></pre>
+    <pre><code class="lang-csharp hljs">[BepInPlugin(&quot;com.bepis.r2api.teams&quot;, &quot;R2API.Teams&quot;, &quot;1.0.0&quot;)]
+public sealed class TeamsPlugin : BaseUnityPlugin</code></pre>
   </div>
-  <h3 id="fields">Fields
-</h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_R2API_PluginGUID.md&amp;value=---%0Auid%3A%20R2API.R2API.PluginGUID%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Core/R2API.cs/#L43">View Source</a>
-  </span>
-  <h4 id="R2API_R2API_PluginGUID" data-uid="R2API.R2API.PluginGUID">PluginGUID</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string PluginGUID = &quot;com.bepis.r2api&quot;</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_R2API_PluginName.md&amp;value=---%0Auid%3A%20R2API.R2API.PluginName%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Core/R2API.cs/#L45">View Source</a>
-  </span>
-  <h4 id="R2API_R2API_PluginName" data-uid="R2API.R2API.PluginName">PluginName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string PluginName = &quot;R2API&quot;</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-
-  <h4 id="R2API_R2API_PluginVersion" data-uid="R2API.R2API.PluginVersion">PluginVersion</h4>
-  <div class="markdown level1 summary"><p>Version of the plugin, should be matching with the thunderstore package.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string PluginVersion = &quot;5.1.7&quot;</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-</h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_R2API_DebugMode.md&amp;value=---%0Auid%3A%20R2API.R2API.DebugMode%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Core/R2API.cs/#L51">View Source</a>
-  </span>
-  <a id="R2API_R2API_DebugMode_" data-uid="R2API.R2API.DebugMode*"></a>
-  <h4 id="R2API_R2API_DebugMode" data-uid="R2API.R2API.DebugMode">DebugMode</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool DebugMode { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-</h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_R2API_IsLoaded_System_String_.md&amp;value=---%0Auid%3A%20R2API.R2API.IsLoaded(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Core/R2API.cs/#L135">View Source</a>
-  </span>
-  <a id="R2API_R2API_IsLoaded_" data-uid="R2API.R2API.IsLoaded*"></a>
-  <h4 id="R2API_R2API_IsLoaded_System_String_" data-uid="R2API.R2API.IsLoaded(System.String)">IsLoaded(string)</h4>
-  <div class="markdown level1 summary"><p>Return true if the specified submodule is loaded.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool IsLoaded(string submodule)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
-        <td><span class="parametername">submodule</span></td>
-        <td><p>nameof the submodule</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_R2API_LogDebug_System_Object_System_String_.md&amp;value=---%0Auid%3A%20R2API.R2API.LogDebug(System.Object%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Core/R2API.cs/#L111">View Source</a>
-  </span>
-  <a id="R2API_R2API_LogDebug_" data-uid="R2API.R2API.LogDebug*"></a>
-  <h4 id="R2API_R2API_LogDebug_System_Object_System_String_" data-uid="R2API.R2API.LogDebug(System.Object,System.String)">LogDebug(object, string)</h4>
-  <div class="markdown level1 summary"><p>Logs caller information along side debug message</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void LogDebug(object debugText, string caller = &quot;&quot;)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></td>
-        <td><span class="parametername">debugText</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
-        <td><span class="parametername">caller</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_R2API_SupportsVersion_System_String_.md&amp;value=---%0Auid%3A%20R2API.R2API.SupportsVersion(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Core/R2API.cs/#L145">View Source</a>
-  </span>
-  <a id="R2API_R2API_SupportsVersion_" data-uid="R2API.R2API.SupportsVersion*"></a>
-  <h4 id="R2API_R2API_SupportsVersion_System_String_" data-uid="R2API.R2API.SupportsVersion(System.String)">SupportsVersion(string?)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool SupportsVersion(string? version)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
-        <td><span class="parametername">version</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
@@ -864,6 +582,12 @@ public class R2API : BaseUnityPlugin</code></pre>
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_TeamsPlugin.md&amp;value=---%0Auid%3A%20R2API.TeamsPlugin%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Teams/TeamsPlugin.cs/#L5" class="contribution-link">View Source</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

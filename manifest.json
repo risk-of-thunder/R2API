@@ -2234,6 +2234,46 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TeamsAPI.TeamBehavior.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TeamsAPI.TeamBehavior.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TeamsAPI.TeamClassification.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TeamsAPI.TeamClassification.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TeamsAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TeamsAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.TeamsPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.TeamsPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.TempVisualEffectAPI.EffectCondition.yml",
       "output": {
         ".html": {
@@ -2624,6 +2664,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.Utils.TeamsAPINetworkExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.Utils.TeamsAPINetworkExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.Utils.VersionStrictness.yml",
       "output": {
         ".html": {
@@ -2858,6 +2908,16 @@
       "output": {
         ".html": {
           "relative_path": "api/RoR2.SkinDefParams.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/RoR2.TeamMask.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/RoR2.TeamMask.html"
         }
       },
       "version": ""
