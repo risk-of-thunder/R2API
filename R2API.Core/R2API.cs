@@ -73,6 +73,10 @@ public partial class R2API : BaseUnityPlugin
         _networkCompatibilityHandler.BuildModList();
 
         On.RoR2.RoR2Application.Awake += CheckIfUsedOnRightGameVersion;
+
+#if DEBUG
+        EnumPatcher.SetHooks();
+#endif
     }
 
     private void Start()
@@ -91,6 +95,7 @@ public partial class R2API : BaseUnityPlugin
     private void OnDestroy()
     {
         _networkCompatibilityHandler.CleanupModList();
+        EnumPatcher.UnsetHooks();
     }
 
     private static void DebugUpdate()
