@@ -127,6 +127,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Skins.Patcher", "R2AP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Skins.Interop", "R2API.Skins.Interop\R2API.Skins.Interop.csproj", "{5CD82D06-22F1-4F28-8340-4F6D3448BDE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Teams", "R2API.Teams\R2API.Teams.csproj", "{DE9CB919-E7A4-A858-2133-F31E54CCFCB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Teams.Interop", "R2API.Teams.Interop\R2API.Teams.Interop.csproj", "{9182FF4A-9015-C09A-7609-3A23457F5202}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R2API.Teams.Patcher", "R2API.Teams.Patcher\R2API.Teams.Patcher.csproj", "{682E79EF-4429-FB40-9BF6-63D133C2EF04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -337,6 +343,18 @@ Global
 		{5CD82D06-22F1-4F28-8340-4F6D3448BDE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CD82D06-22F1-4F28-8340-4F6D3448BDE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CD82D06-22F1-4F28-8340-4F6D3448BDE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE9CB919-E7A4-A858-2133-F31E54CCFCB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE9CB919-E7A4-A858-2133-F31E54CCFCB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE9CB919-E7A4-A858-2133-F31E54CCFCB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE9CB919-E7A4-A858-2133-F31E54CCFCB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9182FF4A-9015-C09A-7609-3A23457F5202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9182FF4A-9015-C09A-7609-3A23457F5202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9182FF4A-9015-C09A-7609-3A23457F5202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9182FF4A-9015-C09A-7609-3A23457F5202}.Release|Any CPU.Build.0 = Release|Any CPU
+		{682E79EF-4429-FB40-9BF6-63D133C2EF04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{682E79EF-4429-FB40-9BF6-63D133C2EF04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{682E79EF-4429-FB40-9BF6-63D133C2EF04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{682E79EF-4429-FB40-9BF6-63D133C2EF04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
