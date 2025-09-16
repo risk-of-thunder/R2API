@@ -9,7 +9,7 @@ internal static class TeamsPatcher
 
     public static void Patch(AssemblyDefinition assembly)
     {
-        TypeDefinition procChainMask = assembly.MainModule.GetType("RoR2", "TeamMask");
-        procChainMask?.Fields.Add(new FieldDefinition("r2api_moddedMask", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(byte[]))));
+        TypeDefinition teamMask = assembly.MainModule.GetType("RoR2", "TeamMask");
+        teamMask?.Fields.Add(new FieldDefinition("r2api_moddedMask", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(byte[]))));
     }
 }
