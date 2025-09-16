@@ -28,7 +28,7 @@ public static partial class TeamsAPI
     public const string PluginName = R2API.PluginName + ".Teams";
 
     /// <summary>
-    /// The absolute maximum amount of teams there that can be in the catalog
+    /// The absolute maximum amount of teams there can be in the catalog
     /// </summary>
     public static int TeamCountLimit => sbyte.MaxValue - 1;
 
@@ -38,7 +38,7 @@ public static partial class TeamsAPI
     public static int TeamCount => TeamCatalog.teamDefs.Length;
 
     /// <summary>
-    /// The absolute maximum amount of modded teams that can be in the catalog
+    /// The absolute maximum amount of modded teams there can be in the catalog
     /// </summary>
     public static int ModdedTeamCountLimit => TeamCountLimit - _vanillaTeamsCount;
 
