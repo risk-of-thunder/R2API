@@ -367,7 +367,11 @@ public static partial class TeamsAPI
         orig(self);
     }
 
-    // Purpose: Replace 'base.SetDirtyBit(1U << (int)teamIndex)' with custom implementation for modded teams
+    // Purpose: Replace 'base.SetDirtyBit(1U << (int)teamIndex)' with
+    // if (IsModdedTeam(teamIndex))
+    //     setModdedTeamDirtyBit(this, teamIndex);
+    // else
+    //     base.SetDirtyBit(1U << (int)teamIndex)
     static void TeamManager_SetTeamExperience(ILContext il)
     {
         ILCursor c = new ILCursor(il);
