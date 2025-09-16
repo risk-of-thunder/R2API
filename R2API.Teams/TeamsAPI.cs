@@ -445,7 +445,7 @@ public static partial class TeamsAPI
             {
                 if (initialState || CompressedFlagArrayUtilities.Has(dirtyModdedTeamsBits, i))
                 {
-                    writer.WritePackedUInt64(self.teamExperience[_vanillaTeamsCount + i]);
+                    writer.WritePackedUInt64(self.teamExperience[(int)GetTeamIndex(i)]);
                 }
             }
 
