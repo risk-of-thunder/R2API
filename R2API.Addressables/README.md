@@ -8,6 +8,10 @@ Currently it adds the AddressReferencedAsset system, which allows you on the Edi
 
 ## Changelog
 
+### '1.1.2'
+
+* Reimplemented version '1.1.0' with fixes, changes and improvements.
+
 ### '1.1.1'
 
 * Revert 1.1.0

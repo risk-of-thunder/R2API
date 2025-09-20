@@ -18,6 +18,10 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.3.6'
+* Both AddressableDirectorCardCategorySelection and AddressableDCCSPool now have more intricate validation during upgrading process.
+  * This means that they should catch issues such as invalid spawn cards, invalid addresses and more.
+
 ### '2.3.5'
 * Added MixEnemiesDccsActions action that would allow interaction with MixEnemy artifact DCCS replacement.
 
