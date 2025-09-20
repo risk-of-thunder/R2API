@@ -37,9 +37,16 @@ public class AddressableDCCSPool : ScriptableObject
 
     private void Upgrade()
     {
-        DccsPool.Category[] categories = poolCategories.Select(x => x.Upgrade()).ToArray();
-        targetPool.poolCategories = categories;
-        poolCategories = null;
+        try
+        {
+            DccsPool.Category[] categories = poolCategories.Select(x => x.Upgrade()).ToArray();
+            targetPool.poolCategories = categories;
+            poolCategories = null;
+        }
+        catch(Exception e)
+        {
+            DirectorPlugin.Logger.LogError($"{this} failed to upgrade.\n{e}");
+        }
     }
 
     private void Awake() => instances.Add(this);

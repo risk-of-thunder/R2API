@@ -27,8 +27,15 @@ public class AddressableDirectorCardCategorySelection : ScriptableObject
 
     private void Upgrade()
     {
-        targetCardCategorySelection.categories = categories.Select(x => x.Upgrade()).ToArray();
-        categories = null;
+        try
+        {
+            targetCardCategorySelection.categories = categories.Select(x => x.Upgrade()).ToArray();
+            categories = null;
+        }
+        catch (Exception e)
+        {
+            DirectorPlugin.Logger.LogError($"{this} failed to upgrade.\n{e}");
+        }
     }
 
     private void Awake() => instances.Add(this);
