@@ -82,10 +82,20 @@
     <div class="level2"><a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html">AddressReferencedAsset</a>&lt;<span class="xref">BuffDef</span>&gt;</div>
     <div class="level3"><span class="xref">AddressReferencedBuffDef</span></div>
   </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_Asset">AddressReferencedAsset&lt;BuffDef&gt;.Asset</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_BoxedAsset">AddressReferencedAsset&lt;BuffDef&gt;.BoxedAsset</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_AsyncOperationHandle">AddressReferencedAsset&lt;BuffDef&gt;.AsyncOperationHandle</a>
     </div>
     <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_AssetExists">AddressReferencedAsset&lt;BuffDef&gt;.AssetExists</a>
@@ -103,6 +113,18 @@
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetAsync">AddressReferencedAsset&lt;BuffDef&gt;.LoadAssetAsync()</a>
     </div>
     <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetAsyncCoroutine">AddressReferencedAsset&lt;BuffDef&gt;.LoadAssetAsyncCoroutine()</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetNow">AddressReferencedAsset&lt;BuffDef&gt;.LoadAssetNow()</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAssetNowCoroutine_System_Action__0__">AddressReferencedAsset&lt;BuffDef&gt;.LoadAssetNowCoroutine(Action&lt;BuffDef&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadFromAddressAsyncCoroutine">AddressReferencedAsset&lt;BuffDef&gt;.LoadFromAddressAsyncCoroutine()</a>
+    </div>
+    <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadFromAddressAsync">AddressReferencedAsset&lt;BuffDef&gt;.LoadFromAddressAsync()</a>
     </div>
     <div>
@@ -110,6 +132,12 @@
     </div>
     <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_ToString">AddressReferencedAsset&lt;BuffDef&gt;.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_Dispose">AddressReferencedAsset&lt;BuffDef&gt;.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_addressesThatFailedToBeValidated">AddressReferencedAsset.addressesThatFailedToBeValidated</a>
     </div>
     <div>
       <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_instances">AddressReferencedAsset.instances</a>
@@ -150,7 +178,7 @@
   <h5 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Serializable]
-public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</code></pre>
+public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;, IDisposable</code></pre>
   </div>
   <h3 id="constructors">Constructors
 </h3>
@@ -159,7 +187,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef__ctor.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef.%23ctor%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L77">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L108">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedBuffDef__ctor_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.#ctor*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef__ctor" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.#ctor">AddressReferencedBuffDef()</h4>
@@ -175,7 +203,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef__ctor_RoR2_BuffDef_.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef.%23ctor(RoR2.BuffDef)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L83">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L114">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedBuffDef__ctor_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.#ctor*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef__ctor_RoR2_BuffDef_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.#ctor(RoR2.BuffDef)">AddressReferencedBuffDef(BuffDef)</h4>
@@ -208,7 +236,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef__ctor_System_String_.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef.%23ctor(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L89">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L120">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedBuffDef__ctor_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.#ctor*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef__ctor_System_String_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.#ctor(System.String)">AddressReferencedBuffDef(string)</h4>
@@ -243,7 +271,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef_CanLoadFromCatalog.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef.CanLoadFromCatalog%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L17">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L19">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_CanLoadFromCatalog_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.CanLoadFromCatalog*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_CanLoadFromCatalog" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.CanLoadFromCatalog">CanLoadFromCatalog</h4>
@@ -253,7 +281,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override bool CanLoadFromCatalog { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public override bool CanLoadFromCatalog { get; protected set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-condensed">
@@ -279,7 +307,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef_Load.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef.Load%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L29">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L57">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_Load_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.Load*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_Load" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.Load">Load()</h4>
@@ -297,16 +325,16 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef_LoadAsync.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsync%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L18">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L42">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_LoadAsync_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsync*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_LoadAsync" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsync">LoadAsync()</h4>
-  <div class="markdown level1 summary"><p>Implement how the Asset of type <span class="xref">RoR2.BuffDef</span> is loaded asynchronously when <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_Asset">Asset</a> is null</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected override Task LoadAsync()</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Call LoadAsyncCoroutine instead&quot;)]
+protected override Task LoadAsync()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-condensed">
@@ -325,6 +353,39 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAsync">AddressReferencedAsset&lt;BuffDef&gt;.LoadAsync()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef_LoadAsyncCoroutine.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsyncCoroutine%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L24">View Source</a>
+  </span>
+  <a id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_LoadAsyncCoroutine_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsyncCoroutine*"></a>
+  <h4 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_LoadAsyncCoroutine" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.LoadAsyncCoroutine">LoadAsyncCoroutine()</h4>
+  <div class="markdown level1 summary"><p>Implement how the Asset of type <span class="xref">RoR2.BuffDef</span> is loaded asynchronously when <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_Asset">Asset</a> is null</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override IEnumerator LoadAsyncCoroutine()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerator">IEnumerator</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_LoadAsyncCoroutine">AddressReferencedAsset&lt;BuffDef&gt;.LoadAsyncCoroutine()</a></div>
   <h3 id="operators">Operators
 </h3>
   <span class="small pull-right mobile-hide">
@@ -332,7 +393,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_R2API_AddressReferencedAssets_AddressReferencedBuffDef__RoR2_BuffDef.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit(R2API.AddressReferencedAssets.AddressReferencedBuffDef)~RoR2.BuffDef%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L52">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L83">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_R2API_AddressReferencedAssets_AddressReferencedBuffDef__RoR2_BuffDef" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit(R2API.AddressReferencedAssets.AddressReferencedBuffDef)~RoR2.BuffDef">implicit operator BuffDef(AddressReferencedBuffDef)</h4>
@@ -380,7 +441,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_R2API_AddressReferencedAssets_AddressReferencedBuffDef__System_Boolean.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit(R2API.AddressReferencedAssets.AddressReferencedBuffDef)~System.Boolean%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L44">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L75">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_R2API_AddressReferencedAssets_AddressReferencedBuffDef__System_Boolean" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit(R2API.AddressReferencedAssets.AddressReferencedBuffDef)~System.Boolean">implicit operator bool(AddressReferencedBuffDef)</h4>
@@ -429,7 +490,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_RoR2_BuffDef__R2API_AddressReferencedAssets_AddressReferencedBuffDef.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit(RoR2.BuffDef)~R2API.AddressReferencedAssets.AddressReferencedBuffDef%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L68">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L99">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_RoR2_BuffDef__R2API_AddressReferencedAssets_AddressReferencedBuffDef" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit(RoR2.BuffDef)~R2API.AddressReferencedAssets.AddressReferencedBuffDef">implicit operator AddressReferencedBuffDef(BuffDef)</h4>
@@ -477,7 +538,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_System_String__R2API_AddressReferencedAssets_AddressReferencedBuffDef.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit(System.String)~R2API.AddressReferencedAssets.AddressReferencedBuffDef%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L60">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L91">View Source</a>
   </span>
   <a id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit*"></a>
   <h4 id="R2API_AddressReferencedAssets_AddressReferencedBuffDef_op_Implicit_System_String__R2API_AddressReferencedAssets_AddressReferencedBuffDef" data-uid="R2API.AddressReferencedAssets.AddressReferencedBuffDef.op_Implicit(System.String)~R2API.AddressReferencedAssets.AddressReferencedBuffDef">implicit operator AddressReferencedBuffDef(string)</h4>
@@ -520,6 +581,10 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
@@ -563,7 +628,7 @@ public class AddressReferencedBuffDef : AddressReferencedAsset&lt;BuffDef&gt;</c
                     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_AddressReferencedAssets_AddressReferencedBuffDef.md&amp;value=---%0Auid%3A%20R2API.AddressReferencedAssets.AddressReferencedBuffDef%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L14" class="contribution-link">View Source</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Addressables/AddressReferencedAssets/AddressReferencedBuffDef.cs/#L16" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
