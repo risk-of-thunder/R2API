@@ -27,7 +27,28 @@ public class AddressableDirectorCardCategorySelection : ScriptableObject
 
     private void Upgrade()
     {
-        targetCardCategorySelection.categories = categories.Select(x => x.Upgrade()).ToArray();
+        var logger = DirectorPlugin.Logger;
+        List<DirectorCardCategorySelection.Category> upgradedCategories = new List<DirectorCardCategorySelection.Category>();
+        for (int i = 0; i < categories.Length; i++)
+        {
+            Category addressableCategory = categories[i];
+            var possibleResult = addressableCategory.Upgrade();
+            if (!possibleResult.HasValue)
+            {
+                logger.LogWarning($"{this}'s {i}th category failed to upgrade.");
+                continue;
+            }
+
+            var result = possibleResult.Value;
+            if(result.cards.Length == 0)
+            {
+                logger.LogWarning($"{this}'s {i}th category failed to upgrade, no cards where computed.");
+                continue;
+            }
+
+            upgradedCategories.Add(possibleResult.Value);
+        }
+        targetCardCategorySelection.categories = upgradedCategories.ToArray();
         categories = null;
     }
 
@@ -42,7 +63,14 @@ public class AddressableDirectorCardCategorySelection : ScriptableObject
         {
             foreach (var instance in instances)
             {
-                instance.Upgrade();
+                try
+                {
+                    instance.Upgrade();
+                }
+                catch(Exception ex)
+                {
+                    DirectorPlugin.Logger.LogError($"{instance} failed to upgrade.\n{ex}");
+                }
             }
         };
     }
@@ -60,14 +88,40 @@ public class AddressableDirectorCardCategorySelection : ScriptableObject
         [Tooltip("The weight of this category relative to the other categories")]
         public float selectionWeight;
 
-        internal DirectorCardCategorySelection.Category Upgrade()
+        internal DirectorCardCategorySelection.Category? Upgrade()
         {
-            return new DirectorCardCategorySelection.Category
+            DirectorCardCategorySelection.Category result = new DirectorCardCategorySelection.Category()
             {
                 name = name,
-                cards = cards.Select(x => x.Upgrade()).ToArray(),
                 selectionWeight = selectionWeight
             };
+            List<DirectorCard> resultCards = new List<DirectorCard>();
+
+            if (cards == null || cards.Length == 0)
+            {
+                DirectorPlugin.Logger.LogWarning($"Director card category {name} cannot upgrade as there are no AddressableDirectorCards. See below for more information.");
+                return null;
+            }
+
+            for (int i = 0; i < cards.Length; i++)
+            {
+                AddressableDirectorCard card = cards[i];
+                var realCard = card?.Upgrade();
+
+                if (realCard == null)
+                    continue;
+
+                if(!realCard.spawnCard)
+                {
+                    DirectorPlugin.Logger.LogWarning($"AddressableDCCS.Category with name {name} has an invalid spawn card at index {i}");
+                    continue;
+                }
+
+                resultCards.Add(realCard);
+            }
+
+            result.cards = resultCards.ToArray();
+            return result;
         }
     }
 }
