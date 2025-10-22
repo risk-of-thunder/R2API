@@ -183,6 +183,8 @@ public static partial class TeamsAPI
         On.RoR2.TeamMask.AddTeam -= TeamMask_AddTeam;
         On.RoR2.TeamMask.RemoveTeam -= TeamMask_RemoveTeam;
 
+        IL.RoR2.GenericPickupController.AttemptGrant -= GenericPickupController_AttemptGrant;
+
         foreach (IDetour hookInstance in _hookInstances)
         {
             hookInstance?.Dispose();
