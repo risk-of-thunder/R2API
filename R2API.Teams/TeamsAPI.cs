@@ -104,6 +104,8 @@ public static partial class TeamsAPI
         On.RoR2.TeamMask.AddTeam += TeamMask_AddTeam;
         On.RoR2.TeamMask.RemoveTeam += TeamMask_RemoveTeam;
 
+        IL.RoR2.GenericPickupController.AttemptGrant += GenericPickupController_AttemptGrant;
+
         MethodInfo fogDamageGetAffectedBodiesMoveNextMethod = null;
 
         MethodInfo fogDamageGetAffectedBodiesMethod = SymbolExtensions.GetMethodInfo<FogDamageController>(_ => _.GetAffectedBodies());
@@ -180,6 +182,8 @@ public static partial class TeamsAPI
         On.RoR2.TeamMask.HasTeam -= TeamMask_HasTeam;
         On.RoR2.TeamMask.AddTeam -= TeamMask_AddTeam;
         On.RoR2.TeamMask.RemoveTeam -= TeamMask_RemoveTeam;
+
+        IL.RoR2.GenericPickupController.AttemptGrant -= GenericPickupController_AttemptGrant;
 
         foreach (IDetour hookInstance in _hookInstances)
         {
@@ -309,6 +313,29 @@ public static partial class TeamsAPI
         return layer;
     }
 
+    static void GenericPickupController_AttemptGrant(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+        int locNum = 0;
+        if (c.TryGotoNext(MoveType.After,
+                x => x.MatchLdloc(out locNum),
+                x => x.MatchCallvirt(typeof(TeamComponent).GetPropertyGetter("teamIndex"))
+            ))
+        {
+            c.EmitDelegate(HandleAttemptGrant);
+        }
+        else
+        {
+            Log.Error(il.Method.Name + " IL Hook failed!");
+        }
+    }
+    static TeamIndex HandleAttemptGrant(TeamIndex teamIndex)
+    {
+        TeamBehavior teamBehavior = GetTeamBehavior(teamIndex);
+        if (teamBehavior == null) return teamIndex;
+        if (teamBehavior.CanPickup) return TeamIndex.Player;
+        return teamIndex;
+    }
     static LayerIndex LayerIndex_GetAppropriateFakeLayerForTeam(On.RoR2.LayerIndex.orig_GetAppropriateFakeLayerForTeam orig, TeamIndex teamIndex)
     {
         LayerIndex fakeLayer = orig(teamIndex);
@@ -704,6 +731,10 @@ public static partial class TeamsAPI
             Name = name;
             Classification = teamClassification;
         }
+        /// <summary>
+        /// Make custom team be able to pickup pickups
+        /// </summary>
+        public virtual bool CanPickup => Classification == TeamClassification.Player;
     }
 
     /// <summary>
