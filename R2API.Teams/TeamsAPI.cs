@@ -333,7 +333,7 @@ public static partial class TeamsAPI
     {
         TeamBehavior teamBehavior = GetTeamBehavior(teamIndex);
         if (teamBehavior == null) return teamIndex;
-        if (teamBehavior.Classification == TeamClassification.Player) return TeamIndex.Player;
+        if (teamBehavior.CanPickup) return TeamIndex.Player;
         return teamIndex;
     }
     static LayerIndex LayerIndex_GetAppropriateFakeLayerForTeam(On.RoR2.LayerIndex.orig_GetAppropriateFakeLayerForTeam orig, TeamIndex teamIndex)
@@ -731,6 +731,10 @@ public static partial class TeamsAPI
             Name = name;
             Classification = teamClassification;
         }
+        /// <summary>
+        /// Make custom team be able to pickup pickups
+        /// </summary>
+        public virtual bool CanPickup => false;
     }
 
     /// <summary>
