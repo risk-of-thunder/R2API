@@ -14,5 +14,8 @@ Use `TeamsAPI.RegisterTeam` to add a new team, the `TeamIndex` of the new team i
 
 ## Changelog
 
+### '1.0.1'
+* Custom teams with Player Team Classification can now pickup pickups
+
 ### '1.0.0'
 * Initial Release
