@@ -734,7 +734,7 @@ public static partial class TeamsAPI
         /// <summary>
         /// Make custom team be able to pickup pickups
         /// </summary>
-        public virtual bool CanPickup => false;
+        public virtual bool CanPickup => Classification == TeamClassification.Player;
     }
 
     /// <summary>
