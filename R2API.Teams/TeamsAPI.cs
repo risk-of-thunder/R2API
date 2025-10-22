@@ -326,7 +326,7 @@ public static partial class TeamsAPI
         }
         else
         {
-            Debug.LogError(il.Method.Name + " IL Hook failed!");
+            Log.Error(il.Method.Name + " IL Hook failed!");
         }
     }
     static TeamIndex HandleAttemptGrant(TeamIndex teamIndex)
