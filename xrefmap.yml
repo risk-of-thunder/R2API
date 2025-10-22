@@ -16517,6 +16517,19 @@ references:
   fullName.vb: R2API.TeamsAPI.TeamBehavior.New
   nameWithType: TeamsAPI.TeamBehavior.TeamBehavior
   nameWithType.vb: TeamsAPI.TeamBehavior.New
+- uid: R2API.TeamsAPI.TeamBehavior.CanPickup
+  name: CanPickup
+  href: api/R2API.TeamsAPI.TeamBehavior.html#R2API_TeamsAPI_TeamBehavior_CanPickup
+  commentId: P:R2API.TeamsAPI.TeamBehavior.CanPickup
+  fullName: R2API.TeamsAPI.TeamBehavior.CanPickup
+  nameWithType: TeamsAPI.TeamBehavior.CanPickup
+- uid: R2API.TeamsAPI.TeamBehavior.CanPickup*
+  name: CanPickup
+  href: api/R2API.TeamsAPI.TeamBehavior.html#R2API_TeamsAPI_TeamBehavior_CanPickup_
+  commentId: Overload:R2API.TeamsAPI.TeamBehavior.CanPickup
+  isSpec: "True"
+  fullName: R2API.TeamsAPI.TeamBehavior.CanPickup
+  nameWithType: TeamsAPI.TeamBehavior.CanPickup
 - uid: R2API.TeamsAPI.TeamBehavior.Classification
   name: Classification
   href: api/R2API.TeamsAPI.TeamBehavior.html#R2API_TeamsAPI_TeamBehavior_Classification
