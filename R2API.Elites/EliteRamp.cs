@@ -106,7 +106,7 @@ public static class EliteRamp
             return;
         }
 
-        if (_elitesAndRamps.ContainsKey(eliteDef))
+        if (_elitesAndRamps.TryGetValue(eliteDef, out var existingRamp) && existingRamp != ramp)
         {
             ElitesPlugin.Logger.LogWarning($"Texture ramp for {eliteDef.name ?? eliteDef.modifierToken} already exists. The new texture will be used instead.");
         }

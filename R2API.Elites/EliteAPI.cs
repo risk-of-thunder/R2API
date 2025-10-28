@@ -48,7 +48,7 @@ public static partial class EliteAPI
 
     public static CombatDirector.EliteTierDef VanillaFirstTierDef => GetVanillaEliteTierDef(VanillaEliteTier.BaseTier1);
     public static CombatDirector.EliteTierDef VanillaEliteOnlyFirstTierDef => GetVanillaEliteTierDef(VanillaEliteTier.BaseTier1Honor);
-    public static CombatDirector.EliteTierDef GetVanillaEliteTierDef(VanillaEliteTier tier) => VanillaEliteTiers[(int)tier];
+    public static CombatDirector.EliteTierDef GetVanillaEliteTierDef(VanillaEliteTier tier) => HG.ArrayUtils.GetSafe(VanillaEliteTiers, (int)tier);
     public static int CustomEliteTierCount => CustomEliteTierDefs.Count;
 
     public static int VanillaEliteTierCount;
@@ -81,9 +81,8 @@ public static partial class EliteAPI
         if (_hooksEnabled)
             return;
 
+        // enabled must be set first to avoid recursion
         _hooksEnabled = true;
-
-        R2APIContentPackProvider.WhenAddingContentPacks += AddElitesToGame;
 
         if (CombatDirector.eliteTiers is null)
         {
@@ -97,8 +96,6 @@ public static partial class EliteAPI
         IL.RoR2.CombatDirector.Init -= InitEarlyCombatDirector;
         On.RoR2.CombatDirector.Init -= CopyCombatDirectorTiers;
 
-        R2APIContentPackProvider.WhenAddingContentPacks -= AddElitesToGame;
-
         _hooksEnabled = false;
     }
 
@@ -106,11 +103,13 @@ public static partial class EliteAPI
     {
         orig();
 
-        _vanillaEliteTiers = [.. CombatDirector.eliteTiers];
-        VanillaEliteTierCount = CombatDirector.eliteTiers.Length;
+        if (VanillaEliteTierCount == 0)
+        {
+            VanillaEliteTiers = [.. CombatDirector.eliteTiers];
+            VanillaEliteTierCount = CombatDirector.eliteTiers.Length;
+        }
 
-        // run once
-        On.RoR2.CombatDirector.Init -= CopyCombatDirectorTiers;
+        AddElitesToGame();
     }
 
     private static void InitEarlyCombatDirector(ILContext il)
@@ -131,10 +130,7 @@ public static partial class EliteAPI
         ResolveFieldInfo(il);
     }
 
-    private static CombatDirector.EliteTierDef UseExistingTierDef(CombatDirector.EliteTierDef tierDef, int index)
-    {
-        return HG.ArrayUtils.GetSafe(_vanillaEliteTiers, index, tierDef);
-    }
+    private static CombatDirector.EliteTierDef UseExistingTierDef(CombatDirector.EliteTierDef tierDef, int index) => HG.ArrayUtils.GetSafe(VanillaEliteTiers, index, tierDef);
 
     private static void ResolveFieldInfo(ILContext il)
     {
@@ -144,21 +140,25 @@ public static partial class EliteAPI
         if (!TryLoadTokensFromFile(out Dictionary<string, string> assetNameToGuid))
             return;
 
+        var c = new ILCursor(il);
         FieldReference fieldRef = null;
-        while (new ILCursor(il).TryGotoNext(MoveType.After, x => x.MatchLdsfld(out fieldRef)))
+
+        while (c.TryGotoNext(MoveType.After, x => x.MatchLdsfld(out fieldRef)))
         {
-            if (string.IsNullOrEmpty(fieldRef?.Name) || !fieldRef.Is(typeof(EliteDef)))
+            if (!assetNameToGuid.TryGetValue(fieldRef.Name, out var addressableGuid))
                 continue;
 
-            if (!assetNameToGuid.TryGetValue(fieldRef.Name, out var addressableGuid))
+            var addressable = Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion();
+            if (addressable is null)
             {
-                ElitesPlugin.Logger.LogError($"The addressable path {fieldRef.Name} is invalid! Skipping the addressable load.");
+                ElitesPlugin.Logger.LogWarning("Failed to load addressable " + fieldRef.Name + " | " + addressableGuid);
                 continue;
             }
 
             var fieldInfo = fieldRef.ResolveReflection();
             if (fieldInfo.GetValue(null) is null)
-                fieldInfo.SetValue(null, Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion());
+                fieldInfo.SetValue(null, addressable);
+
         }
 
         _resolvedFields = true;
@@ -257,7 +257,7 @@ public static partial class EliteAPI
     public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef, int indexToInsertAt = -1)
     {
         EliteAPI.SetHooks();
-
+        
         if (eliteTierDef is null)
         {
             ElitesPlugin.Logger.LogError("EliteTierDef cannot be null");
@@ -309,12 +309,10 @@ public static partial class EliteAPI
         foreach (var customElite in EliteDefinitions)
         {
             if (customElite.EliteRamp)
-                EliteRamp.AddRamp(customElite.EliteDef, customElite.EliteRamp);
+                EliteRamp.AddRamp(customElite.EliteDef, customElite.EliteRamp!);
 
             foreach (var tierDefToAdd in customElite.EliteTierDefs)
             {
-                tierDefToAdd.eliteTypes ??= [];
-
                 if (Array.IndexOf(tierDefToAdd.eliteTypes, customElite.EliteDef) == -1)
                     HG.ArrayUtils.ArrayAppend(ref tierDefToAdd.eliteTypes, customElite.EliteDef);
             }
