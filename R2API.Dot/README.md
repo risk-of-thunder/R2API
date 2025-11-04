@@ -18,6 +18,9 @@ Alongside adding new DotIndices and DotDefs, One can also provide CustomDotBehav
 
 ## Changelog
 
+### '1.1.1'
+* Removed ambiguity in methods.
+
 ### '1.1.0'
 * Add CustomDotDamageEvaluation feature.
 

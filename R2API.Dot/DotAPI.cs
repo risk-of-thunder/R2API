@@ -137,7 +137,7 @@ public static partial class DotAPI
     /// <param name="customDotVisual"></param>
     /// <returns></returns>
     public static DotController.DotIndex RegisterDotDef(DotController.DotDef? dotDef,
-        CustomDotBehaviour? customDotBehaviour = null, CustomDotVisual? customDotVisual = null)
+        CustomDotBehaviour? customDotBehaviour, CustomDotVisual? customDotVisual)
     {
         DotAPI.SetHooks();
         return RegisterDotDef(dotDef, customDotBehaviour, customDotVisual, null);
@@ -180,8 +180,8 @@ public static partial class DotAPI
     /// <param name="customDotVisual"></param>
     /// <returns></returns>
     public static DotController.DotIndex RegisterDotDef(float interval, float damageCoefficient,
-        DamageColorIndex colorIndex, BuffDef associatedBuff = null, CustomDotBehaviour customDotBehaviour = null,
-        CustomDotVisual customDotVisual = null)
+        DamageColorIndex colorIndex, BuffDef associatedBuff, CustomDotBehaviour customDotBehaviour,
+        CustomDotVisual customDotVisual)
     {
         DotAPI.SetHooks();
         return RegisterDotDef(interval, damageCoefficient, colorIndex, associatedBuff, customDotBehaviour, customDotVisual, null);
