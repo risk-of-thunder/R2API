@@ -134,20 +134,7 @@ public static partial class ExecuteAPI
     private static HealthComponent.HealthBarValues HealthComponent_GetHealthBarValues(On.RoR2.HealthComponent.orig_GetHealthBarValues orig, HealthComponent self)
     {
         var hbv = orig(self);
-
-        if (self.body)
-        {
-            float executeFractionAdd = 0f;
-            ExecuteAPI.CalculateExecuteThreshold?.Invoke(self.body, ref executeFractionAdd);
-            float executeFraction = ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd);
-            float healthbarFraction = (1f - hbv.curseFraction) / self.fullCombinedHealth;
-
-            float newCullFraction = Mathf.Clamp01(executeFraction * self.fullCombinedHealth * healthbarFraction);
-
-            //ExecuteAPI execute will not stack with non-ExecuteAPI executes.
-            hbv.cullFraction = Mathf.Max(hbv.cullFraction, newCullFraction);
-        }
-
+       UpdateHealthBarValues(self.body, null, hbv);
         return hbv;
     }
 
