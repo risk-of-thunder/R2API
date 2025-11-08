@@ -54,8 +54,6 @@ public static partial class ExecuteAPI
 
     [Tooltip("Calculates the additive execute threshold, factoring in viewer bodies. Final threshold is calculated by the function: 1 - 1 / (1 + executeFractionAdd)")]
     public static CalculateExecuteThresholdForViewerEventHandler CalculateExecuteThresholdForViewer;
-
-    public delegate void OnExecuteEventHandler(CharacterBody victimBody, DamageReport damageReport);
     #endregion
 
     #region internal utility methods
