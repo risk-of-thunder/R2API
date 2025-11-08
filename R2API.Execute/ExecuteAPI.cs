@@ -56,9 +56,6 @@ public static partial class ExecuteAPI
     public static CalculateExecuteThresholdForViewerEventHandler CalculateExecuteThresholdForViewer;
 
     public delegate void OnExecuteEventHandler(CharacterBody victimBody, DamageReport damageReport);
-
-    [Tooltip("Called when an enemy is executed through ExecuteAPI.")]
-    public static OnExecuteEventHandler OnExecute;
     #endregion
 
     #region internal utility methods
@@ -80,7 +77,6 @@ public static partial class ExecuteAPI
             if (victimHealth.health > 0f) victimHealth.health = 0f;
 
             GlobalEventManager.ServerCharacterExecuted(damageReport, executionHealthLost);
-            ExecuteAPI.OnExecute?.Invoke(victimBody, damageReport);
         }
     }
 
