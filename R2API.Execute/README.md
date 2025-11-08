@@ -13,9 +13,8 @@ Execute sources added via this module will not stack with Freeze and Guillotines
 Execute sources added via R2API.Execute stack additively with diminishing returns, using the following formula: `1 - (1/(1 + executeFractionAdd))`
 
 To add an execute source:
-* ExecuteAPI.CalculateExecuteThreshold allows mod creators to increment the execute fraction.
-* ExecuteAPI.CalculateExecuteThresholdForViewer is run after the above, and will factor in the attacker that is viewing the target's healthbar. (similar to Old Guillotine)
-* ExecuteAPI.OnExecute is called when an enemy is executed through this module.
+* `ExecuteAPI.CalculateExecuteThreshold` allows mod creators to increment the execute fraction.
+* `ExecuteAPI.CalculateExecuteThresholdForViewer` is run after the above, and will factor in the attacker that is viewing the target's healthbar. (similar to Old Guillotine)
 
 ## Changelog
 
