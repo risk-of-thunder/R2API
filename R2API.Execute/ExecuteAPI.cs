@@ -145,7 +145,7 @@ public static partial class ExecuteAPI
             float newCullFraction = Mathf.Clamp01(executeFraction * self.fullCombinedHealth * healthbarFraction);
 
             //ExecuteAPI execute will not stack with non-ExecuteAPI executes.
-            if (hbv.cullFraction < newCullFraction) hbv.cullFraction = newCullFraction;
+            hbv.cullFraction = Mathf.Max(hbv.cullFraction, newCullFraction);
         }
 
         return hbv;
