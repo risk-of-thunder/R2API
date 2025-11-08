@@ -88,6 +88,21 @@ public static partial class ExecuteAPI
     {
         return 1f - (1f / (1f + executeFractionAdd));
     }
+
+    private static void UpdateHealthBarValues(CharacterBody victimBody, CharacterBody viewerBody, HealthComponent.HealthBarValues hbv)
+    {
+        if (!victimBody || !victimBody.healthComponent) return;
+        float executeFractionAdd = 0f;
+        ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
+        if (viewerBody) ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, viewerBody, ref executeFractionAdd);
+        float executeFraction = ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd);
+        float healthbarFraction = (1f - hbv.curseFraction) / victimBody.healthComponent.fullCombinedHealth;
+
+        float newCullFraction = Mathf.Clamp01(executeFraction * victimBody.healthComponent.fullCombinedHealth * healthbarFraction);
+
+        //ExecuteAPI execute will not interact with non-ExecuteAPI executes.
+        if (hbv.cullFraction < newCullFraction) hbv.cullFraction = newCullFraction;
+    }
     #endregion
 
     #region hooks
@@ -134,21 +149,6 @@ public static partial class ExecuteAPI
         }
 
         return hbv;
-    }
-
-    private static void UpdateHealthBarValues(CharacterBody victimBody, CharacterBody viewerBody, HealthComponent.HealthBarValues hbv)
-    {
-        if (!victimBody || !victimBody.healthComponent) return;
-        float executeFractionAdd = 0f;
-        ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
-        if (viewerBody) ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, viewerBody, ref executeFractionAdd);
-        float executeFraction = ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd);
-        float healthbarFraction = (1f - hbv.curseFraction) / victimBody.healthComponent.fullCombinedHealth;
-
-        float newCullFraction = Mathf.Clamp01(executeFraction * victimBody.healthComponent.fullCombinedHealth * healthbarFraction);
-
-        //ExecuteAPI execute will not interact with non-ExecuteAPI executes.
-        if (hbv.cullFraction < newCullFraction) hbv.cullFraction = newCullFraction;
     }
 
     private static void GlobalEventManager_ServerDamageDealt(On.RoR2.GlobalEventManager.orig_ServerDamageDealt orig, DamageReport damageReport)
