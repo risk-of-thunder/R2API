@@ -45,14 +45,24 @@ public static partial class ExecuteAPI
     #endregion
 
     #region public-facing methods
-    public delegate void CalculateExecuteThresholdEventHandler(CharacterBody victimBody, ref float executeFractionAdd);
+    public delegate void CalculateAdditiveExecuteThresholdEventHandler(CharacterBody victimBody, ref float executeFractionAdd);
 
-    [Tooltip("Calculates the additive execute threshold. Final threshold is calculated by the function: 1 - 1 / (1 + executeFractionAdd)")]
+    [Tooltip("For stackable executes with cross-mod compat. Calculates the additive execute threshold. Final threshold is calculated by the function: 1 - 1 / (1 + executeFractionAdd)")]
+    public static CalculateAdditiveExecuteThresholdEventHandler CalculateAdditiveExecuteThreshold;
+
+    public delegate void CalculateAdditiveExecuteThresholdForViewerEventHandler(CharacterBody victimBody, CharacterBody viewerBody, ref float executeFractionAdd);
+
+    [Tooltip("For stackable executes with cross-mod compat. Calculates the additive execute threshold, factoring in viewer bodies. Final threshold is calculated by the function: 1 - 1 / (1 + executeFractionAdd)")]
+    public static CalculateAdditiveExecuteThresholdForViewerEventHandler CalculateAdditiveExecuteThresholdForViewer;
+
+    public delegate void CalculateExecuteThresholdEventHandler(CharacterBody victimBody, ref float highestExecuteThreshold);
+
+    [Tooltip("For vanilla-like executes that don't stack. Calculates the flat execute threshold.")]
     public static CalculateExecuteThresholdEventHandler CalculateExecuteThreshold;
 
-    public delegate void CalculateExecuteThresholdForViewerEventHandler(CharacterBody victimBody, CharacterBody viewerBody, ref float executeFractionAdd);
+    public delegate void CalculateExecuteThresholdForViewerEventHandler(CharacterBody victimBody, CharacterBody viewerBody, ref float highestExecuteThreshold);
 
-    [Tooltip("Calculates the additive execute threshold, factoring in viewer bodies. Final threshold is calculated by the function: 1 - 1 / (1 + executeFractionAdd)")]
+    [Tooltip("For vanilla-like executes that don't stack. Calculates the flat execute threshold, factoring in viewer bodies.")]
     public static CalculateExecuteThresholdForViewerEventHandler CalculateExecuteThresholdForViewer;
     #endregion
 
@@ -60,12 +70,21 @@ public static partial class ExecuteAPI
     private static void TryExecuteServer(CharacterBody victimBody, DamageReport damageReport)
     {
         HealthComponent victimHealth = victimBody.healthComponent;
-        float executeFractionAdd = 0f;
-        ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
-        if (damageReport.attackerBody) ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, damageReport.attackerBody, ref executeFractionAdd);
-
         float victimHealthFraction = victimHealth.combinedHealthFraction;
-        float executeFraction = ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd);
+
+        float executeFractionAdd = 0f;
+        float executeFractionFlat = 0f;
+
+        ExecuteAPI.CalculateAdditiveExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
+        ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionFlat);
+
+        if (damageReport.attackerBody)
+        {
+            ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer?.Invoke(victimBody, damageReport.attackerBody, ref executeFractionAdd);
+            ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, damageReport.attackerBody, ref executeFractionFlat);
+        }
+
+        float executeFraction = Mathf.Max(ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd), executeFractionFlat);
 
         if (executeFraction > 0f && victimHealthFraction <= executeFraction)
         {
@@ -89,15 +108,24 @@ public static partial class ExecuteAPI
         if (victimBody && victimBody.healthComponent)
         {
             float executeFractionAdd = 0f;
-            ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
-            if (viewerBody) ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, viewerBody, ref executeFractionAdd);
-            float executeFraction = ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd);
+            float executeFractionFlat = 0f;
+
+            ExecuteAPI.CalculateAdditiveExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
+            ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionFlat);
+
+            if (viewerBody)
+            {
+                ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer?.Invoke(victimBody, viewerBody, ref executeFractionAdd);
+                ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, viewerBody, ref executeFractionFlat);
+            }
+
+            float executeFraction = Mathf.Max(ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd), executeFractionFlat);
             float healthbarFraction = (1f - hbv.curseFraction) / victimBody.healthComponent.fullCombinedHealth;
 
             float newCullFraction = Mathf.Clamp01(executeFraction * victimBody.healthComponent.fullCombinedHealth * healthbarFraction);
 
             //ExecuteAPI execute will not interact with non-ExecuteAPI executes.
-            if (hbv.cullFraction < newCullFraction) hbv.cullFraction = newCullFraction;
+            hbv.cullFraction = Mathf.Max(hbv.cullFraction, newCullFraction);
         }
         return hbv;
     }
