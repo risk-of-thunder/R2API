@@ -8174,6 +8174,60 @@ references:
   commentId: T:R2API.ElitesPlugin
   fullName: R2API.ElitesPlugin
   nameWithType: ElitesPlugin
+- uid: R2API.ExecuteAPI
+  name: ExecuteAPI
+  href: api/R2API.ExecuteAPI.html
+  commentId: T:R2API.ExecuteAPI
+  fullName: R2API.ExecuteAPI
+  nameWithType: ExecuteAPI
+- uid: R2API.ExecuteAPI.CalculateExecuteThreshold
+  name: CalculateExecuteThreshold
+  href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_CalculateExecuteThreshold
+  commentId: F:R2API.ExecuteAPI.CalculateExecuteThreshold
+  fullName: R2API.ExecuteAPI.CalculateExecuteThreshold
+  nameWithType: ExecuteAPI.CalculateExecuteThreshold
+- uid: R2API.ExecuteAPI.CalculateExecuteThresholdEventHandler
+  name: ExecuteAPI.CalculateExecuteThresholdEventHandler
+  href: api/R2API.ExecuteAPI.CalculateExecuteThresholdEventHandler.html
+  commentId: T:R2API.ExecuteAPI.CalculateExecuteThresholdEventHandler
+  fullName: R2API.ExecuteAPI.CalculateExecuteThresholdEventHandler
+  nameWithType: ExecuteAPI.CalculateExecuteThresholdEventHandler
+- uid: R2API.ExecuteAPI.CalculateExecuteThresholdForViewer
+  name: CalculateExecuteThresholdForViewer
+  href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_CalculateExecuteThresholdForViewer
+  commentId: F:R2API.ExecuteAPI.CalculateExecuteThresholdForViewer
+  fullName: R2API.ExecuteAPI.CalculateExecuteThresholdForViewer
+  nameWithType: ExecuteAPI.CalculateExecuteThresholdForViewer
+- uid: R2API.ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler
+  name: ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler
+  href: api/R2API.ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler.html
+  commentId: T:R2API.ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler
+  fullName: R2API.ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler
+  nameWithType: ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler
+- uid: R2API.ExecuteAPI.PluginGUID
+  name: PluginGUID
+  href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_PluginGUID
+  commentId: F:R2API.ExecuteAPI.PluginGUID
+  fullName: R2API.ExecuteAPI.PluginGUID
+  nameWithType: ExecuteAPI.PluginGUID
+- uid: R2API.ExecuteAPI.PluginName
+  name: PluginName
+  href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_PluginName
+  commentId: F:R2API.ExecuteAPI.PluginName
+  fullName: R2API.ExecuteAPI.PluginName
+  nameWithType: ExecuteAPI.PluginName
+- uid: R2API.ExecuteAPI.PluginVersion
+  name: PluginVersion
+  href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_PluginVersion
+  commentId: F:R2API.ExecuteAPI.PluginVersion
+  fullName: R2API.ExecuteAPI.PluginVersion
+  nameWithType: ExecuteAPI.PluginVersion
+- uid: R2API.ExecutePlugin
+  name: ExecutePlugin
+  href: api/R2API.ExecutePlugin.html
+  commentId: T:R2API.ExecutePlugin
+  fullName: R2API.ExecutePlugin
+  nameWithType: ExecutePlugin
 - uid: R2API.ExtendedRuleChoiceDef
   name: ExtendedRuleChoiceDef
   href: api/R2API.ExtendedRuleChoiceDef.html

@@ -954,6 +954,46 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ExecuteAPI.CalculateExecuteThresholdEventHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ExecuteAPI.CalculateExecuteThresholdEventHandler.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ExecuteAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ExecuteAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ExecutePlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ExecutePlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.ExtendedRuleChoiceDef.yml",
       "output": {
         ".html": {
