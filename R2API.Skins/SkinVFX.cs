@@ -108,12 +108,13 @@ public static partial class SkinVFX
         SkinDef skinDef = SkinCatalog.FindCurrentSkinDefForBodyInstance(attacker);
         EffectIndex index = EffectCatalog.FindEffectIndexFromPrefab(effectPrefab);
 
-        return skinVFXInfos.FirstOrDefault(skinVFXInfo => skinVFXInfo.RequiredSkin == skinDef && skinVFXInfo.TargetEffect == index);
+        return skinVFXInfos.FirstOrDefault(skinVFXInfo => skinVFXInfo.RequiredSkin == skinDef && (index == EffectIndex.Invalid ? skinVFXInfo.EffectPrefab == effectPrefab : skinVFXInfo.TargetEffect == index));
     }
 
     private static void ModifyGenericMelee(On.EntityStates.BasicMeleeAttack.orig_BeginMeleeAttackEffect orig, EntityStates.BasicMeleeAttack self)
     {
         SkinVFXInfo info = FindSkinVFXInfo(self.gameObject, self.swingEffectPrefab);
+        bool first = !self.swingEffectInstance;
 
         if (info != null && info.ReplacementEffectPrefab)
         {
@@ -122,7 +123,7 @@ public static partial class SkinVFX
 
         orig(self);
 
-        if (info != null && info.OnEffectSpawned != null)
+        if (first && info != null && info.OnEffectSpawned != null && self.swingEffectInstance)
         {
             info.OnEffectSpawned(self.swingEffectInstance);
         }
