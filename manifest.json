@@ -954,6 +954,26 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdEventHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdEventHandler.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerEventHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerEventHandler.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.ExecuteAPI.CalculateExecuteThresholdEventHandler.yml",
       "output": {
         ".html": {

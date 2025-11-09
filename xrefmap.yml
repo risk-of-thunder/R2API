@@ -8180,6 +8180,30 @@ references:
   commentId: T:R2API.ExecuteAPI
   fullName: R2API.ExecuteAPI
   nameWithType: ExecuteAPI
+- uid: R2API.ExecuteAPI.CalculateAdditiveExecuteThreshold
+  name: CalculateAdditiveExecuteThreshold
+  href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_CalculateAdditiveExecuteThreshold
+  commentId: F:R2API.ExecuteAPI.CalculateAdditiveExecuteThreshold
+  fullName: R2API.ExecuteAPI.CalculateAdditiveExecuteThreshold
+  nameWithType: ExecuteAPI.CalculateAdditiveExecuteThreshold
+- uid: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdEventHandler
+  name: ExecuteAPI.CalculateAdditiveExecuteThresholdEventHandler
+  href: api/R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdEventHandler.html
+  commentId: T:R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdEventHandler
+  fullName: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdEventHandler
+  nameWithType: ExecuteAPI.CalculateAdditiveExecuteThresholdEventHandler
+- uid: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer
+  name: CalculateAdditiveExecuteThresholdForViewer
+  href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_CalculateAdditiveExecuteThresholdForViewer
+  commentId: F:R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer
+  fullName: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer
+  nameWithType: ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer
+- uid: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerEventHandler
+  name: ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerEventHandler
+  href: api/R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerEventHandler.html
+  commentId: T:R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerEventHandler
+  fullName: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerEventHandler
+  nameWithType: ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerEventHandler
 - uid: R2API.ExecuteAPI.CalculateExecuteThreshold
   name: CalculateExecuteThreshold
   href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_CalculateExecuteThreshold
