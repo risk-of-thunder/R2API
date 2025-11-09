@@ -136,19 +136,21 @@ public static partial class ExecuteAPI
     {
         ILCursor c = new ILCursor(il);
         int healthBarValueLoc = -1;
-        if (c.TryGotoNext(x => x.MatchLdloc(out healthBarValueLoc), x => x.MatchLdfld<HealthComponent.HealthBarValues>("cullFraction"))
-            && healthBarValueLoc >= 0
-            && c.TryGotoNext(x => x.MatchStfld<HealthBar.BarInfo>("normalizedXMax")))
+        if (c.TryGotoNext(MoveType.After, x => x.MatchLdloc(out healthBarValueLoc), x => x.MatchLdfld<HealthComponent.HealthBarValues>("cullFraction")) && healthBarValueLoc >= 0)
         {
             c.Emit(OpCodes.Ldarg_0);
             c.Emit(OpCodes.Ldloc, healthBarValueLoc);
-            c.EmitDelegate<Func<float, HealthBar, HealthComponent.HealthBarValues, float>>((originalCullFraction, self, healthBarValues) =>
+            c.EmitDelegate<Func<HealthBar, HealthComponent.HealthBarValues, HealthComponent.HealthBarValues>>((self, healthBarValues) =>
             {
                 if (self.source && self.source.body)
                 {
                     healthBarValues = UpdateHealthBarValues(self.source.body, self.viewerBody, healthBarValues);
                 }
-                return Mathf.Max(originalCullFraction, healthBarValues.cullFraction);
+                return healthBarValues;
+            });
+            c.EmitDelegate<Func<float, HealthComponent.HealthBarValues, float>>((origCullFraction, healthBarValues) =>
+            {
+                return Mathf.Max(origCullFraction, healthBarValues.cullFraction);
             });
         }
         else
