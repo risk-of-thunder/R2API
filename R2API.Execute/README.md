@@ -10,13 +10,22 @@ R2API.Execute can be used for mod creators to add custom sources of Execute to t
 
 Execute sources added via this module will not stack with Freeze and Guillotines, as the goal is to avoid changing Vanilla functionality.
 
-Execute sources added via R2API.Execute stack additively with diminishing returns, using the following formula: `1 - (1/(1 + executeFractionAdd))`
+To add a non-stacking execute source that behaves like Vanilla:
+* `ExecuteAPI.CalculateExecuteThreshold` keeps track of the current execute fraction with a float `highestExecuteThreshold`. To match Vanilla behavior, override the value of this when appropriate.
+* `ExecuteAPI.CalculateExecuteThresholdForViewer` is similar, but factors in the Attacker/Person viewing the healthbar.
 
-To add an execute source:
-* `ExecuteAPI.CalculateExecuteThreshold` allows mod creators to increment the execute fraction.
-* `ExecuteAPI.CalculateExecuteThresholdForViewer` is run after the above, and will factor in the attacker that is viewing the target's healthbar. (similar to Old Guillotine)
+To add a stackable execute source:
+* `ExecuteAPI.CalculateAdditiveExecuteThreshold` allows mod creators to increment the execute fraction additively with diminishing returns with the following formula: `1 - (1/(1 + executeFractionAdd))`
+* `ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer` is similar, but factors in the Attacker/Person viewing the healthbar.
 
 ## Changelog
+
+### '1.1.0'
+
+* `ExecuteAPI.CalculateExecuteThreshold` and `ExecuteAPI.CalculateExecuteThresholdForViewer` now targets flat execute threshold modification to be in-line with Vanilla.
+* Additive Execute Threshold modification has been moved to `ExecuteAPI.CalculateAdditiveExecuteThreshold` and `ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer`
+* Fixed `ExecuteAPI.CalculateExecuteThresholdForViewer` not being invoked in TryExecuteServer.
+* Fixed execute healthbar visuals not updating due to the HealthBarValues struct not being passed properly.
 
 ### '1.0.0'
 * Release

@@ -45,14 +45,24 @@ public static partial class ExecuteAPI
     #endregion
 
     #region public-facing methods
-    public delegate void CalculateExecuteThresholdEventHandler(CharacterBody victimBody, ref float executeFractionAdd);
+    public delegate void CalculateAdditiveExecuteThresholdEventHandler(CharacterBody victimBody, ref float executeFractionAdd);
 
-    [Tooltip("Calculates the additive execute threshold. Final threshold is calculated by the function: 1 - 1 / (1 + executeFractionAdd)")]
+    [Tooltip("For stackable executes with cross-mod compat. Calculates the additive execute threshold. Final threshold is calculated by the function: 1 - 1 / (1 + executeFractionAdd)")]
+    public static CalculateAdditiveExecuteThresholdEventHandler CalculateAdditiveExecuteThreshold;
+
+    public delegate void CalculateAdditiveExecuteThresholdForViewerEventHandler(CharacterBody victimBody, CharacterBody viewerBody, ref float executeFractionAdd);
+
+    [Tooltip("For stackable executes with cross-mod compat. Calculates the additive execute threshold, factoring in viewer bodies. Final threshold is calculated by the function: 1 - 1 / (1 + executeFractionAdd)")]
+    public static CalculateAdditiveExecuteThresholdForViewerEventHandler CalculateAdditiveExecuteThresholdForViewer;
+
+    public delegate void CalculateExecuteThresholdEventHandler(CharacterBody victimBody, ref float highestExecuteThreshold);
+
+    [Tooltip("For vanilla-like executes that don't stack. Calculates the flat execute threshold.")]
     public static CalculateExecuteThresholdEventHandler CalculateExecuteThreshold;
 
-    public delegate void CalculateExecuteThresholdForViewerEventHandler(CharacterBody victimBody, CharacterBody viewerBody, ref float executeFractionAdd);
+    public delegate void CalculateExecuteThresholdForViewerEventHandler(CharacterBody victimBody, CharacterBody viewerBody, ref float highestExecuteThreshold);
 
-    [Tooltip("Calculates the additive execute threshold, factoring in viewer bodies. Final threshold is calculated by the function: 1 - 1 / (1 + executeFractionAdd)")]
+    [Tooltip("For vanilla-like executes that don't stack. Calculates the flat execute threshold, factoring in viewer bodies.")]
     public static CalculateExecuteThresholdForViewerEventHandler CalculateExecuteThresholdForViewer;
     #endregion
 
@@ -60,11 +70,21 @@ public static partial class ExecuteAPI
     private static void TryExecuteServer(CharacterBody victimBody, DamageReport damageReport)
     {
         HealthComponent victimHealth = victimBody.healthComponent;
-        float executeFractionAdd = 0f;
-        ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
-
         float victimHealthFraction = victimHealth.combinedHealthFraction;
-        float executeFraction = ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd);
+
+        float executeFractionAdd = 0f;
+        float executeFractionFlat = 0f;
+
+        ExecuteAPI.CalculateAdditiveExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
+        ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionFlat);
+
+        if (damageReport.attackerBody)
+        {
+            ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer?.Invoke(victimBody, damageReport.attackerBody, ref executeFractionAdd);
+            ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, damageReport.attackerBody, ref executeFractionFlat);
+        }
+
+        float executeFraction = Mathf.Max(ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd), executeFractionFlat);
 
         if (executeFraction > 0f && victimHealthFraction <= executeFraction)
         {
@@ -83,19 +103,31 @@ public static partial class ExecuteAPI
         return 1f - (1f / (1f + executeFractionAdd));
     }
 
-    private static void UpdateHealthBarValues(CharacterBody victimBody, CharacterBody viewerBody, HealthComponent.HealthBarValues hbv)
+    private static HealthComponent.HealthBarValues UpdateHealthBarValues(CharacterBody victimBody, CharacterBody viewerBody, HealthComponent.HealthBarValues hbv)
     {
-        if (!victimBody || !victimBody.healthComponent) return;
-        float executeFractionAdd = 0f;
-        ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
-        if (viewerBody) ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, viewerBody, ref executeFractionAdd);
-        float executeFraction = ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd);
-        float healthbarFraction = (1f - hbv.curseFraction) / victimBody.healthComponent.fullCombinedHealth;
+        if (victimBody && victimBody.healthComponent)
+        {
+            float executeFractionAdd = 0f;
+            float executeFractionFlat = 0f;
 
-        float newCullFraction = Mathf.Clamp01(executeFraction * victimBody.healthComponent.fullCombinedHealth * healthbarFraction);
+            ExecuteAPI.CalculateAdditiveExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
+            ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionFlat);
 
-        //ExecuteAPI execute will not interact with non-ExecuteAPI executes.
-        if (hbv.cullFraction < newCullFraction) hbv.cullFraction = newCullFraction;
+            if (viewerBody)
+            {
+                ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer?.Invoke(victimBody, viewerBody, ref executeFractionAdd);
+                ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, viewerBody, ref executeFractionFlat);
+            }
+
+            float executeFraction = Mathf.Max(ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd), executeFractionFlat);
+            float healthbarFraction = (1f - hbv.curseFraction) / victimBody.healthComponent.fullCombinedHealth;
+
+            float newCullFraction = Mathf.Clamp01(executeFraction * victimBody.healthComponent.fullCombinedHealth * healthbarFraction);
+
+            //ExecuteAPI execute will not interact with non-ExecuteAPI executes.
+            hbv.cullFraction = Mathf.Max(hbv.cullFraction, newCullFraction);
+        }
+        return hbv;
     }
     #endregion
 
@@ -104,19 +136,21 @@ public static partial class ExecuteAPI
     {
         ILCursor c = new ILCursor(il);
         int healthBarValueLoc = -1;
-        if (c.TryGotoNext(x => x.MatchLdloc(out healthBarValueLoc), x => x.MatchLdfld<HealthComponent.HealthBarValues>("cullFraction"))
-            && healthBarValueLoc >= 0
-            && c.TryGotoNext(x => x.MatchStfld<HealthBar.BarInfo>("normalizedXMax")))
+        if (c.TryGotoNext(MoveType.After, x => x.MatchLdloc(out healthBarValueLoc), x => x.MatchLdfld<HealthComponent.HealthBarValues>("cullFraction")) && healthBarValueLoc >= 0)
         {
             c.Emit(OpCodes.Ldarg_0);
             c.Emit(OpCodes.Ldloc, healthBarValueLoc);
-            c.EmitDelegate<Func<float, HealthBar, HealthComponent.HealthBarValues, float>>((originalCullFraction, self, healthBarValues) =>
+            c.EmitDelegate<Func<HealthBar, HealthComponent.HealthBarValues, HealthComponent.HealthBarValues>>((self, healthBarValues) =>
             {
                 if (self.source && self.source.body)
                 {
-                    UpdateHealthBarValues(self.source.body, self.viewerBody, healthBarValues);
+                    healthBarValues = UpdateHealthBarValues(self.source.body, self.viewerBody, healthBarValues);
                 }
-                return Mathf.Max(originalCullFraction, healthBarValues.cullFraction);
+                return healthBarValues;
+            });
+            c.EmitDelegate<Func<float, HealthComponent.HealthBarValues, float>>((origCullFraction, healthBarValues) =>
+            {
+                return Mathf.Max(origCullFraction, healthBarValues.cullFraction);
             });
         }
         else
@@ -128,7 +162,7 @@ public static partial class ExecuteAPI
     private static HealthComponent.HealthBarValues HealthComponent_GetHealthBarValues(On.RoR2.HealthComponent.orig_GetHealthBarValues orig, HealthComponent self)
     {
         var hbv = orig(self);
-       UpdateHealthBarValues(self.body, null, hbv);
+        hbv = UpdateHealthBarValues(self.body, null, hbv);
         return hbv;
     }
 
