@@ -62,6 +62,7 @@ public static partial class ExecuteAPI
         HealthComponent victimHealth = victimBody.healthComponent;
         float executeFractionAdd = 0f;
         ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
+        if (damageReport.attackerBody) ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, damageReport.attackerBody, ref executeFractionAdd);
 
         float victimHealthFraction = victimHealth.combinedHealthFraction;
         float executeFraction = ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd);
@@ -83,19 +84,22 @@ public static partial class ExecuteAPI
         return 1f - (1f / (1f + executeFractionAdd));
     }
 
-    private static void UpdateHealthBarValues(CharacterBody victimBody, CharacterBody viewerBody, HealthComponent.HealthBarValues hbv)
+    private static HealthComponent.HealthBarValues UpdateHealthBarValues(CharacterBody victimBody, CharacterBody viewerBody, HealthComponent.HealthBarValues hbv)
     {
-        if (!victimBody || !victimBody.healthComponent) return;
-        float executeFractionAdd = 0f;
-        ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
-        if (viewerBody) ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, viewerBody, ref executeFractionAdd);
-        float executeFraction = ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd);
-        float healthbarFraction = (1f - hbv.curseFraction) / victimBody.healthComponent.fullCombinedHealth;
+        if (victimBody && victimBody.healthComponent)
+        {
+            float executeFractionAdd = 0f;
+            ExecuteAPI.CalculateExecuteThreshold?.Invoke(victimBody, ref executeFractionAdd);
+            if (viewerBody) ExecuteAPI.CalculateExecuteThresholdForViewer?.Invoke(victimBody, viewerBody, ref executeFractionAdd);
+            float executeFraction = ExecuteAPI.GetFlatExecuteFraction(executeFractionAdd);
+            float healthbarFraction = (1f - hbv.curseFraction) / victimBody.healthComponent.fullCombinedHealth;
 
-        float newCullFraction = Mathf.Clamp01(executeFraction * victimBody.healthComponent.fullCombinedHealth * healthbarFraction);
+            float newCullFraction = Mathf.Clamp01(executeFraction * victimBody.healthComponent.fullCombinedHealth * healthbarFraction);
 
-        //ExecuteAPI execute will not interact with non-ExecuteAPI executes.
-        if (hbv.cullFraction < newCullFraction) hbv.cullFraction = newCullFraction;
+            //ExecuteAPI execute will not interact with non-ExecuteAPI executes.
+            if (hbv.cullFraction < newCullFraction) hbv.cullFraction = newCullFraction;
+        }
+        return hbv;
     }
     #endregion
 
@@ -114,7 +118,7 @@ public static partial class ExecuteAPI
             {
                 if (self.source && self.source.body)
                 {
-                    UpdateHealthBarValues(self.source.body, self.viewerBody, healthBarValues);
+                    healthBarValues = UpdateHealthBarValues(self.source.body, self.viewerBody, healthBarValues);
                 }
                 return Mathf.Max(originalCullFraction, healthBarValues.cullFraction);
             });
@@ -128,7 +132,7 @@ public static partial class ExecuteAPI
     private static HealthComponent.HealthBarValues HealthComponent_GetHealthBarValues(On.RoR2.HealthComponent.orig_GetHealthBarValues orig, HealthComponent self)
     {
         var hbv = orig(self);
-       UpdateHealthBarValues(self.body, null, hbv);
+        hbv = UpdateHealthBarValues(self.body, null, hbv);
         return hbv;
     }
 

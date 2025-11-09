@@ -18,5 +18,9 @@ To add an execute source:
 
 ## Changelog
 
+### '1.0.1'
+* Fixed `ExecuteAPI.CalculateExecuteThresholdForViewer` not being invoked in TryExecuteServer.
+* Fixed execute healthbar visuals not updating due to the HealthBarValues struct not being passed properly.
+
 ### '1.0.0'
 * Release
