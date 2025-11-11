@@ -687,18 +687,12 @@ public static partial class RecalculateStatsAPI
         c.Index = 0;
 
         bool ILFound = c.TryGotoNext(
-            MoveType.After,
-            x => x.MatchLdarg(0),
-            x => x.MatchLdarg(0),
-            x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.baseJumpCount)),
-            x => x.MatchLdloc(out _),
-            x => x.MatchAdd(),
+            MoveType.Before,
             x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.maxJumpCount)))
         );
 
         if (ILFound)
         {
-            c.Index--;
             c.EmitDelegate<Func<int>>(() => StatMods.jumpCountAdd);
             c.Emit(OpCodes.Add);
 
