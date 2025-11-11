@@ -27,9 +27,6 @@ public static partial class RecalculateStatsAPI
 
         public float luckAdd = 0;
 
-        public float selfExecutionThresholdAdd = 0;
-        public float selfExecutionThresholdBase = float.NegativeInfinity;
-
         internal void ResetStats()
         {
             barrierDecayFrozen = false;
@@ -37,9 +34,6 @@ public static partial class RecalculateStatsAPI
             barrierDecayRateMult = 1;
 
             luckAdd = 0;
-
-            selfExecutionThresholdAdd = 0;
-            selfExecutionThresholdBase = 0;
         }
     }
 
@@ -79,9 +73,6 @@ public static partial class RecalculateStatsAPI
         luckHook.Apply();
         // Barrier Decay
         IL.RoR2.HealthComponent.ServerFixedUpdate += ModifyBarrierDecayRate;
-        // Execution
-        IL.RoR2.HealthComponent.TakeDamageProcess += ModifyExecutionThreshold;
-        On.RoR2.HealthComponent.GetHealthBarValues += DisplayModifiedExecutionThreshold;
 
         _hooksEnabled = true;
     }
@@ -91,8 +82,6 @@ public static partial class RecalculateStatsAPI
         IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
         luckHook.Undo();
         IL.RoR2.HealthComponent.ServerFixedUpdate -= ModifyBarrierDecayRate;
-        IL.RoR2.HealthComponent.TakeDamageProcess -= ModifyExecutionThreshold;
-        On.RoR2.HealthComponent.GetHealthBarValues -= DisplayModifiedExecutionThreshold;
 
         _hooksEnabled = false;
     }
@@ -1029,71 +1018,6 @@ public static partial class RecalculateStatsAPI
             return newLuck;
         });
     }
-
-    #region execution
-    private static void ModifyExecutionThreshold(ILContext il)
-    {
-        ILCursor c = new ILCursor(il);
-
-        int thresholdPosition = 0;
-
-        bool ILFound = c.TryGotoNext(MoveType.After,
-            x => x.MatchLdcR4(float.NegativeInfinity),
-            x => x.MatchStloc(out thresholdPosition)
-            )
-         && c.TryGotoNext(MoveType.Before,
-            x => x.MatchLdarg(0),
-            x => x.MatchCallOrCallvirt<HealthComponent>("get_isInFrozenState")
-            );
-
-        if (ILFound)
-        {
-            c.Emit(OpCodes.Ldloc, thresholdPosition);
-            c.Emit(OpCodes.Ldarg, 0);
-            c.EmitDelegate<Func<float, HealthComponent, float>>((currentThreshold, hc) =>
-            {
-                float newThreshold = currentThreshold;
-
-                newThreshold = RecalculateExecutionThreshold(currentThreshold, hc);
-
-                return newThreshold;
-            });
-            c.Emit(OpCodes.Stloc, thresholdPosition);
-        }
-        else
-        {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyExecutionThreshold)} failed.");
-        }
-    }
-
-    private static float RecalculateExecutionThreshold(float currentThreshold, HealthComponent healthComponent, float mult = 1)
-    {
-        CharacterBody body = healthComponent.body;
-
-        if (body != null)
-        {
-            if (!body.bodyFlags.HasFlag(CharacterBody.BodyFlags.ImmuneToExecutes))
-            {
-                MoreStats stats = GetMoreStatsFromBody(body);
-                float t = Math.Max(currentThreshold, stats.selfExecutionThresholdBase * mult);
-                return t + stats.selfExecutionThresholdAdd;
-            }
-        }
-
-        return currentThreshold;
-    }
-
-    private static HealthComponent.HealthBarValues DisplayModifiedExecutionThreshold(On.RoR2.HealthComponent.orig_GetHealthBarValues orig, HealthComponent self)
-    {
-        HealthComponent.HealthBarValues values = orig(self);
-
-        float maxHealthFractionClamped = Math.Clamp(1f - (1f - 1f / self.body.cursePenalty), 0, 1);
-        float threshold = RecalculateExecutionThreshold(values.cullFraction, self, maxHealthFractionClamped);
-        values.cullFraction = Math.Clamp(threshold, 0, 1);
-
-        return values;
-    }
-    #endregion
 
     #region custom stats
     public static FixedConditionalWeakTable<CharacterBody, CustomStats> characterCustomStats = new FixedConditionalWeakTable<CharacterBody, CustomStats>();
