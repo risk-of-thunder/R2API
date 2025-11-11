@@ -72,23 +72,6 @@ public static partial class ExecuteAPI
     #endregion
 
     #region internal utility methods
-    private static void TryExecuteServer(CharacterBody victimBody, DamageReport damageReport)
-    {
-        HealthComponent victimHealth = victimBody.healthComponent;
-        float victimHealthFraction = victimHealth.combinedHealthFraction;
-        float executeFraction = CalculateExecuteFraction(victimBody, damageReport.attackerBody);
-
-        if (executeFraction > 0f && victimHealthFraction <= executeFraction)
-        {
-            float executionHealthLost = Mathf.Max(victimHealth.combinedHealth, 0f);
-
-            if (victimHealth.barrier > 0f) victimHealth.barrier = 0f;
-            if (victimHealth.shield > 0f) victimHealth.shield = 0f;
-            if (victimHealth.health > 0f) victimHealth.health = 0f;
-
-            GlobalEventManager.ServerCharacterExecuted(damageReport, executionHealthLost);
-        }
-    }
 
     private static float ConvertAdditiveFractionToFlat(float executeFractionAdd)
     {
@@ -123,6 +106,24 @@ public static partial class ExecuteAPI
             hbv.cullFraction = Mathf.Max(hbv.cullFraction, newCullFraction);
         }
         return hbv;
+    }
+
+    private static void TryExecuteServer(CharacterBody victimBody, DamageReport damageReport)
+    {
+        HealthComponent victimHealth = victimBody.healthComponent;
+        float victimHealthFraction = victimHealth.combinedHealthFraction;
+        float executeFraction = CalculateExecuteFraction(victimBody, damageReport.attackerBody);
+
+        if (executeFraction > 0f && victimHealthFraction <= executeFraction)
+        {
+            float executionHealthLost = Mathf.Max(victimHealth.combinedHealth, 0f);
+
+            if (victimHealth.barrier > 0f) victimHealth.barrier = 0f;
+            if (victimHealth.shield > 0f) victimHealth.shield = 0f;
+            if (victimHealth.health > 0f) victimHealth.health = 0f;
+
+            GlobalEventManager.ServerCharacterExecuted(damageReport, executionHealthLost);
+        }
     }
     #endregion
 
