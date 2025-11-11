@@ -1,5 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../R2API.props" />
+  <PropertyGroup>
+    <RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\R2API.Animations.Runtime\R2API.Animations.Runtime.csproj" />
   </ItemGroup>

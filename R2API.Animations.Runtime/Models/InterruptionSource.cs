@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace R2API.Models;
+﻿namespace R2API.Models;
 
 /// <summary>
 /// Which AnimatorState transitions can interrupt the Transition.

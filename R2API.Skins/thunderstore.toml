@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_Skins"
-versionNumber = "1.2.1"
+versionNumber = "1.3.1"
 description = "R2API Submodule for adding custom Skins and Skin-related utilities to the game"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
@@ -21,8 +21,20 @@ readme = "./README.md"
 outdir = "./build"
 
 [[build.copy]]
-source = "./ReleaseOutput"
-target = "./plugins/R2API.Skins"
+source = "./ReleaseOutput/R2API.Skins.dll"
+target = "./plugins/R2API.Skins/R2API.Skins.dll"
+
+[[build.copy]]
+source = "./ReleaseOutput/R2API.Skins.xml"
+target = "./plugins/R2API.Skins/R2API.Skins.xml"
+
+[[build.copy]]
+source = "../R2API.Skins.Interop/ReleaseOutput/R2API.Skins.Interop.dll"
+target = "./plugins/R2API.Skins/R2API.Skins.Interop.dll"
+
+[[build.copy]]
+source = "../R2API.Skins.Patcher/ReleaseOutput/R2API.Skins.Patcher.dll"
+target = "./patchers/R2API.Skins/R2API.Skins.Patcher.dll"
 
 [publish]
 repository = "https://thunderstore.io"

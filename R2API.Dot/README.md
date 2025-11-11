@@ -12,10 +12,17 @@ Alongside adding new DotIndices and DotDefs, One can also provide CustomDotBehav
 
 * CustomDotBehaviour: Runs the delegate after AddDot succesfully adds your DamageOverTime
 * CustomDotVisual: Functions like a FixedUpdate method for your dot, use this to handle the Visual effect of your DOT.
+* CustomDotDamageEvaluation: Runs the delegate to handle custom dot damage evaluation replacing the base one
 
 ## Related Pages
 
 ## Changelog
+
+### '1.1.1'
+* Removed ambiguity in methods.
+
+### '1.1.0'
+* Add CustomDotDamageEvaluation feature.
 
 ### '1.0.4'
 * Fix Death Mark IL hook for SOTS Phase 2.

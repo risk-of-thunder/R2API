@@ -9,4 +9,6 @@ public static class SkillDefInterop
 {
     public static int GetBonusStockMultiplier(SkillDef skillDef) => skillDef.r2api_bonusStockMultiplier;
     public static void SetBonusStockMultiplier(SkillDef skillDef, int value) => skillDef.r2api_bonusStockMultiplier = value;
+    public static string GetCustomCooldownRefreshSound(SkillDef skillDef) => skillDef.r2api_customCooldownRefreshSound;
+    public static void SetCustomCooldownRefreshSound(SkillDef skillDef, string value) => skillDef.r2api_customCooldownRefreshSound = value;
 }
