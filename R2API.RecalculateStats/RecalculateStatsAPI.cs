@@ -295,29 +295,6 @@ public static partial class RecalculateStatsAPI
         /// <summary>Add to increase or decrease Luck. Can be negative.</summary> <remarks>LUCK ~ (MASTER_LUCK + luckAdd).</remarks>
         public float luckAdd = 0;
         #endregion
-
-        #region execution
-        /// <summary>Not to be touched directly. Use ModifySelfExecutionThreshold or selfExecutionThresholdAdd</summary> <remarks>EXECUTION_THRESHOLD ~ Max(BASE_THRESHOLD, newThreshold) + selfExecutionThresholdAdd. Cannot be less than 0.</remarks>
-        internal float selfExecutionThresholdBase { get; private set; } = float.NegativeInfinity;
-
-        /// <summary>Add to increase or decrease sender's execution threshold</summary> <inheritdoc cref="selfExecutionThresholdAdd"/>
-        public float selfExecutionThresholdAdd = 0;
-
-        /// <summary>Uses the largest execution threshold given (mimics vanilla's mutually-exclusive behavior).</summary> <inheritdoc cref="selfExecutionThresholdAdd"/>
-        public float ModifySelfExecutionThreshold(float newThreshold) => _ModifySelfExecutionThreshold(newThreshold);
-        //this was the ONLY way i could think of to circumvent the analyzer complaining about not setting hooks (its not even a hook :sob:)
-        private float _ModifySelfExecutionThreshold(float newThreshold)
-        {
-            if (newThreshold <= 0 || selfExecutionThresholdBase >= 1)
-                return selfExecutionThresholdBase;
-
-            if (newThreshold > selfExecutionThresholdBase)
-            {
-                selfExecutionThresholdBase = newThreshold;
-            }
-            return selfExecutionThresholdBase;
-        }
-        #endregion
     }
 
     /// <summary>
