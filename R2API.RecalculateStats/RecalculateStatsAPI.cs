@@ -71,6 +71,7 @@ public static partial class RecalculateStatsAPI
 
         // Adding custom luck stat to CharacterMaster.get_luck
         luckHook.Apply();
+        On.RoR2.Inventory.HandleInventoryChanged += SetIsRecalculatingLuck;
         // Barrier Decay
         IL.RoR2.HealthComponent.ServerFixedUpdate += ModifyBarrierDecayRate;
 
@@ -81,6 +82,7 @@ public static partial class RecalculateStatsAPI
     {
         IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
         luckHook.Undo();
+        On.RoR2.Inventory.HandleInventoryChanged -= SetIsRecalculatingLuck;
         IL.RoR2.HealthComponent.ServerFixedUpdate -= ModifyBarrierDecayRate;
 
         _hooksEnabled = false;
@@ -988,6 +990,13 @@ public static partial class RecalculateStatsAPI
         }
     }
 
+    private static bool isRecalculatingLuck = false;
+    private static void SetIsRecalculatingLuck(On.RoR2.Inventory.orig_HandleInventoryChanged orig, Inventory self)
+    {
+        isRecalculatingLuck = true;
+        orig(self);
+        isRecalculatingLuck = false;
+    }
     private static void ModifyLuckStat(ILContext il)
     {
         ILCursor c = new ILCursor(il);
@@ -996,6 +1005,8 @@ public static partial class RecalculateStatsAPI
         c.Emit(OpCodes.Ldarg_0);
         c.EmitDelegate<Func<Single, CharacterMaster, Single>>((baseLuck, master) =>
         {
+            if (isRecalculatingLuck)
+                return baseLuck;
             if (master == null || !master.hasBody)
                 return baseLuck;
 
