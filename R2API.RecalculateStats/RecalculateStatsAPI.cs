@@ -19,7 +19,7 @@ namespace R2API;
 #pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class RecalculateStatsAPI
 {
-    public class MoreStats
+    public class CustomStats
     {
         public bool barrierDecayFrozen = false;
         public float barrierDecayRateAdd = 0;
@@ -363,7 +363,7 @@ public static partial class RecalculateStatsAPI
     }
 
     private static StatHookEventArgs StatMods;
-    private static MoreStats CustomStats;
+    private static CustomStats BodyCustomStats;
 
     private static void HookRecalculateStats(ILContext il)
     {
@@ -385,19 +385,16 @@ public static partial class RecalculateStatsAPI
         void SetCustomStats(CharacterBody body)
         {
             //get stats
-            CustomStats = GetMoreStatsFromBody(body);
-            CustomStats.ResetStats();
+            BodyCustomStats = GetCustomStatsFromBody(body);
+            BodyCustomStats.ResetStats();
 
-            CustomStats.luckAdd = StatMods.luckAdd;
+            BodyCustomStats.luckAdd = StatMods.luckAdd;
 
-            CustomStats.selfExecutionThresholdAdd = StatMods.selfExecutionThresholdAdd;
-            CustomStats.selfExecutionThresholdBase = StatMods.selfExecutionThresholdBase;
-
-            CustomStats.barrierDecayFrozen = StatMods.barrierFreezeCount > 0;
-            CustomStats.barrierDecayRateMult = StatMods.barrierDecayMult;
-            if (CustomStats.barrierDecayRateMult < 0)
-                CustomStats.barrierDecayRateMult = 0;
-            CustomStats.barrierDecayRateAdd = StatMods.barrierDecayAdd;
+            BodyCustomStats.barrierDecayFrozen = StatMods.barrierFreezeCount > 0;
+            BodyCustomStats.barrierDecayRateMult = StatMods.barrierDecayMult;
+            if (BodyCustomStats.barrierDecayRateMult < 0)
+                BodyCustomStats.barrierDecayRateMult = 0;
+            BodyCustomStats.barrierDecayRateAdd = StatMods.barrierDecayAdd;
         }
 
 
@@ -978,7 +975,7 @@ public static partial class RecalculateStatsAPI
                 c.Emit(OpCodes.Ldarg_0);
                 c.EmitDelegate<Func<float, HealthComponent, float>>((barrierDecayRate, healthComponent) =>
                 {
-                    MoreStats stats = GetMoreStatsFromBody(healthComponent.body);
+                    CustomStats stats = GetCustomStatsFromBody(healthComponent.body);
                     if (stats == null)
                         return barrierDecayRate;
 
@@ -1016,8 +1013,8 @@ public static partial class RecalculateStatsAPI
             CharacterBody body = master.GetBody();
             if (body == null)
                 return baseLuck;
-            MoreStats msc = GetMoreStatsFromBody(body);
-            float newLuck = baseLuck + msc.luckAdd;
+            CustomStats customStats = GetCustomStatsFromBody(body);
+            float newLuck = baseLuck + customStats.luckAdd;
             float remainder = newLuck % 1;
             if (remainder < 0)
                 remainder += 1;
@@ -1099,8 +1096,8 @@ public static partial class RecalculateStatsAPI
     #endregion
 
     #region custom stats
-    public static FixedConditionalWeakTable<CharacterBody, MoreStats> characterCustomStats = new FixedConditionalWeakTable<CharacterBody, MoreStats>();
-    internal static MoreStats GetMoreStatsFromBody(CharacterBody body)
+    public static FixedConditionalWeakTable<CharacterBody, CustomStats> characterCustomStats = new FixedConditionalWeakTable<CharacterBody, CustomStats>();
+    internal static CustomStats GetCustomStatsFromBody(CharacterBody body)
     {
         if (body == null)
             return null;
