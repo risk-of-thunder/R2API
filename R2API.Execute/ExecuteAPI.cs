@@ -132,13 +132,14 @@ public static partial class ExecuteAPI
     {
         ILCursor c = new ILCursor(il);
         int healthBarValueLoc = -1;
-        if (c.TryGotoNext(MoveType.After, x => x.MatchLdloc(out int healthBarValueLoc), x => x.MatchLdfld<HealthComponent.HealthBarValues>("cullFraction")))
+        if (c.TryGotoNext(MoveType.After, x => x.MatchLdloc(out healthBarValueLoc), x => x.MatchLdfld<HealthComponent.HealthBarValues>("cullFraction")))
         {
             c.Emit(OpCodes.Ldarg_0);
             c.Emit(OpCodes.Ldloc, healthBarValueLoc);
-            c.EmitDelegate<Func<float,  HealthBar, HealthComponent.HealthBarValues, float>>((origCullFraction, self, healthBarValues) =>
+            c.EmitDelegate<Func<float, HealthBar, HealthComponent.HealthBarValues, float>>((origCullFraction, self, healthBarValues) =>
             {
-                if (self.source && self.source.body)
+                //Only recalculate if a Viewer is involved
+                if (self.viewerBody && self.source && self.source.body)
                 {
                     healthBarValues = UpdateHealthBarValues(self.source.body, self.viewerBody, healthBarValues);
                     return Mathf.Max(origCullFraction, healthBarValues.cullFraction);
@@ -154,9 +155,7 @@ public static partial class ExecuteAPI
 
     private static HealthComponent.HealthBarValues HealthComponent_GetHealthBarValues(On.RoR2.HealthComponent.orig_GetHealthBarValues orig, HealthComponent self)
     {
-        var hbv = orig(self);
-        hbv = UpdateHealthBarValues(self.body, null, hbv);
-        return hbv;
+        return UpdateHealthBarValues(self.body, null, orig(self));
     }
 
     private static void GlobalEventManager_ServerDamageDealt(On.RoR2.GlobalEventManager.orig_ServerDamageDealt orig, DamageReport damageReport)
