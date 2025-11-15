@@ -783,7 +783,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpCountStat)} failed.");
         }
     }
 
