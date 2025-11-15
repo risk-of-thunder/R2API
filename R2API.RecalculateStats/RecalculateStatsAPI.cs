@@ -294,6 +294,7 @@ public static partial class RecalculateStatsAPI
         #region luck
         /// <summary>Add to increase or decrease Luck. Can be negative.</summary> <remarks>LUCK ~ (MASTER_LUCK + luckAdd).</remarks>
         public float luckAdd = 0;
+        #endregion
         #region jumpCount
         /// <summary>Added to max jump count.</summary> <remarks>JUMP_COUNT ~ (BASE_JUMP_COUNT + jumpCountAdd) * jumpCountMult</remarks>
         public int jumpCountAdd = 0;
