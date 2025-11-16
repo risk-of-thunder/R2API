@@ -1784,6 +1784,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.RecalculateStatsAPI.CustomStats.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.RecalculateStatsAPI.CustomStats.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.RecalculateStatsAPI.StatHookEventArgs.yml",
       "output": {
         ".html": {

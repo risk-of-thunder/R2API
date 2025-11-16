@@ -12538,6 +12538,36 @@ references:
   commentId: T:R2API.RecalculateStatsAPI
   fullName: R2API.RecalculateStatsAPI
   nameWithType: RecalculateStatsAPI
+- uid: R2API.RecalculateStatsAPI.CustomStats
+  name: RecalculateStatsAPI.CustomStats
+  href: api/R2API.RecalculateStatsAPI.CustomStats.html
+  commentId: T:R2API.RecalculateStatsAPI.CustomStats
+  fullName: R2API.RecalculateStatsAPI.CustomStats
+  nameWithType: RecalculateStatsAPI.CustomStats
+- uid: R2API.RecalculateStatsAPI.CustomStats.barrierDecayFrozen
+  name: barrierDecayFrozen
+  href: api/R2API.RecalculateStatsAPI.CustomStats.html#R2API_RecalculateStatsAPI_CustomStats_barrierDecayFrozen
+  commentId: F:R2API.RecalculateStatsAPI.CustomStats.barrierDecayFrozen
+  fullName: R2API.RecalculateStatsAPI.CustomStats.barrierDecayFrozen
+  nameWithType: RecalculateStatsAPI.CustomStats.barrierDecayFrozen
+- uid: R2API.RecalculateStatsAPI.CustomStats.barrierDecayRateAdd
+  name: barrierDecayRateAdd
+  href: api/R2API.RecalculateStatsAPI.CustomStats.html#R2API_RecalculateStatsAPI_CustomStats_barrierDecayRateAdd
+  commentId: F:R2API.RecalculateStatsAPI.CustomStats.barrierDecayRateAdd
+  fullName: R2API.RecalculateStatsAPI.CustomStats.barrierDecayRateAdd
+  nameWithType: RecalculateStatsAPI.CustomStats.barrierDecayRateAdd
+- uid: R2API.RecalculateStatsAPI.CustomStats.barrierDecayRateMult
+  name: barrierDecayRateMult
+  href: api/R2API.RecalculateStatsAPI.CustomStats.html#R2API_RecalculateStatsAPI_CustomStats_barrierDecayRateMult
+  commentId: F:R2API.RecalculateStatsAPI.CustomStats.barrierDecayRateMult
+  fullName: R2API.RecalculateStatsAPI.CustomStats.barrierDecayRateMult
+  nameWithType: RecalculateStatsAPI.CustomStats.barrierDecayRateMult
+- uid: R2API.RecalculateStatsAPI.CustomStats.luckAdd
+  name: luckAdd
+  href: api/R2API.RecalculateStatsAPI.CustomStats.html#R2API_RecalculateStatsAPI_CustomStats_luckAdd
+  commentId: F:R2API.RecalculateStatsAPI.CustomStats.luckAdd
+  fullName: R2API.RecalculateStatsAPI.CustomStats.luckAdd
+  nameWithType: RecalculateStatsAPI.CustomStats.luckAdd
 - uid: R2API.RecalculateStatsAPI.GetStatCoefficients
   name: GetStatCoefficients
   href: api/R2API.RecalculateStatsAPI.html#R2API_RecalculateStatsAPI_GetStatCoefficients
@@ -12611,6 +12641,18 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedTotalMult
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.attackSpeedTotalMult
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.attackSpeedTotalMult
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.barrierDecayAdd
+  name: barrierDecayAdd
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_barrierDecayAdd
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.barrierDecayAdd
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.barrierDecayAdd
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.barrierDecayAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.barrierDecayMult
+  name: barrierDecayMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_barrierDecayMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.barrierDecayMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.barrierDecayMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.barrierDecayMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.baseAttackSpeedAdd
   name: baseAttackSpeedAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_baseAttackSpeedAdd
@@ -12827,6 +12869,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.levelShieldAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.levelShieldAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.levelShieldAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.luckAdd
+  name: luckAdd
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_luckAdd
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.luckAdd
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.luckAdd
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.luckAdd
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedMultAdd
   name: moveSpeedMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_moveSpeedMultAdd
@@ -12887,6 +12935,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.shieldTotalMult
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.shieldTotalMult
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.shieldTotalMult
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.shouldFreezeBarrier
+  name: shouldFreezeBarrier
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_shouldFreezeBarrier
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.shouldFreezeBarrier
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.shouldFreezeBarrier
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.shouldFreezeBarrier
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.specialCooldownMultAdd
   name: specialCooldownMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_specialCooldownMultAdd
