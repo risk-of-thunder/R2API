@@ -281,8 +281,8 @@ public static partial class RecalculateStatsAPI
         #endregion
 
         #region barrier
-        /// <summary>Amount of Barrier Freeze effects currently applied.</summary> <remarks>BARRIER_DECAY_RATE ~ (barrierFreezeCount > 0) ? 0 : BARRIER_DECAY_RATE</remarks>
-        public int barrierFreezeCount = 0;
+        /// <summary>Set to TRUE to freeze barrier decay.</summary> <remarks>BARRIER_DECAY_RATE ~ (shouldFreezeBarrier == true) ? 0 : BARRIER_DECAY_RATE</remarks>
+        public bool shouldFreezeBarrier = false;
 
         /// <summary>Multiply to increase or decrease barrier decay rate.</summary> <remarks>BARRIER_DECAY_RATE ~ (BASE_DECAY_RATE + barrierDecayAdd) * (barrierDecayMult). Cannot be less than 0.</remarks>
         public float barrierDecayMult = 1;
@@ -365,7 +365,7 @@ public static partial class RecalculateStatsAPI
 
             BodyCustomStats.luckAdd = StatMods.luckAdd;
 
-            BodyCustomStats.barrierDecayFrozen = StatMods.barrierFreezeCount > 0;
+            BodyCustomStats.barrierDecayFrozen = StatMods.shouldFreezeBarrier;
             BodyCustomStats.barrierDecayRateMult = StatMods.barrierDecayMult;
             if (BodyCustomStats.barrierDecayRateMult < 0)
                 BodyCustomStats.barrierDecayRateMult = 0;
