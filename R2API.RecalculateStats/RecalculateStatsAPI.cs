@@ -1045,7 +1045,7 @@ public static partial class RecalculateStatsAPI
     }
 
     #region custom stats
-    public static FixedConditionalWeakTable<CharacterBody, CustomStats> characterCustomStats = new FixedConditionalWeakTable<CharacterBody, CustomStats>();
+    private static FixedConditionalWeakTable<CharacterBody, CustomStats> characterCustomStats = new FixedConditionalWeakTable<CharacterBody, CustomStats>();
     internal static CustomStats GetCustomStatsFromBody(CharacterBody body)
     {
         if (body == null)
