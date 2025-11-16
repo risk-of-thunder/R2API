@@ -1,10 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
 using R2API.AutoVersionGen;
 using R2API.Utils;
 using RoR2;
+using RoR2BepInExPack.Utilities;
 
 namespace R2API;
 
@@ -16,6 +19,24 @@ namespace R2API;
 #pragma warning restore CS0436 // Type conflicts with imported type
 public static partial class RecalculateStatsAPI
 {
+    public class CustomStats
+    {
+        public bool barrierDecayFrozen = false;
+        public float barrierDecayRateAdd = 0;
+        public float barrierDecayRateMult = 1;
+
+        public float luckAdd = 0;
+
+        internal void ResetStats()
+        {
+            barrierDecayFrozen = false;
+            barrierDecayRateAdd = 0;
+            barrierDecayRateMult = 1;
+
+            luckAdd = 0;
+        }
+    }
+
     public const string PluginGUID = R2API.PluginGUID + ".recalculatestats";
     public const string PluginName = R2API.PluginName + ".RecalculateStats";
 
@@ -29,6 +50,16 @@ public static partial class RecalculateStatsAPI
 
     private static bool _hooksEnabled = false;
 
+    #region custom hooks
+    static ILHook luckHook;
+    internal static void InitHooks()
+    {
+        // Does nothing until the hook is applied in SetHooks
+        var hookConfig = new ILHookConfig() { ManualApply = true };
+        luckHook = new ILHook(typeof(CharacterMaster).GetMethod("get_luck"), ModifyLuckStat, ref hookConfig);
+    }
+    #endregion
+
     internal static void SetHooks()
     {
         if (_hooksEnabled)
@@ -37,12 +68,23 @@ public static partial class RecalculateStatsAPI
         }
 
         IL.RoR2.CharacterBody.RecalculateStats += HookRecalculateStats;
+
+        // Adding custom luck stat to CharacterMaster.get_luck
+        luckHook.Apply();
+        On.RoR2.Inventory.HandleInventoryChanged += SetIsRecalculatingLuck;
+        // Barrier Decay
+        IL.RoR2.HealthComponent.ServerFixedUpdate += ModifyBarrierDecayRate;
+
         _hooksEnabled = true;
     }
 
     internal static void UnsetHooks()
     {
         IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
+        luckHook.Undo();
+        On.RoR2.Inventory.HandleInventoryChanged -= SetIsRecalculatingLuck;
+        IL.RoR2.HealthComponent.ServerFixedUpdate -= ModifyBarrierDecayRate;
+
         _hooksEnabled = false;
     }
 
@@ -238,6 +280,21 @@ public static partial class RecalculateStatsAPI
         public float levelMultAdd = 0f;
         #endregion
 
+        #region barrier
+        /// <summary>Set to TRUE to freeze barrier decay.</summary> <remarks>BARRIER_DECAY_RATE ~ (shouldFreezeBarrier == true) ? 0 : BARRIER_DECAY_RATE</remarks>
+        public bool shouldFreezeBarrier = false;
+
+        /// <summary>Multiply to increase or decrease barrier decay rate.</summary> <remarks>BARRIER_DECAY_RATE ~ (BASE_DECAY_RATE + barrierDecayAdd) * (barrierDecayMult). Cannot be less than 0.</remarks>
+        public float barrierDecayMult = 1;
+
+        /// <summary>ADD to increase or decrease barrier decay rate. Expressed as a rate per second.</summary> <inheritdoc cref="barrierDecayMult"/>
+        public float barrierDecayAdd = 0;
+        #endregion
+
+        #region luck
+        /// <summary>Add to increase or decrease Luck. Can be negative.</summary> <remarks>LUCK ~ (MASTER_LUCK + luckAdd).</remarks>
+        public float luckAdd = 0;
+        #endregion
         #region jumpCount
         /// <summary>Added to max jump count.</summary> <remarks>JUMP_COUNT ~ (BASE_JUMP_COUNT + jumpCountAdd) * jumpCountMult</remarks>
         public int jumpCountAdd = 0;
@@ -281,6 +338,7 @@ public static partial class RecalculateStatsAPI
     }
 
     private static StatHookEventArgs StatMods;
+    private static CustomStats BodyCustomStats;
 
     private static void HookRecalculateStats(ILContext il)
     {
@@ -297,11 +355,29 @@ public static partial class RecalculateStatsAPI
 
         Action emitLevelMultiplier = locLevelMultiplierIndex >= 0 ? EmitLevelMultiplier : EmitFallbackLevelMultiplier;
 
+        c.Emit(OpCodes.Ldarg_0);
+        c.EmitDelegate<Action<CharacterBody>>((body) => SetCustomStats(body));
+        void SetCustomStats(CharacterBody body)
+        {
+            //get stats
+            BodyCustomStats = GetCustomStatsFromBody(body);
+            BodyCustomStats.ResetStats();
+
+            BodyCustomStats.luckAdd = StatMods.luckAdd;
+
+            BodyCustomStats.barrierDecayFrozen = StatMods.shouldFreezeBarrier;
+            BodyCustomStats.barrierDecayRateMult = StatMods.barrierDecayMult;
+            if (BodyCustomStats.barrierDecayRateMult < 0)
+                BodyCustomStats.barrierDecayRateMult = 0;
+            BodyCustomStats.barrierDecayRateAdd = StatMods.barrierDecayAdd;
+        }
+
+
         ModifyHealthStat(c, emitLevelMultiplier);
         ModifyShieldStat(c, emitLevelMultiplier);
         ModifyHealthRegenStat(c, emitLevelMultiplier);
         ModifyMovementSpeedStat(c, emitLevelMultiplier);
-        ModifyJumpStat(c, emitLevelMultiplier);
+        ModifyJumpPowerStat(c, emitLevelMultiplier);
         ModifyDamageStat(c, emitLevelMultiplier);
         ModifyAttackSpeedStat(c, emitLevelMultiplier);
         ModifyCritStat(c, emitLevelMultiplier);
@@ -656,7 +732,7 @@ public static partial class RecalculateStatsAPI
         }
     }
 
-    private static void ModifyJumpStat(ILCursor c, Action emitLevelMultiplier)
+    private static void ModifyJumpPowerStat(ILCursor c, Action emitLevelMultiplier)
     {
         c.Index = 0;
 
@@ -678,7 +754,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpPowerStat)} failed.");
         }
     }
 
@@ -701,7 +777,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyJumpCountStat)} failed.");
         }
     }
 
@@ -879,4 +955,96 @@ public static partial class RecalculateStatsAPI
             RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyMovementSpeedStat)} failed.");
         }
     }
+
+    private static void ModifyBarrierDecayRate(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+
+        bool ILFound = c.TryGotoNext(MoveType.After,
+            x => x.MatchLdfld<HealthComponent>("barrier"),
+            x => x.MatchLdcR4(out _)
+            );
+        if (ILFound)
+        {
+            bool ILFound2 = c.TryGotoNext(MoveType.After,
+                x => x.MatchCallOrCallvirt<CharacterBody>("get_barrierDecayRate")
+                );
+            if (ILFound2)
+            {
+                c.Emit(OpCodes.Ldarg_0);
+                c.EmitDelegate<Func<float, HealthComponent, float>>((barrierDecayRate, healthComponent) =>
+                {
+                    CustomStats stats = GetCustomStatsFromBody(healthComponent.body);
+                    if (stats == null)
+                        return barrierDecayRate;
+
+                    barrierDecayRate += stats.barrierDecayRateAdd;
+                    if (stats.barrierDecayFrozen || barrierDecayRate < 0)
+                        barrierDecayRate = 0;
+                    else
+                        barrierDecayRate *= stats.barrierDecayRateMult;
+
+                    return barrierDecayRate;
+                });
+            }
+            else
+            {
+                RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayRate)} failed.");
+            }
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayRate)} failed.");
+        }
+    }
+
+    private static bool isRecalculatingLuck = false;
+    private static void SetIsRecalculatingLuck(On.RoR2.Inventory.orig_HandleInventoryChanged orig, Inventory self)
+    {
+        isRecalculatingLuck = true;
+        orig(self);
+        isRecalculatingLuck = false;
+    }
+    private static void ModifyLuckStat(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+
+        c.Goto(il.Instrs.Last());
+        c.Emit(OpCodes.Ldarg_0);
+        c.EmitDelegate<Func<Single, CharacterMaster, Single>>((baseLuck, master) =>
+        {
+            if (isRecalculatingLuck)
+                return baseLuck;
+            if (master == null || !master.hasBody)
+                return baseLuck;
+
+            CharacterBody body = master.GetBody();
+            if (body == null)
+                return baseLuck;
+            CustomStats customStats = GetCustomStatsFromBody(body);
+            float newLuck = baseLuck + customStats.luckAdd;
+            float remainder = newLuck % 1;
+            if (remainder < 0)
+                remainder += 1;
+            if (remainder > Single.Epsilon && Util.CheckRoll(remainder * 100, 0))
+            {
+                newLuck = (float)Math.Ceiling(newLuck);
+            }
+            else
+            {
+                newLuck = (float)Math.Floor(newLuck);
+            }
+            return newLuck;
+        });
+    }
+
+    #region custom stats
+    private static FixedConditionalWeakTable<CharacterBody, CustomStats> characterCustomStats = new FixedConditionalWeakTable<CharacterBody, CustomStats>();
+    internal static CustomStats GetCustomStatsFromBody(CharacterBody body)
+    {
+        if (body == null)
+            return null;
+        return characterCustomStats.GetOrCreateValue(body);
+    }
+    #endregion
 }

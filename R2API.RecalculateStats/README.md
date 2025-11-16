@@ -25,10 +25,19 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 * Cooldown reduction for skills
 * Shield
 * Critical Strike Damage
+* Luck
+* Barrier Decay Rate
+* Barrer Decay Freeze
 
 ## Related Pages
 
 ## Changelog
+
+### `1.6.2`
+* Added support for fractional/non-integer luck values
+* Added `luckAdd` stat for increasing and decreasing luck
+* Added `shouldFreezeBarrier`, `barrierDecayAdd`, and `barrierDecayMult` stats for modifying barrier decay rate
+* Improved reliability of jump stat hook
 
 ### `1.6.1`
 * Added stats: `jumpCountAdd` and `jumpCountMult`.
