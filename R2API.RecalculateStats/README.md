@@ -33,6 +33,9 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 
 ## Changelog
 
+### `1.6.3`
+- Improved reliability of luck stat hooks
+
 ### `1.6.2`
 * Added support for fractional/non-integer luck values
 * Added `luckAdd` stat for increasing and decreasing luck
