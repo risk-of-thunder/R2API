@@ -12562,12 +12562,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.CustomStats.barrierDecayRateMult
   fullName: R2API.RecalculateStatsAPI.CustomStats.barrierDecayRateMult
   nameWithType: RecalculateStatsAPI.CustomStats.barrierDecayRateMult
-- uid: R2API.RecalculateStatsAPI.CustomStats.luckAdd
-  name: luckAdd
-  href: api/R2API.RecalculateStatsAPI.CustomStats.html#R2API_RecalculateStatsAPI_CustomStats_luckAdd
-  commentId: F:R2API.RecalculateStatsAPI.CustomStats.luckAdd
-  fullName: R2API.RecalculateStatsAPI.CustomStats.luckAdd
-  nameWithType: RecalculateStatsAPI.CustomStats.luckAdd
+- uid: R2API.RecalculateStatsAPI.CustomStats.luckFromBody
+  name: luckFromBody
+  href: api/R2API.RecalculateStatsAPI.CustomStats.html#R2API_RecalculateStatsAPI_CustomStats_luckFromBody
+  commentId: F:R2API.RecalculateStatsAPI.CustomStats.luckFromBody
+  fullName: R2API.RecalculateStatsAPI.CustomStats.luckFromBody
+  nameWithType: RecalculateStatsAPI.CustomStats.luckFromBody
 - uid: R2API.RecalculateStatsAPI.GetStatCoefficients
   name: GetStatCoefficients
   href: api/R2API.RecalculateStatsAPI.html#R2API_RecalculateStatsAPI_GetStatCoefficients
