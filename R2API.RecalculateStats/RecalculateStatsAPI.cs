@@ -1034,4 +1034,4 @@ public static partial class RecalculateStatsAPI
         return characterCustomStats.GetOrCreateValue(body);
     }
     #endregion
-}}
+}
