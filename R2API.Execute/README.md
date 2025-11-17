@@ -20,6 +20,10 @@ To add a stackable execute source:
 
 ## Changelog
 
+### '1.1.1'
+
+* Internal refactoring to reduce code duplication.
+
 ### '1.1.0'
 
 * `ExecuteAPI.CalculateExecuteThreshold` and `ExecuteAPI.CalculateExecuteThresholdForViewer` now targets flat execute threshold modification to be in-line with Vanilla.

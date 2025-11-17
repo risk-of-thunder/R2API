@@ -51,6 +51,16 @@ public static partial class RecalculateStatsAPI
 
     private static bool _hooksEnabled = false;
 
+    #region custom hooks
+    static ILHook luckHook;
+    internal static void InitHooks()
+    {
+        // Does nothing until the hook is applied in SetHooks
+        var hookConfig = new ILHookConfig() { ManualApply = true };
+        luckHook = new ILHook(typeof(CharacterMaster).GetMethod("get_luck"), ModifyLuckStat, ref hookConfig);
+    }
+    #endregion
+
     internal static void SetHooks()
     {
         if (_hooksEnabled)
@@ -755,18 +765,12 @@ public static partial class RecalculateStatsAPI
         c.Index = 0;
 
         bool ILFound = c.TryGotoNext(
-            MoveType.After,
-            x => x.MatchLdarg(0),
-            x => x.MatchLdarg(0),
-            x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.baseJumpCount)),
-            x => x.MatchLdloc(out _),
-            x => x.MatchAdd(),
+            MoveType.Before,
             x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertySetter(nameof(CharacterBody.maxJumpCount)))
         );
 
         if (ILFound)
         {
-            c.Index--;
             c.EmitDelegate<Func<int>>(() => StatMods.jumpCountAdd);
             c.Emit(OpCodes.Add);
 
