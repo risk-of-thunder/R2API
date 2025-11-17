@@ -25,15 +25,16 @@ public static partial class RecalculateStatsAPI
         public float barrierDecayRateAdd = 0;
         public float barrierDecayRateMult = 1;
 
-        public float luckAdd = 0;
+        public float luckFromMaster = 0;
 
+        /// <summary>
+        /// Does not reset luckFromMaster
+        /// </summary>
         internal void ResetStats()
         {
             barrierDecayFrozen = false;
             barrierDecayRateAdd = 0;
             barrierDecayRateMult = 1;
-
-            luckAdd = 0;
         }
     }
 
@@ -50,16 +51,6 @@ public static partial class RecalculateStatsAPI
 
     private static bool _hooksEnabled = false;
 
-    #region custom hooks
-    static ILHook luckHook;
-    internal static void InitHooks()
-    {
-        // Does nothing until the hook is applied in SetHooks
-        var hookConfig = new ILHookConfig() { ManualApply = true };
-        luckHook = new ILHook(typeof(CharacterMaster).GetMethod("get_luck"), ModifyLuckStat, ref hookConfig);
-    }
-    #endregion
-
     internal static void SetHooks()
     {
         if (_hooksEnabled)
@@ -69,9 +60,9 @@ public static partial class RecalculateStatsAPI
 
         IL.RoR2.CharacterBody.RecalculateStats += HookRecalculateStats;
 
-        // Adding custom luck stat to CharacterMaster.get_luck
-        luckHook.Apply();
-        On.RoR2.Inventory.HandleInventoryChanged += SetIsRecalculatingLuck;
+        //luck
+        On.RoR2.CharacterMaster.OnInventoryChanged += GetMasterLuck;
+        On.RoR2.Util.CheckRoll_float_float_CharacterMaster += RoundLuckInCheckRoll;
         // Barrier Decay
         IL.RoR2.HealthComponent.ServerFixedUpdate += ModifyBarrierDecayRate;
 
@@ -81,8 +72,8 @@ public static partial class RecalculateStatsAPI
     internal static void UnsetHooks()
     {
         IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
-        luckHook.Undo();
-        On.RoR2.Inventory.HandleInventoryChanged -= SetIsRecalculatingLuck;
+        On.RoR2.CharacterMaster.OnInventoryChanged -= GetMasterLuck;
+        On.RoR2.Util.CheckRoll_float_float_CharacterMaster -= RoundLuckInCheckRoll;
         IL.RoR2.HealthComponent.ServerFixedUpdate -= ModifyBarrierDecayRate;
 
         _hooksEnabled = false;
@@ -363,7 +354,8 @@ public static partial class RecalculateStatsAPI
             BodyCustomStats = GetCustomStatsFromBody(body);
             BodyCustomStats.ResetStats();
 
-            BodyCustomStats.luckAdd = StatMods.luckAdd;
+            if (body.master)
+                body.master.luck = BodyCustomStats.luckFromMaster + StatMods.luckAdd;
 
             BodyCustomStats.barrierDecayFrozen = StatMods.shouldFreezeBarrier;
             BodyCustomStats.barrierDecayRateMult = StatMods.barrierDecayMult;
@@ -1004,44 +996,31 @@ public static partial class RecalculateStatsAPI
         }
     }
 
-    private static bool isRecalculatingLuck = false;
-    private static void SetIsRecalculatingLuck(On.RoR2.Inventory.orig_HandleInventoryChanged orig, Inventory self)
+    private static void GetMasterLuck(On.RoR2.CharacterMaster.orig_OnInventoryChanged orig, CharacterMaster self)
     {
-        isRecalculatingLuck = true;
         orig(self);
-        isRecalculatingLuck = false;
+        CharacterBody body = self.GetBody();
+        if (body == null)
+            return;
+        CustomStats customStats = GetCustomStatsFromBody(body);
+        customStats.luckFromMaster = self.luck;
+        //body.RecalculateStats();
     }
-    private static void ModifyLuckStat(ILContext il)
+
+    private static bool RoundLuckInCheckRoll(On.RoR2.Util.orig_CheckRoll_float_float_CharacterMaster orig, float percentChance, float luck, CharacterMaster effectOriginMaster)
     {
-        ILCursor c = new ILCursor(il);
-
-        c.Goto(il.Instrs.Last());
-        c.Emit(OpCodes.Ldarg_0);
-        c.EmitDelegate<Func<Single, CharacterMaster, Single>>((baseLuck, master) =>
+        float remainder = luck % 1;
+        if (remainder < 0)
+            remainder += 1;
+        if (remainder > Single.Epsilon && Util.CheckRoll(remainder * 100, 0))
         {
-            if (isRecalculatingLuck)
-                return baseLuck;
-            if (master == null || !master.hasBody)
-                return baseLuck;
-
-            CharacterBody body = master.GetBody();
-            if (body == null)
-                return baseLuck;
-            CustomStats customStats = GetCustomStatsFromBody(body);
-            float newLuck = baseLuck + customStats.luckAdd;
-            float remainder = newLuck % 1;
-            if (remainder < 0)
-                remainder += 1;
-            if (remainder > Single.Epsilon && Util.CheckRoll(remainder * 100, 0))
-            {
-                newLuck = (float)Math.Ceiling(newLuck);
-            }
-            else
-            {
-                newLuck = (float)Math.Floor(newLuck);
-            }
-            return newLuck;
-        });
+            luck = (float)Math.Ceiling(luck);
+        }
+        else
+        {
+            luck = (float)Math.Floor(luck);
+        }
+        return orig(percentChance, luck, effectOriginMaster);
     }
 
     #region custom stats
