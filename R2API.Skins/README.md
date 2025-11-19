@@ -8,6 +8,10 @@ Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also
 
 ## Changelog
 
+### `1.4.0`
+
+* Update for DLC 3 release.
+
 ### `1.3.1`
 
 * Fix missing Patcher / Interop dlls
