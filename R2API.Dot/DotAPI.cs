@@ -204,7 +204,7 @@ public static partial class DotAPI
         On.RoR2.DotController.GetDotDef += GetDotDefSupportCustomDefs;
         On.RoR2.DotController.FixedUpdate += FixedUpdateEvaluateCustomDotStacksAndVisuals;
         IL.RoR2.DotController.InflictDot_refInflictDotInfo += FixInflictDotReturnCheck;
-        IL.RoR2.DotController.AddDot += CallCustomDotBehaviours;
+        IL.RoR2.DotController.AddDot_GameObject_float_HurtBox_DotIndex_float_Nullable1_Nullable1_Nullable1 += CallCustomDotBehaviours;
         On.RoR2.DotController.HasDotActive += OnHasDotActive;
         IL.RoR2.DotController.EvaluateDotStacksForType += EvaluateDotStacksForType;
 
@@ -222,7 +222,7 @@ public static partial class DotAPI
         On.RoR2.DotController.GetDotDef -= GetDotDefSupportCustomDefs;
         On.RoR2.DotController.FixedUpdate -= FixedUpdateEvaluateCustomDotStacksAndVisuals;
         IL.RoR2.DotController.InflictDot_refInflictDotInfo -= FixInflictDotReturnCheck;
-        IL.RoR2.DotController.AddDot -= CallCustomDotBehaviours;
+        IL.RoR2.DotController.AddDot_GameObject_float_HurtBox_DotIndex_float_Nullable1_Nullable1_Nullable1 -= CallCustomDotBehaviours;
         On.RoR2.DotController.HasDotActive -= OnHasDotActive;
         IL.RoR2.DotController.EvaluateDotStacksForType -= EvaluateDotStacksForType;
 
@@ -255,8 +255,8 @@ public static partial class DotAPI
             if (c.TryGotoPrev(MoveType.Before,
                     i => i.MatchStloc(out pendingDamageLocNumber),
                     i => i.MatchBr(out _),
-                    i => i.MatchNewobj<DamageInfo>(),
-                    i => i.MatchStloc(out _)))
+                    i => i.MatchLdloc(out _),
+                    i => i.MatchLdloc(out _)))
             {
                 c.Goto(instruction);
                 instruction = c.Emit(OpCodes.Ldarg_0).Prev;
