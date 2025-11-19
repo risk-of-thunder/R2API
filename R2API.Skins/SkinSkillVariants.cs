@@ -298,9 +298,6 @@ public static partial class SkinSkillVariants
             ILCursor c = new ILCursor(il);
             if (
                 c.TryGotoNext(MoveType.After,
-                    //x => x.MatchLdarg(0),
-                    //x => x.MatchLdloc(1),
-                    //x => x.MatchCall(typeof(SkinDef).GetPropertyGetter(nameof(SkinDef.runtimeSkin)))
                     x => x.MatchStfld<SkinDef>(nameof(SkinDef._runtimeSkin))
                 ))
             {
