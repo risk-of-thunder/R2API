@@ -26,8 +26,6 @@ namespace R2API;
 public static partial class SkinSkillVariants
 {
     public static Dictionary<SkinDef, BodyIndex> skinToBody = [];
-    internal static Dictionary<SkinDef, SkinDefParams> skinDefToSkinDefParams = [];
-    internal static Dictionary<SkinDef, SkinDefParams> skinDefToOptimizedSkinDefParams = [];
     #region Hooks
     private static bool _hooksSet;
     private static bool _isLoaded;
@@ -100,12 +98,12 @@ public static partial class SkinSkillVariants
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook 2 failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 2 failed!");
             }
         }
         else
         {
-            Debug.LogError(il.Method.Name + " IL Hook 1 failed!");
+            SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
         }
     }
     private static void LightReplacementTemplate_ctor(On.RoR2.SkinDef.LightReplacementTemplate.orig_ctor orig, ref SkinDef.LightReplacementTemplate self, CharacterModel.LightInfo source, GameObject rootObject)
@@ -142,7 +140,7 @@ public static partial class SkinSkillVariants
         }
         else
         {
-            Debug.LogError(il.Method.Name + " IL Hook failed!");
+            SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
         }
     }
     private static void MeshReplacementTemplate_ctor(On.RoR2.SkinDef.MeshReplacementTemplate.orig_ctor orig, ref SkinDef.MeshReplacementTemplate self, SkinDefParams.MeshReplacement source, GameObject rootObject)
@@ -157,6 +155,7 @@ public static partial class SkinSkillVariants
     class Patches
     {
         [HarmonyPatch(typeof(SkinDef.RuntimeSkin), nameof(SkinDef.RuntimeSkin.ApplyAsync), MethodType.Enumerator)]
+        [HarmonyPatch([typeof(GameObject), typeof(List<AssetReferenceT<Material>>), typeof(List<AssetReferenceT<Mesh>>), typeof(List<AssetReferenceT<GameObject>>), typeof(AsyncReferenceHandleUnloadType)])]
         [HarmonyILManipulator]
         private static void SkinDef_RuntimeSkin_ApplyAsync(MonoMod.Cil.ILContext il)
         {
@@ -187,7 +186,6 @@ public static partial class SkinSkillVariants
                     x => x.MatchLdflda<SkinDef.RuntimeSkin>(nameof(SkinDef.RuntimeSkin.rendererInfoTemplates)),
                     x => x.MatchLdloc(out _),
                     x => x.MatchCall(out _),
-                    //x => x.MatchCall<HG.ReadOnlyArray<SkinDef.RendererInfoTemplate>>("get_Item"),
                     x => x.MatchCall(typeof(SkinDef.RendererInfoTemplate).GetPropertyGetter(nameof(SkinDef.RendererInfoTemplate.rendererInfoData))),
                     x => x.MatchStloc(out i)
                 ))
@@ -198,11 +196,11 @@ public static partial class SkinSkillVariants
                 }
                 else
                 {
-                    Debug.LogError(il.Method.Name + " IL Hook 2 failed!");
+                    SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 2 failed!");
                 }
                 if (
                 c.TryGotoNext(MoveType.After,
-                    x => x.MatchStloc(8)
+                    x => x.MatchStloc(7)
                 ))
                 {
                     Instruction instruction = c.Prev;
@@ -222,9 +220,7 @@ public static partial class SkinSkillVariants
                 }
                 if (
                 c.TryGotoNext(MoveType.After,
-                    //x => x.MatchLdfld<SkinDef.MeshReplacementTemplate>(nameof(SkinDef.MeshReplacementTemplate.meshReference)),
-                    //x => x.MatchCallvirt(out _),
-                    x => x.MatchStloc(18)
+                    x => x.MatchStloc(19)
                 ))
                 {
                     Instruction instruction = c.Prev;
@@ -243,12 +239,12 @@ public static partial class SkinSkillVariants
                 }
                 else
                 {
-                    Debug.LogError(il.Method.Name + " IL Hook 4 failed!");
+                    SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 4 failed!");
                 }
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook 1 failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
             }
             c.Goto(lastInstruction);
             c.Index--;
@@ -277,7 +273,7 @@ public static partial class SkinSkillVariants
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook 1 failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
             }
             if (
                 c.TryGotoNext(MoveType.Before,
@@ -292,19 +288,20 @@ public static partial class SkinSkillVariants
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook 2 failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 2 failed!");
             }
         }
-        [HarmonyPatch(typeof(SkinDef), nameof(SkinDef.ApplyAsync), MethodType.Enumerator)]
+        [HarmonyPatch(typeof(SkinDef), nameof(SkinDef.BakeAsync), MethodType.Enumerator)]
         [HarmonyILManipulator]
         private static void SkinDef_BakeAsync(MonoMod.Cil.ILContext il)
         {
             ILCursor c = new ILCursor(il);
             if (
-                c.TryGotoNext(MoveType.Before,
-                    x => x.MatchLdarg(0),
-                    x => x.MatchLdloc(1),
-                    x => x.MatchCall(typeof(SkinDef).GetPropertyGetter(nameof(SkinDef.runtimeSkin)))
+                c.TryGotoNext(MoveType.After,
+                    //x => x.MatchLdarg(0),
+                    //x => x.MatchLdloc(1),
+                    //x => x.MatchCall(typeof(SkinDef).GetPropertyGetter(nameof(SkinDef.runtimeSkin)))
+                    x => x.MatchStfld<SkinDef>(nameof(SkinDef._runtimeSkin))
                 ))
             {
                 c.Emit(OpCodes.Ldloc, 1);
@@ -312,7 +309,7 @@ public static partial class SkinSkillVariants
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
             }
         }
         [HarmonyPatch(typeof(ModelSkinController), nameof(ModelSkinController.ApplySkinAsync), MethodType.Enumerator)]
@@ -326,14 +323,14 @@ public static partial class SkinSkillVariants
                     x => x.MatchLdfld(out _),
                     x => x.MatchLdloc(1),
                     x => x.MatchCall(typeof(ModelSkinController).GetPropertyGetter(nameof(ModelSkinController.currentSkinIndex))),
-                    x => x.MatchBeq(out _)
+                    x => x.MatchBneUn(out _)
                 ))
             {
-                c.RemoveRange(5);
+                c.RemoveRange(7);
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
             }
         }
     }
