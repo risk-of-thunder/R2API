@@ -254,7 +254,7 @@ public static partial class SkinVFX
 
             if (skinVFXInfo == null) return;
 
-            BulletAttack._effectData.genericUInt = skinVFXInfo.Identifier;
+            BulletAttack.pooledEffectData.genericUInt = skinVFXInfo.Identifier;
         });
     }
 }
