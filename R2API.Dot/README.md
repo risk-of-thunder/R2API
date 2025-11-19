@@ -18,6 +18,9 @@ Alongside adding new DotIndices and DotDefs, One can also provide CustomDotBehav
 
 ## Changelog
 
+### `1.1.2`
+* Fix AddDot and EvaluateDotStacksForType IL hooks for DLC3 release.
+
 ### '1.1.1'
 * Removed ambiguity in methods.
 
