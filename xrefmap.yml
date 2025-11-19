@@ -11943,6 +11943,12 @@ references:
   isSpec: "True"
   fullName: R2API.Networking.NetworkingHelpers.ApplyBuff
   nameWithType: NetworkingHelpers.ApplyBuff
+- uid: R2API.Networking.NetworkingHelpers.ApplyDot(RoR2.HealthComponent,RoR2.InflictDotInfo)
+  name: ApplyDot(HealthComponent, InflictDotInfo)
+  href: api/R2API.Networking.NetworkingHelpers.html#R2API_Networking_NetworkingHelpers_ApplyDot_RoR2_HealthComponent_RoR2_InflictDotInfo_
+  commentId: M:R2API.Networking.NetworkingHelpers.ApplyDot(RoR2.HealthComponent,RoR2.InflictDotInfo)
+  fullName: R2API.Networking.NetworkingHelpers.ApplyDot(RoR2.HealthComponent, RoR2.InflictDotInfo)
+  nameWithType: NetworkingHelpers.ApplyDot(HealthComponent, InflictDotInfo)
 - uid: R2API.Networking.NetworkingHelpers.ApplyDot(RoR2.HealthComponent,UnityEngine.GameObject,RoR2.DotController.DotIndex,System.Single,System.Single)
   name: ApplyDot(HealthComponent, GameObject, DotIndex, float, float)
   href: api/R2API.Networking.NetworkingHelpers.html#R2API_Networking_NetworkingHelpers_ApplyDot_RoR2_HealthComponent_UnityEngine_GameObject_RoR2_DotController_DotIndex_System_Single_System_Single_
