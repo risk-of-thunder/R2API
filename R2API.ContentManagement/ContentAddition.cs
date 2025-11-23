@@ -713,18 +713,6 @@ public static class ContentAddition
         RejectContent(craftableDef, asm, "craftableDef", "But the CraftableCatalog has already initailized!");
         return false;
     }
-
-    // Idk if I want to add this overload here, may be fit for its own mod or atleast section.
-
-    /*
-    public static bool AddCraftableDef(Recipe[] recipes, ItemIndex result)
-    {
-        CraftableDef def = ScriptableObject.CreateInstance<CraftableDef>();
-        def.recipes = recipes;
-        def.itemIndex = result;
-        return AddCraftableDef(def);
-    }
-    */
     #endregion
 
     #region Util Methods
