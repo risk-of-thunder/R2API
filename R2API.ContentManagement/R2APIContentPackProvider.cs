@@ -74,6 +74,7 @@ internal class R2APIGenericContentPack : IContentPackProvider
         log.AddRange(contentPack.expansionDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
         log.AddRange(contentPack.entitlementDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
         log.AddRange(contentPack.miscPickupDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
+        log.AddRange(contentPack.craftableDefs.assetInfos.Select(ai => $"{ai.assetName} ({ai.asset.GetType().Name})"));
         ContentManagementPlugin.Logger.LogDebug(string.Join("\n", log));
     }
 }

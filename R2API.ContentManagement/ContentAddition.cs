@@ -696,6 +696,35 @@ public static class ContentAddition
         wasAdded = false;
         return new SerializableEntityStateType();
     }
+
+    /// <summary>
+    /// Adds a CraftableDef to your Mod's ContentPack
+    /// </summary>
+    /// <param name="craftableDef">The CraftableDef to Add</param>
+    /// <returns>true if valid and added, false if one of the requirements is not met</returns>
+    public static bool AddCraftableDef(CraftableDef craftableDef)
+    {
+        var asm = GetNonAPICaller();
+        if (CatalogBlockers.GetAvailability<CraftableDef>())
+        {
+            R2APIContentManager.HandleContentAddition(asm, craftableDef);
+            return true;
+        }
+        RejectContent(craftableDef, asm, "craftableDef", "But the CraftableCatalog has already initailized!");
+        return false;
+    }
+
+    // Idk if I want to add this overload here, may be fit for its own mod or atleast section.
+
+    /*
+    public static bool AddCraftableDef(Recipe[] recipes, ItemIndex result)
+    {
+        CraftableDef def = ScriptableObject.CreateInstance<CraftableDef>();
+        def.recipes = recipes;
+        def.itemIndex = result;
+        return AddCraftableDef(def);
+    }
+    */
     #endregion
 
     #region Util Methods

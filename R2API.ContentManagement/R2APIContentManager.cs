@@ -308,6 +308,7 @@ public static partial class R2APIContentManager
                     case ExpansionDef exd: AddSafe(ref scp.expansionDefs, exd, scp.name); added = true; break;
                     case EntitlementDef end: AddSafe(ref scp.entitlementDefs, end, scp.name); added = true; break;
                     case MiscPickupDef mpd: AddSafe(ref scp.miscPickupDefs, mpd, scp.name); added = true; break;
+                    case CraftableDef cd: AddSafe(ref scp.craftableDefs, cd, scp.name); added = true; break;
                 }
                 if (!added)
                 {
