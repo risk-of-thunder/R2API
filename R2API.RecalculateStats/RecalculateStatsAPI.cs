@@ -1199,7 +1199,7 @@ public static partial class RecalculateStatsAPI
         }
         else
         {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ProcessLuck)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyLuckStat)} failed.");
         }
     }
 
