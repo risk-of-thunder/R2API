@@ -1,13 +1,13 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using Mono.Cecil.Cil;
+﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using MonoMod.RuntimeDetour;
 using R2API.AutoVersionGen;
 using R2API.Utils;
 using RoR2;
 using RoR2BepInExPack.Utilities;
+using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 
 namespace R2API;
 
@@ -243,22 +243,159 @@ public static partial class RecalculateStatsAPI
         #endregion
 
         #region cooldowns
+        /// <summary>Stat modifiers applied to all skills.</summary>
+        public SkillSlotStatModifiers allSkills = new SkillSlotStatModifiers();
+
+        /// <summary>Stat modifiers applied to the primary skill.</summary>
+        public SkillSlotStatModifiers primarySkill = new SkillSlotStatModifiers();
+
+        /// <summary>Stat modifiers applied to the secondary skill.</summary>
+        public SkillSlotStatModifiers secondarySkill = new SkillSlotStatModifiers();
+
+        /// <summary>Stat modifiers applied to the utility skill.</summary>
+        public SkillSlotStatModifiers utilitySkill = new SkillSlotStatModifiers();
+
+        /// <summary>Stat modifiers applied to the special skill.</summary>
+        public SkillSlotStatModifiers specialSkill = new SkillSlotStatModifiers();
+
+        internal float CalculateFinalSkillCooldownScale(SkillSlot slot)
+        {
+            float multiplierAdd = 0f;
+            float reductionMultiplier = 0f;
+            float totalMultiplier = 1f;
+
+            void applyModifiers(in SkillSlotStatModifiers statModifiers)
+            {
+                multiplierAdd += Math.Max(0f, statModifiers.cooldownMultAdd);
+                reductionMultiplier += Math.Max(0f, statModifiers.cooldownReductionMultAdd);
+                totalMultiplier *= Math.Max(0f, statModifiers.cooldownMultiplier);
+            }
+
+            applyModifiers(allSkills);
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            multiplierAdd += Math.Max(0f, cooldownMultAdd);
+
+            switch (slot)
+            {
+                case SkillSlot.Primary:
+                    applyModifiers(primarySkill);
+
+                    multiplierAdd += Math.Max(0f, primaryCooldownMultAdd);
+                    break;
+                case SkillSlot.Secondary:
+                    applyModifiers(secondarySkill);
+
+                    multiplierAdd += Math.Max(0f, secondaryCooldownMultAdd);
+                    break;
+                case SkillSlot.Utility:
+                    applyModifiers(utilitySkill);
+
+                    multiplierAdd += Math.Max(0f, utilityCooldownMultAdd);
+                    break;
+                case SkillSlot.Special:
+                    applyModifiers(specialSkill);
+
+                    multiplierAdd += Math.Max(0f, specialCooldownMultAdd);
+                    break;
+            }
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            return ((1f + multiplierAdd) / (1f + reductionMultiplier)) * totalMultiplier;
+        }
+
+        internal float CalculateSkillCooldownFlatReduction(SkillSlot slot)
+        {
+            float flatReduction = 0f;
+
+            void applyModifiers(in SkillSlotStatModifiers statModifiers)
+            {
+                flatReduction += Math.Max(0f, statModifiers.cooldownFlatReduction);
+            }
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            flatReduction += Math.Max(0f, cooldownReductionAdd);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            applyModifiers(allSkills);
+
+            switch (slot)
+            {
+                case SkillSlot.Primary:
+                    applyModifiers(primarySkill);
+                    break;
+                case SkillSlot.Secondary:
+                    applyModifiers(secondarySkill);
+                    break;
+                case SkillSlot.Utility:
+                    applyModifiers(utilitySkill);
+                    break;
+                case SkillSlot.Special:
+                    applyModifiers(specialSkill);
+                    break;
+            }
+
+            return flatReduction;
+        }
+
+        internal int CalculateSkillBonusStocks(SkillSlot slot)
+        {
+            int bonusStockAdd = 0;
+
+            void applyModifiers(in SkillSlotStatModifiers statModifiers)
+            {
+                bonusStockAdd += Math.Max(0, statModifiers.bonusStockAdd);
+            }
+
+            applyModifiers(allSkills);
+
+            switch (slot)
+            {
+                case SkillSlot.Primary:
+                    applyModifiers(primarySkill);
+                    break;
+                case SkillSlot.Secondary:
+                    applyModifiers(secondarySkill);
+                    break;
+                case SkillSlot.Utility:
+                    applyModifiers(utilitySkill);
+                    break;
+                case SkillSlot.Special:
+                    applyModifiers(specialSkill);
+                    break;
+            }
+
+            return bonusStockAdd;
+        }
+
         /// <summary>Added to flat cooldown reduction.</summary> <remarks>COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</remarks>
+        [Obsolete($"Use StatEventHookArgs.{nameof(allSkills)}.{nameof(SkillSlotStatModifiers.cooldownFlatReduction)} instead")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public float cooldownReductionAdd = 0f;
 
         /// <summary>Added to the direct multiplier to cooldown timers.</summary> <inheritdoc cref="cooldownReductionAdd"/>
+        [Obsolete($"Use StatEventHookArgs.{nameof(allSkills)}.{nameof(SkillSlotStatModifiers.cooldownMultAdd)} instead")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public float cooldownMultAdd = 0f;
 
         /// <summary>(Primary) Added to the direct multiplier to cooldown timers.</summary> <inheritdoc cref="cooldownReductionAdd"/>
+        [Obsolete($"Use StatEventHookArgs.{nameof(primarySkill)}.{nameof(SkillSlotStatModifiers.cooldownMultAdd)} instead")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public float primaryCooldownMultAdd = 0f;
 
         /// <summary>(Secondary) Added to the direct multiplier to cooldown timers.</summary> <inheritdoc cref="cooldownReductionAdd"/>
+        [Obsolete($"Use StatEventHookArgs.{nameof(secondarySkill)}.{nameof(SkillSlotStatModifiers.cooldownMultAdd)} instead")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public float secondaryCooldownMultAdd = 0f;
 
         /// <summary>(Utility) Added to the direct multiplier to cooldown timers.</summary> <inheritdoc cref="cooldownReductionAdd"/>
+        [Obsolete($"Use StatEventHookArgs.{nameof(utilitySkill)}.{nameof(SkillSlotStatModifiers.cooldownMultAdd)} instead")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public float utilityCooldownMultAdd = 0f;
 
         /// <summary>(Special) Added to the direct multiplier to cooldown timers.</summary> <inheritdoc cref="cooldownReductionAdd"/>
+        [Obsolete($"Use StatEventHookArgs.{nameof(specialSkill)}.{nameof(SkillSlotStatModifiers.cooldownMultAdd)} instead")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public float specialCooldownMultAdd = 0f;
         #endregion
 
@@ -293,6 +430,33 @@ public static partial class RecalculateStatsAPI
         /// <summary>Jump count is multiplied by this number.</summary> <remarks>JUMP_COUNT ~ (BASE_JUMP_COUNT + jumpCountAdd) * jumpCountMult</remarks>
         public int jumpCountMult = 1;
         #endregion
+    }
+
+    /// <summary>
+    /// A collection of modifiers for skill slots
+    /// </summary>
+    public struct SkillSlotStatModifiers
+    {
+        /// <summary>Added to cooldown multiplier.</summary> <remarks>COOLDOWN ~ (BASE_COOLDOWN * BASE_COOLDOWN_MULT * (1 + cooldownMultAdd) / (1 + cooldownReductionMultAdd) * cooldownMultiplier) - (BASE_FLAT_REDUCTION + cooldownFlatReduction)</remarks>
+        public float cooldownMultAdd = 0f;
+
+        /// <summary>Added to cooldown reduction multiplier.</summary> <inheritdoc cref="cooldownMultAdd"/>
+        public float cooldownReductionMultAdd = 0f;
+
+        /// <summary>Added to flat cooldown reduction.</summary> <inheritdoc cref="cooldownMultAdd"/>
+        public float cooldownFlatReduction = 0f;
+
+        /// <summary>Multiplies the final cooldown (does not affect flat cooldown increase/reduction).</summary> <inheritdoc cref="cooldownMultAdd"/>
+        public float cooldownMultiplier = 1f;
+
+        /// <summary>Added to max stocks.</summary> <remarks>MAX_STOCKS ~ BASE_MAX_STOCKS + BONUS_STOCKS + bonusStockAdd</remarks>
+        public int bonusStockAdd = 0;
+
+#pragma warning disable R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
+        public SkillSlotStatModifiers()
+        {
+        }
+#pragma warning restore R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
     }
 
     /// <summary>
@@ -383,7 +547,7 @@ public static partial class RecalculateStatsAPI
         ModifyBleedStat(c);
         ModifyArmorStat(c, emitLevelMultiplier);
         ModifyCurseStat(c);
-        ModifyCooldownStat(c);
+        ModifySkillSlots(c);
         ModifyLevelingStat(c);
         ModifyJumpCountStat(c);
     }
@@ -448,84 +612,121 @@ public static partial class RecalculateStatsAPI
         }
     }
 
-    private static void ModifyCooldownStat(ILCursor c)
+    private static void ModifySkillSlots(ILCursor c)
     {
-        c.Index = 0;
-        int ILFound = 0;
-        while (c.TryGotoNext(
-                   x => x.MatchCallOrCallvirt(
-                       typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale)))
-               ) && c.TryGotoNext(
-                   x => x.MatchCallOrCallvirt(
-                       typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction)))
-               ))
+        MethodInfo unityObjectImplicitNullCheckMethod = typeof(UnityEngine.Object).GetMethods(BindingFlags.Static | BindingFlags.Public)
+                                                                                  .SingleOrDefault(m => m.Name == "op_Implicit" && m.ReturnType == typeof(bool) && m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(UnityEngine.Object));
+
+        if (unityObjectImplicitNullCheckMethod == null)
         {
-            ILFound++;
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifySkillSlots)}: Failed to find unity object implicit bool conversion method");
+            return;
         }
 
-        if (ILFound >= 4)
+        static void applySkillSlotStatModifiers(GenericSkill genericSkill, SkillSlot skillSlot)
         {
-            c.Index = 0;
-            c.GotoNext(x =>
-                x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
-            c.EmitDelegate<Func<float, float>>((oldCooldown) =>
-            {
-                return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.primaryCooldownMultAdd);
-            });
-            c.GotoNext(x =>
-                x.MatchCallOrCallvirt(
-                    typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
-            c.EmitDelegate<Func<float, float>>((oldCooldown) =>
-            {
-                return oldCooldown + StatMods.cooldownReductionAdd;
-            });
+            genericSkill.cooldownScale *= StatMods.CalculateFinalSkillCooldownScale(skillSlot);
+            genericSkill.flatCooldownReduction += StatMods.CalculateSkillCooldownFlatReduction(skillSlot);
 
-            c.GotoNext(x =>
-                x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
-            c.EmitDelegate<Func<float, float>>((oldCooldown) =>
-            {
-                return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.secondaryCooldownMultAdd);
-            });
-            c.GotoNext(x =>
-                x.MatchCallOrCallvirt(
-                    typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
-            c.EmitDelegate<Func<float, float>>((oldCooldown) =>
-            {
-                return oldCooldown + StatMods.cooldownReductionAdd;
-            });
+            int bonusStocks = StatMods.CalculateSkillBonusStocks(skillSlot);
 
-            c.GotoNext(x =>
-                x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
-            c.EmitDelegate<Func<float, float>>((oldCooldown) =>
+            // Primary doesn't normally recalculate bonus stocks, so adding the existing value would apply it again every time stats recalculated.
+            // Might be a better way to do this, since here any already existing primary bonus stocks will be lost.
+            if (skillSlot != SkillSlot.Primary)
             {
-                return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.utilityCooldownMultAdd);
-            });
-            c.GotoNext(x =>
-                x.MatchCallOrCallvirt(
-                    typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
-            c.EmitDelegate<Func<float, float>>((oldCooldown) =>
-            {
-                return oldCooldown + StatMods.cooldownReductionAdd;
-            });
+                bonusStocks += genericSkill.bonusStockFromBody;
+            }
 
+            genericSkill.SetBonusStockFromBody(bonusStocks);
+        }
 
-            c.GotoNext(x =>
-                x.MatchCallOrCallvirt(typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.cooldownScale))));
-            c.EmitDelegate<Func<float, float>>((oldCooldown) =>
+        c.Index = 0;
+        ILLabel afterPrimarySkillBlockLabel = null;
+        if (c.TryGotoNext(MoveType.After,
+                          x => x.MatchLdfld<SkillLocator>(nameof(SkillLocator.primary)),
+                          x => x.MatchCallOrCallvirt(unityObjectImplicitNullCheckMethod),
+                          x => x.MatchBrfalse(out afterPrimarySkillBlockLabel)))
+        {
+            c.Goto(afterPrimarySkillBlockLabel.Target, MoveType.Before);
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(applyPrimarySkillStatModifiers);
+
+            static void applyPrimarySkillStatModifiers(CharacterBody body)
             {
-                return oldCooldown * (1 + StatMods.cooldownMultAdd + StatMods.specialCooldownMultAdd);
-            });
-            c.GotoNext(x =>
-                x.MatchCallOrCallvirt(
-                    typeof(GenericSkill).GetPropertySetter(nameof(GenericSkill.flatCooldownReduction))));
-            c.EmitDelegate<Func<float, float>>((oldCooldown) =>
-            {
-                return oldCooldown + StatMods.cooldownReductionAdd;
-            });
+                // NOTE: Vanilla does not ever use the primaryBonusStockSkill property (even though it exists). So we're doing the same here to mimic vanilla behavior.
+                applySkillSlotStatModifiers(body.skillLocator.primary, SkillSlot.Primary);
+            }
         }
         else
         {
-            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyCooldownStat)} failed.");
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifySkillSlots)} failed to find primary skill patch location.");
+        }
+
+        c.Index = 0;
+        ILLabel afterSecondarySkillBlockLabel = null;
+        if (c.TryGotoNext(MoveType.After,
+                          x => x.MatchCallOrCallvirt<SkillLocator>("get_" + nameof(SkillLocator.secondaryBonusStockSkill)),
+                          x => x.MatchCallOrCallvirt(unityObjectImplicitNullCheckMethod),
+                          x => x.MatchBrfalse(out afterSecondarySkillBlockLabel)))
+        {
+            c.Goto(afterSecondarySkillBlockLabel.Target, MoveType.Before);
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(applySecondarySkillStatModifiers);
+
+            static void applySecondarySkillStatModifiers(CharacterBody body)
+            {
+                applySkillSlotStatModifiers(body.skillLocator.secondaryBonusStockSkill, SkillSlot.Secondary);
+            }
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifySkillSlots)} failed to find secondary skill patch location.");
+        }
+
+        c.Index = 0;
+        ILLabel afterUtilitySkillBlockLabel = null;
+        if (c.TryGotoNext(MoveType.After,
+                          x => x.MatchCallOrCallvirt<SkillLocator>("get_" + nameof(SkillLocator.utilityBonusStockSkill)),
+                          x => x.MatchCallOrCallvirt(unityObjectImplicitNullCheckMethod),
+                          x => x.MatchBrfalse(out afterUtilitySkillBlockLabel)))
+        {
+            c.Goto(afterUtilitySkillBlockLabel.Target, MoveType.Before);
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(applyUtilitySkillStatModifiers);
+
+            static void applyUtilitySkillStatModifiers(CharacterBody body)
+            {
+                applySkillSlotStatModifiers(body.skillLocator.utilityBonusStockSkill, SkillSlot.Utility);
+            }
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifySkillSlots)} failed to find utility skill patch location.");
+        }
+
+        c.Index = 0;
+        ILLabel afterSpecialSkillBlockLabel = null;
+        if (c.TryGotoNext(MoveType.After,
+                          x => x.MatchCallOrCallvirt<SkillLocator>("get_" + nameof(SkillLocator.specialBonusStockSkill)),
+                          x => x.MatchCallOrCallvirt(unityObjectImplicitNullCheckMethod),
+                          x => x.MatchBrfalse(out afterSpecialSkillBlockLabel)))
+        {
+            c.Goto(afterSpecialSkillBlockLabel.Target, MoveType.Before);
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(applySpecialSkillStatModifiers);
+
+            static void applySpecialSkillStatModifiers(CharacterBody body)
+            {
+                applySkillSlotStatModifiers(body.skillLocator.specialBonusStockSkill, SkillSlot.Special);
+            }
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifySkillSlots)} failed to find special skill patch location.");
         }
     }
 
