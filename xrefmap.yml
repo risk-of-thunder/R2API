@@ -12611,12 +12611,73 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.PluginVersion
   fullName: R2API.RecalculateStatsAPI.PluginVersion
   nameWithType: RecalculateStatsAPI.PluginVersion
+- uid: R2API.RecalculateStatsAPI.SkillSlotStatModifiers
+  name: RecalculateStatsAPI.SkillSlotStatModifiers
+  href: api/R2API.RecalculateStatsAPI.SkillSlotStatModifiers.html
+  commentId: T:R2API.RecalculateStatsAPI.SkillSlotStatModifiers
+  fullName: R2API.RecalculateStatsAPI.SkillSlotStatModifiers
+  nameWithType: RecalculateStatsAPI.SkillSlotStatModifiers
+- uid: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.#ctor
+  name: SkillSlotStatModifiers()
+  href: api/R2API.RecalculateStatsAPI.SkillSlotStatModifiers.html#R2API_RecalculateStatsAPI_SkillSlotStatModifiers__ctor
+  commentId: M:R2API.RecalculateStatsAPI.SkillSlotStatModifiers.#ctor
+  name.vb: New()
+  fullName: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.SkillSlotStatModifiers()
+  fullName.vb: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.New()
+  nameWithType: RecalculateStatsAPI.SkillSlotStatModifiers.SkillSlotStatModifiers()
+  nameWithType.vb: RecalculateStatsAPI.SkillSlotStatModifiers.New()
+- uid: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.#ctor*
+  name: SkillSlotStatModifiers
+  href: api/R2API.RecalculateStatsAPI.SkillSlotStatModifiers.html#R2API_RecalculateStatsAPI_SkillSlotStatModifiers__ctor_
+  commentId: Overload:R2API.RecalculateStatsAPI.SkillSlotStatModifiers.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.SkillSlotStatModifiers
+  fullName.vb: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.New
+  nameWithType: RecalculateStatsAPI.SkillSlotStatModifiers.SkillSlotStatModifiers
+  nameWithType.vb: RecalculateStatsAPI.SkillSlotStatModifiers.New
+- uid: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.bonusStockAdd
+  name: bonusStockAdd
+  href: api/R2API.RecalculateStatsAPI.SkillSlotStatModifiers.html#R2API_RecalculateStatsAPI_SkillSlotStatModifiers_bonusStockAdd
+  commentId: F:R2API.RecalculateStatsAPI.SkillSlotStatModifiers.bonusStockAdd
+  fullName: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.bonusStockAdd
+  nameWithType: RecalculateStatsAPI.SkillSlotStatModifiers.bonusStockAdd
+- uid: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownFlatReduction
+  name: cooldownFlatReduction
+  href: api/R2API.RecalculateStatsAPI.SkillSlotStatModifiers.html#R2API_RecalculateStatsAPI_SkillSlotStatModifiers_cooldownFlatReduction
+  commentId: F:R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownFlatReduction
+  fullName: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownFlatReduction
+  nameWithType: RecalculateStatsAPI.SkillSlotStatModifiers.cooldownFlatReduction
+- uid: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownMultAdd
+  name: cooldownMultAdd
+  href: api/R2API.RecalculateStatsAPI.SkillSlotStatModifiers.html#R2API_RecalculateStatsAPI_SkillSlotStatModifiers_cooldownMultAdd
+  commentId: F:R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownMultAdd
+  fullName: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownMultAdd
+  nameWithType: RecalculateStatsAPI.SkillSlotStatModifiers.cooldownMultAdd
+- uid: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownMultiplier
+  name: cooldownMultiplier
+  href: api/R2API.RecalculateStatsAPI.SkillSlotStatModifiers.html#R2API_RecalculateStatsAPI_SkillSlotStatModifiers_cooldownMultiplier
+  commentId: F:R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownMultiplier
+  fullName: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownMultiplier
+  nameWithType: RecalculateStatsAPI.SkillSlotStatModifiers.cooldownMultiplier
+- uid: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownReductionMultAdd
+  name: cooldownReductionMultAdd
+  href: api/R2API.RecalculateStatsAPI.SkillSlotStatModifiers.html#R2API_RecalculateStatsAPI_SkillSlotStatModifiers_cooldownReductionMultAdd
+  commentId: F:R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownReductionMultAdd
+  fullName: R2API.RecalculateStatsAPI.SkillSlotStatModifiers.cooldownReductionMultAdd
+  nameWithType: RecalculateStatsAPI.SkillSlotStatModifiers.cooldownReductionMultAdd
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs
   name: RecalculateStatsAPI.StatHookEventArgs
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html
   commentId: T:R2API.RecalculateStatsAPI.StatHookEventArgs
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs
   nameWithType: RecalculateStatsAPI.StatHookEventArgs
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.allSkills
+  name: allSkills
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_allSkills
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.allSkills
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.allSkills
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.allSkills
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.armorAdd
   name: armorAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_armorAdd
@@ -12719,18 +12780,6 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceMult
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.bleedChanceMult
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.bleedChanceMult
-- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownMultAdd
-  name: cooldownMultAdd
-  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_cooldownMultAdd
-  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownMultAdd
-  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownMultAdd
-  nameWithType: RecalculateStatsAPI.StatHookEventArgs.cooldownMultAdd
-- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownReductionAdd
-  name: cooldownReductionAdd
-  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_cooldownReductionAdd
-  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownReductionAdd
-  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.cooldownReductionAdd
-  nameWithType: RecalculateStatsAPI.StatHookEventArgs.cooldownReductionAdd
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.critAdd
   name: critAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_critAdd
@@ -12905,12 +12954,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedTotalMult
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedTotalMult
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.moveSpeedTotalMult
-- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.primaryCooldownMultAdd
-  name: primaryCooldownMultAdd
-  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_primaryCooldownMultAdd
-  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.primaryCooldownMultAdd
-  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.primaryCooldownMultAdd
-  nameWithType: RecalculateStatsAPI.StatHookEventArgs.primaryCooldownMultAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.primarySkill
+  name: primarySkill
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_primarySkill
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.primarySkill
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.primarySkill
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.primarySkill
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.regenMultAdd
   name: regenMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_regenMultAdd
@@ -12923,12 +12972,12 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.regenTotalMult
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.regenTotalMult
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.regenTotalMult
-- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.secondaryCooldownMultAdd
-  name: secondaryCooldownMultAdd
-  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_secondaryCooldownMultAdd
-  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.secondaryCooldownMultAdd
-  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.secondaryCooldownMultAdd
-  nameWithType: RecalculateStatsAPI.StatHookEventArgs.secondaryCooldownMultAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.secondarySkill
+  name: secondarySkill
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_secondarySkill
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.secondarySkill
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.secondarySkill
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.secondarySkill
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.shieldMultAdd
   name: shieldMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_shieldMultAdd
@@ -12947,24 +12996,24 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.shouldFreezeBarrier
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.shouldFreezeBarrier
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.shouldFreezeBarrier
-- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.specialCooldownMultAdd
-  name: specialCooldownMultAdd
-  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_specialCooldownMultAdd
-  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.specialCooldownMultAdd
-  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.specialCooldownMultAdd
-  nameWithType: RecalculateStatsAPI.StatHookEventArgs.specialCooldownMultAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.specialSkill
+  name: specialSkill
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_specialSkill
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.specialSkill
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.specialSkill
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.specialSkill
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.sprintSpeedAdd
   name: sprintSpeedAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_sprintSpeedAdd
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.sprintSpeedAdd
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.sprintSpeedAdd
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.sprintSpeedAdd
-- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.utilityCooldownMultAdd
-  name: utilityCooldownMultAdd
-  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_utilityCooldownMultAdd
-  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.utilityCooldownMultAdd
-  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.utilityCooldownMultAdd
-  nameWithType: RecalculateStatsAPI.StatHookEventArgs.utilityCooldownMultAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.utilitySkill
+  name: utilitySkill
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_utilitySkill
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.utilitySkill
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.utilitySkill
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.utilitySkill
 - uid: R2API.RecalculateStatsAPI.StatHookEventHandler
   name: RecalculateStatsAPI.StatHookEventHandler
   href: api/R2API.RecalculateStatsAPI.StatHookEventHandler.html
