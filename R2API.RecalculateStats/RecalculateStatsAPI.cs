@@ -307,7 +307,6 @@ public static partial class RecalculateStatsAPI
         internal float CalculateSkillCooldownFlatReduction(SkillSlot slot)
         {
             float flatReduction = 0f;
-            float flatAdd = 0f;
 
             void applyModifiers(in SkillSlotStatModifiers statModifiers)
             {
@@ -336,7 +335,7 @@ public static partial class RecalculateStatsAPI
                     break;
             }
 
-            return flatReduction - flatAdd;
+            return flatReduction;
         }
 
         internal int CalculateSkillBonusStocks(SkillSlot slot)
