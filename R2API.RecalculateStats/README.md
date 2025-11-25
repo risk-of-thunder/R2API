@@ -16,6 +16,7 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 * Health Regeneration
 * Movement Speed
 * Jump Power
+* Jump Count
 * Damage
 * Attack Speed
 * Critical Strike Chance
@@ -24,10 +25,34 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 * Cooldown reduction for skills
 * Shield
 * Critical Strike Damage
+* Luck
+* Barrier Decay Rate
+* Barrer Decay Freeze
 
 ## Related Pages
 
 ## Changelog
+
+### `1.6.5`
+* Fixed luck and barrier stat hooks for Alloyed Collective
+
+### `1.6.4`
+* Skill slot stats are now handled by `SkillSlotStatModifiers`:
+	* Split into `primarySkill`/`secondarySkill`/`utilitySkill`/`specialSkill`/`allSkills` for stat manipulation to apply to specific slots or all slots simultaneously.
+	* Added `cooldownReductionMultAdd`, and `cooldownMultiplier` stats for better modification of skill cooldowns.
+	* Added `bonusStockAdd` for adding charges to skills.
+
+### `1.6.3`
+* Improved reliability of luck stat hooks
+
+### `1.6.2`
+* Added support for fractional/non-integer luck values
+* Added `luckAdd` stat for increasing and decreasing luck
+* Added `shouldFreezeBarrier`, `barrierDecayAdd`, and `barrierDecayMult` stats for modifying barrier decay rate
+* Improved reliability of jump stat hook
+
+### `1.6.1`
+* Added stats: `jumpCountAdd` and `jumpCountMult`.
 
 ### `1.6.0`
 * Added multiplicative stat modifiers `healthTotalMult`, `shieldTotalMult`, `regenTotalMult`, `moveSpeedTotalMult`, `jumpPowerTotalMult`, `damageTotalMult` `attackSpeedTotalMult`, `critMult`, `bleedChanceMult`, `armorMult`, and `curseTotalMult`.

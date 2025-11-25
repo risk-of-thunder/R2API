@@ -44,7 +44,7 @@ public partial class R2API : BaseUnityPlugin
 
     public const string PluginName = "R2API";
 
-    private const string GameBuildId = "1.3.9";
+    private const string GameBuildId = "1.4.0";
 
     internal static new ManualLogSource Logger { get; set; }
 
@@ -73,6 +73,10 @@ public partial class R2API : BaseUnityPlugin
         _networkCompatibilityHandler.BuildModList();
 
         On.RoR2.RoR2Application.Awake += CheckIfUsedOnRightGameVersion;
+
+#if DEBUG
+        EnumPatcher.SetHooks();
+#endif
     }
 
     private void Start()
@@ -91,6 +95,7 @@ public partial class R2API : BaseUnityPlugin
     private void OnDestroy()
     {
         _networkCompatibilityHandler.CleanupModList();
+        EnumPatcher.UnsetHooks();
     }
 
     private static void DebugUpdate()

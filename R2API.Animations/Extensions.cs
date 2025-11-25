@@ -15,4 +15,19 @@ internal static class Extensions
 
         return dict[key] = defaultValueFunc();
     }
+
+    public static int IndexOf<T>(this IEnumerable<T> values, Func<T, bool> predicate)
+    {
+        var i = 0;
+
+        foreach (var value in values)
+        {
+            if (predicate(value))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
 }

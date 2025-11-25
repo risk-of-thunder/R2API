@@ -6,7 +6,7 @@ R2API.Prefab is a submodule assembly for R2API that allows mod creators to add n
 
 ## Use Cases / Features
 
-The prefabs created via PrefabAPI are mainly created using the `InstantiateClone` method, which instantiates a clone of an existing prefab and leaves it disabled and stored in memory, 
+The prefabs created via PrefabAPI are mainly created using the `InstantiateClone` method, which instantiates a clone of an existing prefab and leaves it disabled and stored in memory, or create a new prefab using the `CreateEmptyPrefab` method, 
 this sleeping state mimic the behaviour like regular prefabs in the Unity Editor.
 
 By default the `InstantiateClone` method assume that it is a prefab with a `NetworkIdentity` component, and will attempt to register it internally using the `RegisterNetworkPrefab` method described below
@@ -19,6 +19,12 @@ by using the `RegisterNetworkPrefab` method.
 ## Related Pages
 
 ## Changelog
+
+### '1.1.1'
+* Remove unused parameter from `CreateEmptyPrefab` method.
+
+### '1.1.0'
+* Add `CreateEmptyPrefab` method.
 
 ### '1.0.4'
 * Initial fixes for SOTS DLC2 Release.

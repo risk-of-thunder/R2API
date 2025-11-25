@@ -161,6 +161,9 @@ public static partial class DirectorAPI
         /// </summary>
         Champions = 4,
 
+        /// <summary>
+        /// Special enemies, like Scavengers
+        /// </summary>
         Special = 5,
     }
 
@@ -181,7 +184,7 @@ public static partial class DirectorAPI
         Custom = 1,
 
         /// <summary>
-        /// Chests, such as basic chests, large chests, shops, equipment barrels, lunar pods, and category chests. NOT legendary chests or cloaked chests.
+        /// Chests, such as basic chests, large chests, shops, equipment barrels, lunar pods, and category chests. NOT legendary chests or cloaked chests. Temp item chests also go here.
         /// </summary>
         Chests = 2,
 
@@ -211,12 +214,18 @@ public static partial class DirectorAPI
         Rare = 7,
 
         /// <summary>
-        /// All three tiers of printers.
+        /// All three tiers of printers. AC adds drone scrapper to it.
         /// </summary>
         Duplicator = 8,
 
+        /// <summary>
+        /// Interactables added with Survivors of the Void - Void Cradle and Void Camp
+        /// </summary>
         VoidStuff = 9,
 
+        /// <summary>
+        /// Shrines added with Seekers of the Storm, specifically Shrine of Shaping and Halcyon Shrine
+        /// </summary>
         StormStuff = 10
     }
 
@@ -442,6 +451,46 @@ public static partial class DirectorAPI
         /// External / Internal Name : Prime Meridian / meridian
         /// </summary>
         PrimeMeridian = 1L << 41,
+
+        /// <summary>
+        /// External / Internal Name : Hidden Realm: Computational Exchange / computationalexchange
+        /// </summary>
+        ComputationalExchange = 1L << 42,
+
+        /// <summary>
+        /// External / Internal Name : Conduit Canyon / conduitcanyon
+        /// </summary>
+        ConduitCanyon = 1L << 43,
+
+        /// <summary>
+        /// External / Internal Name : Iron Alluvium / ironalluvium
+        /// </summary>
+        IronAlluvium = 1L << 44,
+
+        /// <summary>
+        /// External / Internal Name : Iron Auroras / ironalluvium2
+        /// </summary>
+        IronAuroras = 1L << 45,
+
+        /// <summary>
+        /// External / Internal Name : Pretenders Precipice / nest
+        /// </summary>
+        PretendersPrecipice = 1L << 46,
+
+        /// <summary>
+        /// External / Internal Name : Repurposed Crater / repurposedcrater
+        /// </summary>
+        RepurposedCrater = 1L << 47,
+
+        /// <summary>
+        /// External / Internal Name : Hidden Realm: Neural Sanctum / solusweb
+        /// </summary>
+        NeuralSanctum = 1L << 48,
+
+        /// <summary>
+        /// External / Internal Name : Solutional Haunt / solutionalhaunt
+        /// </summary>
+        SolutionalHaunt = 1L << 49,
     }
 
 #pragma warning disable R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
@@ -538,6 +587,14 @@ public static partial class DirectorAPI
         "habitatfall" => Stage.GoldenDieback,
         "helminthroost" => Stage.HelminthHatchery,
         "meridian" => Stage.PrimeMeridian,
+        "computationalexchange" => Stage.ComputationalExchange,
+        "conduitcanyon" => Stage.ConduitCanyon,
+        "ironalluvium" => Stage.IronAlluvium,
+        "ironalluvium2" => Stage.IronAuroras,
+        "nest" => Stage.PretendersPrecipice,
+        "repurposedcrater" => Stage.RepurposedCrater,
+        "solusweb" => Stage.NeuralSanctum,
+        "solutionalhaunt" => Stage.SolutionalHaunt,
         _ => Stage.Custom,
     };
 
@@ -598,6 +655,14 @@ public static partial class DirectorAPI
         Stage.GoldenDieback => "habitatfall",
         Stage.HelminthHatchery => "helminthroost",
         Stage.PrimeMeridian => "meridian",
+        Stage.ComputationalExchange => "computationalexchange",
+        Stage.ConduitCanyon => "conduitcanyon",
+        Stage.IronAlluvium => "ironalluvium",
+        Stage.IronAuroras => "ironalluvium2",
+        Stage.PretendersPrecipice => "nest",
+        Stage.RepurposedCrater => "repurposedcrater",
+        Stage.NeuralSanctum => "solusweb",
+        Stage.SolutionalHaunt => "solutionalhaunt",
         _ => "", // Stage.Custom
     };
 

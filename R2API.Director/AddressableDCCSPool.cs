@@ -1,5 +1,6 @@
 ﻿using R2API.AddressReferencedAssets;
 using RoR2;
+using RoR2.ExpansionManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,15 +31,35 @@ public class AddressableDCCSPool : ScriptableObject
         {
             foreach (var instance in instances)
             {
-                instance.Upgrade();
+                try
+                {
+                    instance.Upgrade();
+                }
+                catch(Exception ex)
+                {
+                    DirectorPlugin.Logger.LogError($"{instance} failed to upgrade.\n{ex}");
+                }
             }
         };
     }
 
     private void Upgrade()
     {
-        DccsPool.Category[] categories = poolCategories.Select(x => x.Upgrade()).ToArray();
-        targetPool.poolCategories = categories;
+        List<DccsPool.Category> upgradedCategories = new List<DccsPool.Category>();
+        for (int i = 0; i < poolCategories.Length; i++)
+        {
+            Category cat = poolCategories[i];
+            var result = cat?.Upgrade();
+
+            if(result == null)
+            {
+                DirectorPlugin.Logger.LogWarning($"{this}'s {i}th index of categories failed to upgrade.");
+                continue;
+            }
+
+            upgradedCategories.Add(result);
+        }
+        targetPool.poolCategories = upgradedCategories.ToArray();
         poolCategories = null;
     }
 
@@ -61,11 +82,22 @@ public class AddressableDCCSPool : ScriptableObject
 
         internal virtual DccsPool.PoolEntry Upgrade()
         {
+
             return new DccsPool.PoolEntry
             {
-                dccs = familyDccs.AssetExists ? familyDccs.Asset : dccs.targetCardCategorySelection,
+                dccs = GetDirectorCardCategorySelection(),
                 weight = weight
             };
+        }
+
+        protected DirectorCardCategorySelection GetDirectorCardCategorySelection()
+        {
+            var familyDccsResult = familyDccs.Asset;
+
+            if (familyDccsResult)
+                return familyDccsResult;
+
+            return dccs.targetCardCategorySelection;
         }
     }
 
@@ -81,12 +113,25 @@ public class AddressableDCCSPool : ScriptableObject
 
         internal override DccsPool.PoolEntry Upgrade()
         {
-            return new DccsPool.ConditionalPoolEntry
+            var result = new DccsPool.ConditionalPoolEntry
             {
-                dccs = familyDccs.AssetExists ? familyDccs.Asset : dccs.targetCardCategorySelection,
-                requiredExpansions = requiredExpansions.Select(x => x.Asset).ToArray(),
+                dccs = GetDirectorCardCategorySelection(),
                 weight = weight
             };
+
+            var expansionDefs = new List<ExpansionDef>();
+
+            foreach (var def in requiredExpansions)
+            {
+                var asset = def.Asset;
+                if (!asset)
+                    continue;
+
+                expansionDefs.Add(asset);
+            }
+            result.requiredExpansions = expansionDefs.ToArray();
+
+            return result;
         }
     }
 
@@ -109,14 +154,64 @@ public class AddressableDCCSPool : ScriptableObject
 
         internal DccsPool.Category Upgrade()
         {
-            return new DccsPool.Category
+            var resultCategory = new DccsPool.Category
             {
                 name = name,
                 categoryWeight = categoryWeight,
-                alwaysIncluded = alwaysIncluded.Select(x => x.Upgrade()).ToArray(),
-                includedIfConditionsMet = includedIfConditionsMet.Select(x => x.Upgrade()).Cast<DccsPool.ConditionalPoolEntry>().ToArray(),
-                includedIfNoConditionsMet = includedIfNoConditionsMet.Select(x => x.Upgrade()).ToArray()
             };
+
+            List<DccsPool.PoolEntry> upgradedPoolEntries = new List<DccsPool.PoolEntry>();
+            List<DccsPool.ConditionalPoolEntry> upgradedConditionalPoolEntries = new List<DccsPool.ConditionalPoolEntry>();
+
+            foreach (var alwaysIncluded in alwaysIncluded)
+            {
+                var result = alwaysIncluded.Upgrade();
+                if (result == null)
+                    continue;
+
+                if (!result.dccs)
+                    continue;
+
+                upgradedPoolEntries.Add(result);
+            }
+            resultCategory.alwaysIncluded = upgradedPoolEntries.ToArray();
+
+            foreach (var conditionallyIncluded in includedIfConditionsMet)
+            {
+                var result = conditionallyIncluded.Upgrade();
+
+                if (result == null)
+                    continue;
+
+                if (result is not DccsPool.ConditionalPoolEntry _conditionalPoolEntry)
+                    continue;
+
+                if (!_conditionalPoolEntry.dccs)
+                    continue;
+
+                if (_conditionalPoolEntry.requiredExpansions == null || _conditionalPoolEntry.requiredExpansions.Length == 0 || !_conditionalPoolEntry.requiredExpansions.Any())
+                    continue;
+
+                upgradedConditionalPoolEntries.Add(_conditionalPoolEntry);
+            }
+            resultCategory.includedIfConditionsMet = upgradedConditionalPoolEntries.ToArray();
+
+            upgradedPoolEntries.Clear();
+            foreach (var noConditionsMet in includedIfNoConditionsMet)
+            {
+                var result = noConditionsMet.Upgrade();
+
+                if (result == null)
+                    continue;
+
+                if (!result.dccs)
+                    continue;
+
+                upgradedPoolEntries.Add(result);
+            }
+            resultCategory.includedIfNoConditionsMet = upgradedPoolEntries.ToArray();
+
+            return resultCategory;
         }
     }
 }

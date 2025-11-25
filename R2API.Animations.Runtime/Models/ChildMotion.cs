@@ -1,99 +1,58 @@
 ﻿using System;
 using System.IO;
+using R2API.Animations.Models.Interfaces;
 using UnityEngine;
 
 namespace R2API.Models;
 
-/// <summary>
-/// Represents a motion in the context of its parent blend tree.
-/// </summary>
+/// <inheritdoc cref="IChildMotion"/>
 [Serializable]
-public class ChildMotion
+public class ChildMotion : IChildMotion
 {
-    [SerializeField]
-    private string clipBundlePath;
     /// <summary>
     /// Full path to an AssetBundle that contains AnimationClip for this state.
     /// </summary>
-    public string ClipBundlePath { get => clipBundlePath; set => clipBundlePath = value; }
+    [Obsolete("No longer required")]
+    public string ClipBundlePath { get => ""; set { } }
 
     [SerializeField]
     private AnimationClip clip;
-    /// <summary>
-    /// AnimationClip that will be played in this motion. Leave null if BlendTree is set.
-    /// </summary>
+    /// <inheritdoc/>
     public AnimationClip Clip { get => clip; set => clip = value; }
 
     [SerializeField]
     private BlendTree blendTree;
-    /// <summary>
-    /// BlendTree that will be played in this motion. Ignored if Clip is not null.
-    /// </summary>
+    /// <inheritdoc cref="IMotion.BlendTree"/>
     public BlendTree BlendTree { get => blendTree; set => blendTree = value; }
+    IBlendTree IMotion.BlendTree { get => blendTree; }
 
     [SerializeField]
     private float threshold;
-    /// <summary>
-    /// The threshold of the child. Used in 1D blend trees.
-    /// </summary>
+    /// <inheritdoc/>
     public float Threshold { get => threshold; set => threshold = value; }
 
     [SerializeField]
     private Vector2 position;
-    /// <summary>
-    /// The position of the child. Used in 2D blend trees.
-    /// </summary>
+    /// <inheritdoc/>
     public Vector2 Position { get => position; set => position = value; }
 
     [SerializeField]
     private float timeScale;
-    /// <summary>
-    /// The relative speed of the child.
-    /// </summary>
+    /// <inheritdoc/>
     public float TimeScale { get => timeScale; set => timeScale = value; }
 
     [SerializeField]
     private float cycleOffset;
-    /// <summary>
-    /// Normalized time offset of the child.
-    /// </summary>
+    /// <inheritdoc/>
     public float CycleOffset { get => cycleOffset; set => cycleOffset = value; }
 
     [SerializeField]
     private string directBlendParameter;
-    /// <summary>
-    /// The parameter used by the child when used in a BlendTree of type BlendTreeType.Direct.
-    /// </summary>
+    /// <inheritdoc/>
     public string DirectBlendParameter { get => directBlendParameter; set => directBlendParameter = value; }
 
     [SerializeField]
     private bool mirror;
-    /// <summary>
-    /// Mirror of the child.
-    /// </summary>
+    /// <inheritdoc/>
     public bool Mirror { get => mirror; set => mirror = value; }
-
-    /// <summary>
-    /// Writing into a binary writer for caching purposes.
-    /// </summary>
-    /// <param name="writer"></param>
-    public void WriteBinary(BinaryWriter writer)
-    {
-        writer.Write(ClipBundlePath ?? "");
-        if (Clip)
-        {
-            writer.Write(Clip.name);
-        }
-        if (BlendTree)
-        {
-            BlendTree.WriteBinary(writer);
-        }
-        writer.Write(Threshold);
-        writer.Write(Position.x);
-        writer.Write(Position.y);
-        writer.Write(TimeScale);
-        writer.Write(CycleOffset);
-        writer.Write(DirectBlendParameter ?? "");
-        writer.Write(Mirror);
-    }
 }
