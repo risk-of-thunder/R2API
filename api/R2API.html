@@ -215,6 +215,12 @@ Unlike regular RuleChoiceDefs, an ExtendedRulechoiceDef can have multiple requir
       <h4><a class="xref" href="R2API.GameModeInfo.html">GameModeInfo</a></h4>
       <section><p>Component to attach to your GameMode prefab. buttonHoverDescription is the only current attribute.</p>
 </section>
+      <h4><a class="xref" href="R2API.HealthBarAPI.html">HealthBarAPI</a></h4>
+      <section><p>API for modifying the HealthBar</p>
+</section>
+      <h4><a class="xref" href="R2API.HealthBarAPI.BarOverlayInfo.html">HealthBarAPI.BarOverlayInfo</a></h4>
+      <section><p>Defines on a modded HealthBar overlay.</p>
+</section>
       <h4><a class="xref" href="R2API.ItemAPI.html">ItemAPI</a></h4>
       <section></section>
       <h4><a class="xref" href="R2API.ItemDisplayRuleDict.html">ItemDisplayRuleDict</a></h4>
@@ -435,6 +441,9 @@ Enums
       <h4><a class="xref" href="R2API.DirectorAPI.Stage.html">DirectorAPI.Stage</a></h4>
       <section><p>A flags enum for the vanilla stages. Custom stages are handled with a string in StageInfo.</p>
 </section>
+      <h4><a class="xref" href="R2API.HealthBarAPI.BarOverlayIndex.html">HealthBarAPI.BarOverlayIndex</a></h4>
+      <section><p>An identifier for a modded HealthBar overlay.</p>
+</section>
       <h4><a class="xref" href="R2API.ModdedProcType.html">ModdedProcType</a></h4>
       <section><p>A modded equivalent of <span class="xref">RoR2.ProcType</span> for use with <a class="xref" href="R2API.ProcTypeAPI.html">ProcTypeAPI</a>.</p>
 </section>
@@ -463,6 +472,12 @@ Delegates
       <section></section>
       <h4><a class="xref" href="R2API.ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler.html">ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler</a></h4>
       <section></section>
+      <h4><a class="xref" href="R2API.HealthBarAPI.BarOverlayInfo.ModifyBarInfoCallback.html">HealthBarAPI.BarOverlayInfo.ModifyBarInfoCallback</a></h4>
+      <section><p>A delegate that can be run when HealthBar overlays are updated. Use this to set things like whether your bar is enabled or its size.</p>
+</section>
+      <h4><a class="xref" href="R2API.HealthBarAPI.BarOverlayInfo.ModifyHealthValuesCallback.html">HealthBarAPI.BarOverlayInfo.ModifyHealthValuesCallback</a></h4>
+      <section><p>A delegate that can be run when HealthBar display values are being calculated. Use this to modify the numerical health values before they render on the HUD.</p>
+</section>
       <h4><a class="xref" href="R2API.RecalculateStatsAPI.StatHookEventHandler.html">RecalculateStatsAPI.StatHookEventHandler</a></h4>
       <section><p>Used as the delegate type for the GetStatCoefficients event.</p>
 </section>

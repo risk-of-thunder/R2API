@@ -8666,6 +8666,111 @@ references:
   commentId: F:R2API.GameModeInfo.buttonHoverDescription
   fullName: R2API.GameModeInfo.buttonHoverDescription
   nameWithType: GameModeInfo.buttonHoverDescription
+- uid: R2API.HealthBarAPI
+  name: HealthBarAPI
+  href: api/R2API.HealthBarAPI.html
+  commentId: T:R2API.HealthBarAPI
+  fullName: R2API.HealthBarAPI
+  nameWithType: HealthBarAPI
+- uid: R2API.HealthBarAPI.AddOverlayToBody(RoR2.CharacterBody,R2API.HealthBarAPI.BarOverlayIndex)
+  name: AddOverlayToBody(CharacterBody, BarOverlayIndex)
+  href: api/R2API.HealthBarAPI.html#R2API_HealthBarAPI_AddOverlayToBody_RoR2_CharacterBody_R2API_HealthBarAPI_BarOverlayIndex_
+  commentId: M:R2API.HealthBarAPI.AddOverlayToBody(RoR2.CharacterBody,R2API.HealthBarAPI.BarOverlayIndex)
+  fullName: R2API.HealthBarAPI.AddOverlayToBody(RoR2.CharacterBody, R2API.HealthBarAPI.BarOverlayIndex)
+  nameWithType: HealthBarAPI.AddOverlayToBody(CharacterBody, HealthBarAPI.BarOverlayIndex)
+- uid: R2API.HealthBarAPI.AddOverlayToBody*
+  name: AddOverlayToBody
+  href: api/R2API.HealthBarAPI.html#R2API_HealthBarAPI_AddOverlayToBody_
+  commentId: Overload:R2API.HealthBarAPI.AddOverlayToBody
+  isSpec: "True"
+  fullName: R2API.HealthBarAPI.AddOverlayToBody
+  nameWithType: HealthBarAPI.AddOverlayToBody
+- uid: R2API.HealthBarAPI.BarOverlayIndex
+  name: HealthBarAPI.BarOverlayIndex
+  href: api/R2API.HealthBarAPI.BarOverlayIndex.html
+  commentId: T:R2API.HealthBarAPI.BarOverlayIndex
+  fullName: R2API.HealthBarAPI.BarOverlayIndex
+  nameWithType: HealthBarAPI.BarOverlayIndex
+- uid: R2API.HealthBarAPI.BarOverlayIndex.None
+  name: None
+  href: api/R2API.HealthBarAPI.BarOverlayIndex.html#R2API_HealthBarAPI_BarOverlayIndex_None
+  commentId: F:R2API.HealthBarAPI.BarOverlayIndex.None
+  fullName: R2API.HealthBarAPI.BarOverlayIndex.None
+  nameWithType: HealthBarAPI.BarOverlayIndex.None
+- uid: R2API.HealthBarAPI.BarOverlayInfo
+  name: HealthBarAPI.BarOverlayInfo
+  href: api/R2API.HealthBarAPI.BarOverlayInfo.html
+  commentId: T:R2API.HealthBarAPI.BarOverlayInfo
+  fullName: R2API.HealthBarAPI.BarOverlayInfo
+  nameWithType: HealthBarAPI.BarOverlayInfo
+- uid: R2API.HealthBarAPI.BarOverlayInfo.BarInfo
+  name: BarInfo
+  href: api/R2API.HealthBarAPI.BarOverlayInfo.html#R2API_HealthBarAPI_BarOverlayInfo_BarInfo
+  commentId: F:R2API.HealthBarAPI.BarOverlayInfo.BarInfo
+  fullName: R2API.HealthBarAPI.BarOverlayInfo.BarInfo
+  nameWithType: HealthBarAPI.BarOverlayInfo.BarInfo
+- uid: R2API.HealthBarAPI.BarOverlayInfo.BodySpecific
+  name: BodySpecific
+  href: api/R2API.HealthBarAPI.BarOverlayInfo.html#R2API_HealthBarAPI_BarOverlayInfo_BodySpecific
+  commentId: F:R2API.HealthBarAPI.BarOverlayInfo.BodySpecific
+  fullName: R2API.HealthBarAPI.BarOverlayInfo.BodySpecific
+  nameWithType: HealthBarAPI.BarOverlayInfo.BodySpecific
+- uid: R2API.HealthBarAPI.BarOverlayInfo.ModifyBarInfo
+  name: ModifyBarInfo
+  href: api/R2API.HealthBarAPI.BarOverlayInfo.html#R2API_HealthBarAPI_BarOverlayInfo_ModifyBarInfo
+  commentId: F:R2API.HealthBarAPI.BarOverlayInfo.ModifyBarInfo
+  fullName: R2API.HealthBarAPI.BarOverlayInfo.ModifyBarInfo
+  nameWithType: HealthBarAPI.BarOverlayInfo.ModifyBarInfo
+- uid: R2API.HealthBarAPI.BarOverlayInfo.ModifyBarInfoCallback
+  name: HealthBarAPI.BarOverlayInfo.ModifyBarInfoCallback
+  href: api/R2API.HealthBarAPI.BarOverlayInfo.ModifyBarInfoCallback.html
+  commentId: T:R2API.HealthBarAPI.BarOverlayInfo.ModifyBarInfoCallback
+  fullName: R2API.HealthBarAPI.BarOverlayInfo.ModifyBarInfoCallback
+  nameWithType: HealthBarAPI.BarOverlayInfo.ModifyBarInfoCallback
+- uid: R2API.HealthBarAPI.BarOverlayInfo.ModifyHealthValues
+  name: ModifyHealthValues
+  href: api/R2API.HealthBarAPI.BarOverlayInfo.html#R2API_HealthBarAPI_BarOverlayInfo_ModifyHealthValues
+  commentId: F:R2API.HealthBarAPI.BarOverlayInfo.ModifyHealthValues
+  fullName: R2API.HealthBarAPI.BarOverlayInfo.ModifyHealthValues
+  nameWithType: HealthBarAPI.BarOverlayInfo.ModifyHealthValues
+- uid: R2API.HealthBarAPI.BarOverlayInfo.ModifyHealthValuesCallback
+  name: HealthBarAPI.BarOverlayInfo.ModifyHealthValuesCallback
+  href: api/R2API.HealthBarAPI.BarOverlayInfo.ModifyHealthValuesCallback.html
+  commentId: T:R2API.HealthBarAPI.BarOverlayInfo.ModifyHealthValuesCallback
+  fullName: R2API.HealthBarAPI.BarOverlayInfo.ModifyHealthValuesCallback
+  nameWithType: HealthBarAPI.BarOverlayInfo.ModifyHealthValuesCallback
+- uid: R2API.HealthBarAPI.BarOverlayInfo.OverlayIndex
+  name: OverlayIndex
+  href: api/R2API.HealthBarAPI.BarOverlayInfo.html#R2API_HealthBarAPI_BarOverlayInfo_OverlayIndex
+  commentId: F:R2API.HealthBarAPI.BarOverlayInfo.OverlayIndex
+  fullName: R2API.HealthBarAPI.BarOverlayInfo.OverlayIndex
+  nameWithType: HealthBarAPI.BarOverlayInfo.OverlayIndex
+- uid: R2API.HealthBarAPI.RegisterBarOverlay(R2API.HealthBarAPI.BarOverlayInfo)
+  name: RegisterBarOverlay(BarOverlayInfo)
+  href: api/R2API.HealthBarAPI.html#R2API_HealthBarAPI_RegisterBarOverlay_R2API_HealthBarAPI_BarOverlayInfo_
+  commentId: M:R2API.HealthBarAPI.RegisterBarOverlay(R2API.HealthBarAPI.BarOverlayInfo)
+  fullName: R2API.HealthBarAPI.RegisterBarOverlay(R2API.HealthBarAPI.BarOverlayInfo)
+  nameWithType: HealthBarAPI.RegisterBarOverlay(HealthBarAPI.BarOverlayInfo)
+- uid: R2API.HealthBarAPI.RegisterBarOverlay*
+  name: RegisterBarOverlay
+  href: api/R2API.HealthBarAPI.html#R2API_HealthBarAPI_RegisterBarOverlay_
+  commentId: Overload:R2API.HealthBarAPI.RegisterBarOverlay
+  isSpec: "True"
+  fullName: R2API.HealthBarAPI.RegisterBarOverlay
+  nameWithType: HealthBarAPI.RegisterBarOverlay
+- uid: R2API.HealthBarAPI.RemoveOverlayFromBody(RoR2.CharacterBody,R2API.HealthBarAPI.BarOverlayIndex)
+  name: RemoveOverlayFromBody(CharacterBody, BarOverlayIndex)
+  href: api/R2API.HealthBarAPI.html#R2API_HealthBarAPI_RemoveOverlayFromBody_RoR2_CharacterBody_R2API_HealthBarAPI_BarOverlayIndex_
+  commentId: M:R2API.HealthBarAPI.RemoveOverlayFromBody(RoR2.CharacterBody,R2API.HealthBarAPI.BarOverlayIndex)
+  fullName: R2API.HealthBarAPI.RemoveOverlayFromBody(RoR2.CharacterBody, R2API.HealthBarAPI.BarOverlayIndex)
+  nameWithType: HealthBarAPI.RemoveOverlayFromBody(CharacterBody, HealthBarAPI.BarOverlayIndex)
+- uid: R2API.HealthBarAPI.RemoveOverlayFromBody*
+  name: RemoveOverlayFromBody
+  href: api/R2API.HealthBarAPI.html#R2API_HealthBarAPI_RemoveOverlayFromBody_
+  commentId: Overload:R2API.HealthBarAPI.RemoveOverlayFromBody
+  isSpec: "True"
+  fullName: R2API.HealthBarAPI.RemoveOverlayFromBody
+  nameWithType: HealthBarAPI.RemoveOverlayFromBody
 - uid: R2API.IModdedUnlockableDataProvider
   name: IModdedUnlockableDataProvider
   href: api/R2API.IModdedUnlockableDataProvider.html

@@ -1034,6 +1034,56 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.HealthBarAPI.BarOverlayIndex.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.HealthBarAPI.BarOverlayIndex.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.HealthBarAPI.BarOverlayInfo.ModifyBarInfoCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.HealthBarAPI.BarOverlayInfo.ModifyBarInfoCallback.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.HealthBarAPI.BarOverlayInfo.ModifyHealthValuesCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.HealthBarAPI.BarOverlayInfo.ModifyHealthValuesCallback.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.HealthBarAPI.BarOverlayInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.HealthBarAPI.BarOverlayInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.HealthBarAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.HealthBarAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.IModdedUnlockableDataProvider.yml",
       "output": {
         ".html": {
