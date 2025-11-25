@@ -5851,6 +5851,12 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.AssessmentFocusAwaitingInteraction
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.AssessmentFocusAwaitingInteraction
   nameWithType: DirectorAPI.Helpers.InteractableNames.AssessmentFocusAwaitingInteraction
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.AurelioniteGeode
+  name: AurelioniteGeode
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_AurelioniteGeode
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.AurelioniteGeode
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.AurelioniteGeode
+  nameWithType: DirectorAPI.Helpers.InteractableNames.AurelioniteGeode
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.Barrel
   name: Barrel
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_Barrel
@@ -5863,6 +5869,24 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.BluePortal
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.BluePortal
   nameWithType: DirectorAPI.Helpers.InteractableNames.BluePortal
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.BrokenBarrierDrone
+  name: BrokenBarrierDrone
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_BrokenBarrierDrone
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.BrokenBarrierDrone
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.BrokenBarrierDrone
+  nameWithType: DirectorAPI.Helpers.InteractableNames.BrokenBarrierDrone
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.BrokenBombardmentDrone
+  name: BrokenBombardmentDrone
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_BrokenBombardmentDrone
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.BrokenBombardmentDrone
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.BrokenBombardmentDrone
+  nameWithType: DirectorAPI.Helpers.InteractableNames.BrokenBombardmentDrone
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.BrokenCleanupDrone
+  name: BrokenCleanupDrone
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_BrokenCleanupDrone
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.BrokenCleanupDrone
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.BrokenCleanupDrone
+  nameWithType: DirectorAPI.Helpers.InteractableNames.BrokenCleanupDrone
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.BrokenEmergencyDrone
   name: BrokenEmergencyDrone
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_BrokenEmergencyDrone
@@ -5875,6 +5899,12 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.BrokenEquipmentDrone
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.BrokenEquipmentDrone
   nameWithType: DirectorAPI.Helpers.InteractableNames.BrokenEquipmentDrone
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.BrokenFreezeDrone
+  name: BrokenFreezeDrone
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_BrokenFreezeDrone
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.BrokenFreezeDrone
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.BrokenFreezeDrone
+  nameWithType: DirectorAPI.Helpers.InteractableNames.BrokenFreezeDrone
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.BrokenGunnerDrone
   name: BrokenGunnerDrone
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_BrokenGunnerDrone
@@ -5899,6 +5929,18 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.BrokenIncineratorDrone
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.BrokenIncineratorDrone
   nameWithType: DirectorAPI.Helpers.InteractableNames.BrokenIncineratorDrone
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.BrokenJailerDrone
+  name: BrokenJailerDrone
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_BrokenJailerDrone
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.BrokenJailerDrone
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.BrokenJailerDrone
+  nameWithType: DirectorAPI.Helpers.InteractableNames.BrokenJailerDrone
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.BrokenJunkDrone
+  name: BrokenJunkDrone
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_BrokenJunkDrone
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.BrokenJunkDrone
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.BrokenJunkDrone
+  nameWithType: DirectorAPI.Helpers.InteractableNames.BrokenJunkDrone
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.BrokenMissileDrone
   name: BrokenMissileDrone
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_BrokenMissileDrone
@@ -5911,6 +5953,12 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.BrokenTC280
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.BrokenTC280
   nameWithType: DirectorAPI.Helpers.InteractableNames.BrokenTC280
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.BrokenTransportDrone
+  name: BrokenTransportDrone
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_BrokenTransportDrone
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.BrokenTransportDrone
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.BrokenTransportDrone
+  nameWithType: DirectorAPI.Helpers.InteractableNames.BrokenTransportDrone
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.CelestialPortal
   name: CelestialPortal
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_CelestialPortal
@@ -5965,6 +6013,12 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.CloakedChest
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.CloakedChest
   nameWithType: DirectorAPI.Helpers.InteractableNames.CloakedChest
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.CollectiveShrineOfCombat
+  name: CollectiveShrineOfCombat
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_CollectiveShrineOfCombat
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.CollectiveShrineOfCombat
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.CollectiveShrineOfCombat
+  nameWithType: DirectorAPI.Helpers.InteractableNames.CollectiveShrineOfCombat
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.DeepVoidPortal
   name: DeepVoidPortal
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_DeepVoidPortal
@@ -5977,12 +6031,54 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.DeepVoidSignal
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.DeepVoidSignal
   nameWithType: DirectorAPI.Helpers.InteractableNames.DeepVoidSignal
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.DefunctUnit
+  name: DefunctUnit
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_DefunctUnit
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.DefunctUnit
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.DefunctUnit
+  nameWithType: DirectorAPI.Helpers.InteractableNames.DefunctUnit
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.DestinationPortal
+  name: DestinationPortal
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_DestinationPortal
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.DestinationPortal
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.DestinationPortal
+  nameWithType: DirectorAPI.Helpers.InteractableNames.DestinationPortal
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.DroneCombinerStation
+  name: DroneCombinerStation
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_DroneCombinerStation
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.DroneCombinerStation
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.DroneCombinerStation
+  nameWithType: DirectorAPI.Helpers.InteractableNames.DroneCombinerStation
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.DroneScrapper
+  name: DroneScrapper
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_DroneScrapper
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.DroneScrapper
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.DroneScrapper
+  nameWithType: DirectorAPI.Helpers.InteractableNames.DroneScrapper
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.DroneUpgradeStation
+  name: DroneUpgradeStation
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_DroneUpgradeStation
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.DroneUpgradeStation
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.DroneUpgradeStation
+  nameWithType: DirectorAPI.Helpers.InteractableNames.DroneUpgradeStation
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.EncrustedLockbox
   name: EncrustedLockbox
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_EncrustedLockbox
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.EncrustedLockbox
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.EncrustedLockbox
   nameWithType: DirectorAPI.Helpers.InteractableNames.EncrustedLockbox
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.EncryptedPortal
+  name: EncryptedPortal
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_EncryptedPortal
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.EncryptedPortal
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.EncryptedPortal
+  nameWithType: DirectorAPI.Helpers.InteractableNames.EncryptedPortal
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.EncryptedPortalHaunt
+  name: EncryptedPortalHaunt
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_EncryptedPortalHaunt
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.EncryptedPortalHaunt
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.EncryptedPortalHaunt
+  nameWithType: DirectorAPI.Helpers.InteractableNames.EncryptedPortalHaunt
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.EquipmentBarrel
   name: EquipmentBarrel
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_EquipmentBarrel
@@ -6007,12 +6103,30 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.GoldPortal
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.GoldPortal
   nameWithType: DirectorAPI.Helpers.InteractableNames.GoldPortal
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.GreenPortal
+  name: GreenPortal
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_GreenPortal
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.GreenPortal
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.GreenPortal
+  nameWithType: DirectorAPI.Helpers.InteractableNames.GreenPortal
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.HalcyonBeacon
   name: HalcyonBeacon
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_HalcyonBeacon
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.HalcyonBeacon
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.HalcyonBeacon
   nameWithType: DirectorAPI.Helpers.InteractableNames.HalcyonBeacon
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.HalcyonShrine
+  name: HalcyonShrine
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_HalcyonShrine
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.HalcyonShrine
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.HalcyonShrine
+  nameWithType: DirectorAPI.Helpers.InteractableNames.HalcyonShrine
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.HalcyonShrineTier1
+  name: HalcyonShrineTier1
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_HalcyonShrineTier1
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.HalcyonShrineTier1
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.HalcyonShrineTier1
+  nameWithType: DirectorAPI.Helpers.InteractableNames.HalcyonShrineTier1
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.InfinitePortal
   name: InfinitePortal
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_InfinitePortal
@@ -6055,6 +6169,12 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.LunarPod
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.LunarPod
   nameWithType: DirectorAPI.Helpers.InteractableNames.LunarPod
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.MainlinePortal
+  name: MainlinePortal
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_MainlinePortal
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.MainlinePortal
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.MainlinePortal
+  nameWithType: DirectorAPI.Helpers.InteractableNames.MainlinePortal
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.NewtAltar
   name: NewtAltar
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_NewtAltar
@@ -6193,6 +6313,12 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.ShrineOfOrderSnowy
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.ShrineOfOrderSnowy
   nameWithType: DirectorAPI.Helpers.InteractableNames.ShrineOfOrderSnowy
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.ShrineOfShaping
+  name: ShrineOfShaping
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_ShrineOfShaping
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.ShrineOfShaping
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.ShrineOfShaping
+  nameWithType: DirectorAPI.Helpers.InteractableNames.ShrineOfShaping
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.ShrineOftheMountain
   name: ShrineOftheMountain
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_ShrineOftheMountain
@@ -6235,6 +6361,12 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.Teleporter
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.Teleporter
   nameWithType: DirectorAPI.Helpers.InteractableNames.Teleporter
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.TemporaryItemDistributor
+  name: TemporaryItemDistributor
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_TemporaryItemDistributor
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.TemporaryItemDistributor
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.TemporaryItemDistributor
+  nameWithType: DirectorAPI.Helpers.InteractableNames.TemporaryItemDistributor
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.TripleShop
   name: TripleShop
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_TripleShop
@@ -6253,6 +6385,24 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.TripleShopLarge
   fullName: R2API.DirectorAPI.Helpers.InteractableNames.TripleShopLarge
   nameWithType: DirectorAPI.Helpers.InteractableNames.TripleShopLarge
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.TrippleDroneShop
+  name: TrippleDroneShop
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_TrippleDroneShop
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.TrippleDroneShop
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.TrippleDroneShop
+  nameWithType: DirectorAPI.Helpers.InteractableNames.TrippleDroneShop
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.VirtualPortal
+  name: VirtualPortal
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_VirtualPortal
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.VirtualPortal
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.VirtualPortal
+  nameWithType: DirectorAPI.Helpers.InteractableNames.VirtualPortal
+- uid: R2API.DirectorAPI.Helpers.InteractableNames.VirtualPortalBackout
+  name: VirtualPortalBackout
+  href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_VirtualPortalBackout
+  commentId: F:R2API.DirectorAPI.Helpers.InteractableNames.VirtualPortalBackout
+  fullName: R2API.DirectorAPI.Helpers.InteractableNames.VirtualPortalBackout
+  nameWithType: DirectorAPI.Helpers.InteractableNames.VirtualPortalBackout
 - uid: R2API.DirectorAPI.Helpers.InteractableNames.VoidCradle
   name: VoidCradle
   href: api/R2API.DirectorAPI.Helpers.InteractableNames.html#R2API_DirectorAPI_Helpers_InteractableNames_VoidCradle
@@ -6345,6 +6495,12 @@ references:
   commentId: T:R2API.DirectorAPI.Helpers.MonsterNames
   fullName: R2API.DirectorAPI.Helpers.MonsterNames
   nameWithType: DirectorAPI.Helpers.MonsterNames
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.AlloyHunter
+  name: AlloyHunter
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_AlloyHunter
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.AlloyHunter
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.AlloyHunter
+  nameWithType: DirectorAPI.Helpers.MonsterNames.AlloyHunter
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.AlloyVulture
   name: AlloyVulture
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_AlloyVulture
@@ -6441,6 +6597,18 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.BeetleQueen
   fullName: R2API.DirectorAPI.Helpers.MonsterNames.BeetleQueen
   nameWithType: DirectorAPI.Helpers.MonsterNames.BeetleQueen
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.BestBuddy
+  name: BestBuddy
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_BestBuddy
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.BestBuddy
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.BestBuddy
+  nameWithType: DirectorAPI.Helpers.MonsterNames.BestBuddy
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.BestBuddyQuestUnlock
+  name: BestBuddyQuestUnlock
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_BestBuddyQuestUnlock
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.BestBuddyQuestUnlock
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.BestBuddyQuestUnlock
+  nameWithType: DirectorAPI.Helpers.MonsterNames.BestBuddyQuestUnlock
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.BighornBison
   name: BighornBison
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_BighornBison
@@ -6477,6 +6645,24 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.BrassContraption
   fullName: R2API.DirectorAPI.Helpers.MonsterNames.BrassContraption
   nameWithType: DirectorAPI.Helpers.MonsterNames.BrassContraption
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.CHIRP
+  name: CHIRP
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_CHIRP
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.CHIRP
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.CHIRP
+  nameWithType: DirectorAPI.Helpers.MonsterNames.CHIRP
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.CROSSHAIRS
+  name: CROSSHAIRS
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_CROSSHAIRS
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.CROSSHAIRS
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.CROSSHAIRS
+  nameWithType: DirectorAPI.Helpers.MonsterNames.CROSSHAIRS
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.Child
+  name: Child
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_Child
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.Child
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.Child
+  nameWithType: DirectorAPI.Helpers.MonsterNames.Child
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.ClayApothecary
   name: ClayApothecary
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_ClayApothecary
@@ -6501,6 +6687,12 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.ColDroneman
   fullName: R2API.DirectorAPI.Helpers.MonsterNames.ColDroneman
   nameWithType: DirectorAPI.Helpers.MonsterNames.ColDroneman
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.DOC
+  name: DOC
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_DOC
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.DOC
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.DOC
+  nameWithType: DirectorAPI.Helpers.MonsterNames.DOC
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.DelightedProbe
   name: DelightedProbe
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_DelightedProbe
@@ -6513,6 +6705,24 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.ElderLemurian
   fullName: R2API.DirectorAPI.Helpers.MonsterNames.ElderLemurian
   nameWithType: DirectorAPI.Helpers.MonsterNames.ElderLemurian
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase1
+  name: FalseSonBossPhase1
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_FalseSonBossPhase1
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase1
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase1
+  nameWithType: DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase1
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase2
+  name: FalseSonBossPhase2
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_FalseSonBossPhase2
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase2
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase2
+  nameWithType: DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase2
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase3
+  name: FalseSonBossPhase3
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_FalseSonBossPhase3
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase3
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase3
+  nameWithType: DirectorAPI.Helpers.MonsterNames.FalseSonBossPhase3
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.Geep
   name: Geep
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_Geep
@@ -6555,6 +6765,12 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.Gup
   fullName: R2API.DirectorAPI.Helpers.MonsterNames.Gup
   nameWithType: DirectorAPI.Helpers.MonsterNames.Gup
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.Halcyonite
+  name: Halcyonite
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_Halcyonite
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.Halcyonite
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.Halcyonite
+  nameWithType: DirectorAPI.Helpers.MonsterNames.Halcyonite
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.HealingDrone
   name: HealingDrone
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_HealingDrone
@@ -6603,6 +6819,12 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.LesserWisp
   fullName: R2API.DirectorAPI.Helpers.MonsterNames.LesserWisp
   nameWithType: DirectorAPI.Helpers.MonsterNames.LesserWisp
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.LtDroneboy
+  name: LtDroneboy
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_LtDroneboy
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.LtDroneboy
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.LtDroneboy
+  nameWithType: DirectorAPI.Helpers.MonsterNames.LtDroneboy
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.LunarChimeraExploder
   name: LunarChimeraExploder
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_LunarChimeraExploder
@@ -6621,6 +6843,12 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.LunarChimeraWisp
   fullName: R2API.DirectorAPI.Helpers.MonsterNames.LunarChimeraWisp
   nameWithType: DirectorAPI.Helpers.MonsterNames.LunarChimeraWisp
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.LunarRain
+  name: LunarRain
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_LunarRain
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.LunarRain
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.LunarRain
+  nameWithType: DirectorAPI.Helpers.MonsterNames.LunarRain
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.MAJORCONSTRUCT_BODY_NAME
   name: MAJORCONSTRUCT_BODY_NAME
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_MAJORCONSTRUCT_BODY_NAME
@@ -6693,18 +6921,102 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.ScavengerBoss
   fullName: R2API.DirectorAPI.Helpers.MonsterNames.ScavengerBoss
   nameWithType: DirectorAPI.Helpers.MonsterNames.ScavengerBoss
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.Scorchling
+  name: Scorchling
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_Scorchling
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.Scorchling
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.Scorchling
+  nameWithType: DirectorAPI.Helpers.MonsterNames.Scorchling
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SeveredBreaker
+  name: SeveredBreaker
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SeveredBreaker
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SeveredBreaker
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SeveredBreaker
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SeveredBreaker
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SeveredProbe
+  name: SeveredProbe
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SeveredProbe
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SeveredProbe
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SeveredProbe
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SeveredProbe
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SeveredScorcher
+  name: SeveredScorcher
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SeveredScorcher
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SeveredScorcher
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SeveredScorcher
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SeveredScorcher
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusAmalgamator
+  name: SolusAmalgamator
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusAmalgamator
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusAmalgamator
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusAmalgamator
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SolusAmalgamator
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusControlUnit
   name: SolusControlUnit
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusControlUnit
   commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusControlUnit
   fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusControlUnit
   nameWithType: DirectorAPI.Helpers.MonsterNames.SolusControlUnit
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusDistributor
+  name: SolusDistributor
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusDistributor
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusDistributor
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusDistributor
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SolusDistributor
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusExtractor
+  name: SolusExtractor
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusExtractor
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusExtractor
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusExtractor
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SolusExtractor
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusHeart
+  name: SolusHeart
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusHeart
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusHeart
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusHeart
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SolusHeart
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusInvalidator
+  name: SolusInvalidator
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusInvalidator
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusInvalidator
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusInvalidator
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SolusInvalidator
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusMine
+  name: SolusMine
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusMine
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusMine
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusMine
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SolusMine
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusProbe
   name: SolusProbe
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusProbe
   commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusProbe
   fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusProbe
   nameWithType: DirectorAPI.Helpers.MonsterNames.SolusProbe
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusProspector
+  name: SolusProspector
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusProspector
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusProspector
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusProspector
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SolusProspector
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusScorcher
+  name: SolusScorcher
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusScorcher
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusScorcher
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusScorcher
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SolusScorcher
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusTransporter
+  name: SolusTransporter
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusTransporter
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusTransporter
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusTransporter
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SolusTransporter
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.SolusWing
+  name: SolusWing
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SolusWing
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.SolusWing
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.SolusWing
+  nameWithType: DirectorAPI.Helpers.MonsterNames.SolusWing
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.SquidTurret
   name: SquidTurret
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_SquidTurret
@@ -6849,6 +7161,18 @@ references:
   commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.VoidlingPhase3
   fullName: R2API.DirectorAPI.Helpers.MonsterNames.VoidlingPhase3
   nameWithType: DirectorAPI.Helpers.MonsterNames.VoidlingPhase3
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.VultureHuntressInvader
+  name: VultureHuntressInvader
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_VultureHuntressInvader
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.VultureHuntressInvader
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.VultureHuntressInvader
+  nameWithType: DirectorAPI.Helpers.MonsterNames.VultureHuntressInvader
+- uid: R2API.DirectorAPI.Helpers.MonsterNames.VultureMulTInvader
+  name: VultureMulTInvader
+  href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_VultureMulTInvader
+  commentId: F:R2API.DirectorAPI.Helpers.MonsterNames.VultureMulTInvader
+  fullName: R2API.DirectorAPI.Helpers.MonsterNames.VultureMulTInvader
+  nameWithType: DirectorAPI.Helpers.MonsterNames.VultureMulTInvader
 - uid: R2API.DirectorAPI.Helpers.MonsterNames.WanderingVagrant
   name: WanderingVagrant
   href: api/R2API.DirectorAPI.Helpers.MonsterNames.html#R2API_DirectorAPI_Helpers_MonsterNames_WanderingVagrant
@@ -7437,6 +7761,18 @@ references:
   commentId: F:R2API.DirectorAPI.Stage.CommencementSimulacrum
   fullName: R2API.DirectorAPI.Stage.CommencementSimulacrum
   nameWithType: DirectorAPI.Stage.CommencementSimulacrum
+- uid: R2API.DirectorAPI.Stage.ComputationalExchange
+  name: ComputationalExchange
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_ComputationalExchange
+  commentId: F:R2API.DirectorAPI.Stage.ComputationalExchange
+  fullName: R2API.DirectorAPI.Stage.ComputationalExchange
+  nameWithType: DirectorAPI.Stage.ComputationalExchange
+- uid: R2API.DirectorAPI.Stage.ConduitCanyon
+  name: ConduitCanyon
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_ConduitCanyon
+  commentId: F:R2API.DirectorAPI.Stage.ConduitCanyon
+  fullName: R2API.DirectorAPI.Stage.ConduitCanyon
+  nameWithType: DirectorAPI.Stage.ConduitCanyon
 - uid: R2API.DirectorAPI.Stage.Custom
   name: Custom
   href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_Custom
@@ -7473,6 +7809,18 @@ references:
   commentId: F:R2API.DirectorAPI.Stage.HelminthHatchery
   fullName: R2API.DirectorAPI.Stage.HelminthHatchery
   nameWithType: DirectorAPI.Stage.HelminthHatchery
+- uid: R2API.DirectorAPI.Stage.IronAlluvium
+  name: IronAlluvium
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_IronAlluvium
+  commentId: F:R2API.DirectorAPI.Stage.IronAlluvium
+  fullName: R2API.DirectorAPI.Stage.IronAlluvium
+  nameWithType: DirectorAPI.Stage.IronAlluvium
+- uid: R2API.DirectorAPI.Stage.IronAuroras
+  name: IronAuroras
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_IronAuroras
+  commentId: F:R2API.DirectorAPI.Stage.IronAuroras
+  fullName: R2API.DirectorAPI.Stage.IronAuroras
+  nameWithType: DirectorAPI.Stage.IronAuroras
 - uid: R2API.DirectorAPI.Stage.MomentFractured
   name: MomentFractured
   href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_MomentFractured
@@ -7485,6 +7833,18 @@ references:
   commentId: F:R2API.DirectorAPI.Stage.MomentWhole
   fullName: R2API.DirectorAPI.Stage.MomentWhole
   nameWithType: DirectorAPI.Stage.MomentWhole
+- uid: R2API.DirectorAPI.Stage.NeuralSanctum
+  name: NeuralSanctum
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_NeuralSanctum
+  commentId: F:R2API.DirectorAPI.Stage.NeuralSanctum
+  fullName: R2API.DirectorAPI.Stage.NeuralSanctum
+  nameWithType: DirectorAPI.Stage.NeuralSanctum
+- uid: R2API.DirectorAPI.Stage.PretendersPrecipice
+  name: PretendersPrecipice
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_PretendersPrecipice
+  commentId: F:R2API.DirectorAPI.Stage.PretendersPrecipice
+  fullName: R2API.DirectorAPI.Stage.PretendersPrecipice
+  nameWithType: DirectorAPI.Stage.PretendersPrecipice
 - uid: R2API.DirectorAPI.Stage.PrimeMeridian
   name: PrimeMeridian
   href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_PrimeMeridian
@@ -7509,6 +7869,12 @@ references:
   commentId: F:R2API.DirectorAPI.Stage.ReformedAltar
   fullName: R2API.DirectorAPI.Stage.ReformedAltar
   nameWithType: DirectorAPI.Stage.ReformedAltar
+- uid: R2API.DirectorAPI.Stage.RepurposedCrater
+  name: RepurposedCrater
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_RepurposedCrater
+  commentId: F:R2API.DirectorAPI.Stage.RepurposedCrater
+  fullName: R2API.DirectorAPI.Stage.RepurposedCrater
+  nameWithType: DirectorAPI.Stage.RepurposedCrater
 - uid: R2API.DirectorAPI.Stage.ScorchedAcres
   name: ScorchedAcres
   href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_ScorchedAcres
@@ -7545,6 +7911,12 @@ references:
   commentId: F:R2API.DirectorAPI.Stage.SkyMeadowSimulacrum
   fullName: R2API.DirectorAPI.Stage.SkyMeadowSimulacrum
   nameWithType: DirectorAPI.Stage.SkyMeadowSimulacrum
+- uid: R2API.DirectorAPI.Stage.SolutionalHaunt
+  name: SolutionalHaunt
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_SolutionalHaunt
+  commentId: F:R2API.DirectorAPI.Stage.SolutionalHaunt
+  fullName: R2API.DirectorAPI.Stage.SolutionalHaunt
+  nameWithType: DirectorAPI.Stage.SolutionalHaunt
 - uid: R2API.DirectorAPI.Stage.SulfurPools
   name: SulfurPools
   href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_SulfurPools
