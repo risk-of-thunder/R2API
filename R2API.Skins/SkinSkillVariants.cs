@@ -535,6 +535,7 @@ public static partial class SkinSkillVariants
                 }
             }
         }
+        if (bodyIndex == BodyIndex.None) return null;
         GameObject body = BodyCatalog.GetBodyPrefab(bodyIndex);
         if (body == null) return null;
         SurvivorMannequinSlotController componentInParent = gameObject.GetComponentInParent<SurvivorMannequinSlotController>();
