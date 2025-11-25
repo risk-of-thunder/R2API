@@ -18,6 +18,10 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.3.7'
+* Support for Alloyed Collective DLC3.
+* Added missing spawn cards for DLC2.
+
 ### '2.3.6'
 * Both AddressableDirectorCardCategorySelection and AddressableDCCSPool now have more intricate validation during upgrading process.
   * This means that they should catch issues such as invalid spawn cards, invalid addresses and more.
