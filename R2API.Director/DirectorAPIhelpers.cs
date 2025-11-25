@@ -112,7 +112,37 @@ public static partial class DirectorAPI
             public static readonly string BeetleGuardCrystal = "cscbeetleguardcrystal";
             public static readonly string MithrixGlass = "cscbrotherglass";
             public static readonly string AncestralPod = "cscparentpod";
-
+            // DLC2
+            public static readonly string Child = "cscchild";
+            public static readonly string LunarRain = "csccorruptionspike";
+            public static readonly string FalseSonBossPhase1 = "cscfalsesonboss";
+            public static readonly string FalseSonBossPhase2 = "cscfalsesonbosslunarshard";
+            public static readonly string FalseSonBossPhase3 = "cscfalsesonbossbrokenlunarshard";
+            public static readonly string Halcyonite = "cschalcyonite";
+            public static readonly string Scorchling = "cscscorchling";
+            // DLC3
+            public static readonly string SolusInvalidator = "cscDefectiveUnit";
+            public static readonly string LtDroneboy = "cscDroneBomber";
+            public static readonly string CROSSHAIRS = "cscGunnerDrone";
+            public static readonly string CHIRP = "cscDTHaulerDrone";
+            public static readonly string DOC = "cscHealingDrone";
+            public static readonly string SolusExtractor = "cscExtractorUnit";
+            public static readonly string BestBuddy = "cscFriendUnit";
+            public static readonly string BestBuddyQuestUnlock = "cscFriendUnitQuestUnlock";
+            public static readonly string SolusTransporter = "cscIronHauler";
+            public static readonly string SolusDistributor = "cscMinePod";
+            public static readonly string SeveredScorcher = "cscSolusAmalgamatorFlamethrowerCannon";
+            public static readonly string SeveredBreaker = "cscSolusAmalgamatorMissilePod";
+            public static readonly string SeveredProbe = "cscSolusAmalgamatorThruster";
+            public static readonly string SolusAmalgamator = "cscSolusAmalgamator";
+            public static readonly string SolusHeart = "cscSolusHeart";
+            public static readonly string SolusMine = "cscSolusMine";
+            public static readonly string SolusWing = "cscSolusWing";
+            public static readonly string VultureHuntressInvader = "cscVultureHuntressInvader";
+            public static readonly string VultureMulTInvader = "cscVultureMulTInvader";
+            public static readonly string SolusScorcher = "cscTanker";
+            public static readonly string AlloyHunter = "cscVultureHunter";
+            public static readonly string SolusProspector = "cscWorkerUnit";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 
@@ -252,6 +282,33 @@ public static partial class DirectorAPI
             public static readonly string GauntletEntranceOrb = "iscgauntletentrance";
             public static readonly string SquidTurretMaster = "iscsquidturret";
             public static readonly string RustyLockbox = "isclockbox";
+            // DLC2
+            public static readonly string AurelioniteGeode = "iscgeode";
+            public static readonly string DestinationPortal = "iscdestinationportal";
+            public static readonly string GreenPortal = "isccolossusportal";
+            public static readonly string HalcyonShrine = "iscshrinehalcyonite";
+            public static readonly string HalcyonShrineTier1 = "iscshrinehalcyonitetier1";
+            public static readonly string ShrineOfShaping = "iscshrinecolossusaccess";
+            // DLC3
+            public static readonly string DroneUpgradeStation = "iscdroneassemblystation";
+            public static readonly string DroneCombinerStation = "iscdronecombinerstation";
+            public static readonly string BrokenBombardmentDrone = "iscbrokenbombardmentdrone";
+            public static readonly string BrokenCleanupDrone = "iscbrokencleanupdrone";
+            public static readonly string BrokenFreezeDrone = "iscbrokencopycatdrone";
+            public static readonly string BrokenTransportDrone = "iscbrokenhaulerdrone";
+            public static readonly string BrokenJailerDrone = "iscbrokenjailerdrone";
+            public static readonly string BrokenJunkDrone = "iscbrokenjunkdrone";
+            public static readonly string BrokenBarrierDrone = "iscbrokenrechargedrone";
+            public static readonly string DroneScrapper = "iscdronescrapper";
+            public static readonly string MainlinePortal = "isceyeportal";
+            public static readonly string DefunctUnit = "iscfriendunitunlock";
+            public static readonly string VirtualPortal = "iscsolusshopportal";
+            public static readonly string CollectiveShrineOfCombat = "iscshrinecombatcollective";
+            public static readonly string EncryptedPortal = "ischardwareprogportal";
+            public static readonly string EncryptedPortalHaunt = "ischardwareprogportal_haunt";
+            public static readonly string VirtualPortalBackout = "iscsolusportalbackout";
+            public static readonly string TemporaryItemDistributor = "isctemporaryitemsshop";
+            public static readonly string TrippleDroneShop = "isctripledroneshop";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 
