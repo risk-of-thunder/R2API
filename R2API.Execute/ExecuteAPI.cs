@@ -96,7 +96,7 @@ public static partial class ExecuteAPI
 
     private static HealthComponent.HealthBarValues UpdateHealthBarValues(CharacterBody victimBody, CharacterBody viewerBody, HealthComponent.HealthBarValues hbv)
     {
-        if (victimBody && victimBody.healthComponent)
+        if (victimBody && (victimBody.bodyFlags & CharacterBody.BodyFlags.ImmuneToExecutes) == 0 && victimBody.healthComponent)
         {
             float executeFraction = CalculateExecuteFraction(victimBody, viewerBody);
             float healthbarFraction = (1f - hbv.curseFraction) / victimBody.healthComponent.fullCombinedHealth;
