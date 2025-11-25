@@ -20,6 +20,10 @@ To add a stackable execute source:
 
 ## Changelog
 
+### '1.1.2'
+
+* Fixed Execute bar showing for bodies with the ImmuneToExecute flag.
+
 ### '1.1.1'
 
 * Internal refactoring to reduce code duplication.

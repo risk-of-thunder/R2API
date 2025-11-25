@@ -80,6 +80,8 @@ public static partial class ExecuteAPI
 
     private static float CalculateExecuteFraction(CharacterBody victimBody, CharacterBody viewerBody)
     {
+        if ((victimBody.bodyFlags & CharacterBody.BodyFlags.ImmuneToExecutes) != 0) return 0f;
+
         float executeFractionAdd = 0f;
         float executeFractionFlat = 0f;
 
@@ -96,7 +98,7 @@ public static partial class ExecuteAPI
 
     private static HealthComponent.HealthBarValues UpdateHealthBarValues(CharacterBody victimBody, CharacterBody viewerBody, HealthComponent.HealthBarValues hbv)
     {
-        if (victimBody && victimBody.healthComponent)
+        if (victimBody && (victimBody.bodyFlags & CharacterBody.BodyFlags.ImmuneToExecutes) == 0 && victimBody.healthComponent)
         {
             float executeFraction = CalculateExecuteFraction(victimBody, viewerBody);
             float healthbarFraction = (1f - hbv.curseFraction) / victimBody.healthComponent.fullCombinedHealth;
