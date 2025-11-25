@@ -36,10 +36,12 @@ public static class HealthBarAPI {
     private static int lastClaimedBarIndex = 0;
     internal static void SetHooks(bool reset = false) {
         if (!reset) {
-            // Evaluate all on game load to save on hook applications. Any defined later will trigger a hook re-eval.
+            // Evaluate all on game load to save on hook applications.
             RoR2Application.onLoad += () => {
                 alreadyLoaded = true;
-                EvaluateHooks();
+                if (OverlayInfos.Count > 0) {
+                    EvaluateHooks();
+                }
             };
 
             get_source = AccessTools.PropertyGetter(typeof(HealthBar), nameof(HealthBar.source));
@@ -66,10 +68,6 @@ public static class HealthBarAPI {
     }
     // Rebuild the hooks based on currently registered overlays
     internal static void EvaluateHooks() {
-        if (!alreadyLoaded) {
-            return;
-        }
-
         if (_hooksEnabled) {
             UnsetHooks();
         }
@@ -245,18 +243,21 @@ public static class HealthBarAPI {
     }
     
     #pragma warning disable R2APISubmodulesAnalyzer
-    /// <summary>Registers a new HealthBar overlay.</summary>
+    /// <summary>Registers a new HealthBar overlay. Must be called before RoR2Application.onLoad finishes.</summary>
     /// <param name="overlayInfo">The BarOverlayInfo defining your overlay.</param>
-    /// <returns>The BarOverlayIndex that corresponds to your overlay. Use this if you need to assign the bar to a specific body.</returns>
+    /// <returns>The BarOverlayIndex that corresponds to your overlay, or BarOverlayIndex.None if called too late. Use this if you need to assign the bar to a specific body.</returns>
     public static BarOverlayIndex RegisterBarOverlay(BarOverlayInfo overlayInfo) {
+        if (alreadyLoaded) {
+            CharacterBodyPlugin.Logger.LogError("Mod attempted to add a BarOverlayInfo after game load. This is not allowed.");
+            return BarOverlayIndex.None;
+        }
+
         overlayInfo.OverlayIndex = (BarOverlayIndex)lastClaimedBarIndex;
         lastClaimedBarIndex++;
         OverlayInfos.Add(overlayInfo);
         foreach (var kvp in HealthBarData) {
             kvp.Value.UpdateSize();
         }
-
-        EvaluateHooks();
 
         return overlayInfo.OverlayIndex;
     }
