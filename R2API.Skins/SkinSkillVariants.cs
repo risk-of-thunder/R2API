@@ -9,18 +9,13 @@ using RoR2.ContentManagement;
 using RoR2.Projectile;
 using RoR2.Skills;
 using RoR2.SurvivorMannequins;
-using RoR2BepInExPack.GameAssetPaths;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Text;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using static R2API.SkinSkillVariants;
-using static UnityEngine.GridBrushBase;
 
 namespace R2API;
 public static partial class SkinSkillVariants
@@ -475,24 +470,37 @@ public static partial class SkinSkillVariants
     }
     private static List<SkillDef> CacheSkillDefsInLobby(GameObject gameObject, SkinDef.RuntimeSkin runtimeSkin)
     {
-        BodyIndex bodyIndex = skinToBody[runtimeSkin.GetSkinDef()];
+        List<SkillDef> skillDefs2 = null;
+        if (skinToBody?.TryGetValue(runtimeSkin?.GetSkinDef(), out var bodyIndex) is not true)
+            return skillDefs2;
+
         GameObject body = BodyCatalog.GetBodyPrefab(bodyIndex);
-        if (body == null) return null;
+        if (body == null)
+            return skillDefs2;
+
         SurvivorMannequinSlotController componentInParent = gameObject.GetComponentInParent<SurvivorMannequinSlotController>();
-        if (componentInParent == null || componentInParent.networkUser == null) return null;
+        if (componentInParent == null || componentInParent.networkUser == null)
+            return skillDefs2;
+
         Loadout loadout = Loadout.RequestInstance();
         componentInParent.networkUser.networkLoadout.CopyLoadout(loadout);
         GenericSkill[] genericSkills = body.GetComponents<GenericSkill>();
-        if (genericSkills == null || genericSkills.Length == 0) return null;
-        List<SkillDef> skillDefs2 = [];
+        if (genericSkills.Length == 0)
+            return skillDefs2;
+
+        skillDefs2 = [];
         for (int i = 0; i < genericSkills.Length; i++)
         {
             GenericSkill genericSkill = genericSkills[i];
-            if (genericSkill == null) continue;
-            SkillDef skillDef = genericSkill.skillFamily.variants[loadout.bodyLoadoutManager.GetSkillVariant(bodyIndex, i)].skillDef;
-            if (skillDef == null) continue;
-            skillDefs2.Add(skillDef);
+            if (genericSkill?.skillFamily?.variants == null)
+                continue;
+
+            var skillVariantIndex = (int)loadout.bodyLoadoutManager.GetSkillVariant(bodyIndex, i);
+            SkillDef skillDef = HG.ArrayUtils.GetSafe(genericSkill.skillFamily.variants, skillVariantIndex).skillDef;
+            if (skillDef != null)
+                skillDefs2.Add(skillDef);
         }
+        Loadout.ReturnInstance(loadout);
         return skillDefs2;
     }
     private static void ApplyRendererInfoSkillVariants(ref CharacterModel.RendererInfo rendererInfoData, List<SkillDef> skillDefs)
