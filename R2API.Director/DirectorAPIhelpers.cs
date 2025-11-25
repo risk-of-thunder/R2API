@@ -121,28 +121,28 @@ public static partial class DirectorAPI
             public static readonly string Halcyonite = "cschalcyonite";
             public static readonly string Scorchling = "cscscorchling";
             // DLC3
-            public static readonly string SolusInvalidator = "cscDefectiveUnit";
-            public static readonly string LtDroneboy = "cscDroneBomber";
-            public static readonly string CROSSHAIRS = "cscGunnerDrone";
-            public static readonly string CHIRP = "cscDTHaulerDrone";
-            public static readonly string DOC = "cscHealingDrone";
-            public static readonly string SolusExtractor = "cscExtractorUnit";
-            public static readonly string BestBuddy = "cscFriendUnit";
-            public static readonly string BestBuddyQuestUnlock = "cscFriendUnitQuestUnlock";
-            public static readonly string SolusTransporter = "cscIronHauler";
-            public static readonly string SolusDistributor = "cscMinePod";
-            public static readonly string SeveredScorcher = "cscSolusAmalgamatorFlamethrowerCannon";
-            public static readonly string SeveredBreaker = "cscSolusAmalgamatorMissilePod";
-            public static readonly string SeveredProbe = "cscSolusAmalgamatorThruster";
-            public static readonly string SolusAmalgamator = "cscSolusAmalgamator";
-            public static readonly string SolusHeart = "cscSolusHeart";
-            public static readonly string SolusMine = "cscSolusMine";
-            public static readonly string SolusWing = "cscSolusWing";
-            public static readonly string VultureHuntressInvader = "cscVultureHuntressInvader";
-            public static readonly string VultureMulTInvader = "cscVultureMulTInvader";
-            public static readonly string SolusScorcher = "cscTanker";
-            public static readonly string AlloyHunter = "cscVultureHunter";
-            public static readonly string SolusProspector = "cscWorkerUnit";
+            public static readonly string SolusInvalidator = "cscdefectiveunit";
+            public static readonly string LtDroneboy = "cscdronebomber";
+            public static readonly string CROSSHAIRS = "cscgunnerdrone";
+            public static readonly string CHIRP = "cscdthaulerdrone";
+            public static readonly string DOC = "cschealingdrone";
+            public static readonly string SolusExtractor = "cscextractorunit";
+            public static readonly string BestBuddy = "cscfriendunit";
+            public static readonly string BestBuddyQuestUnlock = "cscfriendunitquestunlock";
+            public static readonly string SolusTransporter = "cscironhauler";
+            public static readonly string SolusDistributor = "cscminepod";
+            public static readonly string SeveredScorcher = "cscsolusamalgamatorflamethrowercannon";
+            public static readonly string SeveredBreaker = "cscsolusamalgamatormissilepod";
+            public static readonly string SeveredProbe = "cscsolusamalgamatorthruster";
+            public static readonly string SolusAmalgamator = "cscsolusamalgamator";
+            public static readonly string SolusHeart = "cscsolusheart";
+            public static readonly string SolusMine = "cscsolusmine";
+            public static readonly string SolusWing = "cscsoluswing";
+            public static readonly string VultureHuntressInvader = "cscvulturehuntressinvader";
+            public static readonly string VultureMulTInvader = "cscvulturemultinvader";
+            public static readonly string SolusScorcher = "csctanker";
+            public static readonly string AlloyHunter = "cscvulturehunter";
+            public static readonly string SolusProspector = "cscworkerunit";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 
