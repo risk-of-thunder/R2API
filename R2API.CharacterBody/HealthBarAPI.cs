@@ -269,7 +269,6 @@ public static class HealthBarAPI {
 
         AssignedOverlaysData data = HealthBarData.GetOrCreateValue(body.healthComponent);
         if (data.AssignedOverlays.Length >= (int)index) {
-            UnityEngine.Debug.Log($"Setting {index} to true for {body}");
             data.AssignedOverlays[(int)index] = true;
         }
     }
