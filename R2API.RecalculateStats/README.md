@@ -33,6 +33,9 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 
 ## Changelog
 
+### `1.6.5`
+* Fixed luck and barrier stat hooks for Alloyed Collective
+
 ### `1.6.4`
 * Skill slot stats are now handled by `SkillSlotStatModifiers`:
 	* Split into `primarySkill`/`secondarySkill`/`utilitySkill`/`specialSkill`/`allSkills` for stat manipulation to apply to specific slots or all slots simultaneously.
@@ -40,7 +43,7 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 	* Added `bonusStockAdd` for adding charges to skills.
 
 ### `1.6.3`
-- Improved reliability of luck stat hooks
+* Improved reliability of luck stat hooks
 
 ### `1.6.2`
 * Added support for fractional/non-integer luck values

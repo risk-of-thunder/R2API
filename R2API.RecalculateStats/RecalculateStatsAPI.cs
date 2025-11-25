@@ -60,7 +60,6 @@ public static partial class RecalculateStatsAPI
         IL.RoR2.CharacterBody.RecalculateStats += HookRecalculateStats;
 
         //luck
-        On.RoR2.CharacterMaster.OnInventoryChanged += GetMasterLuck;
         On.RoR2.Util.CheckRoll_float_float_CharacterMaster += RoundLuckInCheckRoll;
         // Barrier Decay
         IL.RoR2.HealthComponent.ServerFixedUpdate += ModifyBarrierDecayRate;
@@ -71,7 +70,6 @@ public static partial class RecalculateStatsAPI
     internal static void UnsetHooks()
     {
         IL.RoR2.CharacterBody.RecalculateStats -= HookRecalculateStats;
-        On.RoR2.CharacterMaster.OnInventoryChanged -= GetMasterLuck;
         On.RoR2.Util.CheckRoll_float_float_CharacterMaster -= RoundLuckInCheckRoll;
         IL.RoR2.HealthComponent.ServerFixedUpdate -= ModifyBarrierDecayRate;
 
@@ -550,6 +548,7 @@ public static partial class RecalculateStatsAPI
         ModifySkillSlots(c);
         ModifyLevelingStat(c);
         ModifyJumpCountStat(c);
+        ModifyLuckStat(c);
     }
 
     private static void GetStatMods(CharacterBody characterBody)
@@ -1160,54 +1159,48 @@ public static partial class RecalculateStatsAPI
     {
         ILCursor c = new ILCursor(il);
 
-        bool ILFound = c.TryGotoNext(MoveType.After,
-            x => x.MatchLdfld<HealthComponent>("barrier"),
-            x => x.MatchLdcR4(out _)
-            );
+        bool ILFound = c.TryGotoNext(MoveType.After, x => x.MatchCallOrCallvirt<HealthComponent>(nameof(HealthComponent.GetBarrierDecayRate)));
+
         if (ILFound)
         {
-            bool ILFound2 = c.TryGotoNext(MoveType.After,
-                x => x.MatchCallOrCallvirt<CharacterBody>("get_barrierDecayRate")
-                );
-            if (ILFound2)
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate<Func<float, HealthComponent, float>>((barrierDecayRatePerSecond, healthComponent) =>
             {
-                c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<float, HealthComponent, float>>((barrierDecayRate, healthComponent) =>
+                CustomStats stats = GetCustomStatsFromBody(healthComponent.body);
+                if (stats == null)
+                    return barrierDecayRatePerSecond;
+
+                if (!stats.barrierDecayFrozen)
                 {
-                    CustomStats stats = GetCustomStatsFromBody(healthComponent.body);
-                    if (stats == null)
-                        return barrierDecayRate;
+                    barrierDecayRatePerSecond += stats.barrierDecayRateAdd;
+                    barrierDecayRatePerSecond *= stats.barrierDecayRateMult;
+                }
 
-                    barrierDecayRate += stats.barrierDecayRateAdd;
-                    if (stats.barrierDecayFrozen || barrierDecayRate < 0)
-                        barrierDecayRate = 0;
-                    else
-                        barrierDecayRate *= stats.barrierDecayRateMult;
-
-                    return barrierDecayRate;
-                });
-            }
-            else
-            {
-                RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayRate)} failed.");
-            }
+                return barrierDecayRatePerSecond;
+            });
         }
         else
         {
             RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyBarrierDecayRate)} failed.");
         }
+
     }
 
-    private static void GetMasterLuck(On.RoR2.CharacterMaster.orig_OnInventoryChanged orig, CharacterMaster self)
+    private static void ModifyLuckStat(ILCursor c)
     {
-        CharacterBody body = self.GetBody();
-        if (body != null)
-        {
-            CustomStats customStats = GetCustomStatsFromBody(body);
-            customStats.luckFromBody = 0;
-        }
+        c.Index = 0;
 
-        orig(self);
+        bool ILFound = c.TryGotoNext(MoveType.Before, x => x.MatchCallOrCallvirt<CharacterMaster>("set_luck"));
+
+        if (ILFound)
+        {
+            c.EmitDelegate<Func<float>>(() => StatMods.luckAdd);
+            c.Emit(OpCodes.Add);
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyLuckStat)} failed.");
+        }
     }
 
     private static bool RoundLuckInCheckRoll(On.RoR2.Util.orig_CheckRoll_float_float_CharacterMaster orig, float percentChance, float luck, CharacterMaster effectOriginMaster)
