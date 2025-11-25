@@ -26,6 +26,7 @@ namespace R2API;
 public static partial class SkinSkillVariants
 {
     public static Dictionary<SkinDef, BodyIndex> skinToBody = [];
+    private static Dictionary<SkinDef, SkinDef> lobbySkinDefToBodySkinDef = [];
     #region Hooks
     private static bool _hooksSet;
     private static bool _isLoaded;
@@ -43,7 +44,9 @@ public static partial class SkinSkillVariants
         On.RoR2.SkinDef.MinionSkinTemplate.ctor += MinionSkinTemplate_ctor;
         IL.RoR2.ProjectileGhostReplacementManager.FindProjectileGhostPrefab += ProjectileGhostReplacementManager_FindProjectileGhostPrefab;
         IL.RoR2.MasterSummon.Perform += MasterSummon_Perform;
+        IL.RoR2.SurvivorCatalog.SetSurvivorDefs += SurvivorCatalog_SetSurvivorDefs;
     }
+
     internal static void UnsetHooks()
     {
         _hooksSet = false;
@@ -54,6 +57,27 @@ public static partial class SkinSkillVariants
         On.RoR2.SkinDef.MinionSkinTemplate.ctor -= MinionSkinTemplate_ctor;
         IL.RoR2.ProjectileGhostReplacementManager.FindProjectileGhostPrefab -= ProjectileGhostReplacementManager_FindProjectileGhostPrefab;
         IL.RoR2.MasterSummon.Perform -= MasterSummon_Perform;
+        IL.RoR2.SurvivorCatalog.SetSurvivorDefs -= SurvivorCatalog_SetSurvivorDefs;
+    }
+    private static void SurvivorCatalog_SetSurvivorDefs(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+        int locID = 4;
+        if (
+            c.TryGotoNext(MoveType.After,
+                x => x.MatchLdsfld(typeof(SurvivorCatalog), nameof(SurvivorCatalog.survivorDefs)),
+                x => x.MatchLdloc(out _),
+                x => x.MatchLdelemRef(),
+                x => x.MatchStloc(out locID)
+            ))
+        {
+            c.Emit(OpCodes.Ldloc, locID);
+            c.EmitDelegate(SetLobbySkinToBodySkin);
+        }
+        else
+        {
+            SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
+        }
     }
     private static void MinionSkinTemplate_ctor(On.RoR2.SkinDef.MinionSkinTemplate.orig_ctor orig, ref SkinDef.MinionSkinTemplate self, SkinDefParams.MinionSkinReplacement minionSkinReplacement)
     {
@@ -447,6 +471,24 @@ public static partial class SkinSkillVariants
     #endregion
 
     #region Internal
+
+    private static void SetLobbySkinToBodySkin(SurvivorDef survivorDef)
+    {
+        ModelLocator modelLocator = survivorDef.bodyPrefab ? survivorDef.bodyPrefab.GetComponent<ModelLocator>() : null;
+        if (!modelLocator) return;
+        ModelSkinController bodyPrefabModelSkinController = modelLocator._modelTransform ? modelLocator._modelTransform.GetComponent<ModelSkinController>() : null;
+        if (!bodyPrefabModelSkinController) return;
+        ModelSkinController displayPrefabModelSkinController = survivorDef.displayPrefab ? survivorDef.displayPrefab.GetComponentInChildren<ModelSkinController>() : null;
+        if (!displayPrefabModelSkinController) return;
+        if (bodyPrefabModelSkinController.skins.Length != displayPrefabModelSkinController.skins.Length) return;
+        for (int i = 0; i < bodyPrefabModelSkinController.skins.Length; i++)
+        {
+            SkinDef bodySkinDef = bodyPrefabModelSkinController.skins[i];
+            SkinDef lobbySkinDef = displayPrefabModelSkinController.skins[i];
+            if (!bodySkinDef || !lobbySkinDef) continue;
+            if (!lobbySkinDefToBodySkinDef.ContainsKey(lobbySkinDef)) lobbySkinDefToBodySkinDef.Add(lobbySkinDef, bodySkinDef);
+        }
+    }
     private static List<SkillDef> CacheSkillDefs(GameObject gameObject, SkinDef.RuntimeSkin runtimeSkin)
     {
         HurtBoxGroup hurtBoxGroup = gameObject.GetComponent<HurtBoxGroup>();
@@ -475,7 +517,24 @@ public static partial class SkinSkillVariants
     }
     private static List<SkillDef> CacheSkillDefsInLobby(GameObject gameObject, SkinDef.RuntimeSkin runtimeSkin)
     {
-        BodyIndex bodyIndex = skinToBody[runtimeSkin.GetSkinDef()];
+        SkinDef skinDef = runtimeSkin.GetSkinDef();
+        if (skinDef == null) return null;
+        BodyIndex bodyIndex;
+        if (skinToBody.ContainsKey(skinDef))
+        {
+            bodyIndex = skinToBody[skinDef];
+        }
+        else
+        {
+            bodyIndex = BodyIndex.None;
+            if (lobbySkinDefToBodySkinDef.TryGetValue(skinDef, out SkinDef lobbySkinDef))
+            {
+                if (skinToBody.ContainsKey(lobbySkinDef))
+                {
+                    bodyIndex = skinToBody[lobbySkinDef];
+                }
+            }
+        }
         GameObject body = BodyCatalog.GetBodyPrefab(bodyIndex);
         if (body == null) return null;
         SurvivorMannequinSlotController componentInParent = gameObject.GetComponentInParent<SurvivorMannequinSlotController>();
@@ -1389,7 +1448,7 @@ public class SkinSkillVariantsDef : ScriptableObject
     internal static List<SkinSkillVariantsDef> pendingSkinSkillVariantsDefs = [];
     [Tooltip("SkinDefParams to apply SkillVariants")]
     public SkinDefParams[] skinDefParameters = [];
-    [Tooltip("Put ModelSkinController from either the body prefab or display prefab if you want this to be applied to all possible skins. \nSkillVariants added by it will have lower priority")]
+    [Tooltip("Put ModelSkinController from body prefab if you want this to be applied to all possible skins. \nSkillVariants added by it will have lower priority")]
     [PrefabReference]
     public ModelSkinController modelSkinController;
     public RendererInfoSkillVariant[] rendererInfoSkillVariants = [];

@@ -8,6 +8,10 @@ Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also
 
 ## Changelog
 
+### `1.4.2`
+
+* Update for DLC 3 release 3.
+
 ### `1.4.1`
 
 * Update for DLC 3 release 2.
