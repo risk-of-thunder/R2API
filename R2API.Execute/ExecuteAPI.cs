@@ -80,6 +80,8 @@ public static partial class ExecuteAPI
 
     private static float CalculateExecuteFraction(CharacterBody victimBody, CharacterBody viewerBody)
     {
+        if ((victimBody.bodyFlags & CharacterBody.BodyFlags.ImmuneToExecutes) != 0) return 0f;
+
         float executeFractionAdd = 0f;
         float executeFractionFlat = 0f;
 
