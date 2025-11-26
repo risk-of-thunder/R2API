@@ -474,17 +474,20 @@ public static partial class SkinSkillVariants
 
     private static void SetLobbySkinToBodySkin(SurvivorDef survivorDef)
     {
+        if (!survivorDef) return;
         ModelLocator modelLocator = survivorDef.bodyPrefab ? survivorDef.bodyPrefab.GetComponent<ModelLocator>() : null;
         if (!modelLocator) return;
         ModelSkinController bodyPrefabModelSkinController = modelLocator._modelTransform ? modelLocator._modelTransform.GetComponent<ModelSkinController>() : null;
         if (!bodyPrefabModelSkinController) return;
         ModelSkinController displayPrefabModelSkinController = survivorDef.displayPrefab ? survivorDef.displayPrefab.GetComponentInChildren<ModelSkinController>() : null;
         if (!displayPrefabModelSkinController) return;
-        if (bodyPrefabModelSkinController.skins.Length != displayPrefabModelSkinController.skins.Length) return;
-        for (int i = 0; i < bodyPrefabModelSkinController.skins.Length; i++)
+        SkinDef[] bodyPrefabModelSkinControllerSkins = bodyPrefabModelSkinController.skins;
+        SkinDef[] displayPrefabModelSkinControllerSkins = displayPrefabModelSkinController.skins;
+        if (bodyPrefabModelSkinControllerSkins == null || displayPrefabModelSkinControllerSkins == null || bodyPrefabModelSkinControllerSkins.Length != displayPrefabModelSkinControllerSkins.Length) return;
+        for (int i = 0; i < bodyPrefabModelSkinControllerSkins.Length; i++)
         {
-            SkinDef bodySkinDef = bodyPrefabModelSkinController.skins[i];
-            SkinDef lobbySkinDef = displayPrefabModelSkinController.skins[i];
+            SkinDef bodySkinDef = bodyPrefabModelSkinControllerSkins[i];
+            SkinDef lobbySkinDef = displayPrefabModelSkinControllerSkins[i];
             if (!bodySkinDef || !lobbySkinDef) continue;
             if (!lobbySkinDefToBodySkinDef.ContainsKey(lobbySkinDef)) lobbySkinDefToBodySkinDef.Add(lobbySkinDef, bodySkinDef);
         }
@@ -1449,7 +1452,7 @@ public class SkinSkillVariantsDef : ScriptableObject
     internal static List<SkinSkillVariantsDef> pendingSkinSkillVariantsDefs = [];
     [Tooltip("SkinDefParams to apply SkillVariants")]
     public SkinDefParams[] skinDefParameters = [];
-    [Tooltip("Put ModelSkinController from body prefab if you want this to be applied to all possible skins. \nSkillVariants added by it will have lower priority")]
+    [Tooltip("Put ModelSkinController from body prefab if you want this to be applied to all possible skins")]
     [PrefabReference]
     public ModelSkinController modelSkinController;
     public RendererInfoSkillVariant[] rendererInfoSkillVariants = [];
@@ -1457,6 +1460,7 @@ public class SkinSkillVariantsDef : ScriptableObject
     public LightInfoSkillVariant[] lightInfoSkillVariants = [];
     public ProjectileGhostReplacementSkillVariant[] projectileGhostReplacementSkillVariants = [];
     public MinionSkinReplacementSkillVariant[] minionSkinReplacementSkillVariants = [];
+    public bool lowPriority;
     private bool registered;
     private bool applied;
     public void AddSkinDefParams(SkinDefParams skinDefParams) => Add(ref skinDefParameters, skinDefParams);
@@ -1498,31 +1502,31 @@ public class SkinSkillVariantsDef : ScriptableObject
                 SkinDefParams optimisedSkinDefParams = GetOptimizedSkinDefParams(skinDef);
                 if (optimisedSkinDefParams && !skinDefParams1.Contains(skinDefParams)) skinDefParams1.Add(optimisedSkinDefParams);
             }
-            HandleArray([.. skinDefParams1], true);
+            HandleArray([.. skinDefParams1]);
         }
-        HandleArray(skinDefParameters, false);
+        HandleArray(skinDefParameters);
         applied = true;
         yield break;
     }
-    private void HandleArray(SkinDefParams[] skinDefParamsArray, bool lowPriority)
+    private void HandleArray(SkinDefParams[] skinDefParamsArray)
     {
         for (int i = 0; i < skinDefParamsArray.Length; i++)
         {
             SkinDefParams skinDefParams = skinDefParamsArray[i];
             if (skinDefParams == null) continue;
             CharacterModel.RendererInfo[] rendererInfos = skinDefParams.rendererInfos;
-            PopulateValues(ref rendererInfos, rendererInfoSkillVariants, lowPriority);
+            PopulateValues(ref rendererInfos, rendererInfoSkillVariants);
             SkinDefParams.MeshReplacement[] meshReplacements = skinDefParams.meshReplacements;
-            PopulateValues(ref meshReplacements, meshReplacementSkillVariants, lowPriority);
+            PopulateValues(ref meshReplacements, meshReplacementSkillVariants);
             CharacterModel.LightInfo[] lightInfos = skinDefParams.lightReplacements;
-            PopulateValues(ref lightInfos, lightInfoSkillVariants, lowPriority);
+            PopulateValues(ref lightInfos, lightInfoSkillVariants);
             SkinDefParams.ProjectileGhostReplacement[] projectileGhostReplacements = skinDefParams.projectileGhostReplacements;
-            PopulateValues(ref projectileGhostReplacements, projectileGhostReplacementSkillVariants, lowPriority);
+            PopulateValues(ref projectileGhostReplacements, projectileGhostReplacementSkillVariants);
             SkinDefParams.MinionSkinReplacement[] minionSkinReplacements = skinDefParams.minionSkinReplacements;
-            PopulateValues(ref minionSkinReplacements, minionSkinReplacementSkillVariants, lowPriority);
+            PopulateValues(ref minionSkinReplacements, minionSkinReplacementSkillVariants);
         }
     }
-    private void PopulateValues<T1, T2>(ref T1[] t1s, T2[] t2s, bool lowPririty) where T2 : ISkillVariantStruct<T1>
+    private void PopulateValues<T1, T2>(ref T1[] t1s, T2[] t2s) where T2 : ISkillVariantStruct<T1>
     {
         if (t1s != null && t1s.Length > 0 && t2s != null && t2s.Length > 0)
             foreach (T2 t2 in t2s)
@@ -1533,7 +1537,7 @@ public class SkinSkillVariantsDef : ScriptableObject
                     ref T1 t1 = ref t1s[i];
                     if (t2.Compare(t1))
                     {
-                        t2.lowPriority = lowPririty;
+                        t2.lowPriority = lowPriority;
                         t2.Add(ref t1);
                     }
                 }
