@@ -30,7 +30,13 @@ public static partial class LanguageAPI
     private static readonly Dictionary<string, Dictionary<string, string>> CustomLanguage = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
     private static readonly Dictionary<string, Dictionary<string, string>> OverlayLanguage = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
     private static readonly List<LanguageOverlay> temporaryOverlays = new List<LanguageOverlay>();
-    private const string genericLanguage = "generic";
+
+    // "generic" (or "strings", see below) is a special pseudo-language that users can target when adding tokens.
+    // Any token added under this language acts as a global fallback: it is used for all
+    // languages **unless** that specific language already defines its own value.
+    private const string GenericLanguage = "generic";
+    // This can't be removed or renamed due to backward compatibility.
+    private const string GenericLanguageButNamedDifferentlyBecauseReasons = "strings";
 
     #region Hooks
 
@@ -81,9 +87,9 @@ public static partial class LanguageAPI
                 return true;
             }
         }
-        if (OverlayLanguage.ContainsKey(genericLanguage))
+        if (OverlayLanguage.ContainsKey(GenericLanguage))
         {
-            if (OverlayLanguage[genericLanguage].ContainsKey(token))
+            if (OverlayLanguage[GenericLanguage].ContainsKey(token))
             {
                 return true;
             }
@@ -95,9 +101,9 @@ public static partial class LanguageAPI
                 return true;
             }
         }
-        if (CustomLanguage.ContainsKey(genericLanguage))
+        if (CustomLanguage.ContainsKey(GenericLanguage))
         {
-            if (CustomLanguage[genericLanguage].ContainsKey(token))
+            if (CustomLanguage[GenericLanguage].ContainsKey(token))
             {
                 return true;
             }
@@ -115,11 +121,11 @@ public static partial class LanguageAPI
                 return OverlayLanguage[languagename][token];
             }
         }
-        if (OverlayLanguage.ContainsKey(genericLanguage))
+        if (OverlayLanguage.ContainsKey(GenericLanguage))
         {
-            if (OverlayLanguage[genericLanguage].ContainsKey(token))
+            if (OverlayLanguage[GenericLanguage].ContainsKey(token))
             {
-                return OverlayLanguage[genericLanguage][token];
+                return OverlayLanguage[GenericLanguage][token];
             }
         }
         if (CustomLanguage.ContainsKey(languagename))
@@ -129,11 +135,11 @@ public static partial class LanguageAPI
                 return CustomLanguage[languagename][token];
             }
         }
-        if (CustomLanguage.ContainsKey(genericLanguage))
+        if (CustomLanguage.ContainsKey(GenericLanguage))
         {
-            if (CustomLanguage[genericLanguage].ContainsKey(token))
+            if (CustomLanguage[GenericLanguage].ContainsKey(token))
             {
-                return CustomLanguage[genericLanguage][token];
+                return CustomLanguage[GenericLanguage][token];
             }
         }
         return orig(self, token);
@@ -142,7 +148,8 @@ public static partial class LanguageAPI
 
     private static Dictionary<string, Dictionary<string, string>>? LoadFile(string fileContent)
     {
-        Dictionary<string, Dictionary<string, string>> dict = new Dictionary<string, Dictionary<string, string>>();
+        Dictionary<string, Dictionary<string, string>> result = new Dictionary<string, Dictionary<string, string>>();
+
         try
         {
             JSONNode jsonNode = JSON.Parse(fileContent);
@@ -160,17 +167,17 @@ public static partial class LanguageAPI
                     continue;
                 }
 
-                var languagename = language;
-                if (languagename == "strings")
+                var languageName = language;
+                if (languageName == GenericLanguageButNamedDifferentlyBecauseReasons)
                 {
-                    languagename = genericLanguage;
+                    languageName = GenericLanguage;
                 }
 
-                if (!dict.ContainsKey(languagename))
+                if (!result.ContainsKey(languageName))
                 {
-                    dict.Add(languagename, new Dictionary<string, string>());
+                    result.Add(languageName, new Dictionary<string, string>());
                 }
-                var languagedict = dict[languagename];
+                var languagedict = result[languageName];
 
                 foreach (var key in languageTokens.Keys)
                 {
@@ -183,11 +190,13 @@ public static partial class LanguageAPI
             Debug.LogFormat("Parsing error in language file , Error: {0}", ex);
             return null;
         }
-        if (dict.Count == 0)
+
+        if (result.Count == 0)
         {
             return null;
         }
-        return dict;
+
+        return result;
     }
 
     /// <summary>
@@ -198,6 +207,7 @@ public static partial class LanguageAPI
     public static void Add(string? key, string? value)
     {
         LanguageAPI.SetHooks();
+
         if (key == null)
         {
             throw new NullReferenceException($"param {nameof(key)} is null");
@@ -207,7 +217,7 @@ public static partial class LanguageAPI
             throw new NullReferenceException($"param {nameof(value)} is null");
         }
 
-        Add(key, value, genericLanguage);
+        Add(key, value, GenericLanguage);
     }
 
     /// <summary>
@@ -219,6 +229,7 @@ public static partial class LanguageAPI
     public static void Add(string? key, string? value, string? language)
     {
         LanguageAPI.SetHooks();
+
         if (key == null)
         {
             throw new NullReferenceException($"param {nameof(key)} is null");
@@ -236,6 +247,7 @@ public static partial class LanguageAPI
         {
             CustomLanguage.Add(language, new Dictionary<string, string>());
         }
+
         var languagedict = CustomLanguage[language];
         if (!languagedict.ContainsKey(key))
         {
@@ -250,6 +262,7 @@ public static partial class LanguageAPI
     public static void AddPath(string? path)
     {
         LanguageAPI.SetHooks();
+
         if (path == null)
         {
             throw new NullReferenceException($"param {nameof(path)} is null");
@@ -266,6 +279,7 @@ public static partial class LanguageAPI
     public static void Add(string? file)
     {
         LanguageAPI.SetHooks();
+
         if (file == null)
         {
             throw new NullReferenceException($"param {nameof(file)} is null");
@@ -287,7 +301,7 @@ public static partial class LanguageAPI
     public static void Add(Dictionary<string, string?>? tokenDictionary)
     {
         LanguageAPI.SetHooks();
-        Add(tokenDictionary, genericLanguage);
+        Add(tokenDictionary, GenericLanguage);
     }
 
     /// <summary>
@@ -298,6 +312,7 @@ public static partial class LanguageAPI
     public static void Add(Dictionary<string, string?>? tokenDictionary, string? language)
     {
         LanguageAPI.SetHooks();
+
         if (tokenDictionary == null)
         {
             throw new NullReferenceException($"param {nameof(tokenDictionary)} is null");
@@ -309,6 +324,7 @@ public static partial class LanguageAPI
             {
                 continue;
             }
+
             Add(item.Key, item.Value, language);
         }
     }
@@ -320,6 +336,7 @@ public static partial class LanguageAPI
     public static void Add(Dictionary<string, Dictionary<string, string?>?>? languageDictionary)
     {
         LanguageAPI.SetHooks();
+
         if (languageDictionary == null)
         {
             throw new NullReferenceException($"param {nameof(languageDictionary)} is null");
@@ -340,8 +357,11 @@ public static partial class LanguageAPI
         internal LanguageOverlay(List<OverlayTokenData> data)
         {
             overlayTokenDatas = data;
+
             readOnlyOverlays = overlayTokenDatas.AsReadOnly();
+
             temporaryOverlays.Add(this);
+
             this.Add();
         }
 
@@ -358,7 +378,9 @@ public static partial class LanguageAPI
                 {
                     OverlayLanguage.Add(item.lang, new Dictionary<string, string>());
                 }
+
                 var langdict = OverlayLanguage[item.lang];
+
                 langdict[item.key] = item.value;
             }
         }
@@ -367,8 +389,11 @@ public static partial class LanguageAPI
         public void Remove()
         {
             LanguageAPI.SetHooks();
+
             temporaryOverlays.Remove(this);
+
             OverlayLanguage.Clear();
+
             foreach (var item in temporaryOverlays)
             {
                 item.Add();
@@ -385,6 +410,7 @@ public static partial class LanguageAPI
     public static LanguageOverlay AddOverlay(string? key, string? value)
     {
         LanguageAPI.SetHooks();
+
         if (key == null)
         {
             throw new NullReferenceException($"param {nameof(key)} is null");
@@ -394,7 +420,7 @@ public static partial class LanguageAPI
             throw new NullReferenceException($"param {nameof(value)} is null");
         }
 
-        return AddOverlay(key, value, genericLanguage);
+        return AddOverlay(key, value, GenericLanguage);
     }
 
     /// <summary>
@@ -407,6 +433,7 @@ public static partial class LanguageAPI
     public static LanguageOverlay AddOverlay(string? key, string? value, string? lang)
     {
         LanguageAPI.SetHooks();
+
         if (key == null)
         {
             throw new NullReferenceException($"param {nameof(key)} is null");
@@ -435,6 +462,7 @@ public static partial class LanguageAPI
     public static LanguageOverlay? AddOverlayPath(string? path)
     {
         LanguageAPI.SetHooks();
+
         if (path == null)
         {
             throw new NullReferenceException($"param {nameof(path)} is null");
@@ -445,6 +473,7 @@ public static partial class LanguageAPI
         {
             return null;
         }
+
         return AddOverlay(text);
     }
 
@@ -456,6 +485,7 @@ public static partial class LanguageAPI
     public static LanguageOverlay? AddOverlay(string? file)
     {
         LanguageAPI.SetHooks();
+
         if (file == null)
         {
             throw new NullReferenceException($"param {nameof(file)} is null");
@@ -466,6 +496,7 @@ public static partial class LanguageAPI
         {
             return null;
         }
+
         return AddOverlay(dict!);
     }
 
@@ -477,12 +508,13 @@ public static partial class LanguageAPI
     public static LanguageOverlay AddOverlay(Dictionary<string, string?>? tokenDictionary)
     {
         LanguageAPI.SetHooks();
+
         if (tokenDictionary == null)
         {
             throw new NullReferenceException($"param {nameof(tokenDictionary)} is null");
         }
 
-        return AddOverlay(tokenDictionary, genericLanguage);
+        return AddOverlay(tokenDictionary, GenericLanguage);
     }
 
     /// <summary>
@@ -494,6 +526,7 @@ public static partial class LanguageAPI
     public static LanguageOverlay AddOverlay(Dictionary<string, string?>? tokenDictionary, string? language)
     {
         LanguageAPI.SetHooks();
+
         if (tokenDictionary == null)
         {
             throw new NullReferenceException($"param {nameof(tokenDictionary)} is null");
@@ -505,14 +538,8 @@ public static partial class LanguageAPI
         }
 
         var list = new List<OverlayTokenData>(tokenDictionary.Count);
-        foreach (var item in tokenDictionary)
-        {
-            if (item.Value == null)
-            {
-                continue;
-            }
-            list.Add(new OverlayTokenData(item.Key, item.Value, language));
-        }
+        AddTokensToList(list, language, tokenDictionary);
+
         return new LanguageOverlay(list);
     }
 
@@ -524,31 +551,35 @@ public static partial class LanguageAPI
     public static LanguageOverlay AddOverlay(Dictionary<string, Dictionary<string, string?>?>? languageDictionary)
     {
         LanguageAPI.SetHooks();
+
         if (languageDictionary == null)
         {
             throw new NullReferenceException($"param {nameof(languageDictionary)} is null");
         }
 
         var list = new List<OverlayTokenData>();
-        foreach (var language in languageDictionary)
+        foreach (var (languageName, tokens) in languageDictionary)
         {
-            if (language.Value == null)
+            if (tokens == null)
             {
                 continue;
             }
 
-            foreach (var tokenvalue in language.Value)
-            {
-                if (tokenvalue.Value == null)
-                {
-                    continue;
-                }
-
-                list.Add(new OverlayTokenData(language.Key, tokenvalue.Key, tokenvalue.Value));
-            }
+            AddTokensToList(list, languageName, tokens);
         }
 
         return new LanguageOverlay(list);
+    }
+
+    private static void AddTokensToList(List<OverlayTokenData> list, string language, Dictionary<string, string?> tokens)
+    {
+        foreach (var (key, value) in tokens)
+        {
+            if (value == null)
+                continue;
+
+            list.Add(new OverlayTokenData(key, value, language));
+        }
     }
 
     /// <summary>
@@ -556,7 +587,6 @@ public static partial class LanguageAPI
     /// </summary>
     public struct OverlayTokenData
     {
-
         /// <summary>The token identifier to add/replace the value of.</summary>
         public string key;
 
@@ -573,14 +603,7 @@ public static partial class LanguageAPI
         {
             key = _key;
             value = _value;
-            if (_lang == genericLanguage)
-            {
-                isGeneric = true;
-            }
-            else
-            {
-                isGeneric = false;
-            }
+            isGeneric = _lang == GenericLanguage;
             lang = _lang;
         }
 
@@ -588,7 +611,7 @@ public static partial class LanguageAPI
         {
             key = _key;
             value = _value;
-            lang = genericLanguage;
+            lang = GenericLanguage;
             isGeneric = true;
         }
     }
