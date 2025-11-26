@@ -474,17 +474,20 @@ public static partial class SkinSkillVariants
 
     private static void SetLobbySkinToBodySkin(SurvivorDef survivorDef)
     {
+        if (!survivorDef) return;
         ModelLocator modelLocator = survivorDef.bodyPrefab ? survivorDef.bodyPrefab.GetComponent<ModelLocator>() : null;
         if (!modelLocator) return;
         ModelSkinController bodyPrefabModelSkinController = modelLocator._modelTransform ? modelLocator._modelTransform.GetComponent<ModelSkinController>() : null;
         if (!bodyPrefabModelSkinController) return;
         ModelSkinController displayPrefabModelSkinController = survivorDef.displayPrefab ? survivorDef.displayPrefab.GetComponentInChildren<ModelSkinController>() : null;
         if (!displayPrefabModelSkinController) return;
-        if (bodyPrefabModelSkinController.skins.Length != displayPrefabModelSkinController.skins.Length) return;
-        for (int i = 0; i < bodyPrefabModelSkinController.skins.Length; i++)
+        SkinDef[] bodyPrefabModelSkinControllerSkins = bodyPrefabModelSkinController.skins;
+        SkinDef[] displayPrefabModelSkinControllerSkins = displayPrefabModelSkinController.skins;
+        if (bodyPrefabModelSkinControllerSkins == null || displayPrefabModelSkinControllerSkins == null || bodyPrefabModelSkinControllerSkins.Length != displayPrefabModelSkinControllerSkins.Length) return;
+        for (int i = 0; i < bodyPrefabModelSkinControllerSkins.Length; i++)
         {
-            SkinDef bodySkinDef = bodyPrefabModelSkinController.skins[i];
-            SkinDef lobbySkinDef = displayPrefabModelSkinController.skins[i];
+            SkinDef bodySkinDef = bodyPrefabModelSkinControllerSkins[i];
+            SkinDef lobbySkinDef = displayPrefabModelSkinControllerSkins[i];
             if (!bodySkinDef || !lobbySkinDef) continue;
             if (!lobbySkinDefToBodySkinDef.ContainsKey(lobbySkinDef)) lobbySkinDefToBodySkinDef.Add(lobbySkinDef, bodySkinDef);
         }
