@@ -15992,6 +15992,12 @@ references:
   commentId: F:R2API.SkinSkillVariantsDef.lightInfoSkillVariants
   fullName: R2API.SkinSkillVariantsDef.lightInfoSkillVariants
   nameWithType: SkinSkillVariantsDef.lightInfoSkillVariants
+- uid: R2API.SkinSkillVariantsDef.lowPriority
+  name: lowPriority
+  href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_lowPriority
+  commentId: F:R2API.SkinSkillVariantsDef.lowPriority
+  fullName: R2API.SkinSkillVariantsDef.lowPriority
+  nameWithType: SkinSkillVariantsDef.lowPriority
 - uid: R2API.SkinSkillVariantsDef.meshReplacementSkillVariants
   name: meshReplacementSkillVariants
   href: api/R2API.SkinSkillVariantsDef.html#R2API_SkinSkillVariantsDef_meshReplacementSkillVariants
