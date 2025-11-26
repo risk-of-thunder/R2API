@@ -1452,7 +1452,7 @@ public class SkinSkillVariantsDef : ScriptableObject
     internal static List<SkinSkillVariantsDef> pendingSkinSkillVariantsDefs = [];
     [Tooltip("SkinDefParams to apply SkillVariants")]
     public SkinDefParams[] skinDefParameters = [];
-    [Tooltip("Put ModelSkinController from body prefab if you want this to be applied to all possible skins. \nSkillVariants added by it will have lower priority")]
+    [Tooltip("Put ModelSkinController from body prefab if you want this to be applied to all possible skins")]
     [PrefabReference]
     public ModelSkinController modelSkinController;
     public RendererInfoSkillVariant[] rendererInfoSkillVariants = [];
