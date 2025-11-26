@@ -997,7 +997,6 @@ public static partial class SkinSkillVariants
     public static void AddRenderInfoSkillVariant(this ModelSkinController modelSkinController, string rendererName, RendererInfoSkillVariant rendererInfoSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref CharacterModel.RendererInfo rendererInfo = ref GetRendererInfoByName(GetSkinDefParams(modelSkinController.skins[0]), rendererName);
         HandleAddition(modelSkinController, rendererInfoSkillVariant, ref rendererInfo);
     }
@@ -1030,7 +1029,6 @@ public static partial class SkinSkillVariants
     public static void AddRenderInfoSkillVariant(this ModelSkinController modelSkinController, int index, RendererInfoSkillVariant rendererInfoSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref CharacterModel.RendererInfo rendererInfo = ref GetSkinDefParams(modelSkinController.skins[0]).rendererInfos[index];
         HandleAddition(modelSkinController, rendererInfoSkillVariant, ref rendererInfo);
     }
@@ -1075,7 +1073,6 @@ public static partial class SkinSkillVariants
     public static void AddMeshReplacementSkillVariant(this ModelSkinController modelSkinController, string meshRendererName, MeshReplacementSkillVariant meshReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref SkinDefParams.MeshReplacement meshReplacement = ref GetMeshReplacementByName(GetSkinDefParams(modelSkinController.skins[0]), meshRendererName);
         HandleAddition(modelSkinController, meshReplacementSkillVariant, ref meshReplacement);
     }
@@ -1108,7 +1105,6 @@ public static partial class SkinSkillVariants
     public static void AddMeshReplacementSkillVariant(this ModelSkinController modelSkinController, int index, MeshReplacementSkillVariant meshReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref SkinDefParams.MeshReplacement meshReplacement = ref GetSkinDefParams(modelSkinController.skins[0]).meshReplacements[index];
         HandleAddition(modelSkinController, meshReplacementSkillVariant, ref meshReplacement);
     }
@@ -1153,7 +1149,6 @@ public static partial class SkinSkillVariants
     public static void AddLightInfoSkillVariant(this ModelSkinController modelSkinController, string lightName, LightInfoSkillVariant lightInfoSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref CharacterModel.LightInfo lightInfo = ref GetLightInfoByName(GetSkinDefParams(modelSkinController.skins[0]), lightName);
         HandleAddition(modelSkinController, lightInfoSkillVariant, ref lightInfo);
     }
@@ -1186,7 +1181,6 @@ public static partial class SkinSkillVariants
     public static void AddLightInfoSkillVariant(this ModelSkinController modelSkinController, int index, LightInfoSkillVariant lightInfoSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref CharacterModel.LightInfo lightInfo = ref GetSkinDefParams(modelSkinController.skins[0]).lightReplacements[index];
         HandleAddition(modelSkinController, lightInfoSkillVariant, ref lightInfo);
     }
@@ -1231,7 +1225,6 @@ public static partial class SkinSkillVariants
     public static void AddProjectileGhostReplacementSkillVariant(this ModelSkinController modelSkinController, string projectileName, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement = ref GetProjectileGhostReplacementByName(GetSkinDefParams(modelSkinController.skins[0]), projectileName);
         HandleAddition(modelSkinController, projectileGhostReplacementSkillVariant, ref projectileGhostReplacement);
     }
@@ -1264,7 +1257,6 @@ public static partial class SkinSkillVariants
     public static void AddProjectileGhostReplacementSkillVariant(this ModelSkinController modelSkinController, GameObject projectilePrefab, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement = ref GetProjectileGhostReplacementByPrefab(GetSkinDefParams(modelSkinController.skins[0]), projectilePrefab);
         HandleAddition(modelSkinController, projectileGhostReplacementSkillVariant, ref projectileGhostReplacement);
     }
@@ -1297,7 +1289,6 @@ public static partial class SkinSkillVariants
     public static void AddProjectileGhostReplacementSkillVariant(this ModelSkinController modelSkinController, int index, ProjectileGhostReplacementSkillVariant projectileGhostReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref SkinDefParams.ProjectileGhostReplacement projectileGhostReplacement = ref GetSkinDefParams(modelSkinController.skins[0]).projectileGhostReplacements[index];
         HandleAddition(modelSkinController, projectileGhostReplacementSkillVariant, ref projectileGhostReplacement);
     }
@@ -1342,7 +1333,6 @@ public static partial class SkinSkillVariants
     public static void AddMinionSkinReplacementSkillVariant(this ModelSkinController modelSkinController, string minionBodyName, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref SkinDefParams.MinionSkinReplacement minionSkinReplacement = ref GetMinionSkinReplacementByName(GetSkinDefParams(modelSkinController.skins[0]), minionBodyName);
         HandleAddition(modelSkinController, minionSkinReplacementSkillVariant, ref minionSkinReplacement);
     }
@@ -1375,7 +1365,6 @@ public static partial class SkinSkillVariants
     public static void AddMinionSkinReplacementSkillVariant(this ModelSkinController modelSkinController, GameObject minionBodyPrefab, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref SkinDefParams.MinionSkinReplacement minionSkinReplacement = ref GetMinionSkinReplacementByPrefab(GetSkinDefParams(modelSkinController.skins[0]), minionBodyPrefab);
         HandleAddition(modelSkinController, minionSkinReplacementSkillVariant, ref minionSkinReplacement);
     }
@@ -1408,7 +1397,6 @@ public static partial class SkinSkillVariants
     public static void AddMinionSkinReplacementSkillVariant(this ModelSkinController modelSkinController, int index, MinionSkinReplacementSkillVariant minionSkinReplacementSkillVariant)
     {
         SkinSkillVariants.SetHooks();
-        if (modelSkinController.skins == null || modelSkinController.skins.Length < 1) return;
         ref SkinDefParams.MinionSkinReplacement minionSkinReplacement = ref GetSkinDefParams(modelSkinController.skins[0]).minionSkinReplacements[index];
         HandleAddition(modelSkinController, minionSkinReplacementSkillVariant, ref minionSkinReplacement);
     }
@@ -1507,7 +1495,6 @@ public class SkinSkillVariantsDef : ScriptableObject
         if (modelSkinController != null)
         {
             List<SkinDefParams> skinDefParams1 = [];
-            if (modelSkinController.skins != null)
             foreach (SkinDef skinDef in modelSkinController.skins)
             {
                 SkinDefParams skinDefParams = GetSkinDefParams(skinDef);
