@@ -4,13 +4,14 @@
 
 R2API.Skins is a submodule for R2API that takes the Skin related methods and utilities from ``R2API.Loadout`` and implements them in this new submodule
 
-Alongside the old skin creation methods from ``R2API.Loadout``, R2API.Skins also contains utilities for improving the skin experience, such as having Skin-Specific ItemDisplayRuleSets, custom VFX for skins, providing a system for overriding Light colors and having Skill-Specific parts
+Alongside the old skin creation methods from `R2API.Loadout`, R2API.Skins also contains utilities for improving the skin experience, such as having Skin-Specific ItemDisplayRuleSets, custom VFX for skins, providing a system for overriding Light colors and having Skill-Specific parts
 
 ## Changelog
 
 ### `1.4.3`
 
-* Added missing nullchecks for SkinSkillVariants.
+* Add missing nullchecks for SkinSkillVariants.
+* Add `lowPriority` boolean field to `SkinSkillVariantsDef`.
 
 ### `1.4.2`
 
