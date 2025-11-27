@@ -515,10 +515,11 @@ public static partial class SkinSkillVariants
 
     private static void HandleSkinCustomGameobjectComponent(CharacterModel characterModel, Transform transform)
     {
+        if (!transform || !characterModel) return;
         SkinCustomGameobjectComponent skinCustomGameobjectComponent = transform.GetComponent<SkinCustomGameobjectComponent>();
         if (!skinCustomGameobjectComponent) return;
         skinCustomGameobjectComponent.characterModel = characterModel;
-        if (characterModel.baseLightInfos != null && skinCustomGameobjectComponent.extraRendererInfos != null && skinCustomGameobjectComponent.extraLightInfos.Length > 0)
+        if (characterModel.baseLightInfos != null && skinCustomGameobjectComponent.extraLightInfos != null && skinCustomGameobjectComponent.extraLightInfos.Length > 0)
         {
             int LightInfosSizeBefore = characterModel.baseLightInfos.Length;
             Array.Resize(ref characterModel.baseLightInfos, LightInfosSizeBefore + skinCustomGameobjectComponent.extraLightInfos.Length);
