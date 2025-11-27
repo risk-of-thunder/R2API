@@ -8,6 +8,11 @@ Alongside the old skin creation methods from `R2API.Loadout`, R2API.Skins also c
 
 ## Changelog
 
+### `1.4.4`
+
+* Async `SetLobbySkinToBodySkin` to reduce load time.
+* Add `SkinCustomGameobjectComponent` component.
+
 ### `1.4.3`
 
 * Add missing nullchecks for SkinSkillVariants.
