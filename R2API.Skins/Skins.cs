@@ -52,7 +52,6 @@ public static partial class Skins
 
             if (!(display && body))
             {
-                SkinsPlugin.Logger.LogWarning($"SurvivorDef {survivor.cachedName} is missing a displayPrefab or bodyPrefab! You need to have this! Skipping...");
                 continue;
             }
 
