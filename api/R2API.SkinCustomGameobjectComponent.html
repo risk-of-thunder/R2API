@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Class SkinsPlugin </title>
+      <title>Class SkinCustomGameobjectComponent </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Class SkinsPlugin ">
+      <meta name="title" content="Class SkinCustomGameobjectComponent ">
     
     
       <link rel="shortcut icon" href="../favicon.ico">
@@ -66,11 +66,11 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="R2API.SkinsPlugin">
+            <article class="content wrap" id="_content" data-uid="R2API.SkinCustomGameobjectComponent">
 
 
 
-  <h1 id="R2API_SkinsPlugin" data-uid="R2API.SkinsPlugin" class="text-break">Class SkinsPlugin</h1>
+  <h1 id="R2API_SkinCustomGameobjectComponent" data-uid="R2API.SkinCustomGameobjectComponent" class="text-break">Class SkinCustomGameobjectComponent</h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -80,17 +80,10 @@
     <div class="level2"><span class="xref">Component</span></div>
     <div class="level3"><span class="xref">Behaviour</span></div>
     <div class="level4"><span class="xref">MonoBehaviour</span></div>
-    <div class="level5"><span class="xref">BaseUnityPlugin</span></div>
-    <div class="level6"><span class="xref">SkinsPlugin</span></div>
+    <div class="level5"><span class="xref">SkinCustomGameobjectComponent</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">BaseUnityPlugin.Info</span>
-    </div>
-    <div>
-      <span class="xref">BaseUnityPlugin.Config</span>
-    </div>
     <div>
       <span class="xref">MonoBehaviour.IsInvoking()</span>
     </div>
@@ -533,31 +526,35 @@
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="R2API.html">R2API</a></h6>
   <h6><strong>Assembly</strong>: R2API.Skins.dll</h6>
-  <h5 id="R2API_SkinsPlugin_syntax">Syntax</h5>
+  <h5 id="R2API_SkinCustomGameobjectComponent_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[BepInPlugin(&quot;com.bepis.r2api.skins&quot;, &quot;R2API.Skins&quot;, &quot;1.4.4&quot;)]
-public sealed class SkinsPlugin : BaseUnityPlugin</code></pre>
+    <pre><code class="lang-csharp hljs">public class SkinCustomGameobjectComponent : MonoBehaviour</code></pre>
   </div>
   <h3 id="fields">Fields
 </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SkinsPlugin_harmonyPatcher.md&amp;value=---%0Auid%3A%20R2API.SkinsPlugin.harmonyPatcher%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SkinCustomGameobjectComponent_characterModel.md&amp;value=---%0Auid%3A%20R2API.SkinCustomGameobjectComponent.characterModel%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Skins/SkinsPlugin.cs/#L15">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Skins/SkinCustomGameobjectComponent.cs/#L11">View Source</a>
   </span>
-  <h4 id="R2API_SkinsPlugin_harmonyPatcher" data-uid="R2API.SkinsPlugin.harmonyPatcher">harmonyPatcher</h4>
+  <h4 id="R2API_SkinCustomGameobjectComponent_characterModel" data-uid="R2API.SkinCustomGameobjectComponent.characterModel">characterModel</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Harmony harmonyPatcher</code></pre>
+    <pre><code class="lang-csharp hljs">[Tooltip(&quot;CharacterModel of a character this object is instantiating to for custom uses. This field is null in Awake and first OnEnable&quot;)]
+[HideInInspector]
+public CharacterModel characterModel</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-condensed">
@@ -569,7 +566,67 @@ public sealed class SkinsPlugin : BaseUnityPlugin</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Harmony</span></td>
+        <td><a class="xref" href="RoR2.CharacterModel.html">CharacterModel</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SkinCustomGameobjectComponent_extraLightInfos.md&amp;value=---%0Auid%3A%20R2API.SkinCustomGameobjectComponent.extraLightInfos%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Skins/SkinCustomGameobjectComponent.cs/#L15">View Source</a>
+  </span>
+  <h4 id="R2API_SkinCustomGameobjectComponent_extraLightInfos" data-uid="R2API.SkinCustomGameobjectComponent.extraLightInfos">extraLightInfos</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Tooltip(&quot;LightInfos that will be added to CharacterModel.baseLightInfos&quot;)]
+public CharacterModel.LightInfo[] extraLightInfos</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="RoR2.CharacterModel.LightInfo.html">LightInfo</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SkinCustomGameobjectComponent_extraRendererInfos.md&amp;value=---%0Auid%3A%20R2API.SkinCustomGameobjectComponent.extraRendererInfos%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Skins/SkinCustomGameobjectComponent.cs/#L13">View Source</a>
+  </span>
+  <h4 id="R2API_SkinCustomGameobjectComponent_extraRendererInfos" data-uid="R2API.SkinCustomGameobjectComponent.extraRendererInfos">extraRendererInfos</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Tooltip(&quot;RendererInfos that will be added to CharacterModel.baseRendererInfos&quot;)]
+public CharacterModel.RendererInfo[] extraRendererInfos</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="RoR2.CharacterModel.RendererInfo.html">RendererInfo</a>[]</td>
         <td></td>
       </tr>
     </tbody>
@@ -614,10 +671,10 @@ public sealed class SkinsPlugin : BaseUnityPlugin</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SkinsPlugin.md&amp;value=---%0Auid%3A%20R2API.SkinsPlugin%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SkinCustomGameobjectComponent.md&amp;value=---%0Auid%3A%20R2API.SkinCustomGameobjectComponent%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Skins/SkinsPlugin.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Skins/SkinCustomGameobjectComponent.cs/#L8" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

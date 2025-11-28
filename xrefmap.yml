@@ -14530,6 +14530,30 @@ references:
   commentId: T:R2API.SkillsPlugin
   fullName: R2API.SkillsPlugin
   nameWithType: SkillsPlugin
+- uid: R2API.SkinCustomGameobjectComponent
+  name: SkinCustomGameobjectComponent
+  href: api/R2API.SkinCustomGameobjectComponent.html
+  commentId: T:R2API.SkinCustomGameobjectComponent
+  fullName: R2API.SkinCustomGameobjectComponent
+  nameWithType: SkinCustomGameobjectComponent
+- uid: R2API.SkinCustomGameobjectComponent.characterModel
+  name: characterModel
+  href: api/R2API.SkinCustomGameobjectComponent.html#R2API_SkinCustomGameobjectComponent_characterModel
+  commentId: F:R2API.SkinCustomGameobjectComponent.characterModel
+  fullName: R2API.SkinCustomGameobjectComponent.characterModel
+  nameWithType: SkinCustomGameobjectComponent.characterModel
+- uid: R2API.SkinCustomGameobjectComponent.extraLightInfos
+  name: extraLightInfos
+  href: api/R2API.SkinCustomGameobjectComponent.html#R2API_SkinCustomGameobjectComponent_extraLightInfos
+  commentId: F:R2API.SkinCustomGameobjectComponent.extraLightInfos
+  fullName: R2API.SkinCustomGameobjectComponent.extraLightInfos
+  nameWithType: SkinCustomGameobjectComponent.extraLightInfos
+- uid: R2API.SkinCustomGameobjectComponent.extraRendererInfos
+  name: extraRendererInfos
+  href: api/R2API.SkinCustomGameobjectComponent.html#R2API_SkinCustomGameobjectComponent_extraRendererInfos
+  commentId: F:R2API.SkinCustomGameobjectComponent.extraRendererInfos
+  fullName: R2API.SkinCustomGameobjectComponent.extraRendererInfos
+  nameWithType: SkinCustomGameobjectComponent.extraRendererInfos
 - uid: R2API.SkinDefInfo
   name: SkinDefInfo
   href: api/R2API.SkinDefInfo.html
