@@ -2834,6 +2834,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.VanillaEliteTier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.VanillaEliteTier.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.yml",
       "output": {
         ".html": {

@@ -120,21 +120,22 @@ Please check the constructors docs for more information.</p>
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_CustomElite__ctor_RoR2_EliteDef_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__.md&amp;value=---%0Auid%3A%20R2API.CustomElite.%23ctor(RoR2.EliteDef%2CSystem.Collections.Generic.IEnumerable%7BRoR2.CombatDirector.EliteTierDef%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L63">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L61">View Source</a>
   </span>
   <a id="R2API_CustomElite__ctor_" data-uid="R2API.CustomElite.#ctor*"></a>
-  <h4 id="R2API_CustomElite__ctor_RoR2_EliteDef_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__" data-uid="R2API.CustomElite.#ctor(RoR2.EliteDef,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef})">CustomElite(EliteDef?, IEnumerable&lt;EliteTierDef&gt;)</h4>
-  <div class="markdown level1 summary"><p>You can omit giving a value to <span class="xref">RoR2.EliteDef.eliteIndex</span>, as it'll be filled in automatically by the game.
-For your custom elite to spawn, you need to provide an enumerable of <span class="xref">RoR2.CombatDirector.EliteTierDef</span> as second parameter.
-The API will then add your <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteDef">EliteDef</a> in them.
-You can also make a totally new tier, by either
-directly modifying the array through <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetCombatDirectorEliteTiers">GetCombatDirectorEliteTiers()</a> and <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_OverrideCombatDirectorEliteTiers_RoR2_CombatDirector_EliteTierDef___">OverrideCombatDirectorEliteTiers(EliteTierDef?[]?)</a>
-or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEliteTier_RoR2_CombatDirector_EliteTierDef_">AddCustomEliteTier(EliteTierDef?)</a></p>
+  <h4 id="R2API_CustomElite__ctor_RoR2_EliteDef_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__" data-uid="R2API.CustomElite.#ctor(RoR2.EliteDef,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef})">CustomElite(EliteDef, IEnumerable&lt;EliteTierDef&gt;)</h4>
+  <div class="markdown level1 summary"><p>You can omit giving a value to <span class="xref">RoR2.EliteDef.eliteIndex</span>, as it'll be filled in automatically by the game.</p>
+<p>Use <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_Add_R2API_CustomElite_">Add(CustomElite?)</a> to add your elite to the <span class="xref">RoR2.EliteCatalog</span> during startup,
+along with adding it to all the given <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteTierDefs">EliteTierDefs</a>.</p>
+<p>
+It's recommended that you use <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetEliteTierEnumerable_R2API_VanillaEliteTier_">GetEliteTierEnumerable(VanillaEliteTier)</a> or <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetHonorEliteTierEnumerable_R2API_VanillaEliteTier_">GetHonorEliteTierEnumerable(VanillaEliteTier)</a>
+if you intend on adding this elite to any vanilla tiers to ensure correct tier placement, with custom tiers added as needed.
+</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CustomElite(EliteDef? eliteDef, IEnumerable&lt;CombatDirector.EliteTierDef&gt; eliteTierDefs)</code></pre>
+    <pre><code class="lang-csharp hljs">public CustomElite(EliteDef eliteDef, IEnumerable&lt;CombatDirector.EliteTierDef&gt; eliteTierDefs)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -154,7 +155,8 @@ or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEl
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<span class="xref">CombatDirector</span>.<span class="xref">EliteTierDef</span>&gt;</td>
         <td><span class="parametername">eliteTierDefs</span></td>
-        <td></td>
+        <td><p>List of <span class="xref">RoR2.CombatDirector.EliteTierDef</span> the <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteDef">EliteDef</a> can spawn in.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -163,21 +165,22 @@ or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEl
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_CustomElite__ctor_RoR2_EliteDef_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__UnityEngine_Texture2D_.md&amp;value=---%0Auid%3A%20R2API.CustomElite.%23ctor(RoR2.EliteDef%2CSystem.Collections.Generic.IEnumerable%7BRoR2.CombatDirector.EliteTierDef%7D%2CUnityEngine.Texture2D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L69">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L71">View Source</a>
   </span>
   <a id="R2API_CustomElite__ctor_" data-uid="R2API.CustomElite.#ctor*"></a>
-  <h4 id="R2API_CustomElite__ctor_RoR2_EliteDef_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__UnityEngine_Texture2D_" data-uid="R2API.CustomElite.#ctor(RoR2.EliteDef,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef},UnityEngine.Texture2D)">CustomElite(EliteDef?, IEnumerable&lt;EliteTierDef&gt;, Texture2D)</h4>
-  <div class="markdown level1 summary"><p>You can omit giving a value to <span class="xref">RoR2.EliteDef.eliteIndex</span>, as it'll be filled in automatically by the game.
-For your custom elite to spawn, you need to provide an enumerable of <span class="xref">RoR2.CombatDirector.EliteTierDef</span> as second parameter.
-The API will then add your <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteDef">EliteDef</a> in them.
-You can also make a totally new tier, by either
-directly modifying the array through <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetCombatDirectorEliteTiers">GetCombatDirectorEliteTiers()</a> and <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_OverrideCombatDirectorEliteTiers_RoR2_CombatDirector_EliteTierDef___">OverrideCombatDirectorEliteTiers(EliteTierDef?[]?)</a>
-or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEliteTier_RoR2_CombatDirector_EliteTierDef_">AddCustomEliteTier(EliteTierDef?)</a></p>
+  <h4 id="R2API_CustomElite__ctor_RoR2_EliteDef_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__UnityEngine_Texture2D_" data-uid="R2API.CustomElite.#ctor(RoR2.EliteDef,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef},UnityEngine.Texture2D)">CustomElite(EliteDef, IEnumerable&lt;EliteTierDef&gt;, Texture2D?)</h4>
+  <div class="markdown level1 summary"><p>You can omit giving a value to <span class="xref">RoR2.EliteDef.eliteIndex</span>, as it'll be filled in automatically by the game.</p>
+<p>Use <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_Add_R2API_CustomElite_">Add(CustomElite?)</a> to add your elite to the <span class="xref">RoR2.EliteCatalog</span> during startup,
+along with adding it to all the given <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteTierDefs">EliteTierDefs</a>.</p>
+<p>
+It's recommended that you use <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetEliteTierEnumerable_R2API_VanillaEliteTier_">GetEliteTierEnumerable(VanillaEliteTier)</a> or <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetHonorEliteTierEnumerable_R2API_VanillaEliteTier_">GetHonorEliteTierEnumerable(VanillaEliteTier)</a>
+if you intend on adding this elite to any vanilla tiers to ensure correct tier placement, with custom tiers added as needed.
+</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CustomElite(EliteDef? eliteDef, IEnumerable&lt;CombatDirector.EliteTierDef&gt; eliteTierDefs, Texture2D eliteRamp)</code></pre>
+    <pre><code class="lang-csharp hljs">public CustomElite(EliteDef eliteDef, IEnumerable&lt;CombatDirector.EliteTierDef&gt; eliteTierDefs, Texture2D? eliteRamp)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -197,12 +200,14 @@ or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEl
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<span class="xref">CombatDirector</span>.<span class="xref">EliteTierDef</span>&gt;</td>
         <td><span class="parametername">eliteTierDefs</span></td>
-        <td></td>
+        <td><p>List of <span class="xref">RoR2.CombatDirector.EliteTierDef</span> the <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteDef">EliteDef</a> can spawn in.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">Texture2D</span></td>
         <td><span class="parametername">eliteRamp</span></td>
-        <td></td>
+        <td><p>Color ramp to be used in <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteRamp">EliteRamp</a>. Can be null.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -211,21 +216,21 @@ or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEl
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_CustomElite__ctor_System_String_RoR2_EquipmentDef_UnityEngine_Color32_System_String_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__.md&amp;value=---%0Auid%3A%20R2API.CustomElite.%23ctor(System.String%2CRoR2.EquipmentDef%2CUnityEngine.Color32%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BRoR2.CombatDirector.EliteTierDef%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L40">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L32">View Source</a>
   </span>
   <a id="R2API_CustomElite__ctor_" data-uid="R2API.CustomElite.#ctor*"></a>
-  <h4 id="R2API_CustomElite__ctor_System_String_RoR2_EquipmentDef_UnityEngine_Color32_System_String_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__" data-uid="R2API.CustomElite.#ctor(System.String,RoR2.EquipmentDef,UnityEngine.Color32,System.String,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef})">CustomElite(string?, EquipmentDef, Color32, string?, IEnumerable&lt;EliteTierDef&gt;)</h4>
-  <div class="markdown level1 summary"><p>You can omit giving a value to <span class="xref">RoR2.EliteDef.eliteIndex</span>, as it'll be filled in automatically by the game.
-For your custom elite to spawn, you need to provide an enumerable of <span class="xref">RoR2.CombatDirector.EliteTierDef</span> as second parameter.
-The API will then add your <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteDef">EliteDef</a> in them.
-You can also make a totally new tier, by either
-directly modifying the array through <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetCombatDirectorEliteTiers">GetCombatDirectorEliteTiers()</a> and <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_OverrideCombatDirectorEliteTiers_RoR2_CombatDirector_EliteTierDef___">OverrideCombatDirectorEliteTiers(EliteTierDef?[]?)</a>
-or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEliteTier_RoR2_CombatDirector_EliteTierDef_">AddCustomEliteTier(EliteTierDef?)</a></p>
+  <h4 id="R2API_CustomElite__ctor_System_String_RoR2_EquipmentDef_UnityEngine_Color32_System_String_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__" data-uid="R2API.CustomElite.#ctor(System.String,RoR2.EquipmentDef,UnityEngine.Color32,System.String,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef})">CustomElite(string, EquipmentDef, Color32, string, IEnumerable&lt;EliteTierDef&gt;)</h4>
+  <div class="markdown level1 summary"><p>Use <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_Add_R2API_CustomElite_">Add(CustomElite?)</a> to add your elite to the <span class="xref">RoR2.EliteCatalog</span> during startup,
+along with adding it to all the given <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteTierDefs">EliteTierDefs</a>.</p>
+<p>
+It's recommended that you use <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetEliteTierEnumerable_R2API_VanillaEliteTier_">GetEliteTierEnumerable(VanillaEliteTier)</a> or <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetHonorEliteTierEnumerable_R2API_VanillaEliteTier_">GetHonorEliteTierEnumerable(VanillaEliteTier)</a>
+if you intend on adding this elite to any vanilla tiers to ensure correct tier placement, with custom tiers added as needed.
+</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CustomElite(string? name, EquipmentDef equipmentDef, Color32 color, string? modifierToken, IEnumerable&lt;CombatDirector.EliteTierDef&gt; eliteTierDefs)</code></pre>
+    <pre><code class="lang-csharp hljs">public CustomElite(string name, EquipmentDef equipmentDef, Color32 color, string modifierToken, IEnumerable&lt;CombatDirector.EliteTierDef&gt; eliteTierDefs)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -240,27 +245,32 @@ or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEl
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
         <td><span class="parametername">name</span></td>
-        <td></td>
+        <td><p>Internal <span class="xref">UnityEngine.Object.name</span> for the <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteDef">EliteDef</a></p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">EquipmentDef</span></td>
         <td><span class="parametername">equipmentDef</span></td>
-        <td></td>
+        <td><p>Elite affix equipment</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">Color32</span></td>
         <td><span class="parametername">color</span></td>
-        <td></td>
+        <td><p>Elite base color</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
         <td><span class="parametername">modifierToken</span></td>
-        <td></td>
+        <td><p>Token for the text before a characters name</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<span class="xref">CombatDirector</span>.<span class="xref">EliteTierDef</span>&gt;</td>
         <td><span class="parametername">eliteTierDefs</span></td>
-        <td></td>
+        <td><p>List of all tiers that can spawn this elite.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -269,21 +279,21 @@ or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEl
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_CustomElite__ctor_System_String_RoR2_EquipmentDef_UnityEngine_Color32_System_String_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__UnityEngine_Texture2D_.md&amp;value=---%0Auid%3A%20R2API.CustomElite.%23ctor(System.String%2CRoR2.EquipmentDef%2CUnityEngine.Color32%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BRoR2.CombatDirector.EliteTierDef%7D%2CUnityEngine.Texture2D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L51">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L49">View Source</a>
   </span>
   <a id="R2API_CustomElite__ctor_" data-uid="R2API.CustomElite.#ctor*"></a>
-  <h4 id="R2API_CustomElite__ctor_System_String_RoR2_EquipmentDef_UnityEngine_Color32_System_String_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__UnityEngine_Texture2D_" data-uid="R2API.CustomElite.#ctor(System.String,RoR2.EquipmentDef,UnityEngine.Color32,System.String,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef},UnityEngine.Texture2D)">CustomElite(string?, EquipmentDef, Color32, string?, IEnumerable&lt;EliteTierDef&gt;, Texture2D)</h4>
-  <div class="markdown level1 summary"><p>You can omit giving a value to <span class="xref">RoR2.EliteDef.eliteIndex</span>, as it'll be filled in automatically by the game.
-For your custom elite to spawn, you need to provide an enumerable of <span class="xref">RoR2.CombatDirector.EliteTierDef</span> as second parameter.
-The API will then add your <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteDef">EliteDef</a> in them.
-You can also make a totally new tier, by either
-directly modifying the array through <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetCombatDirectorEliteTiers">GetCombatDirectorEliteTiers()</a> and <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_OverrideCombatDirectorEliteTiers_RoR2_CombatDirector_EliteTierDef___">OverrideCombatDirectorEliteTiers(EliteTierDef?[]?)</a>
-or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEliteTier_RoR2_CombatDirector_EliteTierDef_">AddCustomEliteTier(EliteTierDef?)</a></p>
+  <h4 id="R2API_CustomElite__ctor_System_String_RoR2_EquipmentDef_UnityEngine_Color32_System_String_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__UnityEngine_Texture2D_" data-uid="R2API.CustomElite.#ctor(System.String,RoR2.EquipmentDef,UnityEngine.Color32,System.String,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef},UnityEngine.Texture2D)">CustomElite(string, EquipmentDef, Color32, string, IEnumerable&lt;EliteTierDef&gt;, Texture2D?)</h4>
+  <div class="markdown level1 summary"><p>Use <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_Add_R2API_CustomElite_">Add(CustomElite?)</a> to add your elite to the <span class="xref">RoR2.EliteCatalog</span> during startup,
+along with adding it to all the given <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteTierDefs">EliteTierDefs</a>.</p>
+<p>
+It's recommended that you use <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetEliteTierEnumerable_R2API_VanillaEliteTier_">GetEliteTierEnumerable(VanillaEliteTier)</a> or <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_GetHonorEliteTierEnumerable_R2API_VanillaEliteTier_">GetHonorEliteTierEnumerable(VanillaEliteTier)</a>
+if you intend on adding this elite to any vanilla tiers to ensure correct tier placement, with custom tiers added as needed.
+</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CustomElite(string? name, EquipmentDef equipmentDef, Color32 color, string? modifierToken, IEnumerable&lt;CombatDirector.EliteTierDef&gt; eliteTierDefs, Texture2D eliteRamp)</code></pre>
+    <pre><code class="lang-csharp hljs">public CustomElite(string name, EquipmentDef equipmentDef, Color32 color, string modifierToken, IEnumerable&lt;CombatDirector.EliteTierDef&gt; eliteTierDefs, Texture2D? eliteRamp)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -298,32 +308,38 @@ or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEl
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
         <td><span class="parametername">name</span></td>
-        <td></td>
+        <td><p>Internal <span class="xref">UnityEngine.Object.name</span> for the <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteDef">EliteDef</a></p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">EquipmentDef</span></td>
         <td><span class="parametername">equipmentDef</span></td>
-        <td></td>
+        <td><p>Elite affix equipment</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">Color32</span></td>
         <td><span class="parametername">color</span></td>
-        <td></td>
+        <td><p>Elite base color</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
         <td><span class="parametername">modifierToken</span></td>
-        <td></td>
+        <td><p>Token for the text before a characters name</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<span class="xref">CombatDirector</span>.<span class="xref">EliteTierDef</span>&gt;</td>
         <td><span class="parametername">eliteTierDefs</span></td>
-        <td></td>
+        <td><p>List of all tiers that can spawn this elite.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">Texture2D</span></td>
         <td><span class="parametername">eliteRamp</span></td>
-        <td></td>
+        <td><p>Color ramp to be used in <a class="xref" href="R2API.CustomElite.html#R2API_CustomElite_EliteRamp">EliteRamp</a>. Can be null.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -334,7 +350,7 @@ or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEl
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_CustomElite_EliteDef.md&amp;value=---%0Auid%3A%20R2API.CustomElite.EliteDef%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L20">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L19">View Source</a>
   </span>
   <h4 id="R2API_CustomElite_EliteDef" data-uid="R2API.CustomElite.EliteDef">EliteDef</h4>
   <div class="markdown level1 summary"><p>Elite definition</p>
@@ -342,7 +358,7 @@ or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEl
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EliteDef? EliteDef</code></pre>
+    <pre><code class="lang-csharp hljs">public EliteDef EliteDef</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-condensed">
@@ -364,7 +380,7 @@ or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEl
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_CustomElite_EliteRamp.md&amp;value=---%0Auid%3A%20R2API.CustomElite.EliteRamp%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L25">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L24">View Source</a>
   </span>
   <h4 id="R2API_CustomElite_EliteRamp" data-uid="R2API.CustomElite.EliteRamp">EliteRamp</h4>
   <div class="markdown level1 summary"><p>The TextureRamp for this elite, can be omitted</p>
@@ -394,7 +410,7 @@ or by using <a class="xref" href="R2API.EliteAPI.html#R2API_EliteAPI_AddCustomEl
     <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_CustomElite_EliteTierDefs.md&amp;value=---%0Auid%3A%20R2API.CustomElite.EliteTierDefs%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L30">View Source</a>
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Elites/CustomElite.cs/#L29">View Source</a>
   </span>
   <h4 id="R2API_CustomElite_EliteTierDefs" data-uid="R2API.CustomElite.EliteTierDefs">EliteTierDefs</h4>
   <div class="markdown level1 summary"><p>Elite tier(s) that the eliteDef will be on.</p>

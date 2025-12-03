@@ -4548,40 +4548,40 @@ references:
   fullName: R2API.CustomElite
   nameWithType: CustomElite
 - uid: R2API.CustomElite.#ctor(RoR2.EliteDef,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef})
-  name: CustomElite(EliteDef?, IEnumerable<EliteTierDef>)
+  name: CustomElite(EliteDef, IEnumerable<EliteTierDef>)
   href: api/R2API.CustomElite.html#R2API_CustomElite__ctor_RoR2_EliteDef_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__
   commentId: M:R2API.CustomElite.#ctor(RoR2.EliteDef,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef})
   name.vb: New(EliteDef, IEnumerable(Of EliteTierDef))
-  fullName: R2API.CustomElite.CustomElite(RoR2.EliteDef?, System.Collections.Generic.IEnumerable<RoR2.CombatDirector.EliteTierDef>)
+  fullName: R2API.CustomElite.CustomElite(RoR2.EliteDef, System.Collections.Generic.IEnumerable<RoR2.CombatDirector.EliteTierDef>)
   fullName.vb: R2API.CustomElite.New(RoR2.EliteDef, System.Collections.Generic.IEnumerable(Of RoR2.CombatDirector.EliteTierDef))
-  nameWithType: CustomElite.CustomElite(EliteDef?, IEnumerable<CombatDirector.EliteTierDef>)
+  nameWithType: CustomElite.CustomElite(EliteDef, IEnumerable<CombatDirector.EliteTierDef>)
   nameWithType.vb: CustomElite.New(EliteDef, IEnumerable(Of CombatDirector.EliteTierDef))
 - uid: R2API.CustomElite.#ctor(RoR2.EliteDef,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef},UnityEngine.Texture2D)
-  name: CustomElite(EliteDef?, IEnumerable<EliteTierDef>, Texture2D)
+  name: CustomElite(EliteDef, IEnumerable<EliteTierDef>, Texture2D?)
   href: api/R2API.CustomElite.html#R2API_CustomElite__ctor_RoR2_EliteDef_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__UnityEngine_Texture2D_
   commentId: M:R2API.CustomElite.#ctor(RoR2.EliteDef,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef},UnityEngine.Texture2D)
   name.vb: New(EliteDef, IEnumerable(Of EliteTierDef), Texture2D)
-  fullName: R2API.CustomElite.CustomElite(RoR2.EliteDef?, System.Collections.Generic.IEnumerable<RoR2.CombatDirector.EliteTierDef>, UnityEngine.Texture2D)
+  fullName: R2API.CustomElite.CustomElite(RoR2.EliteDef, System.Collections.Generic.IEnumerable<RoR2.CombatDirector.EliteTierDef>, UnityEngine.Texture2D?)
   fullName.vb: R2API.CustomElite.New(RoR2.EliteDef, System.Collections.Generic.IEnumerable(Of RoR2.CombatDirector.EliteTierDef), UnityEngine.Texture2D)
-  nameWithType: CustomElite.CustomElite(EliteDef?, IEnumerable<CombatDirector.EliteTierDef>, Texture2D)
+  nameWithType: CustomElite.CustomElite(EliteDef, IEnumerable<CombatDirector.EliteTierDef>, Texture2D?)
   nameWithType.vb: CustomElite.New(EliteDef, IEnumerable(Of CombatDirector.EliteTierDef), Texture2D)
 - uid: R2API.CustomElite.#ctor(System.String,RoR2.EquipmentDef,UnityEngine.Color32,System.String,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef})
-  name: CustomElite(string?, EquipmentDef, Color32, string?, IEnumerable<EliteTierDef>)
+  name: CustomElite(string, EquipmentDef, Color32, string, IEnumerable<EliteTierDef>)
   href: api/R2API.CustomElite.html#R2API_CustomElite__ctor_System_String_RoR2_EquipmentDef_UnityEngine_Color32_System_String_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__
   commentId: M:R2API.CustomElite.#ctor(System.String,RoR2.EquipmentDef,UnityEngine.Color32,System.String,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef})
   name.vb: New(String, EquipmentDef, Color32, String, IEnumerable(Of EliteTierDef))
-  fullName: R2API.CustomElite.CustomElite(string?, RoR2.EquipmentDef, UnityEngine.Color32, string?, System.Collections.Generic.IEnumerable<RoR2.CombatDirector.EliteTierDef>)
+  fullName: R2API.CustomElite.CustomElite(string, RoR2.EquipmentDef, UnityEngine.Color32, string, System.Collections.Generic.IEnumerable<RoR2.CombatDirector.EliteTierDef>)
   fullName.vb: R2API.CustomElite.New(String, RoR2.EquipmentDef, UnityEngine.Color32, String, System.Collections.Generic.IEnumerable(Of RoR2.CombatDirector.EliteTierDef))
-  nameWithType: CustomElite.CustomElite(string?, EquipmentDef, Color32, string?, IEnumerable<CombatDirector.EliteTierDef>)
+  nameWithType: CustomElite.CustomElite(string, EquipmentDef, Color32, string, IEnumerable<CombatDirector.EliteTierDef>)
   nameWithType.vb: CustomElite.New(String, EquipmentDef, Color32, String, IEnumerable(Of CombatDirector.EliteTierDef))
 - uid: R2API.CustomElite.#ctor(System.String,RoR2.EquipmentDef,UnityEngine.Color32,System.String,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef},UnityEngine.Texture2D)
-  name: CustomElite(string?, EquipmentDef, Color32, string?, IEnumerable<EliteTierDef>, Texture2D)
+  name: CustomElite(string, EquipmentDef, Color32, string, IEnumerable<EliteTierDef>, Texture2D?)
   href: api/R2API.CustomElite.html#R2API_CustomElite__ctor_System_String_RoR2_EquipmentDef_UnityEngine_Color32_System_String_System_Collections_Generic_IEnumerable_RoR2_CombatDirector_EliteTierDef__UnityEngine_Texture2D_
   commentId: M:R2API.CustomElite.#ctor(System.String,RoR2.EquipmentDef,UnityEngine.Color32,System.String,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef},UnityEngine.Texture2D)
   name.vb: New(String, EquipmentDef, Color32, String, IEnumerable(Of EliteTierDef), Texture2D)
-  fullName: R2API.CustomElite.CustomElite(string?, RoR2.EquipmentDef, UnityEngine.Color32, string?, System.Collections.Generic.IEnumerable<RoR2.CombatDirector.EliteTierDef>, UnityEngine.Texture2D)
+  fullName: R2API.CustomElite.CustomElite(string, RoR2.EquipmentDef, UnityEngine.Color32, string, System.Collections.Generic.IEnumerable<RoR2.CombatDirector.EliteTierDef>, UnityEngine.Texture2D?)
   fullName.vb: R2API.CustomElite.New(String, RoR2.EquipmentDef, UnityEngine.Color32, String, System.Collections.Generic.IEnumerable(Of RoR2.CombatDirector.EliteTierDef), UnityEngine.Texture2D)
-  nameWithType: CustomElite.CustomElite(string?, EquipmentDef, Color32, string?, IEnumerable<CombatDirector.EliteTierDef>, Texture2D)
+  nameWithType: CustomElite.CustomElite(string, EquipmentDef, Color32, string, IEnumerable<CombatDirector.EliteTierDef>, Texture2D?)
   nameWithType.vb: CustomElite.New(String, EquipmentDef, Color32, String, IEnumerable(Of CombatDirector.EliteTierDef), Texture2D)
 - uid: R2API.CustomElite.#ctor*
   name: CustomElite
@@ -8397,6 +8397,45 @@ references:
   isSpec: "True"
   fullName: R2API.EliteAPI.GetCombatDirectorEliteTiers
   nameWithType: EliteAPI.GetCombatDirectorEliteTiers
+- uid: R2API.EliteAPI.GetEliteTierEnumerable(R2API.VanillaEliteTier)
+  name: GetEliteTierEnumerable(VanillaEliteTier)
+  href: api/R2API.EliteAPI.html#R2API_EliteAPI_GetEliteTierEnumerable_R2API_VanillaEliteTier_
+  commentId: M:R2API.EliteAPI.GetEliteTierEnumerable(R2API.VanillaEliteTier)
+  fullName: R2API.EliteAPI.GetEliteTierEnumerable(R2API.VanillaEliteTier)
+  nameWithType: EliteAPI.GetEliteTierEnumerable(VanillaEliteTier)
+- uid: R2API.EliteAPI.GetEliteTierEnumerable*
+  name: GetEliteTierEnumerable
+  href: api/R2API.EliteAPI.html#R2API_EliteAPI_GetEliteTierEnumerable_
+  commentId: Overload:R2API.EliteAPI.GetEliteTierEnumerable
+  isSpec: "True"
+  fullName: R2API.EliteAPI.GetEliteTierEnumerable
+  nameWithType: EliteAPI.GetEliteTierEnumerable
+- uid: R2API.EliteAPI.GetHonorEliteTierEnumerable(R2API.VanillaEliteTier)
+  name: GetHonorEliteTierEnumerable(VanillaEliteTier)
+  href: api/R2API.EliteAPI.html#R2API_EliteAPI_GetHonorEliteTierEnumerable_R2API_VanillaEliteTier_
+  commentId: M:R2API.EliteAPI.GetHonorEliteTierEnumerable(R2API.VanillaEliteTier)
+  fullName: R2API.EliteAPI.GetHonorEliteTierEnumerable(R2API.VanillaEliteTier)
+  nameWithType: EliteAPI.GetHonorEliteTierEnumerable(VanillaEliteTier)
+- uid: R2API.EliteAPI.GetHonorEliteTierEnumerable*
+  name: GetHonorEliteTierEnumerable
+  href: api/R2API.EliteAPI.html#R2API_EliteAPI_GetHonorEliteTierEnumerable_
+  commentId: Overload:R2API.EliteAPI.GetHonorEliteTierEnumerable
+  isSpec: "True"
+  fullName: R2API.EliteAPI.GetHonorEliteTierEnumerable
+  nameWithType: EliteAPI.GetHonorEliteTierEnumerable
+- uid: R2API.EliteAPI.GetVanillaEliteTierDef(R2API.VanillaEliteTier)
+  name: GetVanillaEliteTierDef(VanillaEliteTier)
+  href: api/R2API.EliteAPI.html#R2API_EliteAPI_GetVanillaEliteTierDef_R2API_VanillaEliteTier_
+  commentId: M:R2API.EliteAPI.GetVanillaEliteTierDef(R2API.VanillaEliteTier)
+  fullName: R2API.EliteAPI.GetVanillaEliteTierDef(R2API.VanillaEliteTier)
+  nameWithType: EliteAPI.GetVanillaEliteTierDef(VanillaEliteTier)
+- uid: R2API.EliteAPI.GetVanillaEliteTierDef*
+  name: GetVanillaEliteTierDef
+  href: api/R2API.EliteAPI.html#R2API_EliteAPI_GetVanillaEliteTierDef_
+  commentId: Overload:R2API.EliteAPI.GetVanillaEliteTierDef
+  isSpec: "True"
+  fullName: R2API.EliteAPI.GetVanillaEliteTierDef
+  nameWithType: EliteAPI.GetVanillaEliteTierDef
 - uid: R2API.EliteAPI.Loaded
   name: Loaded
   href: api/R2API.EliteAPI.html#R2API_EliteAPI_Loaded
@@ -8411,13 +8450,13 @@ references:
   fullName: R2API.EliteAPI.Loaded
   nameWithType: EliteAPI.Loaded
 - uid: R2API.EliteAPI.OverrideCombatDirectorEliteTiers(RoR2.CombatDirector.EliteTierDef[])
-  name: OverrideCombatDirectorEliteTiers(EliteTierDef?[]?)
+  name: OverrideCombatDirectorEliteTiers(EliteTierDef[])
   href: api/R2API.EliteAPI.html#R2API_EliteAPI_OverrideCombatDirectorEliteTiers_RoR2_CombatDirector_EliteTierDef___
   commentId: M:R2API.EliteAPI.OverrideCombatDirectorEliteTiers(RoR2.CombatDirector.EliteTierDef[])
   name.vb: OverrideCombatDirectorEliteTiers(EliteTierDef())
-  fullName: R2API.EliteAPI.OverrideCombatDirectorEliteTiers(RoR2.CombatDirector.EliteTierDef?[]?)
+  fullName: R2API.EliteAPI.OverrideCombatDirectorEliteTiers(RoR2.CombatDirector.EliteTierDef[])
   fullName.vb: R2API.EliteAPI.OverrideCombatDirectorEliteTiers(RoR2.CombatDirector.EliteTierDef())
-  nameWithType: EliteAPI.OverrideCombatDirectorEliteTiers(CombatDirector.EliteTierDef?[]?)
+  nameWithType: EliteAPI.OverrideCombatDirectorEliteTiers(CombatDirector.EliteTierDef[])
   nameWithType.vb: EliteAPI.OverrideCombatDirectorEliteTiers(CombatDirector.EliteTierDef())
 - uid: R2API.EliteAPI.OverrideCombatDirectorEliteTiers*
   name: OverrideCombatDirectorEliteTiers
@@ -19294,6 +19333,54 @@ references:
   commentId: F:R2API.Utils.VersionStrictness.EveryoneNeedSameModVersion
   fullName: R2API.Utils.VersionStrictness.EveryoneNeedSameModVersion
   nameWithType: VersionStrictness.EveryoneNeedSameModVersion
+- uid: R2API.VanillaEliteTier
+  name: VanillaEliteTier
+  href: api/R2API.VanillaEliteTier.html
+  commentId: T:R2API.VanillaEliteTier
+  fullName: R2API.VanillaEliteTier
+  nameWithType: VanillaEliteTier
+- uid: R2API.VanillaEliteTier.BaseTier1
+  name: BaseTier1
+  href: api/R2API.VanillaEliteTier.html#R2API_VanillaEliteTier_BaseTier1
+  commentId: F:R2API.VanillaEliteTier.BaseTier1
+  fullName: R2API.VanillaEliteTier.BaseTier1
+  nameWithType: VanillaEliteTier.BaseTier1
+- uid: R2API.VanillaEliteTier.BaseTier1Honor
+  name: BaseTier1Honor
+  href: api/R2API.VanillaEliteTier.html#R2API_VanillaEliteTier_BaseTier1Honor
+  commentId: F:R2API.VanillaEliteTier.BaseTier1Honor
+  fullName: R2API.VanillaEliteTier.BaseTier1Honor
+  nameWithType: VanillaEliteTier.BaseTier1Honor
+- uid: R2API.VanillaEliteTier.FullTier1
+  name: FullTier1
+  href: api/R2API.VanillaEliteTier.html#R2API_VanillaEliteTier_FullTier1
+  commentId: F:R2API.VanillaEliteTier.FullTier1
+  fullName: R2API.VanillaEliteTier.FullTier1
+  nameWithType: VanillaEliteTier.FullTier1
+- uid: R2API.VanillaEliteTier.FullTier1Honor
+  name: FullTier1Honor
+  href: api/R2API.VanillaEliteTier.html#R2API_VanillaEliteTier_FullTier1Honor
+  commentId: F:R2API.VanillaEliteTier.FullTier1Honor
+  fullName: R2API.VanillaEliteTier.FullTier1Honor
+  nameWithType: VanillaEliteTier.FullTier1Honor
+- uid: R2API.VanillaEliteTier.Lunar
+  name: Lunar
+  href: api/R2API.VanillaEliteTier.html#R2API_VanillaEliteTier_Lunar
+  commentId: F:R2API.VanillaEliteTier.Lunar
+  fullName: R2API.VanillaEliteTier.Lunar
+  nameWithType: VanillaEliteTier.Lunar
+- uid: R2API.VanillaEliteTier.None
+  name: None
+  href: api/R2API.VanillaEliteTier.html#R2API_VanillaEliteTier_None
+  commentId: F:R2API.VanillaEliteTier.None
+  fullName: R2API.VanillaEliteTier.None
+  nameWithType: VanillaEliteTier.None
+- uid: R2API.VanillaEliteTier.Tier2
+  name: Tier2
+  href: api/R2API.VanillaEliteTier.html#R2API_VanillaEliteTier_Tier2
+  commentId: F:R2API.VanillaEliteTier.Tier2
+  fullName: R2API.VanillaEliteTier.Tier2
+  nameWithType: VanillaEliteTier.Tier2
 - uid: RoR2
   name: RoR2
   href: api/RoR2.html
