@@ -14,6 +14,7 @@ using RoR2.Skills;
 using RoR2.UI;
 using RoR2BepInExPack.GameAssetPaths;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace R2API;
 
@@ -34,11 +35,97 @@ public static partial class CharacterBodyAPI
     {   
         if (_hooksEnabled) return;
         _hooksEnabled = true;
+        IL.RoR2.UI.SprintIcon.FixedUpdate += SprintIcon_FixedUpdate;
     }
+
+    private static void SprintIcon_FixedUpdate(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+        Instruction lastInstruction = il.Instrs[il.Instrs.Count - 1];
+        Instruction instruction = il.Instrs[0];
+        c.Emit(OpCodes.Ldarg_0);
+        c.EmitDelegate(CheckCustomSprintIcon);
+        c.Emit(OpCodes.Brfalse_S, instruction);
+        c.Emit(OpCodes.Ldarg_0);
+        c.EmitDelegate(SetSprintIconCustomSprintIcon);
+        c.Emit(OpCodes.Br, lastInstruction);
+        if (
+            c.TryGotoNext(MoveType.After,
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld<SprintIcon>(nameof(SprintIcon.sprintIconObject)),
+                x => x.MatchLdcI4(0),
+                x => x.MatchCallvirt<GameObject>(nameof(GameObject.SetActive))
+            ))
+        {
+            Instruction instruction2 = c.Next;
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(GetCustomIconObject);
+            c.EmitDelegate(NullcheckAndDeactivateCustomIconObject);
+        }
+        else
+        {
+            CharacterBodyPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
+        }
+        if (
+            c.TryGotoNext(MoveType.After,
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld<SprintIcon>(nameof(SprintIcon.sprintIconObject)),
+                x => x.MatchLdcI4(1),
+                x => x.MatchCallvirt<GameObject>(nameof(GameObject.SetActive))
+            ))
+        {
+            Instruction instruction2 = c.Next;
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(GetCustomIconObject);
+            c.EmitDelegate(NullcheckAndDeactivateCustomIconObject);
+        }
+        else
+        {
+            CharacterBodyPlugin.Logger.LogError(il.Method.Name + " IL Hook 2 failed!");
+        }
+    }
+
     internal static void UnsetHooks()
     {
         if (!_hooksEnabled) return;
         _hooksEnabled = false;
+    }
+    private static void NullcheckAndDeactivateCustomIconObject(GameObject gameObject) => gameObject?.SetActive(false);
+    private static bool CheckCustomSprintIcon(SprintIcon sprintIcon) => sprintIcon.body && sprintIcon.body.GetCustomSprintIcon();
+    private static void SetSprintIconCustomSprintIcon(SprintIcon sprintIcon)
+    {
+        Sprite sprite = sprintIcon.body.GetCustomSprintIcon();
+        GameObject gameObject = sprintIcon.GetCustomIconObject();
+        if (gameObject)
+        {
+            if (sprintIcon.GetCurrentCustomSprintIcon() != sprite)
+            {
+                Image image = gameObject.GetComponent<Image>();
+                image.sprite = sprite;
+                sprintIcon.SetCurrentCustomSprintIcon(sprite);
+            }
+        }
+        else
+        {
+            Transform transform = sprintIcon.transform.Find("SprintIcon");
+            if (transform)
+            {
+                gameObject = GameObject.Instantiate(transform.gameObject, sprintIcon.transform);
+                gameObject.transform.position = transform.position;
+                gameObject.transform.rotation = transform.rotation;
+                gameObject.transform.localScale = transform.localScale;
+                sprintIcon.SetCustomIconObject(gameObject);
+                Image image = gameObject.GetComponent<Image>();
+                if (image)
+                {
+                    image.sprite = sprite;
+                    sprintIcon.SetCurrentCustomSprintIcon(sprite);
+                }
+            }
+        }
+        gameObject?.SetActive(true);
+        sprintIcon.descendIconObject?.SetActive(false);
+        sprintIcon.sprintIconObject?.SetActive(false);
     }
     public enum ModdedBodyFlag { };
     /// <summary>
@@ -144,4 +231,21 @@ public static partial class CharacterBodyAPI
         }
         return true;
     }
+    /// <summary>
+    /// Get custom sprint HUD icon sprite for this body.
+    /// </summary>
+    /// <param name="characterBody"></param>
+    /// <returns></returns>
+    public static Sprite GetCustomSprintIcon(this CharacterBody characterBody) => CharacterBodyInterop.GetCustomSprintIcon(characterBody);
+    /// <summary>
+    /// Set custom sprint HUD icon sprite for this body.
+    /// </summary>
+    /// <param name="characterBody"></param>
+    /// <param name="sprite"></param>
+    /// <returns></returns>
+    public static void SetCustomSprintIcon(this CharacterBody characterBody, Sprite sprite) => CharacterBodyInterop.SetCustomSprintIcon(characterBody, sprite);
+    private static GameObject GetCustomIconObject(this SprintIcon sprintIcon) => CharacterBodyInterop.GetCustomIconObject(sprintIcon);
+    private static void SetCustomIconObject(this SprintIcon sprintIcon, GameObject gameobject) => CharacterBodyInterop.SetCustomIconObject(sprintIcon, gameobject);
+    private static Sprite GetCurrentCustomSprintIcon(this SprintIcon sprintIcon) => CharacterBodyInterop.GetCurrentCustomSprintIcon(sprintIcon);
+    private static void SetCurrentCustomSprintIcon(this SprintIcon sprintIcon, Sprite sprite) => CharacterBodyInterop.SetCurrentCustomSprintIcon(sprintIcon, sprite);
 }
