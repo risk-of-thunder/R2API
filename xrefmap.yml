@@ -3747,6 +3747,19 @@ references:
   isSpec: "True"
   fullName: R2API.CharacterBodyAPI.AddModdedBodyFlag
   nameWithType: CharacterBodyAPI.AddModdedBodyFlag
+- uid: R2API.CharacterBodyAPI.GetCustomSprintIcon(RoR2.CharacterBody)
+  name: GetCustomSprintIcon(CharacterBody)
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_GetCustomSprintIcon_RoR2_CharacterBody_
+  commentId: M:R2API.CharacterBodyAPI.GetCustomSprintIcon(RoR2.CharacterBody)
+  fullName: R2API.CharacterBodyAPI.GetCustomSprintIcon(RoR2.CharacterBody)
+  nameWithType: CharacterBodyAPI.GetCustomSprintIcon(CharacterBody)
+- uid: R2API.CharacterBodyAPI.GetCustomSprintIcon*
+  name: GetCustomSprintIcon
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_GetCustomSprintIcon_
+  commentId: Overload:R2API.CharacterBodyAPI.GetCustomSprintIcon
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.GetCustomSprintIcon
+  nameWithType: CharacterBodyAPI.GetCustomSprintIcon
 - uid: R2API.CharacterBodyAPI.HasAnyModdedBodyFlag(RoR2.CharacterBody)
   name: HasAnyModdedBodyFlag(CharacterBody)
   href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_HasAnyModdedBodyFlag_RoR2_CharacterBody_
@@ -3849,6 +3862,19 @@ references:
   isSpec: "True"
   fullName: R2API.CharacterBodyAPI.ReserveBodyFlag
   nameWithType: CharacterBodyAPI.ReserveBodyFlag
+- uid: R2API.CharacterBodyAPI.SetCustomSprintIcon(RoR2.CharacterBody,UnityEngine.Sprite)
+  name: SetCustomSprintIcon(CharacterBody, Sprite)
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_SetCustomSprintIcon_RoR2_CharacterBody_UnityEngine_Sprite_
+  commentId: M:R2API.CharacterBodyAPI.SetCustomSprintIcon(RoR2.CharacterBody,UnityEngine.Sprite)
+  fullName: R2API.CharacterBodyAPI.SetCustomSprintIcon(RoR2.CharacterBody, UnityEngine.Sprite)
+  nameWithType: CharacterBodyAPI.SetCustomSprintIcon(CharacterBody, Sprite)
+- uid: R2API.CharacterBodyAPI.SetCustomSprintIcon*
+  name: SetCustomSprintIcon
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_SetCustomSprintIcon_
+  commentId: Overload:R2API.CharacterBodyAPI.SetCustomSprintIcon
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.SetCustomSprintIcon
+  nameWithType: CharacterBodyAPI.SetCustomSprintIcon
 - uid: R2API.CharacterBodyPlugin
   name: CharacterBodyPlugin
   href: api/R2API.CharacterBodyPlugin.html
@@ -19393,6 +19419,12 @@ references:
   commentId: T:RoR2.CharacterBody
   fullName: RoR2.CharacterBody
   nameWithType: CharacterBody
+- uid: RoR2.CharacterBody.r2api_customSprintIcon
+  name: r2api_customSprintIcon
+  href: api/RoR2.CharacterBody.html#RoR2_CharacterBody_r2api_customSprintIcon
+  commentId: F:RoR2.CharacterBody.r2api_customSprintIcon
+  fullName: RoR2.CharacterBody.r2api_customSprintIcon
+  nameWithType: CharacterBody.r2api_customSprintIcon
 - uid: RoR2.CharacterBody.r2api_moddedBodyFlags
   name: r2api_moddedBodyFlags
   href: api/RoR2.CharacterBody.html#RoR2_CharacterBody_r2api_moddedBodyFlags
@@ -19663,3 +19695,27 @@ references:
   commentId: F:RoR2.TeamMask.r2api_moddedMask
   fullName: RoR2.TeamMask.r2api_moddedMask
   nameWithType: TeamMask.r2api_moddedMask
+- uid: RoR2.UI
+  name: RoR2.UI
+  href: api/RoR2.UI.html
+  commentId: N:RoR2.UI
+  fullName: RoR2.UI
+  nameWithType: RoR2.UI
+- uid: RoR2.UI.SprintIcon
+  name: SprintIcon
+  href: api/RoR2.UI.SprintIcon.html
+  commentId: T:RoR2.UI.SprintIcon
+  fullName: RoR2.UI.SprintIcon
+  nameWithType: SprintIcon
+- uid: RoR2.UI.SprintIcon.r2api_currentCustomSprintIcon
+  name: r2api_currentCustomSprintIcon
+  href: api/RoR2.UI.SprintIcon.html#RoR2_UI_SprintIcon_r2api_currentCustomSprintIcon
+  commentId: F:RoR2.UI.SprintIcon.r2api_currentCustomSprintIcon
+  fullName: RoR2.UI.SprintIcon.r2api_currentCustomSprintIcon
+  nameWithType: SprintIcon.r2api_currentCustomSprintIcon
+- uid: RoR2.UI.SprintIcon.r2api_customIconObject
+  name: r2api_customIconObject
+  href: api/RoR2.UI.SprintIcon.html#RoR2_UI_SprintIcon_r2api_customIconObject
+  commentId: F:RoR2.UI.SprintIcon.r2api_customIconObject
+  fullName: RoR2.UI.SprintIcon.r2api_customIconObject
+  nameWithType: SprintIcon.r2api_customIconObject
