@@ -10,5 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Core" Version="5.4.19" />
+    <PackageReference Include="UnityEngine.Modules" Version="2021.3.33" />
   </ItemGroup>
 </Project>
