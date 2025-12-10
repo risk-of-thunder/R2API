@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using BepInEx;
 using BepInEx.Logging;
@@ -11,6 +13,7 @@ using UnityEngine;
 namespace R2API;
 
 // This is for R2API.Legacy
+// Do not remove or add any dependencies here.
 [BepInDependency(PluginGUID + ".artifactcode", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(PluginGUID + ".commandhelper", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(PluginGUID + ".content_management", BepInDependency.DependencyFlags.SoftDependency)]
@@ -44,7 +47,7 @@ public partial class R2API : BaseUnityPlugin
 
     public const string PluginName = "R2API";
 
-    private const string GameBuildId = "1.4.0";
+    private const string GameBuildId = "1.4.1";
 
     internal static new ManualLogSource Logger { get; set; }
 
@@ -73,14 +76,40 @@ public partial class R2API : BaseUnityPlugin
         _networkCompatibilityHandler.BuildModList();
 
         On.RoR2.RoR2Application.Awake += CheckIfUsedOnRightGameVersion;
-
-#if DEBUG
-        EnumPatcher.SetHooks();
-#endif
     }
 
     private void Start()
     {
+#if DEBUG
+        int counter = 0;
+        // Enable hooks immediately for debugging
+        foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            if (ass.FullName.Contains("R2API"))
+            {
+                foreach (var t in ass.GetTypes())
+                {
+                    const BindingFlags allFlags = (BindingFlags)(-1);
+                    foreach (var m in t.GetMethods(allFlags))
+                    {
+                        try
+                        {
+                            if (m.Name == "SetHooks")
+                            {
+                                Logger.LogError("Invoking " + m.Name + " from " + ass.FullName + " " + counter++);
+                                m.Invoke(null, null);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.LogError(e);
+                        }
+                    }
+                }
+            }
+        }
+#endif
+
         R2APIStart?.Invoke(this, null);
     }
 

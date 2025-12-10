@@ -20,8 +20,10 @@ The EliteRamp implementation is handled inside the EliteRamp class, you can use 
 
 ## Changelog
 
-### `1.0.8`
+### '1.1.0'
+* Fixes for 1.4.1 Game Update. Move away from using `lrapi_returns.json`
 
+### `1.0.8`
 * Dynamic implementation of CombatDirectorInitNoTimingIssue
   * Vanilla CombatDirector.Init method is no longer skipped.
   * Makes CombatDirector.Init IL hookable again (required for all Harmony hooks)

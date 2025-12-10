@@ -25,6 +25,17 @@ public static partial class DirectorAPI
             return;
         }
 
+        // Game 1.4.0 changed the timing on when this specific dccs is assigned.
+        // backward compat fix
+        {
+            var asyncOperationHandle = LegacyResourcesAPI.LoadAsync<DirectorCardCategorySelection>("DirectorCardCategorySelections/dccsMixEnemy");
+            asyncOperationHandle.Completed += x => 
+            {
+                RoR2Content.mixEnemyMonsterCards = x.Result;
+            };
+        }
+        
+
         On.RoR2.ClassicStageInfo.Start += ApplyChangesOnStart;
         IL.RoR2.ClassicStageInfo.HandleMixEnemyArtifact += SwapVanillaDccsWithOurs;
 
