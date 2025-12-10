@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization.Formatters;
-using System.Text;
 using System.Text.RegularExpressions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -16,9 +13,7 @@ using R2API.AutoVersionGen;
 using R2API.ContentManagement;
 using R2API.Utils;
 using RoR2;
-using RoR2BepInExPack.GameAssetPaths.Version_1_35_0;
-using SimpleJSON;
-using UnityEngine;
+using RoR2BepInExPack.GameAssetPaths.Version_1_39_0;
 using UnityEngine.AddressableAssets;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -138,9 +133,9 @@ public static partial class EliteAPI
         if (_resolvedFields)
             return;
 
-        //if (!TryLoadTokensFromFile(out Dictionary<string, string> assetNameToGuid))
-        //    return;
-        var assetNameToGuid = GEARBOX_WHY();
+        if (!TryLoadTokensFromFile(out Dictionary<string, string> assetNameToGuid))
+            return;
+
         var c = new ILCursor(il);
         FieldReference fieldRef = null;
 
@@ -165,65 +160,41 @@ public static partial class EliteAPI
         _resolvedFields = true;
     }
 
-    private static Dictionary<string, string> GEARBOX_WHY()
-    {
-        var dict = new Dictionary<string, string>();
-        dict.Add("Lightning", RoR2_Base_EliteLightning.edLightning_asset);
-        dict.Add("LightningHonor", RoR2_Base_EliteLightning.edLightningHonor_asset);
 
-        dict.Add("Ice", RoR2_Base_EliteIce.edIce_asset);
-        dict.Add("IceHonor", RoR2_Base_EliteIce.edIceHonor_asset);
-
-        dict.Add("Fire", RoR2_Base_EliteFire.edFire_asset);
-        dict.Add("FireHonor", RoR2_Base_EliteFire.edFireHonor_asset);
-
-        dict.Add("Earth", RoR2_DLC1_EliteEarth.edEarth_asset);
-        dict.Add("EarthHonor", RoR2_DLC1_EliteEarth.edEarthHonor_asset);
-
-        dict.Add("Aurelionite", RoR2_DLC2_Elites_EliteAurelionite.edAurelionite_asset);
-        dict.Add("AurelioniteHonor", RoR2_DLC2_Elites_EliteAurelionite.edAurelioniteHonor_asset);
-
-        dict.Add("Poison", RoR2_Base_ElitePoison.edPoison_asset);
-        dict.Add("Haunted", RoR2_Base_EliteHaunted.edHaunted_asset);
-        dict.Add("Bead", RoR2_DLC2_Elites_EliteBead.edBead_asset);
-        dict.Add("Collective", RoR2_DLC3_Collective.edCollective_asset);
-
-        dict.Add("Lunar", RoR2_Base_EliteLunar.edLunar_asset);
-
-        return dict;
-    }
-
-    //FUCK
     private static bool TryLoadTokensFromFile(out Dictionary<string, string> assetNameToGuid)
     {
         assetNameToGuid = null;
 
-        var filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "lrapi_returns.json");
-        if (!File.Exists(filePath))
+        try
         {
-            ElitesPlugin.Logger.LogError(filePath + " doesnt exist or could not be read");
-            return false;
+            var bepPackPath = typeof(GameAssetPathsSerde).Assembly.Location;
+            bepPackPath = Directory.GetParent(bepPackPath).FullName;
+            bepPackPath = System.IO.Path.Combine(bepPackPath, "GameAssetPaths.bin");
+            GameAssetPathsSerde.Deserialize(bepPackPath, out var paths, out var guids);
+
+            var regex = new Regex("RoR2.*/ed[A-Z].*asset");
+
+            assetNameToGuid = new Dictionary<string, string>();
+            for (int i = 0; i < paths.Length; i++)
+            {
+                var key = paths[i];
+                if (!regex.IsMatch(key))
+                    continue;
+
+                // ignore the "ed" prefix and the ".asset" postfix
+                var asset = key.Split('/')[^1][2..^6];
+
+                assetNameToGuid[asset] = guids[i];
+            }
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            ElitesPlugin.Logger.LogError("Failed to load elite addressable tokens from file: " + e);
         }
 
-        using Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
-        using StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
-
-        var jSONNode = JSON.Parse(streamReader.ReadToEnd());
-        if (jSONNode == null)
-        {
-            ElitesPlugin.Logger.LogError("json read error at " + filePath);
-            return false;
-        }
-
-        var regex = new Regex("RoR2.*/ed[A-Z].*asset");
-
-        assetNameToGuid = new Dictionary<string, string>(
-            from key in jSONNode.Keys
-            where regex.Match(key).Success
-            let asset = key.Split('/')[^1][2..^6] // ignore the "ed" prefix and the ".asset" postfix
-            select new KeyValuePair<string, string>(asset, jSONNode[key].Value));
-
-        return true;
+        return false;
     }
 
     #endregion ModHelper Events and Hooks
