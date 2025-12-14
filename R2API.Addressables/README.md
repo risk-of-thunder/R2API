@@ -8,6 +8,10 @@ Currently it adds the AddressReferencedAsset system, which allows you on the Edi
 
 ## Changelog
 
+### '1.1.3'
+
+* Added the ``NotCatalogLoadable`` attribute, which when implemented on a field and in conjunction with RoR2EditorKit, forces an AddressReferencedAsset to never be loaded from the catalog.
+
 ### '1.1.2'
 
 * Reimplemented version '1.1.0' with fixes, changes and improvements.
