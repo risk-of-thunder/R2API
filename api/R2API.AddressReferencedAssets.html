@@ -119,6 +119,16 @@ Classes
       <section><p>A <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset.html">AddressReferencedAsset</a> is a class that's used for referencing assets ingame.
 <br><br>The asset referenced can either be a direct reference, or a reference via an address<br><br>Some <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html">AddressReferencedAsset&lt;T&gt;</a> can load their assets via catalog, such as <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedItemDef.html">AddressReferencedItemDef</a><br><br>An <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html">AddressReferencedAsset&lt;T&gt;</a> has implicit operators for casting to it's <code class="typeparamref">T</code> Type, and for casting into a boolean. It also has implicit operators for encapsulating a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> and <code class="typeparamref">T</code> inside an <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html">AddressReferencedAsset&lt;T&gt;</a><br><br>T is <span class="xref">RoR2.UnlockableDef</span><br><br>The <span class="xref">RoR2.UnlockableDef</span> can also be loaded via the <span class="xref">RoR2.UnlockableCatalog</span>, as such, you should wait until <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset.html#R2API_AddressReferencedAssets_AddressReferencedAsset_OnAddressReferencedAssetsLoaded">OnAddressReferencedAssetsLoaded</a> gets raised.<br></p>
 </section>
+      <h4><a class="xref" href="R2API.AddressReferencedAssets.AddressableComponentRequirementAttribute.html">AddressableComponentRequirementAttribute</a></h4>
+      <section><p>An Attribute which can be used to mark a <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedPrefab.html">AddressReferencedPrefab</a> or a <span class="xref">UnityEngine.AddressableAssets.AssetReferenceGameObject</span> that it requires the GameObject to have a specific component.</p>
+<p></p>
+This attribute does nothing at runtime, it's meant to be an Attribute for usage in an editor environment alongside RoR2EditorKit.
+</section>
+      <h4><a class="xref" href="R2API.AddressReferencedAssets.NoCatalogLoadAttribute.html">NoCatalogLoadAttribute</a></h4>
+      <section><p>An Attribute which marks a <a class="xref" href="R2API.AddressReferencedAssets.AddressReferencedAsset-1.html">AddressReferencedAsset&lt;T&gt;</a> that it should not be loaded via the ingame catalogs.</p>
+<p></p>
+This attribute does nothing at runtime, it's meant to be a Attribute for usage in an editor environment alongside RoR2EditorKit.
+</section>
 
 
 </article>

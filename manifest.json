@@ -114,6 +114,26 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.AddressableComponentRequirementAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.AddressableComponentRequirementAttribute.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.AddressReferencedAssets.NoCatalogLoadAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.AddressReferencedAssets.NoCatalogLoadAttribute.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.AddressReferencedAssets.yml",
       "output": {
         ".html": {
