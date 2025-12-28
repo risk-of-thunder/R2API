@@ -20,6 +20,9 @@ The EliteRamp implementation is handled inside the EliteRamp class, you can use 
 
 ## Changelog
 
+### '1.1.1'
+* Fixed hook getting applied too late
+
 ### '1.1.0'
 * Fixes for 1.4.1 Game Update. Move away from using `lrapi_returns.json`
 
