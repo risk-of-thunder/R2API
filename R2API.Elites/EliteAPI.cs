@@ -145,7 +145,6 @@ public static partial class EliteAPI
         }
 
         _resolvedFields = true;
-        ElitesPlugin.Logger.LogWarning("Resolved Fields");
     }
 
 
