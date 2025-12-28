@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
+using MonoMod.RuntimeDetour.HookGen;
 using MonoMod.Utils;
 using R2API.AutoVersionGen;
 using R2API.ContentManagement;
@@ -34,12 +36,12 @@ public static partial class EliteAPI
 
     public static CombatDirector.EliteTierDef[] VanillaEliteTiers
     {
-        get
+        get =>_vanillaEliteTiers;
+        private set
         {
-            EliteAPI.SetHooks();
-            return _vanillaEliteTiers;
+            _vanillaEliteTiers = value;
+            VanillaEliteTierCount = value?.Length ?? 0;
         }
-        private set => _vanillaEliteTiers = value;
     }
 
     public static CombatDirector.EliteTierDef VanillaFirstTierDef => GetVanillaEliteTierDef(VanillaEliteTier.BaseTier1);
@@ -60,39 +62,28 @@ public static partial class EliteAPI
 #pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
-    private static bool _hooksEnabled = false;
     private static bool _resolvedFields = false;
 
     #region ModHelper Events and Hooks
 
     internal static void Init()
     {
-        // this is done so that VanillaEliteTiers is always accurate
-        // seperated from the InitEarlyCombatDirector since using the vanilla timings is preferrable
+        // im just lazy and want the ILContext
+        IL.RoR2.CombatDirector.Init += ResolveFieldInfo;
+        IL.RoR2.CombatDirector.Init -= ResolveFieldInfo;
+
         On.RoR2.CombatDirector.Init += CopyCombatDirectorTiers;
-    }
+        IL.RoR2.CombatDirector.Init += InitEarlyCombatDirector;
 
-    internal static void SetHooks()
-    {
-        if (_hooksEnabled)
-            return;
-
-        // enabled must be set first to avoid recursion
-        _hooksEnabled = true;
-
-        if (CombatDirector.eliteTiers is null)
-        {
-            IL.RoR2.CombatDirector.Init += InitEarlyCombatDirector;
-            CombatDirector.Init();
-        }
+        // call init before anyone else places hooks
+        // wrb expects the elite catalog to be populated when init is called
+        CombatDirector.Init();
     }
 
     internal static void UnsetHooks()
     {
         IL.RoR2.CombatDirector.Init -= InitEarlyCombatDirector;
         On.RoR2.CombatDirector.Init -= CopyCombatDirectorTiers;
-
-        _hooksEnabled = false;
     }
 
     private static void CopyCombatDirectorTiers(On.RoR2.CombatDirector.orig_Init orig)
@@ -102,7 +93,6 @@ public static partial class EliteAPI
         if (VanillaEliteTierCount == 0)
         {
             VanillaEliteTiers = [.. CombatDirector.eliteTiers];
-            VanillaEliteTierCount = CombatDirector.eliteTiers.Length;
         }
 
         AddElitesToGame();
@@ -121,9 +111,6 @@ public static partial class EliteAPI
             c.Emit(OpCodes.Ldc_I4, idx);
             c.EmitDelegate(UseExistingTierDef);
         }
-
-        // populate null static fields
-        ResolveFieldInfo(il);
     }
 
     private static CombatDirector.EliteTierDef UseExistingTierDef(CombatDirector.EliteTierDef tierDef, int index) => HG.ArrayUtils.GetSafe(VanillaEliteTiers, index, tierDef);
@@ -139,6 +126,7 @@ public static partial class EliteAPI
         var c = new ILCursor(il);
         FieldReference fieldRef = null;
 
+        // populate null static fields
         while (c.TryGotoNext(MoveType.After, x => x.MatchLdsfld(out fieldRef)))
         {
             if (!assetNameToGuid.TryGetValue(fieldRef.Name, out var addressableGuid))
@@ -154,10 +142,10 @@ public static partial class EliteAPI
             var fieldInfo = fieldRef.ResolveReflection();
             if (fieldInfo.GetValue(null) is null)
                 fieldInfo.SetValue(null, addressable);
-
         }
 
         _resolvedFields = true;
+        ElitesPlugin.Logger.LogWarning("Resolved Fields");
     }
 
 
@@ -213,8 +201,6 @@ public static partial class EliteAPI
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static bool Add(CustomElite? elite)
     {
-        EliteAPI.SetHooks();
-
         return AddInternal(elite, Assembly.GetCallingAssembly());
     }
 
@@ -224,8 +210,6 @@ public static partial class EliteAPI
     /// <param name="eliteTierDef">The new elite tier to add.</param>
     public static int AppendCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef)
     {
-        EliteAPI.SetHooks();
-
         return AddCustomEliteTier(eliteTierDef, -1);
     }
 
@@ -237,8 +221,6 @@ public static partial class EliteAPI
     /// <returns>Index inserted at, or -1 if the operation failed</returns>
     public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef)
     {
-        EliteAPI.SetHooks();
-
         if (eliteTierDef is null)
         {
             ElitesPlugin.Logger.LogError("EliteTierDef cannot be null");
@@ -257,8 +239,6 @@ public static partial class EliteAPI
     /// <returns>Index inserted at, or -1 if the operation failed</returns>
     public static int AddCustomEliteTier(CombatDirector.EliteTierDef? eliteTierDef, int indexToInsertAt = -1)
     {
-        EliteAPI.SetHooks();
-        
         if (eliteTierDef is null)
         {
             ElitesPlugin.Logger.LogError("EliteTierDef cannot be null");
@@ -355,8 +335,6 @@ public static partial class EliteAPI
     /// </summary>
     public static CombatDirector.EliteTierDef[] GetCombatDirectorEliteTiers()
     {
-        EliteAPI.SetHooks();
-
         return CombatDirector.eliteTiers;
     }
 
@@ -367,8 +345,6 @@ public static partial class EliteAPI
     /// <param name="newEliteTiers">The new elite tiers that will be used by the combat director.</param>
     public static void OverrideCombatDirectorEliteTiers(CombatDirector.EliteTierDef[] newEliteTiers)
     {
-        EliteAPI.SetHooks();
-
         CombatDirector.eliteTiers = newEliteTiers;
     }
     #endregion Combat Director Modifications
