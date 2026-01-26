@@ -6,7 +6,7 @@ R2API.CharacterBody is a submodule for R2API that currently adds Modded Body Fla
 
 ## Changelog
 
-### '1.2.0'
+### '1.3.0'
 * Add FootstepAPI for managing custom extra footstep logic.
 
 ### '1.2.0'
