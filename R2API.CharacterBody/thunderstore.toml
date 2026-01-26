@@ -5,8 +5,8 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "RiskofThunder"
 name = "R2API_CharacterBody"
-versionNumber = "1.2.0"
-description = "API for adding various stuff to Character Body such as: Modded Body Flags"
+versionNumber = "1.3.0"
+description = "API for adding various stuff related to Character Body such as: Modded Body Flags, Custom Sprint Icon, Health Bar Overlays and Custom Footstep Effects"
 websiteUrl = "https://github.com/risk-of-thunder/R2API"
 containsNsfwContent = false
 

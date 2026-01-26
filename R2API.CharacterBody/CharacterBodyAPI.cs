@@ -89,6 +89,7 @@ public static partial class CharacterBodyAPI
     {
         if (!_hooksEnabled) return;
         _hooksEnabled = false;
+        IL.RoR2.UI.SprintIcon.FixedUpdate -= SprintIcon_FixedUpdate;
     }
     private static void NullcheckAndDeactivateCustomIconObject(GameObject gameObject) => gameObject?.SetActive(false);
     private static bool CheckCustomSprintIcon(SprintIcon sprintIcon) => sprintIcon.body && sprintIcon.body.GetCustomSprintIcon();
