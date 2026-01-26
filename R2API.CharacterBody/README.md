@@ -1,4 +1,4 @@
-# R2API.CharacterBody - API for adding various stuff related to Character Body such as: Modded Body Flags, Health Bar Overlays and Custom Footstep Effects
+# R2API.CharacterBody - API for adding various stuff related to Character Body such as: Modded Body Flags, Custom Sprint Icon, Health Bar Overlays and Custom Footstep Effects
 
 ## About
 
