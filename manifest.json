@@ -1044,6 +1044,36 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.FootstepAPI.Footstep.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.FootstepAPI.Footstep.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.FootstepAPI.FootstepReport.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.FootstepAPI.FootstepReport.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.FootstepAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.FootstepAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.GameModeInfo.yml",
       "output": {
         ".html": {
