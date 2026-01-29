@@ -400,7 +400,7 @@ public static partial class BuffsAPI
                     simpleSpriteAnimator.animation = simpleSpriteAnimation;
                     simpleSpriteAnimator.Tick();
                 }
-                if (!simpleSpriteAnimator.enabled) simpleSpriteAnimator.enabled = true
+                if (!simpleSpriteAnimator.enabled) simpleSpriteAnimator.enabled = true;
             }
             return true;
         }
