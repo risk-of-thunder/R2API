@@ -1,0 +1,33 @@
+
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "RiskofThunder"
+name = "R2API_Buffs"
+versionNumber = "1.0.0"
+description = "API for adding various stuff to BuffDef such as: Custom Stacking Display Method, Simple Sprite Animation Icon and Modded Buff Flag"
+websiteUrl = "https://github.com/risk-of-thunder/R2API"
+containsNsfwContent = false
+
+[package.dependencies]
+RiskofThunder-HookGenPatcher = "1.2.9"
+RiskofThunder-R2API_Core = "5.3.0"
+
+[build]
+icon = "../icon.png"
+readme = "./README.md"
+outdir = "./build"
+
+[[build.copy]]
+source = "./ReleaseOutput/R2API.Buffs.dll"
+target = "./plugins/R2API.Buffs/R2API.Buffs.dll"
+
+[[build.copy]]
+source = "./ReleaseOutput/R2API.Buffs.xml"
+target = "./plugins/R2API.Buffs/R2API.Buffs.xml"
+
+[publish]
+repository = "https://thunderstore.io"
+communities = ["riskofrain2"]
+categories = ["libraries"]
