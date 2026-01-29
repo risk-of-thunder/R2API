@@ -395,7 +395,11 @@ public static partial class BuffsAPI
             }
             else
             {
-                simpleSpriteAnimator.animation = simpleSpriteAnimation;
+                if (simpleSpriteAnimator.animation != simpleSpriteAnimation)
+                {
+                    simpleSpriteAnimator.animation = simpleSpriteAnimation;
+                    simpleSpriteAnimator.Tick();
+                }
             }
             return true;
         }
