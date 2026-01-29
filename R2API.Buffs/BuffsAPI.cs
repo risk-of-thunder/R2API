@@ -400,12 +400,13 @@ public static partial class BuffsAPI
                     simpleSpriteAnimator.animation = simpleSpriteAnimation;
                     simpleSpriteAnimator.Tick();
                 }
+                if (!simpleSpriteAnimator.enabled) simpleSpriteAnimator.enabled = true
             }
             return true;
         }
         else
         {
-            if (_buffIconSimpleSpriteAnimator.TryGetValue(buffIcon, out SimpleSpriteAnimator simpleSpriteAnimator)) simpleSpriteAnimator.enabled = false;
+            if (_buffIconSimpleSpriteAnimator.TryGetValue(buffIcon, out SimpleSpriteAnimator simpleSpriteAnimator) && simpleSpriteAnimator.enabled) simpleSpriteAnimator.enabled = false;
             return false;
         }
     }
