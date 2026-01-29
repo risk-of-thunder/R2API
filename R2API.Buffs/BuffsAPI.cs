@@ -393,6 +393,10 @@ public static partial class BuffsAPI
                 simpleSpriteAnimator.Tick();
                 _buffIconSimpleSpriteAnimator.Add(buffIcon, simpleSpriteAnimator);
             }
+            else
+            {
+                simpleSpriteAnimator.animation = simpleSpriteAnimation;
+            }
             return true;
         }
         else
