@@ -59,14 +59,14 @@ public static partial class BuffsAPI
     }
 
     private static byte[][] _moddedBuffFlags = [];
-    private static SimpleSpriteAnimation[] _buffDefSimpleSpriteAnimation = [];
+    private static CustomSimpleSpriteAnimation[] _buffDefSimpleSpriteAnimation = [];
     private static bool _init;
     private static void BuffCatalog_SetBuffDefs(On.RoR2.BuffCatalog.orig_SetBuffDefs orig, BuffDef[] newBuffDefs)
     {
         orig(newBuffDefs);
         if (_init) return;
         _moddedBuffFlags = new byte[BuffCatalog.buffCount][];
-        _buffDefSimpleSpriteAnimation = new SimpleSpriteAnimation[BuffCatalog.buffCount];
+        _buffDefSimpleSpriteAnimation = new CustomSimpleSpriteAnimation[BuffCatalog.buffCount];
         foreach (var def in _pendingModdedBuffFlags)
         {
             BuffDef buffDef = def.Key;
@@ -81,8 +81,8 @@ public static partial class BuffsAPI
         {
             BuffDef buffDef = def.Key;
             if (!buffDef) continue;
-            SimpleSpriteAnimation simpleSpriteAnimation = def.Value;
-            if (!simpleSpriteAnimation) continue;
+            CustomSimpleSpriteAnimation simpleSpriteAnimation = def.Value;
+            if (simpleSpriteAnimation == null) continue;
             _buffDefSimpleSpriteAnimation[(int)buffDef.buffIndex] = simpleSpriteAnimation;
         }
         _pendingSimpleSpriteAnimation.Clear();
@@ -105,10 +105,16 @@ public static partial class BuffsAPI
         }
         else
         {
-            Instruction instruction1 = c.Next.Next.Next.Next.Next;
+            Instruction instruction1 = c.Next.Next.Next.Next;
+            Instruction instruction2 = c.Next;
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(CheckSimpleSpriteAnimation);
+            c.Emit(OpCodes.Brfalse_S, instruction2);
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Ldfld, HarmonyLib.AccessTools.Field(typeof(BuffIcon), nameof(BuffIcon.iconImage)));
             c.Emit(OpCodes.Ldarg_0);
             c.EmitDelegate(HandleSimpleSpriteAnimation);
-            c.Emit(OpCodes.Brtrue_S, instruction1);
+            c.Emit(OpCodes.Br_S, instruction1);
         }
         ILLabel iLLabel = null;
         if (
@@ -188,35 +194,48 @@ public static partial class BuffsAPI
     public static void SetSimpleSpriteAnimation(this BuffDef buffDef, SimpleSpriteAnimation simpleSpriteAnimation)
     {
         SetHooks();
+        SingleSimpleSpriteAnimationDisplayClass singleSimpleSpriteAnimationDisplayClass = new SingleSimpleSpriteAnimationDisplayClass();
+        singleSimpleSpriteAnimationDisplayClass.simpleSpriteAnimation = simpleSpriteAnimation;
+        buffDef.SetCustomSimpleSpriteAnimation(singleSimpleSpriteAnimationDisplayClass.SingleCustomSimpleSpriteAnimation);
+    }
+    public delegate SimpleSpriteAnimation CustomSimpleSpriteAnimation(BuffIcon buffIcon);
+    /// <summary>
+    /// Set custom animated sprite for your BuffDef
+    /// </summary>
+    /// <param name="buffDef"></param>
+    /// <param name="customSimpleSpriteAnimation"></param>
+    public static void SetCustomSimpleSpriteAnimation(this BuffDef buffDef, CustomSimpleSpriteAnimation customSimpleSpriteAnimation)
+    {
+        SetHooks();
         if (_init)
         {
-            _buffDefSimpleSpriteAnimation[(int)buffDef.buffIndex] = simpleSpriteAnimation;
+            _buffDefSimpleSpriteAnimation[(int)buffDef.buffIndex] = customSimpleSpriteAnimation;
             return;
         }
         if (_pendingSimpleSpriteAnimation.ContainsKey(buffDef))
         {
-            _pendingSimpleSpriteAnimation[buffDef] = simpleSpriteAnimation;
+            _pendingSimpleSpriteAnimation[buffDef] = customSimpleSpriteAnimation;
         }
         else
         {
-            _pendingSimpleSpriteAnimation.Add(buffDef, simpleSpriteAnimation);
+            _pendingSimpleSpriteAnimation.Add(buffDef, customSimpleSpriteAnimation);
         }
     }
     /// <summary>
-    /// Get animated sprite of your BuffDef
+    /// Get custom animated sprite of your BuffDef
     /// </summary>
     /// <param name="buffDef"></param>
-    public static SimpleSpriteAnimation GetSimpleSpriteAnimation(this BuffDef buffDef)
+    public static CustomSimpleSpriteAnimation GetCustomSimpleSpriteAnimation(this BuffDef buffDef)
     {
         SetHooks();
-        SimpleSpriteAnimation simpleSpriteAnimation;
+        CustomSimpleSpriteAnimation customSimpleSpriteAnimation;
         if (_init)
         {
             return _buffDefSimpleSpriteAnimation[(int)buffDef.buffIndex];
         }
-        if (_pendingSimpleSpriteAnimation.TryGetValue(buffDef, out simpleSpriteAnimation))
+        if (_pendingSimpleSpriteAnimation.TryGetValue(buffDef, out customSimpleSpriteAnimation))
         {
-            return simpleSpriteAnimation;
+            return customSimpleSpriteAnimation;
         }
         return null;
     }
@@ -377,12 +396,24 @@ public static partial class BuffsAPI
     public delegate void CustomStackingDisplayMethod(BuffIcon buffIcon);
     private static CustomStackingDisplayMethod[] _customStackingDisplayMethod = new CustomStackingDisplayMethod[0];
     private static Dictionary<BuffDef, byte[]> _pendingModdedBuffFlags = [];
-    private static Dictionary<BuffDef, SimpleSpriteAnimation> _pendingSimpleSpriteAnimation = [];
+    private static Dictionary<BuffDef, CustomSimpleSpriteAnimation> _pendingSimpleSpriteAnimation = [];
     private static FixedConditionalWeakTable<BuffIcon, SimpleSpriteAnimator> _buffIconSimpleSpriteAnimator = [];
-    private static bool HandleSimpleSpriteAnimation(BuffIcon buffIcon)
+    private static void DisableSimpleSpriteAnimator(BuffIcon buffIcon)
     {
-        if (!_init) return false;
-        SimpleSpriteAnimation simpleSpriteAnimation = buffIcon.buffDef.GetSimpleSpriteAnimation();
+        if (_buffIconSimpleSpriteAnimator.TryGetValue(buffIcon, out SimpleSpriteAnimator simpleSpriteAnimator) && simpleSpriteAnimator.enabled) simpleSpriteAnimator.enabled = false;
+    }
+    private static bool CheckSimpleSpriteAnimation(BuffIcon buffIcon)
+    {
+        CustomSimpleSpriteAnimation customSimpleSpriteAnimation = buffIcon.buffDef.GetCustomSimpleSpriteAnimation();
+        SimpleSpriteAnimation simpleSpriteAnimation = customSimpleSpriteAnimation == null ? null : customSimpleSpriteAnimation.Invoke(buffIcon);
+        if (simpleSpriteAnimation) return true;
+        DisableSimpleSpriteAnimator(buffIcon);
+        return false;
+    }
+    private static Sprite HandleSimpleSpriteAnimation(BuffIcon buffIcon)
+    {
+        CustomSimpleSpriteAnimation customSimpleSpriteAnimation = buffIcon.buffDef.GetCustomSimpleSpriteAnimation();
+        SimpleSpriteAnimation simpleSpriteAnimation = customSimpleSpriteAnimation == null ? null : customSimpleSpriteAnimation.Invoke(buffIcon);
         if (simpleSpriteAnimation)
         {
             if (!_buffIconSimpleSpriteAnimator.TryGetValue(buffIcon, out SimpleSpriteAnimator simpleSpriteAnimator))
@@ -402,13 +433,12 @@ public static partial class BuffsAPI
                 }
                 if (!simpleSpriteAnimator.enabled) simpleSpriteAnimator.enabled = true;
             }
-            return true;
         }
         else
         {
-            if (_buffIconSimpleSpriteAnimator.TryGetValue(buffIcon, out SimpleSpriteAnimator simpleSpriteAnimator) && simpleSpriteAnimator.enabled) simpleSpriteAnimator.enabled = false;
-            return false;
+            DisableSimpleSpriteAnimator(buffIcon);
         }
+        return buffIcon.iconImage.sprite;
     }
     private static bool HandleCustomStackingDisplayMethods(BuffIcon buffIcon, StackingDisplayMethod stackingDisplayMethod)
     {
@@ -418,6 +448,11 @@ public static partial class BuffsAPI
             return true;
         }
         return false;
+    }
+    private class SingleSimpleSpriteAnimationDisplayClass
+    {
+        public SimpleSpriteAnimation simpleSpriteAnimation;
+        public SimpleSpriteAnimation SingleCustomSimpleSpriteAnimation(BuffIcon buffIcon) => simpleSpriteAnimation;
     }
     #endregion
 }
