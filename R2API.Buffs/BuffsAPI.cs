@@ -42,7 +42,7 @@ public static partial class BuffsAPI
         IL.RoR2.UI.BuffIcon.UpdateIcon += BuffIcon_UpdateIcon;
         On.RoR2.UI.BuffIcon.OnEnable += BuffIcon_OnEnable;
         On.RoR2.BuffCatalog.SetBuffDefs += BuffCatalog_SetBuffDefs;
-        NoneStackingDisplayMethod = RegisterStackingDisplayMethod(null);
+        if (NoneStackingDisplayMethod == StackingDisplayMethod.Default) NoneStackingDisplayMethod = RegisterStackingDisplayMethod(null);
     }
     internal static void UnsetHooks()
     {
