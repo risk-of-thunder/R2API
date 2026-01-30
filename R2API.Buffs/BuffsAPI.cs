@@ -55,7 +55,7 @@ public static partial class BuffsAPI
     private static void BuffIcon_OnEnable(On.RoR2.UI.BuffIcon.orig_OnEnable orig, BuffIcon self)
     {
         orig(self);
-        if (_buffIconSimpleSpriteAnimator.TryGetValue(self, out SimpleSpriteAnimator simpleSpriteAnimator)) simpleSpriteAnimator.Tick();
+        if (_buffIconSimpleSpriteAnimator.TryGetValue(self, out SimpleSpriteAnimator simpleSpriteAnimator) && simpleSpriteAnimator.enabled) simpleSpriteAnimator.Tick();
     }
 
     private static byte[][] _moddedBuffFlags = [];
