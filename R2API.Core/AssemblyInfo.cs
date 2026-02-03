@@ -47,3 +47,4 @@ using IVT = System.Runtime.CompilerServices.InternalsVisibleToAttribute;
 [assembly: IVT("R2API.StringSerializerExtensions")]
 [assembly: IVT("R2API.CharacterBody")]
 [assembly: IVT("R2API.Teams")]
+[assembly: IVT("R2API.Buffs")]
