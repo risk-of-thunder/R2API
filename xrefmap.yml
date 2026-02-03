@@ -3785,6 +3785,209 @@ references:
   commentId: T:R2API.ArtifactCodePlugin
   fullName: R2API.ArtifactCodePlugin
   nameWithType: ArtifactCodePlugin
+- uid: R2API.BuffsAPI
+  name: BuffsAPI
+  href: api/R2API.BuffsAPI.html
+  commentId: T:R2API.BuffsAPI
+  fullName: R2API.BuffsAPI
+  nameWithType: BuffsAPI
+- uid: R2API.BuffsAPI.AddModdedBuffFlag(RoR2.BuffDef,R2API.BuffsAPI.ModdedBuffFlag)
+  name: AddModdedBuffFlag(BuffDef, ModdedBuffFlag)
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_AddModdedBuffFlag_RoR2_BuffDef_R2API_BuffsAPI_ModdedBuffFlag_
+  commentId: M:R2API.BuffsAPI.AddModdedBuffFlag(RoR2.BuffDef,R2API.BuffsAPI.ModdedBuffFlag)
+  fullName: R2API.BuffsAPI.AddModdedBuffFlag(RoR2.BuffDef, R2API.BuffsAPI.ModdedBuffFlag)
+  nameWithType: BuffsAPI.AddModdedBuffFlag(BuffDef, BuffsAPI.ModdedBuffFlag)
+- uid: R2API.BuffsAPI.AddModdedBuffFlag*
+  name: AddModdedBuffFlag
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_AddModdedBuffFlag_
+  commentId: Overload:R2API.BuffsAPI.AddModdedBuffFlag
+  isSpec: "True"
+  fullName: R2API.BuffsAPI.AddModdedBuffFlag
+  nameWithType: BuffsAPI.AddModdedBuffFlag
+- uid: R2API.BuffsAPI.CustomSimpleSpriteAnimation
+  name: BuffsAPI.CustomSimpleSpriteAnimation
+  href: api/R2API.BuffsAPI.CustomSimpleSpriteAnimation.html
+  commentId: T:R2API.BuffsAPI.CustomSimpleSpriteAnimation
+  fullName: R2API.BuffsAPI.CustomSimpleSpriteAnimation
+  nameWithType: BuffsAPI.CustomSimpleSpriteAnimation
+- uid: R2API.BuffsAPI.CustomStackingDisplayMethod
+  name: BuffsAPI.CustomStackingDisplayMethod
+  href: api/R2API.BuffsAPI.CustomStackingDisplayMethod.html
+  commentId: T:R2API.BuffsAPI.CustomStackingDisplayMethod
+  fullName: R2API.BuffsAPI.CustomStackingDisplayMethod
+  nameWithType: BuffsAPI.CustomStackingDisplayMethod
+- uid: R2API.BuffsAPI.CustomStackingDisplayMethodCount
+  name: CustomStackingDisplayMethodCount
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_CustomStackingDisplayMethodCount
+  commentId: P:R2API.BuffsAPI.CustomStackingDisplayMethodCount
+  fullName: R2API.BuffsAPI.CustomStackingDisplayMethodCount
+  nameWithType: BuffsAPI.CustomStackingDisplayMethodCount
+- uid: R2API.BuffsAPI.CustomStackingDisplayMethodCount*
+  name: CustomStackingDisplayMethodCount
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_CustomStackingDisplayMethodCount_
+  commentId: Overload:R2API.BuffsAPI.CustomStackingDisplayMethodCount
+  isSpec: "True"
+  fullName: R2API.BuffsAPI.CustomStackingDisplayMethodCount
+  nameWithType: BuffsAPI.CustomStackingDisplayMethodCount
+- uid: R2API.BuffsAPI.GetCustomSimpleSpriteAnimation(RoR2.BuffDef)
+  name: GetCustomSimpleSpriteAnimation(BuffDef)
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_GetCustomSimpleSpriteAnimation_RoR2_BuffDef_
+  commentId: M:R2API.BuffsAPI.GetCustomSimpleSpriteAnimation(RoR2.BuffDef)
+  fullName: R2API.BuffsAPI.GetCustomSimpleSpriteAnimation(RoR2.BuffDef)
+  nameWithType: BuffsAPI.GetCustomSimpleSpriteAnimation(BuffDef)
+- uid: R2API.BuffsAPI.GetCustomSimpleSpriteAnimation*
+  name: GetCustomSimpleSpriteAnimation
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_GetCustomSimpleSpriteAnimation_
+  commentId: Overload:R2API.BuffsAPI.GetCustomSimpleSpriteAnimation
+  isSpec: "True"
+  fullName: R2API.BuffsAPI.GetCustomSimpleSpriteAnimation
+  nameWithType: BuffsAPI.GetCustomSimpleSpriteAnimation
+- uid: R2API.BuffsAPI.HasAnyModdedBodyFlag(RoR2.BuffDef)
+  name: HasAnyModdedBodyFlag(BuffDef)
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_HasAnyModdedBodyFlag_RoR2_BuffDef_
+  commentId: M:R2API.BuffsAPI.HasAnyModdedBodyFlag(RoR2.BuffDef)
+  fullName: R2API.BuffsAPI.HasAnyModdedBodyFlag(RoR2.BuffDef)
+  nameWithType: BuffsAPI.HasAnyModdedBodyFlag(BuffDef)
+- uid: R2API.BuffsAPI.HasAnyModdedBodyFlag*
+  name: HasAnyModdedBodyFlag
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_HasAnyModdedBodyFlag_
+  commentId: Overload:R2API.BuffsAPI.HasAnyModdedBodyFlag
+  isSpec: "True"
+  fullName: R2API.BuffsAPI.HasAnyModdedBodyFlag
+  nameWithType: BuffsAPI.HasAnyModdedBodyFlag
+- uid: R2API.BuffsAPI.HasModdedBuffFlag(RoR2.BuffDef,R2API.BuffsAPI.ModdedBuffFlag)
+  name: HasModdedBuffFlag(BuffDef, ModdedBuffFlag)
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_HasModdedBuffFlag_RoR2_BuffDef_R2API_BuffsAPI_ModdedBuffFlag_
+  commentId: M:R2API.BuffsAPI.HasModdedBuffFlag(RoR2.BuffDef,R2API.BuffsAPI.ModdedBuffFlag)
+  fullName: R2API.BuffsAPI.HasModdedBuffFlag(RoR2.BuffDef, R2API.BuffsAPI.ModdedBuffFlag)
+  nameWithType: BuffsAPI.HasModdedBuffFlag(BuffDef, BuffsAPI.ModdedBuffFlag)
+- uid: R2API.BuffsAPI.HasModdedBuffFlag*
+  name: HasModdedBuffFlag
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_HasModdedBuffFlag_
+  commentId: Overload:R2API.BuffsAPI.HasModdedBuffFlag
+  isSpec: "True"
+  fullName: R2API.BuffsAPI.HasModdedBuffFlag
+  nameWithType: BuffsAPI.HasModdedBuffFlag
+- uid: R2API.BuffsAPI.ModdedBuffFlag
+  name: BuffsAPI.ModdedBuffFlag
+  href: api/R2API.BuffsAPI.ModdedBuffFlag.html
+  commentId: T:R2API.BuffsAPI.ModdedBuffFlag
+  fullName: R2API.BuffsAPI.ModdedBuffFlag
+  nameWithType: BuffsAPI.ModdedBuffFlag
+- uid: R2API.BuffsAPI.ModdedBuffFlagCount
+  name: ModdedBuffFlagCount
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_ModdedBuffFlagCount
+  commentId: P:R2API.BuffsAPI.ModdedBuffFlagCount
+  fullName: R2API.BuffsAPI.ModdedBuffFlagCount
+  nameWithType: BuffsAPI.ModdedBuffFlagCount
+- uid: R2API.BuffsAPI.ModdedBuffFlagCount*
+  name: ModdedBuffFlagCount
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_ModdedBuffFlagCount_
+  commentId: Overload:R2API.BuffsAPI.ModdedBuffFlagCount
+  isSpec: "True"
+  fullName: R2API.BuffsAPI.ModdedBuffFlagCount
+  nameWithType: BuffsAPI.ModdedBuffFlagCount
+- uid: R2API.BuffsAPI.NoneStackingDisplayMethod
+  name: NoneStackingDisplayMethod
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_NoneStackingDisplayMethod
+  commentId: F:R2API.BuffsAPI.NoneStackingDisplayMethod
+  fullName: R2API.BuffsAPI.NoneStackingDisplayMethod
+  nameWithType: BuffsAPI.NoneStackingDisplayMethod
+- uid: R2API.BuffsAPI.PluginGUID
+  name: PluginGUID
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_PluginGUID
+  commentId: F:R2API.BuffsAPI.PluginGUID
+  fullName: R2API.BuffsAPI.PluginGUID
+  nameWithType: BuffsAPI.PluginGUID
+- uid: R2API.BuffsAPI.PluginName
+  name: PluginName
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_PluginName
+  commentId: F:R2API.BuffsAPI.PluginName
+  fullName: R2API.BuffsAPI.PluginName
+  nameWithType: BuffsAPI.PluginName
+- uid: R2API.BuffsAPI.PluginVersion
+  name: PluginVersion
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_PluginVersion
+  commentId: F:R2API.BuffsAPI.PluginVersion
+  fullName: R2API.BuffsAPI.PluginVersion
+  nameWithType: BuffsAPI.PluginVersion
+- uid: R2API.BuffsAPI.RegisterStackingDisplayMethod(R2API.BuffsAPI.CustomStackingDisplayMethod)
+  name: RegisterStackingDisplayMethod(CustomStackingDisplayMethod)
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_RegisterStackingDisplayMethod_R2API_BuffsAPI_CustomStackingDisplayMethod_
+  commentId: M:R2API.BuffsAPI.RegisterStackingDisplayMethod(R2API.BuffsAPI.CustomStackingDisplayMethod)
+  fullName: R2API.BuffsAPI.RegisterStackingDisplayMethod(R2API.BuffsAPI.CustomStackingDisplayMethod)
+  nameWithType: BuffsAPI.RegisterStackingDisplayMethod(BuffsAPI.CustomStackingDisplayMethod)
+- uid: R2API.BuffsAPI.RegisterStackingDisplayMethod*
+  name: RegisterStackingDisplayMethod
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_RegisterStackingDisplayMethod_
+  commentId: Overload:R2API.BuffsAPI.RegisterStackingDisplayMethod
+  isSpec: "True"
+  fullName: R2API.BuffsAPI.RegisterStackingDisplayMethod
+  nameWithType: BuffsAPI.RegisterStackingDisplayMethod
+- uid: R2API.BuffsAPI.RemoveModdedBuffFlag(RoR2.BuffDef,R2API.BuffsAPI.ModdedBuffFlag)
+  name: RemoveModdedBuffFlag(BuffDef, ModdedBuffFlag)
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_RemoveModdedBuffFlag_RoR2_BuffDef_R2API_BuffsAPI_ModdedBuffFlag_
+  commentId: M:R2API.BuffsAPI.RemoveModdedBuffFlag(RoR2.BuffDef,R2API.BuffsAPI.ModdedBuffFlag)
+  fullName: R2API.BuffsAPI.RemoveModdedBuffFlag(RoR2.BuffDef, R2API.BuffsAPI.ModdedBuffFlag)
+  nameWithType: BuffsAPI.RemoveModdedBuffFlag(BuffDef, BuffsAPI.ModdedBuffFlag)
+- uid: R2API.BuffsAPI.RemoveModdedBuffFlag*
+  name: RemoveModdedBuffFlag
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_RemoveModdedBuffFlag_
+  commentId: Overload:R2API.BuffsAPI.RemoveModdedBuffFlag
+  isSpec: "True"
+  fullName: R2API.BuffsAPI.RemoveModdedBuffFlag
+  nameWithType: BuffsAPI.RemoveModdedBuffFlag
+- uid: R2API.BuffsAPI.ReserveBuffFlag
+  name: ReserveBuffFlag()
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_ReserveBuffFlag
+  commentId: M:R2API.BuffsAPI.ReserveBuffFlag
+  fullName: R2API.BuffsAPI.ReserveBuffFlag()
+  nameWithType: BuffsAPI.ReserveBuffFlag()
+- uid: R2API.BuffsAPI.ReserveBuffFlag*
+  name: ReserveBuffFlag
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_ReserveBuffFlag_
+  commentId: Overload:R2API.BuffsAPI.ReserveBuffFlag
+  isSpec: "True"
+  fullName: R2API.BuffsAPI.ReserveBuffFlag
+  nameWithType: BuffsAPI.ReserveBuffFlag
+- uid: R2API.BuffsAPI.SetCustomSimpleSpriteAnimation(RoR2.BuffDef,R2API.BuffsAPI.CustomSimpleSpriteAnimation)
+  name: SetCustomSimpleSpriteAnimation(BuffDef, CustomSimpleSpriteAnimation)
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_SetCustomSimpleSpriteAnimation_RoR2_BuffDef_R2API_BuffsAPI_CustomSimpleSpriteAnimation_
+  commentId: M:R2API.BuffsAPI.SetCustomSimpleSpriteAnimation(RoR2.BuffDef,R2API.BuffsAPI.CustomSimpleSpriteAnimation)
+  fullName: R2API.BuffsAPI.SetCustomSimpleSpriteAnimation(RoR2.BuffDef, R2API.BuffsAPI.CustomSimpleSpriteAnimation)
+  nameWithType: BuffsAPI.SetCustomSimpleSpriteAnimation(BuffDef, BuffsAPI.CustomSimpleSpriteAnimation)
+- uid: R2API.BuffsAPI.SetCustomSimpleSpriteAnimation*
+  name: SetCustomSimpleSpriteAnimation
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_SetCustomSimpleSpriteAnimation_
+  commentId: Overload:R2API.BuffsAPI.SetCustomSimpleSpriteAnimation
+  isSpec: "True"
+  fullName: R2API.BuffsAPI.SetCustomSimpleSpriteAnimation
+  nameWithType: BuffsAPI.SetCustomSimpleSpriteAnimation
+- uid: R2API.BuffsAPI.SetSimpleSpriteAnimation(RoR2.BuffDef,RoR2.SimpleSpriteAnimation)
+  name: SetSimpleSpriteAnimation(BuffDef, SimpleSpriteAnimation)
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_SetSimpleSpriteAnimation_RoR2_BuffDef_RoR2_SimpleSpriteAnimation_
+  commentId: M:R2API.BuffsAPI.SetSimpleSpriteAnimation(RoR2.BuffDef,RoR2.SimpleSpriteAnimation)
+  fullName: R2API.BuffsAPI.SetSimpleSpriteAnimation(RoR2.BuffDef, RoR2.SimpleSpriteAnimation)
+  nameWithType: BuffsAPI.SetSimpleSpriteAnimation(BuffDef, SimpleSpriteAnimation)
+- uid: R2API.BuffsAPI.SetSimpleSpriteAnimation*
+  name: SetSimpleSpriteAnimation
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_SetSimpleSpriteAnimation_
+  commentId: Overload:R2API.BuffsAPI.SetSimpleSpriteAnimation
+  isSpec: "True"
+  fullName: R2API.BuffsAPI.SetSimpleSpriteAnimation
+  nameWithType: BuffsAPI.SetSimpleSpriteAnimation
+- uid: R2API.BuffsAPI.VanillaStackingDisplayMethodCount
+  name: VanillaStackingDisplayMethodCount
+  href: api/R2API.BuffsAPI.html#R2API_BuffsAPI_VanillaStackingDisplayMethodCount
+  commentId: F:R2API.BuffsAPI.VanillaStackingDisplayMethodCount
+  fullName: R2API.BuffsAPI.VanillaStackingDisplayMethodCount
+  nameWithType: BuffsAPI.VanillaStackingDisplayMethodCount
+- uid: R2API.BuffsPlugin
+  name: BuffsPlugin
+  href: api/R2API.BuffsPlugin.html
+  commentId: T:R2API.BuffsPlugin
+  fullName: R2API.BuffsPlugin
+  nameWithType: BuffsPlugin
 - uid: R2API.CharacterBodyAPI
   name: CharacterBodyAPI
   href: api/R2API.CharacterBodyAPI.html

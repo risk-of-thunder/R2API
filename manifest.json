@@ -514,6 +514,56 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.BuffsAPI.CustomSimpleSpriteAnimation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.BuffsAPI.CustomSimpleSpriteAnimation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.BuffsAPI.CustomStackingDisplayMethod.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.BuffsAPI.CustomStackingDisplayMethod.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.BuffsAPI.ModdedBuffFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.BuffsAPI.ModdedBuffFlag.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.BuffsAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.BuffsAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.BuffsPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.BuffsPlugin.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.CharacterBodyAPI.ModdedBodyFlag.yml",
       "output": {
         ".html": {
