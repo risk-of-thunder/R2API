@@ -20,6 +20,9 @@ A detailed tutorial on how to make custom items using ItemAPI can be found [here
 
 ## Changelog
 
+### '1.0.8'
+* Fixes for Alloyed Collective DLC3.
+
 ### '1.0.7'
 * Ensure followerPrefabAddress is never null.
 
