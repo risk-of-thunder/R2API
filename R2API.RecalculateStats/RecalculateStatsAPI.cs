@@ -1175,6 +1175,10 @@ public static partial class RecalculateStatsAPI
                     barrierDecayRatePerSecond += stats.barrierDecayRateAdd;
                     barrierDecayRatePerSecond *= stats.barrierDecayRateMult;
                 }
+                else if (barrierDecayRatePerSecond > 0)
+                {
+                    barrierDecayRatePerSecond = 0;
+                }
 
                 return barrierDecayRatePerSecond;
             });
