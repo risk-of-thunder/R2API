@@ -33,6 +33,10 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 
 ## Changelog
 
+### `1.6.6`
+* Fixed barrier decay freeze stat failing to freeze barrier decay
+* Flat cooldown reduction stat can now be negative (increasing cooldowns by a flat amount)
+
 ### `1.6.5`
 * Fixed luck and barrier stat hooks for Alloyed Collective
 

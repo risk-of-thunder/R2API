@@ -308,11 +308,11 @@ public static partial class RecalculateStatsAPI
 
             void applyModifiers(in SkillSlotStatModifiers statModifiers)
             {
-                flatReduction += Math.Max(0f, statModifiers.cooldownFlatReduction);
+                flatReduction += statModifiers.cooldownFlatReduction;
             }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-            flatReduction += Math.Max(0f, cooldownReductionAdd);
+            flatReduction += cooldownReductionAdd;
 #pragma warning restore CS0618 // Type or member is obsolete
 
             applyModifiers(allSkills);
@@ -1174,6 +1174,10 @@ public static partial class RecalculateStatsAPI
                 {
                     barrierDecayRatePerSecond += stats.barrierDecayRateAdd;
                     barrierDecayRatePerSecond *= stats.barrierDecayRateMult;
+                }
+                else if (barrierDecayRatePerSecond > 0)
+                {
+                    barrierDecayRatePerSecond = 0;
                 }
 
                 return barrierDecayRatePerSecond;
