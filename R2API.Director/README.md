@@ -18,6 +18,9 @@ Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which
 
 ## Changelog
 
+### '2.3.9'
+* Fix `AddressableDCCSPool` not adding "Included If Conditions Met" entries with 0 required expansions to the target DCCS pool.
+
 ### '2.3.8'
 * Backward compat fix for `mixEnemyMonsterCards` not being assigned as early as before due to a timing change from 1.4.0 Game Update.
 
