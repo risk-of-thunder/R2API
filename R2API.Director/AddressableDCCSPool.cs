@@ -189,9 +189,6 @@ public class AddressableDCCSPool : ScriptableObject
                 if (!_conditionalPoolEntry.dccs)
                     continue;
 
-                if (_conditionalPoolEntry.requiredExpansions == null || _conditionalPoolEntry.requiredExpansions.Length == 0 || !_conditionalPoolEntry.requiredExpansions.Any())
-                    continue;
-
                 upgradedConditionalPoolEntries.Add(_conditionalPoolEntry);
             }
             resultCategory.includedIfConditionsMet = upgradedConditionalPoolEntries.ToArray();
