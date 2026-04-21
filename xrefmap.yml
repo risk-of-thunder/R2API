@@ -4281,6 +4281,19 @@ references:
   isSpec: "True"
   fullName: R2API.ContentAddition.AddBuffDef
   nameWithType: ContentAddition.AddBuffDef
+- uid: R2API.ContentAddition.AddDroneDef(RoR2.DroneDef)
+  name: AddDroneDef(DroneDef)
+  href: api/R2API.ContentAddition.html#R2API_ContentAddition_AddDroneDef_RoR2_DroneDef_
+  commentId: M:R2API.ContentAddition.AddDroneDef(RoR2.DroneDef)
+  fullName: R2API.ContentAddition.AddDroneDef(RoR2.DroneDef)
+  nameWithType: ContentAddition.AddDroneDef(DroneDef)
+- uid: R2API.ContentAddition.AddDroneDef*
+  name: AddDroneDef
+  href: api/R2API.ContentAddition.html#R2API_ContentAddition_AddDroneDef_
+  commentId: Overload:R2API.ContentAddition.AddDroneDef
+  isSpec: "True"
+  fullName: R2API.ContentAddition.AddDroneDef
+  nameWithType: ContentAddition.AddDroneDef
 - uid: R2API.ContentAddition.AddEffect(UnityEngine.GameObject)
   name: AddEffect(GameObject)
   href: api/R2API.ContentAddition.html#R2API_ContentAddition_AddEffect_UnityEngine_GameObject_
@@ -14239,6 +14252,12 @@ references:
   commentId: F:R2API.ScriptableObjects.R2APISerializableContentPack.buffDefs
   fullName: R2API.ScriptableObjects.R2APISerializableContentPack.buffDefs
   nameWithType: R2APISerializableContentPack.buffDefs
+- uid: R2API.ScriptableObjects.R2APISerializableContentPack.droneDefs
+  name: droneDefs
+  href: api/R2API.ScriptableObjects.R2APISerializableContentPack.html#R2API_ScriptableObjects_R2APISerializableContentPack_droneDefs
+  commentId: F:R2API.ScriptableObjects.R2APISerializableContentPack.droneDefs
+  fullName: R2API.ScriptableObjects.R2APISerializableContentPack.droneDefs
+  nameWithType: R2APISerializableContentPack.droneDefs
 - uid: R2API.ScriptableObjects.R2APISerializableContentPack.effectPrefabs
   name: effectPrefabs
   href: api/R2API.ScriptableObjects.R2APISerializableContentPack.html#R2API_ScriptableObjects_R2APISerializableContentPack_effectPrefabs
