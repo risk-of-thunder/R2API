@@ -650,6 +650,23 @@ public static class ContentAddition
         RejectContent(miscPickupDef, asm, "MiscPickupDef", "But the MiscPickupCatalog has already initailized!");
         return false;
     }
+    
+    /// <summary>
+    /// Adds a DroneDef to your Mod's ContentPack
+    /// </summary>
+    /// <param name="droneDef">The ExpansionDef to Add</param>
+    /// <returns>true if valid and added, false if one of the requirements is not met</returns>
+    public static bool AddDroneDef(DroneDef droneDef)
+    {
+        var asm = GetNonAPICaller();
+        if (CatalogBlockers.GetAvailability<DroneDef>())
+        {
+            R2APIContentManager.HandleContentAddition(asm, droneDef);
+            return true;
+        }
+        RejectContent(droneDef, asm, "DroneDef", "But the DroneCatalog has already initialized!");
+        return false;
+    }
 
     /// <summary>
     /// Adds an EntitySateType to your Mod's ContentPack
