@@ -75,21 +75,29 @@ public static partial class TeamsAPI
             return;
         
         IL.EntityStates.GrandParentBoss.Offspring.FindTargetFarthest += ReplaceTeamIndexCount;
+        IL.EntityStates.VultureHunter.Weapon.Calldown.Call += ReplaceTeamIndexCount;
         IL.RoR2.AffixBeadAttachment.ClearEnemyLunarRuinDamage += ReplaceTeamIndexCount;
         IL.RoR2.BuffWard.FixedUpdate += ReplaceTeamIndexCount;
         IL.RoR2.FogDamageController.MyFixedUpdate += ReplaceTeamIndexCount;
         IL.RoR2.GhostGunController.FindTarget += ReplaceTeamIndexCount;
         IL.RoR2.GoldTitanManager.CalcTitanPowerAndBestTeam += ReplaceTeamIndexCount;
         IL.RoR2.HoldoutZoneController.UpdateHealingNovas += ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.AreAnyPoolsDirty += ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.CleanAllDirtyPools += ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.DealDamage += ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.HandleSharedSufferingPooledDamageMessage += ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.ResetDamagePools += ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.SharedSufferingPooledDamageMessage.Serialize += ReplaceTeamIndexCount;
+        IL.RoR2.TargetNearbyHealthComponents.SearchForTargets += ReplaceTeamIndexCount;
         IL.RoR2.TeamComponent.TeamIsValid += ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.Start += ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.GetTeamExperience += ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.GetTeamCurrentLevelExperience += ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.GetTeamNextLevelExperience += ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.GetTeamExperience += ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.GetTeamLevel += ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.SetTeamLevel += ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.GiveTeamMoney_TeamIndex_int += ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.GetTeamNextLevelExperience += ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.GiveTeamItem += ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.GiveTeamMoney_TeamIndex_int += ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.SetTeamLevel += ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.Start += ReplaceTeamIndexCount;
         IL.RoR2.Util.GetEnemyEasyTarget += ReplaceTeamIndexCount;
 
         On.RoR2.TeamManager.Start += TeamManager_Start;
@@ -143,6 +151,31 @@ public static partial class TeamsAPI
             Log.Error("Failed to find TeamManager constructor for patches");
         }
 
+        ConstructorInfo sharedSufferingManagerCtor = AccessTools.DeclaredConstructor(typeof(SharedSufferingManager));
+        if (sharedSufferingManagerCtor != null)
+        {
+            _hookInstances.Add(new ILHook(sharedSufferingManagerCtor, ReplaceTeamIndexCount));
+            _hookInstances.Add(new ILHook(sharedSufferingManagerCtor, ReplaceTeamArraySize));
+        }
+        else
+        {
+            Log.Error("Failed to find SharedSufferingManager constructor for patches");
+        }
+
+        List<ConstructorInfo> sharedSufferingPooledDamageCtors = AccessTools.GetDeclaredConstructors(typeof(SharedSufferingManager.SharedSufferingPooledDamageMessage));
+        if (sharedSufferingPooledDamageCtors.Count > 0)
+        {
+            foreach (ConstructorInfo constructor in sharedSufferingPooledDamageCtors)
+            {
+                _hookInstances.Add(new ILHook(constructor, ReplaceTeamIndexCount));
+                _hookInstances.Add(new ILHook(constructor, ReplaceTeamArraySize));
+            }
+        }
+        else
+        {
+            Log.Error("Failed to find SharedSufferingManager.SharedSufferingPooledDamageMessage constructor for patches");
+        }
+
         _hooksEnabled = true;
     }
 
@@ -152,23 +185,31 @@ public static partial class TeamsAPI
             return;
 
         IL.EntityStates.GrandParentBoss.Offspring.FindTargetFarthest -= ReplaceTeamIndexCount;
+        IL.EntityStates.VultureHunter.Weapon.Calldown.Call -= ReplaceTeamIndexCount;
         IL.RoR2.AffixBeadAttachment.ClearEnemyLunarRuinDamage -= ReplaceTeamIndexCount;
         IL.RoR2.BuffWard.FixedUpdate -= ReplaceTeamIndexCount;
         IL.RoR2.FogDamageController.MyFixedUpdate -= ReplaceTeamIndexCount;
         IL.RoR2.GhostGunController.FindTarget -= ReplaceTeamIndexCount;
         IL.RoR2.GoldTitanManager.CalcTitanPowerAndBestTeam -= ReplaceTeamIndexCount;
         IL.RoR2.HoldoutZoneController.UpdateHealingNovas -= ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.AreAnyPoolsDirty -= ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.CleanAllDirtyPools -= ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.DealDamage -= ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.HandleSharedSufferingPooledDamageMessage -= ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.ResetDamagePools -= ReplaceTeamIndexCount;
+        IL.RoR2.SharedSufferingManager.SharedSufferingPooledDamageMessage.Serialize -= ReplaceTeamIndexCount;
+        IL.RoR2.TargetNearbyHealthComponents.SearchForTargets -= ReplaceTeamIndexCount;
         IL.RoR2.TeamComponent.TeamIsValid -= ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.Start -= ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.OnSerialize -= ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.OnDeserialize -= ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.GetTeamExperience -= ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.GetTeamCurrentLevelExperience -= ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.GetTeamNextLevelExperience -= ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.GetTeamExperience -= ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.GetTeamLevel -= ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.SetTeamLevel -= ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.GiveTeamMoney_TeamIndex_int -= ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.GetTeamNextLevelExperience -= ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.GiveTeamItem -= ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.GiveTeamMoney_TeamIndex_int -= ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.OnDeserialize -= ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.OnSerialize -= ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.SetTeamLevel -= ReplaceTeamIndexCount;
+        IL.RoR2.TeamManager.Start -= ReplaceTeamIndexCount;
         IL.RoR2.Util.GetEnemyEasyTarget -= ReplaceTeamIndexCount;
 
         On.RoR2.TeamManager.Start -= TeamManager_Start;
@@ -316,26 +357,31 @@ public static partial class TeamsAPI
     static void GenericPickupController_AttemptGrant(ILContext il)
     {
         ILCursor c = new ILCursor(il);
-        int locNum = 0;
-        if (c.TryGotoNext(MoveType.After,
-                x => x.MatchLdloc(out locNum),
-                x => x.MatchCallvirt(typeof(TeamComponent).GetPropertyGetter("teamIndex"))
-            ))
+
+        if (!c.TryFindNext(out ILCursor[] foundCursors,
+                           x => x.MatchCallvirt(typeof(TeamComponent).GetPropertyGetter(nameof(TeamComponent.teamIndex))),
+                           x => x.MatchBneUn(out _)))
         {
-            c.EmitDelegate(HandleAttemptGrant);
+            Log.Error($"Failed to find pickup permission patch location for {il.Method.FullName}");
         }
-        else
+
+        c.Goto(foundCursors[0].Next, MoveType.After); // call get_teamIndex
+        c.EmitDelegate(getPretendTeamForPickup);
+
+        static TeamIndex getPretendTeamForPickup(TeamIndex realTeamIndex)
         {
-            Log.Error(il.Method.Name + " IL Hook failed!");
+            if (!IsModdedTeam(realTeamIndex))
+                return realTeamIndex;
+
+            TeamBehavior teamBehavior = GetTeamBehavior(realTeamIndex);
+            if (teamBehavior == null || !teamBehavior.CanPickup)
+                return realTeamIndex;
+
+            // Player team is allowed to pickup, just pretend any team with pickup permissions are player
+            return TeamIndex.Player;
         }
     }
-    static TeamIndex HandleAttemptGrant(TeamIndex teamIndex)
-    {
-        TeamBehavior teamBehavior = GetTeamBehavior(teamIndex);
-        if (teamBehavior == null) return teamIndex;
-        if (teamBehavior.CanPickup) return TeamIndex.Player;
-        return teamIndex;
-    }
+
     static LayerIndex LayerIndex_GetAppropriateFakeLayerForTeam(On.RoR2.LayerIndex.orig_GetAppropriateFakeLayerForTeam orig, TeamIndex teamIndex)
     {
         LayerIndex fakeLayer = orig(teamIndex);
@@ -717,6 +763,11 @@ public static partial class TeamsAPI
         public virtual LayerIndex TeamFakeLayer => (Classification & TeamClassification.Player) != 0 ? LayerIndex.playerFakeActor : LayerIndex.fakeActor;
 
         /// <summary>
+        /// If this team can pick up items or equipment
+        /// </summary>
+        public virtual bool CanPickup => Classification == TeamClassification.Player;
+
+        /// <summary>
         /// Constructs a <see cref="TeamBehavior"/> with all required values set
         /// </summary>
         /// <param name="name">The internal name of this team, used in place of an enum string representation</param>
@@ -731,10 +782,6 @@ public static partial class TeamsAPI
             Name = name;
             Classification = teamClassification;
         }
-        /// <summary>
-        /// Make custom team be able to pickup pickups
-        /// </summary>
-        public virtual bool CanPickup => Classification == TeamClassification.Player;
     }
 
     /// <summary>

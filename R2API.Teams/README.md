@@ -14,8 +14,11 @@ Use `TeamsAPI.RegisterTeam` to add a new team, the `TeamIndex` of the new team i
 
 ## Changelog
 
+### '1.0.2'
+* Updated for Alloyed Collective.
+
 ### '1.0.1'
-* Add CanPickup virtual bool to TeamBehaviour.
+* Added CanPickup property to TeamBehaviour for overriding if a team can pick up items/equipments off the ground.
 
 ### '1.0.0'
-* Initial Release
+* Initial Release.

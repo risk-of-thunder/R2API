@@ -33,8 +33,21 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 
 ## Changelog
 
+### `1.6.6`
+* Fixed barrier decay freeze stat failing to freeze barrier decay
+* Flat cooldown reduction stat can now be negative (increasing cooldowns by a flat amount)
+
+### `1.6.5`
+* Fixed luck and barrier stat hooks for Alloyed Collective
+
+### `1.6.4`
+* Skill slot stats are now handled by `SkillSlotStatModifiers`:
+	* Split into `primarySkill`/`secondarySkill`/`utilitySkill`/`specialSkill`/`allSkills` for stat manipulation to apply to specific slots or all slots simultaneously.
+	* Added `cooldownReductionMultAdd`, and `cooldownMultiplier` stats for better modification of skill cooldowns.
+	* Added `bonusStockAdd` for adding charges to skills.
+
 ### `1.6.3`
-- Improved reliability of luck stat hooks
+* Improved reliability of luck stat hooks
 
 ### `1.6.2`
 * Added support for fractional/non-integer luck values

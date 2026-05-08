@@ -79,13 +79,25 @@ public static class NetworkingHelpers
     public static void ApplyDot(this HealthComponent victim, GameObject attacker,
         DotController.DotIndex dotIndex, float duration = 8f, float damageMultiplier = 1f)
     {
+        ApplyDot(victim, new InflictDotInfo
+        {
+            victimObject = victim.gameObject,
+            attackerObject = attacker,
+            dotIndex = dotIndex,
+            duration = duration,
+            damageMultiplier = damageMultiplier
+        });
+    }
+
+    public static void ApplyDot(this HealthComponent victim, InflictDotInfo inflictDotInfo)
+    {
         if (NetworkServer.active)
         {
-            DotController.InflictDot(victim.gameObject, attacker, dotIndex, duration, damageMultiplier);
+            DotController.InflictDot(ref inflictDotInfo);
         }
         else
         {
-            new DotMessage(victim.gameObject, attacker, dotIndex, duration, damageMultiplier)
+            new DotMessage(inflictDotInfo)
                 .Send(NetworkDestination.Server);
         }
     }

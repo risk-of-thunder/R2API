@@ -18,6 +18,10 @@ Do not hesitate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
 ## Changelog
 
+### '5.3.0'
+
+* Fixes for 1.4.1 Game Update.
+
 ### '5.1.7'
 
 * R2API.Teams compatibility

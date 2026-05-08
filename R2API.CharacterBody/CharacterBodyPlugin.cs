@@ -15,10 +15,14 @@ public sealed class CharacterBodyPlugin : BaseUnityPlugin
     {
         Logger = base.Logger;
         CharacterBodyAPI.SetHooks();
+        HealthBarAPI.SetHooks();
+        FootstepAPI.SetHooks();
     }
 
     private void OnDestroy()
     {
         CharacterBodyAPI.UnsetHooks();
+        HealthBarAPI.UnsetHooks();
+        FootstepAPI.UnsetHooks();
     }
 }

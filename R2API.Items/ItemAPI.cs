@@ -50,12 +50,20 @@ public static partial class ItemAPI
 
     private static bool _hooksEnabled = false;
 
+    private static ItemTag ItemTagCount = ItemTag.Count;
+
+    private const string XmlSafetyErrorMessage = "is not XML-safe and will not be added. " +
+                "This is usually because the name contains spaces, special characters, or other invalid characters. " +
+                "A good name would follow a pattern such as AUTHOR_MODNAME_ITEMNAME";
+
     internal static void SetHooks()
     {
         if (_hooksEnabled)
         {
             return;
         }
+
+        Enum.TryParse(nameof(ItemTag.Count), out ItemTagCount);
 
         IL.RoR2.CharacterModel.UpdateMaterials += MaterialFixForItemDisplayOnCharacter;
         On.RoR2.ItemDisplayRuleSet.Init += AddingItemDisplayRulesToCharacterModels;
@@ -96,17 +104,17 @@ public static partial class ItemAPI
     {
         if (!CatalogBlockers.GetAvailability<ItemDef>())
         {
-            ItemsPlugin.Logger.LogError($"Too late ! Tried to add item: {item.ItemDef.nameToken} after the ItemCatalog has Initialized!");
+            ItemsPlugin.Logger.LogError($"Too late! Tried to add item: {item.ItemDef.nameToken} after the ItemCatalog has initialized!");
         }
 
         if (!item.ItemDef)
         {
-            ItemsPlugin.Logger.LogError("ItemDef is null ! Can't add the custom item.");
+            ItemsPlugin.Logger.LogError("ItemDef is null! Can't add the custom item.");
         }
 
         if (string.IsNullOrEmpty(item.ItemDef.name))
         {
-            ItemsPlugin.Logger.LogError("ItemDef.name is null or empty ! Can't add the custom item.");
+            ItemsPlugin.Logger.LogError("ItemDef.name is null or empty! Can't add the custom item.");
         }
 
         if (!item.ItemDef.pickupModelPrefab && item.ItemDef.pickupModelReference == null)
@@ -134,7 +142,7 @@ public static partial class ItemAPI
         }
         catch
         {
-            ItemsPlugin.Logger.LogError($"Custom item '{item.ItemDef.name}' is not XMLsafe. Item not added.");
+            ItemsPlugin.Logger.LogError($"Custom item '{item.ItemDef.name}' " + XmlSafetyErrorMessage);
         }
         if (xmlSafe)
         {
@@ -171,17 +179,17 @@ public static partial class ItemAPI
     {
         if (!CatalogBlockers.GetAvailability<EquipmentDef>())
         {
-            ItemsPlugin.Logger.LogError($"Too late ! Tried to add equipment item: {equip.EquipmentDef.nameToken} after the EquipmentCatalog has initialized!");
+            ItemsPlugin.Logger.LogError($"Too late! Tried to add equipment item: {equip.EquipmentDef.nameToken} after the EquipmentCatalog has initialized!");
         }
 
         if (equip.EquipmentDef == null)
         {
-            ItemsPlugin.Logger.LogError("EquipmentDef is null ! Can't add the custom Equipment.");
+            ItemsPlugin.Logger.LogError("EquipmentDef is null! Can't add the custom Equipment.");
         }
 
         if (string.IsNullOrEmpty(equip.EquipmentDef.name))
         {
-            ItemsPlugin.Logger.LogError("EquipmentDef.name is null or empty ! Can't add the custom Equipment.");
+            ItemsPlugin.Logger.LogError("EquipmentDef.name is null or empty! Can't add the custom Equipment.");
         }
 
         if (!equip.EquipmentDef.pickupModelPrefab && equip.EquipmentDef.pickupModelReference == null)
@@ -209,7 +217,7 @@ public static partial class ItemAPI
         }
         catch
         {
-            ItemsPlugin.Logger.LogError($"Custom equipment '{equip.EquipmentDef.name}' is not XMLsafe. Equipment not added.");
+            ItemsPlugin.Logger.LogError($"Custom equipment '{equip.EquipmentDef.name}' " + XmlSafetyErrorMessage);
         }
         if (xmlSafe)
         {
@@ -235,7 +243,7 @@ public static partial class ItemAPI
 
         if (!CatalogBlockers.GetAvailability<ItemDef>())
         {
-            ItemsPlugin.Logger.LogError($"Too late ! Tried to add itemTag: {name} after the ItemCatalog has Initialized!");
+            ItemsPlugin.Logger.LogError($"Too late! Tried to add itemTag: {name} after the ItemCatalog has initialized!");
             return (ItemTag)(-1);
         }
 
@@ -243,7 +251,7 @@ public static partial class ItemAPI
         if (result == -1)
         {
             customItemTags.Add(name);
-            result = customItemTags.Count + (int)ItemTag.Count;
+            result = customItemTags.Count + (int)ItemTagCount;
         }
 
         return (ItemTag)result;
@@ -269,7 +277,7 @@ public static partial class ItemAPI
                 return (ItemTag)(-1);
             }
         }
-        return (ItemTag)(result + 1 + (int)ItemTag.Count);
+        return (ItemTag)(result + 1 + (int)ItemTagCount);
     }
 
     /// <summary>
@@ -443,10 +451,14 @@ public static partial class ItemAPI
     private static void AddCustomTagsToItemCatalog(ILContext il)
     {
         ILCursor c = new ILCursor(il);
-        if (c.TryGotoNext(MoveType.After, x => x.MatchLdcI4((int)ItemTag.Count)))
+        if (c.TryGotoNext(MoveType.After, x => x.MatchLdcI4((int)ItemTagCount)))
         {
-            c.EmitDelegate<Func<int>>(() => customItemTags.Count + 1);
+            c.EmitDelegate(() => customItemTags.Count + 1);
             c.Emit(OpCodes.Add);
+        }
+        else
+        {
+            ItemsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
         }
     }
     #endregion

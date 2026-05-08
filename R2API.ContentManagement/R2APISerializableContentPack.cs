@@ -75,6 +75,8 @@ public class R2APISerializableContentPack : ScriptableObject
     public GameEndingDef[] gameEndingDefs = Array.Empty<GameEndingDef>();
 
     public MiscPickupDef[] miscPickupDefs = Array.Empty<MiscPickupDef>();
+
+    public DroneDef[] droneDefs = Array.Empty<DroneDef>();
     #endregion
 
     #region Entity States
@@ -129,6 +131,7 @@ public class R2APISerializableContentPack : ScriptableObject
         cp.entityStateConfigurations.Add(entityStateConfigurations);
         cp.expansionDefs.Add(expansionDefs);
         cp.entitlementDefs.Add(entitlementDefs);
+        cp.droneDefs.Add(droneDefs);
 
         List<Type> list = new List<Type>();
         for (int i = 0; i < entityStateTypes.Length; i++)
@@ -209,6 +212,7 @@ public class R2APISerializableContentPack : ScriptableObject
         RemoveNullFields(ref gameEndingDefs);
         RemoveNullFields(ref musicTrackDefs);
         RemoveNullFields(ref miscPickupDefs);
+        RemoveNullFields(ref droneDefs);
 
         RemoveNullFields(ref entityStateConfigurations);
 

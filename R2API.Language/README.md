@@ -18,6 +18,9 @@ An example tutorial on how to use .language files to load tokens can be found [h
 
 ## Changelog
 
+### '1.1.0'
+* Fix LanguageAPI.AddOverlayPath not working.
+
 ### '1.0.1'
 * Fix the NuGet package which had a dependency on a non-existent version of `R2API.Core`.
 

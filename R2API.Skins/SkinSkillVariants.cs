@@ -1,7 +1,9 @@
 ﻿using HarmonyLib;
+using HG.Coroutines;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using MonoMod.Utils;
 using R2API.SkinsAPI.Interop;
 using R2API.Utils;
 using RoR2;
@@ -20,14 +22,15 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using static R2API.SkinSkillVariants;
+using static Rewired.InputMapper;
 using static UnityEngine.GridBrushBase;
 
 namespace R2API;
 public static partial class SkinSkillVariants
 {
     public static Dictionary<SkinDef, BodyIndex> skinToBody = [];
-    internal static Dictionary<SkinDef, SkinDefParams> skinDefToSkinDefParams = [];
-    internal static Dictionary<SkinDef, SkinDefParams> skinDefToOptimizedSkinDefParams = [];
+    private static Dictionary<SkinDef, SkinDef> lobbySkinDefToBodySkinDef = [];
+    private static ParallelCoroutine parallelCoroutine;
     #region Hooks
     private static bool _hooksSet;
     private static bool _isLoaded;
@@ -45,7 +48,22 @@ public static partial class SkinSkillVariants
         On.RoR2.SkinDef.MinionSkinTemplate.ctor += MinionSkinTemplate_ctor;
         IL.RoR2.ProjectileGhostReplacementManager.FindProjectileGhostPrefab += ProjectileGhostReplacementManager_FindProjectileGhostPrefab;
         IL.RoR2.MasterSummon.Perform += MasterSummon_Perform;
+        IL.RoR2.SurvivorCatalog.SetSurvivorDefs += SurvivorCatalog_SetSurvivorDefs;
+        On.RoR2.SurvivorCatalog.SetSurvivorDefs += SurvivorCatalog_SetSurvivorDefs1;
+        
     }
+
+    private static void SurvivorCatalog_SetSurvivorDefs1(On.RoR2.SurvivorCatalog.orig_SetSurvivorDefs orig, SurvivorDef[] newSurvivorDefs)
+    {
+        orig(newSurvivorDefs);
+        if (parallelCoroutine == null) return;
+        IEnumerator runLoadCoroutine()
+        {
+            yield return parallelCoroutine;
+        }
+        RoR2Application.instance.StartCoroutine(runLoadCoroutine());
+    }
+
     internal static void UnsetHooks()
     {
         _hooksSet = false;
@@ -56,6 +74,27 @@ public static partial class SkinSkillVariants
         On.RoR2.SkinDef.MinionSkinTemplate.ctor -= MinionSkinTemplate_ctor;
         IL.RoR2.ProjectileGhostReplacementManager.FindProjectileGhostPrefab -= ProjectileGhostReplacementManager_FindProjectileGhostPrefab;
         IL.RoR2.MasterSummon.Perform -= MasterSummon_Perform;
+        IL.RoR2.SurvivorCatalog.SetSurvivorDefs -= SurvivorCatalog_SetSurvivorDefs;
+    }
+    private static void SurvivorCatalog_SetSurvivorDefs(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+        int locID = 4;
+        if (
+            c.TryGotoNext(MoveType.After,
+                x => x.MatchLdsfld(typeof(SurvivorCatalog), nameof(SurvivorCatalog.survivorDefs)),
+                x => x.MatchLdloc(out _),
+                x => x.MatchLdelemRef(),
+                x => x.MatchStloc(out locID)
+            ))
+        {
+            c.Emit(OpCodes.Ldloc, locID);
+            c.EmitDelegate(SetLobbySkinToBodySkin);
+        }
+        else
+        {
+            SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
+        }
     }
     private static void MinionSkinTemplate_ctor(On.RoR2.SkinDef.MinionSkinTemplate.orig_ctor orig, ref SkinDef.MinionSkinTemplate self, SkinDefParams.MinionSkinReplacement minionSkinReplacement)
     {
@@ -100,12 +139,12 @@ public static partial class SkinSkillVariants
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook 2 failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 2 failed!");
             }
         }
         else
         {
-            Debug.LogError(il.Method.Name + " IL Hook 1 failed!");
+            SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
         }
     }
     private static void LightReplacementTemplate_ctor(On.RoR2.SkinDef.LightReplacementTemplate.orig_ctor orig, ref SkinDef.LightReplacementTemplate self, CharacterModel.LightInfo source, GameObject rootObject)
@@ -142,7 +181,7 @@ public static partial class SkinSkillVariants
         }
         else
         {
-            Debug.LogError(il.Method.Name + " IL Hook failed!");
+            SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
         }
     }
     private static void MeshReplacementTemplate_ctor(On.RoR2.SkinDef.MeshReplacementTemplate.orig_ctor orig, ref SkinDef.MeshReplacementTemplate self, SkinDefParams.MeshReplacement source, GameObject rootObject)
@@ -157,6 +196,7 @@ public static partial class SkinSkillVariants
     class Patches
     {
         [HarmonyPatch(typeof(SkinDef.RuntimeSkin), nameof(SkinDef.RuntimeSkin.ApplyAsync), MethodType.Enumerator)]
+        [HarmonyPatch([typeof(GameObject), typeof(List<AssetReferenceT<Material>>), typeof(List<AssetReferenceT<Mesh>>), typeof(List<AssetReferenceT<GameObject>>), typeof(AsyncReferenceHandleUnloadType)])]
         [HarmonyILManipulator]
         private static void SkinDef_RuntimeSkin_ApplyAsync(MonoMod.Cil.ILContext il)
         {
@@ -164,16 +204,15 @@ public static partial class SkinSkillVariants
             il.Body.Variables.Add(new(il.Import(typeof(List<SkillDef>))));
             il.Body.Variables.Add(new(il.Import(typeof(Mesh))));
             FieldReference fieldReference = null;
+            FieldReference fieldReference2 = null;
+            int locID = 0;
             Instruction lastInstruction = il.Instrs[il.Instrs.Count - 1];
             int i = 0;
             ILCursor c = new ILCursor(il);
             if (
                 c.TryGotoNext(MoveType.After,
-                    x => x.MatchLdarg(0),
-                    x => x.MatchLdarg(0),
                     x => x.MatchLdfld(out fieldReference),
-                    x => x.MatchCallvirt(typeof(GameObject).GetPropertyGetter(nameof(GameObject.transform))),
-                    x => x.MatchStfld(out _)
+                    x => x.MatchCallvirt(typeof(GameObject).GetPropertyGetter(nameof(GameObject.transform)))
                 ))
             {
                 c.Emit(OpCodes.Ldarg_0);
@@ -187,7 +226,6 @@ public static partial class SkinSkillVariants
                     x => x.MatchLdflda<SkinDef.RuntimeSkin>(nameof(SkinDef.RuntimeSkin.rendererInfoTemplates)),
                     x => x.MatchLdloc(out _),
                     x => x.MatchCall(out _),
-                    //x => x.MatchCall<HG.ReadOnlyArray<SkinDef.RendererInfoTemplate>>("get_Item"),
                     x => x.MatchCall(typeof(SkinDef.RendererInfoTemplate).GetPropertyGetter(nameof(SkinDef.RendererInfoTemplate.rendererInfoData))),
                     x => x.MatchStloc(out i)
                 ))
@@ -198,11 +236,11 @@ public static partial class SkinSkillVariants
                 }
                 else
                 {
-                    Debug.LogError(il.Method.Name + " IL Hook 2 failed!");
+                    SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 2 failed!");
                 }
                 if (
                 c.TryGotoNext(MoveType.After,
-                    x => x.MatchStloc(8)
+                    x => x.MatchStloc(7)
                 ))
                 {
                     Instruction instruction = c.Prev;
@@ -218,13 +256,11 @@ public static partial class SkinSkillVariants
                 }
                 else
                 {
-                    Debug.LogError(il.Method.Name + " IL Hook 3 failed!");
+                    SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 3 failed!");
                 }
                 if (
                 c.TryGotoNext(MoveType.After,
-                    //x => x.MatchLdfld<SkinDef.MeshReplacementTemplate>(nameof(SkinDef.MeshReplacementTemplate.meshReference)),
-                    //x => x.MatchCallvirt(out _),
-                    x => x.MatchStloc(18)
+                    x => x.MatchStloc(19)
                 ))
                 {
                     Instruction instruction = c.Prev;
@@ -243,12 +279,39 @@ public static partial class SkinSkillVariants
                 }
                 else
                 {
-                    Debug.LogError(il.Method.Name + " IL Hook 4 failed!");
+                    SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 4 failed!");
                 }
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook 1 failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
+            }
+            if (
+                c.TryGotoPrev(MoveType.After,
+                    x => x.MatchLdfld(out fieldReference2),
+                    x => x.MatchLdcI4(1),
+                    x => x.MatchStfld<CharacterModel>(nameof(CharacterModel.forceUpdate))
+                ))
+            {
+                if (
+                c.TryGotoNext(MoveType.After,
+                    x => x.MatchLdfld<CharacterModel>(nameof(CharacterModel.customGameObjectActivationTransforms)),
+                    x => x.MatchLdloc(out locID)
+                ))
+                {
+                    c.Emit(OpCodes.Ldarg_0);
+                    c.Emit(OpCodes.Ldfld, fieldReference2);
+                    c.Emit(OpCodes.Ldloc, locID);
+                    c.EmitDelegate(HandleSkinCustomGameobjectComponent);
+                }
+                else
+                {
+                    SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 6 failed!");
+                }   
+            }
+            else
+            {
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 5 failed!");
             }
             c.Goto(lastInstruction);
             c.Index--;
@@ -268,7 +331,6 @@ public static partial class SkinSkillVariants
                     x => x.MatchLdloc(1),
                     x => x.MatchLdloc(6),
                     x => x.MatchCallvirt(out _)
-                    //x => x.MatchCallvirt<List<SkinDef>>(nameof(List<SkinDef>.Add))
                 ))
             {
                 c.Emit(OpCodes.Ldloc, 6);
@@ -277,7 +339,7 @@ public static partial class SkinSkillVariants
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook 1 failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
             }
             if (
                 c.TryGotoNext(MoveType.Before,
@@ -285,26 +347,23 @@ public static partial class SkinSkillVariants
                     x => x.MatchLdcI4(0),
                     x => x.MatchStfld(out _),
                     x => x.MatchBr(out _)
-                    //x => x.MatchCallvirt<List<SkinDef>>(nameof(List<SkinDef>.Add))
                 ))
             {
                 c.EmitDelegate(ApplyPendingSkinSkillVariations);
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook 2 failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 2 failed!");
             }
         }
-        [HarmonyPatch(typeof(SkinDef), nameof(SkinDef.ApplyAsync), MethodType.Enumerator)]
+        [HarmonyPatch(typeof(SkinDef), nameof(SkinDef.BakeAsync), MethodType.Enumerator)]
         [HarmonyILManipulator]
         private static void SkinDef_BakeAsync(MonoMod.Cil.ILContext il)
         {
             ILCursor c = new ILCursor(il);
             if (
-                c.TryGotoNext(MoveType.Before,
-                    x => x.MatchLdarg(0),
-                    x => x.MatchLdloc(1),
-                    x => x.MatchCall(typeof(SkinDef).GetPropertyGetter(nameof(SkinDef.runtimeSkin)))
+                c.TryGotoNext(MoveType.After,
+                    x => x.MatchStfld<SkinDef>(nameof(SkinDef._runtimeSkin))
                 ))
             {
                 c.Emit(OpCodes.Ldloc, 1);
@@ -312,7 +371,7 @@ public static partial class SkinSkillVariants
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
             }
         }
         [HarmonyPatch(typeof(ModelSkinController), nameof(ModelSkinController.ApplySkinAsync), MethodType.Enumerator)]
@@ -326,14 +385,14 @@ public static partial class SkinSkillVariants
                     x => x.MatchLdfld(out _),
                     x => x.MatchLdloc(1),
                     x => x.MatchCall(typeof(ModelSkinController).GetPropertyGetter(nameof(ModelSkinController.currentSkinIndex))),
-                    x => x.MatchBeq(out _)
+                    x => x.MatchBneUn(out _)
                 ))
             {
-                c.RemoveRange(5);
+                c.RemoveRange(7);
             }
             else
             {
-                Debug.LogError(il.Method.Name + " IL Hook failed!");
+                SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
             }
         }
     }
@@ -453,6 +512,52 @@ public static partial class SkinSkillVariants
     #endregion
 
     #region Internal
+
+    private static void HandleSkinCustomGameobjectComponent(CharacterModel characterModel, Transform transform)
+    {
+        if (!transform || !characterModel) return;
+        SkinCustomGameobjectComponent skinCustomGameobjectComponent = transform.GetComponent<SkinCustomGameobjectComponent>();
+        if (!skinCustomGameobjectComponent) return;
+        skinCustomGameobjectComponent.characterModel = characterModel;
+        if (characterModel.baseLightInfos != null && skinCustomGameobjectComponent.extraLightInfos != null && skinCustomGameobjectComponent.extraLightInfos.Length > 0)
+        {
+            int LightInfosSizeBefore = characterModel.baseLightInfos.Length;
+            Array.Resize(ref characterModel.baseLightInfos, LightInfosSizeBefore + skinCustomGameobjectComponent.extraLightInfos.Length);
+            for (int i = 0; i < skinCustomGameobjectComponent.extraLightInfos.Length; i++) characterModel.baseLightInfos[i + LightInfosSizeBefore] = skinCustomGameobjectComponent.extraLightInfos[i];
+        }
+        if (characterModel.baseRendererInfos == null || skinCustomGameobjectComponent.extraRendererInfos == null || skinCustomGameobjectComponent.extraRendererInfos.Length == 0) return;
+        int RendererInfosSizeBefore = characterModel.baseRendererInfos.Length;
+        Array.Resize(ref characterModel.baseRendererInfos, RendererInfosSizeBefore + skinCustomGameobjectComponent.extraRendererInfos.Length);
+        for (int i = 0; i < skinCustomGameobjectComponent.extraRendererInfos.Length; i++) characterModel.baseRendererInfos[i + RendererInfosSizeBefore] = skinCustomGameobjectComponent.extraRendererInfos[i];
+    }
+    private static void SetLobbySkinToBodySkin(SurvivorDef survivorDef)
+    {
+        if (!survivorDef) return;
+        if (parallelCoroutine == null) parallelCoroutine = new ParallelCoroutine();
+        parallelCoroutine.Add(SetLobbySkinToBodySkinAsync(survivorDef));
+    }
+    private static IEnumerator SetLobbySkinToBodySkinAsync(SurvivorDef survivorDef)
+    {
+        ModelLocator modelLocator = survivorDef.bodyPrefab ? survivorDef.bodyPrefab.GetComponent<ModelLocator>() : null;
+        yield return null;
+        if (!modelLocator) yield break;
+        ModelSkinController bodyPrefabModelSkinController = modelLocator._modelTransform ? modelLocator._modelTransform.GetComponent<ModelSkinController>() : null;
+        yield return null;
+        if (!bodyPrefabModelSkinController) yield break;
+        ModelSkinController displayPrefabModelSkinController = survivorDef.displayPrefab ? survivorDef.displayPrefab.GetComponentInChildren<ModelSkinController>() : null;
+        yield return null;
+        if (!displayPrefabModelSkinController) yield break;
+        SkinDef[] bodyPrefabModelSkinControllerSkins = bodyPrefabModelSkinController.skins;
+        SkinDef[] displayPrefabModelSkinControllerSkins = displayPrefabModelSkinController.skins;
+        if (bodyPrefabModelSkinControllerSkins == null || displayPrefabModelSkinControllerSkins == null || bodyPrefabModelSkinControllerSkins.Length != displayPrefabModelSkinControllerSkins.Length) yield break;
+        for (int i = 0; i < bodyPrefabModelSkinControllerSkins.Length; i++)
+        {
+            SkinDef bodySkinDef = bodyPrefabModelSkinControllerSkins[i];
+            SkinDef lobbySkinDef = displayPrefabModelSkinControllerSkins[i];
+            if (!bodySkinDef || !lobbySkinDef) continue;
+            if (!lobbySkinDefToBodySkinDef.ContainsKey(lobbySkinDef)) lobbySkinDefToBodySkinDef.Add(lobbySkinDef, bodySkinDef);
+        }
+    }
     private static List<SkillDef> CacheSkillDefs(GameObject gameObject, SkinDef.RuntimeSkin runtimeSkin)
     {
         HurtBoxGroup hurtBoxGroup = gameObject.GetComponent<HurtBoxGroup>();
@@ -481,7 +586,25 @@ public static partial class SkinSkillVariants
     }
     private static List<SkillDef> CacheSkillDefsInLobby(GameObject gameObject, SkinDef.RuntimeSkin runtimeSkin)
     {
-        BodyIndex bodyIndex = skinToBody[runtimeSkin.GetSkinDef()];
+        SkinDef skinDef = runtimeSkin.GetSkinDef();
+        if (skinDef == null) return null;
+        BodyIndex bodyIndex;
+        if (skinToBody.ContainsKey(skinDef))
+        {
+            bodyIndex = skinToBody[skinDef];
+        }
+        else
+        {
+            bodyIndex = BodyIndex.None;
+            if (lobbySkinDefToBodySkinDef.TryGetValue(skinDef, out SkinDef lobbySkinDef))
+            {
+                if (skinToBody.ContainsKey(lobbySkinDef))
+                {
+                    bodyIndex = skinToBody[lobbySkinDef];
+                }
+            }
+        }
+        if (bodyIndex == BodyIndex.None) return null;
         GameObject body = BodyCatalog.GetBodyPrefab(bodyIndex);
         if (body == null) return null;
         SurvivorMannequinSlotController componentInParent = gameObject.GetComponentInParent<SurvivorMannequinSlotController>();
@@ -1395,7 +1518,7 @@ public class SkinSkillVariantsDef : ScriptableObject
     internal static List<SkinSkillVariantsDef> pendingSkinSkillVariantsDefs = [];
     [Tooltip("SkinDefParams to apply SkillVariants")]
     public SkinDefParams[] skinDefParameters = [];
-    [Tooltip("Put ModelSkinController from either the body prefab or display prefab if you want this to be applied to all possible skins. \nSkillVariants added by it will have lower priority")]
+    [Tooltip("Put ModelSkinController from body prefab if you want this to be applied to all possible skins")]
     [PrefabReference]
     public ModelSkinController modelSkinController;
     public RendererInfoSkillVariant[] rendererInfoSkillVariants = [];
@@ -1403,6 +1526,7 @@ public class SkinSkillVariantsDef : ScriptableObject
     public LightInfoSkillVariant[] lightInfoSkillVariants = [];
     public ProjectileGhostReplacementSkillVariant[] projectileGhostReplacementSkillVariants = [];
     public MinionSkinReplacementSkillVariant[] minionSkinReplacementSkillVariants = [];
+    public bool lowPriority;
     private bool registered;
     private bool applied;
     public void AddSkinDefParams(SkinDefParams skinDefParams) => Add(ref skinDefParameters, skinDefParams);
@@ -1444,31 +1568,31 @@ public class SkinSkillVariantsDef : ScriptableObject
                 SkinDefParams optimisedSkinDefParams = GetOptimizedSkinDefParams(skinDef);
                 if (optimisedSkinDefParams && !skinDefParams1.Contains(skinDefParams)) skinDefParams1.Add(optimisedSkinDefParams);
             }
-            HandleArray([.. skinDefParams1], true);
+            HandleArray([.. skinDefParams1]);
         }
-        HandleArray(skinDefParameters, false);
+        HandleArray(skinDefParameters);
         applied = true;
         yield break;
     }
-    private void HandleArray(SkinDefParams[] skinDefParamsArray, bool lowPriority)
+    private void HandleArray(SkinDefParams[] skinDefParamsArray)
     {
         for (int i = 0; i < skinDefParamsArray.Length; i++)
         {
             SkinDefParams skinDefParams = skinDefParamsArray[i];
             if (skinDefParams == null) continue;
             CharacterModel.RendererInfo[] rendererInfos = skinDefParams.rendererInfos;
-            PopulateValues(ref rendererInfos, rendererInfoSkillVariants, lowPriority);
+            PopulateValues(ref rendererInfos, rendererInfoSkillVariants);
             SkinDefParams.MeshReplacement[] meshReplacements = skinDefParams.meshReplacements;
-            PopulateValues(ref meshReplacements, meshReplacementSkillVariants, lowPriority);
+            PopulateValues(ref meshReplacements, meshReplacementSkillVariants);
             CharacterModel.LightInfo[] lightInfos = skinDefParams.lightReplacements;
-            PopulateValues(ref lightInfos, lightInfoSkillVariants, lowPriority);
+            PopulateValues(ref lightInfos, lightInfoSkillVariants);
             SkinDefParams.ProjectileGhostReplacement[] projectileGhostReplacements = skinDefParams.projectileGhostReplacements;
-            PopulateValues(ref projectileGhostReplacements, projectileGhostReplacementSkillVariants, lowPriority);
+            PopulateValues(ref projectileGhostReplacements, projectileGhostReplacementSkillVariants);
             SkinDefParams.MinionSkinReplacement[] minionSkinReplacements = skinDefParams.minionSkinReplacements;
-            PopulateValues(ref minionSkinReplacements, minionSkinReplacementSkillVariants, lowPriority);
+            PopulateValues(ref minionSkinReplacements, minionSkinReplacementSkillVariants);
         }
     }
-    private void PopulateValues<T1, T2>(ref T1[] t1s, T2[] t2s, bool lowPririty) where T2 : ISkillVariantStruct<T1>
+    private void PopulateValues<T1, T2>(ref T1[] t1s, T2[] t2s) where T2 : ISkillVariantStruct<T1>
     {
         if (t1s != null && t1s.Length > 0 && t2s != null && t2s.Length > 0)
             foreach (T2 t2 in t2s)
@@ -1479,7 +1603,7 @@ public class SkinSkillVariantsDef : ScriptableObject
                     ref T1 t1 = ref t1s[i];
                     if (t2.Compare(t1))
                     {
-                        t2.lowPriority = lowPririty;
+                        t2.lowPriority = lowPriority;
                         t2.Add(ref t1);
                     }
                 }
