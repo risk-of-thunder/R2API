@@ -1,5 +1,7 @@
 ﻿using RoR2;
 using System;
+using RoR2.ContentManagement;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,14 +27,14 @@ public static class SkinIDRS
 
         hooksSet = true;
 
-        On.RoR2.ModelSkinController.ApplySkin += SetCustomIDRS;
+        On.RoR2.ModelSkinController.ApplySkinAsync += SetCustomIDRS;
         RoR2Application.onLoad += SystemInit;
     }
 
     internal static void UnsetHooks()
     {
         hooksSet = false;
-        On.RoR2.ModelSkinController.ApplySkin -= SetCustomIDRS;
+        On.RoR2.ModelSkinController.ApplySkinAsync -= SetCustomIDRS;
         RoR2Application.onLoad -= SystemInit;
     }
 
@@ -134,19 +136,21 @@ public static class SkinIDRS
         skinIDRSOverrides.Clear();
     }
 
-    private static void SetCustomIDRS(On.RoR2.ModelSkinController.orig_ApplySkin orig, ModelSkinController self, int skinIndex)
+    private static IEnumerator SetCustomIDRS(On.RoR2.ModelSkinController.orig_ApplySkinAsync orig, ModelSkinController self, int skinIndex, AsyncReferenceHandleUnloadType unloadType)
     {
-        orig(self, skinIndex);
+        IEnumerator enumerator = orig(self, skinIndex, unloadType);
 
         SkinDef skin = HG.ArrayUtils.GetSafe(self.skins, skinIndex);
         if (!skin)
-            return;
+            return enumerator;
 
         if (!skinToIDRS.TryGetValue(skin, out var idrs))
         {
-            return;
+            return enumerator;
         }
 
         self.characterModel.itemDisplayRuleSet = idrs;
+
+        return enumerator;
     }
 }

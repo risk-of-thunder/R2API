@@ -8,6 +8,10 @@ Alongside the old skin creation methods from `R2API.Loadout`, R2API.Skins also c
 
 ## Changelog
 
+### `1.4.5`
+
+* Fix custom IDRS not working since memop update.
+
 ### `1.4.4`
 
 * Async `SetLobbySkinToBodySkin` to reduce load time.
@@ -58,7 +62,7 @@ Alongside the old skin creation methods from `R2API.Loadout`, R2API.Skins also c
 
 ### `1.1.1`
 
-* Added the ability to override `DisplayGroupRule` per item for a skin. Which allows to add skin-specic item display without requiring to create IDRS with all items. See `SkinIDRS.AddGroupOverride()`.
+* Added the ability to override `DisplayGroupRule` per item for a skin. Which allows to add skin-specific item display without requiring to create IDRS with all items. See `SkinIDRS.AddGroupOverride()`.
 
 ### `1.1.0`
 
