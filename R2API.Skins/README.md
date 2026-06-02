@@ -8,6 +8,10 @@ Alongside the old skin creation methods from `R2API.Loadout`, R2API.Skins also c
 
 ## Changelog
 
+### `1.4.6`
+
+* Fix IDRS issues related to async skin application by refreshing item displays when a skin with a custom IDRS is applied.
+
 ### `1.4.5`
 
 * Fix custom IDRS not working since memop update.
@@ -42,7 +46,7 @@ Alongside the old skin creation methods from `R2API.Loadout`, R2API.Skins also c
 
 * Added SkinSkillVariants feature for adding skill-specific skin parts replacements.
 
-### '1.2.2'
+### `1.2.2`
 * Removed the SkinLightReplacement system, as it was not used by a single mod in the entire thunderstore, alongside the fact that the Memory Optimization patch made its concept obsolete.
 
 ### `1.2.1`
