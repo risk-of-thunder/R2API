@@ -1,10 +1,7 @@
 ﻿using RoR2;
-using System;
 using RoR2.ContentManagement;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace R2API;
@@ -145,11 +142,15 @@ public static class SkinIDRS
             return enumerator;
 
         if (!skinToIDRS.TryGetValue(skin, out var idrs))
-        {
             return enumerator;
-        }
 
         self.characterModel.itemDisplayRuleSet = idrs;
+
+        if (self.characterModel.body?.inventory is Inventory inventory)
+        {
+            self.characterModel.DisableAllItemDisplays();
+            self.characterModel.UpdateItemDisplay(inventory);
+        }
 
         return enumerator;
     }
