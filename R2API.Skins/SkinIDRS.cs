@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using HG.Coroutines;
+using RoR2;
 using RoR2.ContentManagement;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,14 +26,12 @@ public static class SkinIDRS
         hooksSet = true;
 
         On.RoR2.ModelSkinController.ApplySkinAsync += SetCustomIDRS;
-        RoR2Application.onLoad += SystemInit;
     }
 
     internal static void UnsetHooks()
     {
         hooksSet = false;
         On.RoR2.ModelSkinController.ApplySkinAsync -= SetCustomIDRS;
-        RoR2Application.onLoad -= SystemInit;
     }
 
     /// <summary>
@@ -89,10 +88,13 @@ public static class SkinIDRS
         return true;
     }
 
+    //Some mods add idrs in RoR2Application.onLoad, this is currently the last moment of loading
+    [InitDuringStartupPhase(GameInitPhase.PostProgressBar, int.MaxValue - 100)]
     private static void SystemInit()
     {
         initialized = true;
 
+        var coroutine = new ParallelCoroutine();
         foreach (var body in BodyCatalog.allBodyPrefabBodyBodyComponents)
         {
             if (!body ||
@@ -120,17 +122,47 @@ public static class SkinIDRS
                     skinToIDRS[skin] = idrs = baseIDRS ? UnityEngine.Object.Instantiate(baseIDRS) : ScriptableObject.CreateInstance<ItemDisplayRuleSet>();
                 }
 
-                foreach (var kvp in overrides)
-                {
-                    idrs.SetDisplayRuleGroup(kvp.Key, kvp.Value);
-                }
-
-                var async = idrs.GenerateRuntimeValuesAsync();
-                while (async.MoveNext()) ;
+                coroutine.Add(OverrideGroups(idrs, overrides));
             }
         }
 
+        SkinsPlugin.Instance.StartCoroutine(coroutine);
         skinIDRSOverrides.Clear();
+    }
+
+    private static IEnumerator OverrideGroups(ItemDisplayRuleSet idrs, Dictionary<UnityEngine.Object, DisplayRuleGroup> overrides)
+    {
+        for (var i = 0; i < 1000; i++)
+        {
+            var foundNonInitialized = false;
+            foreach (var group in idrs.keyAssetRuleGroups)
+            {
+                if (!group.keyAsset && (group.keyAssetAddress?.RuntimeKeyIsValid() ?? false))
+                {
+                    //Some mod just added new idrs and still generating runtime values, delaying overrides
+                    foundNonInitialized = true;
+                    break;
+                }
+            }
+
+            if (!foundNonInitialized)
+            {
+                break;
+            }
+
+            yield return new WaitForSecondsRealtime(0.25f);
+        }
+
+        foreach (var kvp in overrides)
+        {
+            idrs.SetDisplayRuleGroup(kvp.Key, kvp.Value);
+        }
+
+        var enumerator = idrs.GenerateRuntimeValuesAsync();
+        while (enumerator.MoveNext())
+        {
+            yield return enumerator.Current;
+        }
     }
 
     private static IEnumerator SetCustomIDRS(On.RoR2.ModelSkinController.orig_ApplySkinAsync orig, ModelSkinController self, int skinIndex, AsyncReferenceHandleUnloadType unloadType)
@@ -141,15 +173,19 @@ public static class SkinIDRS
         if (!skin)
             return enumerator;
 
-        if (!skinToIDRS.TryGetValue(skin, out var idrs))
+        var characterModel = self.characterModel;
+        if (!skinToIDRS.TryGetValue(skin, out var idrs) || idrs == characterModel.itemDisplayRuleSet)
             return enumerator;
 
-        self.characterModel.itemDisplayRuleSet = idrs;
-
-        if (self.characterModel.body?.inventory is Inventory inventory)
+        characterModel.itemDisplayRuleSet = idrs;
+        if (characterModel.body && characterModel.body.inventory)
         {
-            self.characterModel.DisableAllItemDisplays();
-            self.characterModel.UpdateItemDisplay(inventory);
+            characterModel.DisableAllItemDisplays();
+            characterModel.SetEquipmentDisplay(EquipmentIndex.None);
+
+            characterModel.body.inventory.wasRecentlyCreated = true;
+            characterModel.UpdateItemDisplay(characterModel.body.inventory);
+            characterModel.SetEquipmentDisplay(characterModel.inventoryEquipmentIndex);
         }
 
         return enumerator;

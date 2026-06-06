@@ -11,10 +11,12 @@ namespace R2API;
 public sealed class SkinsPlugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger { get; set; }
+    internal static SkinsPlugin Instance { get; private set; }
 
     public static Harmony harmonyPatcher;
     private void Awake()
     {
+        Instance = this;
         Logger = base.Logger;
         harmonyPatcher = new Harmony(Skins.PluginGUID);
     }
