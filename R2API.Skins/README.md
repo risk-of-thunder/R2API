@@ -8,6 +8,11 @@ Alongside the old skin creation methods from `R2API.Loadout`, R2API.Skins also c
 
 ## Changelog
 
+### `1.4.7`
+
+* Fix IDRS issues when adding skin-specific overrides under certain conditions.
+* Fix IDRS issues related to async skin application by refreshing item displays when a skin with a custom IDRS is applied.
+
 ### `1.4.6`
 
 * Fix IDRS issues related to async skin application by refreshing item displays when a skin with a custom IDRS is applied.
