@@ -13,8 +13,12 @@ internal static class CharacterBodyInterop
     public static void SetModdedBodyFlags(CharacterBody characterBody, byte[] value) => characterBody.r2api_moddedBodyFlags = value;
     public static Sprite GetCustomSprintIcon(CharacterBody characterBody) => characterBody.r2api_customSprintIcon;
     public static void SetCustomSprintIcon(CharacterBody characterBody, Sprite value) => characterBody.r2api_customSprintIcon = value;
+    public static Color? GetCustomSprintColor(CharacterBody characterBody) => characterBody.r2api_customSprintColor;
+    public static void SetCustomSprintColor(CharacterBody characterBody, Color? value) => characterBody.r2api_customSprintColor = value;
     public static GameObject GetCustomIconObject(SprintIcon sprintIcon) => sprintIcon.r2api_customIconObject;
     public static void SetCustomIconObject(SprintIcon sprintIcon, GameObject value) => sprintIcon.r2api_customIconObject = value;
     public static Sprite GetCurrentCustomSprintIcon(SprintIcon sprintIcon) => sprintIcon.r2api_currentCustomSprintIcon;
     public static void SetCurrentCustomSprintIcon(SprintIcon sprintIcon, Sprite value) => sprintIcon.r2api_currentCustomSprintIcon = value;
+    public static Color? GetCurrentCustomSprintColor(SprintIcon sprintIcon) => sprintIcon.r2api_currentCustomSprintColor;
+    public static void SetCurrentCustomSprintColor(SprintIcon sprintIcon, Color? value) => sprintIcon.r2api_currentCustomSprintColor = value;
 }

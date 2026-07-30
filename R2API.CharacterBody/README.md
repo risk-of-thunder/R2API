@@ -2,9 +2,12 @@
 
 ## About
 
-R2API.CharacterBody is a submodule for R2API that currently adds Modded Body Flags, Custom Sprint Icon, support for modded HealthBar Overlays and Footstep Effects.
+R2API.CharacterBody is a submodule for R2API that currently adds Modded Body Flags, Custom Sprint Icon and Color, Always Sprint Condition and Body Flag, Health Bar Overlays and Custom Footstep Effects.
 
 ## Changelog
+
+### '1.4.0'
+* Add `CustomSprintColor` and `AlwaysSprint` features.
 
 ### '1.3.0'
 * Add FootstepAPI for managing custom extra footstep logic.
