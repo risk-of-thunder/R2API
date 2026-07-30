@@ -34,6 +34,7 @@ public static partial class CharacterBodyAPI
     public const string PluginGUID = R2API.PluginGUID + ".character_body";
     public const string PluginName = R2API.PluginName + ".CharacterBody";
     public delegate bool CanAlwaysSprint(CharacterBody characterBody);
+    public static ModdedBodyFlag AlwaysSprint {  get; private set; }
     public static Color DefaultSprintColor => new Color(0.816f, 0.9655f, 1f, 1f);
     private static List<CanAlwaysSprint> canAlwaysSprints = [];
 
@@ -41,6 +42,7 @@ public static partial class CharacterBodyAPI
     {   
         if (_hooksEnabled) return;
         _hooksEnabled = true;
+        AlwaysSprint = ReserveBodyFlag();
         IL.RoR2.UI.SprintIcon.FixedUpdate += SprintIcon_FixedUpdate;
         On.EntityStates.GenericCharacterMain.HandleMovements += GenericCharacterMain_HandleMovements;
         IL.RoR2.PlayerCharacterMasterController.PollButtonInput += PlayerCharacterMasterController_PollButtonInput;
@@ -471,6 +473,7 @@ public static partial class CharacterBodyAPI
     public static bool GetAlwaysSprint(this CharacterBody characterBody)
     {
         CharacterBodyAPI.SetHooks();
+        if (characterBody.HasModdedBodyFlag(AlwaysSprint)) return true;
         foreach (CanAlwaysSprint canAlwaysSprint in canAlwaysSprints) if (canAlwaysSprint != null && canAlwaysSprint.Invoke(characterBody)) return true;
         return false;
     }
