@@ -34,7 +34,6 @@ public static partial class CharacterBodyAPI
     public const string PluginGUID = R2API.PluginGUID + ".character_body";
     public const string PluginName = R2API.PluginName + ".CharacterBody";
     public delegate bool CanAlwaysSprint(CharacterBody characterBody);
-    public static ModdedBodyFlag AlwaysSprint {  get; private set; }
     public static Color DefaultSprintColor => new Color(0.816f, 0.9655f, 1f, 1f);
     private static List<CanAlwaysSprint> canAlwaysSprints = [];
 
@@ -42,7 +41,6 @@ public static partial class CharacterBodyAPI
     {   
         if (_hooksEnabled) return;
         _hooksEnabled = true;
-        if (AlwaysSprint == (ModdedBodyFlag)0) AlwaysSprint = ReserveBodyFlag();
         IL.RoR2.UI.SprintIcon.FixedUpdate += SprintIcon_FixedUpdate;
         On.EntityStates.GenericCharacterMain.HandleMovements += GenericCharacterMain_HandleMovements;
         IL.RoR2.PlayerCharacterMasterController.PollButtonInput += PlayerCharacterMasterController_PollButtonInput;
@@ -175,7 +173,7 @@ public static partial class CharacterBodyAPI
         ILLabel iLLabel = null;
         if (c.TryGotoNext(
                 x => x.MatchLdarg(0),
-                x => x.MatchLdfld<SkillDef>("cancelSprintingOnActivation"),
+                x => x.MatchLdfld<SkillDef>(nameof(SkillDef.cancelSprintingOnActivation)),
                 x => x.MatchBrfalse(out iLLabel)
             ))
         {
@@ -223,14 +221,14 @@ public static partial class CharacterBodyAPI
         if (
             c.TryGotoNext(
                 x => x.MatchLdarg(2),
-                x => x.MatchLdflda<CameraModeBase.CameraModeContext>("targetInfo"),
-                x => x.MatchLdfld<CameraModeBase.TargetInfo>("isSprinting"),
+                x => x.MatchLdflda<CameraModeBase.CameraModeContext>(nameof(CameraModeBase.CameraModeContext.targetInfo)),
+                x => x.MatchLdfld<CameraModeBase.TargetInfo>(nameof(CameraModeBase.TargetInfo.isSprinting)),
                 x => x.MatchBrfalse(out iLLabel)
             ))
         {
             c.Emit(OpCodes.Ldarg_2);
-            c.EmitDelegate(sus);
-            bool sus(ref CameraModeBase.CameraModeContext cameraModeContext)
+            c.EmitDelegate(method1);
+            bool method1(ref CameraModeBase.CameraModeContext cameraModeContext)
             {
                 if (cameraModeContext.targetInfo.body != null)
                 {
@@ -257,7 +255,7 @@ public static partial class CharacterBodyAPI
         if (
             c.TryGotoNext(
                 x => x.MatchLdarg(0),
-                x => x.MatchLdfld<CrosshairManager>("cameraRigController"),
+                x => x.MatchLdfld<CrosshairManager>(nameof(CrosshairManager.cameraRigController)),
                 x => x.MatchCallvirt<CameraRigController>("get_hasOverride"),
                 x => x.MatchBrtrue(out iLLabel)
             )
@@ -473,7 +471,6 @@ public static partial class CharacterBodyAPI
     public static bool GetAlwaysSprint(this CharacterBody characterBody)
     {
         CharacterBodyAPI.SetHooks();
-        if (characterBody.HasModdedBodyFlag(AlwaysSprint)) return true;
         foreach (CanAlwaysSprint canAlwaysSprint in canAlwaysSprints) if (canAlwaysSprint != null && canAlwaysSprint.Invoke(characterBody)) return true;
         return false;
     }
