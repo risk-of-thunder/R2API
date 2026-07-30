@@ -564,6 +564,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.CharacterBodyAPI.CanAlwaysSprint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.CharacterBodyAPI.CanAlwaysSprint.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.CharacterBodyAPI.ModdedBodyFlag.yml",
       "output": {
         ".html": {
@@ -3216,11 +3226,11 @@
       "type": "Toc",
       "source_relative_path": "api/toc.yml",
       "output": {
-        ".json": {
-          "relative_path": "api/toc.json"
-        },
         ".html": {
           "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
         }
       },
       "version": ""
@@ -3239,11 +3249,11 @@
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
-        ".json": {
-          "relative_path": "toc.json"
-        },
         ".html": {
           "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
         }
       },
       "version": ""

@@ -3994,6 +3994,19 @@ references:
   commentId: T:R2API.CharacterBodyAPI
   fullName: R2API.CharacterBodyAPI
   nameWithType: CharacterBodyAPI
+- uid: R2API.CharacterBodyAPI.AddAlwaysSprintCondition(R2API.CharacterBodyAPI.CanAlwaysSprint)
+  name: AddAlwaysSprintCondition(CanAlwaysSprint)
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_AddAlwaysSprintCondition_R2API_CharacterBodyAPI_CanAlwaysSprint_
+  commentId: M:R2API.CharacterBodyAPI.AddAlwaysSprintCondition(R2API.CharacterBodyAPI.CanAlwaysSprint)
+  fullName: R2API.CharacterBodyAPI.AddAlwaysSprintCondition(R2API.CharacterBodyAPI.CanAlwaysSprint)
+  nameWithType: CharacterBodyAPI.AddAlwaysSprintCondition(CharacterBodyAPI.CanAlwaysSprint)
+- uid: R2API.CharacterBodyAPI.AddAlwaysSprintCondition*
+  name: AddAlwaysSprintCondition
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_AddAlwaysSprintCondition_
+  commentId: Overload:R2API.CharacterBodyAPI.AddAlwaysSprintCondition
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.AddAlwaysSprintCondition
+  nameWithType: CharacterBodyAPI.AddAlwaysSprintCondition
 - uid: R2API.CharacterBodyAPI.AddModdedBodyFlag(RoR2.CharacterBody,R2API.CharacterBodyAPI.ModdedBodyFlag)
   name: AddModdedBodyFlag(CharacterBody, ModdedBodyFlag)
   href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_AddModdedBodyFlag_RoR2_CharacterBody_R2API_CharacterBodyAPI_ModdedBodyFlag_
@@ -4007,6 +4020,64 @@ references:
   isSpec: "True"
   fullName: R2API.CharacterBodyAPI.AddModdedBodyFlag
   nameWithType: CharacterBodyAPI.AddModdedBodyFlag
+- uid: R2API.CharacterBodyAPI.AlwaysSprint
+  name: AlwaysSprint
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_AlwaysSprint
+  commentId: P:R2API.CharacterBodyAPI.AlwaysSprint
+  fullName: R2API.CharacterBodyAPI.AlwaysSprint
+  nameWithType: CharacterBodyAPI.AlwaysSprint
+- uid: R2API.CharacterBodyAPI.AlwaysSprint*
+  name: AlwaysSprint
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_AlwaysSprint_
+  commentId: Overload:R2API.CharacterBodyAPI.AlwaysSprint
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.AlwaysSprint
+  nameWithType: CharacterBodyAPI.AlwaysSprint
+- uid: R2API.CharacterBodyAPI.CanAlwaysSprint
+  name: CharacterBodyAPI.CanAlwaysSprint
+  href: api/R2API.CharacterBodyAPI.CanAlwaysSprint.html
+  commentId: T:R2API.CharacterBodyAPI.CanAlwaysSprint
+  fullName: R2API.CharacterBodyAPI.CanAlwaysSprint
+  nameWithType: CharacterBodyAPI.CanAlwaysSprint
+- uid: R2API.CharacterBodyAPI.DefaultSprintColor
+  name: DefaultSprintColor
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_DefaultSprintColor
+  commentId: P:R2API.CharacterBodyAPI.DefaultSprintColor
+  fullName: R2API.CharacterBodyAPI.DefaultSprintColor
+  nameWithType: CharacterBodyAPI.DefaultSprintColor
+- uid: R2API.CharacterBodyAPI.DefaultSprintColor*
+  name: DefaultSprintColor
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_DefaultSprintColor_
+  commentId: Overload:R2API.CharacterBodyAPI.DefaultSprintColor
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.DefaultSprintColor
+  nameWithType: CharacterBodyAPI.DefaultSprintColor
+- uid: R2API.CharacterBodyAPI.GetAlwaysSprint(RoR2.CharacterBody)
+  name: GetAlwaysSprint(CharacterBody)
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_GetAlwaysSprint_RoR2_CharacterBody_
+  commentId: M:R2API.CharacterBodyAPI.GetAlwaysSprint(RoR2.CharacterBody)
+  fullName: R2API.CharacterBodyAPI.GetAlwaysSprint(RoR2.CharacterBody)
+  nameWithType: CharacterBodyAPI.GetAlwaysSprint(CharacterBody)
+- uid: R2API.CharacterBodyAPI.GetAlwaysSprint*
+  name: GetAlwaysSprint
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_GetAlwaysSprint_
+  commentId: Overload:R2API.CharacterBodyAPI.GetAlwaysSprint
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.GetAlwaysSprint
+  nameWithType: CharacterBodyAPI.GetAlwaysSprint
+- uid: R2API.CharacterBodyAPI.GetCustomSprintColor(RoR2.CharacterBody)
+  name: GetCustomSprintColor(CharacterBody)
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_GetCustomSprintColor_RoR2_CharacterBody_
+  commentId: M:R2API.CharacterBodyAPI.GetCustomSprintColor(RoR2.CharacterBody)
+  fullName: R2API.CharacterBodyAPI.GetCustomSprintColor(RoR2.CharacterBody)
+  nameWithType: CharacterBodyAPI.GetCustomSprintColor(CharacterBody)
+- uid: R2API.CharacterBodyAPI.GetCustomSprintColor*
+  name: GetCustomSprintColor
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_GetCustomSprintColor_
+  commentId: Overload:R2API.CharacterBodyAPI.GetCustomSprintColor
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.GetCustomSprintColor
+  nameWithType: CharacterBodyAPI.GetCustomSprintColor
 - uid: R2API.CharacterBodyAPI.GetCustomSprintIcon(RoR2.CharacterBody)
   name: GetCustomSprintIcon(CharacterBody)
   href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_GetCustomSprintIcon_RoR2_CharacterBody_
@@ -4122,6 +4193,19 @@ references:
   isSpec: "True"
   fullName: R2API.CharacterBodyAPI.ReserveBodyFlag
   nameWithType: CharacterBodyAPI.ReserveBodyFlag
+- uid: R2API.CharacterBodyAPI.SetCustomSprintColor(RoR2.CharacterBody,System.Nullable{UnityEngine.Color})
+  name: SetCustomSprintColor(CharacterBody, Color?)
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_SetCustomSprintColor_RoR2_CharacterBody_System_Nullable_UnityEngine_Color__
+  commentId: M:R2API.CharacterBodyAPI.SetCustomSprintColor(RoR2.CharacterBody,System.Nullable{UnityEngine.Color})
+  fullName: R2API.CharacterBodyAPI.SetCustomSprintColor(RoR2.CharacterBody, UnityEngine.Color?)
+  nameWithType: CharacterBodyAPI.SetCustomSprintColor(CharacterBody, Color?)
+- uid: R2API.CharacterBodyAPI.SetCustomSprintColor*
+  name: SetCustomSprintColor
+  href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_SetCustomSprintColor_
+  commentId: Overload:R2API.CharacterBodyAPI.SetCustomSprintColor
+  isSpec: "True"
+  fullName: R2API.CharacterBodyAPI.SetCustomSprintColor
+  nameWithType: CharacterBodyAPI.SetCustomSprintColor
 - uid: R2API.CharacterBodyAPI.SetCustomSprintIcon(RoR2.CharacterBody,UnityEngine.Sprite)
   name: SetCustomSprintIcon(CharacterBody, Sprite)
   href: api/R2API.CharacterBodyAPI.html#R2API_CharacterBodyAPI_SetCustomSprintIcon_RoR2_CharacterBody_UnityEngine_Sprite_
@@ -19764,6 +19848,12 @@ references:
   commentId: T:RoR2.CharacterBody
   fullName: RoR2.CharacterBody
   nameWithType: CharacterBody
+- uid: RoR2.CharacterBody.r2api_customSprintColor
+  name: r2api_customSprintColor
+  href: api/RoR2.CharacterBody.html#RoR2_CharacterBody_r2api_customSprintColor
+  commentId: F:RoR2.CharacterBody.r2api_customSprintColor
+  fullName: RoR2.CharacterBody.r2api_customSprintColor
+  nameWithType: CharacterBody.r2api_customSprintColor
 - uid: RoR2.CharacterBody.r2api_customSprintIcon
   name: r2api_customSprintIcon
   href: api/RoR2.CharacterBody.html#RoR2_CharacterBody_r2api_customSprintIcon
@@ -20052,6 +20142,12 @@ references:
   commentId: T:RoR2.UI.SprintIcon
   fullName: RoR2.UI.SprintIcon
   nameWithType: SprintIcon
+- uid: RoR2.UI.SprintIcon.r2api_currentCustomSprintColor
+  name: r2api_currentCustomSprintColor
+  href: api/RoR2.UI.SprintIcon.html#RoR2_UI_SprintIcon_r2api_currentCustomSprintColor
+  commentId: F:RoR2.UI.SprintIcon.r2api_currentCustomSprintColor
+  fullName: RoR2.UI.SprintIcon.r2api_currentCustomSprintColor
+  nameWithType: SprintIcon.r2api_currentCustomSprintColor
 - uid: RoR2.UI.SprintIcon.r2api_currentCustomSprintIcon
   name: r2api_currentCustomSprintIcon
   href: api/RoR2.UI.SprintIcon.html#RoR2_UI_SprintIcon_r2api_currentCustomSprintIcon
