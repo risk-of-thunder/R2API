@@ -27,6 +27,7 @@ internal static class CharacterBodyPatcher
         {
             sprintIcon.Fields.Add(new FieldDefinition("r2api_customIconObject", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(GameObject))));
             sprintIcon.Fields.Add(new FieldDefinition("r2api_currentCustomSprintIcon", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(Sprite))));
+            sprintIcon.Fields.Add(new FieldDefinition("r2api_currentCustomSprintColor", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(Color?))));
         }
     }
     private static void PatchCharacterBody(AssemblyDefinition assembly)
@@ -36,6 +37,7 @@ internal static class CharacterBodyPatcher
         {
             characterBody.Fields.Add(new FieldDefinition("r2api_moddedBodyFlags", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(byte[]))));
             characterBody.Fields.Add(new FieldDefinition("r2api_customSprintIcon", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(Sprite))));
+            characterBody.Fields.Add(new FieldDefinition("r2api_customSprintColor", FieldAttributes.Public, assembly.MainModule.ImportReference(typeof(Color?))));
         }
     }
 }

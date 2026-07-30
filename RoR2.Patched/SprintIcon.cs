@@ -8,4 +8,5 @@ public class SprintIcon
 {
     public GameObject r2api_customIconObject;
     public Sprite r2api_currentCustomSprintIcon;
+    public Color? r2api_currentCustomSprintColor;
 }

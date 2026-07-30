@@ -8,4 +8,5 @@ public class CharacterBody
 {
     public byte[] r2api_moddedBodyFlags;
     public Sprite r2api_customSprintIcon;
+    public Color? r2api_customSprintColor;
 }
