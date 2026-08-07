@@ -2041,19 +2041,6 @@ references:
   isSpec: "True"
   fullName: R2API.Animations.Editor.AnimatorDiffImporter.OnImportAsset
   nameWithType: AnimatorDiffImporter.OnImportAsset
-- uid: R2API.Animations.Editor.AnimatorDiffImporter.OnValidate
-  name: OnValidate()
-  href: api/R2API.Animations.Editor.AnimatorDiffImporter.html#R2API_Animations_Editor_AnimatorDiffImporter_OnValidate
-  commentId: M:R2API.Animations.Editor.AnimatorDiffImporter.OnValidate
-  fullName: R2API.Animations.Editor.AnimatorDiffImporter.OnValidate()
-  nameWithType: AnimatorDiffImporter.OnValidate()
-- uid: R2API.Animations.Editor.AnimatorDiffImporter.OnValidate*
-  name: OnValidate
-  href: api/R2API.Animations.Editor.AnimatorDiffImporter.html#R2API_Animations_Editor_AnimatorDiffImporter_OnValidate_
-  commentId: Overload:R2API.Animations.Editor.AnimatorDiffImporter.OnValidate
-  isSpec: "True"
-  fullName: R2API.Animations.Editor.AnimatorDiffImporter.OnValidate
-  nameWithType: AnimatorDiffImporter.OnValidate
 - uid: R2API.Animations.Editor.AnimatorDiffImporter.PreventDiffDoubleClick(System.Int32,System.Int32)
   name: PreventDiffDoubleClick(int, int)
   href: api/R2API.Animations.Editor.AnimatorDiffImporter.html#R2API_Animations_Editor_AnimatorDiffImporter_PreventDiffDoubleClick_System_Int32_System_Int32_
