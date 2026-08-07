@@ -20,14 +20,6 @@ public class AnimatorDiffImporter : ScriptedImporter
     private const string copyButtonName = "Copy AnimatorController for modification";
     private const string copyButtonPath = $"Assets/R2API/Animation/{copyButtonName}";
 
-    //Turns out referenced controllers will be added to an AssetBundle on build,
-    //even though they are dependencies only in the editor.
-    //Keeping the fields to upgrade them to a new system.
-    [SerializeField, HideInInspector, Obsolete]
-    private AnimatorController sourceController;
-    [SerializeField, HideInInspector, Obsolete]
-    private AnimatorController modifiedController;
-
     public string modifiedControllerGuid;
 
     [MenuItem("Assets/Create/R2API/Animation/AnimatorDiff", false, -1000)]
@@ -133,44 +125,6 @@ public class AnimatorDiffImporter : ScriptedImporter
         return Path.GetExtension(AssetDatabase.GetAssetPath(EditorUtility.InstanceIDToObject(instanceID))).ToLower() == extensionWithDot;
     }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-    public void OnValidate()
-    {
-        if (this.modifiedController)
-        {
-            if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(this.modifiedController, out var guid, out long localId))
-            {
-                modifiedControllerGuid = guid;
-                this.modifiedController = null;
-            }
-        }
-
-        if (!sourceController)
-        {
-            return;
-        }
-
-        var modifiedController = AssetDatabase.LoadMainAssetAtGUID(new GUID(modifiedControllerGuid)) as AnimatorController;
-        var map = AssetDatabase.LoadAssetAtPath<AnimatorMap>(AssetDatabase.GetAssetPath(modifiedController));
-        if (map)
-        {
-            sourceController = null;
-            return;
-        }
-
-        map = ScriptableObject.CreateInstance<AnimatorMap>();
-        map.name = modifiedController.name + "_map";
-        map.sourceController = sourceController;
-        map.hideFlags = HideFlags.NotEditable;
-        FillMap(map, sourceController, modifiedController);
-
-        sourceController = null;
-        AssetDatabase.AddObjectToAsset(map, modifiedController);
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-    }
-#pragma warning restore CS0612 // Type or member is obsolete
-
     public override void OnImportAsset(AssetImportContext ctx)
     {
         if (string.IsNullOrEmpty(modifiedControllerGuid))
@@ -247,7 +201,7 @@ public class AnimatorDiffImporter : ScriptedImporter
 
         foreach (var parameter in modifiedController.parameters)
         {
-            if (sourceController.parameters.Any(p => p.name != parameter.name))
+            if (sourceController.parameters.Any(p => p.name == parameter.name))
             {
                 continue;
             }

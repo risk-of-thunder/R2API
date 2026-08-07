@@ -25,6 +25,9 @@ To create `Modified Controller` use option `Assets/R2API/Animation/Copy Animator
 After that you add the `AnimatorDiff` to an `AssetBundle` and in code you can create an instance of `AnimatorModifications` with `AnimatorModifications.CreateFromDiff()`.
 
 ## Changelog
+### '1.2.1'
+* Fixed `AnimatorDiff` incorrectly diffing parameters in the editor.
+
 ### '1.2.0'
 * Added support for behaviours.
 * Added support for child `StateMachine`s.
