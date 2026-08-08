@@ -14,9 +14,14 @@ R2API.Director is used for adding new Enemies and Interactables to the Director'
 
 Alongside this, R2API.Director also comes bundled with DirectorAPIHelpers, which contains helper methods which greatly simplify interacting with the Events described above.
 
+Additionaly you can clone existing spawn cards and set new values for cloned spawn cards using CharacterSpawnCardClone, InteractableSpawnCardClone and MultiCharacterSpawnCardClone.
+
 ## Related Pages
 
 ## Changelog
+
+### `3.0.0`
+* Added SpawnCardCloningAPI for cloning existing spawn cards.
 
 ### '2.3.9'
 * Fix `AddressableDCCSPool` not adding "Included If Conditions Met" entries with 0 required expansions to the target DCCS pool.
