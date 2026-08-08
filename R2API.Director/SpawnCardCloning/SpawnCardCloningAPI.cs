@@ -17,15 +17,15 @@ public static partial class SpawnCardCloningAPI
     internal static Dictionary<GameObject, List<object>> spawnCardClonesFromPrefab = [];
     internal static GameObjectArrayDictionary<List<object>> multiCharacterSpawnCardClonesFromPrefab = new GameObjectArrayDictionary<List<object>>();
     private static HashSet<DccsPool> appliedDccsPools = [];
-    private static Hook ClassicStageInfoRebuildCardsHook;
     private static bool handledMixEnemyMonsterCards;
     internal static void SetHooks()
     {
-        ClassicStageInfoRebuildCardsHook = new Hook(typeof(ClassicStageInfo).GetMethod(nameof(ClassicStageInfo.RebuildCards), BindingFlags.NonPublic | BindingFlags.Instance), typeof(SpawnCardCloningAPI).GetMethod(nameof(ClassicStageInfo_RebuildCards), BindingFlags.NonPublic | BindingFlags.Static), new HookConfig { Priority = int.MaxValue });
+        On.RoR2.ClassicStageInfo.RebuildCards += ClassicStageInfo_RebuildCards;
     }
+
     internal static void UnsetHooks()
     {
-        if (ClassicStageInfoRebuildCardsHook != null) ClassicStageInfoRebuildCardsHook.Undo();
+        On.RoR2.ClassicStageInfo.RebuildCards -= ClassicStageInfo_RebuildCards;
     }
     private static void ClassicStageInfo_RebuildCards(On.RoR2.ClassicStageInfo.orig_RebuildCards orig, ClassicStageInfo self, DirectorCardCategorySelection forcedMonsterCategory, DirectorCardCategorySelection forcedInteractableCategory)
     {
@@ -46,25 +46,18 @@ public static partial class SpawnCardCloningAPI
     }
     private static void HandlDccsPool(DccsPool dccsPool, RebuildCardsInfo rebuildCardsInfo)
     {
-        rebuildCardsInfo.dccsPool = dccsPool;
         if (!dccsPool || appliedDccsPools.Contains(dccsPool)) return;
-        try
-        {
-            HandlePoolCategories(dccsPool.poolCategories, rebuildCardsInfo);
-        }
-        catch (Exception e)
-        {
-            DirectorPlugin.Logger.LogError("Failed to setup cloned spawn cards for " + dccsPool.name);
-            DirectorPlugin.Logger.LogError(e);
-        }
+        rebuildCardsInfo.dccsPool = dccsPool;
+        HandlePoolCategories(dccsPool.poolCategories, rebuildCardsInfo);
         appliedDccsPools.Add(dccsPool);
     }
     private static void HandlePoolCategories(DccsPool.Category[] categories, RebuildCardsInfo rebuildCardsInfo)
     {
-        rebuildCardsInfo.categories = categories;
         if (categories == null) return;
+        rebuildCardsInfo.categories = categories;
         foreach (DccsPool.Category category in categories)
         {
+            if (category == null) return;
             rebuildCardsInfo.dccsPoolCategory = category;
             foreach (DccsPool.PoolEntry poolEntry in category.alwaysIncluded) HandlePoolEntry(poolEntry, rebuildCardsInfo);
             foreach (DccsPool.PoolEntry poolEntry in category.includedIfConditionsMet)HandlePoolEntry(poolEntry, rebuildCardsInfo);
@@ -73,14 +66,15 @@ public static partial class SpawnCardCloningAPI
     }
     private static void HandlePoolEntry(DccsPool.PoolEntry poolEntry, RebuildCardsInfo rebuildCardsInfo)
     {
-        rebuildCardsInfo.poolEntry = poolEntry;
         if (poolEntry == null) return;
+        rebuildCardsInfo.poolEntry = poolEntry;
         DirectorCardCategorySelection directorCardCategorySelection = poolEntry.dccs;
         if (!directorCardCategorySelection) return;
         HandleDirectorCardCategorySelection(directorCardCategorySelection, rebuildCardsInfo);
     }
     private static void HandleDirectorCardCategorySelection(DirectorCardCategorySelection directorCardCategorySelection, RebuildCardsInfo rebuildCardsInfo)
     {
+        if (directorCardCategorySelection.categories == null || directorCardCategorySelection.categories.Length == 0) return;
         rebuildCardsInfo.directorCardCategorySelection = directorCardCategorySelection;
         Dictionary<DirectorCard, string> overrideCategories = [];
         HashSet<string> validCategories = [];
@@ -93,12 +87,13 @@ public static partial class SpawnCardCloningAPI
         {
             ref DirectorCardCategorySelection.Category category = ref directorCardCategorySelection.categories[i];
             ref DirectorCard[] directorCards = ref category.cards;
-            rebuildCardsInfo.category = category;
             if (directorCards == null || directorCards.Length == 0) continue;
+            rebuildCardsInfo.category = category;
             HashSet<GameObject> appliedClonedSpawnCardPrefabs = [];
             HashSet<GameObject[]> appliedClonedMultiCharacterSpawnCardPrefabs = new HashSet<GameObject[]>(new GameObjectArrayComparer());
             foreach (DirectorCard directorCard in directorCards)
             {
+                if (directorCard == null) continue;
                 rebuildCardsInfo.directorCard = directorCard;
                 SpawnCard spawnCard = directorCard.spawnCard;
                 rebuildCardsInfo.spawnCard = spawnCard;
