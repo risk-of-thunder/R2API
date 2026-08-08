@@ -148,12 +148,12 @@ public abstract class BaseSpawnCardClone<T> : ScriptableObject where T : SpawnCa
     }
     public virtual void UpdateValuesForClonedSpawnCard(T originalSpawnCard, T clonedSpawnCard)
     {
-        clonedSpawnCard.directorCreditCost = overrideCost ? cost : (int)(clonedSpawnCard.directorCreditCost * costMultiplier);
-        clonedSpawnCard.eliteRules = overrideEliteRules ? eliteRules : clonedSpawnCard.eliteRules;
-        clonedSpawnCard.requiredFlags = overrideRequiredFlags ? requiredFlags : clonedSpawnCard.requiredFlags;
-        clonedSpawnCard.hullSize = overrideHullSize ? hullSize : clonedSpawnCard.hullSize;
-        clonedSpawnCard.nodeGraphType = overrideNodeGraphType ? nodeGrapthType : clonedSpawnCard.nodeGraphType;
-        clonedSpawnCard.forbiddenFlags = overrideForbiddenFlags ? forbiddenFlags : clonedSpawnCard.forbiddenFlags;
+        clonedSpawnCard.directorCreditCost = overrideCost ? cost : (int)(originalSpawnCard.directorCreditCost * costMultiplier);
+        clonedSpawnCard.eliteRules = overrideEliteRules ? eliteRules : originalSpawnCard.eliteRules;
+        clonedSpawnCard.requiredFlags = overrideRequiredFlags ? requiredFlags : originalSpawnCard.requiredFlags;
+        clonedSpawnCard.hullSize = overrideHullSize ? hullSize : originalSpawnCard.hullSize;
+        clonedSpawnCard.nodeGraphType = overrideNodeGraphType ? nodeGrapthType : originalSpawnCard.nodeGraphType;
+        clonedSpawnCard.forbiddenFlags = overrideForbiddenFlags ? forbiddenFlags : originalSpawnCard.forbiddenFlags;
     }
     public enum CloningType
     {
