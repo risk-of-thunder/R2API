@@ -69,12 +69,11 @@ public static partial class SpawnCardCloningAPI
         if (poolEntry == null) return;
         rebuildCardsInfo.poolEntry = poolEntry;
         DirectorCardCategorySelection directorCardCategorySelection = poolEntry.dccs;
-        if (!directorCardCategorySelection) return;
         HandleDirectorCardCategorySelection(directorCardCategorySelection, rebuildCardsInfo);
     }
     private static void HandleDirectorCardCategorySelection(DirectorCardCategorySelection directorCardCategorySelection, RebuildCardsInfo rebuildCardsInfo)
     {
-        if (directorCardCategorySelection.categories == null || directorCardCategorySelection.categories.Length == 0) return;
+        if (!directorCardCategorySelection || directorCardCategorySelection.categories == null || directorCardCategorySelection.categories.Length == 0) return;
         rebuildCardsInfo.directorCardCategorySelection = directorCardCategorySelection;
         Dictionary<DirectorCard, string> overrideCategories = [];
         HashSet<string> validCategories = [];
