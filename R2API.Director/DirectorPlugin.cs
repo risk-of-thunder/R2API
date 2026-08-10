@@ -15,15 +15,18 @@ public sealed class DirectorPlugin : BaseUnityPlugin
         Logger = base.Logger;
 
         DirectorAPI.SetHooks();
+        SpawnCardCloning.SpawnCardCloningAPI.SetHooks();
     }
 
     private void OnEnable()
     {
         DirectorAPI.SetHooks();
+        SpawnCardCloning.SpawnCardCloningAPI.SetHooks();
     }
 
     private void OnDisable()
     {
         DirectorAPI.UnsetHooks();
+        SpawnCardCloning.SpawnCardCloningAPI.UnsetHooks();
     }
 }
