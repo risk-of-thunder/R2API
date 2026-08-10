@@ -32,8 +32,8 @@ public static partial class SpawnCardCloningAPI
         RebuildCardsInfo rebuildCardsInfo = new RebuildCardsInfo
         {
             classicStageInfo = self,
-            forcedInteractableCategory = forcedMonsterCategory,
-            forcedMonsterCategory = forcedInteractableCategory
+            forcedInteractableCategory = forcedInteractableCategory,
+            forcedMonsterCategory = forcedMonsterCategory
         };
         if (!handledMixEnemyMonsterCards)
         {
