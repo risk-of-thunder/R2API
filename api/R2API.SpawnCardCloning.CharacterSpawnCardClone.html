@@ -1,0 +1,845 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class CharacterSpawnCardClone </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class CharacterSpawnCardClone ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone">
+
+
+
+  <h1 id="R2API_SpawnCardCloning_CharacterSpawnCardClone" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone" class="text-break">Class CharacterSpawnCardClone</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">Object</span></div>
+    <div class="level2"><span class="xref">ScriptableObject</span></div>
+    <div class="level3"><a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html">BaseSpawnCardClone</a>&lt;<span class="xref">CharacterSpawnCard</span>&gt;</div>
+    <div class="level4"><span class="xref">CharacterSpawnCardClone</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_cloningType">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.cloningType</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_targetSpawnCard">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.targetSpawnCard</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideReturnSpawnCard">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideReturnSpawnCard</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_targetPrefab">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.targetPrefab</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_prefab">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.prefab</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideCategory">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideCategory</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_selectionWeightMultiplier">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.selectionWeightMultiplier</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideSelectionWeight">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideSelectionWeight</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_selectionWeight">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.selectionWeight</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideSpawnDistance">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideSpawnDistance</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_spawnDistance">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.spawnDistance</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overridePreventOverhead">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overridePreventOverhead</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_preventOverhead">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.preventOverhead</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_minimumStageCompletionsMultiplier">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.minimumStageCompletionsMultiplier</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideMinimumStageCompletions">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideMinimumStageCompletions</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_minimumStageCompletions">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.minimumStageCompletions</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideRequiredUnlockableDef">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideRequiredUnlockableDef</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_requiredUnlockableDef">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.requiredUnlockableDef</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideForbiddenUnlockableDef">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideForbiddenUnlockableDef</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_forbiddenUnlockableDef">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.forbiddenUnlockableDef</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_costMultiplier">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.costMultiplier</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideCost">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideCost</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_cost">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.cost</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideHullSize">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideHullSize</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_hullSize">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.hullSize</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideNodeGraphType">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideNodeGraphType</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_nodeGrapthType">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.nodeGrapthType</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideRequiredFlags">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideRequiredFlags</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_requiredFlags">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.requiredFlags</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideForbiddenFlags">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideForbiddenFlags</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_forbiddenFlags">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.forbiddenFlags</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideEliteRules">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.overrideEliteRules</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_eliteRules">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.eliteRules</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_customCondition">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.customCondition</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_onSpawnCardCloneAdded">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.onSpawnCardCloneAdded</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_GetDirectorCard_RoR2_DirectorCard_">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.GetDirectorCard(DirectorCard)</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_GetSpawnCard__0_">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.GetSpawnCard(CharacterSpawnCard)</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_Register">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.Register()</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_Unregister">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.Unregister()</a>
+    </div>
+    <div>
+      <a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_UpdateValuesForClonedSpawnCards">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.UpdateValuesForClonedSpawnCards()</a>
+    </div>
+    <div>
+      <span class="xref">ScriptableObject.SetDirty()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">ScriptableObject.CreateInstance(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">ScriptableObject.CreateInstance(Type)</a>
+    </div>
+    <div>
+      <span class="xref">ScriptableObject.CreateInstance&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">ScriptableObject.CreateScriptableObject(ScriptableObject)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">ScriptableObject.CreateScriptableObjectInstanceFromName(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">ScriptableObject.CreateScriptableObjectInstanceFromType(Type, bool)</a>
+    </div>
+    <div>
+      <span class="xref">ScriptableObject.ResetAndApplyDefaultInstances(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.m_CachedPtr</span>
+    </div>
+    <div>
+      <span class="xref">Object.OffsetOfInstanceIDInCPlusPlusObject</span>
+    </div>
+    <div>
+      <span class="xref">Object.objectIsNullMessage</span>
+    </div>
+    <div>
+      <span class="xref">Object.cloneDestroyedMessage</span>
+    </div>
+    <div>
+      <span class="xref">Object.GetInstanceID()</span>
+    </div>
+    <div>
+      <span class="xref">Object.GetHashCode()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object.Equals(object)</a>
+    </div>
+    <div>
+      <span class="xref">Object.CompareBaseObjects(Object, Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.EnsureRunningOnMainThread()</span>
+    </div>
+    <div>
+      <span class="xref">Object.IsNativeObjectAlive(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.GetCachedPtr()</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate(Object, Vector3, Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate(Object, Vector3, Quaternion, Transform)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate(Object, Transform)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.Instantiate(Object, Transform, bool)</a>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate&lt;T&gt;(T)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate&lt;T&gt;(T, Vector3, Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate&lt;T&gt;(T, Vector3, Quaternion, Transform)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Instantiate&lt;T&gt;(T, Transform)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.Instantiate&lt;T&gt;(T, Transform, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">Object.Destroy(Object, float)</a>
+    </div>
+    <div>
+      <span class="xref">Object.Destroy(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.DestroyImmediate(Object, bool)</a>
+    </div>
+    <div>
+      <span class="xref">Object.DestroyImmediate(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsOfType(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsOfType(Type, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsByType(Type, FindObjectsSortMode)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsByType(Type, FindObjectsInactive, FindObjectsSortMode)</a>
+    </div>
+    <div>
+      <span class="xref">Object.DontDestroyOnLoad(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">Object.DestroyObject(Object, float)</a>
+    </div>
+    <div>
+      <span class="xref">Object.DestroyObject(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindSceneObjectsOfType(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsOfTypeIncludingAssets(Type)</a>
+    </div>
+    <div>
+      <span class="xref">Object.FindObjectsOfType&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">Object.FindObjectsByType&lt;T&gt;(FindObjectsSortMode)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.FindObjectsOfType&lt;T&gt;(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Object.FindObjectsByType&lt;T&gt;(FindObjectsInactive, FindObjectsSortMode)</span>
+    </div>
+    <div>
+      <span class="xref">Object.FindObjectOfType&lt;T&gt;()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.FindObjectOfType&lt;T&gt;(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Object.FindFirstObjectByType&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">Object.FindAnyObjectByType&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">Object.FindFirstObjectByType&lt;T&gt;(FindObjectsInactive)</span>
+    </div>
+    <div>
+      <span class="xref">Object.FindAnyObjectByType&lt;T&gt;(FindObjectsInactive)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectsOfTypeAll(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object.CheckNullArgument(object, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectOfType(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindFirstObjectByType(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindAnyObjectByType(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindObjectOfType(Type, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindFirstObjectByType(Type, FindObjectsInactive)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Object.FindAnyObjectByType(Type, FindObjectsInactive)</a>
+    </div>
+    <div>
+      <span class="xref">Object.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">Object.GetOffsetOfInstanceIDInCPlusPlusObject()</span>
+    </div>
+    <div>
+      <span class="xref">Object.CurrentThreadIsMainThread()</span>
+    </div>
+    <div>
+      <span class="xref">Object.Internal_CloneSingle(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Object.Internal_CloneSingleWithParent(Object, Transform, bool)</a>
+    </div>
+    <div>
+      <span class="xref">Object.Internal_InstantiateSingle(Object, Vector3, Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Internal_InstantiateSingleWithParent(Object, Transform, Vector3, Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.ToString(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.GetName(Object)</span>
+    </div>
+    <div>
+      <span class="xref">Object.IsPersistent(Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Object.SetName(Object, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Object.DoesObjectWithInstanceIDExist(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Object.FindObjectFromInstanceID(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Object.ForceLoadFromInstanceID(int)</a>
+    </div>
+    <div>
+      <span class="xref">Object.Internal_InstantiateSingle_Injected(Object, ref Vector3, ref Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.Internal_InstantiateSingleWithParent_Injected(Object, Transform, ref Vector3, ref Quaternion)</span>
+    </div>
+    <div>
+      <span class="xref">Object.name</span>
+    </div>
+    <div>
+      <span class="xref">Object.hideFlags</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="R2API.html">R2API</a>.<a class="xref" href="R2API.SpawnCardCloning.html">SpawnCardCloning</a></h6>
+  <h6><strong>Assembly</strong>: R2API.Director.dll</h6>
+  <h5 id="R2API_SpawnCardCloning_CharacterSpawnCardClone_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[CreateAssetMenu(fileName = &quot;New CharacterSpawnCardClone&quot;, menuName = &quot;R2API/DirectorAPI/SpawnCardCloning/CharacterSpawnCardClone&quot;)]
+public class CharacterSpawnCardClone : BaseSpawnCardClone&lt;CharacterSpawnCard&gt;</code></pre>
+  </div>
+  <h3 id="fields">Fields
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SpawnCardCloning_CharacterSpawnCardClone_equipmentToGrant.md&amp;value=---%0Auid%3A%20R2API.SpawnCardCloning.CharacterSpawnCardClone.equipmentToGrant%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Director/SpawnCardCloning/CharacterSpawnCardClone.cs/#L23">View Source</a>
+  </span>
+  <h4 id="R2API_SpawnCardCloning_CharacterSpawnCardClone_equipmentToGrant" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone.equipmentToGrant">equipmentToGrant</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Tooltip(&quot;The set of equipment to grant to any summoned character, after inventory copy.&quot;)]
+[NotNull]
+public EquipmentDef[] equipmentToGrant</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EquipmentDef</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SpawnCardCloning_CharacterSpawnCardClone_forbiddenAsBoss.md&amp;value=---%0Auid%3A%20R2API.SpawnCardCloning.CharacterSpawnCardClone.forbiddenAsBoss%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Director/SpawnCardCloning/CharacterSpawnCardClone.cs/#L16">View Source</a>
+  </span>
+  <h4 id="R2API_SpawnCardCloning_CharacterSpawnCardClone_forbiddenAsBoss" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone.forbiddenAsBoss">forbiddenAsBoss</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool forbiddenAsBoss</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SpawnCardCloning_CharacterSpawnCardClone_itemsToGrant.md&amp;value=---%0Auid%3A%20R2API.SpawnCardCloning.CharacterSpawnCardClone.itemsToGrant%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Director/SpawnCardCloning/CharacterSpawnCardClone.cs/#L27">View Source</a>
+  </span>
+  <h4 id="R2API_SpawnCardCloning_CharacterSpawnCardClone_itemsToGrant" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone.itemsToGrant">itemsToGrant</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[NotNull]
+[Tooltip(&quot;The set of items to grant to any summoned character, after inventory copy.&quot;)]
+public ItemCountPair[] itemsToGrant</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">ItemCountPair</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SpawnCardCloning_CharacterSpawnCardClone_loadout.md&amp;value=---%0Auid%3A%20R2API.SpawnCardCloning.CharacterSpawnCardClone.loadout%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Director/SpawnCardCloning/CharacterSpawnCardClone.cs/#L19">View Source</a>
+  </span>
+  <h4 id="R2API_SpawnCardCloning_CharacterSpawnCardClone_loadout" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone.loadout">loadout</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[CanBeNull]
+[Tooltip(&quot;The loadout for any summoned character to use.&quot;)]
+public SerializableLoadout loadout</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">SerializableLoadout</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SpawnCardCloning_CharacterSpawnCardClone_noElites.md&amp;value=---%0Auid%3A%20R2API.SpawnCardCloning.CharacterSpawnCardClone.noElites%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Director/SpawnCardCloning/CharacterSpawnCardClone.cs/#L14">View Source</a>
+  </span>
+  <h4 id="R2API_SpawnCardCloning_CharacterSpawnCardClone_noElites" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone.noElites">noElites</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool noElites</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideEquipmentToGrant.md&amp;value=---%0Auid%3A%20R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideEquipmentToGrant%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Director/SpawnCardCloning/CharacterSpawnCardClone.cs/#L20">View Source</a>
+  </span>
+  <h4 id="R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideEquipmentToGrant" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideEquipmentToGrant">overrideEquipmentToGrant</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool overrideEquipmentToGrant</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideForbiddenAsBoss.md&amp;value=---%0Auid%3A%20R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideForbiddenAsBoss%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Director/SpawnCardCloning/CharacterSpawnCardClone.cs/#L15">View Source</a>
+  </span>
+  <h4 id="R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideForbiddenAsBoss" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideForbiddenAsBoss">overrideForbiddenAsBoss</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool overrideForbiddenAsBoss</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideItemsToGrant.md&amp;value=---%0Auid%3A%20R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideItemsToGrant%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Director/SpawnCardCloning/CharacterSpawnCardClone.cs/#L24">View Source</a>
+  </span>
+  <h4 id="R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideItemsToGrant" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideItemsToGrant">overrideItemsToGrant</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool overrideItemsToGrant</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideNoElites.md&amp;value=---%0Auid%3A%20R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideNoElites%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Director/SpawnCardCloning/CharacterSpawnCardClone.cs/#L13">View Source</a>
+  </span>
+  <h4 id="R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideNoElites" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideNoElites">overrideNoElites</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Header(&quot;Cloning CharacterSpawnCard Settings&quot;)]
+public bool overrideNoElites</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SpawnCardCloning_CharacterSpawnCardClone_UpdateValuesForClonedSpawnCard_RoR2_CharacterSpawnCard_RoR2_CharacterSpawnCard_.md&amp;value=---%0Auid%3A%20R2API.SpawnCardCloning.CharacterSpawnCardClone.UpdateValuesForClonedSpawnCard(RoR2.CharacterSpawnCard%2CRoR2.CharacterSpawnCard)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Director/SpawnCardCloning/CharacterSpawnCardClone.cs/#L28">View Source</a>
+  </span>
+  <a id="R2API_SpawnCardCloning_CharacterSpawnCardClone_UpdateValuesForClonedSpawnCard_" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone.UpdateValuesForClonedSpawnCard*"></a>
+  <h4 id="R2API_SpawnCardCloning_CharacterSpawnCardClone_UpdateValuesForClonedSpawnCard_RoR2_CharacterSpawnCard_RoR2_CharacterSpawnCard_" data-uid="R2API.SpawnCardCloning.CharacterSpawnCardClone.UpdateValuesForClonedSpawnCard(RoR2.CharacterSpawnCard,RoR2.CharacterSpawnCard)">UpdateValuesForClonedSpawnCard(CharacterSpawnCard, CharacterSpawnCard)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void UpdateValuesForClonedSpawnCard(CharacterSpawnCard originalSpawnCard, CharacterSpawnCard clonedSpawnCard)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">CharacterSpawnCard</span></td>
+        <td><span class="parametername">originalSpawnCard</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CharacterSpawnCard</span></td>
+        <td><span class="parametername">clonedSpawnCard</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_UpdateValuesForClonedSpawnCard__0__0_">BaseSpawnCardClone&lt;CharacterSpawnCard&gt;.UpdateValuesForClonedSpawnCard(CharacterSpawnCard, CharacterSpawnCard)</a></div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_R2API_Networking_NetworkDestination_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkDestination)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Networking.Interfaces.NetRequestExtensions.html#R2API_Networking_Interfaces_NetRequestExtensions_Send__2___0_UnityEngine_Networking_NetworkConnection_">NetRequestExtensions.Send&lt;TRequest, TReply&gt;(TRequest, NetworkConnection)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_GetFieldValue__1_System_Object_System_String_">Reflection.GetFieldValue&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_GetPropertyValue__1_System_Object_System_String_">Reflection.GetPropertyValue&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod_System_Object_System_String_">Reflection.InvokeMethod(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod_System_Object_System_String_System_Object___">Reflection.InvokeMethod(object?, string?, params object?[]?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod__1_System_Object_System_String_">Reflection.InvokeMethod&lt;TReturn&gt;(object?, string?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_InvokeMethod__1_System_Object_System_String_System_Object___">Reflection.InvokeMethod&lt;TReturn&gt;(object?, string?, params object?[]?)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetFieldValue__1_System_Object_System_String___0_">Reflection.SetFieldValue&lt;TValue&gt;(object?, string?, TValue)</a>
+  </div>
+  <div>
+      <a class="xref" href="R2API.Utils.Reflection.html#R2API_Utils_Reflection_SetPropertyValue__1_System_Object_System_String___0_">Reflection.SetPropertyValue&lt;TValue&gt;(object?, string?, TValue)</a>
+  </div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/risk-of-thunder/R2API/new/master/apiSpec/new?filename=R2API_SpawnCardCloning_CharacterSpawnCardClone.md&amp;value=---%0Auid%3A%20R2API.SpawnCardCloning.CharacterSpawnCardClone%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/risk-of-thunder/R2API/blob/master/R2API.Director/SpawnCardCloning/CharacterSpawnCardClone.cs/#L9" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

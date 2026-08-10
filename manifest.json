@@ -2444,6 +2444,126 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.CloningType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.CloningType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.CustomCondition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.CustomCondition.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.OnSpawnCardCloneAdded.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.OnSpawnCardCloneAdded.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.CharacterSpawnCardClone.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.GameObjectArrayComparer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.GameObjectArrayComparer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.InteractableSpawnCardClone.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.RebuildCardsInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.RebuildCardsInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.SpawnCardClone.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.SpawnCardClone.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.SpawnCardCloningAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.SpawnCardCloningAPI.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/R2API.SpawnCardCloning.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/R2API.SpawnCardCloning.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/R2API.StageRegistration.yml",
       "output": {
         ".html": {

@@ -17382,6 +17382,886 @@ references:
   commentId: T:R2API.SoundPlugin
   fullName: R2API.SoundPlugin
   nameWithType: SoundPlugin
+- uid: R2API.SpawnCardCloning
+  name: R2API.SpawnCardCloning
+  href: api/R2API.SpawnCardCloning.html
+  commentId: N:R2API.SpawnCardCloning
+  fullName: R2API.SpawnCardCloning
+  nameWithType: R2API.SpawnCardCloning
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1
+  name: BaseSpawnCardClone<T>
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html
+  commentId: T:R2API.SpawnCardCloning.BaseSpawnCardClone`1
+  name.vb: BaseSpawnCardClone(Of T)
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T)
+  nameWithType: BaseSpawnCardClone<T>
+  nameWithType.vb: BaseSpawnCardClone(Of T)
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.CloningType
+  name: BaseSpawnCardClone<T>.CloningType
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.CloningType.html
+  commentId: T:R2API.SpawnCardCloning.BaseSpawnCardClone`1.CloningType
+  name.vb: BaseSpawnCardClone(Of T).CloningType
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.CloningType
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).CloningType
+  nameWithType: BaseSpawnCardClone<T>.CloningType
+  nameWithType.vb: BaseSpawnCardClone(Of T).CloningType
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.CloningType.Prefab
+  name: Prefab
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.CloningType.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_CloningType_Prefab
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.CloningType.Prefab
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.CloningType.Prefab
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).CloningType.Prefab
+  nameWithType: BaseSpawnCardClone<T>.CloningType.Prefab
+  nameWithType.vb: BaseSpawnCardClone(Of T).CloningType.Prefab
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.CloningType.Prefabs
+  name: Prefabs
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.CloningType.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_CloningType_Prefabs
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.CloningType.Prefabs
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.CloningType.Prefabs
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).CloningType.Prefabs
+  nameWithType: BaseSpawnCardClone<T>.CloningType.Prefabs
+  nameWithType.vb: BaseSpawnCardClone(Of T).CloningType.Prefabs
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.CloningType.SpawnCard
+  name: SpawnCard
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.CloningType.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_CloningType_SpawnCard
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.CloningType.SpawnCard
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.CloningType.SpawnCard
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).CloningType.SpawnCard
+  nameWithType: BaseSpawnCardClone<T>.CloningType.SpawnCard
+  nameWithType.vb: BaseSpawnCardClone(Of T).CloningType.SpawnCard
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.CustomCondition
+  name: BaseSpawnCardClone<T>.CustomCondition
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.CustomCondition.html
+  commentId: T:R2API.SpawnCardCloning.BaseSpawnCardClone`1.CustomCondition
+  name.vb: BaseSpawnCardClone(Of T).CustomCondition
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.CustomCondition
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).CustomCondition
+  nameWithType: BaseSpawnCardClone<T>.CustomCondition
+  nameWithType.vb: BaseSpawnCardClone(Of T).CustomCondition
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.GetDirectorCard(RoR2.DirectorCard)
+  name: GetDirectorCard(DirectorCard)
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_GetDirectorCard_RoR2_DirectorCard_
+  commentId: M:R2API.SpawnCardCloning.BaseSpawnCardClone`1.GetDirectorCard(RoR2.DirectorCard)
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.GetDirectorCard(RoR2.DirectorCard)
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).GetDirectorCard(RoR2.DirectorCard)
+  nameWithType: BaseSpawnCardClone<T>.GetDirectorCard(DirectorCard)
+  nameWithType.vb: BaseSpawnCardClone(Of T).GetDirectorCard(DirectorCard)
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.GetDirectorCard*
+  name: GetDirectorCard
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_GetDirectorCard_
+  commentId: Overload:R2API.SpawnCardCloning.BaseSpawnCardClone`1.GetDirectorCard
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.GetDirectorCard
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).GetDirectorCard
+  nameWithType: BaseSpawnCardClone<T>.GetDirectorCard
+  nameWithType.vb: BaseSpawnCardClone(Of T).GetDirectorCard
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.GetSpawnCard(`0)
+  name: GetSpawnCard(T)
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_GetSpawnCard__0_
+  commentId: M:R2API.SpawnCardCloning.BaseSpawnCardClone`1.GetSpawnCard(`0)
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.GetSpawnCard(T)
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).GetSpawnCard(T)
+  nameWithType: BaseSpawnCardClone<T>.GetSpawnCard(T)
+  nameWithType.vb: BaseSpawnCardClone(Of T).GetSpawnCard(T)
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.GetSpawnCard*
+  name: GetSpawnCard
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_GetSpawnCard_
+  commentId: Overload:R2API.SpawnCardCloning.BaseSpawnCardClone`1.GetSpawnCard
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.GetSpawnCard
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).GetSpawnCard
+  nameWithType: BaseSpawnCardClone<T>.GetSpawnCard
+  nameWithType.vb: BaseSpawnCardClone(Of T).GetSpawnCard
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.OnSpawnCardCloneAdded
+  name: BaseSpawnCardClone<T>.OnSpawnCardCloneAdded
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.OnSpawnCardCloneAdded.html
+  commentId: T:R2API.SpawnCardCloning.BaseSpawnCardClone`1.OnSpawnCardCloneAdded
+  name.vb: BaseSpawnCardClone(Of T).OnSpawnCardCloneAdded
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.OnSpawnCardCloneAdded
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).OnSpawnCardCloneAdded
+  nameWithType: BaseSpawnCardClone<T>.OnSpawnCardCloneAdded
+  nameWithType.vb: BaseSpawnCardClone(Of T).OnSpawnCardCloneAdded
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.Register
+  name: Register()
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_Register
+  commentId: M:R2API.SpawnCardCloning.BaseSpawnCardClone`1.Register
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.Register()
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).Register()
+  nameWithType: BaseSpawnCardClone<T>.Register()
+  nameWithType.vb: BaseSpawnCardClone(Of T).Register()
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.Register*
+  name: Register
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_Register_
+  commentId: Overload:R2API.SpawnCardCloning.BaseSpawnCardClone`1.Register
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.Register
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).Register
+  nameWithType: BaseSpawnCardClone<T>.Register
+  nameWithType.vb: BaseSpawnCardClone(Of T).Register
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.Unregister
+  name: Unregister()
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_Unregister
+  commentId: M:R2API.SpawnCardCloning.BaseSpawnCardClone`1.Unregister
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.Unregister()
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).Unregister()
+  nameWithType: BaseSpawnCardClone<T>.Unregister()
+  nameWithType.vb: BaseSpawnCardClone(Of T).Unregister()
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.Unregister*
+  name: Unregister
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_Unregister_
+  commentId: Overload:R2API.SpawnCardCloning.BaseSpawnCardClone`1.Unregister
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.Unregister
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).Unregister
+  nameWithType: BaseSpawnCardClone<T>.Unregister
+  nameWithType.vb: BaseSpawnCardClone(Of T).Unregister
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.UpdateValuesForClonedSpawnCard(`0,`0)
+  name: UpdateValuesForClonedSpawnCard(T, T)
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_UpdateValuesForClonedSpawnCard__0__0_
+  commentId: M:R2API.SpawnCardCloning.BaseSpawnCardClone`1.UpdateValuesForClonedSpawnCard(`0,`0)
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.UpdateValuesForClonedSpawnCard(T, T)
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).UpdateValuesForClonedSpawnCard(T, T)
+  nameWithType: BaseSpawnCardClone<T>.UpdateValuesForClonedSpawnCard(T, T)
+  nameWithType.vb: BaseSpawnCardClone(Of T).UpdateValuesForClonedSpawnCard(T, T)
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.UpdateValuesForClonedSpawnCard*
+  name: UpdateValuesForClonedSpawnCard
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_UpdateValuesForClonedSpawnCard_
+  commentId: Overload:R2API.SpawnCardCloning.BaseSpawnCardClone`1.UpdateValuesForClonedSpawnCard
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.UpdateValuesForClonedSpawnCard
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).UpdateValuesForClonedSpawnCard
+  nameWithType: BaseSpawnCardClone<T>.UpdateValuesForClonedSpawnCard
+  nameWithType.vb: BaseSpawnCardClone(Of T).UpdateValuesForClonedSpawnCard
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.UpdateValuesForClonedSpawnCards
+  name: UpdateValuesForClonedSpawnCards()
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_UpdateValuesForClonedSpawnCards
+  commentId: M:R2API.SpawnCardCloning.BaseSpawnCardClone`1.UpdateValuesForClonedSpawnCards
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.UpdateValuesForClonedSpawnCards()
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).UpdateValuesForClonedSpawnCards()
+  nameWithType: BaseSpawnCardClone<T>.UpdateValuesForClonedSpawnCards()
+  nameWithType.vb: BaseSpawnCardClone(Of T).UpdateValuesForClonedSpawnCards()
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.UpdateValuesForClonedSpawnCards*
+  name: UpdateValuesForClonedSpawnCards
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_UpdateValuesForClonedSpawnCards_
+  commentId: Overload:R2API.SpawnCardCloning.BaseSpawnCardClone`1.UpdateValuesForClonedSpawnCards
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.UpdateValuesForClonedSpawnCards
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).UpdateValuesForClonedSpawnCards
+  nameWithType: BaseSpawnCardClone<T>.UpdateValuesForClonedSpawnCards
+  nameWithType.vb: BaseSpawnCardClone(Of T).UpdateValuesForClonedSpawnCards
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.cloningType
+  name: cloningType
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_cloningType
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.cloningType
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.cloningType
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).cloningType
+  nameWithType: BaseSpawnCardClone<T>.cloningType
+  nameWithType.vb: BaseSpawnCardClone(Of T).cloningType
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.cost
+  name: cost
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_cost
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.cost
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.cost
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).cost
+  nameWithType: BaseSpawnCardClone<T>.cost
+  nameWithType.vb: BaseSpawnCardClone(Of T).cost
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.costMultiplier
+  name: costMultiplier
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_costMultiplier
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.costMultiplier
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.costMultiplier
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).costMultiplier
+  nameWithType: BaseSpawnCardClone<T>.costMultiplier
+  nameWithType.vb: BaseSpawnCardClone(Of T).costMultiplier
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.customCondition
+  name: customCondition
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_customCondition
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.customCondition
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.customCondition
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).customCondition
+  nameWithType: BaseSpawnCardClone<T>.customCondition
+  nameWithType.vb: BaseSpawnCardClone(Of T).customCondition
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.eliteRules
+  name: eliteRules
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_eliteRules
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.eliteRules
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.eliteRules
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).eliteRules
+  nameWithType: BaseSpawnCardClone<T>.eliteRules
+  nameWithType.vb: BaseSpawnCardClone(Of T).eliteRules
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.forbiddenFlags
+  name: forbiddenFlags
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_forbiddenFlags
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.forbiddenFlags
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.forbiddenFlags
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).forbiddenFlags
+  nameWithType: BaseSpawnCardClone<T>.forbiddenFlags
+  nameWithType.vb: BaseSpawnCardClone(Of T).forbiddenFlags
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.forbiddenUnlockableDef
+  name: forbiddenUnlockableDef
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_forbiddenUnlockableDef
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.forbiddenUnlockableDef
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.forbiddenUnlockableDef
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).forbiddenUnlockableDef
+  nameWithType: BaseSpawnCardClone<T>.forbiddenUnlockableDef
+  nameWithType.vb: BaseSpawnCardClone(Of T).forbiddenUnlockableDef
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.hullSize
+  name: hullSize
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_hullSize
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.hullSize
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.hullSize
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).hullSize
+  nameWithType: BaseSpawnCardClone<T>.hullSize
+  nameWithType.vb: BaseSpawnCardClone(Of T).hullSize
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.minimumStageCompletions
+  name: minimumStageCompletions
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_minimumStageCompletions
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.minimumStageCompletions
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.minimumStageCompletions
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).minimumStageCompletions
+  nameWithType: BaseSpawnCardClone<T>.minimumStageCompletions
+  nameWithType.vb: BaseSpawnCardClone(Of T).minimumStageCompletions
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.minimumStageCompletionsMultiplier
+  name: minimumStageCompletionsMultiplier
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_minimumStageCompletionsMultiplier
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.minimumStageCompletionsMultiplier
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.minimumStageCompletionsMultiplier
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).minimumStageCompletionsMultiplier
+  nameWithType: BaseSpawnCardClone<T>.minimumStageCompletionsMultiplier
+  nameWithType.vb: BaseSpawnCardClone(Of T).minimumStageCompletionsMultiplier
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.nodeGrapthType
+  name: nodeGrapthType
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_nodeGrapthType
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.nodeGrapthType
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.nodeGrapthType
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).nodeGrapthType
+  nameWithType: BaseSpawnCardClone<T>.nodeGrapthType
+  nameWithType.vb: BaseSpawnCardClone(Of T).nodeGrapthType
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.onSpawnCardCloneAdded
+  name: onSpawnCardCloneAdded
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_onSpawnCardCloneAdded
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.onSpawnCardCloneAdded
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.onSpawnCardCloneAdded
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).onSpawnCardCloneAdded
+  nameWithType: BaseSpawnCardClone<T>.onSpawnCardCloneAdded
+  nameWithType.vb: BaseSpawnCardClone(Of T).onSpawnCardCloneAdded
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideCategory
+  name: overrideCategory
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideCategory
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideCategory
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideCategory
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideCategory
+  nameWithType: BaseSpawnCardClone<T>.overrideCategory
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideCategory
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideCost
+  name: overrideCost
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideCost
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideCost
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideCost
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideCost
+  nameWithType: BaseSpawnCardClone<T>.overrideCost
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideCost
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideEliteRules
+  name: overrideEliteRules
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideEliteRules
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideEliteRules
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideEliteRules
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideEliteRules
+  nameWithType: BaseSpawnCardClone<T>.overrideEliteRules
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideEliteRules
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideForbiddenFlags
+  name: overrideForbiddenFlags
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideForbiddenFlags
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideForbiddenFlags
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideForbiddenFlags
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideForbiddenFlags
+  nameWithType: BaseSpawnCardClone<T>.overrideForbiddenFlags
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideForbiddenFlags
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideForbiddenUnlockableDef
+  name: overrideForbiddenUnlockableDef
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideForbiddenUnlockableDef
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideForbiddenUnlockableDef
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideForbiddenUnlockableDef
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideForbiddenUnlockableDef
+  nameWithType: BaseSpawnCardClone<T>.overrideForbiddenUnlockableDef
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideForbiddenUnlockableDef
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideHullSize
+  name: overrideHullSize
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideHullSize
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideHullSize
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideHullSize
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideHullSize
+  nameWithType: BaseSpawnCardClone<T>.overrideHullSize
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideHullSize
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideMinimumStageCompletions
+  name: overrideMinimumStageCompletions
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideMinimumStageCompletions
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideMinimumStageCompletions
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideMinimumStageCompletions
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideMinimumStageCompletions
+  nameWithType: BaseSpawnCardClone<T>.overrideMinimumStageCompletions
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideMinimumStageCompletions
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideNodeGraphType
+  name: overrideNodeGraphType
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideNodeGraphType
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideNodeGraphType
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideNodeGraphType
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideNodeGraphType
+  nameWithType: BaseSpawnCardClone<T>.overrideNodeGraphType
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideNodeGraphType
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overridePreventOverhead
+  name: overridePreventOverhead
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overridePreventOverhead
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overridePreventOverhead
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overridePreventOverhead
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overridePreventOverhead
+  nameWithType: BaseSpawnCardClone<T>.overridePreventOverhead
+  nameWithType.vb: BaseSpawnCardClone(Of T).overridePreventOverhead
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideRequiredFlags
+  name: overrideRequiredFlags
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideRequiredFlags
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideRequiredFlags
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideRequiredFlags
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideRequiredFlags
+  nameWithType: BaseSpawnCardClone<T>.overrideRequiredFlags
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideRequiredFlags
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideRequiredUnlockableDef
+  name: overrideRequiredUnlockableDef
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideRequiredUnlockableDef
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideRequiredUnlockableDef
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideRequiredUnlockableDef
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideRequiredUnlockableDef
+  nameWithType: BaseSpawnCardClone<T>.overrideRequiredUnlockableDef
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideRequiredUnlockableDef
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideReturnSpawnCard
+  name: overrideReturnSpawnCard
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideReturnSpawnCard
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideReturnSpawnCard
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideReturnSpawnCard
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideReturnSpawnCard
+  nameWithType: BaseSpawnCardClone<T>.overrideReturnSpawnCard
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideReturnSpawnCard
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideSelectionWeight
+  name: overrideSelectionWeight
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideSelectionWeight
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideSelectionWeight
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideSelectionWeight
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideSelectionWeight
+  nameWithType: BaseSpawnCardClone<T>.overrideSelectionWeight
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideSelectionWeight
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideSpawnDistance
+  name: overrideSpawnDistance
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_overrideSpawnDistance
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.overrideSpawnDistance
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.overrideSpawnDistance
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).overrideSpawnDistance
+  nameWithType: BaseSpawnCardClone<T>.overrideSpawnDistance
+  nameWithType.vb: BaseSpawnCardClone(Of T).overrideSpawnDistance
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.prefab
+  name: prefab
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_prefab
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.prefab
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.prefab
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).prefab
+  nameWithType: BaseSpawnCardClone<T>.prefab
+  nameWithType.vb: BaseSpawnCardClone(Of T).prefab
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.preventOverhead
+  name: preventOverhead
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_preventOverhead
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.preventOverhead
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.preventOverhead
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).preventOverhead
+  nameWithType: BaseSpawnCardClone<T>.preventOverhead
+  nameWithType.vb: BaseSpawnCardClone(Of T).preventOverhead
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.requiredFlags
+  name: requiredFlags
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_requiredFlags
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.requiredFlags
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.requiredFlags
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).requiredFlags
+  nameWithType: BaseSpawnCardClone<T>.requiredFlags
+  nameWithType.vb: BaseSpawnCardClone(Of T).requiredFlags
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.requiredUnlockableDef
+  name: requiredUnlockableDef
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_requiredUnlockableDef
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.requiredUnlockableDef
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.requiredUnlockableDef
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).requiredUnlockableDef
+  nameWithType: BaseSpawnCardClone<T>.requiredUnlockableDef
+  nameWithType.vb: BaseSpawnCardClone(Of T).requiredUnlockableDef
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.selectionWeight
+  name: selectionWeight
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_selectionWeight
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.selectionWeight
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.selectionWeight
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).selectionWeight
+  nameWithType: BaseSpawnCardClone<T>.selectionWeight
+  nameWithType.vb: BaseSpawnCardClone(Of T).selectionWeight
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.selectionWeightMultiplier
+  name: selectionWeightMultiplier
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_selectionWeightMultiplier
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.selectionWeightMultiplier
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.selectionWeightMultiplier
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).selectionWeightMultiplier
+  nameWithType: BaseSpawnCardClone<T>.selectionWeightMultiplier
+  nameWithType.vb: BaseSpawnCardClone(Of T).selectionWeightMultiplier
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.spawnDistance
+  name: spawnDistance
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_spawnDistance
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.spawnDistance
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.spawnDistance
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).spawnDistance
+  nameWithType: BaseSpawnCardClone<T>.spawnDistance
+  nameWithType.vb: BaseSpawnCardClone(Of T).spawnDistance
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.targetPrefab
+  name: targetPrefab
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_targetPrefab
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.targetPrefab
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.targetPrefab
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).targetPrefab
+  nameWithType: BaseSpawnCardClone<T>.targetPrefab
+  nameWithType.vb: BaseSpawnCardClone(Of T).targetPrefab
+- uid: R2API.SpawnCardCloning.BaseSpawnCardClone`1.targetSpawnCard
+  name: targetSpawnCard
+  href: api/R2API.SpawnCardCloning.BaseSpawnCardClone-1.html#R2API_SpawnCardCloning_BaseSpawnCardClone_1_targetSpawnCard
+  commentId: F:R2API.SpawnCardCloning.BaseSpawnCardClone`1.targetSpawnCard
+  fullName: R2API.SpawnCardCloning.BaseSpawnCardClone<T>.targetSpawnCard
+  fullName.vb: R2API.SpawnCardCloning.BaseSpawnCardClone(Of T).targetSpawnCard
+  nameWithType: BaseSpawnCardClone<T>.targetSpawnCard
+  nameWithType.vb: BaseSpawnCardClone(Of T).targetSpawnCard
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone
+  name: CharacterSpawnCardClone
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html
+  commentId: T:R2API.SpawnCardCloning.CharacterSpawnCardClone
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone
+  nameWithType: CharacterSpawnCardClone
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone.UpdateValuesForClonedSpawnCard(RoR2.CharacterSpawnCard,RoR2.CharacterSpawnCard)
+  name: UpdateValuesForClonedSpawnCard(CharacterSpawnCard, CharacterSpawnCard)
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html#R2API_SpawnCardCloning_CharacterSpawnCardClone_UpdateValuesForClonedSpawnCard_RoR2_CharacterSpawnCard_RoR2_CharacterSpawnCard_
+  commentId: M:R2API.SpawnCardCloning.CharacterSpawnCardClone.UpdateValuesForClonedSpawnCard(RoR2.CharacterSpawnCard,RoR2.CharacterSpawnCard)
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone.UpdateValuesForClonedSpawnCard(RoR2.CharacterSpawnCard, RoR2.CharacterSpawnCard)
+  nameWithType: CharacterSpawnCardClone.UpdateValuesForClonedSpawnCard(CharacterSpawnCard, CharacterSpawnCard)
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone.UpdateValuesForClonedSpawnCard*
+  name: UpdateValuesForClonedSpawnCard
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html#R2API_SpawnCardCloning_CharacterSpawnCardClone_UpdateValuesForClonedSpawnCard_
+  commentId: Overload:R2API.SpawnCardCloning.CharacterSpawnCardClone.UpdateValuesForClonedSpawnCard
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone.UpdateValuesForClonedSpawnCard
+  nameWithType: CharacterSpawnCardClone.UpdateValuesForClonedSpawnCard
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone.equipmentToGrant
+  name: equipmentToGrant
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html#R2API_SpawnCardCloning_CharacterSpawnCardClone_equipmentToGrant
+  commentId: F:R2API.SpawnCardCloning.CharacterSpawnCardClone.equipmentToGrant
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone.equipmentToGrant
+  nameWithType: CharacterSpawnCardClone.equipmentToGrant
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone.forbiddenAsBoss
+  name: forbiddenAsBoss
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html#R2API_SpawnCardCloning_CharacterSpawnCardClone_forbiddenAsBoss
+  commentId: F:R2API.SpawnCardCloning.CharacterSpawnCardClone.forbiddenAsBoss
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone.forbiddenAsBoss
+  nameWithType: CharacterSpawnCardClone.forbiddenAsBoss
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone.itemsToGrant
+  name: itemsToGrant
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html#R2API_SpawnCardCloning_CharacterSpawnCardClone_itemsToGrant
+  commentId: F:R2API.SpawnCardCloning.CharacterSpawnCardClone.itemsToGrant
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone.itemsToGrant
+  nameWithType: CharacterSpawnCardClone.itemsToGrant
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone.loadout
+  name: loadout
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html#R2API_SpawnCardCloning_CharacterSpawnCardClone_loadout
+  commentId: F:R2API.SpawnCardCloning.CharacterSpawnCardClone.loadout
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone.loadout
+  nameWithType: CharacterSpawnCardClone.loadout
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone.noElites
+  name: noElites
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html#R2API_SpawnCardCloning_CharacterSpawnCardClone_noElites
+  commentId: F:R2API.SpawnCardCloning.CharacterSpawnCardClone.noElites
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone.noElites
+  nameWithType: CharacterSpawnCardClone.noElites
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideEquipmentToGrant
+  name: overrideEquipmentToGrant
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html#R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideEquipmentToGrant
+  commentId: F:R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideEquipmentToGrant
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideEquipmentToGrant
+  nameWithType: CharacterSpawnCardClone.overrideEquipmentToGrant
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideForbiddenAsBoss
+  name: overrideForbiddenAsBoss
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html#R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideForbiddenAsBoss
+  commentId: F:R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideForbiddenAsBoss
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideForbiddenAsBoss
+  nameWithType: CharacterSpawnCardClone.overrideForbiddenAsBoss
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideItemsToGrant
+  name: overrideItemsToGrant
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html#R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideItemsToGrant
+  commentId: F:R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideItemsToGrant
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideItemsToGrant
+  nameWithType: CharacterSpawnCardClone.overrideItemsToGrant
+- uid: R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideNoElites
+  name: overrideNoElites
+  href: api/R2API.SpawnCardCloning.CharacterSpawnCardClone.html#R2API_SpawnCardCloning_CharacterSpawnCardClone_overrideNoElites
+  commentId: F:R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideNoElites
+  fullName: R2API.SpawnCardCloning.CharacterSpawnCardClone.overrideNoElites
+  nameWithType: CharacterSpawnCardClone.overrideNoElites
+- uid: R2API.SpawnCardCloning.GameObjectArrayComparer
+  name: GameObjectArrayComparer
+  href: api/R2API.SpawnCardCloning.GameObjectArrayComparer.html
+  commentId: T:R2API.SpawnCardCloning.GameObjectArrayComparer
+  fullName: R2API.SpawnCardCloning.GameObjectArrayComparer
+  nameWithType: GameObjectArrayComparer
+- uid: R2API.SpawnCardCloning.GameObjectArrayComparer.Equals(UnityEngine.GameObject[],UnityEngine.GameObject[])
+  name: Equals(GameObject[], GameObject[])
+  href: api/R2API.SpawnCardCloning.GameObjectArrayComparer.html#R2API_SpawnCardCloning_GameObjectArrayComparer_Equals_UnityEngine_GameObject___UnityEngine_GameObject___
+  commentId: M:R2API.SpawnCardCloning.GameObjectArrayComparer.Equals(UnityEngine.GameObject[],UnityEngine.GameObject[])
+  name.vb: Equals(GameObject(), GameObject())
+  fullName: R2API.SpawnCardCloning.GameObjectArrayComparer.Equals(UnityEngine.GameObject[], UnityEngine.GameObject[])
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayComparer.Equals(UnityEngine.GameObject(), UnityEngine.GameObject())
+  nameWithType: GameObjectArrayComparer.Equals(GameObject[], GameObject[])
+  nameWithType.vb: GameObjectArrayComparer.Equals(GameObject(), GameObject())
+- uid: R2API.SpawnCardCloning.GameObjectArrayComparer.Equals*
+  name: Equals
+  href: api/R2API.SpawnCardCloning.GameObjectArrayComparer.html#R2API_SpawnCardCloning_GameObjectArrayComparer_Equals_
+  commentId: Overload:R2API.SpawnCardCloning.GameObjectArrayComparer.Equals
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.GameObjectArrayComparer.Equals
+  nameWithType: GameObjectArrayComparer.Equals
+- uid: R2API.SpawnCardCloning.GameObjectArrayComparer.GetHashCode(UnityEngine.GameObject[])
+  name: GetHashCode(GameObject[])
+  href: api/R2API.SpawnCardCloning.GameObjectArrayComparer.html#R2API_SpawnCardCloning_GameObjectArrayComparer_GetHashCode_UnityEngine_GameObject___
+  commentId: M:R2API.SpawnCardCloning.GameObjectArrayComparer.GetHashCode(UnityEngine.GameObject[])
+  name.vb: GetHashCode(GameObject())
+  fullName: R2API.SpawnCardCloning.GameObjectArrayComparer.GetHashCode(UnityEngine.GameObject[])
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayComparer.GetHashCode(UnityEngine.GameObject())
+  nameWithType: GameObjectArrayComparer.GetHashCode(GameObject[])
+  nameWithType.vb: GameObjectArrayComparer.GetHashCode(GameObject())
+- uid: R2API.SpawnCardCloning.GameObjectArrayComparer.GetHashCode*
+  name: GetHashCode
+  href: api/R2API.SpawnCardCloning.GameObjectArrayComparer.html#R2API_SpawnCardCloning_GameObjectArrayComparer_GetHashCode_
+  commentId: Overload:R2API.SpawnCardCloning.GameObjectArrayComparer.GetHashCode
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.GameObjectArrayComparer.GetHashCode
+  nameWithType: GameObjectArrayComparer.GetHashCode
+- uid: R2API.SpawnCardCloning.GameObjectArrayDictionary`1
+  name: GameObjectArrayDictionary<T>
+  href: api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html
+  commentId: T:R2API.SpawnCardCloning.GameObjectArrayDictionary`1
+  name.vb: GameObjectArrayDictionary(Of T)
+  fullName: R2API.SpawnCardCloning.GameObjectArrayDictionary<T>
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayDictionary(Of T)
+  nameWithType: GameObjectArrayDictionary<T>
+  nameWithType.vb: GameObjectArrayDictionary(Of T)
+- uid: R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Add(UnityEngine.GameObject[],`0)
+  name: Add(GameObject[], T)
+  href: api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html#R2API_SpawnCardCloning_GameObjectArrayDictionary_1_Add_UnityEngine_GameObject____0_
+  commentId: M:R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Add(UnityEngine.GameObject[],`0)
+  name.vb: Add(GameObject(), T)
+  fullName: R2API.SpawnCardCloning.GameObjectArrayDictionary<T>.Add(UnityEngine.GameObject[], T)
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayDictionary(Of T).Add(UnityEngine.GameObject(), T)
+  nameWithType: GameObjectArrayDictionary<T>.Add(GameObject[], T)
+  nameWithType.vb: GameObjectArrayDictionary(Of T).Add(GameObject(), T)
+- uid: R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Add*
+  name: Add
+  href: api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html#R2API_SpawnCardCloning_GameObjectArrayDictionary_1_Add_
+  commentId: Overload:R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Add
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.GameObjectArrayDictionary<T>.Add
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayDictionary(Of T).Add
+  nameWithType: GameObjectArrayDictionary<T>.Add
+  nameWithType.vb: GameObjectArrayDictionary(Of T).Add
+- uid: R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Clear
+  name: Clear()
+  href: api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html#R2API_SpawnCardCloning_GameObjectArrayDictionary_1_Clear
+  commentId: M:R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Clear
+  fullName: R2API.SpawnCardCloning.GameObjectArrayDictionary<T>.Clear()
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayDictionary(Of T).Clear()
+  nameWithType: GameObjectArrayDictionary<T>.Clear()
+  nameWithType.vb: GameObjectArrayDictionary(Of T).Clear()
+- uid: R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Clear*
+  name: Clear
+  href: api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html#R2API_SpawnCardCloning_GameObjectArrayDictionary_1_Clear_
+  commentId: Overload:R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Clear
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.GameObjectArrayDictionary<T>.Clear
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayDictionary(Of T).Clear
+  nameWithType: GameObjectArrayDictionary<T>.Clear
+  nameWithType.vb: GameObjectArrayDictionary(Of T).Clear
+- uid: R2API.SpawnCardCloning.GameObjectArrayDictionary`1.ContainsKey(UnityEngine.GameObject[],System.Boolean)
+  name: ContainsKey(GameObject[], bool)
+  href: api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html#R2API_SpawnCardCloning_GameObjectArrayDictionary_1_ContainsKey_UnityEngine_GameObject___System_Boolean_
+  commentId: M:R2API.SpawnCardCloning.GameObjectArrayDictionary`1.ContainsKey(UnityEngine.GameObject[],System.Boolean)
+  name.vb: ContainsKey(GameObject(), Boolean)
+  fullName: R2API.SpawnCardCloning.GameObjectArrayDictionary<T>.ContainsKey(UnityEngine.GameObject[], bool)
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayDictionary(Of T).ContainsKey(UnityEngine.GameObject(), Boolean)
+  nameWithType: GameObjectArrayDictionary<T>.ContainsKey(GameObject[], bool)
+  nameWithType.vb: GameObjectArrayDictionary(Of T).ContainsKey(GameObject(), Boolean)
+- uid: R2API.SpawnCardCloning.GameObjectArrayDictionary`1.ContainsKey*
+  name: ContainsKey
+  href: api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html#R2API_SpawnCardCloning_GameObjectArrayDictionary_1_ContainsKey_
+  commentId: Overload:R2API.SpawnCardCloning.GameObjectArrayDictionary`1.ContainsKey
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.GameObjectArrayDictionary<T>.ContainsKey
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayDictionary(Of T).ContainsKey
+  nameWithType: GameObjectArrayDictionary<T>.ContainsKey
+  nameWithType.vb: GameObjectArrayDictionary(Of T).ContainsKey
+- uid: R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Remove(UnityEngine.GameObject[],System.Boolean,System.Boolean)
+  name: Remove(GameObject[], bool, bool)
+  href: api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html#R2API_SpawnCardCloning_GameObjectArrayDictionary_1_Remove_UnityEngine_GameObject___System_Boolean_System_Boolean_
+  commentId: M:R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Remove(UnityEngine.GameObject[],System.Boolean,System.Boolean)
+  name.vb: Remove(GameObject(), Boolean, Boolean)
+  fullName: R2API.SpawnCardCloning.GameObjectArrayDictionary<T>.Remove(UnityEngine.GameObject[], bool, bool)
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayDictionary(Of T).Remove(UnityEngine.GameObject(), Boolean, Boolean)
+  nameWithType: GameObjectArrayDictionary<T>.Remove(GameObject[], bool, bool)
+  nameWithType.vb: GameObjectArrayDictionary(Of T).Remove(GameObject(), Boolean, Boolean)
+- uid: R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Remove*
+  name: Remove
+  href: api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html#R2API_SpawnCardCloning_GameObjectArrayDictionary_1_Remove_
+  commentId: Overload:R2API.SpawnCardCloning.GameObjectArrayDictionary`1.Remove
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.GameObjectArrayDictionary<T>.Remove
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayDictionary(Of T).Remove
+  nameWithType: GameObjectArrayDictionary<T>.Remove
+  nameWithType.vb: GameObjectArrayDictionary(Of T).Remove
+- uid: R2API.SpawnCardCloning.GameObjectArrayDictionary`1.TryGetValue(UnityEngine.GameObject[],System.Boolean,`0@)
+  name: TryGetValue(GameObject[], bool, out T)
+  href: api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html#R2API_SpawnCardCloning_GameObjectArrayDictionary_1_TryGetValue_UnityEngine_GameObject___System_Boolean__0__
+  commentId: M:R2API.SpawnCardCloning.GameObjectArrayDictionary`1.TryGetValue(UnityEngine.GameObject[],System.Boolean,`0@)
+  name.vb: TryGetValue(GameObject(), Boolean, T)
+  fullName: R2API.SpawnCardCloning.GameObjectArrayDictionary<T>.TryGetValue(UnityEngine.GameObject[], bool, out T)
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayDictionary(Of T).TryGetValue(UnityEngine.GameObject(), Boolean, T)
+  nameWithType: GameObjectArrayDictionary<T>.TryGetValue(GameObject[], bool, out T)
+  nameWithType.vb: GameObjectArrayDictionary(Of T).TryGetValue(GameObject(), Boolean, T)
+- uid: R2API.SpawnCardCloning.GameObjectArrayDictionary`1.TryGetValue*
+  name: TryGetValue
+  href: api/R2API.SpawnCardCloning.GameObjectArrayDictionary-1.html#R2API_SpawnCardCloning_GameObjectArrayDictionary_1_TryGetValue_
+  commentId: Overload:R2API.SpawnCardCloning.GameObjectArrayDictionary`1.TryGetValue
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.GameObjectArrayDictionary<T>.TryGetValue
+  fullName.vb: R2API.SpawnCardCloning.GameObjectArrayDictionary(Of T).TryGetValue
+  nameWithType: GameObjectArrayDictionary<T>.TryGetValue
+  nameWithType.vb: GameObjectArrayDictionary(Of T).TryGetValue
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone
+  name: InteractableSpawnCardClone
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html
+  commentId: T:R2API.SpawnCardCloning.InteractableSpawnCardClone
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone
+  nameWithType: InteractableSpawnCardClone
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.UpdateValuesForClonedSpawnCard(RoR2.InteractableSpawnCard,RoR2.InteractableSpawnCard)
+  name: UpdateValuesForClonedSpawnCard(InteractableSpawnCard, InteractableSpawnCard)
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_UpdateValuesForClonedSpawnCard_RoR2_InteractableSpawnCard_RoR2_InteractableSpawnCard_
+  commentId: M:R2API.SpawnCardCloning.InteractableSpawnCardClone.UpdateValuesForClonedSpawnCard(RoR2.InteractableSpawnCard,RoR2.InteractableSpawnCard)
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.UpdateValuesForClonedSpawnCard(RoR2.InteractableSpawnCard, RoR2.InteractableSpawnCard)
+  nameWithType: InteractableSpawnCardClone.UpdateValuesForClonedSpawnCard(InteractableSpawnCard, InteractableSpawnCard)
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.UpdateValuesForClonedSpawnCard*
+  name: UpdateValuesForClonedSpawnCard
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_UpdateValuesForClonedSpawnCard_
+  commentId: Overload:R2API.SpawnCardCloning.InteractableSpawnCardClone.UpdateValuesForClonedSpawnCard
+  isSpec: "True"
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.UpdateValuesForClonedSpawnCard
+  nameWithType: InteractableSpawnCardClone.UpdateValuesForClonedSpawnCard
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.maxSpawnsPerStage
+  name: maxSpawnsPerStage
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_maxSpawnsPerStage
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.maxSpawnsPerStage
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.maxSpawnsPerStage
+  nameWithType: InteractableSpawnCardClone.maxSpawnsPerStage
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.maxSpawnsPerStageMultiplier
+  name: maxSpawnsPerStageMultiplier
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_maxSpawnsPerStageMultiplier
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.maxSpawnsPerStageMultiplier
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.maxSpawnsPerStageMultiplier
+  nameWithType: InteractableSpawnCardClone.maxSpawnsPerStageMultiplier
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.orientToFloor
+  name: orientToFloor
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_orientToFloor
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.orientToFloor
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.orientToFloor
+  nameWithType: InteractableSpawnCardClone.orientToFloor
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideMaxSpawnsPerStage
+  name: overrideMaxSpawnsPerStage
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_overrideMaxSpawnsPerStage
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideMaxSpawnsPerStage
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideMaxSpawnsPerStage
+  nameWithType: InteractableSpawnCardClone.overrideMaxSpawnsPerStage
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideOrientToFloor
+  name: overrideOrientToFloor
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_overrideOrientToFloor
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideOrientToFloor
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideOrientToFloor
+  nameWithType: InteractableSpawnCardClone.overrideOrientToFloor
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.overridePrismaticTrialSpawnChance
+  name: overridePrismaticTrialSpawnChance
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_overridePrismaticTrialSpawnChance
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.overridePrismaticTrialSpawnChance
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.overridePrismaticTrialSpawnChance
+  nameWithType: InteractableSpawnCardClone.overridePrismaticTrialSpawnChance
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideSkipSpawnWhenDevotionArtifactEnabled
+  name: overrideSkipSpawnWhenDevotionArtifactEnabled
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_overrideSkipSpawnWhenDevotionArtifactEnabled
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideSkipSpawnWhenDevotionArtifactEnabled
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideSkipSpawnWhenDevotionArtifactEnabled
+  nameWithType: InteractableSpawnCardClone.overrideSkipSpawnWhenDevotionArtifactEnabled
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideSkipSpawnWhenSacrificeArtifactEnabled
+  name: overrideSkipSpawnWhenSacrificeArtifactEnabled
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_overrideSkipSpawnWhenSacrificeArtifactEnabled
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideSkipSpawnWhenSacrificeArtifactEnabled
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideSkipSpawnWhenSacrificeArtifactEnabled
+  nameWithType: InteractableSpawnCardClone.overrideSkipSpawnWhenSacrificeArtifactEnabled
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideSlightlyRandomizeOrientation
+  name: overrideSlightlyRandomizeOrientation
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_overrideSlightlyRandomizeOrientation
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideSlightlyRandomizeOrientation
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideSlightlyRandomizeOrientation
+  nameWithType: InteractableSpawnCardClone.overrideSlightlyRandomizeOrientation
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideWeightScalarWhenSacrificeArtifactEnabled
+  name: overrideWeightScalarWhenSacrificeArtifactEnabled
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_overrideWeightScalarWhenSacrificeArtifactEnabled
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideWeightScalarWhenSacrificeArtifactEnabled
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.overrideWeightScalarWhenSacrificeArtifactEnabled
+  nameWithType: InteractableSpawnCardClone.overrideWeightScalarWhenSacrificeArtifactEnabled
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.prismaticTrialSpawnChance
+  name: prismaticTrialSpawnChance
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_prismaticTrialSpawnChance
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.prismaticTrialSpawnChance
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.prismaticTrialSpawnChance
+  nameWithType: InteractableSpawnCardClone.prismaticTrialSpawnChance
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.prismaticTrialSpawnChanceMultiplier
+  name: prismaticTrialSpawnChanceMultiplier
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_prismaticTrialSpawnChanceMultiplier
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.prismaticTrialSpawnChanceMultiplier
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.prismaticTrialSpawnChanceMultiplier
+  nameWithType: InteractableSpawnCardClone.prismaticTrialSpawnChanceMultiplier
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.skipSpawnWhenDevotionArtifactEnabled
+  name: skipSpawnWhenDevotionArtifactEnabled
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_skipSpawnWhenDevotionArtifactEnabled
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.skipSpawnWhenDevotionArtifactEnabled
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.skipSpawnWhenDevotionArtifactEnabled
+  nameWithType: InteractableSpawnCardClone.skipSpawnWhenDevotionArtifactEnabled
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.skipSpawnWhenSacrificeArtifactEnabled
+  name: skipSpawnWhenSacrificeArtifactEnabled
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_skipSpawnWhenSacrificeArtifactEnabled
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.skipSpawnWhenSacrificeArtifactEnabled
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.skipSpawnWhenSacrificeArtifactEnabled
+  nameWithType: InteractableSpawnCardClone.skipSpawnWhenSacrificeArtifactEnabled
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.slightlyRandomizeOrientation
+  name: slightlyRandomizeOrientation
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_slightlyRandomizeOrientation
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.slightlyRandomizeOrientation
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.slightlyRandomizeOrientation
+  nameWithType: InteractableSpawnCardClone.slightlyRandomizeOrientation
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.weightScalarWhenSacrificeArtifactEnabled
+  name: weightScalarWhenSacrificeArtifactEnabled
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_weightScalarWhenSacrificeArtifactEnabled
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.weightScalarWhenSacrificeArtifactEnabled
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.weightScalarWhenSacrificeArtifactEnabled
+  nameWithType: InteractableSpawnCardClone.weightScalarWhenSacrificeArtifactEnabled
+- uid: R2API.SpawnCardCloning.InteractableSpawnCardClone.weightScalarWhenSacrificeArtifactEnabledMultiplier
+  name: weightScalarWhenSacrificeArtifactEnabledMultiplier
+  href: api/R2API.SpawnCardCloning.InteractableSpawnCardClone.html#R2API_SpawnCardCloning_InteractableSpawnCardClone_weightScalarWhenSacrificeArtifactEnabledMultiplier
+  commentId: F:R2API.SpawnCardCloning.InteractableSpawnCardClone.weightScalarWhenSacrificeArtifactEnabledMultiplier
+  fullName: R2API.SpawnCardCloning.InteractableSpawnCardClone.weightScalarWhenSacrificeArtifactEnabledMultiplier
+  nameWithType: InteractableSpawnCardClone.weightScalarWhenSacrificeArtifactEnabledMultiplier
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo
+  name: RebuildCardsInfo
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html
+  commentId: T:R2API.SpawnCardCloning.RebuildCardsInfo
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo
+  nameWithType: RebuildCardsInfo
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.categories
+  name: categories
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_categories
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.categories
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.categories
+  nameWithType: RebuildCardsInfo.categories
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.category
+  name: category
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_category
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.category
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.category
+  nameWithType: RebuildCardsInfo.category
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.classicStageInfo
+  name: classicStageInfo
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_classicStageInfo
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.classicStageInfo
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.classicStageInfo
+  nameWithType: RebuildCardsInfo.classicStageInfo
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.clonedDirectorCard
+  name: clonedDirectorCard
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_clonedDirectorCard
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.clonedDirectorCard
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.clonedDirectorCard
+  nameWithType: RebuildCardsInfo.clonedDirectorCard
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.clonedSpawnCard
+  name: clonedSpawnCard
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_clonedSpawnCard
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.clonedSpawnCard
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.clonedSpawnCard
+  nameWithType: RebuildCardsInfo.clonedSpawnCard
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.dccsPool
+  name: dccsPool
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_dccsPool
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.dccsPool
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.dccsPool
+  nameWithType: RebuildCardsInfo.dccsPool
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.dccsPoolCategory
+  name: dccsPoolCategory
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_dccsPoolCategory
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.dccsPoolCategory
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.dccsPoolCategory
+  nameWithType: RebuildCardsInfo.dccsPoolCategory
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.directorCard
+  name: directorCard
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_directorCard
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.directorCard
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.directorCard
+  nameWithType: RebuildCardsInfo.directorCard
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.directorCardCategorySelection
+  name: directorCardCategorySelection
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_directorCardCategorySelection
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.directorCardCategorySelection
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.directorCardCategorySelection
+  nameWithType: RebuildCardsInfo.directorCardCategorySelection
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.forcedInteractableCategory
+  name: forcedInteractableCategory
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_forcedInteractableCategory
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.forcedInteractableCategory
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.forcedInteractableCategory
+  nameWithType: RebuildCardsInfo.forcedInteractableCategory
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.forcedMonsterCategory
+  name: forcedMonsterCategory
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_forcedMonsterCategory
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.forcedMonsterCategory
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.forcedMonsterCategory
+  nameWithType: RebuildCardsInfo.forcedMonsterCategory
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.poolEntry
+  name: poolEntry
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_poolEntry
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.poolEntry
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.poolEntry
+  nameWithType: RebuildCardsInfo.poolEntry
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.spawnCard
+  name: spawnCard
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_spawnCard
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.spawnCard
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.spawnCard
+  nameWithType: RebuildCardsInfo.spawnCard
+- uid: R2API.SpawnCardCloning.RebuildCardsInfo.spawnCardClone
+  name: spawnCardClone
+  href: api/R2API.SpawnCardCloning.RebuildCardsInfo.html#R2API_SpawnCardCloning_RebuildCardsInfo_spawnCardClone
+  commentId: F:R2API.SpawnCardCloning.RebuildCardsInfo.spawnCardClone
+  fullName: R2API.SpawnCardCloning.RebuildCardsInfo.spawnCardClone
+  nameWithType: RebuildCardsInfo.spawnCardClone
+- uid: R2API.SpawnCardCloning.SpawnCardClone
+  name: SpawnCardClone
+  href: api/R2API.SpawnCardCloning.SpawnCardClone.html
+  commentId: T:R2API.SpawnCardCloning.SpawnCardClone
+  fullName: R2API.SpawnCardCloning.SpawnCardClone
+  nameWithType: SpawnCardClone
+- uid: R2API.SpawnCardCloning.SpawnCardCloningAPI
+  name: SpawnCardCloningAPI
+  href: api/R2API.SpawnCardCloning.SpawnCardCloningAPI.html
+  commentId: T:R2API.SpawnCardCloning.SpawnCardCloningAPI
+  fullName: R2API.SpawnCardCloning.SpawnCardCloningAPI
+  nameWithType: SpawnCardCloningAPI
 - uid: R2API.StageRegistration
   name: StageRegistration
   href: api/R2API.StageRegistration.html
