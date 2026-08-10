@@ -26,6 +26,8 @@ internal static class Extensions
             {
                 return i;
             }
+
+            i++;
         }
 
         return -1;
