@@ -71,7 +71,8 @@ public static partial class AnimationsAPI
     {
         SetHooks();
 
-        var list = controllerModifications.GetOrAddDefault((sourceBundlePath, sourceAnimatorController), () => []);
+        var normalizedPath = Path.GetFullPath(sourceBundlePath);
+        var list = controllerModifications.GetOrAddDefault((normalizedPath, sourceAnimatorController), () => []);
         list.Add(modifications);
     }
 
@@ -91,66 +92,83 @@ public static partial class AnimationsAPI
     internal static void ApplyModifications()
     {
         var manager = new AssetsManager();
-
-        var dummyPath = Path.Combine(Path.GetDirectoryName(AnimationsPlugin.Instance.Info.Location), dummyBundleName);
-        foreach (var ((sourceBundlePath, sourceAnimatorController), modifications) in controllerModifications)
+        try
         {
-            var sourceAnimatorControllerPathID = NativeHelpers.GetAssetPathID(sourceAnimatorController);
-            var modifiedBundlePath = Path.Combine(
-                Paths.CachePath,
-                "R2API.Animations",
-                $"{Path.GetFileName(sourceBundlePath)}_{sourceAnimatorControllerPathID}{bundleExtension}");
-            var hashPath = Path.Combine(
-                Paths.CachePath,
-                "R2API.Animations",
-                $"{Path.GetFileName(sourceBundlePath)}_{sourceAnimatorControllerPathID}{hashExtension}");
-
-            var ignoreCache = AnimationsPlugin.IgnoreCache.Value;
-            string hash = null;
-            if (ignoreCache || !CachedBundleExists(modifiedBundlePath, hashPath, sourceAnimatorControllerPathID, modifications, out hash))
+            var dummyPath = Path.Combine(Path.GetDirectoryName(AnimationsPlugin.Instance.Info.Location), dummyBundleName);
+            foreach (var ((sourceBundlePath, sourceAnimatorController), modifications) in controllerModifications)
             {
-                var bundleFile = manager.LoadBundleFile(sourceBundlePath);
-                var assetFile = manager.LoadAssetsFileFromBundle(bundleFile, 0);
+                var sourceAnimatorControllerPathID = NativeHelpers.GetAssetPathID(sourceAnimatorController);
+                var modifiedBundlePath = Path.Combine(
+                    Paths.CachePath,
+                    "R2API.Animations",
+                    $"{Path.GetFileName(sourceBundlePath)}_{sourceAnimatorControllerPathID}{bundleExtension}");
+                var hashPath = Path.Combine(
+                    Paths.CachePath,
+                    "R2API.Animations",
+                    $"{Path.GetFileName(sourceBundlePath)}_{sourceAnimatorControllerPathID}{hashExtension}");
 
-                var dummyBundleFile = manager.LoadBundleFile(dummyPath);
-                var dummyAssetFile = manager.LoadAssetsFileFromBundle(dummyBundleFile, 0);
-
-                var creator = new ModificationsBundleCreator(
-                    manager,
-                    assetFile,
-                    sourceAnimatorControllerPathID,
-                    dummyAssetFile,
-                    dummyBundleFile,
-                    dummyAnimatorControllerPathID,
-                    modifications,
-                    modifiedBundlePath
-                );
-
-                creator.Run();
-                if (!ignoreCache)
+                var ignoreCache = AnimationsPlugin.IgnoreCache.Value;
+                string hash = null;
+                if (ignoreCache || !CachedBundleExists(modifiedBundlePath, hashPath, sourceAnimatorControllerPathID, modifications, out hash))
                 {
-                    File.WriteAllText(hashPath, hash);
+                    var bundleFile = manager.LoadBundleFile(sourceBundlePath);
+                    var assetFile = manager.LoadAssetsFileFromBundle(bundleFile, 0);
+
+                    var dummyBundleFile = manager.LoadBundleFile(dummyPath);
+                    var dummyAssetFile = manager.LoadAssetsFileFromBundle(dummyBundleFile, 0);
+
+                    try
+                    {
+                        var controllerAsset = manager.GetExtAsset(assetFile, 0, sourceAnimatorControllerPathID, false);
+                        var baseField = controllerAsset.baseField;
+                        if (baseField is null || baseField.IsDummy)
+                        {
+                            AnimationsPlugin.Logger.LogError($"AnimatorController \"{sourceAnimatorController.name}\" was not found in the bundle \"{sourceBundlePath}\", make sure the source bundle path is correct");
+                            continue;
+                        }
+
+                        var creator = new ModificationsBundleCreator(
+                            manager,
+                            assetFile,
+                            baseField,
+                            dummyAssetFile,
+                            dummyBundleFile,
+                            dummyAnimatorControllerPathID,
+                            modifications,
+                            modifiedBundlePath
+                        );
+
+                        creator.Run();
+                        if (!ignoreCache)
+                        {
+                            File.WriteAllText(hashPath, hash);
+                        }
+                    }
+                    finally
+                    {
+                        manager.UnloadAssetsFile(dummyAssetFile);
+                        manager.UnloadBundleFile(dummyBundleFile);
+                    }
                 }
 
-                manager.UnloadAssetsFile(dummyAssetFile);
-                manager.UnloadBundleFile(dummyBundleFile);
-            }
+                var modifiedBundle = AssetBundle.LoadFromFile(modifiedBundlePath);
+                var modifiedAnimatorController = modifiedBundle.LoadAsset<RuntimeAnimatorController>(dummyAnimatorControllerPath);
 
-            var modifiedBundle = AssetBundle.LoadFromFile(modifiedBundlePath);
-            var modifiedAnimatorController = modifiedBundle.LoadAsset<RuntimeAnimatorController>(dummyAnimatorControllerPath);
-
-            if (controllerToAnimators.TryGetValue(sourceAnimatorController, out var animators))
-            {
-                foreach (var animator in animators)
+                if (controllerToAnimators.TryGetValue(sourceAnimatorController, out var animators))
                 {
-                    animator.runtimeAnimatorController = modifiedAnimatorController;
+                    foreach (var animator in animators)
+                    {
+                        animator.runtimeAnimatorController = modifiedAnimatorController;
+                    }
                 }
             }
         }
-
-        manager.UnloadAll(true);
-        controllerModifications.Clear();
-        controllerToAnimators.Clear();
+        finally
+        {
+            manager.UnloadAll(true);
+            controllerModifications.Clear();
+            controllerToAnimators.Clear();
+        }
     }
 
     private static bool CachedBundleExists(string modifiedBundlePath, string hashPath, long sourceAnimatorControllerPathID, List<AnimatorModifications> modifications, out string hash)
