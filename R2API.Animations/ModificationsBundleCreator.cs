@@ -20,7 +20,7 @@ internal partial class ModificationsBundleCreator
 
     private readonly AssetsManager manager;
     private readonly AssetsFileInstance assetFile;
-    private readonly long sourceAnimatorControllerPathID;
+    private readonly AssetTypeValueField baseField;
     private readonly AssetsFileInstance dummyAssetFile;
     private readonly BundleFileInstance dummyBundleFile;
     private readonly long dummyAnimatorControllerPathID;
@@ -32,13 +32,12 @@ internal partial class ModificationsBundleCreator
     private readonly Dictionary<string, uint> nameToHash = [];
     private readonly List<Action> delayedActions = [];
 
-    private AssetTypeValueField baseField;
     private AnimatorModifications currentModification;
 
     public ModificationsBundleCreator(
         AssetsManager manager,
         AssetsFileInstance assetFile,
-        long sourceAnimatorControllerPathID,
+        AssetTypeValueField baseField,
         AssetsFileInstance dummyAssetFile,
         BundleFileInstance dummyBundleFile,
         long dummyAnimatorControllerPathID,
@@ -47,7 +46,7 @@ internal partial class ModificationsBundleCreator
     {
         this.manager = manager;
         this.assetFile = assetFile;
-        this.sourceAnimatorControllerPathID = sourceAnimatorControllerPathID;
+        this.baseField = baseField;
         this.dummyAssetFile = dummyAssetFile;
         this.dummyBundleFile = dummyBundleFile;
         this.dummyAnimatorControllerPathID = dummyAnimatorControllerPathID;
@@ -57,10 +56,6 @@ internal partial class ModificationsBundleCreator
 
     public void Run()
     {
-        var controllerAsset = manager.GetExtAsset(assetFile, 0, sourceAnimatorControllerPathID, false);
-
-        baseField = controllerAsset.baseField;
-
         GatherNames();
         RemapPPtrs();
 
@@ -136,8 +131,21 @@ internal partial class ModificationsBundleCreator
                 }
             }
 
-            foreach (var layer in modification.NewLayers.OrderBy(l => string.IsNullOrEmpty(l.SyncedLayerName)))
+            var syncedLayers = new List<(Layer, AssetTypeValueField)>();
+            foreach (var layer in GetSortedNewLayers(modification))
             {
+                var previousLayerIndex = -1;
+                if (!string.IsNullOrEmpty(layer.PreviousLayerName))
+                {
+                    var previousLayerHash = GetOrAddName(layer.PreviousLayerName);
+                    previousLayerIndex = layerArray.IndexOf(f => f["data"]["m_Binding"].AsUInt == previousLayerHash);
+                    if (previousLayerIndex == -1)
+                    {
+                        LogError($"Can't add layer \"{layer.Name}\" because previous layer \"{layer.PreviousLayerName}\" was not found");
+                        continue;
+                    }
+                }
+
                 var layerField = ValueBuilder.DefaultValueFieldFromTemplate(layerArray.TemplateField.Children[1]);
                 var dataField = layerField["data"];
                 CreateBodyMaskFromAvatarMask(dataField["m_BodyMask"], layer.AvatarMask);
@@ -152,41 +160,12 @@ internal partial class ModificationsBundleCreator
 
                 if (!string.IsNullOrEmpty(layer.SyncedLayerName))
                 {
-                    var syncedLayerHash = GetOrAddName(layer.SyncedLayerName);
-                    var syncedLayer = layerArray.FirstOrDefault(f => f["data"]["m_Binding"].AsUInt == syncedLayerHash);
-                    var syncedStateMachineIndex = syncedLayer["data"]["m_StateMachineIndex"].AsUInt;
-                    var syncedStateMachine = stateMachineArray[(int)syncedStateMachineIndex];
-                    var synchronizedLayerCountField = syncedStateMachine["data"]["m_SynchronizedLayerCount"];
-                    
-                    dataField["m_StateMachineIndex"].AsUInt = syncedStateMachineIndex;
-                    dataField["m_StateMachineSynchronizedLayerIndex"].AsUInt = synchronizedLayerCountField.AsUInt;
-
-                    synchronizedLayerCountField.AsUInt++;
-                    var syncedStates = layer.SyncedMotions.ToDictionary(f =>
-                    {
-                        return GetOrAddName($"{f.StateMachinePath}.{f.StateName}");
-                    });
-
-                    foreach (var stateField in syncedStateMachine["data"]["m_StateConstantArray"]["Array"])
-                    {
-                        var blendTreeIndexArray = stateField["data"]["m_BlendTreeConstantIndexArray"]["Array"];
-                        var blendTreeConstantArray = stateField["data"]["m_BlendTreeConstantArray"]["Array"];
-                        var stateNameHash = stateField["data"]["m_FullPathID"].AsUInt;
-                        var syncedState = syncedStates.GetValueOrDefault(stateNameHash);
-                        CreateBlendTreeFromMotion(animationClips, syncedState, blendTreeIndexArray, blendTreeConstantArray);
-                    }
+                    syncedLayers.Add((layer, dataField));
                 }
                 else
                 {
                     dataField["m_StateMachineIndex"].AsUInt = CreateStateMachine(layer.StateMachine, animationClips, stateMachineArray);
                     dataField["m_StateMachineSynchronizedLayerIndex"].AsUInt = 0;
-                }
-
-                var previousLayerIndex = -1;
-                if (!string.IsNullOrEmpty(layer.PreviousLayerName))
-                {
-                    var previousLayerHash = GetOrAddName(layer.PreviousLayerName);
-                    previousLayerIndex = layerArray.IndexOf(f => f["data"]["m_Binding"].AsUInt == previousLayerHash);
                 }
 
                 foreach (var range in stateMachineBehaviourRangesArray)
@@ -199,8 +178,87 @@ internal partial class ModificationsBundleCreator
                 }
                 layerArray.Children.Insert(previousLayerIndex + 1, layerField);
             }
+
+            //Filling out synced layers separately because they can be for the layers that come after them
+            foreach (var (layer, dataField) in syncedLayers)
+            {
+                var syncedLayerHash = GetOrAddName(layer.SyncedLayerName);
+                var syncedLayer = layerArray.FirstOrDefault(f => f["data"]["m_Binding"].AsUInt == syncedLayerHash);
+                var syncedStateMachineIndex = syncedLayer["data"]["m_StateMachineIndex"].AsUInt;
+                var syncedStateMachine = stateMachineArray[(int)syncedStateMachineIndex];
+                var synchronizedLayerCountField = syncedStateMachine["data"]["m_SynchronizedLayerCount"];
+
+                dataField["m_StateMachineIndex"].AsUInt = syncedStateMachineIndex;
+                dataField["m_StateMachineSynchronizedLayerIndex"].AsUInt = synchronizedLayerCountField.AsUInt;
+
+                synchronizedLayerCountField.AsUInt++;
+                var syncedStates = layer.SyncedMotions.ToDictionary(f =>
+                {
+                    return GetOrAddName($"{f.StateMachinePath}.{f.StateName}");
+                });
+
+                foreach (var stateField in syncedStateMachine["data"]["m_StateConstantArray"]["Array"])
+                {
+                    var blendTreeIndexArray = stateField["data"]["m_BlendTreeConstantIndexArray"]["Array"];
+                    var blendTreeConstantArray = stateField["data"]["m_BlendTreeConstantArray"]["Array"];
+                    var stateNameHash = stateField["data"]["m_FullPathID"].AsUInt;
+                    var syncedState = syncedStates.GetValueOrDefault(stateNameHash);
+                    CreateBlendTreeFromMotion(animationClips, syncedState, blendTreeIndexArray, blendTreeConstantArray);
+                }
+            }
         }
         currentModification = null;
+    }
+
+    /// <summary>
+    /// Returns a list of new layers from modification sorted by the order they should be added in
+    /// </summary>
+    /// <param name="modification"></param>
+    /// <returns></returns>
+    private List<Layer> GetSortedNewLayers(AnimatorModifications modification)
+    {
+        if (modification.NewLayers.Count < 2)
+        {
+            return modification.NewLayers;
+        }
+
+        var sortedLayers = new List<Layer>(modification.NewLayers.Count);
+        var tempLayers = new List<Layer>(0);
+        foreach (var layer in modification.NewLayers)
+        {
+            if (string.IsNullOrEmpty(layer.PreviousLayerName) || modification.NewLayers.All(l => l.Name != layer.PreviousLayerName))
+            {
+                sortedLayers.Add(layer);
+            }
+            else
+            {
+                tempLayers.Add(layer);
+            }
+        }
+
+        while (tempLayers.Count > 0)
+        {
+            var anyAdded = false;
+            for (var i = 0; i < tempLayers.Count; i++)
+            {
+                var layer = tempLayers[i];
+                if (tempLayers.All(l => l.Name != layer.PreviousLayerName))
+                {
+                    sortedLayers.Add(layer);
+                    tempLayers.RemoveAt(i);
+                    i--;
+                    anyAdded = true;
+                }
+            }
+
+            if (!anyAdded)
+            {
+                LogError("Found cyclic dependency in new layers.");
+                return new List<Layer>();
+            }
+        }
+
+        return sortedLayers;
     }
 
     /// <summary>
