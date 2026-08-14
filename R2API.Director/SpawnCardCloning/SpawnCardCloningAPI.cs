@@ -16,24 +16,15 @@ public static partial class SpawnCardCloningAPI
     internal static Dictionary<SpawnCard, List<object>> spawnCardClonesFromOriginalSpawnCard = [];
     internal static Dictionary<GameObject, List<object>> spawnCardClonesFromPrefab = [];
     internal static GameObjectArrayDictionary<List<object>> multiCharacterSpawnCardClonesFromPrefab = new GameObjectArrayDictionary<List<object>>();
-    private static HashSet<DccsPool.Category> appliedDccsPoolCategories = [];
     private static bool handledMixEnemyMonsterCards;
     internal static void SetHooks()
     {
         On.RoR2.ClassicStageInfo.RebuildCards += ClassicStageInfo_RebuildCards;
-        On.RoR2.DccsPool.Category.OnBeforeSerialize += Category_OnBeforeSerialize;
-    }
-
-    private static void Category_OnBeforeSerialize(On.RoR2.DccsPool.Category.orig_OnBeforeSerialize orig, DccsPool.Category self)
-    {
-        orig(self);
-        if (appliedDccsPoolCategories.Contains(self)) appliedDccsPoolCategories.Remove(self);
     }
 
     internal static void UnsetHooks()
     {
         On.RoR2.ClassicStageInfo.RebuildCards -= ClassicStageInfo_RebuildCards;
-        On.RoR2.DccsPool.Category.OnBeforeSerialize -= Category_OnBeforeSerialize;
     }
     private static void ClassicStageInfo_RebuildCards(On.RoR2.ClassicStageInfo.orig_RebuildCards orig, ClassicStageInfo self, DirectorCardCategorySelection forcedMonsterCategory, DirectorCardCategorySelection forcedInteractableCategory)
     {
@@ -64,8 +55,7 @@ public static partial class SpawnCardCloningAPI
         rebuildCardsInfo.categories = categories;
         foreach (DccsPool.Category category in categories)
         {
-            if (category == null || appliedDccsPoolCategories.Contains(category)) return;
-            appliedDccsPoolCategories.Add(category);
+            if (category == null) return;
             rebuildCardsInfo.dccsPoolCategory = category;
             foreach (DccsPool.PoolEntry poolEntry in category.alwaysIncluded) HandlePoolEntry(poolEntry, rebuildCardsInfo);
             foreach (DccsPool.PoolEntry poolEntry in category.includedIfConditionsMet)HandlePoolEntry(poolEntry, rebuildCardsInfo);
@@ -120,6 +110,7 @@ public static partial class SpawnCardCloningAPI
                 ref DirectorCardCategorySelection.Category category = ref directorCardCategorySelection.categories[i];
                 if (category.name == pair.Value)
                 {
+                    if (category.cards.Contains(directorCard)) continue;
                     int length = category.cards.Length;
                     Array.Resize(ref category.cards, length + 1);
                     category.cards[length] = directorCard;
@@ -158,6 +149,7 @@ public static partial class SpawnCardCloningAPI
                     }
                     continue;
                 }
+                if (category.cards.Contains(clonedDirectorCard)) continue;
                 int length = category.cards.Length;
                 Array.Resize(ref category.cards, length + 1);
                 category.cards[length] = clonedDirectorCard;
@@ -194,6 +186,7 @@ public static partial class SpawnCardCloningAPI
                     }
                     continue;
                 }
+                if (category.cards.Contains(directorCard1)) continue;
                 int length = category.cards.Length;
                 Array.Resize(ref category.cards, length + 1);
                 category.cards[length] = directorCard1;
