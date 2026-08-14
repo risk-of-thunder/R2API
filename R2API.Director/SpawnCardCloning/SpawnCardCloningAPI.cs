@@ -16,16 +16,24 @@ public static partial class SpawnCardCloningAPI
     internal static Dictionary<SpawnCard, List<object>> spawnCardClonesFromOriginalSpawnCard = [];
     internal static Dictionary<GameObject, List<object>> spawnCardClonesFromPrefab = [];
     internal static GameObjectArrayDictionary<List<object>> multiCharacterSpawnCardClonesFromPrefab = new GameObjectArrayDictionary<List<object>>();
-    private static HashSet<DccsPool> appliedDccsPools = [];
+    private static HashSet<DccsPool.Category> appliedDccsPoolCategories = [];
     private static bool handledMixEnemyMonsterCards;
     internal static void SetHooks()
     {
         On.RoR2.ClassicStageInfo.RebuildCards += ClassicStageInfo_RebuildCards;
+        On.RoR2.DccsPool.Category.OnBeforeSerialize += Category_OnBeforeSerialize;
+    }
+
+    private static void Category_OnBeforeSerialize(On.RoR2.DccsPool.Category.orig_OnBeforeSerialize orig, DccsPool.Category self)
+    {
+        orig(self);
+        if (appliedDccsPoolCategories.Contains(self)) appliedDccsPoolCategories.Remove(self);
     }
 
     internal static void UnsetHooks()
     {
         On.RoR2.ClassicStageInfo.RebuildCards -= ClassicStageInfo_RebuildCards;
+        On.RoR2.DccsPool.Category.OnBeforeSerialize -= Category_OnBeforeSerialize;
     }
     private static void ClassicStageInfo_RebuildCards(On.RoR2.ClassicStageInfo.orig_RebuildCards orig, ClassicStageInfo self, DirectorCardCategorySelection forcedMonsterCategory, DirectorCardCategorySelection forcedInteractableCategory)
     {
@@ -46,10 +54,9 @@ public static partial class SpawnCardCloningAPI
     }
     private static void HandlDccsPool(DccsPool dccsPool, RebuildCardsInfo rebuildCardsInfo)
     {
-        if (!dccsPool || appliedDccsPools.Contains(dccsPool)) return;
+        if (!dccsPool) return;
         rebuildCardsInfo.dccsPool = dccsPool;
         HandlePoolCategories(dccsPool.poolCategories, rebuildCardsInfo);
-        appliedDccsPools.Add(dccsPool);
     }
     private static void HandlePoolCategories(DccsPool.Category[] categories, RebuildCardsInfo rebuildCardsInfo)
     {
@@ -57,7 +64,8 @@ public static partial class SpawnCardCloningAPI
         rebuildCardsInfo.categories = categories;
         foreach (DccsPool.Category category in categories)
         {
-            if (category == null) return;
+            if (category == null || appliedDccsPoolCategories.Contains(category)) return;
+            appliedDccsPoolCategories.Add(category);
             rebuildCardsInfo.dccsPoolCategory = category;
             foreach (DccsPool.PoolEntry poolEntry in category.alwaysIncluded) HandlePoolEntry(poolEntry, rebuildCardsInfo);
             foreach (DccsPool.PoolEntry poolEntry in category.includedIfConditionsMet)HandlePoolEntry(poolEntry, rebuildCardsInfo);
