@@ -16,7 +16,6 @@ public static partial class SpawnCardCloningAPI
     internal static Dictionary<SpawnCard, List<object>> spawnCardClonesFromOriginalSpawnCard = [];
     internal static Dictionary<GameObject, List<object>> spawnCardClonesFromPrefab = [];
     internal static GameObjectArrayDictionary<List<object>> multiCharacterSpawnCardClonesFromPrefab = new GameObjectArrayDictionary<List<object>>();
-    private static HashSet<DccsPool> appliedDccsPools = [];
     private static bool handledMixEnemyMonsterCards;
     internal static void SetHooks()
     {
@@ -46,10 +45,9 @@ public static partial class SpawnCardCloningAPI
     }
     private static void HandlDccsPool(DccsPool dccsPool, RebuildCardsInfo rebuildCardsInfo)
     {
-        if (!dccsPool || appliedDccsPools.Contains(dccsPool)) return;
+        if (!dccsPool) return;
         rebuildCardsInfo.dccsPool = dccsPool;
         HandlePoolCategories(dccsPool.poolCategories, rebuildCardsInfo);
-        appliedDccsPools.Add(dccsPool);
     }
     private static void HandlePoolCategories(DccsPool.Category[] categories, RebuildCardsInfo rebuildCardsInfo)
     {
@@ -112,6 +110,7 @@ public static partial class SpawnCardCloningAPI
                 ref DirectorCardCategorySelection.Category category = ref directorCardCategorySelection.categories[i];
                 if (category.name == pair.Value)
                 {
+                    if (category.cards.Contains(directorCard)) continue;
                     int length = category.cards.Length;
                     Array.Resize(ref category.cards, length + 1);
                     category.cards[length] = directorCard;
@@ -150,6 +149,7 @@ public static partial class SpawnCardCloningAPI
                     }
                     continue;
                 }
+                if (category.cards.Contains(clonedDirectorCard)) continue;
                 int length = category.cards.Length;
                 Array.Resize(ref category.cards, length + 1);
                 category.cards[length] = clonedDirectorCard;
@@ -186,6 +186,7 @@ public static partial class SpawnCardCloningAPI
                     }
                     continue;
                 }
+                if (category.cards.Contains(directorCard1)) continue;
                 int length = category.cards.Length;
                 Array.Resize(ref category.cards, length + 1);
                 category.cards[length] = directorCard1;

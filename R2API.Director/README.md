@@ -20,6 +20,9 @@ Additionaly you can clone existing spawn cards and set new values for cloned spa
 
 ## Changelog
 
+### `3.0.1`
+* Fix spawn card clones not being able to be applied more than once for the dccspool in a single game session.
+
 ### `3.0.0`
 * Added SpawnCardCloningAPI for cloning existing spawn cards.
 
