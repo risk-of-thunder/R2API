@@ -8992,6 +8992,12 @@ references:
   commentId: F:R2API.ExecuteAPI.CalculateAdditiveExecuteThreshold
   fullName: R2API.ExecuteAPI.CalculateAdditiveExecuteThreshold
   nameWithType: ExecuteAPI.CalculateAdditiveExecuteThreshold
+- uid: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdBypassImmunity
+  name: CalculateAdditiveExecuteThresholdBypassImmunity
+  href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_CalculateAdditiveExecuteThresholdBypassImmunity
+  commentId: F:R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdBypassImmunity
+  fullName: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdBypassImmunity
+  nameWithType: ExecuteAPI.CalculateAdditiveExecuteThresholdBypassImmunity
 - uid: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdEventHandler
   name: ExecuteAPI.CalculateAdditiveExecuteThresholdEventHandler
   href: api/R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdEventHandler.html
@@ -9004,6 +9010,12 @@ references:
   commentId: F:R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer
   fullName: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer
   nameWithType: ExecuteAPI.CalculateAdditiveExecuteThresholdForViewer
+- uid: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerBypassImmunity
+  name: CalculateAdditiveExecuteThresholdForViewerBypassImmunity
+  href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_CalculateAdditiveExecuteThresholdForViewerBypassImmunity
+  commentId: F:R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerBypassImmunity
+  fullName: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerBypassImmunity
+  nameWithType: ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerBypassImmunity
 - uid: R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerEventHandler
   name: ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerEventHandler
   href: api/R2API.ExecuteAPI.CalculateAdditiveExecuteThresholdForViewerEventHandler.html
@@ -9016,6 +9028,12 @@ references:
   commentId: F:R2API.ExecuteAPI.CalculateExecuteThreshold
   fullName: R2API.ExecuteAPI.CalculateExecuteThreshold
   nameWithType: ExecuteAPI.CalculateExecuteThreshold
+- uid: R2API.ExecuteAPI.CalculateExecuteThresholdBypassImmunity
+  name: CalculateExecuteThresholdBypassImmunity
+  href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_CalculateExecuteThresholdBypassImmunity
+  commentId: F:R2API.ExecuteAPI.CalculateExecuteThresholdBypassImmunity
+  fullName: R2API.ExecuteAPI.CalculateExecuteThresholdBypassImmunity
+  nameWithType: ExecuteAPI.CalculateExecuteThresholdBypassImmunity
 - uid: R2API.ExecuteAPI.CalculateExecuteThresholdEventHandler
   name: ExecuteAPI.CalculateExecuteThresholdEventHandler
   href: api/R2API.ExecuteAPI.CalculateExecuteThresholdEventHandler.html
@@ -9028,6 +9046,12 @@ references:
   commentId: F:R2API.ExecuteAPI.CalculateExecuteThresholdForViewer
   fullName: R2API.ExecuteAPI.CalculateExecuteThresholdForViewer
   nameWithType: ExecuteAPI.CalculateExecuteThresholdForViewer
+- uid: R2API.ExecuteAPI.CalculateExecuteThresholdForViewerBypassImmunity
+  name: CalculateExecuteThresholdForViewerBypassImmunity
+  href: api/R2API.ExecuteAPI.html#R2API_ExecuteAPI_CalculateExecuteThresholdForViewerBypassImmunity
+  commentId: F:R2API.ExecuteAPI.CalculateExecuteThresholdForViewerBypassImmunity
+  fullName: R2API.ExecuteAPI.CalculateExecuteThresholdForViewerBypassImmunity
+  nameWithType: ExecuteAPI.CalculateExecuteThresholdForViewerBypassImmunity
 - uid: R2API.ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler
   name: ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler
   href: api/R2API.ExecuteAPI.CalculateExecuteThresholdForViewerEventHandler.html
