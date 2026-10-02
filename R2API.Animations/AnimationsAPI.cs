@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using AssetsTools.NET.Extra;
 using BepInEx;
 using R2API.AutoVersionGen;
@@ -98,14 +99,15 @@ public static partial class AnimationsAPI
             foreach (var ((sourceBundlePath, sourceAnimatorController), modifications) in controllerModifications)
             {
                 var sourceAnimatorControllerPathID = NativeHelpers.GetAssetPathID(sourceAnimatorController);
+                var fileNameHash = ComputeHash($"{Path.GetFileName(sourceBundlePath)}_{sourceAnimatorControllerPathID}");
                 var modifiedBundlePath = Path.Combine(
                     Paths.CachePath,
                     "R2API.Animations",
-                    $"{Path.GetFileName(sourceBundlePath)}_{sourceAnimatorControllerPathID}{bundleExtension}");
+                    fileNameHash + bundleExtension);
                 var hashPath = Path.Combine(
                     Paths.CachePath,
                     "R2API.Animations",
-                    $"{Path.GetFileName(sourceBundlePath)}_{sourceAnimatorControllerPathID}{hashExtension}");
+                    fileNameHash + hashExtension);
 
                 var ignoreCache = AnimationsPlugin.IgnoreCache.Value;
                 string hash = null;
@@ -169,6 +171,13 @@ public static partial class AnimationsAPI
             controllerModifications.Clear();
             controllerToAnimators.Clear();
         }
+    }
+
+    private static string ComputeHash(string value)
+    {
+        using var md5 = MD5.Create();
+        var hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(value));
+        return new Guid(hashBytes).ToString("N");
     }
 
     private static bool CachedBundleExists(string modifiedBundlePath, string hashPath, long sourceAnimatorControllerPathID, List<AnimatorModifications> modifications, out string hash)
