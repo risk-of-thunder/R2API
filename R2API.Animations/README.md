@@ -25,6 +25,9 @@ To create `Modified Controller` use option `Assets/R2API/Animation/Copy Animator
 After that you add the `AnimatorDiff` to an `AssetBundle` and in code you can create an instance of `AnimatorModifications` with `AnimatorModifications.CreateFromDiff()`.
 
 ## Changelog
+### '1.2.4'
+* Reduced file name for cached files to reduce the chance of going over file path limit.
+
 ### '1.2.3'
 * Fixed an issue where adding a new layer after another new layer could result in an error because of incorrect sorting.
 
