@@ -14,6 +14,9 @@ Adds extra fields (can be accessed with extension methods) to SkillDef:
 
 ## Changelog
 
+### '1.0.5'
+* Update for DLC 4 release 1
+
 ### '1.0.4'
 * Add GetCooldownRefreshSound and SetCooldownRefreshSound to SkillDef
 
