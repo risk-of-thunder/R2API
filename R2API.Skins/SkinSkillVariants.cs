@@ -260,7 +260,7 @@ public static partial class SkinSkillVariants
                 }
                 if (
                 c.TryGotoNext(MoveType.After,
-                    x => x.MatchStloc(19)
+                    x => x.MatchStloc(21)
                 ))
                 {
                     Instruction instruction = c.Prev;
@@ -287,14 +287,14 @@ public static partial class SkinSkillVariants
                 SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
             }
             if (
-                c.TryGotoPrev(MoveType.After,
+                c.TryGotoNext(MoveType.After,
                     x => x.MatchLdfld(out fieldReference2),
                     x => x.MatchLdcI4(1),
                     x => x.MatchStfld<CharacterModel>(nameof(CharacterModel.forceUpdate))
                 ))
             {
                 if (
-                c.TryGotoNext(MoveType.After,
+                c.TryGotoPrev(MoveType.After,
                     x => x.MatchLdfld<CharacterModel>(nameof(CharacterModel.customGameObjectActivationTransforms)),
                     x => x.MatchLdloc(out locID)
                 ))
