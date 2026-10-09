@@ -47,6 +47,7 @@ public static class EliteRamp
     {
         var c = new ILCursor(il);
         if (!c.TryGotoNext(MoveType.After,
+                x => x.MatchBr(out _),
                 x => x.MatchLdarg(0),
                 x => x.MatchLdfld<CharacterModel>(nameof(CharacterModel.propertyStorage)),
                 x => x.MatchLdsfld(typeof(CommonShaderProperties), nameof(CommonShaderProperties._EliteIndex))
