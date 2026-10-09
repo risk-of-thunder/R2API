@@ -93,7 +93,7 @@ public abstract class BaseSpawnCardClone<T> : ScriptableObject where T : SpawnCa
         if (!SpawnCardCloningAPI.allSpawnCardClones.Contains(this)) SpawnCardCloningAPI.allSpawnCardClones.Add(this);
         if (cloningType == CloningType.SpawnCard)
         {
-            SpawnCard spawnCard = targetSpawnCard.Asset;
+            SpawnCard spawnCard = targetSpawnCard == null ? null : targetSpawnCard.Asset;
             if (spawnCard)
             {
                 if (SpawnCardCloningAPI.spawnCardClonesFromOriginalSpawnCard.TryGetValue(spawnCard, out List<object> list) && !list.Contains(this))
@@ -108,7 +108,7 @@ public abstract class BaseSpawnCardClone<T> : ScriptableObject where T : SpawnCa
         }
         if (cloningType == CloningType.Prefab)
         {
-            GameObject gameObject = targetPrefab.Asset;
+            GameObject gameObject = targetPrefab == null ? null : targetPrefab.Asset;
             if (gameObject)
             {
                 if (SpawnCardCloningAPI.spawnCardClonesFromPrefab.TryGetValue(gameObject, out List<object> list) && !list.Contains(this))

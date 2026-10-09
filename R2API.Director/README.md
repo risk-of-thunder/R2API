@@ -22,6 +22,9 @@ Also provides an event to easily enable/disable Combat Directors. Provides an ex
 
 ## Changelog
 
+## `3.1.1`
+* Update for DLC 4 release 1.
+
 ## `3.1.0`
 * Added enabling/disabling Combat Directors event.
 
