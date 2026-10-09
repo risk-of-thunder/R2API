@@ -45,7 +45,6 @@ public static partial class CharacterBodyAPI
         AlwaysSprint = ReserveBodyFlag();
         IL.RoR2.UI.SprintIcon.FixedUpdate += SprintIcon_FixedUpdate;
         On.EntityStates.GenericCharacterMain.HandleMovements += GenericCharacterMain_HandleMovements;
-        IL.RoR2.PlayerCharacterMasterController.PollButtonInput += PlayerCharacterMasterController_PollButtonInput;
         IL.RoR2.CameraModes.CameraModePlayerBasic.CollectLookInputInternal += CameraModePlayerBasic_CollectLookInputInternal;
         IL.RoR2.Skills.SkillDef.OnExecute += SkillDef_OnExecute;
         IL.RoR2.Skills.SkillDef.OnFixedUpdate += SkillDef_OnFixedUpdate;
@@ -58,7 +57,6 @@ public static partial class CharacterBodyAPI
         _hooksEnabled = false;
         IL.RoR2.UI.SprintIcon.FixedUpdate -= SprintIcon_FixedUpdate;
         On.EntityStates.GenericCharacterMain.HandleMovements -= GenericCharacterMain_HandleMovements;
-        IL.RoR2.PlayerCharacterMasterController.PollButtonInput -= PlayerCharacterMasterController_PollButtonInput;
         IL.RoR2.CameraModes.CameraModePlayerBasic.CollectLookInputInternal -= CameraModePlayerBasic_CollectLookInputInternal;
         IL.RoR2.Skills.SkillDef.OnExecute -= SkillDef_OnExecute;
         IL.RoR2.Skills.SkillDef.OnFixedUpdate -= SkillDef_OnFixedUpdate;
@@ -116,32 +114,6 @@ public static partial class CharacterBodyAPI
         else
         {
             CharacterBodyPlugin.Logger.LogError(il.Method.Name + " IL Hook 2 failed!");
-        }
-    }
-    private static void PlayerCharacterMasterController_PollButtonInput(ILContext il)
-    {
-        ILCursor c = new ILCursor(il);
-        if (
-            c.TryGotoNext(MoveType.Before,
-                x => x.MatchLdloc(16),
-                x => x.MatchStloc(6)
-            ))
-        {
-            c.Index++;
-            Instruction instruction = c.Next;
-            Instruction instruction2 = c.Next.Next;
-            c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate(GetFlag);
-            bool GetFlag(PlayerCharacterMasterController playerCharacterMasterController) => playerCharacterMasterController.body.GetAlwaysSprint();
-            c.Emit(OpCodes.Brfalse_S, instruction);
-            c.Emit(OpCodes.Pop);
-            c.Emit(OpCodes.Ldloc, 13);
-            c.Emit(OpCodes.Ldc_I4, 18);
-            c.Emit(OpCodes.Callvirt, AccessTools.Method(typeof(Player), nameof(Player.GetButton), [typeof(int)]));
-        }
-        else
-        {
-            CharacterBodyPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
         }
     }
     private static void CameraModePlayerBasic_CollectLookInputInternal(ILContext il)

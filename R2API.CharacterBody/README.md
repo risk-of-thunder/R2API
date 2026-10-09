@@ -6,6 +6,9 @@ R2API.CharacterBody is a submodule for R2API that currently adds Modded Body Fla
 
 ## Changelog
 
+### '1.4.1'
+* Update for DLC 4 release 1. Sprint key no longer acts as a raw skill input when body can always sprint, use new raw skill input key instead
+
 ### '1.4.0'
 * Add `CustomSprintColor` and `AlwaysSprint` features.
 
