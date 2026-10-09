@@ -78,10 +78,15 @@ public static partial class TeamsAPI
         IL.EntityStates.VultureHunter.Weapon.Calldown.Call += ReplaceTeamIndexCount;
         IL.RoR2.AffixBeadAttachment.ClearEnemyLunarRuinDamage += ReplaceTeamIndexCount;
         IL.RoR2.BuffWard.FixedUpdate += ReplaceTeamIndexCount;
-        IL.RoR2.FogDamageController.MyFixedUpdate += ReplaceTeamIndexCount;
+        IL.RoR2.ChamprushQuadrantController.KillUntrackedStragglers += ReplaceTeamIndexCount;
+        IL.RoR2.FogBuffController.UpdateDictionary += ReplaceTeamIndexCount;
+        IL.RoR2.FogBuffController.GetAffectedBodies += ReplaceTeamIndexCount;
+        IL.RoR2.FogDamageController.UpdateDictionary += ReplaceTeamIndexCount;
+        IL.RoR2.FogDamageController.GetAffectedBodies += ReplaceTeamIndexCount;
         IL.RoR2.GhostGunController.FindTarget += ReplaceTeamIndexCount;
         IL.RoR2.GoldTitanManager.CalcTitanPowerAndBestTeam += ReplaceTeamIndexCount;
         IL.RoR2.HoldoutZoneController.UpdateHealingNovas += ReplaceTeamIndexCount;
+        IL.RoR2.HoldoutZoneController.UpdateBlightZones += ReplaceTeamIndexCount;
         IL.RoR2.SharedSufferingManager.AreAnyPoolsDirty += ReplaceTeamIndexCount;
         IL.RoR2.SharedSufferingManager.CleanAllDirtyPools += ReplaceTeamIndexCount;
         IL.RoR2.SharedSufferingManager.DealDamage += ReplaceTeamIndexCount;
@@ -94,8 +99,6 @@ public static partial class TeamsAPI
         IL.RoR2.TeamManager.GetTeamExperience += ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.GetTeamLevel += ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.GetTeamNextLevelExperience += ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.GiveTeamItem += ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.GiveTeamMoney_TeamIndex_int += ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.SetTeamLevel += ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.Start += ReplaceTeamIndexCount;
         IL.RoR2.Util.GetEnemyEasyTarget += ReplaceTeamIndexCount;
@@ -204,13 +207,14 @@ public static partial class TeamsAPI
         IL.RoR2.TeamManager.GetTeamExperience -= ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.GetTeamLevel -= ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.GetTeamNextLevelExperience -= ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.GiveTeamItem -= ReplaceTeamIndexCount;
-        IL.RoR2.TeamManager.GiveTeamMoney_TeamIndex_int -= ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.OnDeserialize -= ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.OnSerialize -= ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.SetTeamLevel -= ReplaceTeamIndexCount;
         IL.RoR2.TeamManager.Start -= ReplaceTeamIndexCount;
         IL.RoR2.Util.GetEnemyEasyTarget -= ReplaceTeamIndexCount;
+
+        IL.RoR2.Items.OutOfTPRadiusManager.DestroyFogDamagersForTeams -= ReplaceTeamIndexCount;
+        IL.RoR2.Items.OutOfTPRadiusManager.InstantiateDamagersForTeams -= ReplaceTeamIndexCount;
 
         On.RoR2.TeamManager.Start -= TeamManager_Start;
         IL.RoR2.TeamManager.SetTeamExperience -= TeamManager_SetTeamExperience;

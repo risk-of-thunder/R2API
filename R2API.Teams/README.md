@@ -14,6 +14,9 @@ Use `TeamsAPI.RegisterTeam` to add a new team, the `TeamIndex` of the new team i
 
 ## Changelog
 
+### '1.0.3'
+* Updated for DLC 4: Hallowed Concepts.
+
 ### '1.0.2'
 * Updated for Alloyed Collective.
 

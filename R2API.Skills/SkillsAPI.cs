@@ -26,7 +26,7 @@ public static partial class SkillsAPI
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot += LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData += CharacterSelectControllerBuildSkillStripDisplayDataHook;
         IL.RoR2.GenericSkill.RecalculateMaxStock += GenericSkill_RecalculateMaxStock;
-        IL.RoR2.UI.SkillIcon.Update += SkillIcon_Update;
+        IL.RoR2.UI.SkillIcon.LateUpdate += SkillIcon_Update;
     }
     internal static void UnsetHooks()
     {
@@ -34,7 +34,7 @@ public static partial class SkillsAPI
         IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot -= LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData -= CharacterSelectControllerBuildSkillStripDisplayDataHook;
         IL.RoR2.GenericSkill.RecalculateMaxStock -= GenericSkill_RecalculateMaxStock;
-        IL.RoR2.UI.SkillIcon.Update -= SkillIcon_Update;
+        IL.RoR2.UI.SkillIcon.LateUpdate -= SkillIcon_Update;
     }
 
     /// <summary>
