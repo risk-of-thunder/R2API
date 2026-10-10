@@ -62,8 +62,6 @@ public static partial class EliteAPI
 #pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
-    private static bool _resolvedFields = false;
-
     #region ModHelper Events and Hooks
 
     internal static void Init()
@@ -72,7 +70,7 @@ public static partial class EliteAPI
         IL.RoR2.CombatDirector.Init += InitEarlyCombatDirector;
 
         // call init before anyone else places hooks
-        // wrb expects the elite catalog to be populated when init is called
+        // we hold onto the unmodified tiers, while still allowing the method to be called during normal startup
         CombatDirector.Init();
     }
 
@@ -90,40 +88,7 @@ public static partial class EliteAPI
         {
             // force the async queue to complete. the elite tiers are populated during the load callbacks
             _ = Addressables.LoadAssetAsync<AssetCollection>("28c1ff73384cbbc469eefc6c7ef399dd").WaitForCompletion();
-            /*
-            // content fields are prepopulated for backwards compat, but might not be necessary...
-            RoR2Content.Elites.Fire = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteFire.edFire_asset).WaitForCompletion();
-            RoR2Content.Elites.FireHonor = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteFire.edFireHonor_asset).WaitForCompletion();
 
-            RoR2Content.Elites.Ice = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteIce.edIce_asset).WaitForCompletion();
-            RoR2Content.Elites.IceHonor = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteIce.edIceHonor_asset).WaitForCompletion();
-
-            RoR2Content.Elites.Lightning = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteLightning.edLightning_asset).WaitForCompletion();
-            RoR2Content.Elites.LightningHonor = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteLightning.edLightningHonor_asset).WaitForCompletion();
-
-            RoR2Content.Elites.Haunted = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteHaunted.edHaunted_asset).WaitForCompletion();
-            RoR2Content.Elites.Poison = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_ElitePoison.edPoison_asset).WaitForCompletion();
-            RoR2Content.Elites.Lunar = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteLunar.edLunar_asset).WaitForCompletion();
-
-            // dlc1
-            DLC1Content.Elites.Earth = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC1_EliteEarth.edEarth_asset).WaitForCompletion();
-            DLC1Content.Elites.EarthHonor = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC1_EliteEarth.edEarthHonor_asset).WaitForCompletion();
-
-            DLC1Content.Elites.Void = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC1_EliteVoid.edVoid_asset).WaitForCompletion();
-
-            // dlc2
-            DLC2Content.Elites.Aurelionite = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC2_Elites_EliteAurelionite.edAurelionite_asset).WaitForCompletion();
-            DLC2Content.Elites.AurelioniteHonor = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC2_Elites_EliteAurelionite.edAurelioniteHonor_asset).WaitForCompletion();
-
-            DLC2Content.Elites.Bead = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC2_Elites_EliteBead.edBead_asset).WaitForCompletion();
-
-            // dlc3
-            DLC3Content.Elites.Collective = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC3_Collective.edCollective_asset).WaitForCompletion();
-            DLC3Content.Elites.CollectiveWeak = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC3_Collective.edCollectiveWeak_asset).WaitForCompletion();
-
-            // dlc4
-            DLC4Content.Elites.Death = Addressables.LoadAssetAsync<EliteDef>("15cb42e326e7e084c8a4b4f167342f6b").WaitForCompletion();
-            */
             VanillaEliteTiers = [.. CombatDirector.eliteTiers];
         }
 
@@ -133,19 +98,12 @@ public static partial class EliteAPI
     private static void InitEarlyCombatDirector(ILContext il)
     {
         var c = new ILCursor(il);
-        int idx = 0;
-
-        while (c.TryGotoNext(MoveType.After,
-                x => x.MatchLdcI4(out idx),
-                x => x.MatchNewobj<CombatDirector.EliteTierDef>()
-            ))
-        {
-            c.Emit(OpCodes.Ldc_I4, idx);
-            c.EmitDelegate(UseExistingTierDef);
-        }
+        c.EmitDelegate(HasInitRun);
+        c.Emit(OpCodes.Brfalse, c.Next);
+        c.Emit(OpCodes.Ret);
     }
 
-    private static CombatDirector.EliteTierDef UseExistingTierDef(CombatDirector.EliteTierDef tierDef, int index) => HG.ArrayUtils.GetSafe(VanillaEliteTiers, index, tierDef);
+    private static bool HasInitRun() => VanillaEliteTierCount > 0;
 
     #endregion ModHelper Events and Hooks
 
