@@ -80,23 +80,21 @@ public static partial class Skins
             displaySkins.skins ??= [];
             if (displaySkins.skins.Length != bodySkins.skins.Length)
             {
-                if (body == DLC4Content.BodyPrefabs.AcolyteBody)
+                SkinsPlugin.Logger.LogWarning($"ModelSkinController skins array on the displayPrefab {displayModel.name} array does not match the one on the bodyPrefab!" +
+                $"\r\nHighly recommended you set the controller up manually. Attempting to convert extra bodySkins to displaySkins. (Experimental!)");
+                for (int i = displaySkins.skins.Length; i < bodySkins.skins.Length; i++)
                 {
-                    SkinsPlugin.Logger.LogWarning($"ModelSkinController skins array on the displayPrefab {displayModel.name} array does not match the one on the bodyPrefab!" +
-                    $"\r\nHighly recommended you set the controller up manually. Attempting to convert extra bodySkins to displaySkins. (Acolyte Patch)");
-                    for (int i = displaySkins.skins.Length; i < bodySkins.skins.Length; i++)
-                    {
-                        SkinDef skinDef = SkinDef.Instantiate(bodySkins.skins[i]);
-                        skinDef.baseSkins[0] = displaySkins.skins[0];
+                    SkinDef skinDef = SkinDef.Instantiate(bodySkins.skins[i]);
+                    if (skinDef.baseSkins == null || skinDef.baseSkins.Length == 0)
+                        skinDef.baseSkins = new SkinDef[1];
+
+                    skinDef.baseSkins[0] = displaySkins.skins[0];
+
+                    if (displaySkins.skins[0].rootObject)
                         skinDef.rootObject = displaySkins.skins[0].rootObject;
-                        Array.Resize(ref displaySkins.skins, displaySkins.skins.Length + 1);
-                        displaySkins.skins[displaySkins.skins.Length - 1] = skinDef;
-                    }
-                } else
-                {
-                    SkinsPlugin.Logger.LogWarning($"ModelSkinController skins array on the displayPrefab {displayModel.name} array does not match the one on the bodyPrefab!" +
-                    $"\r\nHighly recommended you set the controller up manually. Cloning from body prefab...");
-                    displaySkins.skins = ArrayUtils.Clone(bodySkins.skins);
+
+                    Array.Resize(ref displaySkins.skins, displaySkins.skins.Length + 1);
+                    displaySkins.skins[displaySkins.skins.Length - 1] = skinDef;
                 }
             }
         }
