@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -17,6 +18,7 @@ using R2API.Utils;
 using RoR2;
 using RoR2BepInExPack.GameAssetPaths.Version_1_39_0;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -54,6 +56,10 @@ public static partial class EliteAPI
     private static readonly List<CombatDirector.EliteTierDef> CustomEliteTierDefs = [];
     private static CombatDirector.EliteTierDef[] _vanillaEliteTiers = [];
 
+    private static readonly List<MethodBase> _eliteTierCallbacks = [];
+    private static readonly List<ILHook> _eliteTierCallbackHooks = [];
+    private static readonly List<AsyncOperationHandle<AssetCollection>> _pendingEliteTierLoads = [];
+
     /// <summary>
     /// Return true if the submodule is loaded.
     /// </summary>
@@ -72,8 +78,15 @@ public static partial class EliteAPI
         IL.RoR2.CombatDirector.Init += ResolveFieldInfo;
         IL.RoR2.CombatDirector.Init -= ResolveFieldInfo;
 
+        IL.RoR2.CombatDirector.Init += FindEliteTierCallbacks;
+        IL.RoR2.CombatDirector.Init -= FindEliteTierCallbacks;
+
+        foreach (var callback in _eliteTierCallbacks)
+            _eliteTierCallbackHooks.Add(new ILHook(callback, InitEarlyCombatDirector));
+
         On.RoR2.CombatDirector.Init += CopyCombatDirectorTiers;
         IL.RoR2.CombatDirector.Init += InitEarlyCombatDirector;
+        IL.RoR2.CombatDirector.Init += WaitForEliteTierLoads;
 
         // call init before anyone else places hooks
         // wrb expects the elite catalog to be populated when init is called
@@ -82,8 +95,14 @@ public static partial class EliteAPI
 
     internal static void UnsetHooks()
     {
+        IL.RoR2.CombatDirector.Init -= WaitForEliteTierLoads;
         IL.RoR2.CombatDirector.Init -= InitEarlyCombatDirector;
         On.RoR2.CombatDirector.Init -= CopyCombatDirectorTiers;
+
+        foreach (var hook in _eliteTierCallbackHooks)
+            hook.Dispose();
+
+        _eliteTierCallbackHooks.Clear();
     }
 
     private static void CopyCombatDirectorTiers(On.RoR2.CombatDirector.orig_Init orig)
@@ -114,6 +133,61 @@ public static partial class EliteAPI
     }
 
     private static CombatDirector.EliteTierDef UseExistingTierDef(CombatDirector.EliteTierDef tierDef, int index) => HG.ArrayUtils.GetSafe(VanillaEliteTiers, index, tierDef);
+
+    // hallowed concepts update now builds most elite tiers in addressable load callbacks, so they are still missing when Init returns
+    private static void FindEliteTierCallbacks(ILContext il)
+    {
+        var c = new ILCursor(il);
+        MethodReference callback = null;
+
+        while (c.TryGotoNext(MoveType.After, x => x.MatchLdftn(out callback)))
+        {
+            if (CreatesEliteTierDef(callback))
+                _eliteTierCallbacks.Add(callback.ResolveReflection());
+        }
+    }
+
+    private static bool CreatesEliteTierDef(MethodReference method)
+    {
+        var body = method.SafeResolve()?.Body;
+
+        return body != null && body.Instructions.Any(x => x.MatchNewobj<CombatDirector.EliteTierDef>());
+    }
+
+    private static void WaitForEliteTierLoads(ILContext il)
+    {
+        var c = new ILCursor(il);
+
+        while (c.TryGotoNext(MoveType.After, x => x.MatchCall(out var method) && IsEliteTierCollectionLoad(method)))
+            c.EmitDelegate(TrackEliteTierLoad);
+
+        c.Index = 0;
+        while (c.TryGotoNext(x => x.MatchRet()))
+        {
+            c.EmitDelegate(WaitForTrackedEliteTierLoads);
+            c.Index++;
+        }
+    }
+
+    private static bool IsEliteTierCollectionLoad(MethodReference method) =>
+        method is GenericInstanceMethod { Name: nameof(Addressables.LoadAssetAsync) } loadMethod
+        && loadMethod.DeclaringType.Is(typeof(Addressables))
+        && loadMethod.GenericArguments[0].Is(typeof(AssetCollection));
+
+    private static AsyncOperationHandle<AssetCollection> TrackEliteTierLoad(AsyncOperationHandle<AssetCollection> handle)
+    {
+        _pendingEliteTierLoads.Add(handle);
+
+        return handle;
+    }
+
+    private static void WaitForTrackedEliteTierLoads()
+    {
+        foreach (var handle in _pendingEliteTierLoads)
+            handle.WaitForCompletion();
+
+        _pendingEliteTierLoads.Clear();
+    }
 
     private static void ResolveFieldInfo(ILContext il)
     {

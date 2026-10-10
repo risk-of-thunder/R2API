@@ -20,6 +20,9 @@ The EliteRamp implementation is handled inside the EliteRamp class, you can use 
 
 ## Changelog
 
+### '1.1.3'
+* Fixed vanilla elite tiers being null after `CombatDirector.Init` since DLC4 loads them asynchronously, which broke every custom elite added to a vanilla tier
+
 ### '1.1.2'
 * Fixes for DLC4
 
