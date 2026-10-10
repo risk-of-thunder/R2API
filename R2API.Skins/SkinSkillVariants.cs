@@ -3,7 +3,6 @@ using HG.Coroutines;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using MonoMod.Utils;
 using R2API.SkinsAPI.Interop;
 using R2API.Utils;
 using RoR2;
@@ -11,19 +10,13 @@ using RoR2.ContentManagement;
 using RoR2.Projectile;
 using RoR2.Skills;
 using RoR2.SurvivorMannequins;
-using RoR2BepInExPack.GameAssetPaths;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Text;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using static R2API.SkinSkillVariants;
-using static Rewired.InputMapper;
-using static UnityEngine.GridBrushBase;
 
 namespace R2API;
 public static partial class SkinSkillVariants
@@ -40,7 +33,7 @@ public static partial class SkinSkillVariants
             return;
 
         _hooksSet = true;
-        
+
         SkinsPlugin.harmonyPatcher.CreateClassProcessor(typeof(Patches)).Patch();
         On.RoR2.SkinDef.MeshReplacementTemplate.ctor += MeshReplacementTemplate_ctor;
         On.RoR2.SkinDef.GhostReplacementTemplate.ctor += GhostReplacementTemplate_ctor;
@@ -50,7 +43,7 @@ public static partial class SkinSkillVariants
         IL.RoR2.MasterSummon.Perform += MasterSummon_Perform;
         IL.RoR2.SurvivorCatalog.SetSurvivorDefs += SurvivorCatalog_SetSurvivorDefs;
         On.RoR2.SurvivorCatalog.SetSurvivorDefs += SurvivorCatalog_SetSurvivorDefs1;
-        
+
     }
 
     private static void SurvivorCatalog_SetSurvivorDefs1(On.RoR2.SurvivorCatalog.orig_SetSurvivorDefs orig, SurvivorDef[] newSurvivorDefs)
@@ -90,8 +83,7 @@ public static partial class SkinSkillVariants
         {
             c.Emit(OpCodes.Ldloc, locID);
             c.EmitDelegate(SetLobbySkinToBodySkin);
-        }
-        else
+        } else
         {
             SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
         }
@@ -136,13 +128,11 @@ public static partial class SkinSkillVariants
                 c.Emit(OpCodes.Pop);
                 c.Emit(OpCodes.Ldloc, newLocal + 1);
                 c.Emit(OpCodes.Br, instruction);
-            }
-            else
+            } else
             {
                 SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 2 failed!");
             }
-        }
-        else
+        } else
         {
             SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
         }
@@ -178,8 +168,7 @@ public static partial class SkinSkillVariants
             c.Emit(OpCodes.Call, AccessTools.Method(typeof(UnityEngine.Object), "op_Implicit"));
             c.Emit(OpCodes.Brtrue_S, lastInstruction);
             c.Emit(OpCodes.Pop);
-        }
-        else
+        } else
         {
             SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
         }
@@ -233,8 +222,7 @@ public static partial class SkinSkillVariants
                     c.Emit(OpCodes.Ldloca, i);
                     c.Emit(OpCodes.Ldloc, newLocal);
                     c.EmitDelegate(ApplyRendererInfoSkillVariants);
-                }
-                else
+                } else
                 {
                     SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 2 failed!");
                 }
@@ -253,8 +241,7 @@ public static partial class SkinSkillVariants
                     c.Emit(OpCodes.Ldloc, newLocal);
                     c.EmitDelegate(ApplyLightInfoSkillVariants);
                     c.Emit(OpCodes.Br, instruction);
-                }
-                else
+                } else
                 {
                     SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 3 failed!");
                 }
@@ -276,13 +263,11 @@ public static partial class SkinSkillVariants
                     c.Emit(OpCodes.Pop);
                     c.Emit(OpCodes.Ldloc, newLocal + 1);
                     c.Emit(OpCodes.Br, instruction);
-                }
-                else
+                } else
                 {
                     SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 4 failed!");
                 }
-            }
-            else
+            } else
             {
                 SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
             }
@@ -303,13 +288,11 @@ public static partial class SkinSkillVariants
                     c.Emit(OpCodes.Ldfld, fieldReference2);
                     c.Emit(OpCodes.Ldloc, locID);
                     c.EmitDelegate(HandleSkinCustomGameobjectComponent);
-                }
-                else
+                } else
                 {
                     SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 6 failed!");
-                }   
-            }
-            else
+                }
+            } else
             {
                 SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 5 failed!");
             }
@@ -336,8 +319,7 @@ public static partial class SkinSkillVariants
                 c.Emit(OpCodes.Ldloc, 6);
                 c.Emit(OpCodes.Ldloc, 2);
                 c.EmitDelegate(AddSkinToBodyDictionary);
-            }
-            else
+            } else
             {
                 SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 1 failed!");
             }
@@ -350,8 +332,7 @@ public static partial class SkinSkillVariants
                 ))
             {
                 c.EmitDelegate(ApplyPendingSkinSkillVariations);
-            }
-            else
+            } else
             {
                 SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook 2 failed!");
             }
@@ -368,8 +349,7 @@ public static partial class SkinSkillVariants
             {
                 c.Emit(OpCodes.Ldloc, 1);
                 c.EmitDelegate(AddSkinDefToRuntimeSkin);
-            }
-            else
+            } else
             {
                 SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
             }
@@ -389,8 +369,7 @@ public static partial class SkinSkillVariants
                 ))
             {
                 c.RemoveRange(7);
-            }
-            else
+            } else
             {
                 SkinsPlugin.Logger.LogError(il.Method.Name + " IL Hook failed!");
             }
@@ -573,7 +552,7 @@ public static partial class SkinSkillVariants
     private static List<SkillDef> CollectSkills(CharacterBody characterBody)
     {
         SkillLocator skillLocator = characterBody.skillLocator;
-        if(skillLocator == null) return null;
+        if (skillLocator == null) return null;
         GenericSkill[] genericSkills = skillLocator.allSkills;
         if (genericSkills == null) return null;
         List<SkillDef> skillDefs = [];
@@ -592,8 +571,7 @@ public static partial class SkinSkillVariants
         if (skinToBody.ContainsKey(skinDef))
         {
             bodyIndex = skinToBody[skinDef];
-        }
-        else
+        } else
         {
             bodyIndex = BodyIndex.None;
             if (lobbySkinDefToBodySkinDef.TryGetValue(skinDef, out SkinDef lobbySkinDef))
@@ -719,7 +697,7 @@ public static partial class SkinSkillVariants
             if (!skillDefs.Contains(skillDef)) continue;
             if (set && lightInfoSkillVariant.lowPriority) continue;
             lightInfo = lightInfoSkillVariant.lightInfo;
-            if(!lightInfoSkillVariant.lowPriority) set = true;
+            if (!lightInfoSkillVariant.lowPriority) set = true;
         }
         return lightInfo;
     }
@@ -747,8 +725,7 @@ public static partial class SkinSkillVariants
                 if (skinDef.skinDefParamsAddress.Asset)
                 {
                     skinDefParams = skinDef.skinDefParamsAddress.Asset as SkinDefParams;
-                }
-                else
+                } else
                 {
                     skinDefParams = skinDef.skinDefParamsAddress.LoadAsset().WaitForCompletion();
                 }
@@ -766,8 +743,7 @@ public static partial class SkinSkillVariants
                 if (skinDef.optimizedSkinDefParamsAddress.Asset)
                 {
                     skinDefParams = skinDef.optimizedSkinDefParamsAddress.Asset as SkinDefParams;
-                }
-                else
+                } else
                 {
                     skinDefParams = skinDef.optimizedSkinDefParamsAddress.LoadAsset().WaitForCompletion();
                 }
@@ -781,8 +757,8 @@ public static partial class SkinSkillVariants
         for (int i = 0; i < rendererInfos.Length; i++)
         {
             ref CharacterModel.RendererInfo rendererInfo = ref rendererInfos[i];
-            if(rendererInfo.renderer == null) continue;
-            if(rendererInfo.renderer.name == rendererName) return ref rendererInfo;
+            if (rendererInfo.renderer == null) continue;
+            if (rendererInfo.renderer.name == rendererName) return ref rendererInfo;
         }
         NullReferenceException nullReferenceException = new($"Couldn't find renderer \"{rendererName}\" for \"{skinDefParams}\"");
         throw nullReferenceException;
@@ -864,8 +840,7 @@ public static partial class SkinSkillVariants
         if (objects == null)
         {
             objects = [t];
-        }
-        else
+        } else
         {
             int arraySize = objects.Length;
             Array.Resize(ref objects, arraySize + 1);
@@ -1000,8 +975,7 @@ public static partial class SkinSkillVariants
         if (_isLoaded)
         {
             t1.Add(ref t2);
-        }
-        else
+        } else
         {
             t1.AddPending(skinDefParams, t2);
         }
@@ -1011,8 +985,7 @@ public static partial class SkinSkillVariants
         if (_isLoaded)
         {
             t1.Add(ref t2);
-        }
-        else
+        } else
         {
             t1.AddPending(modelSkinController, t2);
         }
