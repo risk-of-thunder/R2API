@@ -80,10 +80,10 @@ public static partial class Skins
             displaySkins.skins ??= [];
             if (displaySkins.skins.Length != bodySkins.skins.Length)
             {
-                if (body.name == "AcolyteBody")
+                if (body == DLC4Content.BodyPrefabs.AcolyteBody)
                 {
                     SkinsPlugin.Logger.LogWarning($"ModelSkinController skins array on the displayPrefab {displayModel.name} array does not match the one on the bodyPrefab!" +
-                    $"\r\nHighly recommended you set the controller up manually. Attempting manual fix...");
+                    $"\r\nHighly recommended you set the controller up manually. Attempting to convert extra bodySkins to displaySkins. (Acolyte Patch)");
                     for (int i = displaySkins.skins.Length; i < bodySkins.skins.Length; i++)
                     {
                         SkinDef skinDef = SkinDef.Instantiate(bodySkins.skins[i]);
