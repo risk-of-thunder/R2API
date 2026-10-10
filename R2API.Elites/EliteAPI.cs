@@ -68,10 +68,6 @@ public static partial class EliteAPI
 
     internal static void Init()
     {
-        // im just lazy and want the ILContext
-        IL.RoR2.CombatDirector.Init += ResolveFieldInfo;
-        IL.RoR2.CombatDirector.Init -= ResolveFieldInfo;
-
         On.RoR2.CombatDirector.Init += CopyCombatDirectorTiers;
         IL.RoR2.CombatDirector.Init += InitEarlyCombatDirector;
 
@@ -92,6 +88,43 @@ public static partial class EliteAPI
 
         if (VanillaEliteTierCount == 0)
         {
+            // force the async queue to complete. the elite tiers are populated during the load callbacks
+            // content fields are prepopulated for backwards compat, but might not be necessary...
+            // keeping it here just to keep things running. revisit this.
+
+            // base
+            RoR2Content.Elites.Fire = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteFire.edFire_asset).WaitForCompletion();
+            RoR2Content.Elites.FireHonor = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteFire.edFireHonor_asset).WaitForCompletion();
+
+            RoR2Content.Elites.Ice = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteIce.edIce_asset).WaitForCompletion();
+            RoR2Content.Elites.IceHonor = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteIce.edIceHonor_asset).WaitForCompletion();
+
+            RoR2Content.Elites.Lightning = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteLightning.edLightning_asset).WaitForCompletion();
+            RoR2Content.Elites.LightningHonor = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteLightning.edLightningHonor_asset).WaitForCompletion();
+
+            RoR2Content.Elites.Haunted = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteHaunted.edHaunted_asset).WaitForCompletion();
+            RoR2Content.Elites.Poison = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_ElitePoison.edPoison_asset).WaitForCompletion();
+            RoR2Content.Elites.Lunar = Addressables.LoadAssetAsync<EliteDef>(RoR2_Base_EliteLunar.edLunar_asset).WaitForCompletion();
+
+            // dlc1
+            DLC1Content.Elites.Earth = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC1_EliteEarth.edEarth_asset).WaitForCompletion();
+            DLC1Content.Elites.EarthHonor = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC1_EliteEarth.edEarthHonor_asset).WaitForCompletion();
+
+            DLC1Content.Elites.Void = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC1_EliteVoid.edVoid_asset).WaitForCompletion();
+
+            // dlc2
+            DLC2Content.Elites.Aurelionite = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC2_Elites_EliteAurelionite.edAurelionite_asset).WaitForCompletion();
+            DLC2Content.Elites.AurelioniteHonor = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC2_Elites_EliteAurelionite.edAurelioniteHonor_asset).WaitForCompletion();
+
+            DLC2Content.Elites.Bead = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC2_Elites_EliteBead.edBead_asset).WaitForCompletion();
+
+            // dlc3
+            DLC3Content.Elites.Collective = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC3_Collective.edCollective_asset).WaitForCompletion();
+            DLC3Content.Elites.CollectiveWeak = Addressables.LoadAssetAsync<EliteDef>(RoR2_DLC3_Collective.edCollectiveWeak_asset).WaitForCompletion();
+
+            // dlc4
+            DLC4Content.Elites.Death = Addressables.LoadAssetAsync<EliteDef>("15cb42e326e7e084c8a4b4f167342f6b").WaitForCompletion();
+
             VanillaEliteTiers = [.. CombatDirector.eliteTiers];
         }
 
@@ -114,75 +147,6 @@ public static partial class EliteAPI
     }
 
     private static CombatDirector.EliteTierDef UseExistingTierDef(CombatDirector.EliteTierDef tierDef, int index) => HG.ArrayUtils.GetSafe(VanillaEliteTiers, index, tierDef);
-
-    private static void ResolveFieldInfo(ILContext il)
-    {
-        if (_resolvedFields)
-            return;
-
-        if (!TryLoadTokensFromFile(out Dictionary<string, string> assetNameToGuid))
-            return;
-
-        var c = new ILCursor(il);
-        FieldReference fieldRef = null;
-
-        // populate null static fields
-        while (c.TryGotoNext(MoveType.After, x => x.MatchLdsfld(out fieldRef)))
-        {
-            if (!assetNameToGuid.TryGetValue(fieldRef.Name, out var addressableGuid))
-                continue;
-
-            var addressable = Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion();
-            if (addressable is null)
-            {
-                ElitesPlugin.Logger.LogWarning("Failed to load addressable " + fieldRef.Name + " | " + addressableGuid);
-                continue;
-            }
-
-            var fieldInfo = fieldRef.ResolveReflection();
-            if (fieldInfo.GetValue(null) is null)
-                fieldInfo.SetValue(null, addressable);
-        }
-
-        _resolvedFields = true;
-    }
-
-
-    private static bool TryLoadTokensFromFile(out Dictionary<string, string> assetNameToGuid)
-    {
-        assetNameToGuid = null;
-
-        try
-        {
-            var bepPackPath = typeof(GameAssetPathsSerde).Assembly.Location;
-            bepPackPath = Directory.GetParent(bepPackPath).FullName;
-            bepPackPath = System.IO.Path.Combine(bepPackPath, "GameAssetPaths.bin");
-            GameAssetPathsSerde.Deserialize(bepPackPath, out var paths, out var guids);
-
-            var regex = new Regex("RoR2.*/ed[A-Z].*asset");
-
-            assetNameToGuid = new Dictionary<string, string>();
-            for (int i = 0; i < paths.Length; i++)
-            {
-                var key = paths[i];
-                if (!regex.IsMatch(key))
-                    continue;
-
-                // ignore the "ed" prefix and the ".asset" postfix
-                var asset = key.Split('/')[^1][2..^6];
-
-                assetNameToGuid[asset] = guids[i];
-            }
-
-            return true;
-        }
-        catch (Exception e)
-        {
-            ElitesPlugin.Logger.LogError("Failed to load elite addressable tokens from file: " + e);
-        }
-
-        return false;
-    }
 
     #endregion ModHelper Events and Hooks
 

@@ -20,8 +20,11 @@ The EliteRamp implementation is handled inside the EliteRamp class, you can use 
 
 ## Changelog
 
+### '1.1.3'
+* Fixes EliteTiers for DLC4
+
 ### '1.1.2'
-* Fixes for DLC4
+* Fixes EliteRamps for DLC4
 
 ### '1.1.1'
 * Fixed hook getting applied too late
