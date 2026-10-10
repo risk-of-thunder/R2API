@@ -80,9 +80,24 @@ public static partial class Skins
             displaySkins.skins ??= [];
             if (displaySkins.skins.Length != bodySkins.skins.Length)
             {
-                SkinsPlugin.Logger.LogWarning($"ModelSkinController skins array on the displayPrefab {displayModel.name} array does not match the one on the bodyPrefab!" +
+                if (body.name == "AcolyteBody")
+                {
+                    SkinsPlugin.Logger.LogWarning($"ModelSkinController skins array on the displayPrefab {displayModel.name} array does not match the one on the bodyPrefab!" +
+                    $"\r\nHighly recommended you set the controller up manually. Attempting manual fix...");
+                    for (int i = displaySkins.skins.Length; i < bodySkins.skins.Length; i++)
+                    {
+                        SkinDef skinDef = SkinDef.Instantiate(bodySkins.skins[i]);
+                        skinDef.baseSkins[0] = displaySkins.skins[0];
+                        skinDef.rootObject = displaySkins.skins[0].rootObject;
+                        Array.Resize(ref displaySkins.skins, displaySkins.skins.Length + 1);
+                        displaySkins.skins[displaySkins.skins.Length - 1] = skinDef;
+                    }
+                } else
+                {
+                    SkinsPlugin.Logger.LogWarning($"ModelSkinController skins array on the displayPrefab {displayModel.name} array does not match the one on the bodyPrefab!" +
                     $"\r\nHighly recommended you set the controller up manually. Cloning from body prefab...");
-                displaySkins.skins = ArrayUtils.Clone(bodySkins.skins);
+                    displaySkins.skins = ArrayUtils.Clone(bodySkins.skins);
+                }
             }
         }
     }
