@@ -8,6 +8,10 @@ Alongside the old skin creation methods from `R2API.Loadout`, R2API.Skins also c
 
 ## Changelog
 
+### `1.4.10`
+
+* Hotfix for the previous patch.
+
 ### `1.4.9`
 
 * Fix custom Acolyte skins not appearing in the lobby.
