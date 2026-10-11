@@ -309,6 +309,7 @@ public static partial class R2APIContentManager
                     case EntitlementDef end: AddSafe(ref scp.entitlementDefs, end, scp.name); added = true; break;
                     case MiscPickupDef mpd: AddSafe(ref scp.miscPickupDefs, mpd, scp.name); added = true; break;
                     case DroneDef df: AddSafe(ref scp.droneDefs, df, scp.name); added = true; break;
+                    case CraftableDef cf: AddSafe(ref scp.craftableDefs, cf, scp.name); added = true; break;
                 }
                 if (!added)
                 {

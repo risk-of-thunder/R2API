@@ -669,6 +669,81 @@ public static class ContentAddition
     }
 
     /// <summary>
+    /// Adds a CraftableDef to your Mod's ContentPack
+    /// </summary>
+    /// <param name="craftableDef">The CraftableDef to Add</param>
+    /// <returns>true if valid and added, false if one of the requirements is not met</returns>
+    public static bool AddCraftableDef(CraftableDef craftableDef)
+    {
+        var asm = GetNonAPICaller();
+        if (CatalogBlockers.GetAvailability<CraftableDef>())
+        {
+            const string typeName = "CraftableDef";
+            if (craftableDef == null)
+            {
+                RejectContent(craftableDef, asm, typeName, "but it's null!");
+                return false;
+            }
+            if (craftableDef.pickup == null)
+            {
+                RejectContent(craftableDef, asm, typeName, "but its pickup is null!");
+                return false;
+            }
+            if (craftableDef.pickup is not ItemDef && craftableDef.pickup is not EquipmentDef)
+            {
+                RejectContent(craftableDef, asm, typeName, "but its pickup is neither an ItemDef nor EquipmentDef!");
+                return false;
+            }
+            if (craftableDef.recipes == null || craftableDef.recipes.Length == 0)
+            {
+                RejectContent(craftableDef, asm, typeName, "but its recipes array is null or empty!");
+                return false;
+            }
+            for (int i = 0, recipeCount = craftableDef.recipes.Length; i < recipeCount; i++)
+            {
+                Recipe recipe = craftableDef.recipes[i];
+                if (recipe == null)
+                {
+                    RejectContent(craftableDef, asm, typeName, $"but its recipe at index {i} is null!");
+                    return false;
+                }
+                else
+                {
+                    if (recipe.ingredients == null || recipe.ingredients.Length == 0)
+                    {
+                        RejectContent(craftableDef, asm, typeName, $"but the ingredients array is null or empty for the the recipe at index {i}!");
+                        return false;
+                    }
+                    for (int j = 0, ingredientCount = recipe.ingredients.Length; j < ingredientCount; j++)
+                    {
+                        RecipeIngredient ingredient = recipe.ingredients[j];
+                        if (ingredient == null)
+                        {
+                            RejectContent(craftableDef, asm, typeName, $"but the ingredient at index {j} for the the recipe at index {i} is null!");
+                            return false;
+                        }
+                        if (ingredient.IsDefinedPickup() == false)
+                        {
+                            RejectContent(craftableDef, asm, typeName, $"but the ingredient pickup at index {j} for the the recipe at index {i} is not defined!");
+                            return false;
+                        }
+                        if (ingredient.type == IngredientTypeIndex.AssetReference &&
+                            (ingredient.pickup is not ItemDef && ingredient.pickup is not EquipmentDef))
+                        {
+                            RejectContent(craftableDef, asm, typeName, $"but the ingredient pickup at index {j} for the the recipe at index {i} is neither an ItemDef nor EquipmentDef!");
+                            return false;
+                        }
+                    }
+                }
+            }
+            R2APIContentManager.HandleContentAddition(asm, craftableDef);
+            return true;
+        }
+        RejectContent(craftableDef, asm, "CraftableDef", "But the CraftableCatalog has already initialized!");
+        return false;
+    }
+
+    /// <summary>
     /// Adds an EntitySateType to your Mod's ContentPack
     /// <para>State Type cannot be abstract</para>
     /// </summary>
