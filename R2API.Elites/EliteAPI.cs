@@ -62,21 +62,15 @@ public static partial class EliteAPI
 #pragma warning restore CS0618 // Type or member is obsolete
     public static bool Loaded => true;
 
-    private static bool _resolvedFields = false;
-
     #region ModHelper Events and Hooks
 
     internal static void Init()
     {
-        // im just lazy and want the ILContext
-        IL.RoR2.CombatDirector.Init += ResolveFieldInfo;
-        IL.RoR2.CombatDirector.Init -= ResolveFieldInfo;
-
         On.RoR2.CombatDirector.Init += CopyCombatDirectorTiers;
         IL.RoR2.CombatDirector.Init += InitEarlyCombatDirector;
 
         // call init before anyone else places hooks
-        // wrb expects the elite catalog to be populated when init is called
+        // we hold onto the unmodified tiers, while still allowing the method to be called during normal startup
         CombatDirector.Init();
     }
 
@@ -92,6 +86,9 @@ public static partial class EliteAPI
 
         if (VanillaEliteTierCount == 0)
         {
+            // force the async queue to complete. the elite tiers are populated during the load callbacks
+            _ = Addressables.LoadAssetAsync<AssetCollection>("28c1ff73384cbbc469eefc6c7ef399dd").WaitForCompletion();
+
             VanillaEliteTiers = [.. CombatDirector.eliteTiers];
         }
 
@@ -101,88 +98,12 @@ public static partial class EliteAPI
     private static void InitEarlyCombatDirector(ILContext il)
     {
         var c = new ILCursor(il);
-        int idx = 0;
-
-        while (c.TryGotoNext(MoveType.After,
-                x => x.MatchLdcI4(out idx),
-                x => x.MatchNewobj<CombatDirector.EliteTierDef>()
-            ))
-        {
-            c.Emit(OpCodes.Ldc_I4, idx);
-            c.EmitDelegate(UseExistingTierDef);
-        }
+        c.EmitDelegate(HasInitRun);
+        c.Emit(OpCodes.Brfalse, c.Next);
+        c.Emit(OpCodes.Ret);
     }
 
-    private static CombatDirector.EliteTierDef UseExistingTierDef(CombatDirector.EliteTierDef tierDef, int index) => HG.ArrayUtils.GetSafe(VanillaEliteTiers, index, tierDef);
-
-    private static void ResolveFieldInfo(ILContext il)
-    {
-        if (_resolvedFields)
-            return;
-
-        if (!TryLoadTokensFromFile(out Dictionary<string, string> assetNameToGuid))
-            return;
-
-        var c = new ILCursor(il);
-        FieldReference fieldRef = null;
-
-        // populate null static fields
-        while (c.TryGotoNext(MoveType.After, x => x.MatchLdsfld(out fieldRef)))
-        {
-            if (!assetNameToGuid.TryGetValue(fieldRef.Name, out var addressableGuid))
-                continue;
-
-            var addressable = Addressables.LoadAssetAsync<EliteDef>(addressableGuid).WaitForCompletion();
-            if (addressable is null)
-            {
-                ElitesPlugin.Logger.LogWarning("Failed to load addressable " + fieldRef.Name + " | " + addressableGuid);
-                continue;
-            }
-
-            var fieldInfo = fieldRef.ResolveReflection();
-            if (fieldInfo.GetValue(null) is null)
-                fieldInfo.SetValue(null, addressable);
-        }
-
-        _resolvedFields = true;
-    }
-
-
-    private static bool TryLoadTokensFromFile(out Dictionary<string, string> assetNameToGuid)
-    {
-        assetNameToGuid = null;
-
-        try
-        {
-            var bepPackPath = typeof(GameAssetPathsSerde).Assembly.Location;
-            bepPackPath = Directory.GetParent(bepPackPath).FullName;
-            bepPackPath = System.IO.Path.Combine(bepPackPath, "GameAssetPaths.bin");
-            GameAssetPathsSerde.Deserialize(bepPackPath, out var paths, out var guids);
-
-            var regex = new Regex("RoR2.*/ed[A-Z].*asset");
-
-            assetNameToGuid = new Dictionary<string, string>();
-            for (int i = 0; i < paths.Length; i++)
-            {
-                var key = paths[i];
-                if (!regex.IsMatch(key))
-                    continue;
-
-                // ignore the "ed" prefix and the ".asset" postfix
-                var asset = key.Split('/')[^1][2..^6];
-
-                assetNameToGuid[asset] = guids[i];
-            }
-
-            return true;
-        }
-        catch (Exception e)
-        {
-            ElitesPlugin.Logger.LogError("Failed to load elite addressable tokens from file: " + e);
-        }
-
-        return false;
-    }
+    private static bool HasInitRun() => VanillaEliteTierCount > 0;
 
     #endregion ModHelper Events and Hooks
 
