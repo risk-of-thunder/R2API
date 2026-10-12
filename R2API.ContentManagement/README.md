@@ -21,6 +21,9 @@ R2API.ContentManaged is used for mods that would like to have R2API handle the c
 
 ## Changelog
 
+### '1.1.0'
+* Adds CraftableDef registation with `ContentAddition.AddCraftableDef`.
+
 ### '1.0.11'
 * ContentManagement / ContentAddition now allows DroneDef registration.
 

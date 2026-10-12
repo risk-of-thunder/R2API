@@ -41,7 +41,8 @@ internal static class CatalogBlockers
         {typeof(ExpansionDef), true },
         {typeof(EntitlementDef), true },
         {typeof(MiscPickupDef), true },
-        {typeof(DroneDef), true }
+        {typeof(DroneDef), true },
+        {typeof(CraftableDef), true }
 
         //The rest are catalogs that arent added by scriptable objects or game objects yet.
     };
@@ -147,6 +148,9 @@ internal static class CatalogBlockers
     
     [SystemInitializer(typeof(DroneCatalog))]
     private static void BlockDroneDefs() => SetAvailability<DroneDef>(false);
+
+    [SystemInitializer(typeof(CraftableCatalog))]
+    private static void BlockCraftableDefs() => SetAvailability<CraftableDef>(false);
 
     #endregion
 }

@@ -77,6 +77,8 @@ public class R2APISerializableContentPack : ScriptableObject
     public MiscPickupDef[] miscPickupDefs = Array.Empty<MiscPickupDef>();
 
     public DroneDef[] droneDefs = Array.Empty<DroneDef>();
+
+    public CraftableDef[] craftableDefs = Array.Empty<CraftableDef>();
     #endregion
 
     #region Entity States
@@ -132,6 +134,7 @@ public class R2APISerializableContentPack : ScriptableObject
         cp.expansionDefs.Add(expansionDefs);
         cp.entitlementDefs.Add(entitlementDefs);
         cp.droneDefs.Add(droneDefs);
+        cp.craftableDefs.Add(craftableDefs);
 
         List<Type> list = new List<Type>();
         for (int i = 0; i < entityStateTypes.Length; i++)
