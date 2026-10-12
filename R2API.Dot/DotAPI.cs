@@ -204,7 +204,7 @@ public static partial class DotAPI
         On.RoR2.DotController.GetDotDef += GetDotDefSupportCustomDefs;
         On.RoR2.DotController.FixedUpdate += FixedUpdateEvaluateCustomDotStacksAndVisuals;
         IL.RoR2.DotController.InflictDot_refInflictDotInfo += FixInflictDotReturnCheck;
-        IL.RoR2.DotController.AddDot_GameObject_float_HurtBox_DotIndex_float_Nullable1_Nullable1_Nullable1 += CallCustomDotBehaviours;
+        IL.RoR2.DotController.AddDot_GameObject_float_HurtBox_DotIndex_float_ProcChainMask_Nullable1_Nullable1_Nullable1 += CallCustomDotBehaviours;
         On.RoR2.DotController.HasDotActive += OnHasDotActive;
         IL.RoR2.DotController.EvaluateDotStacksForType += EvaluateDotStacksForType;
 
