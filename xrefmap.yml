@@ -4352,6 +4352,19 @@ references:
   isSpec: "True"
   fullName: R2API.ContentAddition.AddBuffDef
   nameWithType: ContentAddition.AddBuffDef
+- uid: R2API.ContentAddition.AddCraftableDef(RoR2.CraftableDef)
+  name: AddCraftableDef(CraftableDef)
+  href: api/R2API.ContentAddition.html#R2API_ContentAddition_AddCraftableDef_RoR2_CraftableDef_
+  commentId: M:R2API.ContentAddition.AddCraftableDef(RoR2.CraftableDef)
+  fullName: R2API.ContentAddition.AddCraftableDef(RoR2.CraftableDef)
+  nameWithType: ContentAddition.AddCraftableDef(CraftableDef)
+- uid: R2API.ContentAddition.AddCraftableDef*
+  name: AddCraftableDef
+  href: api/R2API.ContentAddition.html#R2API_ContentAddition_AddCraftableDef_
+  commentId: Overload:R2API.ContentAddition.AddCraftableDef
+  isSpec: "True"
+  fullName: R2API.ContentAddition.AddCraftableDef
+  nameWithType: ContentAddition.AddCraftableDef
 - uid: R2API.ContentAddition.AddDroneDef(RoR2.DroneDef)
   name: AddDroneDef(DroneDef)
   href: api/R2API.ContentAddition.html#R2API_ContentAddition_AddDroneDef_RoR2_DroneDef_
@@ -14410,6 +14423,12 @@ references:
   commentId: F:R2API.ScriptableObjects.R2APISerializableContentPack.buffDefs
   fullName: R2API.ScriptableObjects.R2APISerializableContentPack.buffDefs
   nameWithType: R2APISerializableContentPack.buffDefs
+- uid: R2API.ScriptableObjects.R2APISerializableContentPack.craftableDefs
+  name: craftableDefs
+  href: api/R2API.ScriptableObjects.R2APISerializableContentPack.html#R2API_ScriptableObjects_R2APISerializableContentPack_craftableDefs
+  commentId: F:R2API.ScriptableObjects.R2APISerializableContentPack.craftableDefs
+  fullName: R2API.ScriptableObjects.R2APISerializableContentPack.craftableDefs
+  nameWithType: R2APISerializableContentPack.craftableDefs
 - uid: R2API.ScriptableObjects.R2APISerializableContentPack.droneDefs
   name: droneDefs
   href: api/R2API.ScriptableObjects.R2APISerializableContentPack.html#R2API_ScriptableObjects_R2APISerializableContentPack_droneDefs
