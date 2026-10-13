@@ -478,8 +478,11 @@ public static partial class DirectorAPI
 
             poolEntryBackup.weight = poolEntry.weight;
 
-            poolEntryBackup.dccs = ScriptableObject.Instantiate(poolEntry.dccs);
-            poolEntryBackup.dccs.name = poolEntry.dccs.name;
+            if (poolEntry.dccs)
+            {
+                poolEntryBackup.dccs = ScriptableObject.Instantiate(poolEntry.dccs);
+                poolEntryBackup.dccs.name = poolEntry.dccs.name;
+            }
 
             backup.Add(poolEntryBackup);
         }
@@ -497,8 +500,11 @@ public static partial class DirectorAPI
 
             poolEntryBackup.weight = poolEntry.weight;
 
-            poolEntryBackup.dccs = ScriptableObject.Instantiate(poolEntry.dccs);
-            poolEntryBackup.dccs.name = poolEntry.dccs.name;
+            if (poolEntry.dccs)
+            {
+                poolEntryBackup.dccs = ScriptableObject.Instantiate(poolEntry.dccs);
+                poolEntryBackup.dccs.name = poolEntry.dccs.name;
+            }
 
             backup.Add(poolEntryBackup);
         }
@@ -646,11 +652,13 @@ public static partial class DirectorAPI
 
     private static void GetMonsterCategoryWeights(StageSettings stageSettings, DirectorCardCategorySelection dccs)
     {
-        stageSettings.MonsterCategoryWeightsPerDccs[dccs] = new();
-
-        foreach (var category in dccs.categories)
+        if (dccs != null)
         {
-            stageSettings.MonsterCategoryWeightsPerDccs[dccs][category.name] = category.selectionWeight;
+            stageSettings.MonsterCategoryWeightsPerDccs[dccs] = new();
+            foreach (var category in dccs.categories)
+            {
+                stageSettings.MonsterCategoryWeightsPerDccs[dccs][category.name] = category.selectionWeight;
+            }
         }
     }
 
@@ -687,10 +695,13 @@ public static partial class DirectorAPI
 
     private static void GetInteractableCategoryWeights(StageSettings stageSettings, DirectorCardCategorySelection dccs)
     {
-        stageSettings.InteractableCategoryWeightsPerDccs[dccs] = new();
-        foreach (var category in dccs.categories)
+        if (dccs != null)
         {
-            stageSettings.InteractableCategoryWeightsPerDccs[dccs][category.name] = category.selectionWeight;
+            stageSettings.InteractableCategoryWeightsPerDccs[dccs] = new();
+            foreach (var category in dccs.categories)
+            {
+                stageSettings.InteractableCategoryWeightsPerDccs[dccs][category.name] = category.selectionWeight;
+            }
         }
     }
 
@@ -748,7 +759,10 @@ public static partial class DirectorAPI
     {
         foreach (var poolEntry in poolCategories)
         {
-            SetMonsterCategoryWeights(poolEntry.dccs, stageSettings.MonsterCategoryWeightsPerDccs[poolEntry.dccs]);
+            if (poolEntry.dccs != null)
+            {
+                SetMonsterCategoryWeights(poolEntry.dccs, stageSettings.MonsterCategoryWeightsPerDccs[poolEntry.dccs]);
+            }
         }
     }
 
@@ -769,7 +783,10 @@ public static partial class DirectorAPI
     {
         foreach (var poolEntry in poolCategories)
         {
-            SetInteractableCategoryWeights(poolEntry.dccs, stageSettings.InteractableCategoryWeightsPerDccs[poolEntry.dccs]);
+            if (poolEntry.dccs != null)
+            {
+                SetInteractableCategoryWeights(poolEntry.dccs, stageSettings.InteractableCategoryWeightsPerDccs[poolEntry.dccs]);
+            }
         }
     }
 

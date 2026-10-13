@@ -22,6 +22,9 @@ Also provides an event to easily enable/disable Combat Directors. Provides an ex
 
 ## Changelog
 
+## `3.1.2`
+* Added safety checks to prevent spawning issues if DCCS references are missing, e.g., in ironalluvium2.
+
 ## `3.1.1`
 * Update for DLC 4 release 1.
 
