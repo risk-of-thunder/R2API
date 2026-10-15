@@ -92,6 +92,7 @@ public static partial class Skins
                         if (skinDef.baseSkins == null || skinDef.baseSkins.Length == 0)
                             skinDef.baseSkins = new SkinDef[1];
 
+                        skinDef.skinIndex = bodySkins.skins[i].skinIndex;
                         skinDef.baseSkins[0] = firstDisplaySkin;
 
                         if (firstDisplaySkin.rootObject)
