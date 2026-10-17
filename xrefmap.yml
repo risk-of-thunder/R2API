@@ -14746,32 +14746,6 @@ references:
   isSpec: "True"
   fullName: R2API.Skills.Interop.GenericSkillInterop.GetHideInCharacterSelectIfFirstSkillSelected
   nameWithType: GenericSkillInterop.GetHideInCharacterSelectIfFirstSkillSelected
-- uid: R2API.Skills.Interop.GenericSkillInterop.GetHideInLoadout(RoR2.GenericSkill)
-  name: GetHideInLoadout(GenericSkill)
-  href: api/R2API.Skills.Interop.GenericSkillInterop.html#R2API_Skills_Interop_GenericSkillInterop_GetHideInLoadout_RoR2_GenericSkill_
-  commentId: M:R2API.Skills.Interop.GenericSkillInterop.GetHideInLoadout(RoR2.GenericSkill)
-  fullName: R2API.Skills.Interop.GenericSkillInterop.GetHideInLoadout(RoR2.GenericSkill)
-  nameWithType: GenericSkillInterop.GetHideInLoadout(GenericSkill)
-- uid: R2API.Skills.Interop.GenericSkillInterop.GetHideInLoadout*
-  name: GetHideInLoadout
-  href: api/R2API.Skills.Interop.GenericSkillInterop.html#R2API_Skills_Interop_GenericSkillInterop_GetHideInLoadout_
-  commentId: Overload:R2API.Skills.Interop.GenericSkillInterop.GetHideInLoadout
-  isSpec: "True"
-  fullName: R2API.Skills.Interop.GenericSkillInterop.GetHideInLoadout
-  nameWithType: GenericSkillInterop.GetHideInLoadout
-- uid: R2API.Skills.Interop.GenericSkillInterop.GetLoadoutTitleTokenOverride(RoR2.GenericSkill)
-  name: GetLoadoutTitleTokenOverride(GenericSkill)
-  href: api/R2API.Skills.Interop.GenericSkillInterop.html#R2API_Skills_Interop_GenericSkillInterop_GetLoadoutTitleTokenOverride_RoR2_GenericSkill_
-  commentId: M:R2API.Skills.Interop.GenericSkillInterop.GetLoadoutTitleTokenOverride(RoR2.GenericSkill)
-  fullName: R2API.Skills.Interop.GenericSkillInterop.GetLoadoutTitleTokenOverride(RoR2.GenericSkill)
-  nameWithType: GenericSkillInterop.GetLoadoutTitleTokenOverride(GenericSkill)
-- uid: R2API.Skills.Interop.GenericSkillInterop.GetLoadoutTitleTokenOverride*
-  name: GetLoadoutTitleTokenOverride
-  href: api/R2API.Skills.Interop.GenericSkillInterop.html#R2API_Skills_Interop_GenericSkillInterop_GetLoadoutTitleTokenOverride_
-  commentId: Overload:R2API.Skills.Interop.GenericSkillInterop.GetLoadoutTitleTokenOverride
-  isSpec: "True"
-  fullName: R2API.Skills.Interop.GenericSkillInterop.GetLoadoutTitleTokenOverride
-  nameWithType: GenericSkillInterop.GetLoadoutTitleTokenOverride
 - uid: R2API.Skills.Interop.GenericSkillInterop.GetOrderPriority(RoR2.GenericSkill)
   name: GetOrderPriority(GenericSkill)
   href: api/R2API.Skills.Interop.GenericSkillInterop.html#R2API_Skills_Interop_GenericSkillInterop_GetOrderPriority_RoR2_GenericSkill_
@@ -14801,38 +14775,6 @@ references:
   isSpec: "True"
   fullName: R2API.Skills.Interop.GenericSkillInterop.SetHideInCharacterSelectIfFirstSkillSelected
   nameWithType: GenericSkillInterop.SetHideInCharacterSelectIfFirstSkillSelected
-- uid: R2API.Skills.Interop.GenericSkillInterop.SetHideInLoadout(RoR2.GenericSkill,System.Boolean)
-  name: SetHideInLoadout(GenericSkill, bool)
-  href: api/R2API.Skills.Interop.GenericSkillInterop.html#R2API_Skills_Interop_GenericSkillInterop_SetHideInLoadout_RoR2_GenericSkill_System_Boolean_
-  commentId: M:R2API.Skills.Interop.GenericSkillInterop.SetHideInLoadout(RoR2.GenericSkill,System.Boolean)
-  name.vb: SetHideInLoadout(GenericSkill, Boolean)
-  fullName: R2API.Skills.Interop.GenericSkillInterop.SetHideInLoadout(RoR2.GenericSkill, bool)
-  fullName.vb: R2API.Skills.Interop.GenericSkillInterop.SetHideInLoadout(RoR2.GenericSkill, Boolean)
-  nameWithType: GenericSkillInterop.SetHideInLoadout(GenericSkill, bool)
-  nameWithType.vb: GenericSkillInterop.SetHideInLoadout(GenericSkill, Boolean)
-- uid: R2API.Skills.Interop.GenericSkillInterop.SetHideInLoadout*
-  name: SetHideInLoadout
-  href: api/R2API.Skills.Interop.GenericSkillInterop.html#R2API_Skills_Interop_GenericSkillInterop_SetHideInLoadout_
-  commentId: Overload:R2API.Skills.Interop.GenericSkillInterop.SetHideInLoadout
-  isSpec: "True"
-  fullName: R2API.Skills.Interop.GenericSkillInterop.SetHideInLoadout
-  nameWithType: GenericSkillInterop.SetHideInLoadout
-- uid: R2API.Skills.Interop.GenericSkillInterop.SetLoadoutTitleTokenOverride(RoR2.GenericSkill,System.String)
-  name: SetLoadoutTitleTokenOverride(GenericSkill, string)
-  href: api/R2API.Skills.Interop.GenericSkillInterop.html#R2API_Skills_Interop_GenericSkillInterop_SetLoadoutTitleTokenOverride_RoR2_GenericSkill_System_String_
-  commentId: M:R2API.Skills.Interop.GenericSkillInterop.SetLoadoutTitleTokenOverride(RoR2.GenericSkill,System.String)
-  name.vb: SetLoadoutTitleTokenOverride(GenericSkill, String)
-  fullName: R2API.Skills.Interop.GenericSkillInterop.SetLoadoutTitleTokenOverride(RoR2.GenericSkill, string)
-  fullName.vb: R2API.Skills.Interop.GenericSkillInterop.SetLoadoutTitleTokenOverride(RoR2.GenericSkill, String)
-  nameWithType: GenericSkillInterop.SetLoadoutTitleTokenOverride(GenericSkill, string)
-  nameWithType.vb: GenericSkillInterop.SetLoadoutTitleTokenOverride(GenericSkill, String)
-- uid: R2API.Skills.Interop.GenericSkillInterop.SetLoadoutTitleTokenOverride*
-  name: SetLoadoutTitleTokenOverride
-  href: api/R2API.Skills.Interop.GenericSkillInterop.html#R2API_Skills_Interop_GenericSkillInterop_SetLoadoutTitleTokenOverride_
-  commentId: Overload:R2API.Skills.Interop.GenericSkillInterop.SetLoadoutTitleTokenOverride
-  isSpec: "True"
-  fullName: R2API.Skills.Interop.GenericSkillInterop.SetLoadoutTitleTokenOverride
-  nameWithType: GenericSkillInterop.SetLoadoutTitleTokenOverride
 - uid: R2API.Skills.Interop.GenericSkillInterop.SetOrderPriority(RoR2.GenericSkill,System.Int32)
   name: SetOrderPriority(GenericSkill, int)
   href: api/R2API.Skills.Interop.GenericSkillInterop.html#R2API_Skills_Interop_GenericSkillInterop_SetOrderPriority_RoR2_GenericSkill_System_Int32_
@@ -20905,18 +20847,6 @@ references:
   commentId: F:RoR2.GenericSkill.r2api_hideInCharacterSelectIfFirstSkillSelected
   fullName: RoR2.GenericSkill.r2api_hideInCharacterSelectIfFirstSkillSelected
   nameWithType: GenericSkill.r2api_hideInCharacterSelectIfFirstSkillSelected
-- uid: RoR2.GenericSkill.r2api_hideInLoadout
-  name: r2api_hideInLoadout
-  href: api/RoR2.GenericSkill.html#RoR2_GenericSkill_r2api_hideInLoadout
-  commentId: F:RoR2.GenericSkill.r2api_hideInLoadout
-  fullName: RoR2.GenericSkill.r2api_hideInLoadout
-  nameWithType: GenericSkill.r2api_hideInLoadout
-- uid: RoR2.GenericSkill.r2api_loadoutTitleTokenOverride
-  name: r2api_loadoutTitleTokenOverride
-  href: api/RoR2.GenericSkill.html#RoR2_GenericSkill_r2api_loadoutTitleTokenOverride
-  commentId: F:RoR2.GenericSkill.r2api_loadoutTitleTokenOverride
-  fullName: RoR2.GenericSkill.r2api_loadoutTitleTokenOverride
-  nameWithType: GenericSkill.r2api_loadoutTitleTokenOverride
 - uid: RoR2.GenericSkill.r2api_orderPriority
   name: r2api_orderPriority
   href: api/RoR2.GenericSkill.html#RoR2_GenericSkill_r2api_orderPriority
