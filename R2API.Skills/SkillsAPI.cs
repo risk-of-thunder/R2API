@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
@@ -20,21 +21,27 @@ public static partial class SkillsAPI
     public const string PluginGUID = R2API.PluginGUID + ".skills";
     public const string PluginName = R2API.PluginName + ".Skills";
 
+    private static bool _hooksEnabled = false;
+
     internal static void SetHooks()
     {
+        if(_hooksEnabled){
+            return;
+        }
+
         IL.RoR2.UI.LoadoutPanelController.Rebuild += LoadoutPanelControllerRebuildHook;
-        IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot += LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData += CharacterSelectControllerBuildSkillStripDisplayDataHook;
         IL.RoR2.GenericSkill.RecalculateMaxStock += GenericSkill_RecalculateMaxStock;
         IL.RoR2.UI.SkillIcon.LateUpdate += SkillIcon_Update;
+        _hooksEnabled = true;
     }
     internal static void UnsetHooks()
     {
         IL.RoR2.UI.LoadoutPanelController.Rebuild -= LoadoutPanelControllerRebuildHook;
-        IL.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot -= LoadoutPanelControllerRowFromSkillSlotHook;
         IL.RoR2.UI.CharacterSelectController.BuildSkillStripDisplayData -= CharacterSelectControllerBuildSkillStripDisplayDataHook;
         IL.RoR2.GenericSkill.RecalculateMaxStock -= GenericSkill_RecalculateMaxStock;
         IL.RoR2.UI.SkillIcon.LateUpdate -= SkillIcon_Update;
+        _hooksEnabled = false;
     }
 
     /// <summary>
@@ -51,21 +58,23 @@ public static partial class SkillsAPI
     /// Gets the value of bonus stock multiplication of a SkillDef.
     /// </summary>
     public static int GetBonusStockMultiplier(this SkillDef skillDef) => SkillDefInterop.GetBonusStockMultiplier(skillDef);
-    
+
      /// <summary>
     /// Sets the value of bonus stock multiplication of a SkillDef.
     /// </summary>
     public static void SetBonusStockMultiplier(this SkillDef skillDef, int value) => SkillDefInterop.SetBonusStockMultiplier(skillDef, value);
-    
+
     /// <summary>
     /// Gets the value of whether a GenericSkill row should be hidden in loadout tab or not.
     /// </summary>
-    public static bool GetHideInLoadout(this GenericSkill genericSkill) => GenericSkillInterop.GetHideInLoadout(genericSkill);
-    
+    [Obsolete($"Use GenericSkill.{nameof(GenericSkill.hideInLoadoutSelect)} instead")]
+    public static bool GetHideInLoadout(this GenericSkill genericSkill) => genericSkill.hideInLoadoutSelect;
+
     /// <summary>
     /// Sets the value of whether a GenericSkill row should be hidden in loadout tab or not.
     /// </summary>
-    public static void SetHideInLoadout(this GenericSkill genericSkill, bool value) => GenericSkillInterop.SetHideInLoadout(genericSkill, value);
+    [Obsolete($"Use GenericSkill.{nameof(GenericSkill.hideInLoadoutSelect)} instead")]
+    public static void SetHideInLoadout(this GenericSkill genericSkill, bool value) => genericSkill.hideInLoadoutSelect = value;
 
     /// <summary>
     /// Gets the value of whether a GenericSkill row should be hidden in skills tab if the first skill is selected or not.
@@ -90,12 +99,14 @@ public static partial class SkillsAPI
     /// <summary>
     /// Gets the value of a GenericSkill title token that will be used instead of default one in loadout tabs.
     /// </summary>
-    public static string GetLoadoutTitleTokenOverride(this GenericSkill genericSkill) => GenericSkillInterop.GetLoadoutTitleTokenOverride(genericSkill);
-    
+    [Obsolete($"Use GenericSkill.{nameof(GenericSkill.loadoutTitleToken)} instead")]
+    public static string GetLoadoutTitleTokenOverride(this GenericSkill genericSkill) => genericSkill.loadoutTitleToken;
+
     /// <summary>
     /// Sets the value of a GenericSkill title token that will be used instead of default one in loadout tabs.
     /// </summary>
-    public static void SetLoadoutTitleTokenOverride(this GenericSkill genericSkill, string value) => GenericSkillInterop.SetLoadoutTitleTokenOverride(genericSkill, value);
+    [Obsolete($"Use GenericSkill.{nameof(GenericSkill.loadoutTitleToken)} instead")]
+    public static void SetLoadoutTitleTokenOverride(this GenericSkill genericSkill, string value) => genericSkill.loadoutTitleToken = value;
 
     private static void CharacterSelectControllerBuildSkillStripDisplayDataHook(ILContext il)
     {
@@ -185,26 +196,11 @@ public static partial class SkillsAPI
         }
     }
 
-    private static void LoadoutPanelControllerRowFromSkillSlotHook(ILContext il)
-    {
-        var c = new ILCursor(il);
-        if (c.TryGotoNext(MoveType.Before,
-            x => x.MatchNewobj<LoadoutPanelController.Row>()))
-        {
-            c.Emit(OpCodes.Ldarg_3);
-            c.EmitDelegate(LoadoutPanelControllerReplaceTitleToken);
-        }
-        else
-        {
-            SkillsPlugin.Logger.LogError($"Failed to apply {nameof(LoadoutPanelControllerRowFromSkillSlotHook)}");
-        }
-    }
 
     private static int[] LoadoutPanelControllerRemoveAndSortSkills(List<GenericSkill> list, CharacterBody body)
     {
         var sortedValues = list
             .Select((skill, index) => (skill, index))
-            .Where((x) => !x.skill.GetHideInLoadout())
             .OrderBy(x => x.skill.GetOrderPriority());
         var originalIndices = sortedValues.Select(x => x.index).ToArray();
         var sortedSkills = sortedValues.Select(x => x.skill).ToArray();
@@ -223,32 +219,18 @@ public static partial class SkillsAPI
         previousValue = sortedValues.Select(x => x.skill).ToArray();
         return sortedValues.Select(x => x.index).ToArray();
     }
-    
+
     private static void GenericSkill_SetBonusStockFromBody(On.RoR2.GenericSkill.orig_SetBonusStockFromBody orig, GenericSkill self, int newBonusStockFromBody)
     {
-    if (self.skillDef)newBonusStockFromBody *= (int)System.MathF.Max(1, self.skillDef.GetBonusStockMultiplier());
-    orig(self, newBonusStockFromBody);
+        if (self.skillDef)newBonusStockFromBody *= (int)System.MathF.Max(1, self.skillDef.GetBonusStockMultiplier());
+        orig(self, newBonusStockFromBody);
     }
 
-    private static string LoadoutPanelControllerReplaceTitleToken(string token, GenericSkill skill)
-    {
-        var tokenOverride = skill.GetLoadoutTitleTokenOverride();
-        if (!string.IsNullOrEmpty(tokenOverride))
-        {
-            return tokenOverride;
-        }
 
-        return token;
-    }
-    
     private static void GenericSkill_RecalculateMaxStock(ILContext il)
     {
         var c = new ILCursor(il);
         if (c.TryGotoNext(MoveType.After,
-            x => x.MatchLdarg(0),
-            x => x.MatchLdarg(0),
-            x => x.MatchCall(typeof(GenericSkill).GetPropertyGetter(nameof(GenericSkill.maxStock))),
-            x => x.MatchLdarg(0),
             x => x.MatchLdfld<GenericSkill>(nameof(GenericSkill.bonusStockFromBody)),
             x => x.MatchAdd()
             )
