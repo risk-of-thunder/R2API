@@ -28,10 +28,14 @@ These stat changes are represented in the StatHookEventArgs, which includes argu
 * Luck
 * Barrier Decay Rate
 * Barrer Decay Freeze
+* Character Scale
 
 ## Related Pages
 
 ## Changelog
+
+### `1.7.0`
+* Added `desiredScaleAdd` and `desiredScaleTotalMult` stats for increasing and decreasing character scale
 
 ### `1.6.6`
 * Fixed barrier decay freeze stat failing to freeze barrier decay

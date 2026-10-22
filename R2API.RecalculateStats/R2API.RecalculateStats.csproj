@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../R2API.props" />
   <ItemGroup>
-    <ProjectReference Include="..\R2API.Core\R2API.Core.csproj" Private="false"/>
+    <ProjectReference Include="..\R2API.Core\R2API.Core.csproj" Private="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="RiskOfRain2.GameLibs" Version="1.5.0-r.1" />
   </ItemGroup>
 </Project>
