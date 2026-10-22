@@ -308,11 +308,11 @@ public static partial class RecalculateStatsAPI
 
             void applyModifiers(in SkillSlotStatModifiers statModifiers)
             {
-                flatReduction += statModifiers.cooldownFlatReduction;
+                flatReduction += Math.Max(0f, statModifiers.cooldownFlatReduction);
             }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-            flatReduction += cooldownReductionAdd;
+            flatReduction += Math.Max(0f, cooldownReductionAdd);
 #pragma warning restore CS0618 // Type or member is obsolete
 
             applyModifiers(allSkills);
@@ -427,6 +427,14 @@ public static partial class RecalculateStatsAPI
 
         /// <summary>Jump count is multiplied by this number.</summary> <remarks>JUMP_COUNT ~ (BASE_JUMP_COUNT + jumpCountAdd) * jumpCountMult</remarks>
         public int jumpCountMult = 1;
+        #endregion
+
+        #region desiredScale
+        /// <summary>Added to desiredScale.</summary> <remarks>DESIRED_SCALE ~ (1 + desiredScaleAdd) * desiredScaleTotalMult</remarks>
+        public float desiredScaleAdd = 0f;
+
+        /// <summary>desiredScale is multiplied by this number. Multiply this value by your multiplier.</summary> <inheritdoc cref="desiredScaleAdd"/>
+        public float desiredScaleTotalMult = 1f;
         #endregion
     }
 
@@ -549,6 +557,7 @@ public static partial class RecalculateStatsAPI
         ModifyLevelingStat(c);
         ModifyJumpCountStat(c);
         ModifyLuckStat(c);
+        ModifyDesiredScaleStat(c);
     }
 
     private static void GetStatMods(CharacterBody characterBody)
@@ -1137,14 +1146,15 @@ public static partial class RecalculateStatsAPI
             c.EmitDelegate<Func<float>>(() => StatMods.moveSpeedMultAdd);
             c.Emit(OpCodes.Add);
 
-            while (c.TryGotoNext(MoveType.After,x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.sprintingSpeedMultiplier)))){
+            while (c.TryGotoNext(MoveType.After, x => x.MatchLdfld<CharacterBody>(nameof(CharacterBody.sprintingSpeedMultiplier))))
+            {
                 c.EmitDelegate<Func<float>>(() => StatMods.sprintSpeedAdd);
                 c.Emit(OpCodes.Add);
             }
 
-            c.GotoPrev(MoveType.After,x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertyGetter(nameof(CharacterBody.isSprinting))));
+            c.GotoPrev(MoveType.After, x => x.MatchCallOrCallvirt(typeof(CharacterBody).GetPropertyGetter(nameof(CharacterBody.isSprinting))));
             c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Func<bool,CharacterBody,bool>>((isSprinting,sender) =>{ return isSprinting && ((sender.sprintingSpeedMultiplier + StatMods.sprintSpeedAdd) != 0); });
+            c.EmitDelegate<Func<bool, CharacterBody, bool>>((isSprinting, sender) => { return isSprinting && ((sender.sprintingSpeedMultiplier + StatMods.sprintSpeedAdd) != 0); });
             c.GotoNext(x => x.MatchStloc(locSpeedDivIndex));
             c.EmitDelegate<Func<float>>(() => StatMods.moveSpeedReductionMultAdd);
             c.Emit(OpCodes.Add);
@@ -1175,10 +1185,6 @@ public static partial class RecalculateStatsAPI
                     barrierDecayRatePerSecond += stats.barrierDecayRateAdd;
                     barrierDecayRatePerSecond *= stats.barrierDecayRateMult;
                 }
-                else if (barrierDecayRatePerSecond > 0)
-                {
-                    barrierDecayRatePerSecond = 0;
-                }
 
                 return barrierDecayRatePerSecond;
             });
@@ -1204,6 +1210,27 @@ public static partial class RecalculateStatsAPI
         else
         {
             RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyLuckStat)} failed.");
+        }
+    }
+
+    private static void ModifyDesiredScaleStat(ILCursor c)
+    {
+        c.Index = 0;
+
+        bool ILFound = c.TryGotoNext(MoveType.Before, x => x.MatchCallOrCallvirt<CharacterBody>("set_desiredScale"));
+
+        if (ILFound)
+        {
+            c.EmitDelegate<Func<float, float>>((vanillaScaleMultiplier) =>
+            {
+                vanillaScaleMultiplier += StatMods.desiredScaleAdd;
+                vanillaScaleMultiplier *= StatMods.desiredScaleTotalMult;
+                return MathF.Max(float.Epsilon, vanillaScaleMultiplier); //Cant return a value <= 0 or else an exception is thrown
+            });
+        }
+        else
+        {
+            RecalculateStatsPlugin.Logger.LogError($"{nameof(ModifyDesiredScaleStat)} failed.");
         }
     }
 
