@@ -13836,6 +13836,18 @@ references:
   commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.damageTotalMult
   fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.damageTotalMult
   nameWithType: RecalculateStatsAPI.StatHookEventArgs.damageTotalMult
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.desiredScaleAdd
+  name: desiredScaleAdd
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_desiredScaleAdd
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.desiredScaleAdd
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.desiredScaleAdd
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.desiredScaleAdd
+- uid: R2API.RecalculateStatsAPI.StatHookEventArgs.desiredScaleTotalMult
+  name: desiredScaleTotalMult
+  href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_desiredScaleTotalMult
+  commentId: F:R2API.RecalculateStatsAPI.StatHookEventArgs.desiredScaleTotalMult
+  fullName: R2API.RecalculateStatsAPI.StatHookEventArgs.desiredScaleTotalMult
+  nameWithType: RecalculateStatsAPI.StatHookEventArgs.desiredScaleTotalMult
 - uid: R2API.RecalculateStatsAPI.StatHookEventArgs.healthMultAdd
   name: healthMultAdd
   href: api/R2API.RecalculateStatsAPI.StatHookEventArgs.html#R2API_RecalculateStatsAPI_StatHookEventArgs_healthMultAdd
