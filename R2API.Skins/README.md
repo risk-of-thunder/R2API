@@ -8,6 +8,10 @@ Alongside the old skin creation methods from `R2API.Loadout`, R2API.Skins also c
 
 ## Changelog
 
+### `1.4.14`
+
+* Revert changes to lobby SkinDef generation made in 1.4.12 due to technical issues
+
 ### `1.4.13`
 
 * Fix some new changes not working for certain modded survivors
