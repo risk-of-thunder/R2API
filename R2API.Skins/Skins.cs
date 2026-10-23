@@ -82,8 +82,41 @@ public static partial class Skins
             {
                 SkinsPlugin.Logger.LogDebug($"ModelSkinController skins array on the displayPrefab {displayModel.name} array does not match the one on the bodyPrefab!" +
                 $"\r\nHighly recommended you set the controller up manually. Attempting to convert extra bodySkins to displaySkins.");
-                for (int i = displaySkins.skins.Length; i < bodySkins.skins.Length; i++)
+                var newSkins = new SkinDef[bodySkins.skins.Length];
+                for (int i = 0, k = 0; i < displaySkins.skins.Length; i++)
                 {
+                    var displaySkin = displaySkins.skins[i];
+                    var displayName = displaySkin.name;
+                    var added = false;
+                    for (var j = k; j < bodySkins.skins.Length; j++)
+                    {
+                        var bodySkin = bodySkins.skins[j];
+                        if (displaySkin == bodySkin || displayName == bodySkin.name)
+                        {
+                            newSkins[j] = displaySkin;
+                            added = true;
+                            if (j == k)
+                            {
+                                while (++k < newSkins.Length && newSkins[k]) { }
+                            }
+                            break;
+                        }
+                    }
+
+                    if (!added)
+                    {
+                        newSkins[k] = displaySkin;
+                        while (++k < newSkins.Length && newSkins[k]) { }
+                    }
+                }
+
+                for (int i = 0; i < bodySkins.skins.Length; i++)
+                {
+                    if (newSkins[i])
+                    {
+                        continue;
+                    }
+
                     SkinDef skinDef = SkinDef.Instantiate(bodySkins.skins[i]);
 
                     var firstDisplaySkin = HG.ArrayUtils.GetSafe(displaySkins.skins, 0);
@@ -99,9 +132,9 @@ public static partial class Skins
                             skinDef.rootObject = firstDisplaySkin.rootObject;
                     }
 
-                    Array.Resize(ref displaySkins.skins, displaySkins.skins.Length + 1);
-                    displaySkins.skins[displaySkins.skins.Length - 1] = skinDef;
+                    newSkins[i] = skinDef;
                 }
+                displaySkins.skins = newSkins;
             }
         }
     }
