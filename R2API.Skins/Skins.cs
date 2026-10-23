@@ -118,14 +118,14 @@ public static partial class Skins
                     }
 
                     SkinDef skinDef = SkinDef.Instantiate(bodySkins.skins[i]);
+                    skinDef.skinIndex = bodySkins.skins[i].skinIndex;
 
-                    var firstDisplaySkin = HG.ArrayUtils.GetSafe(displaySkins.skins, 0);
+                    var firstDisplaySkin = displaySkins.skins.Length == 0 ? ArrayUtils.GetSafe(newSkins, 0) : ArrayUtils.GetSafe(displaySkins.skins, 0);
                     if (firstDisplaySkin != null)
                     {
                         if (skinDef.baseSkins == null || skinDef.baseSkins.Length == 0)
                             skinDef.baseSkins = new SkinDef[1];
 
-                        skinDef.skinIndex = bodySkins.skins[i].skinIndex;
                         skinDef.baseSkins[0] = firstDisplaySkin;
 
                         if (firstDisplaySkin.rootObject)
