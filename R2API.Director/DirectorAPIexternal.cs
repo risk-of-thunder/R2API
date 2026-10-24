@@ -242,7 +242,12 @@ public static partial class DirectorAPI
         /// <summary>
         /// Shrines added with Seekers of the Storm, specifically Shrine of Shaping and Halcyon Shrine
         /// </summary>
-        StormStuff = 10
+        StormStuff = 10,
+
+        /// <summary>
+        /// Interactables added with Hallowed Concepts - Concept Reliquary and Shrine of Compulsion, everything else is spawned via special controller
+        /// </summary>
+        HallowStuff = 11,
     }
 
     /// <summary>
@@ -507,6 +512,48 @@ public static partial class DirectorAPI
         /// External / Internal Name : Solutional Haunt / solutionalhaunt
         /// </summary>
         SolutionalHaunt = 1L << 49,
+
+        // DLC4 entries
+
+        /// <summary>
+        /// External / Internal Name : Hidden Realm: Soulbound Threshold / champrush
+        /// </summary>
+        SoulboundThreshold = 1L << 50,
+
+        /// <summary>
+        /// External / Internal Name : Damp Caverns / fungal
+        /// </summary>
+        DampCaverns = 1L << 51,
+
+        /// <summary>
+        /// External / Internal Name : Tenebrous Quagmire / mire
+        /// </summary>
+        TenebrousQuagmire = 1L << 52,
+
+        /// <summary>
+        /// External / Internal Name : Hidden Realm: Winnowing of Predation / sad1
+        /// </summary>
+        WinnowingOfPredation = 1L << 53,
+
+        /// <summary>
+        /// External / Internal Name : Lurid Basilica / sanctum
+        /// </summary>
+        LuridBasilica = 1L << 54,
+
+        /// <summary>
+        /// External / Internal Name : Hidden Realm: Winnowing of Mortality / soul1
+        /// </summary>
+        WinnowingOfMortality = 1L << 55,
+
+        /// <summary>
+        /// External / Internal Name : Hidden Realm: Winnowing of Survival / surv2
+        /// </summary>
+        WinnowingOfSurvival = 1L << 56,
+
+        /// <summary>
+        /// External / Internal Name : Hidden Realm: Terminal Lucidity / ultima
+        /// </summary>
+        TerminalLucidity = 1L << 57
     }
 
 #pragma warning disable R2APISubmodulesAnalyzer // Public API Method is not enabling the hooks if needed.
@@ -611,6 +658,14 @@ public static partial class DirectorAPI
         "repurposedcrater" => Stage.RepurposedCrater,
         "solusweb" => Stage.NeuralSanctum,
         "solutionalhaunt" => Stage.SolutionalHaunt,
+        "ultima" => Stage.TerminalLucidity,
+        "surv2" => Stage.WinnowingOfSurvival,
+        "soul1" => Stage.WinnowingOfMortality,
+        "sanctum" => Stage.LuridBasilica,
+        "sad1" => Stage.WinnowingOfPredation,
+        "mire" => Stage.TenebrousQuagmire,
+        "fungal" => Stage.DampCaverns,
+        "champrush" => Stage.SoulboundThreshold,
         _ => Stage.Custom,
     };
 
@@ -679,6 +734,14 @@ public static partial class DirectorAPI
         Stage.RepurposedCrater => "repurposedcrater",
         Stage.NeuralSanctum => "solusweb",
         Stage.SolutionalHaunt => "solutionalhaunt",
+        Stage.TerminalLucidity => "ultima",
+        Stage.WinnowingOfSurvival => "surv2",
+        Stage.WinnowingOfMortality => "soul1",
+        Stage.LuridBasilica => "sanctum",
+        Stage.WinnowingOfPredation => "sad1",
+        Stage.TenebrousQuagmire => "mire",
+        Stage.DampCaverns => "fungal",
+        Stage.SoulboundThreshold => "champrush",
         _ => "", // Stage.Custom
     };
 
