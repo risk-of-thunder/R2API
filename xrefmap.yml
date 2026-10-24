@@ -7857,6 +7857,12 @@ references:
   commentId: F:R2API.DirectorAPI.InteractableCategory.Duplicator
   fullName: R2API.DirectorAPI.InteractableCategory.Duplicator
   nameWithType: DirectorAPI.InteractableCategory.Duplicator
+- uid: R2API.DirectorAPI.InteractableCategory.HallowStuff
+  name: HallowStuff
+  href: api/R2API.DirectorAPI.InteractableCategory.html#R2API_DirectorAPI_InteractableCategory_HallowStuff
+  commentId: F:R2API.DirectorAPI.InteractableCategory.HallowStuff
+  fullName: R2API.DirectorAPI.InteractableCategory.HallowStuff
+  nameWithType: DirectorAPI.InteractableCategory.HallowStuff
 - uid: R2API.DirectorAPI.InteractableCategory.Invalid
   name: Invalid
   href: api/R2API.DirectorAPI.InteractableCategory.html#R2API_DirectorAPI_InteractableCategory_Invalid
@@ -8187,6 +8193,12 @@ references:
   commentId: F:R2API.DirectorAPI.Stage.Custom
   fullName: R2API.DirectorAPI.Stage.Custom
   nameWithType: DirectorAPI.Stage.Custom
+- uid: R2API.DirectorAPI.Stage.DampCaverns
+  name: DampCaverns
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_DampCaverns
+  commentId: F:R2API.DirectorAPI.Stage.DampCaverns
+  fullName: R2API.DirectorAPI.Stage.DampCaverns
+  nameWithType: DirectorAPI.Stage.DampCaverns
 - uid: R2API.DirectorAPI.Stage.DistantRoost
   name: DistantRoost
   href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_DistantRoost
@@ -8229,6 +8241,12 @@ references:
   commentId: F:R2API.DirectorAPI.Stage.IronAuroras
   fullName: R2API.DirectorAPI.Stage.IronAuroras
   nameWithType: DirectorAPI.Stage.IronAuroras
+- uid: R2API.DirectorAPI.Stage.LuridBasilica
+  name: LuridBasilica
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_LuridBasilica
+  commentId: F:R2API.DirectorAPI.Stage.LuridBasilica
+  fullName: R2API.DirectorAPI.Stage.LuridBasilica
+  nameWithType: DirectorAPI.Stage.LuridBasilica
 - uid: R2API.DirectorAPI.Stage.MomentFractured
   name: MomentFractured
   href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_MomentFractured
@@ -8325,6 +8343,12 @@ references:
   commentId: F:R2API.DirectorAPI.Stage.SolutionalHaunt
   fullName: R2API.DirectorAPI.Stage.SolutionalHaunt
   nameWithType: DirectorAPI.Stage.SolutionalHaunt
+- uid: R2API.DirectorAPI.Stage.SoulboundThreshold
+  name: SoulboundThreshold
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_SoulboundThreshold
+  commentId: F:R2API.DirectorAPI.Stage.SoulboundThreshold
+  fullName: R2API.DirectorAPI.Stage.SoulboundThreshold
+  nameWithType: DirectorAPI.Stage.SoulboundThreshold
 - uid: R2API.DirectorAPI.Stage.SulfurPools
   name: SulfurPools
   href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_SulfurPools
@@ -8337,6 +8361,18 @@ references:
   commentId: F:R2API.DirectorAPI.Stage.SunderedGrove
   fullName: R2API.DirectorAPI.Stage.SunderedGrove
   nameWithType: DirectorAPI.Stage.SunderedGrove
+- uid: R2API.DirectorAPI.Stage.TenebrousQuagmire
+  name: TenebrousQuagmire
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_TenebrousQuagmire
+  commentId: F:R2API.DirectorAPI.Stage.TenebrousQuagmire
+  fullName: R2API.DirectorAPI.Stage.TenebrousQuagmire
+  nameWithType: DirectorAPI.Stage.TenebrousQuagmire
+- uid: R2API.DirectorAPI.Stage.TerminalLucidity
+  name: TerminalLucidity
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_TerminalLucidity
+  commentId: F:R2API.DirectorAPI.Stage.TerminalLucidity
+  fullName: R2API.DirectorAPI.Stage.TerminalLucidity
+  nameWithType: DirectorAPI.Stage.TerminalLucidity
 - uid: R2API.DirectorAPI.Stage.ThePlanetarium
   name: ThePlanetarium
   href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_ThePlanetarium
@@ -8391,6 +8427,24 @@ references:
   commentId: F:R2API.DirectorAPI.Stage.WetlandAspect
   fullName: R2API.DirectorAPI.Stage.WetlandAspect
   nameWithType: DirectorAPI.Stage.WetlandAspect
+- uid: R2API.DirectorAPI.Stage.WinnowingOfMortality
+  name: WinnowingOfMortality
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_WinnowingOfMortality
+  commentId: F:R2API.DirectorAPI.Stage.WinnowingOfMortality
+  fullName: R2API.DirectorAPI.Stage.WinnowingOfMortality
+  nameWithType: DirectorAPI.Stage.WinnowingOfMortality
+- uid: R2API.DirectorAPI.Stage.WinnowingOfPredation
+  name: WinnowingOfPredation
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_WinnowingOfPredation
+  commentId: F:R2API.DirectorAPI.Stage.WinnowingOfPredation
+  fullName: R2API.DirectorAPI.Stage.WinnowingOfPredation
+  nameWithType: DirectorAPI.Stage.WinnowingOfPredation
+- uid: R2API.DirectorAPI.Stage.WinnowingOfSurvival
+  name: WinnowingOfSurvival
+  href: api/R2API.DirectorAPI.Stage.html#R2API_DirectorAPI_Stage_WinnowingOfSurvival
+  commentId: F:R2API.DirectorAPI.Stage.WinnowingOfSurvival
+  fullName: R2API.DirectorAPI.Stage.WinnowingOfSurvival
+  nameWithType: DirectorAPI.Stage.WinnowingOfSurvival
 - uid: R2API.DirectorAPI.StageInfo
   name: DirectorAPI.StageInfo
   href: api/R2API.DirectorAPI.StageInfo.html
