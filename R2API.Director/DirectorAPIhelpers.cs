@@ -1252,6 +1252,7 @@ public static partial class DirectorAPI
                 "Rare" => InteractableCategory.Rare,
                 "Duplicator" => InteractableCategory.Duplicator,
                 "Void Stuff" => InteractableCategory.VoidStuff,
+                "Hallow Stuff" => InteractableCategory.HallowStuff,
                 _ => InteractableCategory.Custom,
             };
         }
@@ -1277,6 +1278,7 @@ public static partial class DirectorAPI
                 InteractableCategory.Duplicator => "Duplicator",
                 InteractableCategory.VoidStuff => "Void Stuff",
                 InteractableCategory.StormStuff => "Storm Stuff",
+                InteractableCategory.HallowStuff => "Hallow Stuff",
                 _ => throw new ArgumentException(((int)interactableCategory).ToString())
             };
         }
