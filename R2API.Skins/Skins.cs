@@ -78,35 +78,43 @@ public static partial class Skins
             }
 
             displaySkins.skins ??= [];
-            if (displaySkins.skins.Length != bodySkins.skins.Length)
+            if (displaySkins.skins.Length < bodySkins.skins.Length)
             {
                 SkinsPlugin.Logger.LogDebug($"ModelSkinController skins array on the displayPrefab {displayModel.name} array does not match the one on the bodyPrefab!" +
                 $"\r\nHighly recommended you set the controller up manually. Attempting to convert extra bodySkins to displaySkins.");
                 var newSkins = new SkinDef[bodySkins.skins.Length];
-                for (int i = 0, k = 0; i < displaySkins.skins.Length; i++)
+                for (int displaySkinIndex = 0, newSkinIndex = 0; displaySkinIndex < displaySkins.skins.Length; displaySkinIndex++)
                 {
-                    var displaySkin = displaySkins.skins[i];
+                    var displaySkin = displaySkins.skins[displaySkinIndex];
                     var displayName = displaySkin.name;
                     var added = false;
-                    for (var j = k; j < bodySkins.skins.Length; j++)
+                    for (var bodySkinIndex = 0; bodySkinIndex < bodySkins.skins.Length; bodySkinIndex++)
                     {
-                        var bodySkin = bodySkins.skins[j];
-                        if (displaySkin == bodySkin || displayName == bodySkin.name)
+                        var bodySkin = bodySkins.skins[bodySkinIndex];
+                        if (displaySkin != bodySkin)
                         {
-                            newSkins[j] = displaySkin;
-                            added = true;
-                            if (j == k)
+                            var nameEquals = string.IsNullOrEmpty(displayName) ? displaySkin.nameToken == bodySkin.nameToken : displayName == bodySkin.name;
+                            if (!nameEquals)
                             {
-                                while (++k < newSkins.Length && newSkins[k]) { }
+                                continue;
                             }
-                            break;
                         }
+
+                        newSkins[bodySkinIndex] = displaySkin;
+                        added = true;
+                        if (bodySkinIndex == newSkinIndex)
+                        {
+                            //Skipping already assigned indices in case the order got mixed up
+                            while (++newSkinIndex < newSkins.Length && newSkins[newSkinIndex]) { }
+                        }
+                        break;
                     }
 
                     if (!added)
                     {
-                        newSkins[k] = displaySkin;
-                        while (++k < newSkins.Length && newSkins[k]) { }
+                        newSkins[newSkinIndex] = displaySkin;
+                        //Skipping already assigned indices in case the order got mixed up
+                        while (++newSkinIndex < newSkins.Length && newSkins[newSkinIndex]) { }
                     }
                 }
 

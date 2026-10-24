@@ -8,6 +8,10 @@ Alongside the old skin creation methods from `R2API.Loadout`, R2API.Skins also c
 
 ## Changelog
 
+### `1.4.14`
+
+* Skip fixing lobby skins if there's more lobby skins than body skins
+
 ### `1.4.13`
 
 * Fix some new changes not working for certain modded survivors
