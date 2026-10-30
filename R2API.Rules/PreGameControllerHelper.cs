@@ -16,12 +16,14 @@ internal static class PreGameControllerHelper
 {
     public static bool AnyUserHasAllUnlockables(IEnumerable<UnlockableDef> unlockables)
     {
-        bool requirementsMet = false;
         foreach (UnlockableDef unlockableDef in unlockables)
         {
-            requirementsMet = PreGameController.AnyUserHasUnlockable(unlockableDef);
+            if(PreGameController.AnyUserHasUnlockable(unlockableDef) == false)
+            {
+                return false;
+            }
         }
-        return requirementsMet;
+        return true;
     }
 
     public static bool AreAllExpansionsActive(PreGameController controllerInstance, IEnumerable<ExpansionDef> expansionDefs)
@@ -31,26 +33,30 @@ internal static class PreGameControllerHelper
     }
     public static bool AreAllChoicesActive(PreGameController controllerInstance, IEnumerable<RuleChoiceDef> ruleChoices)
     {
-        bool requirementsMet = false;
         if (controllerInstance.readOnlyRuleBook == null)
-            return requirementsMet;
+            return false;
 
         var ruleBookInstance = controllerInstance.readOnlyRuleBook;
         foreach (RuleChoiceDef choiceDef in ruleChoices)
         {
-            requirementsMet = ruleBookInstance.IsChoiceActive(choiceDef);
+            if(ruleBookInstance.IsChoiceActive(choiceDef) == false)
+            {
+                return false;
+            }
         }
-        return requirementsMet;
+        return true;
     }
 
     public static bool AnyUserHasAllEntitlements(IEnumerable<EntitlementDef> entitlementDefs, bool checkNetworkInsteadOfLocal)
     {
-        bool requirementsMet = false;
-
         foreach (EntitlementDef entitlementDef in entitlementDefs)
         {
-            requirementsMet = checkNetworkInsteadOfLocal ? EntitlementManager.networkUserEntitlementTracker.AnyUserHasEntitlement(entitlementDef) : EntitlementManager.localUserEntitlementTracker.AnyUserHasEntitlement(entitlementDef);
+            bool requirementMet = checkNetworkInsteadOfLocal ? EntitlementManager.networkUserEntitlementTracker.AnyUserHasEntitlement(entitlementDef) : EntitlementManager.localUserEntitlementTracker.AnyUserHasEntitlement(entitlementDef);
+            if(requirementMet == false)
+            {
+                return false;
+            }
         }
-        return requirementsMet;
+        return true;
     }
 }
