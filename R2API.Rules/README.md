@@ -16,6 +16,10 @@ A Wiki page explaining how the Rule system works and how to create new rules wil
 
 ## Changelog
 
+## '1.0.2'
+
+Fix situation where utilizing the collection options for required unlockables, expansions, choice defs and entitlements would return true when one of the elements in the collection where inactive. instead of returning true if all of them where active.
+
 ### '1.0.1'
 
 Fix wrong logger being used
