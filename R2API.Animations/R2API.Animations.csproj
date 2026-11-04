@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AssetsTools.NET" Version="3.0.0" GeneratePathProperty="true" />
+    <PackageReference Include="AssetsTools.NET" Version="3.0.4" GeneratePathProperty="true" />
     <None Include="$(PkgAssetsTools_NET)\lib\netstandard2.0\AssetsTools.NET.dll" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
