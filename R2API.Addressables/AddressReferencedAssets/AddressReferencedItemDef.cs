@@ -21,6 +21,11 @@ public class AddressReferencedItemDef : AddressReferencedAsset<ItemDef>
     [SerializeField, HideInInspector]
     private bool _canLoadFromCatalog = true;
 
+    protected override bool IsCatalogAvailable()
+    {
+        return ItemCatalog.availability.available;
+    }
+
     protected override IEnumerator LoadAsyncCoroutine()
     {
         if (CanLoadFromCatalog)

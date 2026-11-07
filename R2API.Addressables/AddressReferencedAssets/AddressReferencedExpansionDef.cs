@@ -22,6 +22,11 @@ public class AddressReferencedExpansionDef : AddressReferencedAsset<ExpansionDef
     [SerializeField, HideInInspector]
     private bool _canLoadFromCatalog = true;
 
+    protected override bool IsCatalogAvailable()
+    {
+        return ExpansionCatalog.availability.available;
+    }
+
     protected override IEnumerator LoadAsyncCoroutine()
     {
         if (CanLoadFromCatalog)
