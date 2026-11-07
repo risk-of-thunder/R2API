@@ -322,6 +322,23 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.~AddressReferencedAsset
   nameWithType: AddressReferencedAsset<T>.~AddressReferencedAsset
+- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.IsCatalogAvailable
+  name: IsCatalogAvailable()
+  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_IsCatalogAvailable
+  commentId: M:R2API.AddressReferencedAssets.AddressReferencedAsset`1.IsCatalogAvailable
+  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.IsCatalogAvailable()
+  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).IsCatalogAvailable()
+  nameWithType: AddressReferencedAsset<T>.IsCatalogAvailable()
+  nameWithType.vb: AddressReferencedAsset(Of T).IsCatalogAvailable()
+- uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.IsCatalogAvailable*
+  name: IsCatalogAvailable
+  href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_IsCatalogAvailable_
+  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedAsset`1.IsCatalogAvailable
+  isSpec: "True"
+  fullName: R2API.AddressReferencedAssets.AddressReferencedAsset<T>.IsCatalogAvailable
+  fullName.vb: R2API.AddressReferencedAssets.AddressReferencedAsset(Of T).IsCatalogAvailable
+  nameWithType: AddressReferencedAsset<T>.IsCatalogAvailable
+  nameWithType.vb: AddressReferencedAsset(Of T).IsCatalogAvailable
 - uid: R2API.AddressReferencedAssets.AddressReferencedAsset`1.IsInvalid
   name: IsInvalid
   href: api/R2API.AddressReferencedAssets.AddressReferencedAsset-1.html#R2API_AddressReferencedAssets_AddressReferencedAsset_1_IsInvalid
@@ -646,6 +663,19 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedBuffDef.CanLoadFromCatalog
   nameWithType: AddressReferencedBuffDef.CanLoadFromCatalog
+- uid: R2API.AddressReferencedAssets.AddressReferencedBuffDef.IsCatalogAvailable
+  name: IsCatalogAvailable()
+  href: api/R2API.AddressReferencedAssets.AddressReferencedBuffDef.html#R2API_AddressReferencedAssets_AddressReferencedBuffDef_IsCatalogAvailable
+  commentId: M:R2API.AddressReferencedAssets.AddressReferencedBuffDef.IsCatalogAvailable
+  fullName: R2API.AddressReferencedAssets.AddressReferencedBuffDef.IsCatalogAvailable()
+  nameWithType: AddressReferencedBuffDef.IsCatalogAvailable()
+- uid: R2API.AddressReferencedAssets.AddressReferencedBuffDef.IsCatalogAvailable*
+  name: IsCatalogAvailable
+  href: api/R2API.AddressReferencedAssets.AddressReferencedBuffDef.html#R2API_AddressReferencedAssets_AddressReferencedBuffDef_IsCatalogAvailable_
+  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedBuffDef.IsCatalogAvailable
+  isSpec: "True"
+  fullName: R2API.AddressReferencedAssets.AddressReferencedBuffDef.IsCatalogAvailable
+  nameWithType: AddressReferencedBuffDef.IsCatalogAvailable
 - uid: R2API.AddressReferencedAssets.AddressReferencedBuffDef.Load
   name: Load()
   href: api/R2API.AddressReferencedAssets.AddressReferencedBuffDef.html#R2API_AddressReferencedAssets_AddressReferencedBuffDef_Load
@@ -787,6 +817,19 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedEliteDef.CanLoadFromCatalog
   nameWithType: AddressReferencedEliteDef.CanLoadFromCatalog
+- uid: R2API.AddressReferencedAssets.AddressReferencedEliteDef.IsCatalogAvailable
+  name: IsCatalogAvailable()
+  href: api/R2API.AddressReferencedAssets.AddressReferencedEliteDef.html#R2API_AddressReferencedAssets_AddressReferencedEliteDef_IsCatalogAvailable
+  commentId: M:R2API.AddressReferencedAssets.AddressReferencedEliteDef.IsCatalogAvailable
+  fullName: R2API.AddressReferencedAssets.AddressReferencedEliteDef.IsCatalogAvailable()
+  nameWithType: AddressReferencedEliteDef.IsCatalogAvailable()
+- uid: R2API.AddressReferencedAssets.AddressReferencedEliteDef.IsCatalogAvailable*
+  name: IsCatalogAvailable
+  href: api/R2API.AddressReferencedAssets.AddressReferencedEliteDef.html#R2API_AddressReferencedAssets_AddressReferencedEliteDef_IsCatalogAvailable_
+  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedEliteDef.IsCatalogAvailable
+  isSpec: "True"
+  fullName: R2API.AddressReferencedAssets.AddressReferencedEliteDef.IsCatalogAvailable
+  nameWithType: AddressReferencedEliteDef.IsCatalogAvailable
 - uid: R2API.AddressReferencedAssets.AddressReferencedEliteDef.Load
   name: Load()
   href: api/R2API.AddressReferencedAssets.AddressReferencedEliteDef.html#R2API_AddressReferencedAssets_AddressReferencedEliteDef_Load
@@ -928,6 +971,19 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.CanLoadFromCatalog
   nameWithType: AddressReferencedEquipmentDef.CanLoadFromCatalog
+- uid: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.IsCatalogAvailable
+  name: IsCatalogAvailable()
+  href: api/R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.html#R2API_AddressReferencedAssets_AddressReferencedEquipmentDef_IsCatalogAvailable
+  commentId: M:R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.IsCatalogAvailable
+  fullName: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.IsCatalogAvailable()
+  nameWithType: AddressReferencedEquipmentDef.IsCatalogAvailable()
+- uid: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.IsCatalogAvailable*
+  name: IsCatalogAvailable
+  href: api/R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.html#R2API_AddressReferencedAssets_AddressReferencedEquipmentDef_IsCatalogAvailable_
+  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.IsCatalogAvailable
+  isSpec: "True"
+  fullName: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.IsCatalogAvailable
+  nameWithType: AddressReferencedEquipmentDef.IsCatalogAvailable
 - uid: R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.Load
   name: Load()
   href: api/R2API.AddressReferencedAssets.AddressReferencedEquipmentDef.html#R2API_AddressReferencedAssets_AddressReferencedEquipmentDef_Load
@@ -1069,6 +1125,19 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.CanLoadFromCatalog
   nameWithType: AddressReferencedExpansionDef.CanLoadFromCatalog
+- uid: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.IsCatalogAvailable
+  name: IsCatalogAvailable()
+  href: api/R2API.AddressReferencedAssets.AddressReferencedExpansionDef.html#R2API_AddressReferencedAssets_AddressReferencedExpansionDef_IsCatalogAvailable
+  commentId: M:R2API.AddressReferencedAssets.AddressReferencedExpansionDef.IsCatalogAvailable
+  fullName: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.IsCatalogAvailable()
+  nameWithType: AddressReferencedExpansionDef.IsCatalogAvailable()
+- uid: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.IsCatalogAvailable*
+  name: IsCatalogAvailable
+  href: api/R2API.AddressReferencedAssets.AddressReferencedExpansionDef.html#R2API_AddressReferencedAssets_AddressReferencedExpansionDef_IsCatalogAvailable_
+  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedExpansionDef.IsCatalogAvailable
+  isSpec: "True"
+  fullName: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.IsCatalogAvailable
+  nameWithType: AddressReferencedExpansionDef.IsCatalogAvailable
 - uid: R2API.AddressReferencedAssets.AddressReferencedExpansionDef.Load
   name: Load()
   href: api/R2API.AddressReferencedAssets.AddressReferencedExpansionDef.html#R2API_AddressReferencedAssets_AddressReferencedExpansionDef_Load
@@ -1299,6 +1368,19 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedItemDef.CanLoadFromCatalog
   nameWithType: AddressReferencedItemDef.CanLoadFromCatalog
+- uid: R2API.AddressReferencedAssets.AddressReferencedItemDef.IsCatalogAvailable
+  name: IsCatalogAvailable()
+  href: api/R2API.AddressReferencedAssets.AddressReferencedItemDef.html#R2API_AddressReferencedAssets_AddressReferencedItemDef_IsCatalogAvailable
+  commentId: M:R2API.AddressReferencedAssets.AddressReferencedItemDef.IsCatalogAvailable
+  fullName: R2API.AddressReferencedAssets.AddressReferencedItemDef.IsCatalogAvailable()
+  nameWithType: AddressReferencedItemDef.IsCatalogAvailable()
+- uid: R2API.AddressReferencedAssets.AddressReferencedItemDef.IsCatalogAvailable*
+  name: IsCatalogAvailable
+  href: api/R2API.AddressReferencedAssets.AddressReferencedItemDef.html#R2API_AddressReferencedAssets_AddressReferencedItemDef_IsCatalogAvailable_
+  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedItemDef.IsCatalogAvailable
+  isSpec: "True"
+  fullName: R2API.AddressReferencedAssets.AddressReferencedItemDef.IsCatalogAvailable
+  nameWithType: AddressReferencedItemDef.IsCatalogAvailable
 - uid: R2API.AddressReferencedAssets.AddressReferencedItemDef.Load
   name: Load()
   href: api/R2API.AddressReferencedAssets.AddressReferencedItemDef.html#R2API_AddressReferencedAssets_AddressReferencedItemDef_Load
@@ -1618,6 +1700,19 @@ references:
   isSpec: "True"
   fullName: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.CanLoadFromCatalog
   nameWithType: AddressReferencedUnlockableDef.CanLoadFromCatalog
+- uid: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.IsCatalogAvailable
+  name: IsCatalogAvailable()
+  href: api/R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.html#R2API_AddressReferencedAssets_AddressReferencedUnlockableDef_IsCatalogAvailable
+  commentId: M:R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.IsCatalogAvailable
+  fullName: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.IsCatalogAvailable()
+  nameWithType: AddressReferencedUnlockableDef.IsCatalogAvailable()
+- uid: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.IsCatalogAvailable*
+  name: IsCatalogAvailable
+  href: api/R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.html#R2API_AddressReferencedAssets_AddressReferencedUnlockableDef_IsCatalogAvailable_
+  commentId: Overload:R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.IsCatalogAvailable
+  isSpec: "True"
+  fullName: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.IsCatalogAvailable
+  nameWithType: AddressReferencedUnlockableDef.IsCatalogAvailable
 - uid: R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.Load
   name: Load()
   href: api/R2API.AddressReferencedAssets.AddressReferencedUnlockableDef.html#R2API_AddressReferencedAssets_AddressReferencedUnlockableDef_Load
