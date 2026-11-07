@@ -8,6 +8,10 @@ Currently it adds the AddressReferencedAsset system, which allows you on the Edi
 
 ## Changelog
 
+# '1.1.4'
+
+* Added a virtual method used to check wether a Catalog is available for a specific AddressReferencedAsset
+
 ### '1.1.3'
 
 * Added the ``NoCataloLoad`` attribute, which when implemented on a field and in conjunction with RoR2EditorKit, forces an AddressReferencedAsset to never be loaded from the catalog.

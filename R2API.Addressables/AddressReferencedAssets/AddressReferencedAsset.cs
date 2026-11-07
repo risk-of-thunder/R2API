@@ -49,7 +49,7 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
             if (_asset)
                 return _asset;
 
-            if (!Initialized && CanLoadFromCatalog)
+            if (!Initialized && CanLoadFromCatalog && !IsCatalogAvailable())
             {
                 string typeName = GetType().Name;
                 var stackTrace = new StackTrace();
@@ -383,6 +383,16 @@ public class AddressReferencedAsset<T> : AddressReferencedAsset where T : UObjec
             Addressables.Release(AsyncOperationHandle);
         }
     }
+
+    /// <summary>
+    /// Override this method to check wether the Catalog is available.
+    /// <br></br>
+    /// Useful when <see cref="CanLoadFromCatalog"/> is set to true, and a mod starts loading stuff from catalogs as soon as they're available but the AddressReferencedAsset system is not initialized.
+    /// <br></br>
+    /// This way a warning is avoided
+    /// </summary>
+    /// <returns>True if the catalog for this AddressReferencedAsset is available</returns>
+    protected virtual bool IsCatalogAvailable() => false;
 
     /// <summary>
     /// Operator for casting <see cref="AddressReferencedAsset{T}"/> to a boolean value

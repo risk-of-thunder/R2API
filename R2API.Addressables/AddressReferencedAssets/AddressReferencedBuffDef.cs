@@ -21,6 +21,11 @@ public class AddressReferencedBuffDef : AddressReferencedAsset<BuffDef>
     [SerializeField, HideInInspector]
     private bool _canLoadFromCatalog = true;
 
+    protected override bool IsCatalogAvailable()
+    {
+        return BuffCatalog.availability.available;
+    }
+
     protected override IEnumerator LoadAsyncCoroutine()
     {
         if (CanLoadFromCatalog)
