@@ -1,3 +1,4 @@
+
 name: Thunderstore Release
 
 on:
@@ -7,12 +8,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  
+    runs-on: ubuntu-latest
 
     permissions:
       contents: read
       id-token: write
-    
+
     steps:
 
     - name: Checkout
@@ -26,12 +27,6 @@ jobs:
     - name: Setup TCLI
       run: dotnet tool install --global tcli
 
-    - name: NuGet login
-      uses: NuGet/login@v1
-      id: nuget-login
-      with:
-        user: RiskofThunder
-
     # Install Mono on Ubuntu to run nuget.exe (due to this issue on Ubuntu 24 that hasn't been fixed yet - https://github.com/NuGet/setup-nuget/issues/168)
     - name: Install Mono on Ubuntu
       run: |
@@ -42,14 +37,19 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y mono-complete
 
+    - name: NuGet login
+      uses: NuGet/login@v1
+      id: nuget-login-risk
+      with:
+        user: RiskofThunder
+
     - name: Build and Publish
       env:
-        NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
         TCLI_AUTH_TOKEN: ${{ secrets.TCLI_AUTH_TOKEN_RISK_OF_THUNDER }}
       shell: bash
       run: |
         set -x
-        
+
         cd BuildCI
 
         for line in $(dotnet run --configuration Release Program.cs); do
@@ -60,32 +60,36 @@ jobs:
           csproj_folder=${parts[3]}
           nuget_package_name=${parts[4]}
 
-          cd $csproj_folder
+          # Skip legacy packages
+          if [ "$namespace" != "RiskofThunder" ]; then
+            continue
+          fi
+
+          cd "$csproj_folder"
 
           is_project_built=false
 
           existing_version_number=$(curl --compressed -s "https://api-v2v3search-0.nuget.org/query?q=packageid:${nuget_package_name}&prerelease=true&semVerLevel=2.0.0" | jq '.data[0]?.versions[]?.version' | grep "${version}\"" || true)
-          if [ -z $existing_version_number ]
-          then
+
+          if [ -z "$existing_version_number" ]; then
             dotnet pack --configuration Release /p:PackageOutputPath=./ReleaseOutput /p:OutputPath=./ReleaseOutput
             is_project_built=true
 
-            can_nuget_push=false
-            if [ "$namespace" == "RiskofThunder" ]; then
-              nuget setapikey "${{ secrets.NUGET_API_KEY_RISK_OF_THUNDER }}"
-              can_nuget_push=true
-            fi
-            
-            if [ "$can_nuget_push" = true ] ; then
-              nuget push ./ReleaseOutput/*.nupkg -Source 'https://api.nuget.org/v3/index.json'
-            fi
+            for package in ./ReleaseOutput/*.nupkg; do
+              [ -f "$package" ] || continue
+
+              dotnet nuget push "$package" \
+                --api-key "${{ steps.nuget-login-risk.outputs.NUGET_API_KEY }}" \
+                --source "https://api.nuget.org/v3/index.json"
+            done
+
             find . -name '*.nupkg' -type f -delete
           fi
 
           existing_version_number=$(curl --compressed -s "https://thunderstore.io/api/v1/package/" | jq --arg package_name "$namespace-$name_underscore_separator" '.[]? | select(.full_name|startswith($package_name)) | .versions[0]?.version_number' | grep "${version}\"" || true)
-          if [ -z $existing_version_number ]
-          then
-            if [ "$is_project_built" = false ] ; then
+
+          if [ -z "$existing_version_number" ]; then
+            if [ "$is_project_built" = false ]; then
               dotnet pack --configuration Release /p:PackageOutputPath=./ReleaseOutput /p:OutputPath=./ReleaseOutput
               is_project_built=true
             fi
@@ -93,14 +97,12 @@ jobs:
             find . -name '*.pdb' -type f -delete
             find . -name '*.deps.json' -type f -delete
 
-            if [ "$namespace" == "RiskofThunder" ]; then
-              tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN_RISK_OF_THUNDER }}
-            fi
+            tcli publish --token "$TCLI_AUTH_TOKEN"
 
             rm -rf ./build
           fi
 
-          if [ "$is_project_built" = true ] ; then
+          if [ "$is_project_built" = true ]; then
             rm -rf ./ReleaseOutput
           fi
         done
