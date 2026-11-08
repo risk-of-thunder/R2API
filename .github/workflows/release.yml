@@ -4,31 +4,33 @@ on:
   release:
     types: [published]
   workflow_dispatch:
-    inputs:
-      release_legacy_package:
-        description: 'Release legacy package'
-        required: true
-        default: false
-        type: boolean
 
 jobs:
   build:
     runs-on: ubuntu-latest  
+
+    permissions:
+      contents: read
+      id-token: write
+    
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1
-
-    - name: Setup TCLI
-      run: dotnet tool install --global tcli
+      uses: actions/checkout@v4
 
     - name: Setup dotnet
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
+    - name: Setup TCLI
+      run: dotnet tool install --global tcli
+
+    - name: NuGet login
+      uses: NuGet/login@v1
+      id: nuget-login
+      with:
+        user: RiskofThunder
 
     # Install Mono on Ubuntu to run nuget.exe (due to this issue on Ubuntu 24 that hasn't been fixed yet - https://github.com/NuGet/setup-nuget/issues/168)
     - name: Install Mono on Ubuntu
@@ -41,8 +43,13 @@ jobs:
         sudo apt-get install -y mono-complete
 
     - name: Build and Publish
+      env:
+        NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+        TCLI_AUTH_TOKEN: ${{ secrets.TCLI_AUTH_TOKEN_RISK_OF_THUNDER }}
+      shell: bash
       run: |
         set -x
+        
         cd BuildCI
 
         for line in $(dotnet run --configuration Release Program.cs); do
@@ -67,11 +74,6 @@ jobs:
             if [ "$namespace" == "RiskofThunder" ]; then
               nuget setapikey "${{ secrets.NUGET_API_KEY_RISK_OF_THUNDER }}"
               can_nuget_push=true
-            else
-              if [ "${{ github.event.inputs.release_legacy_package }}" == 'true' ]; then
-                nuget setapikey "${{ secrets.NUGET_API_KEY }}"
-                can_nuget_push=true
-              fi
             fi
             
             if [ "$can_nuget_push" = true ] ; then
@@ -93,10 +95,6 @@ jobs:
 
             if [ "$namespace" == "RiskofThunder" ]; then
               tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN_RISK_OF_THUNDER }}
-            else
-              if [ "${{ github.event.inputs.release_legacy_package }}" == 'true' ]; then
-                tcli publish --token ${{ secrets.TCLI_AUTH_TOKEN }}
-              fi
             fi
 
             rm -rf ./build
