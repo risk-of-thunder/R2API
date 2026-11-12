@@ -1,12 +1,17 @@
 ﻿using HG.GeneralSerializer;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
+using R2API.AutoVersionGen;
+using RoR2.AsyncManagement;
 using System;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEngine;
-using SerializationHandler = HG.GeneralSerializer.StringSerializer.SerializationHandler;
+using static RoR2.SolusWing.SolusWingPodAI.Simulation.SimulationState;
 using HGSerializer = HG.GeneralSerializer.StringSerializer;
-using R2API.AutoVersionGen;
+using SerializationHandler = HG.GeneralSerializer.StringSerializer.SerializationHandler;
 
 namespace R2API;
 
@@ -24,6 +29,8 @@ public static partial class StringSerializerExtensions
     private static Hook _canSerializeTypeHook;
     private static Hook _deserializeHook;
     private static Hook _serializeHook;
+    private static ILHook _getValueHook;
+    private static ILHook _setValueHook;
 
     private static bool AllowEnumSerialization(Func<Type, bool> orig, Type type)
     {
@@ -39,11 +46,111 @@ public static partial class StringSerializerExtensions
     {
         return orig(type, value) ?? (type.IsEnum ? _enumTypeHandler.serializer(value) : null);
     }
+
+    //EntityStateGameObject (ESGO) is mainly used for loading game objects via addressables, a couple of entity states now utilize ESGO instead of direct object references.
+    //Despite this, ESGO has support for direct references, yet the SerializedValue doesnt support that.
+    //These ILHooks take care of that issue, allowing the usage of direct reference GameObjects on ESGO as well as Addressable GameObjects
+    private static void HandleESGODirectReferenceGet(ILContext context)
+    {
+        string methodName = $"{nameof(SerializedValue)}.{nameof(SerializedValue.GetValue)}({nameof(FieldInfo)})";
+        static EntityStateGameObject DeserializeEntityStateGameObjectWithDirectReference(UnityEngine.Object objectValue, FieldInfo fieldInfo)
+        {
+            if(typeof(EntityStateGameObject).IsAssignableFrom(fieldInfo.FieldType) && objectValue != null && objectValue is GameObject directReferenceGameObject)
+            {
+#if DEBUG
+                StringSerializerExtensionsPlugin.Logger.LogMessage($"Returning an EntityStateGameObject that uses a direct reference");
+#endif
+                EntityStateGameObject result = new EntityStateGameObject();
+                result.SetDirectRef(directReferenceGameObject, true);
+                return result;
+            }
+            return null;
+        }
+
+        ILCursor cursor = new ILCursor(context);
+
+        //This puts our cursor right after the first if statement which checks if the field type is of type unityengine.object and the serialized value is valid.
+        bool reachedPosition = cursor.TryGotoNext(MoveType.After, x => x.MatchLdfld<SerializedValue>(nameof(SerializedValue.objectValue)),
+            x => x.MatchRet());
+
+        if(!reachedPosition)
+        {
+            StringSerializerExtensionsPlugin.Logger.LogFatal($"Failed to hook \"{methodName}\". Unable to reach position to handle the custom Deserialization for EntityStateGameObject using a direct reference. Deserializing a GameObject as an EntityStateGameObject with a direct reference will not work!");
+            return;
+        }
+
+        cursor.MoveAfterLabels();
+        //Put the instance's object value on the stack
+        cursor.Emit(OpCodes.Ldarg_0);
+        cursor.Emit<SerializedValue>(OpCodes.Ldfld, nameof(SerializedValue.objectValue));
+        //Put the field info itself on the stack
+        cursor.Emit(OpCodes.Ldarg_1);
+        //Emit the delegate, which will put either null or the ESGO on the stack.
+        cursor.EmitDelegate(DeserializeEntityStateGameObjectWithDirectReference);
+
+        //If the returned value from the delegate is null, jump to string deserialization, otherwise, return the valid ESGO
+        cursor.Emit(OpCodes.Dup);
+        cursor.Emit(OpCodes.Pop);
+        cursor.Index--;
+        cursor.Emit(OpCodes.Brfalse, cursor.Next);
+        cursor.Emit(OpCodes.Ret);
+    }
+
+    private static void HandleESGODirectReferenceSet(ILContext context)
+    {
+        string methodName = $"{nameof(SerializedValue)}.{nameof(SerializedValue.GetValue)}({nameof(FieldInfo)}, object)";
+
+        static GameObject SerializeEntityStateGameObjectWithDirectReference(FieldInfo fieldInfo, object newValue)
+        {
+            if(typeof(EntityStateGameObject).IsAssignableFrom(fieldInfo.FieldType) && newValue != null && newValue is GameObject gameObject)
+            {
+#if DEBUG
+                StringSerializerExtensionsPlugin.Logger.LogMessage($"Serializing an EntityStateGameObject that has a DirectReference");
+#endif
+                return gameObject;
+            }
+            return null;
+        }
+
+        ILCursor cursor = new ILCursor(context);
+
+        ILLabel returnLabel = null;
+        //This puts our cursor right after the first "return" method, which checks if the new value is assignable to the field and is of type unityengine.object
+        bool reachedPosition = cursor.TryGotoNext(MoveType.After, x => x.MatchBr(out returnLabel));
+        if(!reachedPosition)
+        {
+            StringSerializerExtensionsPlugin.Logger.LogFatal($"Failed to hook \"{methodName}\". Unable to reach position to handle the custom Serialization of EntityStateGameObjects with direct references. Serializing an EntityStateGameObject with a direct reference will not work!");
+            return;
+        }
+
+        cursor.MoveAfterLabels();
+        //Load the instance first, which will get consumed on the stfld operation
+        cursor.Emit(OpCodes.Ldarg_0);
+        //Put the field info onto the stack
+        cursor.Emit(OpCodes.Ldarg_1);
+        //Put the new value on`to the stack
+        cursor.Emit(OpCodes.Ldarg_2);
+        //Emit the delegate, which will put either a GameObject or null on the stack
+        cursor.EmitDelegate(SerializeEntityStateGameObjectWithDirectReference);
+        //We need to make sure that the returned GameObject is not null, if it is null, jump to the string serialization
+        cursor.Emit(OpCodes.Dup);
+        cursor.Emit<UnityEngine.Object>(OpCodes.Call, "op_Implicit");
+        cursor.Emit(OpCodes.Brfalse, cursor.Next);
+        //Returned GameObject is not null, store it in the objectValue field then return.
+        cursor.Emit<SerializedValue>(OpCodes.Stfld, nameof(SerializedValue.objectValue));
+        cursor.Emit(OpCodes.Br, returnLabel);
+        cursor.MoveAfterLabels(); //Balances stuff
+        cursor.Emit(OpCodes.Pop);
+        cursor.Emit(OpCodes.Pop);
+    }
+
     internal static void ApplyHooks()
     {
         _canSerializeTypeHook.Apply();
         _deserializeHook.Apply();
         _serializeHook.Apply();
+        _getValueHook.Apply();
+        _setValueHook.Apply();
     }
 
     internal static void UndoHooks()
@@ -51,12 +158,16 @@ public static partial class StringSerializerExtensions
         _canSerializeTypeHook.Undo();
         _deserializeHook.Undo();
         _serializeHook.Undo();
+        _getValueHook.Undo();
+        _setValueHook.Undo();
     }
     internal static void FreeHooks()
     {
         _canSerializeTypeHook.Free();
         _deserializeHook.Free();
         _serializeHook.Free();
+        _getValueHook.Free();
+        _setValueHook.Free();
     }
 
     static StringSerializerExtensions()
@@ -223,10 +334,14 @@ public static partial class StringSerializerExtensions
         };
 
         var onHookConfig = new HookConfig { ManualApply = true };
+        var ilHookConfig = new ILHookConfig { ManualApply = true };
         _canSerializeTypeHook = new Hook(typeof(StringSerializer).GetMethod(nameof(StringSerializer.CanSerializeType), (BindingFlags)(-1)), AllowEnumSerialization, onHookConfig);
         _deserializeHook = new Hook(typeof(StringSerializer).GetMethod(nameof(StringSerializer.Deserialize), (BindingFlags)(-1)), HandleEnumDeserialization, onHookConfig);
         _serializeHook = new Hook(typeof(StringSerializer).GetMethod(nameof(StringSerializer.Serialize), (BindingFlags)(-1)), HandleEnumSerialization, onHookConfig);
+        _getValueHook = new ILHook(typeof(SerializedValue).GetMethod(nameof(SerializedValue.GetValue), (BindingFlags)(-1)), HandleESGODirectReferenceGet, ilHookConfig);
+        _setValueHook = new ILHook(typeof(SerializedValue).GetMethod(nameof(SerializedValue.SetValue), (BindingFlags)(-1)), HandleESGODirectReferenceSet, ilHookConfig);
     }
+
     private struct EnumJSONIntermediate
     {
         public string assemblyQualifiedName;

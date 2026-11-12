@@ -21,9 +21,15 @@ It adds handlers for:
 * Vector3Int
 * Any Enum Type, including Flags.
 
+Alongside this, it adds a handler for utilizing Direct GameObject references on EntityStateGameObject fields.
+
 For Thunderkit Users, it is recommended that you install RoR2EditorKit alongside this submodule as it enables the EntityStateConfiguration inspector to serialize the new types.
 
 ## Changelog
+
+### '1.1.0'
+
+* Added support for utilizing a direct GameObject reference in EntityStateGameObject fields
 
 ### '1.0.0'
 
